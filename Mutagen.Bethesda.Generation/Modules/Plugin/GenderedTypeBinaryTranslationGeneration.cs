@@ -223,13 +223,13 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 }
                 else
                 {
-                    args.Add((gen) =>
+                    await args.Add(async (gen) =>
                     {
                         var listTranslMask = this.MaskModule.GetMaskModule(gendered.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(gendered.SubTypeGeneration);
                         gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName}{gendered.SubTypeGeneration.NullChar} subItem{(needsMasters ? $", {nameof(TypedWriteParams)}? conv" : null)}) =>");
                         using (new BraceWrapper(gen))
                         {
-                            subTransl.GenerateWrite(
+                            await subTransl.GenerateWrite(
                                 fg: gen,
                                 objGen: objGen,
                                 typeGen: gendered.SubTypeGeneration,

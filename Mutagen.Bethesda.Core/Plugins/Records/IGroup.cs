@@ -52,6 +52,8 @@ namespace Mutagen.Bethesda.Plugins.Records
         bool ContainsKey(FormKey key);
         
         ILoquiRegistration ContainedRecordRegistration { get; }
+        
+        Type ContainedRecordType { get; }
     }
     
     /// <summary>

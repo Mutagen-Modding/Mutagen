@@ -71,6 +71,7 @@ public class GroupMergeGetter<TGroup, TMajor> : IGroupGetter<TMajor>, IReadOnlyC
     }
 
     public ILoquiRegistration ContainedRecordRegistration => SubGroups[0].ContainedRecordRegistration;
+    public Type ContainedRecordType => typeof(TMajor);
 
     #endregion
 

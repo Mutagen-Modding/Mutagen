@@ -123,13 +123,13 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                     }
                     else
                     {
-                        args.Add((gen) =>
+                        await args.Add(async (gen) =>
                         {
                             gen.AppendLine($"transl: (MutagenWriter r, {dict.ValueTypeGen.TypeName(getter: true)} dictSubItem) =>");
                             using (new BraceWrapper(gen))
                             {
                                 LoquiType targetLoqui = dict.ValueTypeGen as LoquiType;
-                                valTransl.GenerateWrite(
+                                await valTransl.GenerateWrite(
                                     fg: gen,
                                     objGen: objGen,
                                     typeGen: targetLoqui,

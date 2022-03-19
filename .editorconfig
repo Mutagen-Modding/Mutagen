@@ -18,3 +18,8 @@ dotnet_diagnostic.IDE0060.severity = silent
  
 # CS1066: // Optional parameter has no effect 
 dotnet_diagnostic.CS1066.severity = silent 
+
+dotnet_diagnostic.LindhartAnalyserMissingAwaitWarning.severity = error 
+
+dotnet_diagnostic.ASYNC0004.severity = silent
+dotnet_diagnostic.ASYNC0001.severity = silent

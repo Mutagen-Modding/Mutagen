@@ -48,6 +48,28 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 Race_Registration.Instance,
             });
             dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
+            dict[typeof(INamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                ActionRecord_Registration.Instance,
+                Class_Registration.Instance,
+                Component_Registration.Instance,
+                Faction_Registration.Instance,
+                HeadPart_Registration.Instance,
+                Keyword_Registration.Instance,
+                MaterialType_Registration.Instance,
+                Race_Registration.Instance,
+            });
+            dict[typeof(INamedRequiredGetter)] = dict[typeof(INamedRequired)] with { Setter = false };
+            dict[typeof(ITranslatedNamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Keyword_Registration.Instance,
+            });
+            dict[typeof(ITranslatedNamedGetter)] = dict[typeof(ITranslatedNamed)] with { Setter = false };
+            dict[typeof(ITranslatedNamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Keyword_Registration.Instance,
+            });
+            dict[typeof(ITranslatedNamedRequiredGetter)] = dict[typeof(ITranslatedNamedRequired)] with { Setter = false };
             dict[typeof(IObjectBounded)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 AcousticSpace_Registration.Instance,

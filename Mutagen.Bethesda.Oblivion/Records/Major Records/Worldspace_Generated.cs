@@ -3184,53 +3184,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return item;
                     }
                     yield break;
-                case "IPlaced":
-                case "IPlacedGetter":
-                {
-                    {
-                        if (obj.TopCell is {} WorldspaceTopCellitem)
-                        {
-                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
-                                obj: WorldspaceTopCellitem,
-                                linkCache: linkCache,
-                                type: type,
-                                modKey: modKey,
-                                parent: curContext,
-                                throwIfUnknown: false,
-                                getOrAddAsOverride: (m, r) =>
-                                {
-                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    if (baseRec.TopCell != null) return baseRec.TopCell;
-                                    var copy = r.DeepCopy(ModContextExt.CellCopyMask);
-                                    baseRec.TopCell = copy;
-                                    return copy;
-                                },
-                                duplicateInto: (m, r, e) =>
-                                {
-                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
-                                    baseRec.TopCell = dupRec;
-                                    return dupRec;
-                                }))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
-                        type: type,
-                        modKey: modKey,
-                        parent: curContext,
-                        linkCache: linkCache,
-                        throwIfUnknown: false,
-                        worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<IWorldspaceGetter, IOblivionMod, IOblivionModGetter>(
+                        GameCategory.Oblivion,
+                        obj,
+                        type,
+                        linkCache,
+                        (lk, t, b) => this.EnumerateMajorRecordContexts(obj, lk, t, modKey, parent, b, getOrAddAsOverride, duplicateInto),
+                        out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");

@@ -137,9 +137,9 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                     cache.Depth++;
                     cache.PassedMods.Add(targetMod.ModKey);
 
-                    void AddRecords(IModGetter mod, Type type)
+                    void AddRecords(IModGetter mod, Type type, bool throwIfUnknown)
                     {
-                        foreach (var record in mod.EnumerateMajorRecordSimpleContexts(_linkCache, type))
+                        foreach (var record in mod.EnumerateMajorRecordSimpleContexts(_linkCache, type, throwIfUnknown: throwIfUnknown))
                         {
                             var key = _keyGetter(record.Record);
                             if (key.Failed) continue;
@@ -152,12 +152,12 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                     {
                         foreach (var regis in objs.Registrations)
                         {
-                            AddRecords(targetMod, regis.GetterType);
+                            AddRecords(targetMod, regis.GetterType, throwIfUnknown: false);
                         }
                     }
                     else
                     {
-                        AddRecords(targetMod, type);
+                        AddRecords(targetMod, type, throwIfUnknown: true);
                     }
                     // Check again
                     if (cache.TryGetValue(key, out majorRec))
@@ -222,9 +222,9 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                         cache.Depth++;
                         cache.PassedMods.Add(targetMod.ModKey);
 
-                        void AddRecords(IModGetter mod, Type type)
+                        void AddRecords(IModGetter mod, Type type, bool throwIfUnknown)
                         {
-                            foreach (var item in mod.EnumerateMajorRecordSimpleContexts(_linkCache, type))
+                            foreach (var item in mod.EnumerateMajorRecordSimpleContexts(_linkCache, type, throwIfUnknown: throwIfUnknown))
                             {
                                 var iterKey = _keyGetter(item.Record);
                                 if (iterKey.Failed) continue;
@@ -245,12 +245,12 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
                         {
                             foreach (var regis in objs.Registrations)
                             {
-                                AddRecords(targetMod, regis.GetterType);
+                                AddRecords(targetMod, regis.GetterType, throwIfUnknown: false);
                             }
                         }
                         else
                         {
-                            AddRecords(targetMod, type);
+                            AddRecords(targetMod, type, throwIfUnknown: true);
                         }
                     }
                     consideredDepth = cache.Depth;

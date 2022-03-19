@@ -65,13 +65,16 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 fg.AppendLine();
                 fg.AppendLine("Functions can then be written that take in `INamed`, allowing any record that has a name to be passed in.");
                 fg.AppendLine($"## Interfaces to Concrete Classes");
-                foreach (var interf in aspectInterfaces.OrderBy(x => x.Key.Name))
+                foreach (var interf in aspectInterfaces.OrderBy(x => x.Key.Nickname))
                 {
-                    fg.AppendLine($"### {interf.Key.Name}");
-                    foreach (var obj in interf.Value.OrderBy(x => x.Name))
+                    fg.AppendLine($"### {interf.Key.Nickname}");
+                    foreach (var obj in interf.Value
+                                 .SelectMany(x => x.Value)
+                                 .Distinct()
+                                 .OrderBy(x => x.Name))
                     {
                         fg.AppendLine($"- {obj.Name}");
-                        reverse.GetOrAdd(obj.Name).Add(interf.Key.Name);
+                        reverse.GetOrAdd(obj.Name).Add(interf.Key.Nickname);
                     }
                 }
 

@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal
             var cache = new Cache<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>, TKey>(x => _keyGetter(x.Record).Value);
             // ToDo
             // Upgrade to call EnumerateGroups(), which will perform much better
-            foreach (var majorRec in _parent._sourceMod.EnumerateMajorRecordContexts(_parent, type))
+            foreach (var majorRec in _parent._sourceMod.EnumerateMajorRecordContexts(_parent, type, throwIfUnknown: false))
             {
                 var key = _keyGetter(majorRec.Record);
                 if (key.Failed) continue;

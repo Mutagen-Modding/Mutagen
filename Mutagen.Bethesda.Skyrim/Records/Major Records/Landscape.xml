@@ -32,7 +32,8 @@
   <Object name="LayerHeader" recordType="BTXT" objType="Subrecord" GUID="6d96352d-8353-4eb9-b1dd-658a76b55abf" ID="348">
     <Fields>
       <FormLink name="Texture" refName="LandscapeTexture" />
-      <Enum name="Quadrant" enumName="Quadrant" byteLength="2" />
+      <Enum name="Quadrant" enumName="Quadrant" byteLength="1" />
+      <UInt8 name="Unused" />  
       <UInt16 name="LayerNumber" />
     </Fields>
   </Object>

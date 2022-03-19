@@ -8110,357 +8110,401 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionModGetter obj,
             ILinkCache linkCache)
         {
-            foreach (var item in obj.GameSettings)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, GameSetting, IGameSettingGetter>(
+                srcGroup: obj.GameSettings,
+                type: typeof(IGameSettingGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.GameSettings,
+                groupGetter: (m) => m.GameSettings))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, GameSetting, IGameSettingGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.GameSettings,
-                    groupGetter: (m) => m.GameSettings);
+                yield return item;
             }
-            foreach (var item in obj.Globals)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Global, IGlobalGetter>(
+                srcGroup: obj.Globals,
+                type: typeof(IGlobalGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Globals,
+                groupGetter: (m) => m.Globals))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Global, IGlobalGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Globals,
-                    groupGetter: (m) => m.Globals);
+                yield return item;
             }
-            foreach (var item in obj.Classes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Class, IClassGetter>(
+                srcGroup: obj.Classes,
+                type: typeof(IClassGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Classes,
+                groupGetter: (m) => m.Classes))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Class, IClassGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Classes,
-                    groupGetter: (m) => m.Classes);
+                yield return item;
             }
-            foreach (var item in obj.Factions)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Faction, IFactionGetter>(
+                srcGroup: obj.Factions,
+                type: typeof(IFactionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Factions,
+                groupGetter: (m) => m.Factions))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Faction, IFactionGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Factions,
-                    groupGetter: (m) => m.Factions);
+                yield return item;
             }
-            foreach (var item in obj.Hairs)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Hair, IHairGetter>(
+                srcGroup: obj.Hairs,
+                type: typeof(IHairGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Hairs,
+                groupGetter: (m) => m.Hairs))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Hair, IHairGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Hairs,
-                    groupGetter: (m) => m.Hairs);
+                yield return item;
             }
-            foreach (var item in obj.Eyes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Eye, IEyeGetter>(
+                srcGroup: obj.Eyes,
+                type: typeof(IEyeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Eyes,
+                groupGetter: (m) => m.Eyes))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Eye, IEyeGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Eyes,
-                    groupGetter: (m) => m.Eyes);
+                yield return item;
             }
-            foreach (var item in obj.Races)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Race, IRaceGetter>(
+                srcGroup: obj.Races,
+                type: typeof(IRaceGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Races,
+                groupGetter: (m) => m.Races))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Race, IRaceGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Races,
-                    groupGetter: (m) => m.Races);
+                yield return item;
             }
-            foreach (var item in obj.Sounds)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Sound, ISoundGetter>(
+                srcGroup: obj.Sounds,
+                type: typeof(ISoundGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Sounds,
+                groupGetter: (m) => m.Sounds))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Sound, ISoundGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Sounds,
-                    groupGetter: (m) => m.Sounds);
+                yield return item;
             }
-            foreach (var item in obj.Skills)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, SkillRecord, ISkillRecordGetter>(
+                srcGroup: obj.Skills,
+                type: typeof(ISkillRecordGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Skills,
+                groupGetter: (m) => m.Skills))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, SkillRecord, ISkillRecordGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Skills,
-                    groupGetter: (m) => m.Skills);
+                yield return item;
             }
-            foreach (var item in obj.MagicEffects)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, MagicEffect, IMagicEffectGetter>(
+                srcGroup: obj.MagicEffects,
+                type: typeof(IMagicEffectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MagicEffects,
+                groupGetter: (m) => m.MagicEffects))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, MagicEffect, IMagicEffectGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.MagicEffects,
-                    groupGetter: (m) => m.MagicEffects);
+                yield return item;
             }
-            foreach (var item in obj.Scripts)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Script, IScriptGetter>(
+                srcGroup: obj.Scripts,
+                type: typeof(IScriptGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Scripts,
+                groupGetter: (m) => m.Scripts))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Script, IScriptGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Scripts,
-                    groupGetter: (m) => m.Scripts);
+                yield return item;
             }
-            foreach (var item in obj.LandTextures)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, LandTexture, ILandTextureGetter>(
+                srcGroup: obj.LandTextures,
+                type: typeof(ILandTextureGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LandTextures,
+                groupGetter: (m) => m.LandTextures))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LandTexture, ILandTextureGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.LandTextures,
-                    groupGetter: (m) => m.LandTextures);
+                yield return item;
             }
-            foreach (var item in obj.Enchantments)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Enchantment, IEnchantmentGetter>(
+                srcGroup: obj.Enchantments,
+                type: typeof(IEnchantmentGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Enchantments,
+                groupGetter: (m) => m.Enchantments))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Enchantment, IEnchantmentGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Enchantments,
-                    groupGetter: (m) => m.Enchantments);
+                yield return item;
             }
-            foreach (var item in obj.Spells)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, SpellUnleveled, ISpellUnleveledGetter>(
+                srcGroup: obj.Spells,
+                type: typeof(ISpellUnleveledGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Spells,
+                groupGetter: (m) => m.Spells))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, SpellUnleveled, ISpellUnleveledGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Spells,
-                    groupGetter: (m) => m.Spells);
+                yield return item;
             }
-            foreach (var item in obj.Birthsigns)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Birthsign, IBirthsignGetter>(
+                srcGroup: obj.Birthsigns,
+                type: typeof(IBirthsignGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Birthsigns,
+                groupGetter: (m) => m.Birthsigns))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Birthsign, IBirthsignGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Birthsigns,
-                    groupGetter: (m) => m.Birthsigns);
+                yield return item;
             }
-            foreach (var item in obj.Activators)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Activator, IActivatorGetter>(
+                srcGroup: obj.Activators,
+                type: typeof(IActivatorGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Activators,
+                groupGetter: (m) => m.Activators))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Activator, IActivatorGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Activators,
-                    groupGetter: (m) => m.Activators);
+                yield return item;
             }
-            foreach (var item in obj.AlchemicalApparatus)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, AlchemicalApparatus, IAlchemicalApparatusGetter>(
+                srcGroup: obj.AlchemicalApparatus,
+                type: typeof(IAlchemicalApparatusGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AlchemicalApparatus,
+                groupGetter: (m) => m.AlchemicalApparatus))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, AlchemicalApparatus, IAlchemicalApparatusGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.AlchemicalApparatus,
-                    groupGetter: (m) => m.AlchemicalApparatus);
+                yield return item;
             }
-            foreach (var item in obj.Armors)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Armor, IArmorGetter>(
+                srcGroup: obj.Armors,
+                type: typeof(IArmorGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Armors,
+                groupGetter: (m) => m.Armors))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Armor, IArmorGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Armors,
-                    groupGetter: (m) => m.Armors);
+                yield return item;
             }
-            foreach (var item in obj.Books)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Book, IBookGetter>(
+                srcGroup: obj.Books,
+                type: typeof(IBookGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Books,
+                groupGetter: (m) => m.Books))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Book, IBookGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Books,
-                    groupGetter: (m) => m.Books);
+                yield return item;
             }
-            foreach (var item in obj.Clothes)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Clothing, IClothingGetter>(
+                srcGroup: obj.Clothes,
+                type: typeof(IClothingGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Clothes,
+                groupGetter: (m) => m.Clothes))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Clothing, IClothingGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Clothes,
-                    groupGetter: (m) => m.Clothes);
+                yield return item;
             }
-            foreach (var item in obj.Containers)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Container, IContainerGetter>(
+                srcGroup: obj.Containers,
+                type: typeof(IContainerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Containers,
+                groupGetter: (m) => m.Containers))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Container, IContainerGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Containers,
-                    groupGetter: (m) => m.Containers);
+                yield return item;
             }
-            foreach (var item in obj.Doors)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Door, IDoorGetter>(
+                srcGroup: obj.Doors,
+                type: typeof(IDoorGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Doors,
+                groupGetter: (m) => m.Doors))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Door, IDoorGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Doors,
-                    groupGetter: (m) => m.Doors);
+                yield return item;
             }
-            foreach (var item in obj.Ingredients)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Ingredient, IIngredientGetter>(
+                srcGroup: obj.Ingredients,
+                type: typeof(IIngredientGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Ingredients,
+                groupGetter: (m) => m.Ingredients))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Ingredient, IIngredientGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Ingredients,
-                    groupGetter: (m) => m.Ingredients);
+                yield return item;
             }
-            foreach (var item in obj.Lights)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Light, ILightGetter>(
+                srcGroup: obj.Lights,
+                type: typeof(ILightGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Lights,
+                groupGetter: (m) => m.Lights))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Light, ILightGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Lights,
-                    groupGetter: (m) => m.Lights);
+                yield return item;
             }
-            foreach (var item in obj.Miscellaneous)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Miscellaneous, IMiscellaneousGetter>(
+                srcGroup: obj.Miscellaneous,
+                type: typeof(IMiscellaneousGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Miscellaneous,
+                groupGetter: (m) => m.Miscellaneous))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Miscellaneous, IMiscellaneousGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Miscellaneous,
-                    groupGetter: (m) => m.Miscellaneous);
+                yield return item;
             }
-            foreach (var item in obj.Statics)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Static, IStaticGetter>(
+                srcGroup: obj.Statics,
+                type: typeof(IStaticGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Statics,
+                groupGetter: (m) => m.Statics))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Static, IStaticGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Statics,
-                    groupGetter: (m) => m.Statics);
+                yield return item;
             }
-            foreach (var item in obj.Grasses)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Grass, IGrassGetter>(
+                srcGroup: obj.Grasses,
+                type: typeof(IGrassGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Grasses,
+                groupGetter: (m) => m.Grasses))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Grass, IGrassGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Grasses,
-                    groupGetter: (m) => m.Grasses);
+                yield return item;
             }
-            foreach (var item in obj.Trees)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Tree, ITreeGetter>(
+                srcGroup: obj.Trees,
+                type: typeof(ITreeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Trees,
+                groupGetter: (m) => m.Trees))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Tree, ITreeGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Trees,
-                    groupGetter: (m) => m.Trees);
+                yield return item;
             }
-            foreach (var item in obj.Flora)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Flora, IFloraGetter>(
+                srcGroup: obj.Flora,
+                type: typeof(IFloraGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Flora,
+                groupGetter: (m) => m.Flora))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Flora, IFloraGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Flora,
-                    groupGetter: (m) => m.Flora);
+                yield return item;
             }
-            foreach (var item in obj.Furniture)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Furniture, IFurnitureGetter>(
+                srcGroup: obj.Furniture,
+                type: typeof(IFurnitureGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Furniture,
+                groupGetter: (m) => m.Furniture))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Furniture, IFurnitureGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Furniture,
-                    groupGetter: (m) => m.Furniture);
+                yield return item;
             }
-            foreach (var item in obj.Weapons)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Weapon, IWeaponGetter>(
+                srcGroup: obj.Weapons,
+                type: typeof(IWeaponGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Weapons,
+                groupGetter: (m) => m.Weapons))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Weapon, IWeaponGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Weapons,
-                    groupGetter: (m) => m.Weapons);
+                yield return item;
             }
-            foreach (var item in obj.Ammunitions)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Ammunition, IAmmunitionGetter>(
+                srcGroup: obj.Ammunitions,
+                type: typeof(IAmmunitionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Ammunitions,
+                groupGetter: (m) => m.Ammunitions))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Ammunition, IAmmunitionGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Ammunitions,
-                    groupGetter: (m) => m.Ammunitions);
+                yield return item;
             }
-            foreach (var item in obj.Npcs)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Npc, INpcGetter>(
+                srcGroup: obj.Npcs,
+                type: typeof(INpcGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Npcs,
+                groupGetter: (m) => m.Npcs))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Npc, INpcGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Npcs,
-                    groupGetter: (m) => m.Npcs);
+                yield return item;
             }
-            foreach (var item in obj.Creatures)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Creature, ICreatureGetter>(
+                srcGroup: obj.Creatures,
+                type: typeof(ICreatureGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Creatures,
+                groupGetter: (m) => m.Creatures))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Creature, ICreatureGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Creatures,
-                    groupGetter: (m) => m.Creatures);
+                yield return item;
             }
-            foreach (var item in obj.LeveledCreatures)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, LeveledCreature, ILeveledCreatureGetter>(
+                srcGroup: obj.LeveledCreatures,
+                type: typeof(ILeveledCreatureGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LeveledCreatures,
+                groupGetter: (m) => m.LeveledCreatures))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LeveledCreature, ILeveledCreatureGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.LeveledCreatures,
-                    groupGetter: (m) => m.LeveledCreatures);
+                yield return item;
             }
-            foreach (var item in obj.SoulGems)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, SoulGem, ISoulGemGetter>(
+                srcGroup: obj.SoulGems,
+                type: typeof(ISoulGemGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.SoulGems,
+                groupGetter: (m) => m.SoulGems))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, SoulGem, ISoulGemGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.SoulGems,
-                    groupGetter: (m) => m.SoulGems);
+                yield return item;
             }
-            foreach (var item in obj.Keys)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Key, IKeyGetter>(
+                srcGroup: obj.Keys,
+                type: typeof(IKeyGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Keys,
+                groupGetter: (m) => m.Keys))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Key, IKeyGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Keys,
-                    groupGetter: (m) => m.Keys);
+                yield return item;
             }
-            foreach (var item in obj.Potions)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Potion, IPotionGetter>(
+                srcGroup: obj.Potions,
+                type: typeof(IPotionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Potions,
+                groupGetter: (m) => m.Potions))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Potion, IPotionGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Potions,
-                    groupGetter: (m) => m.Potions);
+                yield return item;
             }
-            foreach (var item in obj.Subspaces)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Subspace, ISubspaceGetter>(
+                srcGroup: obj.Subspaces,
+                type: typeof(ISubspaceGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Subspaces,
+                groupGetter: (m) => m.Subspaces))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Subspace, ISubspaceGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Subspaces,
-                    groupGetter: (m) => m.Subspaces);
+                yield return item;
             }
-            foreach (var item in obj.SigilStones)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, SigilStone, ISigilStoneGetter>(
+                srcGroup: obj.SigilStones,
+                type: typeof(ISigilStoneGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.SigilStones,
+                groupGetter: (m) => m.SigilStones))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, SigilStone, ISigilStoneGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.SigilStones,
-                    groupGetter: (m) => m.SigilStones);
+                yield return item;
             }
-            foreach (var item in obj.LeveledItems)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, LeveledItem, ILeveledItemGetter>(
+                srcGroup: obj.LeveledItems,
+                type: typeof(ILeveledItemGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LeveledItems,
+                groupGetter: (m) => m.LeveledItems))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LeveledItem, ILeveledItemGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.LeveledItems,
-                    groupGetter: (m) => m.LeveledItems);
+                yield return item;
             }
-            foreach (var item in obj.Weathers)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Weather, IWeatherGetter>(
+                srcGroup: obj.Weathers,
+                type: typeof(IWeatherGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Weathers,
+                groupGetter: (m) => m.Weathers))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Weather, IWeatherGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Weathers,
-                    groupGetter: (m) => m.Weathers);
+                yield return item;
             }
-            foreach (var item in obj.Climates)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Climate, IClimateGetter>(
+                srcGroup: obj.Climates,
+                type: typeof(IClimateGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Climates,
+                groupGetter: (m) => m.Climates))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Climate, IClimateGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Climates,
-                    groupGetter: (m) => m.Climates);
+                yield return item;
             }
-            foreach (var item in obj.Regions)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Region, IRegionGetter>(
+                srcGroup: obj.Regions,
+                type: typeof(IRegionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Regions,
+                groupGetter: (m) => m.Regions))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Region, IRegionGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Regions,
-                    groupGetter: (m) => m.Regions);
+                yield return item;
             }
             foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
                 linkCache: linkCache,
@@ -8469,13 +8513,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Worldspaces)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Worldspace, IWorldspaceGetter>(
+                srcGroup: obj.Worldspaces,
+                type: typeof(IWorldspaceGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Worldspaces,
+                groupGetter: (m) => m.Worldspaces))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Worldspace, IWorldspaceGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Worldspaces,
-                    groupGetter: (m) => m.Worldspaces);
+                yield return item;
             }
             foreach (var groupItem in obj.Worldspaces)
             {
@@ -8490,13 +8535,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            foreach (var item in obj.DialogTopics)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, DialogTopic, IDialogTopicGetter>(
+                srcGroup: obj.DialogTopics,
+                type: typeof(IDialogTopicGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.DialogTopics,
+                groupGetter: (m) => m.DialogTopics))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, DialogTopic, IDialogTopicGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.DialogTopics,
-                    groupGetter: (m) => m.DialogTopics);
+                yield return item;
             }
             foreach (var groupItem in obj.DialogTopics)
             {
@@ -8511,77 +8557,86 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            foreach (var item in obj.Quests)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Quest, IQuestGetter>(
+                srcGroup: obj.Quests,
+                type: typeof(IQuestGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Quests,
+                groupGetter: (m) => m.Quests))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Quest, IQuestGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Quests,
-                    groupGetter: (m) => m.Quests);
+                yield return item;
             }
-            foreach (var item in obj.IdleAnimations)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, IdleAnimation, IIdleAnimationGetter>(
+                srcGroup: obj.IdleAnimations,
+                type: typeof(IIdleAnimationGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.IdleAnimations,
+                groupGetter: (m) => m.IdleAnimations))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, IdleAnimation, IIdleAnimationGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.IdleAnimations,
-                    groupGetter: (m) => m.IdleAnimations);
+                yield return item;
             }
-            foreach (var item in obj.AIPackages)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, AIPackage, IAIPackageGetter>(
+                srcGroup: obj.AIPackages,
+                type: typeof(IAIPackageGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AIPackages,
+                groupGetter: (m) => m.AIPackages))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, AIPackage, IAIPackageGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.AIPackages,
-                    groupGetter: (m) => m.AIPackages);
+                yield return item;
             }
-            foreach (var item in obj.CombatStyles)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, CombatStyle, ICombatStyleGetter>(
+                srcGroup: obj.CombatStyles,
+                type: typeof(ICombatStyleGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.CombatStyles,
+                groupGetter: (m) => m.CombatStyles))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, CombatStyle, ICombatStyleGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.CombatStyles,
-                    groupGetter: (m) => m.CombatStyles);
+                yield return item;
             }
-            foreach (var item in obj.LoadScreens)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, LoadScreen, ILoadScreenGetter>(
+                srcGroup: obj.LoadScreens,
+                type: typeof(ILoadScreenGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LoadScreens,
+                groupGetter: (m) => m.LoadScreens))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LoadScreen, ILoadScreenGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.LoadScreens,
-                    groupGetter: (m) => m.LoadScreens);
+                yield return item;
             }
-            foreach (var item in obj.LeveledSpells)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, LeveledSpell, ILeveledSpellGetter>(
+                srcGroup: obj.LeveledSpells,
+                type: typeof(ILeveledSpellGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LeveledSpells,
+                groupGetter: (m) => m.LeveledSpells))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LeveledSpell, ILeveledSpellGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.LeveledSpells,
-                    groupGetter: (m) => m.LeveledSpells);
+                yield return item;
             }
-            foreach (var item in obj.AnimatedObjects)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, AnimatedObject, IAnimatedObjectGetter>(
+                srcGroup: obj.AnimatedObjects,
+                type: typeof(IAnimatedObjectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AnimatedObjects,
+                groupGetter: (m) => m.AnimatedObjects))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, AnimatedObject, IAnimatedObjectGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.AnimatedObjects,
-                    groupGetter: (m) => m.AnimatedObjects);
+                yield return item;
             }
-            foreach (var item in obj.Waters)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Water, IWaterGetter>(
+                srcGroup: obj.Waters,
+                type: typeof(IWaterGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Waters,
+                groupGetter: (m) => m.Waters))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Water, IWaterGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Waters,
-                    groupGetter: (m) => m.Waters);
+                yield return item;
             }
-            foreach (var item in obj.EffectShaders)
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, EffectShader, IEffectShaderGetter>(
+                srcGroup: obj.EffectShaders,
+                type: typeof(IEffectShaderGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.EffectShaders,
+                groupGetter: (m) => m.EffectShaders))
             {
-                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, EffectShader, IEffectShaderGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.EffectShaders,
-                    groupGetter: (m) => m.EffectShaders);
+                yield return item;
             }
         }
         
@@ -8618,715 +8673,770 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
-                    foreach (var item in obj.GameSettings)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, GameSetting, IGameSettingGetter>(
+                        srcGroup: obj.GameSettings,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.GameSettings,
+                        groupGetter: (m) => m.GameSettings))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, GameSetting, IGameSettingGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.GameSettings,
-                            groupGetter: (m) => m.GameSettings);
+                        yield return item;
                     }
                     yield break;
                 case "Global":
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
-                    foreach (var item in obj.Globals)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Global, IGlobalGetter>(
+                        srcGroup: obj.Globals,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Globals,
+                        groupGetter: (m) => m.Globals))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Global, IGlobalGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Globals,
-                            groupGetter: (m) => m.Globals);
+                        yield return item;
                     }
                     yield break;
                 case "Class":
                 case "IClassGetter":
                 case "IClass":
                 case "IClassInternal":
-                    foreach (var item in obj.Classes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Class, IClassGetter>(
+                        srcGroup: obj.Classes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Classes,
+                        groupGetter: (m) => m.Classes))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Class, IClassGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Classes,
-                            groupGetter: (m) => m.Classes);
+                        yield return item;
                     }
                     yield break;
                 case "Faction":
                 case "IFactionGetter":
                 case "IFaction":
                 case "IFactionInternal":
-                    foreach (var item in obj.Factions)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Faction, IFactionGetter>(
+                        srcGroup: obj.Factions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Factions,
+                        groupGetter: (m) => m.Factions))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Faction, IFactionGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Factions,
-                            groupGetter: (m) => m.Factions);
+                        yield return item;
                     }
                     yield break;
                 case "Hair":
                 case "IHairGetter":
                 case "IHair":
                 case "IHairInternal":
-                    foreach (var item in obj.Hairs)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Hair, IHairGetter>(
+                        srcGroup: obj.Hairs,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Hairs,
+                        groupGetter: (m) => m.Hairs))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Hair, IHairGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Hairs,
-                            groupGetter: (m) => m.Hairs);
+                        yield return item;
                     }
                     yield break;
                 case "Eye":
                 case "IEyeGetter":
                 case "IEye":
                 case "IEyeInternal":
-                    foreach (var item in obj.Eyes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Eye, IEyeGetter>(
+                        srcGroup: obj.Eyes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Eyes,
+                        groupGetter: (m) => m.Eyes))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Eye, IEyeGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Eyes,
-                            groupGetter: (m) => m.Eyes);
+                        yield return item;
                     }
                     yield break;
                 case "Race":
                 case "IRaceGetter":
                 case "IRace":
                 case "IRaceInternal":
-                    foreach (var item in obj.Races)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Race, IRaceGetter>(
+                        srcGroup: obj.Races,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Races,
+                        groupGetter: (m) => m.Races))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Race, IRaceGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Races,
-                            groupGetter: (m) => m.Races);
+                        yield return item;
                     }
                     yield break;
                 case "Sound":
                 case "ISoundGetter":
                 case "ISound":
                 case "ISoundInternal":
-                    foreach (var item in obj.Sounds)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Sound, ISoundGetter>(
+                        srcGroup: obj.Sounds,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Sounds,
+                        groupGetter: (m) => m.Sounds))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Sound, ISoundGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Sounds,
-                            groupGetter: (m) => m.Sounds);
+                        yield return item;
                     }
                     yield break;
                 case "SkillRecord":
                 case "ISkillRecordGetter":
                 case "ISkillRecord":
                 case "ISkillRecordInternal":
-                    foreach (var item in obj.Skills)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, SkillRecord, ISkillRecordGetter>(
+                        srcGroup: obj.Skills,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Skills,
+                        groupGetter: (m) => m.Skills))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, SkillRecord, ISkillRecordGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Skills,
-                            groupGetter: (m) => m.Skills);
+                        yield return item;
                     }
                     yield break;
                 case "MagicEffect":
                 case "IMagicEffectGetter":
                 case "IMagicEffect":
                 case "IMagicEffectInternal":
-                    foreach (var item in obj.MagicEffects)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, MagicEffect, IMagicEffectGetter>(
+                        srcGroup: obj.MagicEffects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MagicEffects,
+                        groupGetter: (m) => m.MagicEffects))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, MagicEffect, IMagicEffectGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.MagicEffects,
-                            groupGetter: (m) => m.MagicEffects);
+                        yield return item;
                     }
                     yield break;
                 case "Script":
                 case "IScriptGetter":
                 case "IScript":
                 case "IScriptInternal":
-                    foreach (var item in obj.Scripts)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Script, IScriptGetter>(
+                        srcGroup: obj.Scripts,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Scripts,
+                        groupGetter: (m) => m.Scripts))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Script, IScriptGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Scripts,
-                            groupGetter: (m) => m.Scripts);
+                        yield return item;
                     }
                     yield break;
                 case "LandTexture":
                 case "ILandTextureGetter":
                 case "ILandTexture":
                 case "ILandTextureInternal":
-                    foreach (var item in obj.LandTextures)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, LandTexture, ILandTextureGetter>(
+                        srcGroup: obj.LandTextures,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LandTextures,
+                        groupGetter: (m) => m.LandTextures))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LandTexture, ILandTextureGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.LandTextures,
-                            groupGetter: (m) => m.LandTextures);
+                        yield return item;
                     }
                     yield break;
                 case "Enchantment":
                 case "IEnchantmentGetter":
                 case "IEnchantment":
                 case "IEnchantmentInternal":
-                    foreach (var item in obj.Enchantments)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Enchantment, IEnchantmentGetter>(
+                        srcGroup: obj.Enchantments,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Enchantments,
+                        groupGetter: (m) => m.Enchantments))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Enchantment, IEnchantmentGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Enchantments,
-                            groupGetter: (m) => m.Enchantments);
+                        yield return item;
                     }
                     yield break;
                 case "SpellUnleveled":
                 case "ISpellUnleveledGetter":
                 case "ISpellUnleveled":
                 case "ISpellUnleveledInternal":
-                    foreach (var item in obj.Spells)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, SpellUnleveled, ISpellUnleveledGetter>(
+                        srcGroup: obj.Spells,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Spells,
+                        groupGetter: (m) => m.Spells))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, SpellUnleveled, ISpellUnleveledGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Spells,
-                            groupGetter: (m) => m.Spells);
+                        yield return item;
                     }
                     yield break;
                 case "Birthsign":
                 case "IBirthsignGetter":
                 case "IBirthsign":
                 case "IBirthsignInternal":
-                    foreach (var item in obj.Birthsigns)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Birthsign, IBirthsignGetter>(
+                        srcGroup: obj.Birthsigns,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Birthsigns,
+                        groupGetter: (m) => m.Birthsigns))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Birthsign, IBirthsignGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Birthsigns,
-                            groupGetter: (m) => m.Birthsigns);
+                        yield return item;
                     }
                     yield break;
                 case "Activator":
                 case "IActivatorGetter":
                 case "IActivator":
                 case "IActivatorInternal":
-                    foreach (var item in obj.Activators)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Activator, IActivatorGetter>(
+                        srcGroup: obj.Activators,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Activators,
+                        groupGetter: (m) => m.Activators))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Activator, IActivatorGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Activators,
-                            groupGetter: (m) => m.Activators);
+                        yield return item;
                     }
                     yield break;
                 case "AlchemicalApparatus":
                 case "IAlchemicalApparatusGetter":
                 case "IAlchemicalApparatus":
                 case "IAlchemicalApparatusInternal":
-                    foreach (var item in obj.AlchemicalApparatus)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, AlchemicalApparatus, IAlchemicalApparatusGetter>(
+                        srcGroup: obj.AlchemicalApparatus,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AlchemicalApparatus,
+                        groupGetter: (m) => m.AlchemicalApparatus))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, AlchemicalApparatus, IAlchemicalApparatusGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.AlchemicalApparatus,
-                            groupGetter: (m) => m.AlchemicalApparatus);
+                        yield return item;
                     }
                     yield break;
                 case "Armor":
                 case "IArmorGetter":
                 case "IArmor":
                 case "IArmorInternal":
-                    foreach (var item in obj.Armors)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Armor, IArmorGetter>(
+                        srcGroup: obj.Armors,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Armors,
+                        groupGetter: (m) => m.Armors))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Armor, IArmorGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Armors,
-                            groupGetter: (m) => m.Armors);
+                        yield return item;
                     }
                     yield break;
                 case "Book":
                 case "IBookGetter":
                 case "IBook":
                 case "IBookInternal":
-                    foreach (var item in obj.Books)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Book, IBookGetter>(
+                        srcGroup: obj.Books,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Books,
+                        groupGetter: (m) => m.Books))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Book, IBookGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Books,
-                            groupGetter: (m) => m.Books);
+                        yield return item;
                     }
                     yield break;
                 case "Clothing":
                 case "IClothingGetter":
                 case "IClothing":
                 case "IClothingInternal":
-                    foreach (var item in obj.Clothes)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Clothing, IClothingGetter>(
+                        srcGroup: obj.Clothes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Clothes,
+                        groupGetter: (m) => m.Clothes))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Clothing, IClothingGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Clothes,
-                            groupGetter: (m) => m.Clothes);
+                        yield return item;
                     }
                     yield break;
                 case "Container":
                 case "IContainerGetter":
                 case "IContainer":
                 case "IContainerInternal":
-                    foreach (var item in obj.Containers)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Container, IContainerGetter>(
+                        srcGroup: obj.Containers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Containers,
+                        groupGetter: (m) => m.Containers))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Container, IContainerGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Containers,
-                            groupGetter: (m) => m.Containers);
+                        yield return item;
                     }
                     yield break;
                 case "Door":
                 case "IDoorGetter":
                 case "IDoor":
                 case "IDoorInternal":
-                    foreach (var item in obj.Doors)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Door, IDoorGetter>(
+                        srcGroup: obj.Doors,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Doors,
+                        groupGetter: (m) => m.Doors))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Door, IDoorGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Doors,
-                            groupGetter: (m) => m.Doors);
+                        yield return item;
                     }
                     yield break;
                 case "Ingredient":
                 case "IIngredientGetter":
                 case "IIngredient":
                 case "IIngredientInternal":
-                    foreach (var item in obj.Ingredients)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Ingredient, IIngredientGetter>(
+                        srcGroup: obj.Ingredients,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Ingredients,
+                        groupGetter: (m) => m.Ingredients))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Ingredient, IIngredientGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Ingredients,
-                            groupGetter: (m) => m.Ingredients);
+                        yield return item;
                     }
                     yield break;
                 case "Light":
                 case "ILightGetter":
                 case "ILight":
                 case "ILightInternal":
-                    foreach (var item in obj.Lights)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Light, ILightGetter>(
+                        srcGroup: obj.Lights,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Lights,
+                        groupGetter: (m) => m.Lights))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Light, ILightGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Lights,
-                            groupGetter: (m) => m.Lights);
+                        yield return item;
                     }
                     yield break;
                 case "Miscellaneous":
                 case "IMiscellaneousGetter":
                 case "IMiscellaneous":
                 case "IMiscellaneousInternal":
-                    foreach (var item in obj.Miscellaneous)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Miscellaneous, IMiscellaneousGetter>(
+                        srcGroup: obj.Miscellaneous,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Miscellaneous,
+                        groupGetter: (m) => m.Miscellaneous))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Miscellaneous, IMiscellaneousGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Miscellaneous,
-                            groupGetter: (m) => m.Miscellaneous);
+                        yield return item;
                     }
                     yield break;
                 case "Static":
                 case "IStaticGetter":
                 case "IStatic":
                 case "IStaticInternal":
-                    foreach (var item in obj.Statics)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Static, IStaticGetter>(
+                        srcGroup: obj.Statics,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Statics,
+                        groupGetter: (m) => m.Statics))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Static, IStaticGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Statics,
-                            groupGetter: (m) => m.Statics);
+                        yield return item;
                     }
                     yield break;
                 case "Grass":
                 case "IGrassGetter":
                 case "IGrass":
                 case "IGrassInternal":
-                    foreach (var item in obj.Grasses)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Grass, IGrassGetter>(
+                        srcGroup: obj.Grasses,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Grasses,
+                        groupGetter: (m) => m.Grasses))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Grass, IGrassGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Grasses,
-                            groupGetter: (m) => m.Grasses);
+                        yield return item;
                     }
                     yield break;
                 case "Tree":
                 case "ITreeGetter":
                 case "ITree":
                 case "ITreeInternal":
-                    foreach (var item in obj.Trees)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Tree, ITreeGetter>(
+                        srcGroup: obj.Trees,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Trees,
+                        groupGetter: (m) => m.Trees))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Tree, ITreeGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Trees,
-                            groupGetter: (m) => m.Trees);
+                        yield return item;
                     }
                     yield break;
                 case "Flora":
                 case "IFloraGetter":
                 case "IFlora":
                 case "IFloraInternal":
-                    foreach (var item in obj.Flora)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Flora, IFloraGetter>(
+                        srcGroup: obj.Flora,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Flora,
+                        groupGetter: (m) => m.Flora))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Flora, IFloraGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Flora,
-                            groupGetter: (m) => m.Flora);
+                        yield return item;
                     }
                     yield break;
                 case "Furniture":
                 case "IFurnitureGetter":
                 case "IFurniture":
                 case "IFurnitureInternal":
-                    foreach (var item in obj.Furniture)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Furniture, IFurnitureGetter>(
+                        srcGroup: obj.Furniture,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Furniture,
+                        groupGetter: (m) => m.Furniture))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Furniture, IFurnitureGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Furniture,
-                            groupGetter: (m) => m.Furniture);
+                        yield return item;
                     }
                     yield break;
                 case "Weapon":
                 case "IWeaponGetter":
                 case "IWeapon":
                 case "IWeaponInternal":
-                    foreach (var item in obj.Weapons)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Weapon, IWeaponGetter>(
+                        srcGroup: obj.Weapons,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Weapons,
+                        groupGetter: (m) => m.Weapons))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Weapon, IWeaponGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Weapons,
-                            groupGetter: (m) => m.Weapons);
+                        yield return item;
                     }
                     yield break;
                 case "Ammunition":
                 case "IAmmunitionGetter":
                 case "IAmmunition":
                 case "IAmmunitionInternal":
-                    foreach (var item in obj.Ammunitions)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Ammunition, IAmmunitionGetter>(
+                        srcGroup: obj.Ammunitions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Ammunitions,
+                        groupGetter: (m) => m.Ammunitions))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Ammunition, IAmmunitionGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Ammunitions,
-                            groupGetter: (m) => m.Ammunitions);
+                        yield return item;
                     }
                     yield break;
                 case "Npc":
                 case "INpcGetter":
                 case "INpc":
                 case "INpcInternal":
-                    foreach (var item in obj.Npcs)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Npc, INpcGetter>(
+                        srcGroup: obj.Npcs,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Npcs,
+                        groupGetter: (m) => m.Npcs))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Npc, INpcGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Npcs,
-                            groupGetter: (m) => m.Npcs);
+                        yield return item;
                     }
                     yield break;
                 case "Creature":
                 case "ICreatureGetter":
                 case "ICreature":
                 case "ICreatureInternal":
-                    foreach (var item in obj.Creatures)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Creature, ICreatureGetter>(
+                        srcGroup: obj.Creatures,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Creatures,
+                        groupGetter: (m) => m.Creatures))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Creature, ICreatureGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Creatures,
-                            groupGetter: (m) => m.Creatures);
+                        yield return item;
                     }
                     yield break;
                 case "LeveledCreature":
                 case "ILeveledCreatureGetter":
                 case "ILeveledCreature":
                 case "ILeveledCreatureInternal":
-                    foreach (var item in obj.LeveledCreatures)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, LeveledCreature, ILeveledCreatureGetter>(
+                        srcGroup: obj.LeveledCreatures,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LeveledCreatures,
+                        groupGetter: (m) => m.LeveledCreatures))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LeveledCreature, ILeveledCreatureGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.LeveledCreatures,
-                            groupGetter: (m) => m.LeveledCreatures);
+                        yield return item;
                     }
                     yield break;
                 case "SoulGem":
                 case "ISoulGemGetter":
                 case "ISoulGem":
                 case "ISoulGemInternal":
-                    foreach (var item in obj.SoulGems)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, SoulGem, ISoulGemGetter>(
+                        srcGroup: obj.SoulGems,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.SoulGems,
+                        groupGetter: (m) => m.SoulGems))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, SoulGem, ISoulGemGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.SoulGems,
-                            groupGetter: (m) => m.SoulGems);
+                        yield return item;
                     }
                     yield break;
                 case "Key":
                 case "IKeyGetter":
                 case "IKey":
                 case "IKeyInternal":
-                    foreach (var item in obj.Keys)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Key, IKeyGetter>(
+                        srcGroup: obj.Keys,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Keys,
+                        groupGetter: (m) => m.Keys))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Key, IKeyGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Keys,
-                            groupGetter: (m) => m.Keys);
+                        yield return item;
                     }
                     yield break;
                 case "Potion":
                 case "IPotionGetter":
                 case "IPotion":
                 case "IPotionInternal":
-                    foreach (var item in obj.Potions)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Potion, IPotionGetter>(
+                        srcGroup: obj.Potions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Potions,
+                        groupGetter: (m) => m.Potions))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Potion, IPotionGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Potions,
-                            groupGetter: (m) => m.Potions);
+                        yield return item;
                     }
                     yield break;
                 case "Subspace":
                 case "ISubspaceGetter":
                 case "ISubspace":
                 case "ISubspaceInternal":
-                    foreach (var item in obj.Subspaces)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Subspace, ISubspaceGetter>(
+                        srcGroup: obj.Subspaces,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Subspaces,
+                        groupGetter: (m) => m.Subspaces))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Subspace, ISubspaceGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Subspaces,
-                            groupGetter: (m) => m.Subspaces);
+                        yield return item;
                     }
                     yield break;
                 case "SigilStone":
                 case "ISigilStoneGetter":
                 case "ISigilStone":
                 case "ISigilStoneInternal":
-                    foreach (var item in obj.SigilStones)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, SigilStone, ISigilStoneGetter>(
+                        srcGroup: obj.SigilStones,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.SigilStones,
+                        groupGetter: (m) => m.SigilStones))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, SigilStone, ISigilStoneGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.SigilStones,
-                            groupGetter: (m) => m.SigilStones);
+                        yield return item;
                     }
                     yield break;
                 case "LeveledItem":
                 case "ILeveledItemGetter":
                 case "ILeveledItem":
                 case "ILeveledItemInternal":
-                    foreach (var item in obj.LeveledItems)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, LeveledItem, ILeveledItemGetter>(
+                        srcGroup: obj.LeveledItems,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LeveledItems,
+                        groupGetter: (m) => m.LeveledItems))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LeveledItem, ILeveledItemGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.LeveledItems,
-                            groupGetter: (m) => m.LeveledItems);
+                        yield return item;
                     }
                     yield break;
                 case "Weather":
                 case "IWeatherGetter":
                 case "IWeather":
                 case "IWeatherInternal":
-                    foreach (var item in obj.Weathers)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Weather, IWeatherGetter>(
+                        srcGroup: obj.Weathers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Weathers,
+                        groupGetter: (m) => m.Weathers))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Weather, IWeatherGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Weathers,
-                            groupGetter: (m) => m.Weathers);
+                        yield return item;
                     }
                     yield break;
                 case "Climate":
                 case "IClimateGetter":
                 case "IClimate":
                 case "IClimateInternal":
-                    foreach (var item in obj.Climates)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Climate, IClimateGetter>(
+                        srcGroup: obj.Climates,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Climates,
+                        groupGetter: (m) => m.Climates))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Climate, IClimateGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Climates,
-                            groupGetter: (m) => m.Climates);
+                        yield return item;
                     }
                     yield break;
                 case "Region":
                 case "IRegionGetter":
                 case "IRegion":
                 case "IRegionInternal":
-                    foreach (var item in obj.Regions)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Region, IRegionGetter>(
+                        srcGroup: obj.Regions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Regions,
+                        groupGetter: (m) => m.Regions))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Region, IRegionGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Regions,
-                            groupGetter: (m) => m.Regions);
+                        yield return item;
                     }
                     yield break;
                 case "Worldspace":
                 case "IWorldspaceGetter":
                 case "IWorldspace":
                 case "IWorldspaceInternal":
-                    foreach (var item in obj.Worldspaces)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Worldspace, IWorldspaceGetter>(
+                        srcGroup: obj.Worldspaces,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Worldspaces,
+                        groupGetter: (m) => m.Worldspaces))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Worldspace, IWorldspaceGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Worldspaces,
-                            groupGetter: (m) => m.Worldspaces);
+                        yield return item;
                     }
                     yield break;
                 case "DialogTopic":
                 case "IDialogTopicGetter":
                 case "IDialogTopic":
                 case "IDialogTopicInternal":
-                    foreach (var item in obj.DialogTopics)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, DialogTopic, IDialogTopicGetter>(
+                        srcGroup: obj.DialogTopics,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.DialogTopics,
+                        groupGetter: (m) => m.DialogTopics))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, DialogTopic, IDialogTopicGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.DialogTopics,
-                            groupGetter: (m) => m.DialogTopics);
+                        yield return item;
                     }
                     yield break;
                 case "Quest":
                 case "IQuestGetter":
                 case "IQuest":
                 case "IQuestInternal":
-                    foreach (var item in obj.Quests)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Quest, IQuestGetter>(
+                        srcGroup: obj.Quests,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Quests,
+                        groupGetter: (m) => m.Quests))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Quest, IQuestGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Quests,
-                            groupGetter: (m) => m.Quests);
+                        yield return item;
                     }
                     yield break;
                 case "IdleAnimation":
                 case "IIdleAnimationGetter":
                 case "IIdleAnimation":
                 case "IIdleAnimationInternal":
-                    foreach (var item in obj.IdleAnimations)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, IdleAnimation, IIdleAnimationGetter>(
+                        srcGroup: obj.IdleAnimations,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.IdleAnimations,
+                        groupGetter: (m) => m.IdleAnimations))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, IdleAnimation, IIdleAnimationGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.IdleAnimations,
-                            groupGetter: (m) => m.IdleAnimations);
+                        yield return item;
                     }
                     yield break;
                 case "AIPackage":
                 case "IAIPackageGetter":
                 case "IAIPackage":
                 case "IAIPackageInternal":
-                    foreach (var item in obj.AIPackages)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, AIPackage, IAIPackageGetter>(
+                        srcGroup: obj.AIPackages,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AIPackages,
+                        groupGetter: (m) => m.AIPackages))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, AIPackage, IAIPackageGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.AIPackages,
-                            groupGetter: (m) => m.AIPackages);
+                        yield return item;
                     }
                     yield break;
                 case "CombatStyle":
                 case "ICombatStyleGetter":
                 case "ICombatStyle":
                 case "ICombatStyleInternal":
-                    foreach (var item in obj.CombatStyles)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, CombatStyle, ICombatStyleGetter>(
+                        srcGroup: obj.CombatStyles,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.CombatStyles,
+                        groupGetter: (m) => m.CombatStyles))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, CombatStyle, ICombatStyleGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.CombatStyles,
-                            groupGetter: (m) => m.CombatStyles);
+                        yield return item;
                     }
                     yield break;
                 case "LoadScreen":
                 case "ILoadScreenGetter":
                 case "ILoadScreen":
                 case "ILoadScreenInternal":
-                    foreach (var item in obj.LoadScreens)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, LoadScreen, ILoadScreenGetter>(
+                        srcGroup: obj.LoadScreens,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LoadScreens,
+                        groupGetter: (m) => m.LoadScreens))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LoadScreen, ILoadScreenGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.LoadScreens,
-                            groupGetter: (m) => m.LoadScreens);
+                        yield return item;
                     }
                     yield break;
                 case "LeveledSpell":
                 case "ILeveledSpellGetter":
                 case "ILeveledSpell":
                 case "ILeveledSpellInternal":
-                    foreach (var item in obj.LeveledSpells)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, LeveledSpell, ILeveledSpellGetter>(
+                        srcGroup: obj.LeveledSpells,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LeveledSpells,
+                        groupGetter: (m) => m.LeveledSpells))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LeveledSpell, ILeveledSpellGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.LeveledSpells,
-                            groupGetter: (m) => m.LeveledSpells);
+                        yield return item;
                     }
                     yield break;
                 case "AnimatedObject":
                 case "IAnimatedObjectGetter":
                 case "IAnimatedObject":
                 case "IAnimatedObjectInternal":
-                    foreach (var item in obj.AnimatedObjects)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, AnimatedObject, IAnimatedObjectGetter>(
+                        srcGroup: obj.AnimatedObjects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AnimatedObjects,
+                        groupGetter: (m) => m.AnimatedObjects))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, AnimatedObject, IAnimatedObjectGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.AnimatedObjects,
-                            groupGetter: (m) => m.AnimatedObjects);
+                        yield return item;
                     }
                     yield break;
                 case "Water":
                 case "IWaterGetter":
                 case "IWater":
                 case "IWaterInternal":
-                    foreach (var item in obj.Waters)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Water, IWaterGetter>(
+                        srcGroup: obj.Waters,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Waters,
+                        groupGetter: (m) => m.Waters))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Water, IWaterGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Waters,
-                            groupGetter: (m) => m.Waters);
+                        yield return item;
                     }
                     yield break;
                 case "EffectShader":
                 case "IEffectShaderGetter":
                 case "IEffectShader":
                 case "IEffectShaderInternal":
-                    foreach (var item in obj.EffectShaders)
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, EffectShader, IEffectShaderGetter>(
+                        srcGroup: obj.EffectShaders,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.EffectShaders,
+                        groupGetter: (m) => m.EffectShaders))
                     {
-                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, EffectShader, IEffectShaderGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.EffectShaders,
-                            groupGetter: (m) => m.EffectShaders);
+                        yield return item;
                     }
                     yield break;
                 case "Cell":
@@ -9543,237 +9653,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                     }
                     yield break;
-                case "IItem":
-                case "IItemGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
+                default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<IOblivionModGetter, IOblivionMod, IOblivionModGetter>(
+                        GameCategory.Oblivion,
                         obj,
-                        linkCache: linkCache,
-                        type: typeof(IAlchemicalApparatusGetter),
-                        throwIfUnknown: throwIfUnknown))
+                        type,
+                        linkCache,
+                        out var linkInterfaces))
                     {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IAmmunitionGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IArmorGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IBookGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IClothingGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IIngredientGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IKeyGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ILeveledItemGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ILightGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IMiscellaneousGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IPotionGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ISigilStoneGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ISoulGemGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IWeaponGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "INpcSpawn":
-                case "INpcSpawnGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ICreatureGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ILeveledCreatureGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(INpcGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "INpcRecord":
-                case "INpcRecordGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ICreatureGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(INpcGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IOwner":
-                case "IOwnerGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IFactionGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(INpcGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IPlaced":
-                case "IPlacedGetter":
-                {
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
-                        linkCache: linkCache,
-                        type: type,
-                        throwIfUnknown: throwIfUnknown,
-                        modKey: obj.ModKey,
-                        parent: null))
-                    {
-                        yield return item;
-                    }
-                    foreach (var groupItem in obj.Worldspaces)
-                    {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
-                            groupItem,
-                            linkCache: linkCache,
-                            type: type,
-                            throwIfUnknown: throwIfUnknown,
-                            modKey: obj.ModKey,
-                            parent: null,
-                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
+                        foreach (var item in linkInterfaces)
                         {
                             yield return item;
                         }
+                        yield break;
                     }
-                    yield break;
-                }
-                case "ISpellRecord":
-                case "ISpellRecordGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ILeveledSpellGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                default:
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Generation.Fields;
+using Mutagen.Bethesda.Generation.Modules.Aspects;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
@@ -638,9 +639,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         using (new DepthWrapper(fg))
                         {
                             // Generate for major record marker interfaces 
-                            if (LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out _))
+                            if (LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out _)
+                                || AspectInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out _))
                             {
-                                fg.AppendLine($"if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.{obj.ProtoGen.Protocol.Namespace}, {accessor}, type, out var linkInterfaces))");
+                                fg.AppendLine($"if ({nameof(InterfaceEnumerationHelper)}.TryEnumerateInterfaceRecordsFor(GameCategory.{obj.ProtoGen.Protocol.Namespace}, {accessor}, type, out var linkInterfaces))");
                                 using (new BraceWrapper(fg))
                                 {
                                     fg.AppendLine($"foreach (var item in linkInterfaces)");

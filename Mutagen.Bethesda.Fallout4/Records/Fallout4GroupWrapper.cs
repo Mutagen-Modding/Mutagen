@@ -47,6 +47,8 @@ internal class Fallout4GroupWrapper<TMajor> : IFallout4GroupGetter<TMajor>
     public IEnumerable<FormKey> FormKeys => _groupMerge.FormKeys;
 
     IEnumerable<IMajorRecordGetter> IGroupGetter.Records => ((IGroupGetter)_groupMerge).Records;
+    
+    public Type ContainedRecordType => typeof(TMajor);
 
     public bool ContainsKey(FormKey key)
     {

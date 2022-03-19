@@ -1239,6 +1239,12 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         public bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
         {
             CheckDisposal();
+
+            if (formKey.IsNull)
+            {
+                majorRec = default;
+                return false;
+            }
             
             if (target == ResolveTarget.Origin)
             {
@@ -1259,7 +1265,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations
         {
             CheckDisposal();
             
-            if (!_hasAny || string.IsNullOrWhiteSpace(editorId))
+            if (string.IsNullOrWhiteSpace(editorId))
             {
                 majorRec = default;
                 return false;

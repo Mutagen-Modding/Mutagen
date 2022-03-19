@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -787,11 +787,10 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         INpcSpawn,
         IObjectBounded,
-        IObjectBoundedOptional,
         ISkyrimMajorRecordInternal
     {
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }
@@ -821,13 +820,12 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<ILeveledNpcGetter>,
         IModeledGetter,
         INpcSpawnGetter,
-        IObjectBoundedGetter,
-        IObjectBoundedOptionalGetter
+        IObjectBoundedGetter
     {
         static new ILoquiRegistration StaticRegistration => LeveledNpc_Registration.Instance;
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
+        /// Aspects: IObjectBoundedGetter
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion

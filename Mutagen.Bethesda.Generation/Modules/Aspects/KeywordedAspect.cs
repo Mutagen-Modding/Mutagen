@@ -1,51 +1,42 @@
 using Loqui.Generation;
-using System.Collections.Generic;
 using Mutagen.Bethesda.Generation.Fields;
-using Noggog.Autofac.Validation;
 
-namespace Mutagen.Bethesda.Generation.Modules.Aspects
+namespace Mutagen.Bethesda.Generation.Modules.Aspects;
+
+public class KeywordedAspect : AspectFieldInterfaceDefinition
 {
-    public class KeywordedAspect : AspectFieldInterfaceDefinition
+    public KeywordedAspect()
+        : base(
+            "IKeyworded",
+            AspectSubInterfaceDefinition.Factory(
+                Registrations,
+                (_, f) => Test(f)))
     {
-        public KeywordedAspect()
-            : base("IKeyworded")
+        FieldActions = new()
         {
-            FieldActions = new()
+            new(LoquiInterfaceType.Direct, "Keywords", (o, tg, fg) =>
             {
-                new(LoquiInterfaceType.Direct, "Keywords", (o, tg, fg) =>
-                {
-                    fg.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;");
-                    fg.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;");
-                }),
-                new(LoquiInterfaceType.IGetter, "Keywords", (o, tg, fg) =>
-                {
-                    fg.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;");
-                })
-            };
-        }
-
-        public override IEnumerable<(string Name, bool Setter)> Registrations
-        {
-            get
+                fg.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;");
+                fg.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;");
+            }),
+            new(LoquiInterfaceType.IGetter, "Keywords", (o, tg, fg) =>
             {
-                yield return ($"typeof(IKeyworded<IKeywordGetter>)", true);
-                yield return ($"typeof(IKeywordedGetter<IKeywordGetter>)", false);
-            }
-        }
-
-        public override bool Test(ObjectGeneration o, Dictionary<string, TypeGeneration> allFields) => allFields
-                                                                                                           .TryGetValue("Keywords", out var field)
-                                                                                                       && field is ContainerType cont
-                                                                                                       && typeof(FormLinkType).Equals(cont.SubTypeGeneration.GetType());
-
-        public override List<AspectInterfaceData> Interfaces(ObjectGeneration obj)
-        {
-            return new List<AspectInterfaceData>()
-            {
-                (LoquiInterfaceDefinitionType.IGetter, $"IKeywordedGetter<IKeywordGetter>"),
-                (LoquiInterfaceDefinitionType.ISetter, $"IKeyworded<IKeywordGetter>"),
-            };
-        }
-
+                fg.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;");
+            })
+        };
     }
+
+    public static IEnumerable<(string Name, bool Setter)> Registrations
+    {
+        get
+        {
+            yield return ($"IKeyworded<IKeywordGetter>", true);
+            yield return ($"IKeywordedGetter<IKeywordGetter>", false);
+        }
+    }
+
+    public static bool Test(Dictionary<string, TypeGeneration> allFields)
+        => allFields.TryGetValue("Keywords", out var field)
+           && field is ContainerType cont
+           && typeof(FormLinkType).Equals(cont.SubTypeGeneration.GetType());
 }

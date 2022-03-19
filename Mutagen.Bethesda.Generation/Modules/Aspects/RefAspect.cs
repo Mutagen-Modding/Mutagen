@@ -1,37 +1,35 @@
 using Loqui.Generation;
-using System.Collections.Generic;
 
-namespace Mutagen.Bethesda.Generation.Modules.Aspects
+namespace Mutagen.Bethesda.Generation.Modules.Aspects;
+
+public class RefAspect : AspectFieldInterfaceDefinition
 {
-    public class RefAspect : AspectFieldInterfaceDefinition
+    public string InterfaceNickName;
+    public string MemberName;
+    public string LoquiName;
+
+    public RefAspect(
+        string interfaceNickName,
+        string memberName,
+        string loquiName)
+        : base(interfaceNickName, AspectSubInterfaceDefinition.Factory(interfaceNickName))
     {
-        public string InterfaceName;
-        public string MemberName;
-        public string LoquiName;
+        InterfaceNickName = interfaceNickName;
+        MemberName = memberName;
+        LoquiName = loquiName;
 
-        public RefAspect(
-            string interfaceName,
-            string memberName,
-            string loquiName)
-            : base(interfaceName)
+        FieldActions = new()
         {
-            InterfaceName = interfaceName;
-            MemberName = memberName;
-            LoquiName = loquiName;
-
-            FieldActions = new()
+            new (LoquiInterfaceType.Direct, memberName, (o, tg, fg) =>
             {
-                new (LoquiInterfaceType.Direct, memberName, (o, tg, fg) =>
-                {
-                    fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                    fg.AppendLine($"I{loquiName}Getter? {interfaceName}Getter.{memberName} => this.{memberName};");
-                })
-            };
-        }
-
-        public override bool Test(ObjectGeneration o, Dictionary<string, TypeGeneration> allFields) => allFields
-            .TryGetValue(MemberName, out var field)
-            && field is LoquiType loqui
-            && loqui.TargetObjectGeneration.Name == LoquiName;
+                fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                fg.AppendLine($"I{loquiName}Getter? {interfaceNickName}Getter.{memberName} => this.{memberName};");
+            })
+        };
     }
+
+    public override bool Test(ObjectGeneration o, Dictionary<string, TypeGeneration> allFields)
+        => allFields.TryGetValue(MemberName, out var field)
+           && field is LoquiType loqui
+           && loqui.TargetObjectGeneration.Name == LoquiName;
 }

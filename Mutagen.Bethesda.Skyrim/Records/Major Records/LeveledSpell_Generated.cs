@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -691,12 +691,11 @@ namespace Mutagen.Bethesda.Skyrim
         ILeveledSpellGetter,
         ILoquiObjectSetter<ILeveledSpellInternal>,
         IObjectBounded,
-        IObjectBoundedOptional,
         ISkyrimMajorRecordInternal,
         ISpellRecord
     {
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Byte? ChanceNone { get; set; }
@@ -719,13 +718,12 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ILeveledSpellGetter>,
         IMapsToGetter<ILeveledSpellGetter>,
         IObjectBoundedGetter,
-        IObjectBoundedOptionalGetter,
         ISpellRecordGetter
     {
         static new ILoquiRegistration StaticRegistration => LeveledSpell_Registration.Instance;
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
+        /// Aspects: IObjectBoundedGetter
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
