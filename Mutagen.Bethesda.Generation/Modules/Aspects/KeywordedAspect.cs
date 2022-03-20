@@ -9,6 +9,7 @@ public class KeywordedAspect : AspectFieldInterfaceDefinition
         : base(
             "IKeyworded",
             AspectSubInterfaceDefinition.Factory(
+                "IKeyworded",
                 Registrations,
                 (_, f) => Test(f)))
     {

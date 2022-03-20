@@ -191,7 +191,7 @@ public class AspectInterfaceModule : GenerationModule
                     mappingGen.AppendLine($"var dict = new Dictionary<Type, {nameof(InterfaceMappingResult)}>();");
                     foreach (var aspectDef in mappings.OrderBy(x => x.Key.Nickname))
                     {
-                        foreach (var subDef in aspectDef.Value)
+                        foreach (var subDef in aspectDef.Value.OrderBy(x => x.Key.Name))
                         {
                             (string Name, bool Setter)? first = null;
                             foreach (var reg in subDef.Key.Registrations.OrderBy(x => x.Name))
