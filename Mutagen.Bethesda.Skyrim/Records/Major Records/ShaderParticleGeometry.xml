@@ -19,7 +19,7 @@
           <Float name="ParticleDensity" />
         </Fields>
       </Data>
-      <String name="ParticleTexture" recordType="ICON" />
+      <AssetLink name="ParticleTexture" recordType="ICON" assetType="SkyrimTexture" />
     </Fields>
   </Object>
 </Loqui>

@@ -3,7 +3,7 @@
   <Object name="Weather" baseClass="SkyrimMajorRecord" objType="Record" customRecordFallback="true" recordType="WTHR" GUID="2a067384-8f2a-4245-9c26-092e2a0351f0" ID="248">
     <Fields>
       <Array name="CloudTextures" fixedSize="29" binary="NoGeneration" >
-        <String nullable="True" />
+        <AssetLink nullable="True" assetType="SkyrimTexture" />
       </Array>
       <CustomLogic name="CloudTexturesParse" isUntypedRecordType="true" />
       <ByteArray name="DNAM" recordType="DNAM" />

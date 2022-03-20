@@ -2,11 +2,11 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="EffectShader" recordType="EFSH" objType="Record" baseClass="SkyrimMajorRecord" GUID="faa7eca9-d976-44d0-aadd-b5a8dbb97974" ID="106">
     <Fields>
-      <String name="FillTexture" recordType="ICON" />
-      <String name="ParticleShaderTexture" recordType="ICO2" />
-      <String name="HolesTexture" recordType="NAM7" />
-      <String name="MembranePaletteTexture" recordType="NAM8" />
-      <String name="ParticlePaletteTexture" recordType="NAM9" />
+      <AssetLink name="FillTexture" recordType="ICON" assetType="SkyrimTexture" />
+      <AssetLink name="ParticleShaderTexture" recordType="ICO2" assetType="SkyrimTexture" />
+      <AssetLink name="HolesTexture" recordType="NAM7" assetType="SkyrimTexture" />
+      <AssetLink name="MembranePaletteTexture" recordType="NAM8" assetType="SkyrimTexture" />
+      <AssetLink name="ParticlePaletteTexture" recordType="NAM9" assetType="SkyrimTexture" />
       <Data>
         <Fields>
           <Int32 name="Unknown" />
