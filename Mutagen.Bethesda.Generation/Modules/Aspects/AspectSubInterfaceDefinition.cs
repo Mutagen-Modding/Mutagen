@@ -4,13 +4,20 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects;
 
 public interface IAspectSubInterfaceDefinition
 {
+    string Name { get; }
     IEnumerable<(string Name, bool Setter)> Registrations { get; }
     bool Test(ObjectGeneration obj, Dictionary<string, TypeGeneration> allFields);
 }
 
 public abstract class AAspectSubInterfaceDefinition : IAspectSubInterfaceDefinition
 {
+    public string Name { get; }
     public abstract IEnumerable<(string Name, bool Setter)> Registrations { get; }
+    
+    protected AAspectSubInterfaceDefinition(string name)
+    {
+        Name = name;
+    }
 
     public virtual bool Test(ObjectGeneration obj, Dictionary<string, TypeGeneration> allFields)
     {
@@ -27,12 +34,15 @@ public abstract class AAspectSubInterfaceDefinition : IAspectSubInterfaceDefinit
 public class AspectSubInterfaceDefinition : IAspectSubInterfaceDefinition
 {
     private readonly Func<ObjectGeneration, Dictionary<string, TypeGeneration>, bool> _test;
+    public string Name { get; }
     public IEnumerable<(string Name, bool Setter)> Registrations { get; }
     
     public AspectSubInterfaceDefinition(
+        string name,
         IEnumerable<(string Name, bool Setter)> registrations,
         Func<ObjectGeneration, Dictionary<string, TypeGeneration>, bool>? test)
     {
+        Name = name;
         _test = test ?? new Func<ObjectGeneration, Dictionary<string, TypeGeneration>, bool>((_, _) => true);
         Registrations = registrations;
     }
@@ -43,10 +53,11 @@ public class AspectSubInterfaceDefinition : IAspectSubInterfaceDefinition
     }
 
     public static AspectSubInterfaceDefinition Factory(
+        string name,
         IEnumerable<(string Name, bool Setter)> registrations,
         Func<ObjectGeneration, Dictionary<string, TypeGeneration>, bool>? test = null)
     {
-        return new AspectSubInterfaceDefinition(registrations, test);
+        return new AspectSubInterfaceDefinition(name, registrations, test);
     }
 
     public static AspectSubInterfaceDefinition Factory(
@@ -54,6 +65,6 @@ public class AspectSubInterfaceDefinition : IAspectSubInterfaceDefinition
         Func<ObjectGeneration, Dictionary<string, TypeGeneration>, bool>? test = null,
         IEnumerable<(string Name, bool Setter)>? registrations = null)
     {
-        return new AspectSubInterfaceDefinition(registrations ?? AAspectSubInterfaceDefinition.ConstructTypicalRegistrations(name), test);
+        return new AspectSubInterfaceDefinition(name, registrations ?? AAspectSubInterfaceDefinition.ConstructTypicalRegistrations(name), test);
     }
 }
