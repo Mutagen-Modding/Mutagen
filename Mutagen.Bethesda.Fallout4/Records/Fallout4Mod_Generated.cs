@@ -2259,16 +2259,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(IFallout4Mod obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.ModHeader.RemapLinks(mapping);
-            obj.GameSettings.RemapLinks(mapping);
             obj.Keywords.RemapLinks(mapping);
-            obj.LocationReferenceTypes.RemapLinks(mapping);
             obj.Actions.RemapLinks(mapping);
-            obj.Transforms.RemapLinks(mapping);
             obj.Components.RemapLinks(mapping);
-            obj.TextureSets.RemapLinks(mapping);
-            obj.Globals.RemapLinks(mapping);
             obj.DamageTypes.RemapLinks(mapping);
-            obj.Classes.RemapLinks(mapping);
             obj.Factions.RemapLinks(mapping);
             obj.HeadParts.RemapLinks(mapping);
             obj.SoundMarkers.RemapLinks(mapping);
@@ -3118,61 +3112,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
-            if (obj.GameSettings is IFormLinkContainerGetter GameSettingslinkCont)
+            foreach (var item in obj.Keywords.ContainedFormLinks)
             {
-                foreach (var item in GameSettingslinkCont.ContainedFormLinks)
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Keywords is IFormLinkContainerGetter KeywordslinkCont)
+            foreach (var item in obj.Actions.ContainedFormLinks)
             {
-                foreach (var item in KeywordslinkCont.ContainedFormLinks)
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.LocationReferenceTypes is IFormLinkContainerGetter LocationReferenceTypeslinkCont)
+            foreach (var item in obj.Components.ContainedFormLinks)
             {
-                foreach (var item in LocationReferenceTypeslinkCont.ContainedFormLinks)
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Actions is IFormLinkContainerGetter ActionslinkCont)
-            {
-                foreach (var item in ActionslinkCont.ContainedFormLinks)
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Transforms is IFormLinkContainerGetter TransformslinkCont)
-            {
-                foreach (var item in TransformslinkCont.ContainedFormLinks)
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Components is IFormLinkContainerGetter ComponentslinkCont)
-            {
-                foreach (var item in ComponentslinkCont.ContainedFormLinks)
-                {
-                    yield return item;
-                }
-            }
-            if (obj.TextureSets is IFormLinkContainerGetter TextureSetslinkCont)
-            {
-                foreach (var item in TextureSetslinkCont.ContainedFormLinks)
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Globals is IFormLinkContainerGetter GlobalslinkCont)
-            {
-                foreach (var item in GlobalslinkCont.ContainedFormLinks)
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             if (obj.DamageTypes is IFormLinkContainerGetter DamageTypeslinkCont)
             {
@@ -3181,61 +3131,33 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return item;
                 }
             }
-            if (obj.Classes is IFormLinkContainerGetter ClasseslinkCont)
+            foreach (var item in obj.Factions.ContainedFormLinks)
             {
-                foreach (var item in ClasseslinkCont.ContainedFormLinks)
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Factions is IFormLinkContainerGetter FactionslinkCont)
+            foreach (var item in obj.HeadParts.ContainedFormLinks)
             {
-                foreach (var item in FactionslinkCont.ContainedFormLinks)
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.HeadParts is IFormLinkContainerGetter HeadPartslinkCont)
+            foreach (var item in obj.SoundMarkers.ContainedFormLinks)
             {
-                foreach (var item in HeadPartslinkCont.ContainedFormLinks)
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.SoundMarkers is IFormLinkContainerGetter SoundMarkerslinkCont)
+            foreach (var item in obj.AcousticSpaces.ContainedFormLinks)
             {
-                foreach (var item in SoundMarkerslinkCont.ContainedFormLinks)
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.AcousticSpaces is IFormLinkContainerGetter AcousticSpaceslinkCont)
+            foreach (var item in obj.LandscapeTextures.ContainedFormLinks)
             {
-                foreach (var item in AcousticSpaceslinkCont.ContainedFormLinks)
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.LandscapeTextures is IFormLinkContainerGetter LandscapeTextureslinkCont)
+            foreach (var item in obj.Grasses.ContainedFormLinks)
             {
-                foreach (var item in LandscapeTextureslinkCont.ContainedFormLinks)
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Grasses is IFormLinkContainerGetter GrasseslinkCont)
+            foreach (var item in obj.MaterialTypes.ContainedFormLinks)
             {
-                foreach (var item in GrasseslinkCont.ContainedFormLinks)
-                {
-                    yield return item;
-                }
-            }
-            if (obj.MaterialTypes is IFormLinkContainerGetter MaterialTypeslinkCont)
-            {
-                foreach (var item in MaterialTypeslinkCont.ContainedFormLinks)
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }

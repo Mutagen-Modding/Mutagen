@@ -25,13 +25,9 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
         }
 
-        public static async Task<Case> HasLinks(LoquiType loqui, bool includeBaseClass, GenericSpecification specifications = null)
+        public static async Task<Case> HasLinks(LoquiType loqui, bool includeBaseClass, GenericSpecification? specifications = null)
         {
-            if (loqui.TargetObjectGeneration != null)
-            {
-                return await HasLinks(loqui.TargetObjectGeneration, includeBaseClass, loqui.GenericSpecification);
-            }
-            else if (specifications != null)
+            if (specifications != null)
             {
                 foreach (var target in specifications.Specifications.Values)
                 {
@@ -39,7 +35,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     var specObj = loqui.ObjectGen.ProtoGen.Gen.ObjectGenerationsByObjectNameKey[key];
                     return await HasLinks(specObj, includeBaseClass);
                 }
-                return Case.Maybe;
+            }
+            if (loqui.TargetObjectGeneration != null)
+            {
+                return await HasLinks(loqui.TargetObjectGeneration, includeBaseClass, loqui.GenericSpecification);
             }
             else
             {
