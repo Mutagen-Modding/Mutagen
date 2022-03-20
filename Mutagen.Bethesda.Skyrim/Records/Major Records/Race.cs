@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Skyrim
                 flag &= ((Race.Flag)0x00000000FFFFFFFF);
 
                 // Set upper flags
-                ulong flags2 = BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DATALocation!.Value + 124, 4));
+                ulong flags2 = BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_Flags2Location, 4));
                 flags2 <<= 32;
                 flag |= ((Race.Flag)flags2);
                 return flag;
