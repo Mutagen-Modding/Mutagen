@@ -1784,6 +1784,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Icons is {} IconsItems)
+            {
+                foreach (var item in IconsItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.Destructible is {} DestructibleItems)
             {
                 foreach (var item in DestructibleItems.EnumerateListedAssetLinks())
@@ -1798,6 +1805,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapListedAssetLinks(obj, mapping);
             obj.Model?.RemapListedAssetLinks(mapping);
+            obj.Icons?.RemapListedAssetLinks(mapping);
             obj.Destructible?.RemapListedAssetLinks(mapping);
         }
         
@@ -2362,6 +2370,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Icons is {} IconsItems)
+            {
+                foreach (var item in IconsItems.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
                 {
                     yield return item;
                 }

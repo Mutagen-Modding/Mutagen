@@ -8,6 +8,8 @@ using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
+using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Skyrim.Assets;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -58,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return (b - 127) / 127f / 10f;
             }
 
-            public static void FillCloudTexture(IMutagenReadStream stream, RecordType nextRecordType, string?[] textures)
+            public static void FillCloudTexture(MutagenFrame stream, RecordType nextRecordType, IAssetLink<SkyrimTextureAssetType>?[] textures)
             {
                 int layer = nextRecordType.TypeInt - TextureIntBase;
                 if (layer > 29 || layer < 0)
@@ -66,7 +68,9 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new ArgumentException();
                 }
                 var subRec = stream.ReadSubrecordFrame();
-                textures[layer] = BinaryStringUtility.ProcessWholeToZString(subRec.Content, stream.MetaData.Encodings.NonTranslated);
+                textures[layer] = new AssetLink<SkyrimTextureAssetType>(
+                    SkyrimTextureAssetType.Instance,
+                    BinaryStringUtility.ProcessWholeToZString(subRec.Content, stream.MetaData.Encodings.NonTranslated));
             }
 
             public static partial ParseResult FillBinaryCloudAlphasCustom(MutagenFrame frame, IWeatherInternal item)
@@ -231,7 +235,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (cloudTex[i] is not {} tex) continue;
                     using (HeaderExport.Subrecord(writer, new RecordType(WeatherBinaryCreateTranslation.TextureIntBase + i)))
                     {
-                        writer.Write(tex, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
+                        writer.Write(tex.RawPath, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
                     }
                 }
             }
@@ -403,8 +407,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class WeatherBinaryOverlay
         {
-            private readonly string?[] _cloudTextures = new string?[29];
-            public ReadOnlyMemorySlice<string?> CloudTextures => _cloudTextures;
+            private readonly IAssetLink<SkyrimTextureAssetType>?[] _cloudTextures = new IAssetLink<SkyrimTextureAssetType>?[29];
+            public ReadOnlyMemorySlice<IAssetLinkGetter<SkyrimTextureAssetType>?> CloudTextures => _cloudTextures;
 
             private readonly CloudLayer[] _clouds = ArrayExt.Create(WeatherBinaryCreateTranslation.NumLayers, (i) => new CloudLayer());
             public ReadOnlyMemorySlice<ICloudLayerGetter> Clouds => _clouds;

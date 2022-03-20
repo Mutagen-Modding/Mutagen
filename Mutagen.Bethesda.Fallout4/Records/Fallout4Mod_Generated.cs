@@ -2454,10 +2454,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IDamageTypeGetter":
                 case "IDamageType":
                 case "IDamageTypeInternal":
-                case "DamageTypeIndexed":
-                case "IDamageTypeIndexedGetter":
-                case "IDamageTypeIndexed":
-                case "IDamageTypeIndexedInternal":
                     obj.DamageTypes.Remove(
                         type: type,
                         keys: keys);

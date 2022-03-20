@@ -1372,6 +1372,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            foreach (var item in obj.Parts.SelectMany(f => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -1379,6 +1383,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapListedAssetLinks(obj, mapping);
             obj.Model?.RemapListedAssetLinks(mapping);
+            obj.Parts.ForEach(x => x.RemapListedAssetLinks(mapping));
         }
         
         #endregion
@@ -1785,6 +1790,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     yield return item;
                 }
+            }
+            foreach (var item in obj.Parts.SelectMany(f => f.EnumerateAssetLinks(linkCache, includeImplicit)))
+            {
+                yield return item;
             }
             yield break;
         }

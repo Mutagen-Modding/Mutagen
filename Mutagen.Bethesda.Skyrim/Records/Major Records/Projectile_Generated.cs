@@ -22,6 +22,7 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -277,7 +278,8 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<ICollisionLayerGetter> IProjectileGetter.CollisionLayer => this.CollisionLayer;
         #endregion
         #region MuzzleFlashModel
-        public String MuzzleFlashModel { get; set; } = string.Empty;
+        public IAssetLink<SkyrimModelAssetType> MuzzleFlashModel { get; set; } = new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
+        IAssetLinkGetter<SkyrimModelAssetType> IProjectileGetter.MuzzleFlashModel => this.MuzzleFlashModel;
         #endregion
         #region TextureFilesHashes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1670,7 +1672,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single RelaunchInterval { get; set; }
         new IFormLink<ITextureSetGetter> DecalData { get; set; }
         new IFormLink<ICollisionLayerGetter> CollisionLayer { get; set; }
-        new String MuzzleFlashModel { get; set; }
+        new IAssetLink<SkyrimModelAssetType> MuzzleFlashModel { get; set; }
         new MemorySlice<Byte>? TextureFilesHashes { get; set; }
         new UInt32 SoundLevel { get; set; }
         new Projectile.DATADataType DATADataTypeState { get; set; }
@@ -1744,7 +1746,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single RelaunchInterval { get; }
         IFormLinkGetter<ITextureSetGetter> DecalData { get; }
         IFormLinkGetter<ICollisionLayerGetter> CollisionLayer { get; }
-        String MuzzleFlashModel { get; }
+        IAssetLinkGetter<SkyrimModelAssetType> MuzzleFlashModel { get; }
         ReadOnlyMemorySlice<Byte>? TextureFilesHashes { get; }
         UInt32 SoundLevel { get; }
         Projectile.DATADataType DATADataTypeState { get; }
@@ -2060,7 +2062,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.RelaunchInterval = default;
             item.DecalData.Clear();
             item.CollisionLayer.Clear();
-            item.MuzzleFlashModel = string.Empty;
+            item.MuzzleFlashModel.SetToNull();
             item.TextureFilesHashes = default;
             item.SoundLevel = default;
             item.DATADataTypeState = default;
@@ -2114,6 +2116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            yield return obj.MuzzleFlashModel;
             yield break;
         }
         
@@ -2122,6 +2125,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.RemapListedAssetLinks(obj, mapping);
             obj.Model?.RemapListedAssetLinks(mapping);
             obj.Destructible?.RemapListedAssetLinks(mapping);
+            obj.MuzzleFlashModel.Relink(mapping);
         }
         
         #endregion
@@ -2748,6 +2752,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            yield return obj.MuzzleFlashModel;
             yield break;
         }
         
@@ -2996,10 +3001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.CollisionLayer.SetTo(rhs.CollisionLayer.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashModel) ?? true))
-            {
-                item.MuzzleFlashModel = rhs.MuzzleFlashModel;
-            }
+            item.MuzzleFlashModel.RawPath = rhs.MuzzleFlashModel.RawPath;
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.TextureFilesHashes) ?? true))
             {
                 if(rhs.TextureFilesHashes is {} TextureFilesHashesrhs)
@@ -3295,7 +3297,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.MuzzleFlashModel,
+                item: item.MuzzleFlashModel.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -3474,7 +3476,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MuzzleFlashModel = StringBinaryTranslation.Instance.Parse(
+                    item.MuzzleFlashModel.RawPath = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Projectile_FieldIndex.MuzzleFlashModel;
@@ -3693,7 +3695,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region MuzzleFlashModel
         private int? _MuzzleFlashModelLocation;
-        public String MuzzleFlashModel => _MuzzleFlashModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MuzzleFlashModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public IAssetLinkGetter<SkyrimModelAssetType> MuzzleFlashModel => _MuzzleFlashModelLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MuzzleFlashModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
         #endregion
         #region TextureFilesHashes
         private int? _TextureFilesHashesLocation;

@@ -6,6 +6,7 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -18,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -56,9 +58,9 @@ namespace Mutagen.Bethesda.Skyrim
         UInt16? ITintAssetsGetter.Index => this.Index;
         #endregion
         #region FileName
-        public String? FileName { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? FileName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITintAssetsGetter.FileName => this.FileName;
+        IAssetLinkGetter<SkyrimTextureAssetType>? ITintAssetsGetter.FileName => this.FileName;
         #endregion
         #region MaskType
         public TintAssets.TintMaskType? MaskType { get; set; }
@@ -588,6 +590,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => TintAssetsCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintAssetsSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => TintAssetsCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => TintAssetsSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => TintAssetsSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -649,12 +654,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ITintAssets :
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<ITintAssets>,
         ITintAssetsGetter
     {
         new UInt16? Index { get; set; }
-        new String? FileName { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? FileName { get; set; }
         new TintAssets.TintMaskType? MaskType { get; set; }
         new IFormLinkNullable<IColorRecordGetter> PresetDefault { get; set; }
         new ExtendedList<TintPreset> Presets { get; }
@@ -662,6 +668,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ITintAssetsGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ITintAssetsGetter>
@@ -674,7 +681,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => TintAssets_Registration.Instance;
         UInt16? Index { get; }
-        String? FileName { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? FileName { get; }
         TintAssets.TintMaskType? MaskType { get; }
         IFormLinkNullableGetter<IColorRecordGetter> PresetDefault { get; }
         IReadOnlyList<ITintPresetGetter> Presets { get; }
@@ -965,6 +972,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.Presets.RemapLinks(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ITintAssets obj)
+        {
+            if (obj.FileName != null)
+            {
+                yield return obj.FileName;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(ITintAssets obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            obj.FileName?.Relink(mapping);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1174,6 +1195,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ITintAssetsGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            if (obj.FileName != null)
+            {
+                yield return obj.FileName;
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -1193,10 +1223,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Index = rhs.Index;
             }
-            if ((copyMask?.GetShouldTranslate((int)TintAssets_FieldIndex.FileName) ?? true))
-            {
-                item.FileName = rhs.FileName;
-            }
+            item.FileName = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.FileName, rhs.FileName);
             if ((copyMask?.GetShouldTranslate((int)TintAssets_FieldIndex.MaskType) ?? true))
             {
                 item.MaskType = rhs.MaskType;
@@ -1332,7 +1359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: translationParams.ConvertToCustom(RecordTypes.TINI));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.FileName,
+                item: item.FileName?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TINT),
                 binaryType: StringBinaryType.NullTerminate);
             EnumBinaryTranslation<TintAssets.TintMaskType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
@@ -1414,9 +1441,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintAssets_FieldIndex.FileName) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FileName = StringBinaryTranslation.Instance.Parse(
+                    item.FileName = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)TintAssets_FieldIndex.FileName;
                 }
                 case RecordTypeInts.TINP:
@@ -1503,6 +1531,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => TintAssetsCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => TintAssetsCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TintAssetsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1523,7 +1552,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region FileName
         private int? _FileNameLocation;
-        public String? FileName => _FileNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IAssetLinkGetter<SkyrimTextureAssetType>? FileName => _FileNameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region MaskType
         private int? _MaskTypeLocation;

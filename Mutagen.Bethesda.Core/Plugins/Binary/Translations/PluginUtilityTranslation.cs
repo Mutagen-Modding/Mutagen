@@ -14,6 +14,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Assets;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations
 {
@@ -864,6 +865,19 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             {
                 return stream.Position - offset;
             }
+        }
+
+        public static IAssetLink<TAssetType>? AssetNullableDeepCopyIn<TAssetType>(IAssetLink<TAssetType>? lhs, IAssetLinkGetter<TAssetType>? rhs)
+            where TAssetType : IAssetType
+        {
+            if (rhs == null) return null;
+            if (lhs == null)
+            {
+                return new AssetLink<TAssetType>(rhs.AssetType, rhs.RawPath);
+            }
+
+            lhs.RawPath = rhs.RawPath;
+            return lhs;
         }
     }
 }

@@ -6,12 +6,14 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -485,6 +487,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IDebris);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => DebrisCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => DebrisSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => DebrisSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -564,6 +569,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IDebris :
+        IAssetLinkContainer,
         IDebrisGetter,
         ILoquiObjectSetter<IDebrisInternal>,
         ISkyrimMajorRecordInternal
@@ -581,6 +587,7 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.DEBR)]
     public partial interface IDebrisGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<IDebrisGetter>,
         IMapsToGetter<IDebrisGetter>
@@ -854,6 +861,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IDebrisInternal)item);
         }
         
+        #region Mutagen
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IDebris obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Models.SelectMany(f => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IDebris obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.Models.ForEach(x => x.RemapListedAssetLinks(mapping));
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDebrisInternal item,
@@ -1095,6 +1124,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDebrisGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Models.SelectMany(f => f.EnumerateAssetLinks(linkCache, includeImplicit)))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         #region Duplicate
         public Debris Duplicate(
             IDebrisGetter item,
@@ -1502,6 +1544,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => DebrisCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DebrisBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

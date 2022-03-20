@@ -1471,6 +1471,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IHeadData obj)
         {
+            foreach (var item in obj.TintMasks.SelectMany(f => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
             if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.EnumerateListedAssetLinks())
@@ -1483,6 +1487,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public void RemapListedAssetLinks(IHeadData obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
         {
+            obj.TintMasks.ForEach(x => x.RemapListedAssetLinks(mapping));
             obj.Model?.RemapListedAssetLinks(mapping);
         }
         
@@ -1830,6 +1835,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IHeadDataGetter obj, ILinkCache? linkCache, bool includeImplicit)
         {
+            foreach (var item in obj.TintMasks.SelectMany(f => f.EnumerateAssetLinks(linkCache, includeImplicit)))
+            {
+                yield return item;
+            }
             if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))

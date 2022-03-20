@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [DamageType, DamageTypeIndexed]
+    /// Implemented by: [DamageType]
     /// </summary>
     public abstract partial class ADamageType :
         Fallout4MajorRecord,
@@ -404,7 +404,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [DamageType, DamageTypeIndexed]
+    /// Implemented by: [DamageType]
     /// </summary>
     public partial interface IADamageType :
         IADamageTypeGetter,
@@ -422,7 +422,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [DamageType, DamageTypeIndexed]
+    /// Implemented by: [DamageType]
     /// </summary>
     public partial interface IADamageTypeGetter :
         IFallout4MajorRecordGetter,

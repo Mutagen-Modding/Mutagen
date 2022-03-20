@@ -22,6 +22,7 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -242,9 +243,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region ModelFilename
-        public String? ModelFilename { get; set; }
+        public IAssetLink<SkyrimModelAssetType>? ModelFilename { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IFurnitureGetter.ModelFilename => this.ModelFilename;
+        IAssetLinkGetter<SkyrimModelAssetType>? IFurnitureGetter.ModelFilename => this.ModelFilename;
         #endregion
 
         #region To String
@@ -1240,7 +1241,7 @@ namespace Mutagen.Bethesda.Skyrim
         new WorkbenchData? WorkbenchData { get; set; }
         new IFormLinkNullable<ISpellGetter> AssociatedSpell { get; set; }
         new ExtendedList<FurnitureMarker>? Markers { get; set; }
-        new String? ModelFilename { get; set; }
+        new IAssetLink<SkyrimModelAssetType>? ModelFilename { get; set; }
         #region Mutagen
         new Furniture.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1310,7 +1311,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWorkbenchDataGetter? WorkbenchData { get; }
         IFormLinkNullableGetter<ISpellGetter> AssociatedSpell { get; }
         IReadOnlyList<IFurnitureMarkerGetter>? Markers { get; }
-        String? ModelFilename { get; }
+        IAssetLinkGetter<SkyrimModelAssetType>? ModelFilename { get; }
 
         #region Mutagen
         Furniture.MajorFlag MajorFlags { get; }
@@ -1639,6 +1640,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.ModelFilename != null)
+            {
+                yield return obj.ModelFilename;
+            }
             yield break;
         }
         
@@ -1647,6 +1652,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.RemapListedAssetLinks(obj, mapping);
             obj.Model?.RemapListedAssetLinks(mapping);
             obj.Destructible?.RemapListedAssetLinks(mapping);
+            obj.ModelFilename?.Relink(mapping);
         }
         
         #endregion
@@ -2171,6 +2177,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.ModelFilename != null)
+            {
+                yield return obj.ModelFilename;
+            }
             yield break;
         }
         
@@ -2457,10 +2467,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.ModelFilename) ?? true))
-            {
-                item.ModelFilename = rhs.ModelFilename;
-            }
+            item.ModelFilename = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.ModelFilename, rhs.ModelFilename);
         }
         
         public override void DeepCopyIn(
@@ -2695,7 +2702,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ModelFilename,
+                item: item.ModelFilename?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.XMRK),
                 binaryType: StringBinaryType.NullTerminate);
         }
@@ -2941,9 +2948,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XMRK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ModelFilename = StringBinaryTranslation.Instance.Parse(
+                    item.ModelFilename = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimModelAssetType.Instance);
                     return (int)Furniture_FieldIndex.ModelFilename;
                 }
                 default:
@@ -3092,7 +3100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ModelFilename
         private int? _ModelFilenameLocation;
-        public String? ModelFilename => _ModelFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ModelFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IAssetLinkGetter<SkyrimModelAssetType>? ModelFilename => _ModelFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ModelFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

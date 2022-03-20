@@ -6,6 +6,7 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -13,6 +14,7 @@ using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -20,6 +22,7 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -74,44 +77,44 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Diffuse
-        public String? Diffuse { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? Diffuse { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITextureSetGetter.Diffuse => this.Diffuse;
+        IAssetLinkGetter<SkyrimTextureAssetType>? ITextureSetGetter.Diffuse => this.Diffuse;
         #endregion
         #region NormalOrGloss
-        public String? NormalOrGloss { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? NormalOrGloss { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITextureSetGetter.NormalOrGloss => this.NormalOrGloss;
+        IAssetLinkGetter<SkyrimTextureAssetType>? ITextureSetGetter.NormalOrGloss => this.NormalOrGloss;
         #endregion
         #region EnvironmentMaskOrSubsurfaceTint
-        public String? EnvironmentMaskOrSubsurfaceTint { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? EnvironmentMaskOrSubsurfaceTint { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITextureSetGetter.EnvironmentMaskOrSubsurfaceTint => this.EnvironmentMaskOrSubsurfaceTint;
+        IAssetLinkGetter<SkyrimTextureAssetType>? ITextureSetGetter.EnvironmentMaskOrSubsurfaceTint => this.EnvironmentMaskOrSubsurfaceTint;
         #endregion
         #region GlowOrDetailMap
-        public String? GlowOrDetailMap { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? GlowOrDetailMap { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITextureSetGetter.GlowOrDetailMap => this.GlowOrDetailMap;
+        IAssetLinkGetter<SkyrimTextureAssetType>? ITextureSetGetter.GlowOrDetailMap => this.GlowOrDetailMap;
         #endregion
         #region Height
-        public String? Height { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? Height { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITextureSetGetter.Height => this.Height;
+        IAssetLinkGetter<SkyrimTextureAssetType>? ITextureSetGetter.Height => this.Height;
         #endregion
         #region Environment
-        public String? Environment { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? Environment { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITextureSetGetter.Environment => this.Environment;
+        IAssetLinkGetter<SkyrimTextureAssetType>? ITextureSetGetter.Environment => this.Environment;
         #endregion
         #region Multilayer
-        public String? Multilayer { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? Multilayer { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITextureSetGetter.Multilayer => this.Multilayer;
+        IAssetLinkGetter<SkyrimTextureAssetType>? ITextureSetGetter.Multilayer => this.Multilayer;
         #endregion
         #region BacklightMaskOrSpecular
-        public String? BacklightMaskOrSpecular { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? BacklightMaskOrSpecular { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITextureSetGetter.BacklightMaskOrSpecular => this.BacklightMaskOrSpecular;
+        IAssetLinkGetter<SkyrimTextureAssetType>? ITextureSetGetter.BacklightMaskOrSpecular => this.BacklightMaskOrSpecular;
         #endregion
         #region Decal
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -767,6 +770,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(ITextureSet);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => TextureSetCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => TextureSetSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => TextureSetSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -846,6 +852,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ITextureSet :
+        IAssetLinkContainer,
         ILoquiObjectSetter<ITextureSetInternal>,
         IObjectBounded,
         IObjectId,
@@ -856,14 +863,14 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
-        new String? Diffuse { get; set; }
-        new String? NormalOrGloss { get; set; }
-        new String? EnvironmentMaskOrSubsurfaceTint { get; set; }
-        new String? GlowOrDetailMap { get; set; }
-        new String? Height { get; set; }
-        new String? Environment { get; set; }
-        new String? Multilayer { get; set; }
-        new String? BacklightMaskOrSpecular { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? Diffuse { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? NormalOrGloss { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? EnvironmentMaskOrSubsurfaceTint { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? GlowOrDetailMap { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? Height { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? Environment { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? Multilayer { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? BacklightMaskOrSpecular { get; set; }
         new Decal? Decal { get; set; }
         new TextureSet.Flag? Flags { get; set; }
     }
@@ -878,6 +885,7 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.TXST)]
     public partial interface ITextureSetGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<ITextureSetGetter>,
         IMapsToGetter<ITextureSetGetter>,
@@ -891,14 +899,14 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
-        String? Diffuse { get; }
-        String? NormalOrGloss { get; }
-        String? EnvironmentMaskOrSubsurfaceTint { get; }
-        String? GlowOrDetailMap { get; }
-        String? Height { get; }
-        String? Environment { get; }
-        String? Multilayer { get; }
-        String? BacklightMaskOrSpecular { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? Diffuse { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? NormalOrGloss { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? EnvironmentMaskOrSubsurfaceTint { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? GlowOrDetailMap { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? Height { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? Environment { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? Multilayer { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? BacklightMaskOrSpecular { get; }
         IDecalGetter? Decal { get; }
         TextureSet.Flag? Flags { get; }
 
@@ -1187,6 +1195,63 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (ITextureSetInternal)item);
         }
+        
+        #region Mutagen
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ITextureSet obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.Diffuse != null)
+            {
+                yield return obj.Diffuse;
+            }
+            if (obj.NormalOrGloss != null)
+            {
+                yield return obj.NormalOrGloss;
+            }
+            if (obj.EnvironmentMaskOrSubsurfaceTint != null)
+            {
+                yield return obj.EnvironmentMaskOrSubsurfaceTint;
+            }
+            if (obj.GlowOrDetailMap != null)
+            {
+                yield return obj.GlowOrDetailMap;
+            }
+            if (obj.Height != null)
+            {
+                yield return obj.Height;
+            }
+            if (obj.Environment != null)
+            {
+                yield return obj.Environment;
+            }
+            if (obj.Multilayer != null)
+            {
+                yield return obj.Multilayer;
+            }
+            if (obj.BacklightMaskOrSpecular != null)
+            {
+                yield return obj.BacklightMaskOrSpecular;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(ITextureSet obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.Diffuse?.Relink(mapping);
+            obj.NormalOrGloss?.Relink(mapping);
+            obj.EnvironmentMaskOrSubsurfaceTint?.Relink(mapping);
+            obj.GlowOrDetailMap?.Relink(mapping);
+            obj.Height?.Relink(mapping);
+            obj.Environment?.Relink(mapping);
+            obj.Multilayer?.Relink(mapping);
+            obj.BacklightMaskOrSpecular?.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1564,6 +1629,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ITextureSetGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))
+            {
+                yield return item;
+            }
+            if (obj.Diffuse != null)
+            {
+                yield return obj.Diffuse;
+            }
+            if (obj.NormalOrGloss != null)
+            {
+                yield return obj.NormalOrGloss;
+            }
+            if (obj.EnvironmentMaskOrSubsurfaceTint != null)
+            {
+                yield return obj.EnvironmentMaskOrSubsurfaceTint;
+            }
+            if (obj.GlowOrDetailMap != null)
+            {
+                yield return obj.GlowOrDetailMap;
+            }
+            if (obj.Height != null)
+            {
+                yield return obj.Height;
+            }
+            if (obj.Environment != null)
+            {
+                yield return obj.Environment;
+            }
+            if (obj.Multilayer != null)
+            {
+                yield return obj.Multilayer;
+            }
+            if (obj.BacklightMaskOrSpecular != null)
+            {
+                yield return obj.BacklightMaskOrSpecular;
+            }
+            yield break;
+        }
+        
         #region Duplicate
         public TextureSet Duplicate(
             ITextureSetGetter item,
@@ -1657,38 +1763,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Diffuse) ?? true))
-            {
-                item.Diffuse = rhs.Diffuse;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.NormalOrGloss) ?? true))
-            {
-                item.NormalOrGloss = rhs.NormalOrGloss;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.EnvironmentMaskOrSubsurfaceTint) ?? true))
-            {
-                item.EnvironmentMaskOrSubsurfaceTint = rhs.EnvironmentMaskOrSubsurfaceTint;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.GlowOrDetailMap) ?? true))
-            {
-                item.GlowOrDetailMap = rhs.GlowOrDetailMap;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Height) ?? true))
-            {
-                item.Height = rhs.Height;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Environment) ?? true))
-            {
-                item.Environment = rhs.Environment;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Multilayer) ?? true))
-            {
-                item.Multilayer = rhs.Multilayer;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.BacklightMaskOrSpecular) ?? true))
-            {
-                item.BacklightMaskOrSpecular = rhs.BacklightMaskOrSpecular;
-            }
+            item.Diffuse = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Diffuse, rhs.Diffuse);
+            item.NormalOrGloss = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.NormalOrGloss, rhs.NormalOrGloss);
+            item.EnvironmentMaskOrSubsurfaceTint = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.EnvironmentMaskOrSubsurfaceTint, rhs.EnvironmentMaskOrSubsurfaceTint);
+            item.GlowOrDetailMap = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.GlowOrDetailMap, rhs.GlowOrDetailMap);
+            item.Height = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Height, rhs.Height);
+            item.Environment = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Environment, rhs.Environment);
+            item.Multilayer = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Multilayer, rhs.Multilayer);
+            item.BacklightMaskOrSpecular = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.BacklightMaskOrSpecular, rhs.BacklightMaskOrSpecular);
             if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Decal) ?? true))
             {
                 errorMask?.PushIndex((int)TextureSet_FieldIndex.Decal);
@@ -1883,42 +1965,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Diffuse,
+                item: item.Diffuse?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX00),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.NormalOrGloss,
+                item: item.NormalOrGloss?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX01),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.EnvironmentMaskOrSubsurfaceTint,
+                item: item.EnvironmentMaskOrSubsurfaceTint?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX02),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.GlowOrDetailMap,
+                item: item.GlowOrDetailMap?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX03),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Height,
+                item: item.Height?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX04),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Environment,
+                item: item.Environment?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX05),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Multilayer,
+                item: item.Multilayer?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX06),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.BacklightMaskOrSpecular,
+                item: item.BacklightMaskOrSpecular?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX07),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Decal is {} DecalItem)
@@ -2032,65 +2114,73 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TX00:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Diffuse = StringBinaryTranslation.Instance.Parse(
+                    item.Diffuse = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)TextureSet_FieldIndex.Diffuse;
                 }
                 case RecordTypeInts.TX01:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NormalOrGloss = StringBinaryTranslation.Instance.Parse(
+                    item.NormalOrGloss = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)TextureSet_FieldIndex.NormalOrGloss;
                 }
                 case RecordTypeInts.TX02:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EnvironmentMaskOrSubsurfaceTint = StringBinaryTranslation.Instance.Parse(
+                    item.EnvironmentMaskOrSubsurfaceTint = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)TextureSet_FieldIndex.EnvironmentMaskOrSubsurfaceTint;
                 }
                 case RecordTypeInts.TX03:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GlowOrDetailMap = StringBinaryTranslation.Instance.Parse(
+                    item.GlowOrDetailMap = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)TextureSet_FieldIndex.GlowOrDetailMap;
                 }
                 case RecordTypeInts.TX04:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Height = StringBinaryTranslation.Instance.Parse(
+                    item.Height = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)TextureSet_FieldIndex.Height;
                 }
                 case RecordTypeInts.TX05:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Environment = StringBinaryTranslation.Instance.Parse(
+                    item.Environment = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)TextureSet_FieldIndex.Environment;
                 }
                 case RecordTypeInts.TX06:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Multilayer = StringBinaryTranslation.Instance.Parse(
+                    item.Multilayer = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)TextureSet_FieldIndex.Multilayer;
                 }
                 case RecordTypeInts.TX07:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BacklightMaskOrSpecular = StringBinaryTranslation.Instance.Parse(
+                    item.BacklightMaskOrSpecular = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)TextureSet_FieldIndex.BacklightMaskOrSpecular;
                 }
                 case RecordTypeInts.DODT:
@@ -2149,6 +2239,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => TextureSetCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TextureSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2170,35 +2261,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Diffuse
         private int? _DiffuseLocation;
-        public String? Diffuse => _DiffuseLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DiffuseLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IAssetLinkGetter<SkyrimTextureAssetType>? Diffuse => _DiffuseLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DiffuseLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region NormalOrGloss
         private int? _NormalOrGlossLocation;
-        public String? NormalOrGloss => _NormalOrGlossLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NormalOrGlossLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IAssetLinkGetter<SkyrimTextureAssetType>? NormalOrGloss => _NormalOrGlossLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NormalOrGlossLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region EnvironmentMaskOrSubsurfaceTint
         private int? _EnvironmentMaskOrSubsurfaceTintLocation;
-        public String? EnvironmentMaskOrSubsurfaceTint => _EnvironmentMaskOrSubsurfaceTintLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EnvironmentMaskOrSubsurfaceTintLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IAssetLinkGetter<SkyrimTextureAssetType>? EnvironmentMaskOrSubsurfaceTint => _EnvironmentMaskOrSubsurfaceTintLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EnvironmentMaskOrSubsurfaceTintLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region GlowOrDetailMap
         private int? _GlowOrDetailMapLocation;
-        public String? GlowOrDetailMap => _GlowOrDetailMapLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _GlowOrDetailMapLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IAssetLinkGetter<SkyrimTextureAssetType>? GlowOrDetailMap => _GlowOrDetailMapLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _GlowOrDetailMapLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region Height
         private int? _HeightLocation;
-        public String? Height => _HeightLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _HeightLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IAssetLinkGetter<SkyrimTextureAssetType>? Height => _HeightLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _HeightLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region Environment
         private int? _EnvironmentLocation;
-        public String? Environment => _EnvironmentLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EnvironmentLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IAssetLinkGetter<SkyrimTextureAssetType>? Environment => _EnvironmentLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EnvironmentLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region Multilayer
         private int? _MultilayerLocation;
-        public String? Multilayer => _MultilayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MultilayerLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IAssetLinkGetter<SkyrimTextureAssetType>? Multilayer => _MultilayerLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MultilayerLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region BacklightMaskOrSpecular
         private int? _BacklightMaskOrSpecularLocation;
-        public String? BacklightMaskOrSpecular => _BacklightMaskOrSpecularLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _BacklightMaskOrSpecularLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IAssetLinkGetter<SkyrimTextureAssetType>? BacklightMaskOrSpecular => _BacklightMaskOrSpecularLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _BacklightMaskOrSpecularLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region Decal
         private RangeInt32? _DecalLocation;

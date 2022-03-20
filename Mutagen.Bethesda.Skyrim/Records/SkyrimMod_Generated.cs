@@ -8910,7 +8910,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ISkyrimMod obj)
         {
+            foreach (var item in obj.TextureSets.EnumerateListedAssetLinks())
+            {
+                yield return item;
+            }
             foreach (var item in obj.HeadParts.EnumerateListedAssetLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Eyes.EnumerateListedAssetLinks())
             {
                 yield return item;
             }
@@ -9030,6 +9038,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
+            foreach (var item in obj.ShaderParticleGeometries.EnumerateListedAssetLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Regions.EnumerateListedAssetLinks())
+            {
+                yield return item;
+            }
             if (obj.Cells is IAssetLinkContainer CellslinkCont)
             {
                 foreach (var item in CellslinkCont.EnumerateListedAssetLinks())
@@ -9037,18 +9053,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Worldspaces is IAssetLinkContainer WorldspaceslinkCont)
+            foreach (var item in obj.Worldspaces.EnumerateListedAssetLinks())
             {
-                foreach (var item in WorldspaceslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
+            }
+            foreach (var item in obj.IdleAnimations.EnumerateListedAssetLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LoadScreens.EnumerateListedAssetLinks())
+            {
+                yield return item;
             }
             foreach (var item in obj.AnimatedObjects.EnumerateListedAssetLinks())
             {
                 yield return item;
             }
+            foreach (var item in obj.Waters.EnumerateListedAssetLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.EffectShaders.EnumerateListedAssetLinks())
+            {
+                yield return item;
+            }
             foreach (var item in obj.Explosions.EnumerateListedAssetLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Debris.EnumerateListedAssetLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Perks.EnumerateListedAssetLinks())
             {
                 yield return item;
             }
@@ -9068,6 +9105,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
+            foreach (var item in obj.MusicTracks.EnumerateListedAssetLinks())
+            {
+                yield return item;
+            }
             foreach (var item in obj.ArtObjects.EnumerateListedAssetLinks())
             {
                 yield return item;
@@ -9076,12 +9117,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
+            foreach (var item in obj.SoundDescriptors.EnumerateListedAssetLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
         public void RemapListedAssetLinks(ISkyrimMod obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
         {
+            obj.TextureSets.RemapListedAssetLinks(mapping);
             obj.HeadParts.RemapListedAssetLinks(mapping);
+            obj.Eyes.RemapListedAssetLinks(mapping);
             obj.Scrolls.RemapListedAssetLinks(mapping);
             obj.Activators.RemapListedAssetLinks(mapping);
             obj.TalkingActivators.RemapListedAssetLinks(mapping);
@@ -9111,16 +9158,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.SoulGems.RemapListedAssetLinks(mapping);
             obj.Weathers.RemapListedAssetLinks(mapping);
             obj.Climates.RemapListedAssetLinks(mapping);
+            obj.ShaderParticleGeometries.RemapListedAssetLinks(mapping);
+            obj.Regions.RemapListedAssetLinks(mapping);
             obj.Cells.RemapListedAssetLinks(mapping);
             obj.Worldspaces.RemapListedAssetLinks(mapping);
+            obj.IdleAnimations.RemapListedAssetLinks(mapping);
+            obj.LoadScreens.RemapListedAssetLinks(mapping);
             obj.AnimatedObjects.RemapListedAssetLinks(mapping);
+            obj.Waters.RemapListedAssetLinks(mapping);
+            obj.EffectShaders.RemapListedAssetLinks(mapping);
             obj.Explosions.RemapListedAssetLinks(mapping);
+            obj.Debris.RemapListedAssetLinks(mapping);
+            obj.Perks.RemapListedAssetLinks(mapping);
             obj.BodyParts.RemapListedAssetLinks(mapping);
             obj.AddonNodes.RemapListedAssetLinks(mapping);
             obj.CameraShots.RemapListedAssetLinks(mapping);
             obj.Impacts.RemapListedAssetLinks(mapping);
+            obj.MusicTracks.RemapListedAssetLinks(mapping);
             obj.ArtObjects.RemapListedAssetLinks(mapping);
             obj.MaterialObjects.RemapListedAssetLinks(mapping);
+            obj.SoundDescriptors.RemapListedAssetLinks(mapping);
         }
         
         #endregion
@@ -16430,7 +16487,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ISkyrimModGetter obj, ILinkCache? linkCache, bool includeImplicit)
         {
+            foreach (var item in obj.TextureSets.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+            {
+                yield return item;
+            }
             foreach (var item in obj.HeadParts.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Eyes.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
                 yield return item;
             }
@@ -16550,6 +16615,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
+            foreach (var item in obj.ShaderParticleGeometries.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Regions.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+            {
+                yield return item;
+            }
             if (obj.Cells is IAssetLinkContainerGetter CellslinkCont)
             {
                 foreach (var item in CellslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
@@ -16557,18 +16630,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Worldspaces is IAssetLinkContainerGetter WorldspaceslinkCont)
+            foreach (var item in obj.Worldspaces.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in WorldspaceslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
+            }
+            foreach (var item in obj.IdleAnimations.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LoadScreens.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+            {
+                yield return item;
             }
             foreach (var item in obj.AnimatedObjects.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
                 yield return item;
             }
+            foreach (var item in obj.Waters.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.EffectShaders.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+            {
+                yield return item;
+            }
             foreach (var item in obj.Explosions.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Debris.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Perks.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
                 yield return item;
             }
@@ -16588,11 +16682,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
+            foreach (var item in obj.MusicTracks.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+            {
+                yield return item;
+            }
             foreach (var item in obj.ArtObjects.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
                 yield return item;
             }
             foreach (var item in obj.MaterialObjects.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoundDescriptors.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
                 yield return item;
             }

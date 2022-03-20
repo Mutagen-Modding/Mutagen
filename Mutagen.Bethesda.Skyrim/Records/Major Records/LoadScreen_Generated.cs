@@ -6,6 +6,7 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -796,6 +797,9 @@ namespace Mutagen.Bethesda.Skyrim
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => LoadScreenCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => LoadScreenSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => LoadScreenSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -875,6 +879,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILoadScreen :
+        IAssetLinkContainer,
         IFormLinkContainer,
         IHasIcons,
         ILoadScreenGetter,
@@ -909,6 +914,7 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.LSCR)]
     public partial interface ILoadScreenGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IHasIconsGetter,
@@ -1223,6 +1229,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.RemapLinks(obj, mapping);
             obj.Conditions.RemapLinks(mapping);
             obj.LoadingScreenNif.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ILoadScreen obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.Icons is {} IconsItems)
+            {
+                foreach (var item in IconsItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(ILoadScreen obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.Icons?.RemapListedAssetLinks(mapping);
         }
         
         #endregion
@@ -1600,6 +1628,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return FormLinkInformation.Factory(item);
             }
             yield return FormLinkInformation.Factory(obj.LoadingScreenNif);
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILoadScreenGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))
+            {
+                yield return item;
+            }
+            if (obj.Icons is {} IconsItems)
+            {
+                foreach (var item in IconsItems.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -2185,6 +2229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LoadScreenCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => LoadScreenCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LoadScreenBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

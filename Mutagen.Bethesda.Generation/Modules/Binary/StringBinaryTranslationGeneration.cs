@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
         { 
         }
         
-        public virtual Accessor AccessorTransform(Accessor a) => a; 
+        public virtual Accessor AccessorTransform(TypeGeneration typeGen, Accessor a) => a; 
         
         public override async Task GenerateWrite( 
             FileGeneration fg, 
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 $"{this.NamespacePrefix}StringBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}")) 
             { 
                 args.Add($"writer: {writerAccessor}"); 
-                args.Add($"item: {AccessorTransform(itemAccessor)}"); 
+                args.Add($"item: {AccessorTransform(typeGen, itemAccessor)}"); 
                 if (this.DoErrorMasks) 
                 { 
                     if (typeGen.HasIndex) 
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                     TypeGen = typeGen, 
                     TranslatorLine = $"{this.NamespacePrefix}StringBinaryTranslation.Instance", 
                     MaskAccessor = errorMaskAccessor, 
-                    ItemAccessor = AccessorTransform(itemAccessor), 
+                    ItemAccessor = AccessorTransform(typeGen, itemAccessor), 
                     TranslationMaskAccessor = null, 
                     IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null, 
                     ExtraArgs = extraArgs.ToArray(), 
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             switch (str.BinaryType) 
             { 
                 case StringBinaryType.NullTerminate: 
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)}{str.NullChar} {typeGen.Name} {{ get; private set; }} = {(str.Translated.HasValue ? $"{nameof(TranslatedString)}.{nameof(TranslatedString.Empty)}" : "string.Empty")};"); 
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)}{str.NullChar} {typeGen.Name} {{ get; private set; }} = {(str.Translated.HasValue ? $"{nameof(TranslatedString)}.{nameof(TranslatedString.Empty)}" : typeGen.GetDefault(getter: true))};"); 
                     break; 
                 default: 
                     await base.GenerateWrapperFields(fg, objGen, typeGen, dataAccessor, currentPosition, passedLengthAccessor, dataType); 
@@ -262,8 +262,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                     fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadUInt16LittleEndian(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 2;"); 
                     break; 
                 case StringBinaryType.NullTerminate: 
-                    fg.AppendLine($"ret.{typeGen.Name} = {(str.Translated.HasValue ? $"({nameof(TranslatedString)})" : string.Empty)}{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}(ret._data.Slice({passedLengthAccessor}), package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)});"); 
-                    fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}{(str.Translated == null ? $"ret.{typeGen.Name}.Length + 1" : "5")};"); 
+                    fg.AppendLine($"ret.{AccessorTransform(typeGen, typeGen.Name)} = {(str.Translated.HasValue ? $"({nameof(TranslatedString)})" : string.Empty)}{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}(ret._data.Slice({passedLengthAccessor}), package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)});"); 
+                    fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}{(str.Translated == null ? $"ret.{AccessorTransform(typeGen, typeGen.Name)}.Length + 1" : "5")};"); 
                     break; 
                 default: 
                     if (typeGen.GetFieldData().Binary == BinaryGenerationType.Custom) return; 

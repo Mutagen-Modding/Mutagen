@@ -6,6 +6,7 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -20,6 +21,7 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -67,14 +69,14 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IMusicTrackGetter.FadeOut => this.FadeOut;
         #endregion
         #region TrackFilename
-        public String? TrackFilename { get; set; }
+        public IAssetLink<SkyrimMusicAssetType>? TrackFilename { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IMusicTrackGetter.TrackFilename => this.TrackFilename;
+        IAssetLinkGetter<SkyrimMusicAssetType>? IMusicTrackGetter.TrackFilename => this.TrackFilename;
         #endregion
         #region FinaleFilename
-        public String? FinaleFilename { get; set; }
+        public IAssetLink<SkyrimMusicAssetType>? FinaleFilename { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IMusicTrackGetter.FinaleFilename => this.FinaleFilename;
+        IAssetLinkGetter<SkyrimMusicAssetType>? IMusicTrackGetter.FinaleFilename => this.FinaleFilename;
         #endregion
         #region LoopData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -927,6 +929,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IMusicTrack);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => MusicTrackCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => MusicTrackSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => MusicTrackSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1006,6 +1011,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMusicTrack :
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<IMusicTrackInternal>,
         IMusicTrackGetter,
@@ -1014,8 +1020,8 @@ namespace Mutagen.Bethesda.Skyrim
         new MusicTrack.TypeEnum Type { get; set; }
         new Single? Duration { get; set; }
         new Single? FadeOut { get; set; }
-        new String? TrackFilename { get; set; }
-        new String? FinaleFilename { get; set; }
+        new IAssetLink<SkyrimMusicAssetType>? TrackFilename { get; set; }
+        new IAssetLink<SkyrimMusicAssetType>? FinaleFilename { get; set; }
         new MusicTrackLoopData? LoopData { get; set; }
         new ExtendedList<Single>? CuePoints { get; set; }
         new ExtendedList<Condition>? Conditions { get; set; }
@@ -1032,6 +1038,7 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.MUST)]
     public partial interface IMusicTrackGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IMusicTrackGetter>,
@@ -1041,8 +1048,8 @@ namespace Mutagen.Bethesda.Skyrim
         MusicTrack.TypeEnum Type { get; }
         Single? Duration { get; }
         Single? FadeOut { get; }
-        String? TrackFilename { get; }
-        String? FinaleFilename { get; }
+        IAssetLinkGetter<SkyrimMusicAssetType>? TrackFilename { get; }
+        IAssetLinkGetter<SkyrimMusicAssetType>? FinaleFilename { get; }
         IMusicTrackLoopDataGetter? LoopData { get; }
         IReadOnlyList<Single>? CuePoints { get; }
         IReadOnlyList<IConditionGetter>? Conditions { get; }
@@ -1336,6 +1343,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.RemapLinks(obj, mapping);
             obj.Conditions?.RemapLinks(mapping);
             obj.Tracks?.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IMusicTrack obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.TrackFilename != null)
+            {
+                yield return obj.TrackFilename;
+            }
+            if (obj.FinaleFilename != null)
+            {
+                yield return obj.FinaleFilename;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IMusicTrack obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.TrackFilename?.Relink(mapping);
+            obj.FinaleFilename?.Relink(mapping);
         }
         
         #endregion
@@ -1750,6 +1781,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IMusicTrackGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))
+            {
+                yield return item;
+            }
+            if (obj.TrackFilename != null)
+            {
+                yield return obj.TrackFilename;
+            }
+            if (obj.FinaleFilename != null)
+            {
+                yield return obj.FinaleFilename;
+            }
+            yield break;
+        }
+        
         #region Duplicate
         public MusicTrack Duplicate(
             IMusicTrackGetter item,
@@ -1833,14 +1881,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.FadeOut = rhs.FadeOut;
             }
-            if ((copyMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.TrackFilename) ?? true))
-            {
-                item.TrackFilename = rhs.TrackFilename;
-            }
-            if ((copyMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.FinaleFilename) ?? true))
-            {
-                item.FinaleFilename = rhs.FinaleFilename;
-            }
+            item.TrackFilename = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.TrackFilename, rhs.TrackFilename);
+            item.FinaleFilename = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.FinaleFilename, rhs.FinaleFilename);
             if ((copyMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.LoopData) ?? true))
             {
                 errorMask?.PushIndex((int)MusicTrack_FieldIndex.LoopData);
@@ -2124,12 +2166,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: translationParams.ConvertToCustom(RecordTypes.DNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.TrackFilename,
+                item: item.TrackFilename?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.FinaleFilename,
+                item: item.FinaleFilename?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.BNAM),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.LoopData is {} LoopDataItem)
@@ -2281,17 +2323,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TrackFilename = StringBinaryTranslation.Instance.Parse(
+                    item.TrackFilename = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimMusicAssetType.Instance);
                     return (int)MusicTrack_FieldIndex.TrackFilename;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FinaleFilename = StringBinaryTranslation.Instance.Parse(
+                    item.FinaleFilename = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimMusicAssetType.Instance);
                     return (int)MusicTrack_FieldIndex.FinaleFilename;
                 }
                 case RecordTypeInts.LNAM:
@@ -2377,6 +2421,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MusicTrackCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => MusicTrackCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MusicTrackBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2405,11 +2450,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region TrackFilename
         private int? _TrackFilenameLocation;
-        public String? TrackFilename => _TrackFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TrackFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IAssetLinkGetter<SkyrimMusicAssetType>? TrackFilename => _TrackFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimMusicAssetType>(SkyrimMusicAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TrackFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region FinaleFilename
         private int? _FinaleFilenameLocation;
-        public String? FinaleFilename => _FinaleFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FinaleFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IAssetLinkGetter<SkyrimMusicAssetType>? FinaleFilename => _FinaleFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimMusicAssetType>(SkyrimMusicAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FinaleFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region LoopData
         private RangeInt32? _LoopDataLocation;

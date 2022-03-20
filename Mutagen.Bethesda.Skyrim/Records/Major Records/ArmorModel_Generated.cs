@@ -835,12 +835,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Icons is {} IconsItems)
+            {
+                foreach (var item in IconsItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
         public void RemapListedAssetLinks(IArmorModel obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
         {
             obj.Model?.RemapListedAssetLinks(mapping);
+            obj.Icons?.RemapListedAssetLinks(mapping);
         }
         
         #endregion
@@ -1021,6 +1029,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Icons is {} IconsItems)
+            {
+                foreach (var item in IconsItems.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
                 {
                     yield return item;
                 }

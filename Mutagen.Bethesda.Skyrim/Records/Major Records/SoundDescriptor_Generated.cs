@@ -6,6 +6,7 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -20,6 +21,7 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -86,15 +88,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SoundFiles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<String> _SoundFiles = new ExtendedList<String>();
-        public ExtendedList<String> SoundFiles
+        private ExtendedList<IAssetLink<SkyrimSoundAssetType>> _SoundFiles = new ExtendedList<IAssetLink<SkyrimSoundAssetType>>();
+        public ExtendedList<IAssetLink<SkyrimSoundAssetType>> SoundFiles
         {
             get => this._SoundFiles;
             init => this._SoundFiles = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<String> ISoundDescriptorGetter.SoundFiles => _SoundFiles;
+        IReadOnlyList<IAssetLinkGetter<SkyrimSoundAssetType>> ISoundDescriptorGetter.SoundFiles => _SoundFiles;
         #endregion
 
         #endregion
@@ -1025,6 +1027,9 @@ namespace Mutagen.Bethesda.Skyrim
         public enum BNAMDataType
         {
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => SoundDescriptorCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SoundDescriptorSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SoundDescriptorSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1104,6 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISoundDescriptor :
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<ISoundDescriptorInternal>,
         ISkyrimMajorRecordInternal,
@@ -1113,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? CNAM { get; set; }
         new IFormLinkNullable<ISoundCategoryGetter> Category { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor { get; set; }
-        new ExtendedList<String> SoundFiles { get; }
+        new ExtendedList<IAssetLink<SkyrimSoundAssetType>> SoundFiles { get; }
         new IFormLinkNullable<ISoundOutputModelGetter> OutputModel { get; set; }
         new String? String { get; set; }
         new ExtendedList<Condition> Conditions { get; }
@@ -1136,6 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.SNDR)]
     public partial interface ISoundDescriptorGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ISoundDescriptorGetter>,
@@ -1146,7 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? CNAM { get; }
         IFormLinkNullableGetter<ISoundCategoryGetter> Category { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> AlternateSoundFor { get; }
-        IReadOnlyList<String> SoundFiles { get; }
+        IReadOnlyList<IAssetLinkGetter<SkyrimSoundAssetType>> SoundFiles { get; }
         IFormLinkNullableGetter<ISoundOutputModelGetter> OutputModel { get; }
         String? String { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
@@ -1458,6 +1465,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.AlternateSoundFor.Relink(mapping);
             obj.OutputModel.Relink(mapping);
             obj.Conditions.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ISoundDescriptor obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoundFiles)
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(ISoundDescriptor obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.SoundFiles.ForEach(x => x.Relink(mapping));
         }
         
         #endregion
@@ -1896,6 +1922,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ISoundDescriptorGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoundFiles)
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         #region Duplicate
         public SoundDescriptor Duplicate(
             ISoundDescriptorGetter item,
@@ -1991,7 +2030,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)SoundDescriptor_FieldIndex.SoundFiles);
                 try
                 {
-                    item.SoundFiles.SetTo(rhs.SoundFiles);
+                    item.SoundFiles.SetTo(
+                        rhs.SoundFiles
+                        .Select(r => r.AsSetter()));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2263,11 +2304,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.AlternateSoundFor,
                 header: translationParams.ConvertToCustom(RecordTypes.SNAM));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.WritePerItem(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAssetLinkGetter<SkyrimSoundAssetType>>.Instance.Write(
                 writer: writer,
                 items: item.SoundFiles,
-                recordType: translationParams.ConvertToCustom(RecordTypes.ANAM),
-                transl: StringBinaryTranslation.Instance.Write);
+                transl: (MutagenWriter subWriter, IAssetLinkGetter<SkyrimSoundAssetType> subItem) =>
+                {
+                    StringBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem.RawPath,
+                        header: translationParams.ConvertToCustom(RecordTypes.ANAM),
+                        binaryType: StringBinaryType.NullTerminate);
+                });
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.OutputModel,
@@ -2419,10 +2466,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ANAM:
                 {
                     item.SoundFiles.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAssetLink<SkyrimSoundAssetType>>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: translationParams.ConvertToCustom(RecordTypes.ANAM),
-                            transl: StringBinaryTranslation.Instance.Parse));
+                            transl: (MutagenFrame r, [MaybeNullWhen(false)] out IAssetLink<SkyrimSoundAssetType> listSubItem) =>
+                            {
+                                return AssetLinkBinaryTranslation.Instance.Parse(
+                                    r,
+                                    item: out listSubItem,
+                                    assetType: SkyrimSoundAssetType.Instance,
+                                    parseWhole: true,
+                                    binaryType: StringBinaryType.NullTerminate);
+                            }));
                     return (int)SoundDescriptor_FieldIndex.SoundFiles;
                 }
                 case RecordTypeInts.ONAM:
@@ -2512,6 +2567,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => SoundDescriptorCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => SoundDescriptorCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundDescriptorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2538,7 +2594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _AlternateSoundForLocation;
         public IFormLinkNullableGetter<ISoundDescriptorGetter> AlternateSoundFor => _AlternateSoundForLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AlternateSoundForLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
-        public IReadOnlyList<String> SoundFiles { get; private set; } = ListExt.Empty<String>();
+        public IReadOnlyList<IAssetLinkGetter<SkyrimSoundAssetType>> SoundFiles { get; private set; } = ListExt.Empty<IAssetLinkGetter<SkyrimSoundAssetType>>();
         #region OutputModel
         private int? _OutputModelLocation;
         public IFormLinkNullableGetter<ISoundOutputModelGetter> OutputModel => _OutputModelLocation.HasValue ? new FormLinkNullable<ISoundOutputModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OutputModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundOutputModelGetter>.Null;
@@ -2669,10 +2725,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    this.SoundFiles = BinaryOverlayList.FactoryByArray<String>(
+                    this.SoundFiles = BinaryOverlayList.FactoryByArray<IAssetLinkGetter<SkyrimSoundAssetType>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordFrame(s).Content, encoding: p.MetaData.Encodings.NonTranslated),
+                        getter: (s, p) => new AssetLinkGetter<SkyrimSoundAssetType>(SkyrimSoundAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordFrame(s).Content, encoding: p.MetaData.Encodings.NonTranslated)),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

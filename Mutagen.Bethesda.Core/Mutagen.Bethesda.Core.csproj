@@ -29,7 +29,7 @@
     </PackageReference>
     <PackageReference Include="ini-parser-netstandard" Version="2.5.2" />
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.16" />
-    <PackageReference Include="Loqui" Version="2.40.0" />
+    <PackageReference Include="Loqui" Version="2.40.0.1-dev" />
     <PackageReference Include="Noggog.CSharpExt" Version="2.40.0" />
     <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
@@ -189,6 +189,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Plugins\Binary\Translations\AssetLinkBinaryTranslation.cs" />
     <Compile Include="Plugins\Binary\Translations\PreviousParse.cs" />
     <Compile Include="Plugins\Binary\Translations\TypedParseParams.cs" />
     <Compile Include="Plugins\Binary\Translations\TypedWriteParams.cs" />
@@ -214,6 +215,11 @@
     <Compile Include="Plugins\Converters\ModPathTypeConverter.cs" />
     <Compile Include="Plugins\Exceptions\ModHeaderMalformedException.cs" />
     <Compile Include="Plugins\Exceptions\ModPathException.cs" />
+    <Compile Include="Plugins\Extensions\IAssetLinkExt.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Plugins\Extensions\ILinkCacheExt.cs" />
     <Compile Include="Plugins\Extensions\IFormLinkExt.cs" />
     <Compile Include="Plugins\Extensions\ModContextExt.cs" />
@@ -630,7 +636,7 @@
     <Compile Include="Plugins\Binary\Streams\MutagenWriter.cs" />
     <Compile Include="Plugins\Binary\Translations\RecordTypeBinaryTranslation.cs" />
     <Compile Include="Plugins\Binary\Translations\StringBinaryTranslation.cs" />
-    <Compile Include="Plugins\Binary\Translations\UtilityTranslation.cs" />
+    <Compile Include="Plugins\Binary\Translations\PluginUtilityTranslation.cs" />
     <Compile Include="Plugins\Xml\FolderTranslation.cs" />
     <Compile Include="Plugins\Xml\RecordTypeXmlTranslation.cs" />
     <Compile Include="Plugins\Xml\FormKeyXmlTranslation.cs" />

@@ -21,6 +21,7 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -57,15 +58,15 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region CloudTextures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String[] _CloudTextures = new String[29];
-        public String[] CloudTextures
+        private IAssetLink<SkyrimTextureAssetType>[] _CloudTextures = new IAssetLink<SkyrimTextureAssetType>[29];
+        public IAssetLink<SkyrimTextureAssetType>[] CloudTextures
         {
             get => this._CloudTextures;
             init => this._CloudTextures = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<String?> IWeatherGetter.CloudTextures => _CloudTextures;
+        ReadOnlyMemorySlice<IAssetLinkGetter<SkyrimTextureAssetType>?> IWeatherGetter.CloudTextures => _CloudTextures;
         #endregion
 
         #endregion
@@ -3069,7 +3070,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal,
         IWeatherGetter
     {
-        new String?[] CloudTextures { get; }
+        new IAssetLink<SkyrimTextureAssetType>?[] CloudTextures { get; }
         new MemorySlice<Byte>? DNAM { get; set; }
         new MemorySlice<Byte>? CNAM { get; set; }
         new MemorySlice<Byte>? ANAM { get; set; }
@@ -3151,7 +3152,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IWeatherGetter>
     {
         static new ILoquiRegistration StaticRegistration => Weather_Registration.Instance;
-        ReadOnlyMemorySlice<String?> CloudTextures { get; }
+        ReadOnlyMemorySlice<IAssetLinkGetter<SkyrimTextureAssetType>?> CloudTextures { get; }
         ReadOnlyMemorySlice<Byte>? DNAM { get; }
         ReadOnlyMemorySlice<Byte>? CNAM { get; }
         ReadOnlyMemorySlice<Byte>? ANAM { get; }
@@ -3625,6 +3626,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
+            foreach (var item in obj.CloudTextures.NotNull())
+            {
+                yield return item;
+            }
             if (obj.Aurora is {} AuroraItems)
             {
                 foreach (var item in AuroraItems.EnumerateListedAssetLinks())
@@ -3638,6 +3643,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapListedAssetLinks(IWeather obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
         {
             base.RemapListedAssetLinks(obj, mapping);
+            obj.CloudTextures.ForEach(x => x?.Relink(mapping));
             obj.Aurora?.RemapListedAssetLinks(mapping);
         }
         
@@ -4219,7 +4225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.CloudTextures) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual<string>(lhs.CloudTextures.Span!, rhs.CloudTextures.Span!)) return false;
+                if (!MemoryExtensions.SequenceEqual<IAssetLinkGetter<SkyrimTextureAssetType>>(lhs.CloudTextures.Span!, rhs.CloudTextures.Span!)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.DNAM) ?? true))
             {
@@ -4756,6 +4762,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
+            foreach (var item in obj.CloudTextures.NotNull())
+            {
+                yield return item;
+            }
             if (obj.Aurora is {} AuroraItems)
             {
                 foreach (var item in AuroraItems.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
@@ -4839,7 +4849,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudTextures) ?? true))
             {
-                item.CloudTextures.SetTo(rhs.CloudTextures);
+                item.CloudTextures.SetTo(
+                    rhs.CloudTextures
+                    .Select(r => r?.AsSetter()));
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.DNAM) ?? true))
             {

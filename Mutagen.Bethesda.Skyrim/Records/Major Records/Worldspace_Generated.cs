@@ -22,6 +22,7 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -210,9 +211,9 @@ namespace Mutagen.Bethesda.Skyrim
         IWorldspaceLandDefaultsGetter? IWorldspaceGetter.LandDefaults => this.LandDefaults;
         #endregion
         #region MapImage
-        public String? MapImage { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? MapImage { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWorldspaceGetter.MapImage => this.MapImage;
+        IAssetLinkGetter<SkyrimTextureAssetType>? IWorldspaceGetter.MapImage => this.MapImage;
         #endregion
         #region CloudModel
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -271,29 +272,29 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IMusicTypeGetter> IWorldspaceGetter.Music => this.Music;
         #endregion
         #region CanopyShadow
-        public String? CanopyShadow { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? CanopyShadow { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWorldspaceGetter.CanopyShadow => this.CanopyShadow;
+        IAssetLinkGetter<SkyrimTextureAssetType>? IWorldspaceGetter.CanopyShadow => this.CanopyShadow;
         #endregion
         #region WaterNoiseTexture
-        public String? WaterNoiseTexture { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? WaterNoiseTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWorldspaceGetter.WaterNoiseTexture => this.WaterNoiseTexture;
+        IAssetLinkGetter<SkyrimTextureAssetType>? IWorldspaceGetter.WaterNoiseTexture => this.WaterNoiseTexture;
         #endregion
         #region HdLodDiffuseTexture
-        public String? HdLodDiffuseTexture { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? HdLodDiffuseTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWorldspaceGetter.HdLodDiffuseTexture => this.HdLodDiffuseTexture;
+        IAssetLinkGetter<SkyrimTextureAssetType>? IWorldspaceGetter.HdLodDiffuseTexture => this.HdLodDiffuseTexture;
         #endregion
         #region HdLodNormalTexture
-        public String? HdLodNormalTexture { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? HdLodNormalTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWorldspaceGetter.HdLodNormalTexture => this.HdLodNormalTexture;
+        IAssetLinkGetter<SkyrimTextureAssetType>? IWorldspaceGetter.HdLodNormalTexture => this.HdLodNormalTexture;
         #endregion
         #region WaterEnvironmentMap
-        public String? WaterEnvironmentMap { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? WaterEnvironmentMap { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWorldspaceGetter.WaterEnvironmentMap => this.WaterEnvironmentMap;
+        IAssetLinkGetter<SkyrimTextureAssetType>? IWorldspaceGetter.WaterEnvironmentMap => this.WaterEnvironmentMap;
         #endregion
         #region OffsetData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1878,7 +1879,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<IWaterGetter> LodWater { get; set; }
         new Single? LodWaterHeight { get; set; }
         new WorldspaceLandDefaults? LandDefaults { get; set; }
-        new String? MapImage { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? MapImage { get; set; }
         new Model? CloudModel { get; set; }
         new WorldspaceMap? MapData { get; set; }
         new WorldspaceMapOffset MapOffset { get; set; }
@@ -1886,11 +1887,11 @@ namespace Mutagen.Bethesda.Skyrim
         new Worldspace.Flag Flags { get; set; }
         new WorldspaceObjectBounds? ObjectBounds { get; set; }
         new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
-        new String? CanopyShadow { get; set; }
-        new String? WaterNoiseTexture { get; set; }
-        new String? HdLodDiffuseTexture { get; set; }
-        new String? HdLodNormalTexture { get; set; }
-        new String? WaterEnvironmentMap { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? CanopyShadow { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? WaterNoiseTexture { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? HdLodDiffuseTexture { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? HdLodNormalTexture { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? WaterEnvironmentMap { get; set; }
         new MemorySlice<Byte>? OffsetData { get; set; }
         new Cell? TopCell { get; set; }
         new Int32 SubCellsTimestamp { get; set; }
@@ -1943,7 +1944,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IWaterGetter> LodWater { get; }
         Single? LodWaterHeight { get; }
         IWorldspaceLandDefaultsGetter? LandDefaults { get; }
-        String? MapImage { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? MapImage { get; }
         IModelGetter? CloudModel { get; }
         IWorldspaceMapGetter? MapData { get; }
         IWorldspaceMapOffsetGetter MapOffset { get; }
@@ -1951,11 +1952,11 @@ namespace Mutagen.Bethesda.Skyrim
         Worldspace.Flag Flags { get; }
         IWorldspaceObjectBoundsGetter? ObjectBounds { get; }
         IFormLinkNullableGetter<IMusicTypeGetter> Music { get; }
-        String? CanopyShadow { get; }
-        String? WaterNoiseTexture { get; }
-        String? HdLodDiffuseTexture { get; }
-        String? HdLodNormalTexture { get; }
-        String? WaterEnvironmentMap { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? CanopyShadow { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? WaterNoiseTexture { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? HdLodDiffuseTexture { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? HdLodNormalTexture { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? WaterEnvironmentMap { get; }
         ReadOnlyMemorySlice<Byte>? OffsetData { get; }
         ICellGetter? TopCell { get; }
         Int32 SubCellsTimestamp { get; }
@@ -2838,12 +2839,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
+            if (obj.MapImage != null)
+            {
+                yield return obj.MapImage;
+            }
             if (obj.CloudModel is {} CloudModelItems)
             {
                 foreach (var item in CloudModelItems.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
+            }
+            if (obj.CanopyShadow != null)
+            {
+                yield return obj.CanopyShadow;
+            }
+            if (obj.WaterNoiseTexture != null)
+            {
+                yield return obj.WaterNoiseTexture;
+            }
+            if (obj.HdLodDiffuseTexture != null)
+            {
+                yield return obj.HdLodDiffuseTexture;
+            }
+            if (obj.HdLodNormalTexture != null)
+            {
+                yield return obj.HdLodNormalTexture;
+            }
+            if (obj.WaterEnvironmentMap != null)
+            {
+                yield return obj.WaterEnvironmentMap;
             }
             if (obj.TopCell is IAssetLinkContainer TopCelllinkCont)
             {
@@ -2863,7 +2888,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapListedAssetLinks(IWorldspace obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
         {
             base.RemapListedAssetLinks(obj, mapping);
+            obj.MapImage?.Relink(mapping);
             obj.CloudModel?.RemapListedAssetLinks(mapping);
+            obj.CanopyShadow?.Relink(mapping);
+            obj.WaterNoiseTexture?.Relink(mapping);
+            obj.HdLodDiffuseTexture?.Relink(mapping);
+            obj.HdLodNormalTexture?.Relink(mapping);
+            obj.WaterEnvironmentMap?.Relink(mapping);
             obj.TopCell?.RemapListedAssetLinks(mapping);
             obj.SubCells.ForEach(x => x.RemapListedAssetLinks(mapping));
         }
@@ -4313,12 +4344,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
+            if (obj.MapImage != null)
+            {
+                yield return obj.MapImage;
+            }
             if (obj.CloudModel is {} CloudModelItems)
             {
                 foreach (var item in CloudModelItems.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
                 {
                     yield return item;
                 }
+            }
+            if (obj.CanopyShadow != null)
+            {
+                yield return obj.CanopyShadow;
+            }
+            if (obj.WaterNoiseTexture != null)
+            {
+                yield return obj.WaterNoiseTexture;
+            }
+            if (obj.HdLodDiffuseTexture != null)
+            {
+                yield return obj.HdLodDiffuseTexture;
+            }
+            if (obj.HdLodNormalTexture != null)
+            {
+                yield return obj.HdLodNormalTexture;
+            }
+            if (obj.WaterEnvironmentMap != null)
+            {
+                yield return obj.WaterEnvironmentMap;
             }
             if (obj.TopCell is IAssetLinkContainerGetter TopCelllinkCont)
             {
@@ -4544,10 +4599,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MapImage) ?? true))
-            {
-                item.MapImage = rhs.MapImage;
-            }
+            item.MapImage = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.MapImage, rhs.MapImage);
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.CloudModel) ?? true))
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.CloudModel);
@@ -4660,26 +4712,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Music.SetTo(rhs.Music.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.CanopyShadow) ?? true))
-            {
-                item.CanopyShadow = rhs.CanopyShadow;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WaterNoiseTexture) ?? true))
-            {
-                item.WaterNoiseTexture = rhs.WaterNoiseTexture;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.HdLodDiffuseTexture) ?? true))
-            {
-                item.HdLodDiffuseTexture = rhs.HdLodDiffuseTexture;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.HdLodNormalTexture) ?? true))
-            {
-                item.HdLodNormalTexture = rhs.HdLodNormalTexture;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WaterEnvironmentMap) ?? true))
-            {
-                item.WaterEnvironmentMap = rhs.WaterEnvironmentMap;
-            }
+            item.CanopyShadow = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.CanopyShadow, rhs.CanopyShadow);
+            item.WaterNoiseTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.WaterNoiseTexture, rhs.WaterNoiseTexture);
+            item.HdLodDiffuseTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.HdLodDiffuseTexture, rhs.HdLodDiffuseTexture);
+            item.HdLodNormalTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.HdLodNormalTexture, rhs.HdLodNormalTexture);
+            item.WaterEnvironmentMap = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.WaterEnvironmentMap, rhs.WaterEnvironmentMap);
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
             {
                 if(rhs.OffsetData is {} OffsetDatarhs)
@@ -4987,7 +5024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.MapImage,
+                item: item.MapImage?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.CloudModel is {} CloudModelItem)
@@ -5031,27 +5068,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: translationParams.ConvertToCustom(RecordTypes.ZNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.CanopyShadow,
+                item: item.CanopyShadow?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.WaterNoiseTexture,
+                item: item.WaterNoiseTexture?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.XNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.HdLodDiffuseTexture,
+                item: item.HdLodDiffuseTexture?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.HdLodNormalTexture,
+                item: item.HdLodNormalTexture?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.UNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.WaterEnvironmentMap,
+                item: item.WaterEnvironmentMap?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.XWEM),
                 binaryType: StringBinaryType.NullTerminate);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -5253,9 +5290,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MapImage = StringBinaryTranslation.Instance.Parse(
+                    item.MapImage = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)Worldspace_FieldIndex.MapImage;
                 }
                 case RecordTypeInts.MODL:
@@ -5306,41 +5344,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CanopyShadow = StringBinaryTranslation.Instance.Parse(
+                    item.CanopyShadow = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)Worldspace_FieldIndex.CanopyShadow;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WaterNoiseTexture = StringBinaryTranslation.Instance.Parse(
+                    item.WaterNoiseTexture = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)Worldspace_FieldIndex.WaterNoiseTexture;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HdLodDiffuseTexture = StringBinaryTranslation.Instance.Parse(
+                    item.HdLodDiffuseTexture = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)Worldspace_FieldIndex.HdLodDiffuseTexture;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HdLodNormalTexture = StringBinaryTranslation.Instance.Parse(
+                    item.HdLodNormalTexture = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)Worldspace_FieldIndex.HdLodNormalTexture;
                 }
                 case RecordTypeInts.XWEM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WaterEnvironmentMap = StringBinaryTranslation.Instance.Parse(
+                    item.WaterEnvironmentMap = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)Worldspace_FieldIndex.WaterEnvironmentMap;
                 }
                 case RecordTypeInts.OFST:
@@ -5488,7 +5531,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region MapImage
         private int? _MapImageLocation;
-        public String? MapImage => _MapImageLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MapImageLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IAssetLinkGetter<SkyrimTextureAssetType>? MapImage => _MapImageLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MapImageLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         public IModelGetter? CloudModel { get; private set; }
         #region MapData
@@ -5515,23 +5558,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region CanopyShadow
         private int? _CanopyShadowLocation;
-        public String? CanopyShadow => _CanopyShadowLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _CanopyShadowLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IAssetLinkGetter<SkyrimTextureAssetType>? CanopyShadow => _CanopyShadowLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _CanopyShadowLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region WaterNoiseTexture
         private int? _WaterNoiseTextureLocation;
-        public String? WaterNoiseTexture => _WaterNoiseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterNoiseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IAssetLinkGetter<SkyrimTextureAssetType>? WaterNoiseTexture => _WaterNoiseTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterNoiseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region HdLodDiffuseTexture
         private int? _HdLodDiffuseTextureLocation;
-        public String? HdLodDiffuseTexture => _HdLodDiffuseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _HdLodDiffuseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IAssetLinkGetter<SkyrimTextureAssetType>? HdLodDiffuseTexture => _HdLodDiffuseTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _HdLodDiffuseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region HdLodNormalTexture
         private int? _HdLodNormalTextureLocation;
-        public String? HdLodNormalTexture => _HdLodNormalTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _HdLodNormalTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IAssetLinkGetter<SkyrimTextureAssetType>? HdLodNormalTexture => _HdLodNormalTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _HdLodNormalTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region WaterEnvironmentMap
         private int? _WaterEnvironmentMapLocation;
-        public String? WaterEnvironmentMap => _WaterEnvironmentMapLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterEnvironmentMapLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IAssetLinkGetter<SkyrimTextureAssetType>? WaterEnvironmentMap => _WaterEnvironmentMapLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterEnvironmentMapLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region OffsetData
         private int? _OffsetDataLocation;

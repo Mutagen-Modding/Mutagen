@@ -6,6 +6,7 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -20,6 +21,7 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -68,9 +70,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Filename
-        public String? Filename { get; set; }
+        public IAssetLink<SkyrimBehaviorAssetType>? Filename { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IIdleAnimationGetter.Filename => this.Filename;
+        IAssetLinkGetter<SkyrimBehaviorAssetType>? IIdleAnimationGetter.Filename => this.Filename;
         #endregion
         #region AnimationEvent
         public String? AnimationEvent { get; set; }
@@ -859,6 +861,9 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DATADataType
         {
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => IdleAnimationCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => IdleAnimationSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => IdleAnimationSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -938,6 +943,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IIdleAnimation :
+        IAssetLinkContainer,
         IFormLinkContainer,
         IIdleAnimationGetter,
         IIdleRelation,
@@ -945,7 +951,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal
     {
         new ExtendedList<Condition> Conditions { get; }
-        new String? Filename { get; set; }
+        new IAssetLink<SkyrimBehaviorAssetType>? Filename { get; set; }
         new String? AnimationEvent { get; set; }
         new ExtendedList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; }
         new Byte LoopingSecondsMin { get; set; }
@@ -966,6 +972,7 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.IDLE)]
     public partial interface IIdleAnimationGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IIdleRelationGetter,
@@ -974,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration StaticRegistration => IdleAnimation_Registration.Instance;
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        String? Filename { get; }
+        IAssetLinkGetter<SkyrimBehaviorAssetType>? Filename { get; }
         String? AnimationEvent { get; }
         IReadOnlyList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; }
         Byte LoopingSecondsMin { get; }
@@ -1274,6 +1281,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.RemapLinks(obj, mapping);
             obj.Conditions.RemapLinks(mapping);
             obj.RelatedIdles.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IIdleAnimation obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.Filename != null)
+            {
+                yield return obj.Filename;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IIdleAnimation obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.Filename?.Relink(mapping);
         }
         
         #endregion
@@ -1652,6 +1678,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IIdleAnimationGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))
+            {
+                yield return item;
+            }
+            if (obj.Filename != null)
+            {
+                yield return obj.Filename;
+            }
+            yield break;
+        }
+        
         #region Duplicate
         public IdleAnimation Duplicate(
             IIdleAnimationGetter item,
@@ -1747,10 +1786,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Filename) ?? true))
-            {
-                item.Filename = rhs.Filename;
-            }
+            item.Filename = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Filename, rhs.Filename);
             if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationEvent) ?? true))
             {
                 item.AnimationEvent = rhs.AnimationEvent;
@@ -1977,7 +2013,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Filename,
+                item: item.Filename?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.DNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
@@ -2110,9 +2146,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Filename = StringBinaryTranslation.Instance.Parse(
+                    item.Filename = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimBehaviorAssetType.Instance);
                     return (int)IdleAnimation_FieldIndex.Filename;
                 }
                 case RecordTypeInts.ENAM:
@@ -2189,6 +2226,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => IdleAnimationCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => IdleAnimationCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => IdleAnimationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2213,7 +2251,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Filename
         private int? _FilenameLocation;
-        public String? Filename => _FilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IAssetLinkGetter<SkyrimBehaviorAssetType>? Filename => _FilenameLocation.HasValue ? new AssetLinkGetter<SkyrimBehaviorAssetType>(SkyrimBehaviorAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region AnimationEvent
         private int? _AnimationEventLocation;

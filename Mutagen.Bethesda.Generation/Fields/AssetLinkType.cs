@@ -2,6 +2,7 @@ using System.Xml.Linq;
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 
 namespace Mutagen.Bethesda.Generation.Fields;
@@ -24,7 +25,7 @@ public class AssetLinkType : StringType
 
     public override string GetDefault(bool getter)
     {
-        return $"new AssetLink{(getter ? "Getter" : null)}<{AssetTypeString}>({AssetTypeString}.Instance)";
+        return this.Nullable ? "null" : $"new AssetLink{(getter ? "Getter" : null)}<{AssetTypeString}>({AssetTypeString}.Instance)";
     }
 
     public override async Task Load(XElement node, bool requireName = true)
@@ -57,7 +58,14 @@ public class AssetLinkType : StringType
 
     public override void GenerateForCopy(FileGeneration fg, Accessor accessor, Accessor rhs, Accessor copyMaskAccessor, bool protectedMembers, bool deepCopy)
     {
-        fg.AppendLine($"{accessor}.{nameof(IAssetLink.RawPath)} = {rhs}{this.NullChar}.{nameof(IAssetLink.RawPath)};");
+        if (this.Nullable)
+        {
+            fg.AppendLine($"{accessor} = {nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.AssetNullableDeepCopyIn)}({accessor}, {rhs});");
+        }
+        else
+        {
+            fg.AppendLine($"{accessor}.{nameof(IAssetLink.RawPath)} = {rhs}{this.NullChar}.{nameof(IAssetLink.RawPath)};");
+        }
     }
 
     public override void GenerateClear(FileGeneration fg, Accessor identifier)
@@ -70,5 +78,10 @@ public class AssetLinkType : StringType
         {
             fg.AppendLine($"{identifier.Access}.SetToNull();");
         }
+    }
+
+    public override void GenerateCopySetToConverter(FileGeneration fg)
+    {
+        fg.AppendLine($".Select(r => r{NullChar}.AsSetter())");
     }
 }

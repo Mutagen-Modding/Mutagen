@@ -1,7 +1,8 @@
-﻿using Loqui;
+using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Generation.Fields;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
@@ -30,6 +31,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
             yield break;
         }
         yield return "Mutagen.Bethesda.Assets";
+        yield return "Mutagen.Bethesda.Plugins.Cache";
     }
 
     public override async Task PostLoad(ObjectGeneration obj)
@@ -94,7 +96,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                     {
                         if (field.Nullable)
                         {
-                            fg.AppendLine($"if (obj.{field.Name}.{nameof(IAssetLink.RawPath)}.HasValue)");
+                            fg.AppendLine($"if (obj.{field.Name} != null)");
                             using (new BraceWrapper(fg))
                             {
                                 fg.AppendLine($"yield return obj.{field.Name};");
@@ -177,7 +179,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         }
                         else if (cont.SubTypeGeneration is AssetLinkType assetLinkType)
                         {
-                            string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".NotNull()" : null;
+                            string filterNulls = assetLinkType.IsNullable || (cont is GenderedType && ((GenderedType)cont).ItemNullable) ? ".NotNull()" : null;
                             subFg.AppendLine($"foreach (var item in {access}{filterNulls})");
                         }
                         else
@@ -283,7 +285,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                     {
                         if (field.Nullable)
                         {
-                            fg.AppendLine($"if (obj.{field.Name}.{nameof(IAssetLink.RawPath)}.HasValue)");
+                            fg.AppendLine($"if (obj.{field.Name} != null)");
                             using (new BraceWrapper(fg))
                             {
                                 fg.AppendLine($"yield return obj.{field.Name};");
@@ -367,7 +369,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         else if (cont.SubTypeGeneration is AssetLinkType assetLinkType)
                         {
                             string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".NotNull()" : null;
-                            subFg.AppendLine($"foreach (var item in {access}{filterNulls})");
+                            subFg.AppendLine($"foreach (var item in {access}{filterNulls}{(assetLinkType.Nullable ? ".NotNull()" : null)})");
                         }
                         else
                         {
@@ -466,7 +468,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                 {
                     if (field is AssetLinkType)
                     {
-                        fg.AppendLine($"obj.{field.Name}.Relink(mapping);");
+                        fg.AppendLine($"obj.{field.Name}{field.NullChar}.Relink(mapping);");
                     }
                     else if (field is LoquiType loqui)
                     {
@@ -485,10 +487,13 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                     else if (field is WrapperType cont)
                     {
                         if ((cont.SubTypeGeneration is LoquiType contLoqui
-                             && await HasLinks(contLoqui, includeBaseClass: true) != Case.No)
-                            || cont.SubTypeGeneration is AssetLinkType)
+                             && await HasLinks(contLoqui, includeBaseClass: true) != Case.No))
                         {
                             fg.AppendLine($"obj.{field.Name}{field.NullChar}.ForEach(x => x{field.NullChar}.{nameof(IAssetLinkContainer.RemapListedAssetLinks)}(mapping));");
+                        }
+                        else if (cont.SubTypeGeneration is AssetLinkType subAsset)
+                        {
+                            fg.AppendLine($"obj.{field.Name}{field.NullChar}.ForEach(x => x{subAsset.NullChar}.Relink(mapping));");
                         }
                     }
                     else if (field is DictType dict)
