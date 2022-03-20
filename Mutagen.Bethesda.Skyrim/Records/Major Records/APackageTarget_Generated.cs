@@ -1054,7 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region DataParse
-         partial void DataParseCustomParse(
+        partial void DataParseCustomParse(
             OverlayStream stream,
             int offset);
         #endregion

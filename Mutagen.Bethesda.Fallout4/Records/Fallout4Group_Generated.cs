@@ -1482,7 +1482,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
 
         #region ContainedRecordTypeParse
-         partial void ContainedRecordTypeParseCustomParse(
+        partial void ContainedRecordTypeParseCustomParse(
             OverlayStream stream,
             int offset);
         #endregion

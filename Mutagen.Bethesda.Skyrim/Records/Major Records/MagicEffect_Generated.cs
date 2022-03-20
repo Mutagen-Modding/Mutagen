@@ -4835,7 +4835,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single BaseCost => _BaseCost_IsSet ? _data.Slice(_BaseCostLocation, 4).Float() : default;
         #endregion
         #region AssociatedItem
-         partial void AssociatedItemCustomParse(
+        private int _AssociatedItemLocation => _DATALocation!.Value + 0x8;
+        private bool _AssociatedItem_IsSet => _DATALocation.HasValue;
+        partial void AssociatedItemCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -4850,7 +4852,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ActorValue ResistValue => _ResistValue_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ResistValueLocation, 0x4)) : default;
         #endregion
         #region CounterEffectLogic
-         partial void CounterEffectLogicCustomParse(
+        private int _CounterEffectLogicLocation => _DATALocation!.Value + 0x14;
+        private bool _CounterEffectLogic_IsSet => _DATALocation.HasValue;
+        partial void CounterEffectLogicCustomParse(
             OverlayStream stream,
             int offset);
         #endregion

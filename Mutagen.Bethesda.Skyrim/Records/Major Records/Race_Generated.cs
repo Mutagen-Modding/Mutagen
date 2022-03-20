@@ -8288,7 +8288,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single AngularTolerance => _AngularTolerance_IsSet ? _data.Slice(_AngularToleranceLocation, 4).Float() : default;
         #endregion
         #region Flags2
-         partial void Flags2CustomParse(
+        private int _Flags2Location => _DATALocation!.Value + 0x7C;
+        private bool _Flags2_IsSet => _DATALocation.HasValue;
+        partial void Flags2CustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -8373,7 +8375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => _BodyPartDataLocation.HasValue ? new FormLinkNullable<IBodyPartDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BodyPartDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IBodyPartDataGetter>.Null;
         #endregion
         #region ExtraNAM2
-         partial void ExtraNAM2CustomParse(
+        partial void ExtraNAM2CustomParse(
             OverlayStream stream,
             int offset);
         protected int ExtraNAM2EndingPos;

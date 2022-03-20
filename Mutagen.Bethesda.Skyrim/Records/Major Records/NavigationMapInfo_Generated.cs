@@ -2191,7 +2191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(IslandEndingPos, 0x4));
         public IFormLinkGetter<IWorldspaceGetter> ParentWorldspace => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(IslandEndingPos + 0x4, 0x4))));
         #region ParentParseLogic
-         partial void ParentParseLogicCustomParse(
+        partial void ParentParseLogicCustomParse(
             OverlayStream stream,
             int offset);
         protected int ParentParseLogicEndingPos;

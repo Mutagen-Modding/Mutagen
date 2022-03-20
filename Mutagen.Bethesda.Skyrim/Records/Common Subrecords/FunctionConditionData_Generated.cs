@@ -1507,7 +1507,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Condition.Function Function => (Condition.Function)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x0, 0x2));
         public UInt16 Unknown2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
         #region ParameterParsing
-         partial void ParameterParsingCustomParse(
+        partial void ParameterParsingCustomParse(
             OverlayStream stream,
             int offset);
         protected int ParameterParsingEndingPos;

@@ -1267,7 +1267,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
 
         #region CustomLogic
-         partial void CustomLogicCustomParse(
+        partial void CustomLogicCustomParse(
             OverlayStream stream,
             int offset);
         protected int CustomLogicEndingPos;

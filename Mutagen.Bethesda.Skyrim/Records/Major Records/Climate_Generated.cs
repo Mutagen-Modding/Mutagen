@@ -2317,7 +2317,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Byte Volatility => _Volatility_IsSet ? _data.Span[_VolatilityLocation] : default;
         #endregion
         #region MoonAndPhaseLength
-         partial void MoonAndPhaseLengthCustomParse(
+        private int _MoonAndPhaseLengthLocation => _TNAMLocation!.Value + 0x5;
+        private bool _MoonAndPhaseLength_IsSet => _TNAMLocation.HasValue;
+        partial void MoonAndPhaseLengthCustomParse(
             OverlayStream stream,
             int offset);
         protected int MoonAndPhaseLengthEndingPos;

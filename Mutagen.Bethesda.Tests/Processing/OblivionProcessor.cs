@@ -175,7 +175,7 @@ public class OblivionProcessor : Processor
             {
                 using (HeaderExport.Header(
                            writer,
-                           new RecordType("ICON"),
+                           RecordTypes.ICON,
                            ObjectType.Subrecord))
                 {
                     StringBinaryTranslation.Instance.Write(writer, iconStr, StringBinaryType.NullTerminate);

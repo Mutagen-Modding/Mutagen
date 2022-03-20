@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             Accessor dataAccessor,
             int? currentPosition,
             string passedLenAccessor,
-            DataType dataType = null)
+            DataType? dataType = null)
         {
             var fieldData = typeGen.GetFieldData();
             var gen = this.Module.GetTypeGeneration(typeGen.GetType());
@@ -237,12 +237,16 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             Accessor dataAccessor, 
             int? passedLength,
             string passedLengthAccessor,
-            DataType data = null)
+            DataType? data = null)
         {
             var fieldData = typeGen.GetFieldData();
             var returningParseValue = fieldData.HasTrigger;
+            if (data != null)
+            {
+                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, data, objGen, typeGen, passedLengthAccessor);
+            }
             using (var args = new ArgsWrapper(fg,
-                $"{(returningParseValue ? "public" : null)} partial {(returningParseValue ? nameof(ParseResult) : "void")} {(typeGen.Name == null ? typeGen.GetFieldData().RecordType?.ToString() : typeGen.Name)}CustomParse"))
+                $"{(returningParseValue ? "public " : null)}partial {(returningParseValue ? nameof(ParseResult) : "void")} {(typeGen.Name == null ? typeGen.GetFieldData().RecordType?.ToString() : typeGen.Name)}CustomParse"))
             {
                 args.Add($"{nameof(OverlayStream)} stream");
                 args.Add($"int offset");

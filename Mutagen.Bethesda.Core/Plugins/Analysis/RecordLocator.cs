@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Utility;
 
 namespace Mutagen.Bethesda.Plugins.Analysis
@@ -263,7 +264,7 @@ namespace Mutagen.Bethesda.Plugins.Analysis
                         fileLocs: fileLocs,
                         interest: interest,
                         parentGroupLocations: parentGroupLocations,
-                        grupRecOverride: new RecordType("CELL"),
+                        grupRecOverride: RecordTypes.CELL,
                         checkOverallGrupType: true);
                 }
                 else

@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Binary.Streams;
 
-public class RecordTypeConverter_Tests
+public class RecordTypeConverterTests
 {
     [Fact]
     public void NullCustom()

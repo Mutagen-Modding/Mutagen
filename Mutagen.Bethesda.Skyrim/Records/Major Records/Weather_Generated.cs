@@ -6520,7 +6520,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 
         #region CloudTexturesParse
-         partial void CloudTexturesParseCustomParse(
+        partial void CloudTexturesParseCustomParse(
             OverlayStream stream,
             int offset);
         protected int CloudTexturesParseEndingPos;

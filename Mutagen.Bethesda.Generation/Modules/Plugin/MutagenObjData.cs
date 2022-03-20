@@ -14,21 +14,21 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
     public class MutagenObjData
     {
-        public ObjectGeneration ObjGen { get; private set; }
+        public ObjectGeneration ObjGen { get; }
         public RecordType? RecordType;
         public RecordType? OverflowRecordType;
         public bool FailOnUnknown;
         public ObjectType? ObjectType;
         public RecordType? MarkerType;
-        public HashSet<RecordType> TriggeringRecordTypes = new HashSet<RecordType>();
-        public HashSet<RecordType> CustomRecordTypeTriggers = new HashSet<RecordType>();
+        public HashSet<RecordType> TriggeringRecordTypes = new();
+        public HashSet<RecordType> CustomRecordTypeTriggers = new();
         public string TriggeringSource;
         public bool CustomBinary;
         public BinaryGenerationType BinaryOverlay = BinaryGenerationType.Normal;
         public CustomEnd CustomBinaryEnd;
         public Task<IEnumerable<KeyValuePair<IEnumerable<RecordType>, ObjectGeneration>>> GenerationTypes => GetGenerationTypes();
-        public TaskCompletionSource WiringComplete = new TaskCompletionSource();
-        public TaskCompletionSource DataTypeModuleComplete = new TaskCompletionSource();
+        public TaskCompletionSource WiringComplete = new();
+        public TaskCompletionSource DataTypeModuleComplete = new();
         public RecordTypeConverter BaseRecordTypeConverter;
         public Dictionary<GameRelease, RecordTypeConverter> GameReleaseConverters;
         public Dictionary<byte, RecordTypeConverter> VersionConverters;
