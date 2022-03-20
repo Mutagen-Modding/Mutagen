@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SeasonalIngredientProduction" objType="Subrecord" recordType="PFPC" GUID="b45767f2-53e9-4d10-8d69-6f83de862c3e" ID="201">
+    <Fields>
+      <UInt8 name="Spring" />
+      <UInt8 name="Summer" />
+      <UInt8 name="Fall" />
+      <UInt8 name="Winter" />
+    </Fields>
+  </Object>
+</Loqui>

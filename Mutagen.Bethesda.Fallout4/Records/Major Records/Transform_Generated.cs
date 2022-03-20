@@ -567,6 +567,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(ITransform);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         [Flags]
         public enum DATADataType
         {
@@ -661,6 +666,10 @@ namespace Mutagen.Bethesda.Fallout4
         new Single ZoomMin { get; set; }
         new Single ZoomMax { get; set; }
         new Transform.DATADataType DATADataTypeState { get; set; }
+        #region Mutagen
+        new Transform.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface ITransformInternal :
@@ -684,6 +693,10 @@ namespace Mutagen.Bethesda.Fallout4
         Single ZoomMin { get; }
         Single ZoomMax { get; }
         Transform.DATADataType DATADataTypeState { get; }
+
+        #region Mutagen
+        Transform.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -1697,6 +1710,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         protected override Type LinkType => typeof(ITransform);
 
+        public Transform.MajorFlag MajorFlags => (Transform.MajorFlag)this.MajorRecordFlagsRaw;
 
         private int? _DATALocation;
         public Transform.DATADataType DATADataTypeState { get; private set; }

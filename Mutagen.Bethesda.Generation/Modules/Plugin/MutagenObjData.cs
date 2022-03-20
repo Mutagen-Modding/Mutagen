@@ -35,6 +35,9 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
         public HashSet<GameRelease> GameReleaseOptions;
         public RecordType? EndMarkerType;
         public bool MajorRecordFlags;
+        public int? LastRequiredFieldIndex;
+        public bool ShortCircuitToLastRequiredField;
+        public int? GetLastRequiredFieldIndexToUse() => ShortCircuitToLastRequiredField ? LastRequiredFieldIndex : null;
         public GameCategory? GameCategory
         {
             get

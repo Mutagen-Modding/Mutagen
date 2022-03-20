@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Projectile" recordType="PROJ" objType="Record" baseClass="Fallout4MajorRecord" GUID="12c18f9e-ca09-4481-b659-f8d7c4498b9e" ID="270">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <ByteArray name="Unused" recordType="DATA" />
+      <Data recordType="DNAM">
+        <Fields>
+          <Enum name="Flags" enumName="Projectile.Flag" byteLength="2" />
+          <Enum name="Type" enumName="Projectile.TypeEnum" byteLength="2" />
+          <Float name="Gravity" />
+          <Float name="Speed" />
+          <Float name="Range" />
+          <FormLink name="Light" refName="Light" />
+          <FormLink name="MuzzleFlash" refName="Light" />
+          <Float name="ExplosionAltTriggerProximity" />
+          <Float name="ExplosionAltTriggerTimer" />
+          <FormLink name="Explosion" refName="Explosion" />
+          <FormLink name="Sound" refName="SoundDescriptor" />
+          <Float name="MuzzleFlashDuration" />
+          <Float name="FadeDuration" />
+          <Float name="ImpactForce" />
+          <FormLink name="CountdownSound" refName="SoundDescriptor" />
+          <FormLink name="DisaleSound" refName="SoundDescriptor" />
+          <FormLink name="DefaultWeaponSource" refName="Weapon" />
+          <Float name="ConeSpread" />
+          <Float name="CollisionRadius" />
+          <Float name="Lifetime" />
+          <Float name="RelaunchInterval" />
+          <!--<Break />-->
+          <FormLink name="DecalData" refName="TextureSet" />
+          <FormLink name="CollisionLayer" refName="CollisionLayer" />
+          <UInt8 name="TracerFrequency" />
+          <FormLink name="VATSProjectile" refName="Projectile" />
+        </Fields>
+      </Data>
+      <String name="MuzzleFlashModel" recordType="NAM1" nullable="False" />
+      <ByteArray name="TextureFilesHashes" recordType="NAM2" />
+      <UInt32 name="SoundLevel" nullable="False" recordType="VNAM" />
+    </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IPlacedTrapTarget</LinkInterface>
+  </Object>
+</Loqui>

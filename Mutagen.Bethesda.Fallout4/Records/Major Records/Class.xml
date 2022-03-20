@@ -5,7 +5,7 @@
       <String name="Name" recordType="FULL" />
       <String name="Description" recordType="DESC" nullable="False" />
       <String name="Icon" recordType="ICON" />
-      <RefDirect name="Properties" refName="Properties" />
+	  <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
       <Data>
         <Fields>
           <Int32 name="Unknown" />

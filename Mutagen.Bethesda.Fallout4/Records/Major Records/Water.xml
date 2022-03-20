@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Water" recordType="WATR" objType="Record" baseClass="Fallout4MajorRecord" GUID="ae105b0f-70dd-40cb-b5be-e41cac5b0530" ID="131">
+  </Object>
+</Loqui>

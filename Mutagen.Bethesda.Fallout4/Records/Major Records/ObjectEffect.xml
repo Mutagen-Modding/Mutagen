@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ObjectEffect" recordType="ENCH" objType="Record" baseClass="Fallout4MajorRecord" GUID="6bc55e21-a9ae-4ddc-9300-ee6b7e55f77e" ID="104">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <Data recordType="ENIT">
+        <Fields>
+          <UInt32 name="EnchantmentCost" />
+          <Enum name="Flags" enumName="ObjectEffect.Flag" byteLength="4" />
+          <Enum name="CastType" enumName="CastType" byteLength="4" />
+          <Int32 name="EnchantmentAmount" />
+          <Enum name="TargetType" enumName="TargetType" byteLength="4" />
+          <Enum name="EnchantType" enumName="ObjectEffect.EnchantTypeEnum" byteLength="4" />
+          <Float name="ChargeTime" />
+          <FormLink name="BaseEnchantment" refName="ObjectEffect" />
+          <Break />
+          <FormLink name="WornRestrictions" refName="FormList" />
+        </Fields>
+      </Data>
+      <RefList name="Effects" refName="Effect" nullable="False" />
+    </Fields>
+    <LinkInterface>IEffectRecord</LinkInterface>
+  </Object>
+</Loqui>

@@ -38,6 +38,7 @@ namespace Mutagen.Bethesda.Testing
         public static string PrependedString = "Files/Core/Strings/PrependedString";
         public static string ZeroContentPrependedString = "Files/Core/Strings/ZeroContentPrependedString";
         public static string SkyrimPlacedObjectReflectedWaterMissingData = "Files/Skyrim/PlacedObjectReflectedWaterMissingData.esp";
+        public static string SubgraphOutOfOrder = "Files/Fallout4/SubgraphOutOfOrder.esp";
         public static string SkyrimConditionWithTwoStrings= "Files/Skyrim/ConditionWithTwoStrings.esp";
 
         public static MutagenFrame GetReadFrame(ModPath path, GameRelease release, ModKey? modKey = null)

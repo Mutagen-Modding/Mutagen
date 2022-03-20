@@ -634,10 +634,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 56,
+            msgID: 290,
             version: 0);
 
-        public const string GUID = "c5e87d5b-ed3a-4949-948d-5b697649eec8";
+        public const string GUID = "cf1fcd5b-c409-46de-9632-e01722c0779b";
 
         public const ushort AdditionalFieldCount = 2;
 
@@ -1097,10 +1097,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.ComparisonValue);
-            var DataItem = item.Data;
-            ((ConditionDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                item: DataItem,
-                writer: writer);
+            ConditionFloatBinaryWriteTranslation.WriteBinaryData(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryDataCustom(
+            MutagenWriter writer,
+            IConditionFloatGetter item);
+
+        public static void WriteBinaryData(
+            MutagenWriter writer,
+            IConditionFloatGetter item)
+        {
+            WriteBinaryDataCustom(
+                writer: writer,
+                item: item);
         }
 
         public static partial void CustomBinaryEndExport(
@@ -1170,8 +1182,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item,
                 frame: frame);
             item.ComparisonValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Data = Mutagen.Bethesda.Fallout4.ConditionData.CreateFromBinary(frame: frame);
+            ConditionFloatBinaryCreateTranslation.FillBinaryDataCustom(
+                frame: frame,
+                item: item);
         }
+
+        public static partial void FillBinaryDataCustom(
+            MutagenFrame frame,
+            IConditionFloat item);
 
         public static partial void CustomBinaryEndImport(
             MutagenFrame frame,
@@ -1231,8 +1249,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public Single ComparisonValue => _data.Slice(0x4, 0x4).Float();
         #region Data
-        public IConditionDataGetter Data => ConditionDataBinaryOverlay.ConditionDataFactory(new OverlayStream(_data.Slice(0x8), _package), _package, default(TypedParseParams));
+        public override IConditionDataGetter Data => GetDataCustom(location: 0x8);
         protected int DataEndingPos;
+        partial void CustomDataEndPos();
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1264,6 +1283,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+            ret.CustomDataEndPos();
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

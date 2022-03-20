@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Message" recordType="MESG" objType="Record" baseClass="Fallout4MajorRecord" GUID="8a368675-cfab-43a2-a05b-2d2532d538fd" ID="152">
+    <Fields>
+      <String name="Description" recordType="DESC" translated="DL" nullable="False" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <ByteArray name="INAM" recordType="INAM" nullable="False" />
+      <FormLink name="OwnerQuest" recordType="QNAM" refName="Quest" />
+      <Enum name="Flags" enumName="Message.Flag" byteLength="4" recordType="DNAM" nullable="False" />
+      <UInt32 name="DisplayTime" recordType="TNAM" />
+      <String name="SWF" recordType="SNAM" />
+      <String name="ShortTitle" recordType="NNAM" translated="DL" />
+      <RefList name="MenuButtons" refName="MessageButton" />
+    </Fields>
+  </Object>
+  <Object name="MessageButton" objType="Subrecord" GUID="9af1ae82-0c69-44cb-a1fc-87057057bc2d" ID="153">
+    <Fields>
+      <String name="Text" recordType="ITXT" translated="Normal" />
+      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+    </Fields>
+  </Object>
+</Loqui>

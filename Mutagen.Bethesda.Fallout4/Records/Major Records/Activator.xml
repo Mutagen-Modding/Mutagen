@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Activator" objType="Record" recordType="ACTI" majorFlag="true" baseClass="Fallout4MajorRecord" GUID="e5dd8417-9b46-4754-bfe1-1db51332bfa4" ID="127">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+      <FormLink name="AnimationSound" refName="AnimationSoundTagSet" recordType="STCP" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+	  <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <FormLink name="NativeTerminal" refName="Terminal" recordType="NTRM" />
+      <FormLink name="ForcedLocRefType" refName="LocationReferenceType" recordType="FTYP" />
+      <Color name="MarkerColor" recordType="PNAM" binaryType="Alpha" />
+      <FormLink name="LoopingSound" refName="SoundDescriptor" recordType="SNAM" />
+      <FormLink name="ActivationSound" refName="SoundDescriptor" recordType="VNAM" />
+      <FormLink name="WaterType" refName="Water" recordType="WNAM" />
+      <String name="ActivateTextOverride" recordType="ATTX" translated="Normal" />
+      <Enum name="Flags" byteLength="2" enumName="Activator.Flag" recordType="FNAM" />
+      <FormLink name="InteractionKeyword" refName="Keyword" recordType="KNAM" />
+      <RefDirect name="RadioReceiver" refName="RadioReceiver" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binaryOverlay="Custom" />
+      <!--TODO NVNM NavigationMesh. Note: No ACTI in FO4.esm uses it.-->
+    </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
+  </Object>
+  <Object name="RadioReceiver" objType="Subrecord" recordType="RADR" GUID="8be06abd-cae8-4862-a510-a942533bda27" ID="223">
+    <Fields>
+      <FormLink name="SoundModel" refName="SoundOutputModel" />
+      <Float name="Frequency" />
+      <Float name="Volume" />
+      <Bool name="StartsActive" byteLength="1" />
+	  <Break />
+      <Bool name="NoSignalStatic" byteLength="1" />
+    </Fields>
+  </Object>
+</Loqui>

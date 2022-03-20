@@ -618,7 +618,8 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
         int countLengthLength,
         BinaryMasterParseDelegate<T> transl,
         TriggeringRecordCollection triggeringRecord,
-        TypedParseParams? translationParams = null)
+        TypedParseParams? translationParams = null,
+        bool nullIfZero = true)
     {
         var subHeader = reader.GetSubrecordFrame();
         var recType = subHeader.RecordType;
@@ -637,7 +638,8 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
                 count,
                 transl,
                 triggeringRecord,
-                translationParams);
+                translationParams,
+                nullIfZero: nullIfZero);
         }
         else
         {
@@ -654,9 +656,10 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
         int amount,
         BinaryMasterParseDelegate<T> transl,
         TriggeringRecordCollection? triggeringRecord = null,
-        TypedParseParams? translationParams = null)
+        TypedParseParams? translationParams = null,
+        bool nullIfZero = false)
     {
-        if (amount == 0) return Enumerable.Empty<T>();
+        if (amount == 0 && nullIfZero) return Enumerable.Empty<T>();
         var ret = new ExtendedList<T>();
         var startingPos = reader.Position;
         for (int i = 0; i < amount; i++)
@@ -855,8 +858,11 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
         {
             switch (countLengthLength)
             {
+
                 case 1:
+
                     writer.Write(checked((byte)items.Count));
+
                     break;
                 case 2:
                     writer.Write(checked((ushort)items.Count));
@@ -1036,9 +1042,20 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
         RecordType counterType,
         BinaryMasterWriteDelegate<T> transl,
         byte counterLength,
+        bool writeCounterIfNull = false,
         RecordTypeConverter? recordTypeConverter = null)
     {
-        if (items == null) return;
+        if (items == null)
+        {
+            if (writeCounterIfNull)
+            {
+                using (HeaderExport.Header(writer, counterType, ObjectType.Subrecord))
+                {
+                    writer.Write(0, counterLength);
+                }
+            }
+            return;
+        }
         try
         {
             using (HeaderExport.Header(writer, counterType, ObjectType.Subrecord))

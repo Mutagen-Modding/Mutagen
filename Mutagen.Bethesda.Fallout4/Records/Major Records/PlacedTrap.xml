@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="APlacedTrap" baseClass="Fallout4MajorRecord" abstract="true" objType="Record" GUID="c4489db9-4cb1-4b63-80fa-cd91c4530efe" ID="238">
+    <LinkInterface>ILocationTargetable</LinkInterface>
+  </Object>
+</Loqui>

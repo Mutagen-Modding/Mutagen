@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Terminal" recordType="TERM" objType="Record" baseClass="Fallout4MajorRecord" GUID="fc083bd7-24db-4bc1-995b-b6a767179566" ID="193">
+  </Object>
+</Loqui>

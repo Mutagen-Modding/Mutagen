@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ObjectModification" recordType="OMOD" objType="Record" baseClass="Fallout4MajorRecord" GUID="a0536c2f-a2a1-4faf-b038-9ebe8e076f1c" ID="236">
+    <LinkInterface>IObjectId</LinkInterface>
+  </Object>
+</Loqui>

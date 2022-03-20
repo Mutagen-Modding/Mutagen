@@ -145,14 +145,17 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Properties
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Properties? _Properties;
-        public Properties? Properties
+        private ExtendedList<ObjectProperty>? _Properties;
+        public ExtendedList<ObjectProperty>? Properties
         {
-            get => _Properties;
-            set => _Properties = value;
+            get => this._Properties;
+            set => this._Properties = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPropertiesGetter? IRaceGetter.Properties => this.Properties;
+        IReadOnlyList<IObjectPropertyGetter>? IRaceGetter.Properties => _Properties;
+        #endregion
+
         #endregion
         #region AttachParentSlots
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -173,8 +176,8 @@ namespace Mutagen.Bethesda.Fallout4
         IGenderedItemGetter<Single> IRaceGetter.Height => this.Height;
         #endregion
         #region DefaultWeight
-        public IGenderedItem<Single> DefaultWeight { get; set; } = new GenderedItem<Single>(default, default);
-        IGenderedItemGetter<Single> IRaceGetter.DefaultWeight => this.DefaultWeight;
+        public IGenderedItem<RaceWeight> DefaultWeight { get; set; } = new GenderedItem<RaceWeight>(new RaceWeight(), new RaceWeight());
+        IGenderedItemGetter<IRaceWeightGetter> IRaceGetter.DefaultWeight => this.DefaultWeight;
         #endregion
         #region Flags
         public Race.Flag Flags { get; set; } = default;
@@ -190,7 +193,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unknown = new byte[16];
+        private MemorySlice<Byte> _Unknown = new byte[8];
         public MemorySlice<Byte> Unknown
         {
             get => _Unknown;
@@ -206,9 +209,9 @@ namespace Mutagen.Bethesda.Fallout4
         public readonly static BipedObject _ShieldBipedObject_Default = BipedObject.None;
         public BipedObject ShieldBipedObject { get; set; } = _ShieldBipedObject_Default;
         #endregion
-        #region BearddBipedObject
-        public readonly static BipedObject _BearddBipedObject_Default = BipedObject.None;
-        public BipedObject BearddBipedObject { get; set; } = _BearddBipedObject_Default;
+        #region BeardBipedObject
+        public readonly static BipedObject _BeardBipedObject_Default = BipedObject.None;
+        public BipedObject BeardBipedObject { get; set; } = _BeardBipedObject_Default;
         #endregion
         #region BodyBipedObject
         public readonly static BipedObject _BodyBipedObject_Default = BipedObject.None;
@@ -226,12 +229,9 @@ namespace Mutagen.Bethesda.Fallout4
         #region AngularTolerance
         public Single AngularTolerance { get; set; } = default;
         #endregion
-        #region Flags2
-        public Race.Flag2 Flags2 { get; set; } = default;
-        #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unknown2 = new byte[72];
+        private MemorySlice<Byte> _Unknown2 = new byte[36];
         public MemorySlice<Byte> Unknown2
         {
             get => _Unknown2;
@@ -325,6 +325,9 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IRaceGetter.ExplodableImpactDataSet => this.ExplodableImpactDataSet;
         #endregion
+        #region OnCrippleDebrisScale
+        public Single OnCrippleDebrisScale { get; set; } = default;
+        #endregion
         #region OnCrippleDebrisCount
         public Byte OnCrippleDebrisCount { get; set; } = default;
         #endregion
@@ -371,6 +374,364 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IRaceGetter.ExplodableSubsegmentExplosion => this.ExplodableSubsegmentExplosion;
         #endregion
+        #region OrientationLimitsPitch
+        public Single OrientationLimitsPitch { get; set; } = default;
+        #endregion
+        #region OrientationLimitsRoll
+        public Single OrientationLimitsRoll { get; set; } = default;
+        #endregion
+        #region SkeletalModel
+        public IGenderedItem<SimpleModel?>? SkeletalModel { get; set; }
+        IGenderedItemGetter<ISimpleModelGetter?>? IRaceGetter.SkeletalModel => this.SkeletalModel;
+        #endregion
+        #region MovementTypeNames
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<String> _MovementTypeNames = new ExtendedList<String>();
+        public ExtendedList<String> MovementTypeNames
+        {
+            get => this._MovementTypeNames;
+            init => this._MovementTypeNames = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<String> IRaceGetter.MovementTypeNames => _MovementTypeNames;
+        #endregion
+
+        #endregion
+        #region Voices
+        public IGenderedItem<IFormLinkGetter<IVoiceTypeGetter>> Voices { get; set; } = new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(FormLink<VoiceType>.Null, FormLink<VoiceType>.Null);
+        IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>> IRaceGetter.Voices => this.Voices;
+        #endregion
+        #region DefaultHairColors
+        public IGenderedItem<IFormLinkGetter<IColorRecordGetter>>? DefaultHairColors { get; set; }
+        IGenderedItemGetter<IFormLinkGetter<IColorRecordGetter>>? IRaceGetter.DefaultHairColors => this.DefaultHairColors;
+        #endregion
+        #region NumberOfTintsInList
+        public UInt16? NumberOfTintsInList { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt16? IRaceGetter.NumberOfTintsInList => this.NumberOfTintsInList;
+        #endregion
+        #region FacegenMainClamp
+        public Single FacegenMainClamp { get; set; } = default;
+        #endregion
+        #region FacegenFaceClamp
+        public Single FacegenFaceClamp { get; set; } = default;
+        #endregion
+        #region AttackRace
+        private readonly IFormLinkNullable<IRaceGetter> _AttackRace = new FormLinkNullable<IRaceGetter>();
+        public IFormLinkNullable<IRaceGetter> AttackRace
+        {
+            get => _AttackRace;
+            set => _AttackRace.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IRaceGetter> IRaceGetter.AttackRace => this.AttackRace;
+        #endregion
+        #region Attacks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Attack> _Attacks = new ExtendedList<Attack>();
+        public ExtendedList<Attack> Attacks
+        {
+            get => this._Attacks;
+            init => this._Attacks = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAttackGetter> IRaceGetter.Attacks => _Attacks;
+        #endregion
+
+        #endregion
+        #region BodyData
+        public IGenderedItem<BodyData?> BodyData { get; set; } = new GenderedItem<BodyData?>(default, default);
+        IGenderedItemGetter<IBodyDataGetter?> IRaceGetter.BodyData => this.BodyData;
+        #endregion
+        #region BodyPartData
+        private readonly IFormLinkNullable<IBodyPartDataGetter> _BodyPartData = new FormLinkNullable<IBodyPartDataGetter>();
+        public IFormLinkNullable<IBodyPartDataGetter> BodyPartData
+        {
+            get => _BodyPartData;
+            set => _BodyPartData.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IBodyPartDataGetter> IRaceGetter.BodyPartData => this.BodyPartData;
+        #endregion
+        #region BehaviorGraph
+        public IGenderedItem<Model?> BehaviorGraph { get; set; } = new GenderedItem<Model?>(default, default);
+        IGenderedItemGetter<IModelGetter?> IRaceGetter.BehaviorGraph => this.BehaviorGraph;
+        #endregion
+        #region ImpactMaterialType
+        private readonly IFormLinkNullable<IMaterialTypeGetter> _ImpactMaterialType = new FormLinkNullable<IMaterialTypeGetter>();
+        public IFormLinkNullable<IMaterialTypeGetter> ImpactMaterialType
+        {
+            get => _ImpactMaterialType;
+            set => _ImpactMaterialType.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMaterialTypeGetter> IRaceGetter.ImpactMaterialType => this.ImpactMaterialType;
+        #endregion
+        #region ImpactDataSet
+        private readonly IFormLinkNullable<IImpactDataSetGetter> _ImpactDataSet = new FormLinkNullable<IImpactDataSetGetter>();
+        public IFormLinkNullable<IImpactDataSetGetter> ImpactDataSet
+        {
+            get => _ImpactDataSet;
+            set => _ImpactDataSet.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IImpactDataSetGetter> IRaceGetter.ImpactDataSet => this.ImpactDataSet;
+        #endregion
+        #region DispemberBloodArt
+        private readonly IFormLinkNullable<IArtObjectGetter> _DispemberBloodArt = new FormLinkNullable<IArtObjectGetter>();
+        public IFormLinkNullable<IArtObjectGetter> DispemberBloodArt
+        {
+            get => _DispemberBloodArt;
+            set => _DispemberBloodArt.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IArtObjectGetter> IRaceGetter.DispemberBloodArt => this.DispemberBloodArt;
+        #endregion
+        #region MeatCapTextureSet
+        private readonly IFormLinkNullable<ITextureSetGetter> _MeatCapTextureSet = new FormLinkNullable<ITextureSetGetter>();
+        public IFormLinkNullable<ITextureSetGetter> MeatCapTextureSet
+        {
+            get => _MeatCapTextureSet;
+            set => _MeatCapTextureSet.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ITextureSetGetter> IRaceGetter.MeatCapTextureSet => this.MeatCapTextureSet;
+        #endregion
+        #region CollarTextureSet
+        private readonly IFormLinkNullable<ITextureSetGetter> _CollarTextureSet = new FormLinkNullable<ITextureSetGetter>();
+        public IFormLinkNullable<ITextureSetGetter> CollarTextureSet
+        {
+            get => _CollarTextureSet;
+            set => _CollarTextureSet.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ITextureSetGetter> IRaceGetter.CollarTextureSet => this.CollarTextureSet;
+        #endregion
+        #region SoundOpenCorpse
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _SoundOpenCorpse = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> SoundOpenCorpse
+        {
+            get => _SoundOpenCorpse;
+            set => _SoundOpenCorpse.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IRaceGetter.SoundOpenCorpse => this.SoundOpenCorpse;
+        #endregion
+        #region SoundCloseCorpse
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _SoundCloseCorpse = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> SoundCloseCorpse
+        {
+            get => _SoundCloseCorpse;
+            set => _SoundCloseCorpse.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IRaceGetter.SoundCloseCorpse => this.SoundCloseCorpse;
+        #endregion
+        #region BipedObjects
+        private readonly Dictionary<BipedObject, BipedObjectData> _BipedObjects = new Dictionary<BipedObject, BipedObjectData>();
+        public IDictionary<BipedObject, BipedObjectData> BipedObjects => _BipedObjects;
+        #region Interface Members
+        IDictionary<BipedObject, BipedObjectData> IRace.BipedObjects => _BipedObjects;
+        IReadOnlyDictionary<BipedObject, IBipedObjectDataGetter> IRaceGetter.BipedObjects => _BipedObjects.Covariant<BipedObject, BipedObjectData, IBipedObjectDataGetter>();
+        #endregion
+
+        #endregion
+        #region MovementDataOverrides
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<MovementDataOverride> _MovementDataOverrides = new ExtendedList<MovementDataOverride>();
+        public ExtendedList<MovementDataOverride> MovementDataOverrides
+        {
+            get => this._MovementDataOverrides;
+            init => this._MovementDataOverrides = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IMovementDataOverrideGetter> IRaceGetter.MovementDataOverrides => _MovementDataOverrides;
+        #endregion
+
+        #endregion
+        #region EquipmentFlags
+        public EquipTypeFlag? EquipmentFlags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        EquipTypeFlag? IRaceGetter.EquipmentFlags => this.EquipmentFlags;
+        #endregion
+        #region EquipmentSlots
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<EquipmentSlot> _EquipmentSlots = new ExtendedList<EquipmentSlot>();
+        public ExtendedList<EquipmentSlot> EquipmentSlots
+        {
+            get => this._EquipmentSlots;
+            init => this._EquipmentSlots = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IEquipmentSlotGetter> IRaceGetter.EquipmentSlots => _EquipmentSlots;
+        #endregion
+
+        #endregion
+        #region UnarmedWeapon
+        private readonly IFormLinkNullable<IWeaponGetter> _UnarmedWeapon = new FormLinkNullable<IWeaponGetter>();
+        public IFormLinkNullable<IWeaponGetter> UnarmedWeapon
+        {
+            get => _UnarmedWeapon;
+            set => _UnarmedWeapon.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IWeaponGetter> IRaceGetter.UnarmedWeapon => this.UnarmedWeapon;
+        #endregion
+        #region FaceFxPhonemes
+        public FaceFxPhonemes FaceFxPhonemes { get; set; } = new FaceFxPhonemes();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFaceFxPhonemesGetter IRaceGetter.FaceFxPhonemes => FaceFxPhonemes;
+        #endregion
+        #region BaseMovementDefault
+        private readonly IFormLinkNullable<IMovementTypeGetter> _BaseMovementDefault = new FormLinkNullable<IMovementTypeGetter>();
+        public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefault
+        {
+            get => _BaseMovementDefault;
+            set => _BaseMovementDefault.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMovementTypeGetter> IRaceGetter.BaseMovementDefault => this.BaseMovementDefault;
+        #endregion
+        #region BaseMovementDefaultSwim
+        private readonly IFormLinkNullable<IMovementTypeGetter> _BaseMovementDefaultSwim = new FormLinkNullable<IMovementTypeGetter>();
+        public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSwim
+        {
+            get => _BaseMovementDefaultSwim;
+            set => _BaseMovementDefaultSwim.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMovementTypeGetter> IRaceGetter.BaseMovementDefaultSwim => this.BaseMovementDefaultSwim;
+        #endregion
+        #region BaseMovementDefaultFly
+        private readonly IFormLinkNullable<IMovementTypeGetter> _BaseMovementDefaultFly = new FormLinkNullable<IMovementTypeGetter>();
+        public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultFly
+        {
+            get => _BaseMovementDefaultFly;
+            set => _BaseMovementDefaultFly.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMovementTypeGetter> IRaceGetter.BaseMovementDefaultFly => this.BaseMovementDefaultFly;
+        #endregion
+        #region BaseMovementDefaultSneak
+        private readonly IFormLinkNullable<IMovementTypeGetter> _BaseMovementDefaultSneak = new FormLinkNullable<IMovementTypeGetter>();
+        public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSneak
+        {
+            get => _BaseMovementDefaultSneak;
+            set => _BaseMovementDefaultSneak.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMovementTypeGetter> IRaceGetter.BaseMovementDefaultSneak => this.BaseMovementDefaultSneak;
+        #endregion
+        #region HeadData
+        public IGenderedItem<HeadData?>? HeadData { get; set; }
+        IGenderedItemGetter<IHeadDataGetter?>? IRaceGetter.HeadData => this.HeadData;
+        #endregion
+        #region MorphRace
+        private readonly IFormLinkNullable<IRaceGetter> _MorphRace = new FormLinkNullable<IRaceGetter>();
+        public IFormLinkNullable<IRaceGetter> MorphRace
+        {
+            get => _MorphRace;
+            set => _MorphRace.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IRaceGetter> IRaceGetter.MorphRace => this.MorphRace;
+        #endregion
+        #region ArmorRace
+        private readonly IFormLinkNullable<IRaceGetter> _ArmorRace = new FormLinkNullable<IRaceGetter>();
+        public IFormLinkNullable<IRaceGetter> ArmorRace
+        {
+            get => _ArmorRace;
+            set => _ArmorRace.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IRaceGetter> IRaceGetter.ArmorRace => this.ArmorRace;
+        #endregion
+        #region SubgraphTemplateRace
+        private readonly IFormLinkNullable<IRaceGetter> _SubgraphTemplateRace = new FormLinkNullable<IRaceGetter>();
+        public IFormLinkNullable<IRaceGetter> SubgraphTemplateRace
+        {
+            get => _SubgraphTemplateRace;
+            set => _SubgraphTemplateRace.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IRaceGetter> IRaceGetter.SubgraphTemplateRace => this.SubgraphTemplateRace;
+        #endregion
+        #region SubgraphAdditiveRace
+        private readonly IFormLinkNullable<IRaceGetter> _SubgraphAdditiveRace = new FormLinkNullable<IRaceGetter>();
+        public IFormLinkNullable<IRaceGetter> SubgraphAdditiveRace
+        {
+            get => _SubgraphAdditiveRace;
+            set => _SubgraphAdditiveRace.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IRaceGetter> IRaceGetter.SubgraphAdditiveRace => this.SubgraphAdditiveRace;
+        #endregion
+        #region Subgraphs
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Subgraph> _Subgraphs = new ExtendedList<Subgraph>();
+        public ExtendedList<Subgraph> Subgraphs
+        {
+            get => this._Subgraphs;
+            init => this._Subgraphs = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ISubgraphGetter> IRaceGetter.Subgraphs => _Subgraphs;
+        #endregion
+
+        #endregion
+        #region IdleChatterTimeMin
+        public Single? IdleChatterTimeMin { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IRaceGetter.IdleChatterTimeMin => this.IdleChatterTimeMin;
+        #endregion
+        #region IdleChatterTimeMax
+        public Single? IdleChatterTimeMax { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IRaceGetter.IdleChatterTimeMax => this.IdleChatterTimeMax;
+        #endregion
+        #region MorphValues
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<MorphValue> _MorphValues = new ExtendedList<MorphValue>();
+        public ExtendedList<MorphValue> MorphValues
+        {
+            get => this._MorphValues;
+            init => this._MorphValues = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IMorphValueGetter> IRaceGetter.MorphValues => _MorphValues;
+        #endregion
+
+        #endregion
+        #region HairColorLookupTexture
+        public String? HairColorLookupTexture { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IRaceGetter.HairColorLookupTexture => this.HairColorLookupTexture;
+        #endregion
+        #region HairColorExtendedLookupTexture
+        public String? HairColorExtendedLookupTexture { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IRaceGetter.HairColorExtendedLookupTexture => this.HairColorExtendedLookupTexture;
+        #endregion
+        #region DialogueQuest
+        private readonly IFormLinkNullable<IQuestGetter> _DialogueQuest = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> DialogueQuest
+        {
+            get => _DialogueQuest;
+            set => _DialogueQuest.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IQuestGetter> IRaceGetter.DialogueQuest => this.DialogueQuest;
+        #endregion
+        #region BoneData
+        public IGenderedItem<ExtendedList<Bone>?> BoneData { get; set; } = new GenderedItem<ExtendedList<Bone>?>(default, default);
+        IGenderedItemGetter<IReadOnlyList<IBoneGetter>?> IRaceGetter.BoneData => this.BoneData;
+        #endregion
         #region DATADataTypeState
         public Race.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
@@ -405,10 +766,10 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Skin = initialValue;
                 this.BipedBodyTemplate = new MaskItem<TItem, BipedBodyTemplate.Mask<TItem>?>(initialValue, new BipedBodyTemplate.Mask<TItem>(initialValue));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Properties = new MaskItem<TItem, Properties.Mask<TItem>?>(initialValue, new Properties.Mask<TItem>(initialValue));
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Height = new GenderedItem<TItem>(initialValue, initialValue);
-                this.DefaultWeight = new GenderedItem<TItem>(initialValue, initialValue);
+                this.DefaultWeight = new MaskItem<TItem, GenderedItem<RaceWeight.Mask<TItem>?>?>(initialValue, default);
                 this.Flags = initialValue;
                 this.AccelerationRate = initialValue;
                 this.DecelerationRate = initialValue;
@@ -416,13 +777,12 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Unknown = initialValue;
                 this.InjuredHealthPercent = initialValue;
                 this.ShieldBipedObject = initialValue;
-                this.BearddBipedObject = initialValue;
+                this.BeardBipedObject = initialValue;
                 this.BodyBipedObject = initialValue;
                 this.AimAngleTolerance = initialValue;
                 this.FlightRadius = initialValue;
                 this.AngularAccelerationRate = initialValue;
                 this.AngularTolerance = initialValue;
-                this.Flags2 = initialValue;
                 this.Unknown2 = initialValue;
                 this.PipboyBipedObject = initialValue;
                 this.XPValue = initialValue;
@@ -438,12 +798,57 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ExplodableExplosion = initialValue;
                 this.ExplodableDebris = initialValue;
                 this.ExplodableImpactDataSet = initialValue;
+                this.OnCrippleDebrisScale = initialValue;
                 this.OnCrippleDebrisCount = initialValue;
                 this.OnCrippleDecalCount = initialValue;
                 this.OnCrippleExplosion = initialValue;
                 this.OnCrippleDebris = initialValue;
                 this.OnCrippleImpactDataSet = initialValue;
                 this.ExplodableSubsegmentExplosion = initialValue;
+                this.OrientationLimitsPitch = initialValue;
+                this.OrientationLimitsRoll = initialValue;
+                this.SkeletalModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, SimpleModel.Mask<TItem>?>?>?>(initialValue, default);
+                this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Voices = new GenderedItem<TItem>(initialValue, initialValue);
+                this.DefaultHairColors = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
+                this.NumberOfTintsInList = initialValue;
+                this.FacegenMainClamp = initialValue;
+                this.FacegenFaceClamp = initialValue;
+                this.AttackRace = initialValue;
+                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>());
+                this.BodyData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, BodyData.Mask<TItem>?>?>?>(initialValue, default);
+                this.BodyPartData = initialValue;
+                this.BehaviorGraph = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(initialValue, default);
+                this.ImpactMaterialType = initialValue;
+                this.ImpactDataSet = initialValue;
+                this.DispemberBloodArt = initialValue;
+                this.MeatCapTextureSet = initialValue;
+                this.CollarTextureSet = initialValue;
+                this.SoundOpenCorpse = initialValue;
+                this.SoundCloseCorpse = initialValue;
+                this.BipedObjects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<BipedObject, TItem, BipedObjectData.Mask<TItem>?>>?>(initialValue, null);
+                this.MovementDataOverrides = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MovementDataOverride.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MovementDataOverride.Mask<TItem>?>>());
+                this.EquipmentFlags = initialValue;
+                this.EquipmentSlots = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EquipmentSlot.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, EquipmentSlot.Mask<TItem>?>>());
+                this.UnarmedWeapon = initialValue;
+                this.FaceFxPhonemes = new MaskItem<TItem, FaceFxPhonemes.Mask<TItem>?>(initialValue, new FaceFxPhonemes.Mask<TItem>(initialValue));
+                this.BaseMovementDefault = initialValue;
+                this.BaseMovementDefaultSwim = initialValue;
+                this.BaseMovementDefaultFly = initialValue;
+                this.BaseMovementDefaultSneak = initialValue;
+                this.HeadData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, HeadData.Mask<TItem>?>?>?>(initialValue, default);
+                this.MorphRace = initialValue;
+                this.ArmorRace = initialValue;
+                this.SubgraphTemplateRace = initialValue;
+                this.SubgraphAdditiveRace = initialValue;
+                this.Subgraphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>());
+                this.IdleChatterTimeMin = initialValue;
+                this.IdleChatterTimeMax = initialValue;
+                this.MorphValues = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>());
+                this.HairColorLookupTexture = initialValue;
+                this.HairColorExtendedLookupTexture = initialValue;
+                this.DialogueQuest = initialValue;
+                this.BoneData = new GenderedItem<TItem>(initialValue, initialValue);
                 this.DATADataTypeState = initialValue;
             }
 
@@ -472,13 +877,12 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Unknown,
                 TItem InjuredHealthPercent,
                 TItem ShieldBipedObject,
-                TItem BearddBipedObject,
+                TItem BeardBipedObject,
                 TItem BodyBipedObject,
                 TItem AimAngleTolerance,
                 TItem FlightRadius,
                 TItem AngularAccelerationRate,
                 TItem AngularTolerance,
-                TItem Flags2,
                 TItem Unknown2,
                 TItem PipboyBipedObject,
                 TItem XPValue,
@@ -494,12 +898,57 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem ExplodableExplosion,
                 TItem ExplodableDebris,
                 TItem ExplodableImpactDataSet,
+                TItem OnCrippleDebrisScale,
                 TItem OnCrippleDebrisCount,
                 TItem OnCrippleDecalCount,
                 TItem OnCrippleExplosion,
                 TItem OnCrippleDebris,
                 TItem OnCrippleImpactDataSet,
                 TItem ExplodableSubsegmentExplosion,
+                TItem OrientationLimitsPitch,
+                TItem OrientationLimitsRoll,
+                TItem SkeletalModel,
+                TItem MovementTypeNames,
+                TItem Voices,
+                TItem DefaultHairColors,
+                TItem NumberOfTintsInList,
+                TItem FacegenMainClamp,
+                TItem FacegenFaceClamp,
+                TItem AttackRace,
+                TItem Attacks,
+                TItem BodyData,
+                TItem BodyPartData,
+                TItem BehaviorGraph,
+                TItem ImpactMaterialType,
+                TItem ImpactDataSet,
+                TItem DispemberBloodArt,
+                TItem MeatCapTextureSet,
+                TItem CollarTextureSet,
+                TItem SoundOpenCorpse,
+                TItem SoundCloseCorpse,
+                TItem BipedObjects,
+                TItem MovementDataOverrides,
+                TItem EquipmentFlags,
+                TItem EquipmentSlots,
+                TItem UnarmedWeapon,
+                TItem FaceFxPhonemes,
+                TItem BaseMovementDefault,
+                TItem BaseMovementDefaultSwim,
+                TItem BaseMovementDefaultFly,
+                TItem BaseMovementDefaultSneak,
+                TItem HeadData,
+                TItem MorphRace,
+                TItem ArmorRace,
+                TItem SubgraphTemplateRace,
+                TItem SubgraphAdditiveRace,
+                TItem Subgraphs,
+                TItem IdleChatterTimeMin,
+                TItem IdleChatterTimeMax,
+                TItem MorphValues,
+                TItem HairColorLookupTexture,
+                TItem HairColorExtendedLookupTexture,
+                TItem DialogueQuest,
+                TItem BoneData,
                 TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -516,10 +965,10 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Skin = Skin;
                 this.BipedBodyTemplate = new MaskItem<TItem, BipedBodyTemplate.Mask<TItem>?>(BipedBodyTemplate, new BipedBodyTemplate.Mask<TItem>(BipedBodyTemplate));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Properties = new MaskItem<TItem, Properties.Mask<TItem>?>(Properties, new Properties.Mask<TItem>(Properties));
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Height = new GenderedItem<TItem>(Height, Height);
-                this.DefaultWeight = new GenderedItem<TItem>(DefaultWeight, DefaultWeight);
+                this.DefaultWeight = new MaskItem<TItem, GenderedItem<RaceWeight.Mask<TItem>?>?>(DefaultWeight, default);
                 this.Flags = Flags;
                 this.AccelerationRate = AccelerationRate;
                 this.DecelerationRate = DecelerationRate;
@@ -527,13 +976,12 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Unknown = Unknown;
                 this.InjuredHealthPercent = InjuredHealthPercent;
                 this.ShieldBipedObject = ShieldBipedObject;
-                this.BearddBipedObject = BearddBipedObject;
+                this.BeardBipedObject = BeardBipedObject;
                 this.BodyBipedObject = BodyBipedObject;
                 this.AimAngleTolerance = AimAngleTolerance;
                 this.FlightRadius = FlightRadius;
                 this.AngularAccelerationRate = AngularAccelerationRate;
                 this.AngularTolerance = AngularTolerance;
-                this.Flags2 = Flags2;
                 this.Unknown2 = Unknown2;
                 this.PipboyBipedObject = PipboyBipedObject;
                 this.XPValue = XPValue;
@@ -549,12 +997,57 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ExplodableExplosion = ExplodableExplosion;
                 this.ExplodableDebris = ExplodableDebris;
                 this.ExplodableImpactDataSet = ExplodableImpactDataSet;
+                this.OnCrippleDebrisScale = OnCrippleDebrisScale;
                 this.OnCrippleDebrisCount = OnCrippleDebrisCount;
                 this.OnCrippleDecalCount = OnCrippleDecalCount;
                 this.OnCrippleExplosion = OnCrippleExplosion;
                 this.OnCrippleDebris = OnCrippleDebris;
                 this.OnCrippleImpactDataSet = OnCrippleImpactDataSet;
                 this.ExplodableSubsegmentExplosion = ExplodableSubsegmentExplosion;
+                this.OrientationLimitsPitch = OrientationLimitsPitch;
+                this.OrientationLimitsRoll = OrientationLimitsRoll;
+                this.SkeletalModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, SimpleModel.Mask<TItem>?>?>?>(SkeletalModel, default);
+                this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MovementTypeNames, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Voices = new GenderedItem<TItem>(Voices, Voices);
+                this.DefaultHairColors = new MaskItem<TItem, GenderedItem<TItem>?>(DefaultHairColors, default);
+                this.NumberOfTintsInList = NumberOfTintsInList;
+                this.FacegenMainClamp = FacegenMainClamp;
+                this.FacegenFaceClamp = FacegenFaceClamp;
+                this.AttackRace = AttackRace;
+                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(Attacks, Enumerable.Empty<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>());
+                this.BodyData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, BodyData.Mask<TItem>?>?>?>(BodyData, default);
+                this.BodyPartData = BodyPartData;
+                this.BehaviorGraph = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(BehaviorGraph, default);
+                this.ImpactMaterialType = ImpactMaterialType;
+                this.ImpactDataSet = ImpactDataSet;
+                this.DispemberBloodArt = DispemberBloodArt;
+                this.MeatCapTextureSet = MeatCapTextureSet;
+                this.CollarTextureSet = CollarTextureSet;
+                this.SoundOpenCorpse = SoundOpenCorpse;
+                this.SoundCloseCorpse = SoundCloseCorpse;
+                this.BipedObjects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<BipedObject, TItem, BipedObjectData.Mask<TItem>?>>?>(BipedObjects, null);
+                this.MovementDataOverrides = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MovementDataOverride.Mask<TItem>?>>?>(MovementDataOverrides, Enumerable.Empty<MaskItemIndexed<TItem, MovementDataOverride.Mask<TItem>?>>());
+                this.EquipmentFlags = EquipmentFlags;
+                this.EquipmentSlots = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EquipmentSlot.Mask<TItem>?>>?>(EquipmentSlots, Enumerable.Empty<MaskItemIndexed<TItem, EquipmentSlot.Mask<TItem>?>>());
+                this.UnarmedWeapon = UnarmedWeapon;
+                this.FaceFxPhonemes = new MaskItem<TItem, FaceFxPhonemes.Mask<TItem>?>(FaceFxPhonemes, new FaceFxPhonemes.Mask<TItem>(FaceFxPhonemes));
+                this.BaseMovementDefault = BaseMovementDefault;
+                this.BaseMovementDefaultSwim = BaseMovementDefaultSwim;
+                this.BaseMovementDefaultFly = BaseMovementDefaultFly;
+                this.BaseMovementDefaultSneak = BaseMovementDefaultSneak;
+                this.HeadData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, HeadData.Mask<TItem>?>?>?>(HeadData, default);
+                this.MorphRace = MorphRace;
+                this.ArmorRace = ArmorRace;
+                this.SubgraphTemplateRace = SubgraphTemplateRace;
+                this.SubgraphAdditiveRace = SubgraphAdditiveRace;
+                this.Subgraphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>?>(Subgraphs, Enumerable.Empty<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>());
+                this.IdleChatterTimeMin = IdleChatterTimeMin;
+                this.IdleChatterTimeMax = IdleChatterTimeMax;
+                this.MorphValues = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>?>(MorphValues, Enumerable.Empty<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>());
+                this.HairColorLookupTexture = HairColorLookupTexture;
+                this.HairColorExtendedLookupTexture = HairColorExtendedLookupTexture;
+                this.DialogueQuest = DialogueQuest;
+                this.BoneData = new GenderedItem<TItem>(BoneData, BoneData);
                 this.DATADataTypeState = DATADataTypeState;
             }
 
@@ -574,10 +1067,10 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Skin;
             public MaskItem<TItem, BipedBodyTemplate.Mask<TItem>?>? BipedBodyTemplate { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
-            public MaskItem<TItem, Properties.Mask<TItem>?>? Properties { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AttachParentSlots;
             public GenderedItem<TItem> Height;
-            public GenderedItem<TItem> DefaultWeight;
+            public MaskItem<TItem, GenderedItem<RaceWeight.Mask<TItem>?>?>? DefaultWeight;
             public TItem Flags;
             public TItem AccelerationRate;
             public TItem DecelerationRate;
@@ -585,13 +1078,12 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Unknown;
             public TItem InjuredHealthPercent;
             public TItem ShieldBipedObject;
-            public TItem BearddBipedObject;
+            public TItem BeardBipedObject;
             public TItem BodyBipedObject;
             public TItem AimAngleTolerance;
             public TItem FlightRadius;
             public TItem AngularAccelerationRate;
             public TItem AngularTolerance;
-            public TItem Flags2;
             public TItem Unknown2;
             public TItem PipboyBipedObject;
             public TItem XPValue;
@@ -607,12 +1099,57 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem ExplodableExplosion;
             public TItem ExplodableDebris;
             public TItem ExplodableImpactDataSet;
+            public TItem OnCrippleDebrisScale;
             public TItem OnCrippleDebrisCount;
             public TItem OnCrippleDecalCount;
             public TItem OnCrippleExplosion;
             public TItem OnCrippleDebris;
             public TItem OnCrippleImpactDataSet;
             public TItem ExplodableSubsegmentExplosion;
+            public TItem OrientationLimitsPitch;
+            public TItem OrientationLimitsRoll;
+            public MaskItem<TItem, GenderedItem<MaskItem<TItem, SimpleModel.Mask<TItem>?>?>?>? SkeletalModel;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? MovementTypeNames;
+            public GenderedItem<TItem> Voices;
+            public MaskItem<TItem, GenderedItem<TItem>?>? DefaultHairColors;
+            public TItem NumberOfTintsInList;
+            public TItem FacegenMainClamp;
+            public TItem FacegenFaceClamp;
+            public TItem AttackRace;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>? Attacks;
+            public MaskItem<TItem, GenderedItem<MaskItem<TItem, BodyData.Mask<TItem>?>?>?>? BodyData;
+            public TItem BodyPartData;
+            public MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>? BehaviorGraph;
+            public TItem ImpactMaterialType;
+            public TItem ImpactDataSet;
+            public TItem DispemberBloodArt;
+            public TItem MeatCapTextureSet;
+            public TItem CollarTextureSet;
+            public TItem SoundOpenCorpse;
+            public TItem SoundCloseCorpse;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<BipedObject, TItem, BipedObjectData.Mask<TItem>?>>?>? BipedObjects;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MovementDataOverride.Mask<TItem>?>>?>? MovementDataOverrides;
+            public TItem EquipmentFlags;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EquipmentSlot.Mask<TItem>?>>?>? EquipmentSlots;
+            public TItem UnarmedWeapon;
+            public MaskItem<TItem, FaceFxPhonemes.Mask<TItem>?>? FaceFxPhonemes { get; set; }
+            public TItem BaseMovementDefault;
+            public TItem BaseMovementDefaultSwim;
+            public TItem BaseMovementDefaultFly;
+            public TItem BaseMovementDefaultSneak;
+            public MaskItem<TItem, GenderedItem<MaskItem<TItem, HeadData.Mask<TItem>?>?>?>? HeadData;
+            public TItem MorphRace;
+            public TItem ArmorRace;
+            public TItem SubgraphTemplateRace;
+            public TItem SubgraphAdditiveRace;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>?>? Subgraphs;
+            public TItem IdleChatterTimeMin;
+            public TItem IdleChatterTimeMax;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>?>? MorphValues;
+            public TItem HairColorLookupTexture;
+            public TItem HairColorExtendedLookupTexture;
+            public TItem DialogueQuest;
+            public GenderedItem<TItem> BoneData;
             public TItem DATADataTypeState;
             #endregion
 
@@ -645,13 +1182,12 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.InjuredHealthPercent, rhs.InjuredHealthPercent)) return false;
                 if (!object.Equals(this.ShieldBipedObject, rhs.ShieldBipedObject)) return false;
-                if (!object.Equals(this.BearddBipedObject, rhs.BearddBipedObject)) return false;
+                if (!object.Equals(this.BeardBipedObject, rhs.BeardBipedObject)) return false;
                 if (!object.Equals(this.BodyBipedObject, rhs.BodyBipedObject)) return false;
                 if (!object.Equals(this.AimAngleTolerance, rhs.AimAngleTolerance)) return false;
                 if (!object.Equals(this.FlightRadius, rhs.FlightRadius)) return false;
                 if (!object.Equals(this.AngularAccelerationRate, rhs.AngularAccelerationRate)) return false;
                 if (!object.Equals(this.AngularTolerance, rhs.AngularTolerance)) return false;
-                if (!object.Equals(this.Flags2, rhs.Flags2)) return false;
                 if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
                 if (!object.Equals(this.PipboyBipedObject, rhs.PipboyBipedObject)) return false;
                 if (!object.Equals(this.XPValue, rhs.XPValue)) return false;
@@ -667,12 +1203,57 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.ExplodableExplosion, rhs.ExplodableExplosion)) return false;
                 if (!object.Equals(this.ExplodableDebris, rhs.ExplodableDebris)) return false;
                 if (!object.Equals(this.ExplodableImpactDataSet, rhs.ExplodableImpactDataSet)) return false;
+                if (!object.Equals(this.OnCrippleDebrisScale, rhs.OnCrippleDebrisScale)) return false;
                 if (!object.Equals(this.OnCrippleDebrisCount, rhs.OnCrippleDebrisCount)) return false;
                 if (!object.Equals(this.OnCrippleDecalCount, rhs.OnCrippleDecalCount)) return false;
                 if (!object.Equals(this.OnCrippleExplosion, rhs.OnCrippleExplosion)) return false;
                 if (!object.Equals(this.OnCrippleDebris, rhs.OnCrippleDebris)) return false;
                 if (!object.Equals(this.OnCrippleImpactDataSet, rhs.OnCrippleImpactDataSet)) return false;
                 if (!object.Equals(this.ExplodableSubsegmentExplosion, rhs.ExplodableSubsegmentExplosion)) return false;
+                if (!object.Equals(this.OrientationLimitsPitch, rhs.OrientationLimitsPitch)) return false;
+                if (!object.Equals(this.OrientationLimitsRoll, rhs.OrientationLimitsRoll)) return false;
+                if (!object.Equals(this.SkeletalModel, rhs.SkeletalModel)) return false;
+                if (!object.Equals(this.MovementTypeNames, rhs.MovementTypeNames)) return false;
+                if (!object.Equals(this.Voices, rhs.Voices)) return false;
+                if (!object.Equals(this.DefaultHairColors, rhs.DefaultHairColors)) return false;
+                if (!object.Equals(this.NumberOfTintsInList, rhs.NumberOfTintsInList)) return false;
+                if (!object.Equals(this.FacegenMainClamp, rhs.FacegenMainClamp)) return false;
+                if (!object.Equals(this.FacegenFaceClamp, rhs.FacegenFaceClamp)) return false;
+                if (!object.Equals(this.AttackRace, rhs.AttackRace)) return false;
+                if (!object.Equals(this.Attacks, rhs.Attacks)) return false;
+                if (!object.Equals(this.BodyData, rhs.BodyData)) return false;
+                if (!object.Equals(this.BodyPartData, rhs.BodyPartData)) return false;
+                if (!object.Equals(this.BehaviorGraph, rhs.BehaviorGraph)) return false;
+                if (!object.Equals(this.ImpactMaterialType, rhs.ImpactMaterialType)) return false;
+                if (!object.Equals(this.ImpactDataSet, rhs.ImpactDataSet)) return false;
+                if (!object.Equals(this.DispemberBloodArt, rhs.DispemberBloodArt)) return false;
+                if (!object.Equals(this.MeatCapTextureSet, rhs.MeatCapTextureSet)) return false;
+                if (!object.Equals(this.CollarTextureSet, rhs.CollarTextureSet)) return false;
+                if (!object.Equals(this.SoundOpenCorpse, rhs.SoundOpenCorpse)) return false;
+                if (!object.Equals(this.SoundCloseCorpse, rhs.SoundCloseCorpse)) return false;
+                if (!object.Equals(this.BipedObjects, rhs.BipedObjects)) return false;
+                if (!object.Equals(this.MovementDataOverrides, rhs.MovementDataOverrides)) return false;
+                if (!object.Equals(this.EquipmentFlags, rhs.EquipmentFlags)) return false;
+                if (!object.Equals(this.EquipmentSlots, rhs.EquipmentSlots)) return false;
+                if (!object.Equals(this.UnarmedWeapon, rhs.UnarmedWeapon)) return false;
+                if (!object.Equals(this.FaceFxPhonemes, rhs.FaceFxPhonemes)) return false;
+                if (!object.Equals(this.BaseMovementDefault, rhs.BaseMovementDefault)) return false;
+                if (!object.Equals(this.BaseMovementDefaultSwim, rhs.BaseMovementDefaultSwim)) return false;
+                if (!object.Equals(this.BaseMovementDefaultFly, rhs.BaseMovementDefaultFly)) return false;
+                if (!object.Equals(this.BaseMovementDefaultSneak, rhs.BaseMovementDefaultSneak)) return false;
+                if (!object.Equals(this.HeadData, rhs.HeadData)) return false;
+                if (!object.Equals(this.MorphRace, rhs.MorphRace)) return false;
+                if (!object.Equals(this.ArmorRace, rhs.ArmorRace)) return false;
+                if (!object.Equals(this.SubgraphTemplateRace, rhs.SubgraphTemplateRace)) return false;
+                if (!object.Equals(this.SubgraphAdditiveRace, rhs.SubgraphAdditiveRace)) return false;
+                if (!object.Equals(this.Subgraphs, rhs.Subgraphs)) return false;
+                if (!object.Equals(this.IdleChatterTimeMin, rhs.IdleChatterTimeMin)) return false;
+                if (!object.Equals(this.IdleChatterTimeMax, rhs.IdleChatterTimeMax)) return false;
+                if (!object.Equals(this.MorphValues, rhs.MorphValues)) return false;
+                if (!object.Equals(this.HairColorLookupTexture, rhs.HairColorLookupTexture)) return false;
+                if (!object.Equals(this.HairColorExtendedLookupTexture, rhs.HairColorExtendedLookupTexture)) return false;
+                if (!object.Equals(this.DialogueQuest, rhs.DialogueQuest)) return false;
+                if (!object.Equals(this.BoneData, rhs.BoneData)) return false;
                 if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
@@ -697,13 +1278,12 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Unknown);
                 hash.Add(this.InjuredHealthPercent);
                 hash.Add(this.ShieldBipedObject);
-                hash.Add(this.BearddBipedObject);
+                hash.Add(this.BeardBipedObject);
                 hash.Add(this.BodyBipedObject);
                 hash.Add(this.AimAngleTolerance);
                 hash.Add(this.FlightRadius);
                 hash.Add(this.AngularAccelerationRate);
                 hash.Add(this.AngularTolerance);
-                hash.Add(this.Flags2);
                 hash.Add(this.Unknown2);
                 hash.Add(this.PipboyBipedObject);
                 hash.Add(this.XPValue);
@@ -719,12 +1299,57 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.ExplodableExplosion);
                 hash.Add(this.ExplodableDebris);
                 hash.Add(this.ExplodableImpactDataSet);
+                hash.Add(this.OnCrippleDebrisScale);
                 hash.Add(this.OnCrippleDebrisCount);
                 hash.Add(this.OnCrippleDecalCount);
                 hash.Add(this.OnCrippleExplosion);
                 hash.Add(this.OnCrippleDebris);
                 hash.Add(this.OnCrippleImpactDataSet);
                 hash.Add(this.ExplodableSubsegmentExplosion);
+                hash.Add(this.OrientationLimitsPitch);
+                hash.Add(this.OrientationLimitsRoll);
+                hash.Add(this.SkeletalModel);
+                hash.Add(this.MovementTypeNames);
+                hash.Add(this.Voices);
+                hash.Add(this.DefaultHairColors);
+                hash.Add(this.NumberOfTintsInList);
+                hash.Add(this.FacegenMainClamp);
+                hash.Add(this.FacegenFaceClamp);
+                hash.Add(this.AttackRace);
+                hash.Add(this.Attacks);
+                hash.Add(this.BodyData);
+                hash.Add(this.BodyPartData);
+                hash.Add(this.BehaviorGraph);
+                hash.Add(this.ImpactMaterialType);
+                hash.Add(this.ImpactDataSet);
+                hash.Add(this.DispemberBloodArt);
+                hash.Add(this.MeatCapTextureSet);
+                hash.Add(this.CollarTextureSet);
+                hash.Add(this.SoundOpenCorpse);
+                hash.Add(this.SoundCloseCorpse);
+                hash.Add(this.BipedObjects);
+                hash.Add(this.MovementDataOverrides);
+                hash.Add(this.EquipmentFlags);
+                hash.Add(this.EquipmentSlots);
+                hash.Add(this.UnarmedWeapon);
+                hash.Add(this.FaceFxPhonemes);
+                hash.Add(this.BaseMovementDefault);
+                hash.Add(this.BaseMovementDefaultSwim);
+                hash.Add(this.BaseMovementDefaultFly);
+                hash.Add(this.BaseMovementDefaultSneak);
+                hash.Add(this.HeadData);
+                hash.Add(this.MorphRace);
+                hash.Add(this.ArmorRace);
+                hash.Add(this.SubgraphTemplateRace);
+                hash.Add(this.SubgraphAdditiveRace);
+                hash.Add(this.Subgraphs);
+                hash.Add(this.IdleChatterTimeMin);
+                hash.Add(this.IdleChatterTimeMax);
+                hash.Add(this.MorphValues);
+                hash.Add(this.HairColorLookupTexture);
+                hash.Add(this.HairColorExtendedLookupTexture);
+                hash.Add(this.DialogueQuest);
+                hash.Add(this.BoneData);
                 hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -767,10 +1392,17 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (Properties != null)
+                if (this.Properties != null)
                 {
                     if (!eval(this.Properties.Overall)) return false;
-                    if (this.Properties.Specific != null && !this.Properties.Specific.All(eval)) return false;
+                    if (this.Properties.Specific != null)
+                    {
+                        foreach (var item in this.Properties.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
                 }
                 if (this.AttachParentSlots != null)
                 {
@@ -784,7 +1416,9 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 if (!eval(this.Height.Male) || !eval(this.Height.Female)) return false;
-                if (!eval(this.DefaultWeight.Male) || !eval(this.DefaultWeight.Female)) return false;
+                if (!GenderedItem.AllMask(
+                    this.DefaultWeight,
+                    eval: eval)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.AccelerationRate)) return false;
                 if (!eval(this.DecelerationRate)) return false;
@@ -792,13 +1426,12 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.Unknown)) return false;
                 if (!eval(this.InjuredHealthPercent)) return false;
                 if (!eval(this.ShieldBipedObject)) return false;
-                if (!eval(this.BearddBipedObject)) return false;
+                if (!eval(this.BeardBipedObject)) return false;
                 if (!eval(this.BodyBipedObject)) return false;
                 if (!eval(this.AimAngleTolerance)) return false;
                 if (!eval(this.FlightRadius)) return false;
                 if (!eval(this.AngularAccelerationRate)) return false;
                 if (!eval(this.AngularTolerance)) return false;
-                if (!eval(this.Flags2)) return false;
                 if (!eval(this.Unknown2)) return false;
                 if (!eval(this.PipboyBipedObject)) return false;
                 if (!eval(this.XPValue)) return false;
@@ -814,12 +1447,150 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.ExplodableExplosion)) return false;
                 if (!eval(this.ExplodableDebris)) return false;
                 if (!eval(this.ExplodableImpactDataSet)) return false;
+                if (!eval(this.OnCrippleDebrisScale)) return false;
                 if (!eval(this.OnCrippleDebrisCount)) return false;
                 if (!eval(this.OnCrippleDecalCount)) return false;
                 if (!eval(this.OnCrippleExplosion)) return false;
                 if (!eval(this.OnCrippleDebris)) return false;
                 if (!eval(this.OnCrippleImpactDataSet)) return false;
                 if (!eval(this.ExplodableSubsegmentExplosion)) return false;
+                if (!eval(this.OrientationLimitsPitch)) return false;
+                if (!eval(this.OrientationLimitsRoll)) return false;
+                if (!GenderedItem.AllMask(
+                    this.SkeletalModel,
+                    eval: eval)) return false;
+                if (this.MovementTypeNames != null)
+                {
+                    if (!eval(this.MovementTypeNames.Overall)) return false;
+                    if (this.MovementTypeNames.Specific != null)
+                    {
+                        foreach (var item in this.MovementTypeNames.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Voices.Male) || !eval(this.Voices.Female)) return false;
+                if (!GenderedItem.All(
+                    this.DefaultHairColors,
+                    eval: eval)) return false;
+                if (!eval(this.NumberOfTintsInList)) return false;
+                if (!eval(this.FacegenMainClamp)) return false;
+                if (!eval(this.FacegenFaceClamp)) return false;
+                if (!eval(this.AttackRace)) return false;
+                if (this.Attacks != null)
+                {
+                    if (!eval(this.Attacks.Overall)) return false;
+                    if (this.Attacks.Specific != null)
+                    {
+                        foreach (var item in this.Attacks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!GenderedItem.AllMask(
+                    this.BodyData,
+                    eval: eval)) return false;
+                if (!eval(this.BodyPartData)) return false;
+                if (!GenderedItem.AllMask(
+                    this.BehaviorGraph,
+                    eval: eval)) return false;
+                if (!eval(this.ImpactMaterialType)) return false;
+                if (!eval(this.ImpactDataSet)) return false;
+                if (!eval(this.DispemberBloodArt)) return false;
+                if (!eval(this.MeatCapTextureSet)) return false;
+                if (!eval(this.CollarTextureSet)) return false;
+                if (!eval(this.SoundOpenCorpse)) return false;
+                if (!eval(this.SoundCloseCorpse)) return false;
+                if (this.BipedObjects != null)
+                {
+                    if (!eval(this.BipedObjects.Overall)) return false;
+                    if (this.BipedObjects.Specific != null)
+                    {
+                        foreach (var item in this.BipedObjects.Specific)
+                        {
+                            if (item.Specific != null)
+                            {
+                                if (!eval(item.Overall)) return false;
+                                if (!item.Specific?.All(eval) ?? false) return false;
+                            }
+                        }
+                    }
+                }
+                if (this.MovementDataOverrides != null)
+                {
+                    if (!eval(this.MovementDataOverrides.Overall)) return false;
+                    if (this.MovementDataOverrides.Specific != null)
+                    {
+                        foreach (var item in this.MovementDataOverrides.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.EquipmentFlags)) return false;
+                if (this.EquipmentSlots != null)
+                {
+                    if (!eval(this.EquipmentSlots.Overall)) return false;
+                    if (this.EquipmentSlots.Specific != null)
+                    {
+                        foreach (var item in this.EquipmentSlots.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.UnarmedWeapon)) return false;
+                if (FaceFxPhonemes != null)
+                {
+                    if (!eval(this.FaceFxPhonemes.Overall)) return false;
+                    if (this.FaceFxPhonemes.Specific != null && !this.FaceFxPhonemes.Specific.All(eval)) return false;
+                }
+                if (!eval(this.BaseMovementDefault)) return false;
+                if (!eval(this.BaseMovementDefaultSwim)) return false;
+                if (!eval(this.BaseMovementDefaultFly)) return false;
+                if (!eval(this.BaseMovementDefaultSneak)) return false;
+                if (!GenderedItem.AllMask(
+                    this.HeadData,
+                    eval: eval)) return false;
+                if (!eval(this.MorphRace)) return false;
+                if (!eval(this.ArmorRace)) return false;
+                if (!eval(this.SubgraphTemplateRace)) return false;
+                if (!eval(this.SubgraphAdditiveRace)) return false;
+                if (this.Subgraphs != null)
+                {
+                    if (!eval(this.Subgraphs.Overall)) return false;
+                    if (this.Subgraphs.Specific != null)
+                    {
+                        foreach (var item in this.Subgraphs.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.IdleChatterTimeMin)) return false;
+                if (!eval(this.IdleChatterTimeMax)) return false;
+                if (this.MorphValues != null)
+                {
+                    if (!eval(this.MorphValues.Overall)) return false;
+                    if (this.MorphValues.Specific != null)
+                    {
+                        foreach (var item in this.MorphValues.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.HairColorLookupTexture)) return false;
+                if (!eval(this.HairColorExtendedLookupTexture)) return false;
+                if (!eval(this.DialogueQuest)) return false;
+                if (!eval(this.BoneData.Male) || !eval(this.BoneData.Female)) return false;
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
@@ -860,10 +1631,17 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (Properties != null)
+                if (this.Properties != null)
                 {
                     if (eval(this.Properties.Overall)) return true;
-                    if (this.Properties.Specific != null && this.Properties.Specific.Any(eval)) return true;
+                    if (this.Properties.Specific != null)
+                    {
+                        foreach (var item in this.Properties.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
                 }
                 if (this.AttachParentSlots != null)
                 {
@@ -877,7 +1655,9 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 if (eval(this.Height.Male) || eval(this.Height.Female)) return true;
-                if (eval(this.DefaultWeight.Male) || eval(this.DefaultWeight.Female)) return true;
+                if (GenderedItem.AnyMask(
+                    this.DefaultWeight,
+                    eval: eval)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.AccelerationRate)) return true;
                 if (eval(this.DecelerationRate)) return true;
@@ -885,13 +1665,12 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.Unknown)) return true;
                 if (eval(this.InjuredHealthPercent)) return true;
                 if (eval(this.ShieldBipedObject)) return true;
-                if (eval(this.BearddBipedObject)) return true;
+                if (eval(this.BeardBipedObject)) return true;
                 if (eval(this.BodyBipedObject)) return true;
                 if (eval(this.AimAngleTolerance)) return true;
                 if (eval(this.FlightRadius)) return true;
                 if (eval(this.AngularAccelerationRate)) return true;
                 if (eval(this.AngularTolerance)) return true;
-                if (eval(this.Flags2)) return true;
                 if (eval(this.Unknown2)) return true;
                 if (eval(this.PipboyBipedObject)) return true;
                 if (eval(this.XPValue)) return true;
@@ -907,12 +1686,150 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.ExplodableExplosion)) return true;
                 if (eval(this.ExplodableDebris)) return true;
                 if (eval(this.ExplodableImpactDataSet)) return true;
+                if (eval(this.OnCrippleDebrisScale)) return true;
                 if (eval(this.OnCrippleDebrisCount)) return true;
                 if (eval(this.OnCrippleDecalCount)) return true;
                 if (eval(this.OnCrippleExplosion)) return true;
                 if (eval(this.OnCrippleDebris)) return true;
                 if (eval(this.OnCrippleImpactDataSet)) return true;
                 if (eval(this.ExplodableSubsegmentExplosion)) return true;
+                if (eval(this.OrientationLimitsPitch)) return true;
+                if (eval(this.OrientationLimitsRoll)) return true;
+                if (GenderedItem.AnyMask(
+                    this.SkeletalModel,
+                    eval: eval)) return true;
+                if (this.MovementTypeNames != null)
+                {
+                    if (eval(this.MovementTypeNames.Overall)) return true;
+                    if (this.MovementTypeNames.Specific != null)
+                    {
+                        foreach (var item in this.MovementTypeNames.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Voices.Male) || eval(this.Voices.Female)) return true;
+                if (GenderedItem.Any(
+                    this.DefaultHairColors,
+                    eval: eval)) return true;
+                if (eval(this.NumberOfTintsInList)) return true;
+                if (eval(this.FacegenMainClamp)) return true;
+                if (eval(this.FacegenFaceClamp)) return true;
+                if (eval(this.AttackRace)) return true;
+                if (this.Attacks != null)
+                {
+                    if (eval(this.Attacks.Overall)) return true;
+                    if (this.Attacks.Specific != null)
+                    {
+                        foreach (var item in this.Attacks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (GenderedItem.AnyMask(
+                    this.BodyData,
+                    eval: eval)) return true;
+                if (eval(this.BodyPartData)) return true;
+                if (GenderedItem.AnyMask(
+                    this.BehaviorGraph,
+                    eval: eval)) return true;
+                if (eval(this.ImpactMaterialType)) return true;
+                if (eval(this.ImpactDataSet)) return true;
+                if (eval(this.DispemberBloodArt)) return true;
+                if (eval(this.MeatCapTextureSet)) return true;
+                if (eval(this.CollarTextureSet)) return true;
+                if (eval(this.SoundOpenCorpse)) return true;
+                if (eval(this.SoundCloseCorpse)) return true;
+                if (this.BipedObjects != null)
+                {
+                    if (eval(this.BipedObjects.Overall)) return true;
+                    if (this.BipedObjects.Specific != null)
+                    {
+                        foreach (var item in this.BipedObjects.Specific)
+                        {
+                            if (item.Specific != null)
+                            {
+                                if (eval(item.Overall)) return true;
+                                if (item.Specific?.Any(eval) ?? false) return true;
+                            }
+                        }
+                    }
+                }
+                if (this.MovementDataOverrides != null)
+                {
+                    if (eval(this.MovementDataOverrides.Overall)) return true;
+                    if (this.MovementDataOverrides.Specific != null)
+                    {
+                        foreach (var item in this.MovementDataOverrides.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.EquipmentFlags)) return true;
+                if (this.EquipmentSlots != null)
+                {
+                    if (eval(this.EquipmentSlots.Overall)) return true;
+                    if (this.EquipmentSlots.Specific != null)
+                    {
+                        foreach (var item in this.EquipmentSlots.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.UnarmedWeapon)) return true;
+                if (FaceFxPhonemes != null)
+                {
+                    if (eval(this.FaceFxPhonemes.Overall)) return true;
+                    if (this.FaceFxPhonemes.Specific != null && this.FaceFxPhonemes.Specific.Any(eval)) return true;
+                }
+                if (eval(this.BaseMovementDefault)) return true;
+                if (eval(this.BaseMovementDefaultSwim)) return true;
+                if (eval(this.BaseMovementDefaultFly)) return true;
+                if (eval(this.BaseMovementDefaultSneak)) return true;
+                if (GenderedItem.AnyMask(
+                    this.HeadData,
+                    eval: eval)) return true;
+                if (eval(this.MorphRace)) return true;
+                if (eval(this.ArmorRace)) return true;
+                if (eval(this.SubgraphTemplateRace)) return true;
+                if (eval(this.SubgraphAdditiveRace)) return true;
+                if (this.Subgraphs != null)
+                {
+                    if (eval(this.Subgraphs.Overall)) return true;
+                    if (this.Subgraphs.Specific != null)
+                    {
+                        foreach (var item in this.Subgraphs.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.IdleChatterTimeMin)) return true;
+                if (eval(this.IdleChatterTimeMax)) return true;
+                if (this.MorphValues != null)
+                {
+                    if (eval(this.MorphValues.Overall)) return true;
+                    if (this.MorphValues.Specific != null)
+                    {
+                        foreach (var item in this.MorphValues.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.HairColorLookupTexture)) return true;
+                if (eval(this.HairColorExtendedLookupTexture)) return true;
+                if (eval(this.DialogueQuest)) return true;
+                if (eval(this.BoneData.Male) || eval(this.BoneData.Female)) return true;
                 if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
@@ -962,7 +1879,21 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                obj.Properties = this.Properties == null ? null : new MaskItem<R, Properties.Mask<R>?>(eval(this.Properties.Overall), this.Properties.Specific?.Translate(eval));
+                if (Properties != null)
+                {
+                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>());
+                    if (Properties.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>();
+                        obj.Properties.Specific = l;
+                        foreach (var item in Properties.Specific)
+                        {
+                            MaskItemIndexed<R, ObjectProperty.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ObjectProperty.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 if (AttachParentSlots != null)
                 {
                     obj.AttachParentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttachParentSlots.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -980,9 +1911,10 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Height = new GenderedItem<R>(
                     eval(this.Height.Male),
                     eval(this.Height.Female));
-                obj.DefaultWeight = new GenderedItem<R>(
-                    eval(this.DefaultWeight.Male),
-                    eval(this.DefaultWeight.Female));
+                obj.DefaultWeight = GenderedItem.TranslateHelper(
+                    this.DefaultWeight,
+                    eval,
+                    (m, e) => m?.Translate(e));
                 obj.Flags = eval(this.Flags);
                 obj.AccelerationRate = eval(this.AccelerationRate);
                 obj.DecelerationRate = eval(this.DecelerationRate);
@@ -990,13 +1922,12 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Unknown = eval(this.Unknown);
                 obj.InjuredHealthPercent = eval(this.InjuredHealthPercent);
                 obj.ShieldBipedObject = eval(this.ShieldBipedObject);
-                obj.BearddBipedObject = eval(this.BearddBipedObject);
+                obj.BeardBipedObject = eval(this.BeardBipedObject);
                 obj.BodyBipedObject = eval(this.BodyBipedObject);
                 obj.AimAngleTolerance = eval(this.AimAngleTolerance);
                 obj.FlightRadius = eval(this.FlightRadius);
                 obj.AngularAccelerationRate = eval(this.AngularAccelerationRate);
                 obj.AngularTolerance = eval(this.AngularTolerance);
-                obj.Flags2 = eval(this.Flags2);
                 obj.Unknown2 = eval(this.Unknown2);
                 obj.PipboyBipedObject = eval(this.PipboyBipedObject);
                 obj.XPValue = eval(this.XPValue);
@@ -1012,12 +1943,170 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.ExplodableExplosion = eval(this.ExplodableExplosion);
                 obj.ExplodableDebris = eval(this.ExplodableDebris);
                 obj.ExplodableImpactDataSet = eval(this.ExplodableImpactDataSet);
+                obj.OnCrippleDebrisScale = eval(this.OnCrippleDebrisScale);
                 obj.OnCrippleDebrisCount = eval(this.OnCrippleDebrisCount);
                 obj.OnCrippleDecalCount = eval(this.OnCrippleDecalCount);
                 obj.OnCrippleExplosion = eval(this.OnCrippleExplosion);
                 obj.OnCrippleDebris = eval(this.OnCrippleDebris);
                 obj.OnCrippleImpactDataSet = eval(this.OnCrippleImpactDataSet);
                 obj.ExplodableSubsegmentExplosion = eval(this.ExplodableSubsegmentExplosion);
+                obj.OrientationLimitsPitch = eval(this.OrientationLimitsPitch);
+                obj.OrientationLimitsRoll = eval(this.OrientationLimitsRoll);
+                obj.SkeletalModel = GenderedItem.TranslateHelper(
+                    this.SkeletalModel,
+                    eval,
+                    (m, e) => m?.Translate(e));
+                if (MovementTypeNames != null)
+                {
+                    obj.MovementTypeNames = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MovementTypeNames.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (MovementTypeNames.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.MovementTypeNames.Specific = l;
+                        foreach (var item in MovementTypeNames.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Voices = new GenderedItem<R>(
+                    eval(this.Voices.Male),
+                    eval(this.Voices.Female));
+                obj.DefaultHairColors = GenderedItem.TranslateHelper(
+                    this.DefaultHairColors,
+                    eval);
+                obj.NumberOfTintsInList = eval(this.NumberOfTintsInList);
+                obj.FacegenMainClamp = eval(this.FacegenMainClamp);
+                obj.FacegenFaceClamp = eval(this.FacegenFaceClamp);
+                obj.AttackRace = eval(this.AttackRace);
+                if (Attacks != null)
+                {
+                    obj.Attacks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Attack.Mask<R>?>>?>(eval(this.Attacks.Overall), Enumerable.Empty<MaskItemIndexed<R, Attack.Mask<R>?>>());
+                    if (Attacks.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Attack.Mask<R>?>>();
+                        obj.Attacks.Specific = l;
+                        foreach (var item in Attacks.Specific)
+                        {
+                            MaskItemIndexed<R, Attack.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Attack.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.BodyData = GenderedItem.TranslateHelper(
+                    this.BodyData,
+                    eval,
+                    (m, e) => m?.Translate(e));
+                obj.BodyPartData = eval(this.BodyPartData);
+                obj.BehaviorGraph = GenderedItem.TranslateHelper(
+                    this.BehaviorGraph,
+                    eval,
+                    (m, e) => m?.Translate(e));
+                obj.ImpactMaterialType = eval(this.ImpactMaterialType);
+                obj.ImpactDataSet = eval(this.ImpactDataSet);
+                obj.DispemberBloodArt = eval(this.DispemberBloodArt);
+                obj.MeatCapTextureSet = eval(this.MeatCapTextureSet);
+                obj.CollarTextureSet = eval(this.CollarTextureSet);
+                obj.SoundOpenCorpse = eval(this.SoundOpenCorpse);
+                obj.SoundCloseCorpse = eval(this.SoundCloseCorpse);
+                if (BipedObjects != null)
+                {
+                    obj.BipedObjects = new MaskItem<R, IEnumerable<MaskItemIndexed<BipedObject, R, BipedObjectData.Mask<R>?>>?>(eval(this.BipedObjects.Overall), default);
+                    if (BipedObjects.Specific != null)
+                    {
+                        List<MaskItemIndexed<BipedObject, R, BipedObjectData.Mask<R>?>> l = new List<MaskItemIndexed<BipedObject, R, BipedObjectData.Mask<R>?>>();
+                        obj.BipedObjects.Specific = l;
+                        foreach (var item in BipedObjects.Specific)
+                        {
+                            throw new NotImplementedException();
+                        }
+                    }
+                }
+                if (MovementDataOverrides != null)
+                {
+                    obj.MovementDataOverrides = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MovementDataOverride.Mask<R>?>>?>(eval(this.MovementDataOverrides.Overall), Enumerable.Empty<MaskItemIndexed<R, MovementDataOverride.Mask<R>?>>());
+                    if (MovementDataOverrides.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, MovementDataOverride.Mask<R>?>>();
+                        obj.MovementDataOverrides.Specific = l;
+                        foreach (var item in MovementDataOverrides.Specific)
+                        {
+                            MaskItemIndexed<R, MovementDataOverride.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, MovementDataOverride.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.EquipmentFlags = eval(this.EquipmentFlags);
+                if (EquipmentSlots != null)
+                {
+                    obj.EquipmentSlots = new MaskItem<R, IEnumerable<MaskItemIndexed<R, EquipmentSlot.Mask<R>?>>?>(eval(this.EquipmentSlots.Overall), Enumerable.Empty<MaskItemIndexed<R, EquipmentSlot.Mask<R>?>>());
+                    if (EquipmentSlots.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, EquipmentSlot.Mask<R>?>>();
+                        obj.EquipmentSlots.Specific = l;
+                        foreach (var item in EquipmentSlots.Specific)
+                        {
+                            MaskItemIndexed<R, EquipmentSlot.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, EquipmentSlot.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.UnarmedWeapon = eval(this.UnarmedWeapon);
+                obj.FaceFxPhonemes = this.FaceFxPhonemes == null ? null : new MaskItem<R, FaceFxPhonemes.Mask<R>?>(eval(this.FaceFxPhonemes.Overall), this.FaceFxPhonemes.Specific?.Translate(eval));
+                obj.BaseMovementDefault = eval(this.BaseMovementDefault);
+                obj.BaseMovementDefaultSwim = eval(this.BaseMovementDefaultSwim);
+                obj.BaseMovementDefaultFly = eval(this.BaseMovementDefaultFly);
+                obj.BaseMovementDefaultSneak = eval(this.BaseMovementDefaultSneak);
+                obj.HeadData = GenderedItem.TranslateHelper(
+                    this.HeadData,
+                    eval,
+                    (m, e) => m?.Translate(e));
+                obj.MorphRace = eval(this.MorphRace);
+                obj.ArmorRace = eval(this.ArmorRace);
+                obj.SubgraphTemplateRace = eval(this.SubgraphTemplateRace);
+                obj.SubgraphAdditiveRace = eval(this.SubgraphAdditiveRace);
+                if (Subgraphs != null)
+                {
+                    obj.Subgraphs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Subgraph.Mask<R>?>>?>(eval(this.Subgraphs.Overall), Enumerable.Empty<MaskItemIndexed<R, Subgraph.Mask<R>?>>());
+                    if (Subgraphs.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Subgraph.Mask<R>?>>();
+                        obj.Subgraphs.Specific = l;
+                        foreach (var item in Subgraphs.Specific)
+                        {
+                            MaskItemIndexed<R, Subgraph.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Subgraph.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.IdleChatterTimeMin = eval(this.IdleChatterTimeMin);
+                obj.IdleChatterTimeMax = eval(this.IdleChatterTimeMax);
+                if (MorphValues != null)
+                {
+                    obj.MorphValues = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MorphValue.Mask<R>?>>?>(eval(this.MorphValues.Overall), Enumerable.Empty<MaskItemIndexed<R, MorphValue.Mask<R>?>>());
+                    if (MorphValues.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, MorphValue.Mask<R>?>>();
+                        obj.MorphValues.Specific = l;
+                        foreach (var item in MorphValues.Specific)
+                        {
+                            MaskItemIndexed<R, MorphValue.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, MorphValue.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.HairColorLookupTexture = eval(this.HairColorLookupTexture);
+                obj.HairColorExtendedLookupTexture = eval(this.HairColorExtendedLookupTexture);
+                obj.DialogueQuest = eval(this.DialogueQuest);
+                obj.BoneData = new GenderedItem<R>(
+                    eval(this.BoneData.Male),
+                    eval(this.BoneData.Female));
                 obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
@@ -1107,9 +2196,28 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.Properties?.Overall ?? true)
+                    if ((printMask?.Properties?.Overall ?? true)
+                        && Properties is {} PropertiesItem)
                     {
-                        Properties?.ToString(fg);
+                        fg.AppendLine("Properties =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(PropertiesItem.Overall);
+                            if (PropertiesItem.Specific != null)
+                            {
+                                foreach (var subItem in PropertiesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
                     }
                     if ((printMask?.AttachParentSlots?.Overall ?? true)
                         && AttachParentSlots is {} AttachParentSlotsItem)
@@ -1170,9 +2278,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         fg.AppendItem(ShieldBipedObject, "ShieldBipedObject");
                     }
-                    if (printMask?.BearddBipedObject ?? true)
+                    if (printMask?.BeardBipedObject ?? true)
                     {
-                        fg.AppendItem(BearddBipedObject, "BearddBipedObject");
+                        fg.AppendItem(BeardBipedObject, "BeardBipedObject");
                     }
                     if (printMask?.BodyBipedObject ?? true)
                     {
@@ -1193,10 +2301,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (printMask?.AngularTolerance ?? true)
                     {
                         fg.AppendItem(AngularTolerance, "AngularTolerance");
-                    }
-                    if (printMask?.Flags2 ?? true)
-                    {
-                        fg.AppendItem(Flags2, "Flags2");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
@@ -1258,6 +2362,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         fg.AppendItem(ExplodableImpactDataSet, "ExplodableImpactDataSet");
                     }
+                    if (printMask?.OnCrippleDebrisScale ?? true)
+                    {
+                        fg.AppendItem(OnCrippleDebrisScale, "OnCrippleDebrisScale");
+                    }
                     if (printMask?.OnCrippleDebrisCount ?? true)
                     {
                         fg.AppendItem(OnCrippleDebrisCount, "OnCrippleDebrisCount");
@@ -1282,6 +2390,334 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         fg.AppendItem(ExplodableSubsegmentExplosion, "ExplodableSubsegmentExplosion");
                     }
+                    if (printMask?.OrientationLimitsPitch ?? true)
+                    {
+                        fg.AppendItem(OrientationLimitsPitch, "OrientationLimitsPitch");
+                    }
+                    if (printMask?.OrientationLimitsRoll ?? true)
+                    {
+                        fg.AppendItem(OrientationLimitsRoll, "OrientationLimitsRoll");
+                    }
+                    if (SkeletalModel != null
+                        && (printMask?.SkeletalModel?.Overall ?? true))
+                    {
+                        fg.AppendLine($"SkeletalModel => {SkeletalModel}");
+                    }
+                    if ((printMask?.MovementTypeNames?.Overall ?? true)
+                        && MovementTypeNames is {} MovementTypeNamesItem)
+                    {
+                        fg.AppendLine("MovementTypeNames =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(MovementTypeNamesItem.Overall);
+                            if (MovementTypeNamesItem.Specific != null)
+                            {
+                                foreach (var subItem in MovementTypeNamesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((true))
+                    {
+                        fg.AppendLine($"Voices => {Voices}");
+                    }
+                    if (DefaultHairColors != null
+                        && (printMask?.DefaultHairColors?.Overall ?? true))
+                    {
+                        fg.AppendLine($"DefaultHairColors => {DefaultHairColors}");
+                    }
+                    if (printMask?.NumberOfTintsInList ?? true)
+                    {
+                        fg.AppendItem(NumberOfTintsInList, "NumberOfTintsInList");
+                    }
+                    if (printMask?.FacegenMainClamp ?? true)
+                    {
+                        fg.AppendItem(FacegenMainClamp, "FacegenMainClamp");
+                    }
+                    if (printMask?.FacegenFaceClamp ?? true)
+                    {
+                        fg.AppendItem(FacegenFaceClamp, "FacegenFaceClamp");
+                    }
+                    if (printMask?.AttackRace ?? true)
+                    {
+                        fg.AppendItem(AttackRace, "AttackRace");
+                    }
+                    if ((printMask?.Attacks?.Overall ?? true)
+                        && Attacks is {} AttacksItem)
+                    {
+                        fg.AppendLine("Attacks =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(AttacksItem.Overall);
+                            if (AttacksItem.Specific != null)
+                            {
+                                foreach (var subItem in AttacksItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((true))
+                    {
+                        fg.AppendLine($"BodyData => {BodyData}");
+                    }
+                    if (printMask?.BodyPartData ?? true)
+                    {
+                        fg.AppendItem(BodyPartData, "BodyPartData");
+                    }
+                    if ((true))
+                    {
+                        fg.AppendLine($"BehaviorGraph => {BehaviorGraph}");
+                    }
+                    if (printMask?.ImpactMaterialType ?? true)
+                    {
+                        fg.AppendItem(ImpactMaterialType, "ImpactMaterialType");
+                    }
+                    if (printMask?.ImpactDataSet ?? true)
+                    {
+                        fg.AppendItem(ImpactDataSet, "ImpactDataSet");
+                    }
+                    if (printMask?.DispemberBloodArt ?? true)
+                    {
+                        fg.AppendItem(DispemberBloodArt, "DispemberBloodArt");
+                    }
+                    if (printMask?.MeatCapTextureSet ?? true)
+                    {
+                        fg.AppendItem(MeatCapTextureSet, "MeatCapTextureSet");
+                    }
+                    if (printMask?.CollarTextureSet ?? true)
+                    {
+                        fg.AppendItem(CollarTextureSet, "CollarTextureSet");
+                    }
+                    if (printMask?.SoundOpenCorpse ?? true)
+                    {
+                        fg.AppendItem(SoundOpenCorpse, "SoundOpenCorpse");
+                    }
+                    if (printMask?.SoundCloseCorpse ?? true)
+                    {
+                        fg.AppendItem(SoundCloseCorpse, "SoundCloseCorpse");
+                    }
+                    if (printMask?.BipedObjects?.Overall ?? true)
+                    {
+                        fg.AppendLine("BipedObjects =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (BipedObjects != null)
+                            {
+                                if (BipedObjects.Overall != null)
+                                {
+                                    fg.AppendLine(BipedObjects.Overall.ToString());
+                                }
+                                if (BipedObjects.Specific != null)
+                                {
+                                    foreach (var subItem in BipedObjects.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine("Key => [");
+                                            using (new DepthWrapper(fg))
+                                            {
+                                                fg.AppendItem(subItem.Index);
+                                            }
+                                            fg.AppendLine("]");
+                                            fg.AppendLine("Value => [");
+                                            using (new DepthWrapper(fg))
+                                            {
+                                                subItem.Specific?.ToString(fg);
+                                            }
+                                            fg.AppendLine("]");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.MovementDataOverrides?.Overall ?? true)
+                        && MovementDataOverrides is {} MovementDataOverridesItem)
+                    {
+                        fg.AppendLine("MovementDataOverrides =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(MovementDataOverridesItem.Overall);
+                            if (MovementDataOverridesItem.Specific != null)
+                            {
+                                foreach (var subItem in MovementDataOverridesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.EquipmentFlags ?? true)
+                    {
+                        fg.AppendItem(EquipmentFlags, "EquipmentFlags");
+                    }
+                    if ((printMask?.EquipmentSlots?.Overall ?? true)
+                        && EquipmentSlots is {} EquipmentSlotsItem)
+                    {
+                        fg.AppendLine("EquipmentSlots =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(EquipmentSlotsItem.Overall);
+                            if (EquipmentSlotsItem.Specific != null)
+                            {
+                                foreach (var subItem in EquipmentSlotsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.UnarmedWeapon ?? true)
+                    {
+                        fg.AppendItem(UnarmedWeapon, "UnarmedWeapon");
+                    }
+                    if (printMask?.FaceFxPhonemes?.Overall ?? true)
+                    {
+                        FaceFxPhonemes?.ToString(fg);
+                    }
+                    if (printMask?.BaseMovementDefault ?? true)
+                    {
+                        fg.AppendItem(BaseMovementDefault, "BaseMovementDefault");
+                    }
+                    if (printMask?.BaseMovementDefaultSwim ?? true)
+                    {
+                        fg.AppendItem(BaseMovementDefaultSwim, "BaseMovementDefaultSwim");
+                    }
+                    if (printMask?.BaseMovementDefaultFly ?? true)
+                    {
+                        fg.AppendItem(BaseMovementDefaultFly, "BaseMovementDefaultFly");
+                    }
+                    if (printMask?.BaseMovementDefaultSneak ?? true)
+                    {
+                        fg.AppendItem(BaseMovementDefaultSneak, "BaseMovementDefaultSneak");
+                    }
+                    if (HeadData != null
+                        && (printMask?.HeadData?.Overall ?? true))
+                    {
+                        fg.AppendLine($"HeadData => {HeadData}");
+                    }
+                    if (printMask?.MorphRace ?? true)
+                    {
+                        fg.AppendItem(MorphRace, "MorphRace");
+                    }
+                    if (printMask?.ArmorRace ?? true)
+                    {
+                        fg.AppendItem(ArmorRace, "ArmorRace");
+                    }
+                    if (printMask?.SubgraphTemplateRace ?? true)
+                    {
+                        fg.AppendItem(SubgraphTemplateRace, "SubgraphTemplateRace");
+                    }
+                    if (printMask?.SubgraphAdditiveRace ?? true)
+                    {
+                        fg.AppendItem(SubgraphAdditiveRace, "SubgraphAdditiveRace");
+                    }
+                    if ((printMask?.Subgraphs?.Overall ?? true)
+                        && Subgraphs is {} SubgraphsItem)
+                    {
+                        fg.AppendLine("Subgraphs =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(SubgraphsItem.Overall);
+                            if (SubgraphsItem.Specific != null)
+                            {
+                                foreach (var subItem in SubgraphsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.IdleChatterTimeMin ?? true)
+                    {
+                        fg.AppendItem(IdleChatterTimeMin, "IdleChatterTimeMin");
+                    }
+                    if (printMask?.IdleChatterTimeMax ?? true)
+                    {
+                        fg.AppendItem(IdleChatterTimeMax, "IdleChatterTimeMax");
+                    }
+                    if ((printMask?.MorphValues?.Overall ?? true)
+                        && MorphValues is {} MorphValuesItem)
+                    {
+                        fg.AppendLine("MorphValues =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(MorphValuesItem.Overall);
+                            if (MorphValuesItem.Specific != null)
+                            {
+                                foreach (var subItem in MorphValuesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.HairColorLookupTexture ?? true)
+                    {
+                        fg.AppendItem(HairColorLookupTexture, "HairColorLookupTexture");
+                    }
+                    if (printMask?.HairColorExtendedLookupTexture ?? true)
+                    {
+                        fg.AppendItem(HairColorExtendedLookupTexture, "HairColorExtendedLookupTexture");
+                    }
+                    if (printMask?.DialogueQuest ?? true)
+                    {
+                        fg.AppendItem(DialogueQuest, "DialogueQuest");
+                    }
+                    if ((true))
+                    {
+                        fg.AppendLine($"BoneData => {BoneData}");
+                    }
                     if (printMask?.DATADataTypeState ?? true)
                     {
                         fg.AppendItem(DATADataTypeState, "DATADataTypeState");
@@ -1305,7 +2741,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Skin;
             public MaskItem<Exception?, BipedBodyTemplate.ErrorMask?>? BipedBodyTemplate;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
-            public MaskItem<Exception?, Properties.ErrorMask?>? Properties;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AttachParentSlots;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? Height;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? DefaultWeight;
@@ -1316,13 +2752,12 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Unknown;
             public Exception? InjuredHealthPercent;
             public Exception? ShieldBipedObject;
-            public Exception? BearddBipedObject;
+            public Exception? BeardBipedObject;
             public Exception? BodyBipedObject;
             public Exception? AimAngleTolerance;
             public Exception? FlightRadius;
             public Exception? AngularAccelerationRate;
             public Exception? AngularTolerance;
-            public Exception? Flags2;
             public Exception? Unknown2;
             public Exception? PipboyBipedObject;
             public Exception? XPValue;
@@ -1338,12 +2773,57 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? ExplodableExplosion;
             public Exception? ExplodableDebris;
             public Exception? ExplodableImpactDataSet;
+            public Exception? OnCrippleDebrisScale;
             public Exception? OnCrippleDebrisCount;
             public Exception? OnCrippleDecalCount;
             public Exception? OnCrippleExplosion;
             public Exception? OnCrippleDebris;
             public Exception? OnCrippleImpactDataSet;
             public Exception? ExplodableSubsegmentExplosion;
+            public Exception? OrientationLimitsPitch;
+            public Exception? OrientationLimitsRoll;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? SkeletalModel;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? MovementTypeNames;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? Voices;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? DefaultHairColors;
+            public Exception? NumberOfTintsInList;
+            public Exception? FacegenMainClamp;
+            public Exception? FacegenFaceClamp;
+            public Exception? AttackRace;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>? Attacks;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? BodyData;
+            public Exception? BodyPartData;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? BehaviorGraph;
+            public Exception? ImpactMaterialType;
+            public Exception? ImpactDataSet;
+            public Exception? DispemberBloodArt;
+            public Exception? MeatCapTextureSet;
+            public Exception? CollarTextureSet;
+            public Exception? SoundOpenCorpse;
+            public Exception? SoundCloseCorpse;
+            public MaskItem<Exception?, IEnumerable<MaskItemIndexed<BipedObject, Exception?, BipedObjectData.ErrorMask?>>?>? BipedObjects;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MovementDataOverride.ErrorMask?>>?>? MovementDataOverrides;
+            public Exception? EquipmentFlags;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EquipmentSlot.ErrorMask?>>?>? EquipmentSlots;
+            public Exception? UnarmedWeapon;
+            public MaskItem<Exception?, FaceFxPhonemes.ErrorMask?>? FaceFxPhonemes;
+            public Exception? BaseMovementDefault;
+            public Exception? BaseMovementDefaultSwim;
+            public Exception? BaseMovementDefaultFly;
+            public Exception? BaseMovementDefaultSneak;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? HeadData;
+            public Exception? MorphRace;
+            public Exception? ArmorRace;
+            public Exception? SubgraphTemplateRace;
+            public Exception? SubgraphAdditiveRace;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Subgraph.ErrorMask?>>?>? Subgraphs;
+            public Exception? IdleChatterTimeMin;
+            public Exception? IdleChatterTimeMax;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphValue.ErrorMask?>>?>? MorphValues;
+            public Exception? HairColorLookupTexture;
+            public Exception? HairColorExtendedLookupTexture;
+            public Exception? DialogueQuest;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? BoneData;
             public Exception? DATADataTypeState;
             #endregion
 
@@ -1389,8 +2869,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return InjuredHealthPercent;
                     case Race_FieldIndex.ShieldBipedObject:
                         return ShieldBipedObject;
-                    case Race_FieldIndex.BearddBipedObject:
-                        return BearddBipedObject;
+                    case Race_FieldIndex.BeardBipedObject:
+                        return BeardBipedObject;
                     case Race_FieldIndex.BodyBipedObject:
                         return BodyBipedObject;
                     case Race_FieldIndex.AimAngleTolerance:
@@ -1401,8 +2881,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return AngularAccelerationRate;
                     case Race_FieldIndex.AngularTolerance:
                         return AngularTolerance;
-                    case Race_FieldIndex.Flags2:
-                        return Flags2;
                     case Race_FieldIndex.Unknown2:
                         return Unknown2;
                     case Race_FieldIndex.PipboyBipedObject:
@@ -1433,6 +2911,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return ExplodableDebris;
                     case Race_FieldIndex.ExplodableImpactDataSet:
                         return ExplodableImpactDataSet;
+                    case Race_FieldIndex.OnCrippleDebrisScale:
+                        return OnCrippleDebrisScale;
                     case Race_FieldIndex.OnCrippleDebrisCount:
                         return OnCrippleDebrisCount;
                     case Race_FieldIndex.OnCrippleDecalCount:
@@ -1445,6 +2925,94 @@ namespace Mutagen.Bethesda.Fallout4
                         return OnCrippleImpactDataSet;
                     case Race_FieldIndex.ExplodableSubsegmentExplosion:
                         return ExplodableSubsegmentExplosion;
+                    case Race_FieldIndex.OrientationLimitsPitch:
+                        return OrientationLimitsPitch;
+                    case Race_FieldIndex.OrientationLimitsRoll:
+                        return OrientationLimitsRoll;
+                    case Race_FieldIndex.SkeletalModel:
+                        return SkeletalModel;
+                    case Race_FieldIndex.MovementTypeNames:
+                        return MovementTypeNames;
+                    case Race_FieldIndex.Voices:
+                        return Voices;
+                    case Race_FieldIndex.DefaultHairColors:
+                        return DefaultHairColors;
+                    case Race_FieldIndex.NumberOfTintsInList:
+                        return NumberOfTintsInList;
+                    case Race_FieldIndex.FacegenMainClamp:
+                        return FacegenMainClamp;
+                    case Race_FieldIndex.FacegenFaceClamp:
+                        return FacegenFaceClamp;
+                    case Race_FieldIndex.AttackRace:
+                        return AttackRace;
+                    case Race_FieldIndex.Attacks:
+                        return Attacks;
+                    case Race_FieldIndex.BodyData:
+                        return BodyData;
+                    case Race_FieldIndex.BodyPartData:
+                        return BodyPartData;
+                    case Race_FieldIndex.BehaviorGraph:
+                        return BehaviorGraph;
+                    case Race_FieldIndex.ImpactMaterialType:
+                        return ImpactMaterialType;
+                    case Race_FieldIndex.ImpactDataSet:
+                        return ImpactDataSet;
+                    case Race_FieldIndex.DispemberBloodArt:
+                        return DispemberBloodArt;
+                    case Race_FieldIndex.MeatCapTextureSet:
+                        return MeatCapTextureSet;
+                    case Race_FieldIndex.CollarTextureSet:
+                        return CollarTextureSet;
+                    case Race_FieldIndex.SoundOpenCorpse:
+                        return SoundOpenCorpse;
+                    case Race_FieldIndex.SoundCloseCorpse:
+                        return SoundCloseCorpse;
+                    case Race_FieldIndex.BipedObjects:
+                        return BipedObjects;
+                    case Race_FieldIndex.MovementDataOverrides:
+                        return MovementDataOverrides;
+                    case Race_FieldIndex.EquipmentFlags:
+                        return EquipmentFlags;
+                    case Race_FieldIndex.EquipmentSlots:
+                        return EquipmentSlots;
+                    case Race_FieldIndex.UnarmedWeapon:
+                        return UnarmedWeapon;
+                    case Race_FieldIndex.FaceFxPhonemes:
+                        return FaceFxPhonemes;
+                    case Race_FieldIndex.BaseMovementDefault:
+                        return BaseMovementDefault;
+                    case Race_FieldIndex.BaseMovementDefaultSwim:
+                        return BaseMovementDefaultSwim;
+                    case Race_FieldIndex.BaseMovementDefaultFly:
+                        return BaseMovementDefaultFly;
+                    case Race_FieldIndex.BaseMovementDefaultSneak:
+                        return BaseMovementDefaultSneak;
+                    case Race_FieldIndex.HeadData:
+                        return HeadData;
+                    case Race_FieldIndex.MorphRace:
+                        return MorphRace;
+                    case Race_FieldIndex.ArmorRace:
+                        return ArmorRace;
+                    case Race_FieldIndex.SubgraphTemplateRace:
+                        return SubgraphTemplateRace;
+                    case Race_FieldIndex.SubgraphAdditiveRace:
+                        return SubgraphAdditiveRace;
+                    case Race_FieldIndex.Subgraphs:
+                        return Subgraphs;
+                    case Race_FieldIndex.IdleChatterTimeMin:
+                        return IdleChatterTimeMin;
+                    case Race_FieldIndex.IdleChatterTimeMax:
+                        return IdleChatterTimeMax;
+                    case Race_FieldIndex.MorphValues:
+                        return MorphValues;
+                    case Race_FieldIndex.HairColorLookupTexture:
+                        return HairColorLookupTexture;
+                    case Race_FieldIndex.HairColorExtendedLookupTexture:
+                        return HairColorExtendedLookupTexture;
+                    case Race_FieldIndex.DialogueQuest:
+                        return DialogueQuest;
+                    case Race_FieldIndex.BoneData:
+                        return BoneData;
                     case Race_FieldIndex.DATADataTypeState:
                         return DATADataTypeState;
                     default:
@@ -1479,7 +3047,7 @@ namespace Mutagen.Bethesda.Fallout4
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case Race_FieldIndex.Properties:
-                        this.Properties = new MaskItem<Exception?, Properties.ErrorMask?>(ex, null);
+                        this.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ex, null);
                         break;
                     case Race_FieldIndex.AttachParentSlots:
                         this.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
@@ -1511,8 +3079,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Race_FieldIndex.ShieldBipedObject:
                         this.ShieldBipedObject = ex;
                         break;
-                    case Race_FieldIndex.BearddBipedObject:
-                        this.BearddBipedObject = ex;
+                    case Race_FieldIndex.BeardBipedObject:
+                        this.BeardBipedObject = ex;
                         break;
                     case Race_FieldIndex.BodyBipedObject:
                         this.BodyBipedObject = ex;
@@ -1528,9 +3096,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Race_FieldIndex.AngularTolerance:
                         this.AngularTolerance = ex;
-                        break;
-                    case Race_FieldIndex.Flags2:
-                        this.Flags2 = ex;
                         break;
                     case Race_FieldIndex.Unknown2:
                         this.Unknown2 = ex;
@@ -1577,6 +3142,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Race_FieldIndex.ExplodableImpactDataSet:
                         this.ExplodableImpactDataSet = ex;
                         break;
+                    case Race_FieldIndex.OnCrippleDebrisScale:
+                        this.OnCrippleDebrisScale = ex;
+                        break;
                     case Race_FieldIndex.OnCrippleDebrisCount:
                         this.OnCrippleDebrisCount = ex;
                         break;
@@ -1594,6 +3162,138 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Race_FieldIndex.ExplodableSubsegmentExplosion:
                         this.ExplodableSubsegmentExplosion = ex;
+                        break;
+                    case Race_FieldIndex.OrientationLimitsPitch:
+                        this.OrientationLimitsPitch = ex;
+                        break;
+                    case Race_FieldIndex.OrientationLimitsRoll:
+                        this.OrientationLimitsRoll = ex;
+                        break;
+                    case Race_FieldIndex.SkeletalModel:
+                        this.SkeletalModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.MovementTypeNames:
+                        this.MovementTypeNames = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.Voices:
+                        this.Voices = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.DefaultHairColors:
+                        this.DefaultHairColors = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.NumberOfTintsInList:
+                        this.NumberOfTintsInList = ex;
+                        break;
+                    case Race_FieldIndex.FacegenMainClamp:
+                        this.FacegenMainClamp = ex;
+                        break;
+                    case Race_FieldIndex.FacegenFaceClamp:
+                        this.FacegenFaceClamp = ex;
+                        break;
+                    case Race_FieldIndex.AttackRace:
+                        this.AttackRace = ex;
+                        break;
+                    case Race_FieldIndex.Attacks:
+                        this.Attacks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.BodyData:
+                        this.BodyData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.BodyPartData:
+                        this.BodyPartData = ex;
+                        break;
+                    case Race_FieldIndex.BehaviorGraph:
+                        this.BehaviorGraph = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.ImpactMaterialType:
+                        this.ImpactMaterialType = ex;
+                        break;
+                    case Race_FieldIndex.ImpactDataSet:
+                        this.ImpactDataSet = ex;
+                        break;
+                    case Race_FieldIndex.DispemberBloodArt:
+                        this.DispemberBloodArt = ex;
+                        break;
+                    case Race_FieldIndex.MeatCapTextureSet:
+                        this.MeatCapTextureSet = ex;
+                        break;
+                    case Race_FieldIndex.CollarTextureSet:
+                        this.CollarTextureSet = ex;
+                        break;
+                    case Race_FieldIndex.SoundOpenCorpse:
+                        this.SoundOpenCorpse = ex;
+                        break;
+                    case Race_FieldIndex.SoundCloseCorpse:
+                        this.SoundCloseCorpse = ex;
+                        break;
+                    case Race_FieldIndex.BipedObjects:
+                        this.BipedObjects = new MaskItem<Exception?, IEnumerable<MaskItemIndexed<BipedObject, Exception?, BipedObjectData.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.MovementDataOverrides:
+                        this.MovementDataOverrides = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MovementDataOverride.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.EquipmentFlags:
+                        this.EquipmentFlags = ex;
+                        break;
+                    case Race_FieldIndex.EquipmentSlots:
+                        this.EquipmentSlots = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EquipmentSlot.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.UnarmedWeapon:
+                        this.UnarmedWeapon = ex;
+                        break;
+                    case Race_FieldIndex.FaceFxPhonemes:
+                        this.FaceFxPhonemes = new MaskItem<Exception?, FaceFxPhonemes.ErrorMask?>(ex, null);
+                        break;
+                    case Race_FieldIndex.BaseMovementDefault:
+                        this.BaseMovementDefault = ex;
+                        break;
+                    case Race_FieldIndex.BaseMovementDefaultSwim:
+                        this.BaseMovementDefaultSwim = ex;
+                        break;
+                    case Race_FieldIndex.BaseMovementDefaultFly:
+                        this.BaseMovementDefaultFly = ex;
+                        break;
+                    case Race_FieldIndex.BaseMovementDefaultSneak:
+                        this.BaseMovementDefaultSneak = ex;
+                        break;
+                    case Race_FieldIndex.HeadData:
+                        this.HeadData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.MorphRace:
+                        this.MorphRace = ex;
+                        break;
+                    case Race_FieldIndex.ArmorRace:
+                        this.ArmorRace = ex;
+                        break;
+                    case Race_FieldIndex.SubgraphTemplateRace:
+                        this.SubgraphTemplateRace = ex;
+                        break;
+                    case Race_FieldIndex.SubgraphAdditiveRace:
+                        this.SubgraphAdditiveRace = ex;
+                        break;
+                    case Race_FieldIndex.Subgraphs:
+                        this.Subgraphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Subgraph.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.IdleChatterTimeMin:
+                        this.IdleChatterTimeMin = ex;
+                        break;
+                    case Race_FieldIndex.IdleChatterTimeMax:
+                        this.IdleChatterTimeMax = ex;
+                        break;
+                    case Race_FieldIndex.MorphValues:
+                        this.MorphValues = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphValue.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.HairColorLookupTexture:
+                        this.HairColorLookupTexture = ex;
+                        break;
+                    case Race_FieldIndex.HairColorExtendedLookupTexture:
+                        this.HairColorExtendedLookupTexture = ex;
+                        break;
+                    case Race_FieldIndex.DialogueQuest:
+                        this.DialogueQuest = ex;
+                        break;
+                    case Race_FieldIndex.BoneData:
+                        this.BoneData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
                     case Race_FieldIndex.DATADataTypeState:
                         this.DATADataTypeState = ex;
@@ -1631,7 +3331,7 @@ namespace Mutagen.Bethesda.Fallout4
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Race_FieldIndex.Properties:
-                        this.Properties = (MaskItem<Exception?, Properties.ErrorMask?>?)obj;
+                        this.Properties = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>)obj;
                         break;
                     case Race_FieldIndex.AttachParentSlots:
                         this.AttachParentSlots = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
@@ -1663,8 +3363,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Race_FieldIndex.ShieldBipedObject:
                         this.ShieldBipedObject = (Exception?)obj;
                         break;
-                    case Race_FieldIndex.BearddBipedObject:
-                        this.BearddBipedObject = (Exception?)obj;
+                    case Race_FieldIndex.BeardBipedObject:
+                        this.BeardBipedObject = (Exception?)obj;
                         break;
                     case Race_FieldIndex.BodyBipedObject:
                         this.BodyBipedObject = (Exception?)obj;
@@ -1680,9 +3380,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Race_FieldIndex.AngularTolerance:
                         this.AngularTolerance = (Exception?)obj;
-                        break;
-                    case Race_FieldIndex.Flags2:
-                        this.Flags2 = (Exception?)obj;
                         break;
                     case Race_FieldIndex.Unknown2:
                         this.Unknown2 = (Exception?)obj;
@@ -1729,6 +3426,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Race_FieldIndex.ExplodableImpactDataSet:
                         this.ExplodableImpactDataSet = (Exception?)obj;
                         break;
+                    case Race_FieldIndex.OnCrippleDebrisScale:
+                        this.OnCrippleDebrisScale = (Exception?)obj;
+                        break;
                     case Race_FieldIndex.OnCrippleDebrisCount:
                         this.OnCrippleDebrisCount = (Exception?)obj;
                         break;
@@ -1746,6 +3446,138 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Race_FieldIndex.ExplodableSubsegmentExplosion:
                         this.ExplodableSubsegmentExplosion = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.OrientationLimitsPitch:
+                        this.OrientationLimitsPitch = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.OrientationLimitsRoll:
+                        this.OrientationLimitsRoll = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.SkeletalModel:
+                        this.SkeletalModel = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case Race_FieldIndex.MovementTypeNames:
+                        this.MovementTypeNames = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Race_FieldIndex.Voices:
+                        this.Voices = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case Race_FieldIndex.DefaultHairColors:
+                        this.DefaultHairColors = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case Race_FieldIndex.NumberOfTintsInList:
+                        this.NumberOfTintsInList = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.FacegenMainClamp:
+                        this.FacegenMainClamp = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.FacegenFaceClamp:
+                        this.FacegenFaceClamp = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.AttackRace:
+                        this.AttackRace = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.Attacks:
+                        this.Attacks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>)obj;
+                        break;
+                    case Race_FieldIndex.BodyData:
+                        this.BodyData = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case Race_FieldIndex.BodyPartData:
+                        this.BodyPartData = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.BehaviorGraph:
+                        this.BehaviorGraph = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case Race_FieldIndex.ImpactMaterialType:
+                        this.ImpactMaterialType = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.ImpactDataSet:
+                        this.ImpactDataSet = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.DispemberBloodArt:
+                        this.DispemberBloodArt = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.MeatCapTextureSet:
+                        this.MeatCapTextureSet = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.CollarTextureSet:
+                        this.CollarTextureSet = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.SoundOpenCorpse:
+                        this.SoundOpenCorpse = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.SoundCloseCorpse:
+                        this.SoundCloseCorpse = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.BipedObjects:
+                        this.BipedObjects = (MaskItem<Exception?, IEnumerable<MaskItemIndexed<BipedObject, Exception?, BipedObjectData.ErrorMask?>>?>)obj;
+                        break;
+                    case Race_FieldIndex.MovementDataOverrides:
+                        this.MovementDataOverrides = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MovementDataOverride.ErrorMask?>>?>)obj;
+                        break;
+                    case Race_FieldIndex.EquipmentFlags:
+                        this.EquipmentFlags = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.EquipmentSlots:
+                        this.EquipmentSlots = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EquipmentSlot.ErrorMask?>>?>)obj;
+                        break;
+                    case Race_FieldIndex.UnarmedWeapon:
+                        this.UnarmedWeapon = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.FaceFxPhonemes:
+                        this.FaceFxPhonemes = (MaskItem<Exception?, FaceFxPhonemes.ErrorMask?>?)obj;
+                        break;
+                    case Race_FieldIndex.BaseMovementDefault:
+                        this.BaseMovementDefault = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.BaseMovementDefaultSwim:
+                        this.BaseMovementDefaultSwim = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.BaseMovementDefaultFly:
+                        this.BaseMovementDefaultFly = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.BaseMovementDefaultSneak:
+                        this.BaseMovementDefaultSneak = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.HeadData:
+                        this.HeadData = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case Race_FieldIndex.MorphRace:
+                        this.MorphRace = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.ArmorRace:
+                        this.ArmorRace = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.SubgraphTemplateRace:
+                        this.SubgraphTemplateRace = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.SubgraphAdditiveRace:
+                        this.SubgraphAdditiveRace = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.Subgraphs:
+                        this.Subgraphs = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Subgraph.ErrorMask?>>?>)obj;
+                        break;
+                    case Race_FieldIndex.IdleChatterTimeMin:
+                        this.IdleChatterTimeMin = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.IdleChatterTimeMax:
+                        this.IdleChatterTimeMax = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.MorphValues:
+                        this.MorphValues = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphValue.ErrorMask?>>?>)obj;
+                        break;
+                    case Race_FieldIndex.HairColorLookupTexture:
+                        this.HairColorLookupTexture = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.HairColorExtendedLookupTexture:
+                        this.HairColorExtendedLookupTexture = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.DialogueQuest:
+                        this.DialogueQuest = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.BoneData:
+                        this.BoneData = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
                     case Race_FieldIndex.DATADataTypeState:
                         this.DATADataTypeState = (Exception?)obj;
@@ -1777,13 +3609,12 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Unknown != null) return true;
                 if (InjuredHealthPercent != null) return true;
                 if (ShieldBipedObject != null) return true;
-                if (BearddBipedObject != null) return true;
+                if (BeardBipedObject != null) return true;
                 if (BodyBipedObject != null) return true;
                 if (AimAngleTolerance != null) return true;
                 if (FlightRadius != null) return true;
                 if (AngularAccelerationRate != null) return true;
                 if (AngularTolerance != null) return true;
-                if (Flags2 != null) return true;
                 if (Unknown2 != null) return true;
                 if (PipboyBipedObject != null) return true;
                 if (XPValue != null) return true;
@@ -1799,12 +3630,57 @@ namespace Mutagen.Bethesda.Fallout4
                 if (ExplodableExplosion != null) return true;
                 if (ExplodableDebris != null) return true;
                 if (ExplodableImpactDataSet != null) return true;
+                if (OnCrippleDebrisScale != null) return true;
                 if (OnCrippleDebrisCount != null) return true;
                 if (OnCrippleDecalCount != null) return true;
                 if (OnCrippleExplosion != null) return true;
                 if (OnCrippleDebris != null) return true;
                 if (OnCrippleImpactDataSet != null) return true;
                 if (ExplodableSubsegmentExplosion != null) return true;
+                if (OrientationLimitsPitch != null) return true;
+                if (OrientationLimitsRoll != null) return true;
+                if (SkeletalModel != null) return true;
+                if (MovementTypeNames != null) return true;
+                if (Voices != null) return true;
+                if (DefaultHairColors != null) return true;
+                if (NumberOfTintsInList != null) return true;
+                if (FacegenMainClamp != null) return true;
+                if (FacegenFaceClamp != null) return true;
+                if (AttackRace != null) return true;
+                if (Attacks != null) return true;
+                if (BodyData != null) return true;
+                if (BodyPartData != null) return true;
+                if (BehaviorGraph != null) return true;
+                if (ImpactMaterialType != null) return true;
+                if (ImpactDataSet != null) return true;
+                if (DispemberBloodArt != null) return true;
+                if (MeatCapTextureSet != null) return true;
+                if (CollarTextureSet != null) return true;
+                if (SoundOpenCorpse != null) return true;
+                if (SoundCloseCorpse != null) return true;
+                if (BipedObjects != null) return true;
+                if (MovementDataOverrides != null) return true;
+                if (EquipmentFlags != null) return true;
+                if (EquipmentSlots != null) return true;
+                if (UnarmedWeapon != null) return true;
+                if (FaceFxPhonemes != null) return true;
+                if (BaseMovementDefault != null) return true;
+                if (BaseMovementDefaultSwim != null) return true;
+                if (BaseMovementDefaultFly != null) return true;
+                if (BaseMovementDefaultSneak != null) return true;
+                if (HeadData != null) return true;
+                if (MorphRace != null) return true;
+                if (ArmorRace != null) return true;
+                if (SubgraphTemplateRace != null) return true;
+                if (SubgraphAdditiveRace != null) return true;
+                if (Subgraphs != null) return true;
+                if (IdleChatterTimeMin != null) return true;
+                if (IdleChatterTimeMax != null) return true;
+                if (MorphValues != null) return true;
+                if (HairColorLookupTexture != null) return true;
+                if (HairColorExtendedLookupTexture != null) return true;
+                if (DialogueQuest != null) return true;
+                if (BoneData != null) return true;
                 if (DATADataTypeState != null) return true;
                 return false;
             }
@@ -1890,7 +3766,28 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     fg.AppendLine("]");
                 }
-                Properties?.ToString(fg);
+                if (Properties is {} PropertiesItem)
+                {
+                    fg.AppendLine("Properties =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(PropertiesItem.Overall);
+                        if (PropertiesItem.Specific != null)
+                        {
+                            foreach (var subItem in PropertiesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
                 if (AttachParentSlots is {} AttachParentSlotsItem)
                 {
                     fg.AppendLine("AttachParentSlots =>");
@@ -1922,13 +3819,12 @@ namespace Mutagen.Bethesda.Fallout4
                 fg.AppendItem(Unknown, "Unknown");
                 fg.AppendItem(InjuredHealthPercent, "InjuredHealthPercent");
                 fg.AppendItem(ShieldBipedObject, "ShieldBipedObject");
-                fg.AppendItem(BearddBipedObject, "BearddBipedObject");
+                fg.AppendItem(BeardBipedObject, "BeardBipedObject");
                 fg.AppendItem(BodyBipedObject, "BodyBipedObject");
                 fg.AppendItem(AimAngleTolerance, "AimAngleTolerance");
                 fg.AppendItem(FlightRadius, "FlightRadius");
                 fg.AppendItem(AngularAccelerationRate, "AngularAccelerationRate");
                 fg.AppendItem(AngularTolerance, "AngularTolerance");
-                fg.AppendItem(Flags2, "Flags2");
                 fg.AppendItem(Unknown2, "Unknown2");
                 fg.AppendItem(PipboyBipedObject, "PipboyBipedObject");
                 fg.AppendItem(XPValue, "XPValue");
@@ -1944,12 +3840,227 @@ namespace Mutagen.Bethesda.Fallout4
                 fg.AppendItem(ExplodableExplosion, "ExplodableExplosion");
                 fg.AppendItem(ExplodableDebris, "ExplodableDebris");
                 fg.AppendItem(ExplodableImpactDataSet, "ExplodableImpactDataSet");
+                fg.AppendItem(OnCrippleDebrisScale, "OnCrippleDebrisScale");
                 fg.AppendItem(OnCrippleDebrisCount, "OnCrippleDebrisCount");
                 fg.AppendItem(OnCrippleDecalCount, "OnCrippleDecalCount");
                 fg.AppendItem(OnCrippleExplosion, "OnCrippleExplosion");
                 fg.AppendItem(OnCrippleDebris, "OnCrippleDebris");
                 fg.AppendItem(OnCrippleImpactDataSet, "OnCrippleImpactDataSet");
                 fg.AppendItem(ExplodableSubsegmentExplosion, "ExplodableSubsegmentExplosion");
+                fg.AppendItem(OrientationLimitsPitch, "OrientationLimitsPitch");
+                fg.AppendItem(OrientationLimitsRoll, "OrientationLimitsRoll");
+                if (SkeletalModel != null)
+                {
+                    fg.AppendLine($"SkeletalModel => {SkeletalModel}");
+                }
+                if (MovementTypeNames is {} MovementTypeNamesItem)
+                {
+                    fg.AppendLine("MovementTypeNames =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(MovementTypeNamesItem.Overall);
+                        if (MovementTypeNamesItem.Specific != null)
+                        {
+                            foreach (var subItem in MovementTypeNamesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendLine($"Voices => {Voices}");
+                if (DefaultHairColors != null)
+                {
+                    fg.AppendLine($"DefaultHairColors => {DefaultHairColors}");
+                }
+                fg.AppendItem(NumberOfTintsInList, "NumberOfTintsInList");
+                fg.AppendItem(FacegenMainClamp, "FacegenMainClamp");
+                fg.AppendItem(FacegenFaceClamp, "FacegenFaceClamp");
+                fg.AppendItem(AttackRace, "AttackRace");
+                if (Attacks is {} AttacksItem)
+                {
+                    fg.AppendLine("Attacks =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(AttacksItem.Overall);
+                        if (AttacksItem.Specific != null)
+                        {
+                            foreach (var subItem in AttacksItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendLine($"BodyData => {BodyData}");
+                fg.AppendItem(BodyPartData, "BodyPartData");
+                fg.AppendLine($"BehaviorGraph => {BehaviorGraph}");
+                fg.AppendItem(ImpactMaterialType, "ImpactMaterialType");
+                fg.AppendItem(ImpactDataSet, "ImpactDataSet");
+                fg.AppendItem(DispemberBloodArt, "DispemberBloodArt");
+                fg.AppendItem(MeatCapTextureSet, "MeatCapTextureSet");
+                fg.AppendItem(CollarTextureSet, "CollarTextureSet");
+                fg.AppendItem(SoundOpenCorpse, "SoundOpenCorpse");
+                fg.AppendItem(SoundCloseCorpse, "SoundCloseCorpse");
+                fg.AppendLine("BipedObjects =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (BipedObjects != null)
+                    {
+                        if (BipedObjects.Overall != null)
+                        {
+                            fg.AppendLine(BipedObjects.Overall.ToString());
+                        }
+                        if (BipedObjects.Specific != null)
+                        {
+                            foreach (var subItem in BipedObjects.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine("Key => [");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem.Index);
+                                    }
+                                    fg.AppendLine("]");
+                                    fg.AppendLine("Value => [");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem.Specific?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                if (MovementDataOverrides is {} MovementDataOverridesItem)
+                {
+                    fg.AppendLine("MovementDataOverrides =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(MovementDataOverridesItem.Overall);
+                        if (MovementDataOverridesItem.Specific != null)
+                        {
+                            foreach (var subItem in MovementDataOverridesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(EquipmentFlags, "EquipmentFlags");
+                if (EquipmentSlots is {} EquipmentSlotsItem)
+                {
+                    fg.AppendLine("EquipmentSlots =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(EquipmentSlotsItem.Overall);
+                        if (EquipmentSlotsItem.Specific != null)
+                        {
+                            foreach (var subItem in EquipmentSlotsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(UnarmedWeapon, "UnarmedWeapon");
+                FaceFxPhonemes?.ToString(fg);
+                fg.AppendItem(BaseMovementDefault, "BaseMovementDefault");
+                fg.AppendItem(BaseMovementDefaultSwim, "BaseMovementDefaultSwim");
+                fg.AppendItem(BaseMovementDefaultFly, "BaseMovementDefaultFly");
+                fg.AppendItem(BaseMovementDefaultSneak, "BaseMovementDefaultSneak");
+                if (HeadData != null)
+                {
+                    fg.AppendLine($"HeadData => {HeadData}");
+                }
+                fg.AppendItem(MorphRace, "MorphRace");
+                fg.AppendItem(ArmorRace, "ArmorRace");
+                fg.AppendItem(SubgraphTemplateRace, "SubgraphTemplateRace");
+                fg.AppendItem(SubgraphAdditiveRace, "SubgraphAdditiveRace");
+                if (Subgraphs is {} SubgraphsItem)
+                {
+                    fg.AppendLine("Subgraphs =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(SubgraphsItem.Overall);
+                        if (SubgraphsItem.Specific != null)
+                        {
+                            foreach (var subItem in SubgraphsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(IdleChatterTimeMin, "IdleChatterTimeMin");
+                fg.AppendItem(IdleChatterTimeMax, "IdleChatterTimeMax");
+                if (MorphValues is {} MorphValuesItem)
+                {
+                    fg.AppendLine("MorphValues =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(MorphValuesItem.Overall);
+                        if (MorphValuesItem.Specific != null)
+                        {
+                            foreach (var subItem in MorphValuesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(HairColorLookupTexture, "HairColorLookupTexture");
+                fg.AppendItem(HairColorExtendedLookupTexture, "HairColorExtendedLookupTexture");
+                fg.AppendItem(DialogueQuest, "DialogueQuest");
+                fg.AppendLine($"BoneData => {BoneData}");
                 fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
@@ -1966,7 +4077,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Skin = this.Skin.Combine(rhs.Skin);
                 ret.BipedBodyTemplate = this.BipedBodyTemplate.Combine(rhs.BipedBodyTemplate, (l, r) => l.Combine(r));
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Properties = this.Properties.Combine(rhs.Properties, (l, r) => l.Combine(r));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
                 ret.Height = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Height?.Overall, rhs.Height?.Overall), GenderedItem.Combine(this.Height?.Specific, rhs.Height?.Specific));
                 ret.DefaultWeight = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.DefaultWeight?.Overall, rhs.DefaultWeight?.Overall), GenderedItem.Combine(this.DefaultWeight?.Specific, rhs.DefaultWeight?.Specific));
@@ -1977,13 +4088,12 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.InjuredHealthPercent = this.InjuredHealthPercent.Combine(rhs.InjuredHealthPercent);
                 ret.ShieldBipedObject = this.ShieldBipedObject.Combine(rhs.ShieldBipedObject);
-                ret.BearddBipedObject = this.BearddBipedObject.Combine(rhs.BearddBipedObject);
+                ret.BeardBipedObject = this.BeardBipedObject.Combine(rhs.BeardBipedObject);
                 ret.BodyBipedObject = this.BodyBipedObject.Combine(rhs.BodyBipedObject);
                 ret.AimAngleTolerance = this.AimAngleTolerance.Combine(rhs.AimAngleTolerance);
                 ret.FlightRadius = this.FlightRadius.Combine(rhs.FlightRadius);
                 ret.AngularAccelerationRate = this.AngularAccelerationRate.Combine(rhs.AngularAccelerationRate);
                 ret.AngularTolerance = this.AngularTolerance.Combine(rhs.AngularTolerance);
-                ret.Flags2 = this.Flags2.Combine(rhs.Flags2);
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
                 ret.PipboyBipedObject = this.PipboyBipedObject.Combine(rhs.PipboyBipedObject);
                 ret.XPValue = this.XPValue.Combine(rhs.XPValue);
@@ -1999,12 +4109,57 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ExplodableExplosion = this.ExplodableExplosion.Combine(rhs.ExplodableExplosion);
                 ret.ExplodableDebris = this.ExplodableDebris.Combine(rhs.ExplodableDebris);
                 ret.ExplodableImpactDataSet = this.ExplodableImpactDataSet.Combine(rhs.ExplodableImpactDataSet);
+                ret.OnCrippleDebrisScale = this.OnCrippleDebrisScale.Combine(rhs.OnCrippleDebrisScale);
                 ret.OnCrippleDebrisCount = this.OnCrippleDebrisCount.Combine(rhs.OnCrippleDebrisCount);
                 ret.OnCrippleDecalCount = this.OnCrippleDecalCount.Combine(rhs.OnCrippleDecalCount);
                 ret.OnCrippleExplosion = this.OnCrippleExplosion.Combine(rhs.OnCrippleExplosion);
                 ret.OnCrippleDebris = this.OnCrippleDebris.Combine(rhs.OnCrippleDebris);
                 ret.OnCrippleImpactDataSet = this.OnCrippleImpactDataSet.Combine(rhs.OnCrippleImpactDataSet);
                 ret.ExplodableSubsegmentExplosion = this.ExplodableSubsegmentExplosion.Combine(rhs.ExplodableSubsegmentExplosion);
+                ret.OrientationLimitsPitch = this.OrientationLimitsPitch.Combine(rhs.OrientationLimitsPitch);
+                ret.OrientationLimitsRoll = this.OrientationLimitsRoll.Combine(rhs.OrientationLimitsRoll);
+                ret.SkeletalModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.SkeletalModel?.Overall, rhs.SkeletalModel?.Overall), GenderedItem.Combine(this.SkeletalModel?.Specific, rhs.SkeletalModel?.Specific));
+                ret.MovementTypeNames = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.MovementTypeNames?.Overall, rhs.MovementTypeNames?.Overall), ExceptionExt.Combine(this.MovementTypeNames?.Specific, rhs.MovementTypeNames?.Specific));
+                ret.Voices = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Voices?.Overall, rhs.Voices?.Overall), GenderedItem.Combine(this.Voices?.Specific, rhs.Voices?.Specific));
+                ret.DefaultHairColors = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.DefaultHairColors?.Overall, rhs.DefaultHairColors?.Overall), GenderedItem.Combine(this.DefaultHairColors?.Specific, rhs.DefaultHairColors?.Specific));
+                ret.NumberOfTintsInList = this.NumberOfTintsInList.Combine(rhs.NumberOfTintsInList);
+                ret.FacegenMainClamp = this.FacegenMainClamp.Combine(rhs.FacegenMainClamp);
+                ret.FacegenFaceClamp = this.FacegenFaceClamp.Combine(rhs.FacegenFaceClamp);
+                ret.AttackRace = this.AttackRace.Combine(rhs.AttackRace);
+                ret.Attacks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>(ExceptionExt.Combine(this.Attacks?.Overall, rhs.Attacks?.Overall), ExceptionExt.Combine(this.Attacks?.Specific, rhs.Attacks?.Specific));
+                ret.BodyData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.BodyData?.Overall, rhs.BodyData?.Overall), GenderedItem.Combine(this.BodyData?.Specific, rhs.BodyData?.Specific));
+                ret.BodyPartData = this.BodyPartData.Combine(rhs.BodyPartData);
+                ret.BehaviorGraph = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.BehaviorGraph?.Overall, rhs.BehaviorGraph?.Overall), GenderedItem.Combine(this.BehaviorGraph?.Specific, rhs.BehaviorGraph?.Specific));
+                ret.ImpactMaterialType = this.ImpactMaterialType.Combine(rhs.ImpactMaterialType);
+                ret.ImpactDataSet = this.ImpactDataSet.Combine(rhs.ImpactDataSet);
+                ret.DispemberBloodArt = this.DispemberBloodArt.Combine(rhs.DispemberBloodArt);
+                ret.MeatCapTextureSet = this.MeatCapTextureSet.Combine(rhs.MeatCapTextureSet);
+                ret.CollarTextureSet = this.CollarTextureSet.Combine(rhs.CollarTextureSet);
+                ret.SoundOpenCorpse = this.SoundOpenCorpse.Combine(rhs.SoundOpenCorpse);
+                ret.SoundCloseCorpse = this.SoundCloseCorpse.Combine(rhs.SoundCloseCorpse);
+                ret.BipedObjects = new MaskItem<Exception?, IEnumerable<MaskItemIndexed<BipedObject, Exception?, BipedObjectData.ErrorMask?>>?>(ExceptionExt.Combine(this.BipedObjects?.Overall, rhs.BipedObjects?.Overall), ExceptionExt.Combine(this.BipedObjects?.Specific, rhs.BipedObjects?.Specific));
+                ret.MovementDataOverrides = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MovementDataOverride.ErrorMask?>>?>(ExceptionExt.Combine(this.MovementDataOverrides?.Overall, rhs.MovementDataOverrides?.Overall), ExceptionExt.Combine(this.MovementDataOverrides?.Specific, rhs.MovementDataOverrides?.Specific));
+                ret.EquipmentFlags = this.EquipmentFlags.Combine(rhs.EquipmentFlags);
+                ret.EquipmentSlots = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EquipmentSlot.ErrorMask?>>?>(ExceptionExt.Combine(this.EquipmentSlots?.Overall, rhs.EquipmentSlots?.Overall), ExceptionExt.Combine(this.EquipmentSlots?.Specific, rhs.EquipmentSlots?.Specific));
+                ret.UnarmedWeapon = this.UnarmedWeapon.Combine(rhs.UnarmedWeapon);
+                ret.FaceFxPhonemes = this.FaceFxPhonemes.Combine(rhs.FaceFxPhonemes, (l, r) => l.Combine(r));
+                ret.BaseMovementDefault = this.BaseMovementDefault.Combine(rhs.BaseMovementDefault);
+                ret.BaseMovementDefaultSwim = this.BaseMovementDefaultSwim.Combine(rhs.BaseMovementDefaultSwim);
+                ret.BaseMovementDefaultFly = this.BaseMovementDefaultFly.Combine(rhs.BaseMovementDefaultFly);
+                ret.BaseMovementDefaultSneak = this.BaseMovementDefaultSneak.Combine(rhs.BaseMovementDefaultSneak);
+                ret.HeadData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.HeadData?.Overall, rhs.HeadData?.Overall), GenderedItem.Combine(this.HeadData?.Specific, rhs.HeadData?.Specific));
+                ret.MorphRace = this.MorphRace.Combine(rhs.MorphRace);
+                ret.ArmorRace = this.ArmorRace.Combine(rhs.ArmorRace);
+                ret.SubgraphTemplateRace = this.SubgraphTemplateRace.Combine(rhs.SubgraphTemplateRace);
+                ret.SubgraphAdditiveRace = this.SubgraphAdditiveRace.Combine(rhs.SubgraphAdditiveRace);
+                ret.Subgraphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Subgraph.ErrorMask?>>?>(ExceptionExt.Combine(this.Subgraphs?.Overall, rhs.Subgraphs?.Overall), ExceptionExt.Combine(this.Subgraphs?.Specific, rhs.Subgraphs?.Specific));
+                ret.IdleChatterTimeMin = this.IdleChatterTimeMin.Combine(rhs.IdleChatterTimeMin);
+                ret.IdleChatterTimeMax = this.IdleChatterTimeMax.Combine(rhs.IdleChatterTimeMax);
+                ret.MorphValues = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphValue.ErrorMask?>>?>(ExceptionExt.Combine(this.MorphValues?.Overall, rhs.MorphValues?.Overall), ExceptionExt.Combine(this.MorphValues?.Specific, rhs.MorphValues?.Specific));
+                ret.HairColorLookupTexture = this.HairColorLookupTexture.Combine(rhs.HairColorLookupTexture);
+                ret.HairColorExtendedLookupTexture = this.HairColorExtendedLookupTexture.Combine(rhs.HairColorExtendedLookupTexture);
+                ret.DialogueQuest = this.DialogueQuest.Combine(rhs.DialogueQuest);
+                ret.BoneData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.BoneData?.Overall, rhs.BoneData?.Overall), GenderedItem.Combine(this.BoneData?.Specific, rhs.BoneData?.Specific));
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
@@ -2035,10 +4190,10 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Skin;
             public BipedBodyTemplate.TranslationMask? BipedBodyTemplate;
             public bool Keywords;
-            public Properties.TranslationMask? Properties;
+            public ObjectProperty.TranslationMask? Properties;
             public bool AttachParentSlots;
             public GenderedItem<bool>? Height;
-            public GenderedItem<bool>? DefaultWeight;
+            public GenderedItem<RaceWeight.TranslationMask>? DefaultWeight;
             public bool Flags;
             public bool AccelerationRate;
             public bool DecelerationRate;
@@ -2046,13 +4201,12 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Unknown;
             public bool InjuredHealthPercent;
             public bool ShieldBipedObject;
-            public bool BearddBipedObject;
+            public bool BeardBipedObject;
             public bool BodyBipedObject;
             public bool AimAngleTolerance;
             public bool FlightRadius;
             public bool AngularAccelerationRate;
             public bool AngularTolerance;
-            public bool Flags2;
             public bool Unknown2;
             public bool PipboyBipedObject;
             public bool XPValue;
@@ -2068,12 +4222,57 @@ namespace Mutagen.Bethesda.Fallout4
             public bool ExplodableExplosion;
             public bool ExplodableDebris;
             public bool ExplodableImpactDataSet;
+            public bool OnCrippleDebrisScale;
             public bool OnCrippleDebrisCount;
             public bool OnCrippleDecalCount;
             public bool OnCrippleExplosion;
             public bool OnCrippleDebris;
             public bool OnCrippleImpactDataSet;
             public bool ExplodableSubsegmentExplosion;
+            public bool OrientationLimitsPitch;
+            public bool OrientationLimitsRoll;
+            public GenderedItem<SimpleModel.TranslationMask>? SkeletalModel;
+            public bool MovementTypeNames;
+            public GenderedItem<bool>? Voices;
+            public GenderedItem<bool>? DefaultHairColors;
+            public bool NumberOfTintsInList;
+            public bool FacegenMainClamp;
+            public bool FacegenFaceClamp;
+            public bool AttackRace;
+            public Attack.TranslationMask? Attacks;
+            public GenderedItem<BodyData.TranslationMask>? BodyData;
+            public bool BodyPartData;
+            public GenderedItem<Model.TranslationMask>? BehaviorGraph;
+            public bool ImpactMaterialType;
+            public bool ImpactDataSet;
+            public bool DispemberBloodArt;
+            public bool MeatCapTextureSet;
+            public bool CollarTextureSet;
+            public bool SoundOpenCorpse;
+            public bool SoundCloseCorpse;
+            public BipedObjectData.TranslationMask? BipedObjects;
+            public MovementDataOverride.TranslationMask? MovementDataOverrides;
+            public bool EquipmentFlags;
+            public EquipmentSlot.TranslationMask? EquipmentSlots;
+            public bool UnarmedWeapon;
+            public FaceFxPhonemes.TranslationMask? FaceFxPhonemes;
+            public bool BaseMovementDefault;
+            public bool BaseMovementDefaultSwim;
+            public bool BaseMovementDefaultFly;
+            public bool BaseMovementDefaultSneak;
+            public GenderedItem<HeadData.TranslationMask>? HeadData;
+            public bool MorphRace;
+            public bool ArmorRace;
+            public bool SubgraphTemplateRace;
+            public bool SubgraphAdditiveRace;
+            public Subgraph.TranslationMask? Subgraphs;
+            public bool IdleChatterTimeMin;
+            public bool IdleChatterTimeMax;
+            public MorphValue.TranslationMask? MorphValues;
+            public bool HairColorLookupTexture;
+            public bool HairColorExtendedLookupTexture;
+            public bool DialogueQuest;
+            public GenderedItem<bool>? BoneData;
             public bool DATADataTypeState;
             #endregion
 
@@ -2097,13 +4296,12 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Unknown = defaultOn;
                 this.InjuredHealthPercent = defaultOn;
                 this.ShieldBipedObject = defaultOn;
-                this.BearddBipedObject = defaultOn;
+                this.BeardBipedObject = defaultOn;
                 this.BodyBipedObject = defaultOn;
                 this.AimAngleTolerance = defaultOn;
                 this.FlightRadius = defaultOn;
                 this.AngularAccelerationRate = defaultOn;
                 this.AngularTolerance = defaultOn;
-                this.Flags2 = defaultOn;
                 this.Unknown2 = defaultOn;
                 this.PipboyBipedObject = defaultOn;
                 this.XPValue = defaultOn;
@@ -2119,12 +4317,43 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ExplodableExplosion = defaultOn;
                 this.ExplodableDebris = defaultOn;
                 this.ExplodableImpactDataSet = defaultOn;
+                this.OnCrippleDebrisScale = defaultOn;
                 this.OnCrippleDebrisCount = defaultOn;
                 this.OnCrippleDecalCount = defaultOn;
                 this.OnCrippleExplosion = defaultOn;
                 this.OnCrippleDebris = defaultOn;
                 this.OnCrippleImpactDataSet = defaultOn;
                 this.ExplodableSubsegmentExplosion = defaultOn;
+                this.OrientationLimitsPitch = defaultOn;
+                this.OrientationLimitsRoll = defaultOn;
+                this.MovementTypeNames = defaultOn;
+                this.NumberOfTintsInList = defaultOn;
+                this.FacegenMainClamp = defaultOn;
+                this.FacegenFaceClamp = defaultOn;
+                this.AttackRace = defaultOn;
+                this.BodyPartData = defaultOn;
+                this.ImpactMaterialType = defaultOn;
+                this.ImpactDataSet = defaultOn;
+                this.DispemberBloodArt = defaultOn;
+                this.MeatCapTextureSet = defaultOn;
+                this.CollarTextureSet = defaultOn;
+                this.SoundOpenCorpse = defaultOn;
+                this.SoundCloseCorpse = defaultOn;
+                this.EquipmentFlags = defaultOn;
+                this.UnarmedWeapon = defaultOn;
+                this.BaseMovementDefault = defaultOn;
+                this.BaseMovementDefaultSwim = defaultOn;
+                this.BaseMovementDefaultFly = defaultOn;
+                this.BaseMovementDefaultSneak = defaultOn;
+                this.MorphRace = defaultOn;
+                this.ArmorRace = defaultOn;
+                this.SubgraphTemplateRace = defaultOn;
+                this.SubgraphAdditiveRace = defaultOn;
+                this.IdleChatterTimeMin = defaultOn;
+                this.IdleChatterTimeMax = defaultOn;
+                this.HairColorLookupTexture = defaultOn;
+                this.HairColorExtendedLookupTexture = defaultOn;
+                this.DialogueQuest = defaultOn;
                 this.DATADataTypeState = defaultOn;
             }
 
@@ -2140,7 +4369,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Skin, null));
                 ret.Add((BipedBodyTemplate != null ? BipedBodyTemplate.OnOverall : DefaultOn, BipedBodyTemplate?.GetCrystal()));
                 ret.Add((Keywords, null));
-                ret.Add((Properties != null ? Properties.OnOverall : DefaultOn, Properties?.GetCrystal()));
+                ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
                 ret.Add((AttachParentSlots, null));
                 ret.Add((Height != null || DefaultOn, null));
                 ret.Add((DefaultWeight != null || DefaultOn, null));
@@ -2151,13 +4380,12 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Unknown, null));
                 ret.Add((InjuredHealthPercent, null));
                 ret.Add((ShieldBipedObject, null));
-                ret.Add((BearddBipedObject, null));
+                ret.Add((BeardBipedObject, null));
                 ret.Add((BodyBipedObject, null));
                 ret.Add((AimAngleTolerance, null));
                 ret.Add((FlightRadius, null));
                 ret.Add((AngularAccelerationRate, null));
                 ret.Add((AngularTolerance, null));
-                ret.Add((Flags2, null));
                 ret.Add((Unknown2, null));
                 ret.Add((PipboyBipedObject, null));
                 ret.Add((XPValue, null));
@@ -2173,12 +4401,57 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((ExplodableExplosion, null));
                 ret.Add((ExplodableDebris, null));
                 ret.Add((ExplodableImpactDataSet, null));
+                ret.Add((OnCrippleDebrisScale, null));
                 ret.Add((OnCrippleDebrisCount, null));
                 ret.Add((OnCrippleDecalCount, null));
                 ret.Add((OnCrippleExplosion, null));
                 ret.Add((OnCrippleDebris, null));
                 ret.Add((OnCrippleImpactDataSet, null));
                 ret.Add((ExplodableSubsegmentExplosion, null));
+                ret.Add((OrientationLimitsPitch, null));
+                ret.Add((OrientationLimitsRoll, null));
+                ret.Add((SkeletalModel != null || DefaultOn, null));
+                ret.Add((MovementTypeNames, null));
+                ret.Add((Voices != null || DefaultOn, null));
+                ret.Add((DefaultHairColors != null || DefaultOn, null));
+                ret.Add((NumberOfTintsInList, null));
+                ret.Add((FacegenMainClamp, null));
+                ret.Add((FacegenFaceClamp, null));
+                ret.Add((AttackRace, null));
+                ret.Add((Attacks == null ? DefaultOn : !Attacks.GetCrystal().CopyNothing, Attacks?.GetCrystal()));
+                ret.Add((BodyData != null || DefaultOn, null));
+                ret.Add((BodyPartData, null));
+                ret.Add((BehaviorGraph != null || DefaultOn, null));
+                ret.Add((ImpactMaterialType, null));
+                ret.Add((ImpactDataSet, null));
+                ret.Add((DispemberBloodArt, null));
+                ret.Add((MeatCapTextureSet, null));
+                ret.Add((CollarTextureSet, null));
+                ret.Add((SoundOpenCorpse, null));
+                ret.Add((SoundCloseCorpse, null));
+                ret.Add((BipedObjects != null || DefaultOn, BipedObjects?.GetCrystal()));
+                ret.Add((MovementDataOverrides == null ? DefaultOn : !MovementDataOverrides.GetCrystal().CopyNothing, MovementDataOverrides?.GetCrystal()));
+                ret.Add((EquipmentFlags, null));
+                ret.Add((EquipmentSlots == null ? DefaultOn : !EquipmentSlots.GetCrystal().CopyNothing, EquipmentSlots?.GetCrystal()));
+                ret.Add((UnarmedWeapon, null));
+                ret.Add((FaceFxPhonemes != null ? FaceFxPhonemes.OnOverall : DefaultOn, FaceFxPhonemes?.GetCrystal()));
+                ret.Add((BaseMovementDefault, null));
+                ret.Add((BaseMovementDefaultSwim, null));
+                ret.Add((BaseMovementDefaultFly, null));
+                ret.Add((BaseMovementDefaultSneak, null));
+                ret.Add((HeadData != null || DefaultOn, null));
+                ret.Add((MorphRace, null));
+                ret.Add((ArmorRace, null));
+                ret.Add((SubgraphTemplateRace, null));
+                ret.Add((SubgraphAdditiveRace, null));
+                ret.Add((Subgraphs == null ? DefaultOn : !Subgraphs.GetCrystal().CopyNothing, Subgraphs?.GetCrystal()));
+                ret.Add((IdleChatterTimeMin, null));
+                ret.Add((IdleChatterTimeMax, null));
+                ret.Add((MorphValues == null ? DefaultOn : !MorphValues.GetCrystal().CopyNothing, MorphValues?.GetCrystal()));
+                ret.Add((HairColorLookupTexture, null));
+                ret.Add((HairColorExtendedLookupTexture, null));
+                ret.Add((DialogueQuest, null));
+                ret.Add((BoneData != null || DefaultOn, null));
                 ret.Add((DATADataTypeState, null));
             }
 
@@ -2236,11 +4509,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IRace);
 
-        public MajorFlag MajorFlags
-        {
-            get => (MajorFlag)this.MajorRecordFlagsRaw;
-            set => this.MajorRecordFlagsRaw = (int)value;
-        }
         [Flags]
         public enum DATADataType
         {
@@ -2346,10 +4614,10 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
-        new Properties? Properties { get; set; }
+        new ExtendedList<ObjectProperty>? Properties { get; set; }
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; set; }
         new IGenderedItem<Single> Height { get; set; }
-        new IGenderedItem<Single> DefaultWeight { get; set; }
+        new IGenderedItem<RaceWeight> DefaultWeight { get; set; }
         new Race.Flag Flags { get; set; }
         new Single AccelerationRate { get; set; }
         new Single DecelerationRate { get; set; }
@@ -2357,13 +4625,12 @@ namespace Mutagen.Bethesda.Fallout4
         new MemorySlice<Byte> Unknown { get; set; }
         new Single InjuredHealthPercent { get; set; }
         new BipedObject ShieldBipedObject { get; set; }
-        new BipedObject BearddBipedObject { get; set; }
+        new BipedObject BeardBipedObject { get; set; }
         new BipedObject BodyBipedObject { get; set; }
         new Single AimAngleTolerance { get; set; }
         new Single FlightRadius { get; set; }
         new Single AngularAccelerationRate { get; set; }
         new Single AngularTolerance { get; set; }
-        new Race.Flag2 Flags2 { get; set; }
         new MemorySlice<Byte> Unknown2 { get; set; }
         new BipedObject PipboyBipedObject { get; set; }
         new Int16 XPValue { get; set; }
@@ -2379,17 +4646,58 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLink<IExplosionGetter> ExplodableExplosion { get; set; }
         new IFormLink<IDebrisGetter> ExplodableDebris { get; set; }
         new IFormLink<IImpactDataSetGetter> ExplodableImpactDataSet { get; set; }
+        new Single OnCrippleDebrisScale { get; set; }
         new Byte OnCrippleDebrisCount { get; set; }
         new Byte OnCrippleDecalCount { get; set; }
         new IFormLink<IExplosionGetter> OnCrippleExplosion { get; set; }
         new IFormLink<IDebrisGetter> OnCrippleDebris { get; set; }
         new IFormLink<IImpactDataSetGetter> OnCrippleImpactDataSet { get; set; }
         new IFormLink<IExplosionGetter> ExplodableSubsegmentExplosion { get; set; }
+        new Single OrientationLimitsPitch { get; set; }
+        new Single OrientationLimitsRoll { get; set; }
+        new IGenderedItem<SimpleModel?>? SkeletalModel { get; set; }
+        new ExtendedList<String> MovementTypeNames { get; }
+        new IGenderedItem<IFormLinkGetter<IVoiceTypeGetter>> Voices { get; set; }
+        new IGenderedItem<IFormLinkGetter<IColorRecordGetter>>? DefaultHairColors { get; set; }
+        new UInt16? NumberOfTintsInList { get; set; }
+        new Single FacegenMainClamp { get; set; }
+        new Single FacegenFaceClamp { get; set; }
+        new IFormLinkNullable<IRaceGetter> AttackRace { get; set; }
+        new ExtendedList<Attack> Attacks { get; }
+        new IGenderedItem<BodyData?> BodyData { get; set; }
+        new IFormLinkNullable<IBodyPartDataGetter> BodyPartData { get; set; }
+        new IGenderedItem<Model?> BehaviorGraph { get; set; }
+        new IFormLinkNullable<IMaterialTypeGetter> ImpactMaterialType { get; set; }
+        new IFormLinkNullable<IImpactDataSetGetter> ImpactDataSet { get; set; }
+        new IFormLinkNullable<IArtObjectGetter> DispemberBloodArt { get; set; }
+        new IFormLinkNullable<ITextureSetGetter> MeatCapTextureSet { get; set; }
+        new IFormLinkNullable<ITextureSetGetter> CollarTextureSet { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> SoundOpenCorpse { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> SoundCloseCorpse { get; set; }
+        new IDictionary<BipedObject, BipedObjectData> BipedObjects { get; }
+        new ExtendedList<MovementDataOverride> MovementDataOverrides { get; }
+        new EquipTypeFlag? EquipmentFlags { get; set; }
+        new ExtendedList<EquipmentSlot> EquipmentSlots { get; }
+        new IFormLinkNullable<IWeaponGetter> UnarmedWeapon { get; set; }
+        new FaceFxPhonemes FaceFxPhonemes { get; set; }
+        new IFormLinkNullable<IMovementTypeGetter> BaseMovementDefault { get; set; }
+        new IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSwim { get; set; }
+        new IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultFly { get; set; }
+        new IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSneak { get; set; }
+        new IGenderedItem<HeadData?>? HeadData { get; set; }
+        new IFormLinkNullable<IRaceGetter> MorphRace { get; set; }
+        new IFormLinkNullable<IRaceGetter> ArmorRace { get; set; }
+        new IFormLinkNullable<IRaceGetter> SubgraphTemplateRace { get; set; }
+        new IFormLinkNullable<IRaceGetter> SubgraphAdditiveRace { get; set; }
+        new ExtendedList<Subgraph> Subgraphs { get; }
+        new Single? IdleChatterTimeMin { get; set; }
+        new Single? IdleChatterTimeMax { get; set; }
+        new ExtendedList<MorphValue> MorphValues { get; }
+        new String? HairColorLookupTexture { get; set; }
+        new String? HairColorExtendedLookupTexture { get; set; }
+        new IFormLinkNullable<IQuestGetter> DialogueQuest { get; set; }
+        new IGenderedItem<ExtendedList<Bone>?> BoneData { get; set; }
         new Race.DATADataType DATADataTypeState { get; set; }
-        #region Mutagen
-        new Race.MajorFlag MajorFlags { get; set; }
-        #endregion
-
     }
 
     public partial interface IRaceInternal :
@@ -2398,7 +4706,15 @@ namespace Mutagen.Bethesda.Fallout4
         IRaceGetter
     {
         new IGenderedItem<Single> Height { get; set; }
-        new IGenderedItem<Single> DefaultWeight { get; set; }
+        new IGenderedItem<RaceWeight> DefaultWeight { get; set; }
+        new IGenderedItem<SimpleModel?>? SkeletalModel { get; set; }
+        new IGenderedItem<IFormLinkGetter<IVoiceTypeGetter>> Voices { get; set; }
+        new IGenderedItem<IFormLinkGetter<IColorRecordGetter>>? DefaultHairColors { get; set; }
+        new IGenderedItem<BodyData?> BodyData { get; set; }
+        new IGenderedItem<Model?> BehaviorGraph { get; set; }
+        new IDictionary<BipedObject, BipedObjectData> BipedObjects { get; }
+        new IGenderedItem<HeadData?>? HeadData { get; set; }
+        new IGenderedItem<ExtendedList<Bone>?> BoneData { get; set; }
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.RACE)]
@@ -2431,10 +4747,10 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
-        IPropertiesGetter? Properties { get; }
+        IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; }
         IGenderedItemGetter<Single> Height { get; }
-        IGenderedItemGetter<Single> DefaultWeight { get; }
+        IGenderedItemGetter<IRaceWeightGetter> DefaultWeight { get; }
         Race.Flag Flags { get; }
         Single AccelerationRate { get; }
         Single DecelerationRate { get; }
@@ -2442,13 +4758,12 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte> Unknown { get; }
         Single InjuredHealthPercent { get; }
         BipedObject ShieldBipedObject { get; }
-        BipedObject BearddBipedObject { get; }
+        BipedObject BeardBipedObject { get; }
         BipedObject BodyBipedObject { get; }
         Single AimAngleTolerance { get; }
         Single FlightRadius { get; }
         Single AngularAccelerationRate { get; }
         Single AngularTolerance { get; }
-        Race.Flag2 Flags2 { get; }
         ReadOnlyMemorySlice<Byte> Unknown2 { get; }
         BipedObject PipboyBipedObject { get; }
         Int16 XPValue { get; }
@@ -2464,17 +4779,58 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IExplosionGetter> ExplodableExplosion { get; }
         IFormLinkGetter<IDebrisGetter> ExplodableDebris { get; }
         IFormLinkGetter<IImpactDataSetGetter> ExplodableImpactDataSet { get; }
+        Single OnCrippleDebrisScale { get; }
         Byte OnCrippleDebrisCount { get; }
         Byte OnCrippleDecalCount { get; }
         IFormLinkGetter<IExplosionGetter> OnCrippleExplosion { get; }
         IFormLinkGetter<IDebrisGetter> OnCrippleDebris { get; }
         IFormLinkGetter<IImpactDataSetGetter> OnCrippleImpactDataSet { get; }
         IFormLinkGetter<IExplosionGetter> ExplodableSubsegmentExplosion { get; }
+        Single OrientationLimitsPitch { get; }
+        Single OrientationLimitsRoll { get; }
+        IGenderedItemGetter<ISimpleModelGetter?>? SkeletalModel { get; }
+        IReadOnlyList<String> MovementTypeNames { get; }
+        IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>> Voices { get; }
+        IGenderedItemGetter<IFormLinkGetter<IColorRecordGetter>>? DefaultHairColors { get; }
+        UInt16? NumberOfTintsInList { get; }
+        Single FacegenMainClamp { get; }
+        Single FacegenFaceClamp { get; }
+        IFormLinkNullableGetter<IRaceGetter> AttackRace { get; }
+        IReadOnlyList<IAttackGetter> Attacks { get; }
+        IGenderedItemGetter<IBodyDataGetter?> BodyData { get; }
+        IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData { get; }
+        IGenderedItemGetter<IModelGetter?> BehaviorGraph { get; }
+        IFormLinkNullableGetter<IMaterialTypeGetter> ImpactMaterialType { get; }
+        IFormLinkNullableGetter<IImpactDataSetGetter> ImpactDataSet { get; }
+        IFormLinkNullableGetter<IArtObjectGetter> DispemberBloodArt { get; }
+        IFormLinkNullableGetter<ITextureSetGetter> MeatCapTextureSet { get; }
+        IFormLinkNullableGetter<ITextureSetGetter> CollarTextureSet { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> SoundOpenCorpse { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> SoundCloseCorpse { get; }
+        IReadOnlyDictionary<BipedObject, IBipedObjectDataGetter> BipedObjects { get; }
+        IReadOnlyList<IMovementDataOverrideGetter> MovementDataOverrides { get; }
+        EquipTypeFlag? EquipmentFlags { get; }
+        IReadOnlyList<IEquipmentSlotGetter> EquipmentSlots { get; }
+        IFormLinkNullableGetter<IWeaponGetter> UnarmedWeapon { get; }
+        IFaceFxPhonemesGetter FaceFxPhonemes { get; }
+        IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefault { get; }
+        IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSwim { get; }
+        IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultFly { get; }
+        IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSneak { get; }
+        IGenderedItemGetter<IHeadDataGetter?>? HeadData { get; }
+        IFormLinkNullableGetter<IRaceGetter> MorphRace { get; }
+        IFormLinkNullableGetter<IRaceGetter> ArmorRace { get; }
+        IFormLinkNullableGetter<IRaceGetter> SubgraphTemplateRace { get; }
+        IFormLinkNullableGetter<IRaceGetter> SubgraphAdditiveRace { get; }
+        IReadOnlyList<ISubgraphGetter> Subgraphs { get; }
+        Single? IdleChatterTimeMin { get; }
+        Single? IdleChatterTimeMax { get; }
+        IReadOnlyList<IMorphValueGetter> MorphValues { get; }
+        String? HairColorLookupTexture { get; }
+        String? HairColorExtendedLookupTexture { get; }
+        IFormLinkNullableGetter<IQuestGetter> DialogueQuest { get; }
+        IGenderedItemGetter<IReadOnlyList<IBoneGetter>?> BoneData { get; }
         Race.DATADataType DATADataTypeState { get; }
-
-        #region Mutagen
-        Race.MajorFlag MajorFlags { get; }
-        #endregion
 
     }
 
@@ -2657,35 +5013,79 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Unknown = 21,
         InjuredHealthPercent = 22,
         ShieldBipedObject = 23,
-        BearddBipedObject = 24,
+        BeardBipedObject = 24,
         BodyBipedObject = 25,
         AimAngleTolerance = 26,
         FlightRadius = 27,
         AngularAccelerationRate = 28,
         AngularTolerance = 29,
-        Flags2 = 30,
-        Unknown2 = 31,
-        PipboyBipedObject = 32,
-        XPValue = 33,
-        SeverableDebrisScale = 34,
-        SeverableDebrisCount = 35,
-        SeverableDecalCount = 36,
-        ExplodableDebrisScale = 37,
-        ExplodableDebrisCount = 38,
-        ExplodableDecalCount = 39,
-        SeverableExplosion = 40,
-        SeverableDebris = 41,
-        SeverableImpactDataSet = 42,
-        ExplodableExplosion = 43,
-        ExplodableDebris = 44,
-        ExplodableImpactDataSet = 45,
+        Unknown2 = 30,
+        PipboyBipedObject = 31,
+        XPValue = 32,
+        SeverableDebrisScale = 33,
+        SeverableDebrisCount = 34,
+        SeverableDecalCount = 35,
+        ExplodableDebrisScale = 36,
+        ExplodableDebrisCount = 37,
+        ExplodableDecalCount = 38,
+        SeverableExplosion = 39,
+        SeverableDebris = 40,
+        SeverableImpactDataSet = 41,
+        ExplodableExplosion = 42,
+        ExplodableDebris = 43,
+        ExplodableImpactDataSet = 44,
+        OnCrippleDebrisScale = 45,
         OnCrippleDebrisCount = 46,
         OnCrippleDecalCount = 47,
         OnCrippleExplosion = 48,
         OnCrippleDebris = 49,
         OnCrippleImpactDataSet = 50,
         ExplodableSubsegmentExplosion = 51,
-        DATADataTypeState = 52,
+        OrientationLimitsPitch = 52,
+        OrientationLimitsRoll = 53,
+        SkeletalModel = 54,
+        MovementTypeNames = 55,
+        Voices = 56,
+        DefaultHairColors = 57,
+        NumberOfTintsInList = 58,
+        FacegenMainClamp = 59,
+        FacegenFaceClamp = 60,
+        AttackRace = 61,
+        Attacks = 62,
+        BodyData = 63,
+        BodyPartData = 64,
+        BehaviorGraph = 65,
+        ImpactMaterialType = 66,
+        ImpactDataSet = 67,
+        DispemberBloodArt = 68,
+        MeatCapTextureSet = 69,
+        CollarTextureSet = 70,
+        SoundOpenCorpse = 71,
+        SoundCloseCorpse = 72,
+        BipedObjects = 73,
+        MovementDataOverrides = 74,
+        EquipmentFlags = 75,
+        EquipmentSlots = 76,
+        UnarmedWeapon = 77,
+        FaceFxPhonemes = 78,
+        BaseMovementDefault = 79,
+        BaseMovementDefaultSwim = 80,
+        BaseMovementDefaultFly = 81,
+        BaseMovementDefaultSneak = 82,
+        HeadData = 83,
+        MorphRace = 84,
+        ArmorRace = 85,
+        SubgraphTemplateRace = 86,
+        SubgraphAdditiveRace = 87,
+        Subgraphs = 88,
+        IdleChatterTimeMin = 89,
+        IdleChatterTimeMax = 90,
+        MorphValues = 91,
+        HairColorLookupTexture = 92,
+        HairColorExtendedLookupTexture = 93,
+        DialogueQuest = 94,
+        BoneData = 95,
+        DATADataTypeState = 96,
     }
     #endregion
 
@@ -2698,14 +5098,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 88,
+            msgID: 244,
             version: 0);
 
-        public const string GUID = "6aa2e080-6569-4300-86f2-cc15ca14e935";
+        public const string GUID = "653cc994-ac13-436b-907d-6a4c43bcd98a";
 
-        public const ushort AdditionalFieldCount = 47;
+        public const ushort AdditionalFieldCount = 91;
 
-        public const ushort FieldCount = 53;
+        public const ushort FieldCount = 97;
 
         public static readonly Type MaskType = typeof(Race.Mask<>);
 
@@ -2732,7 +5132,24 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.RACE;
+        public static RecordTypeConverter SkeletalModelConverter = new RecordTypeConverter(
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODL"),
+                new RecordType("ANAM")));
         public static readonly Type BinaryWriteTranslation = typeof(RaceBinaryWriteTranslation);
+        public static RecordTypeConverter HeadDataFemaleConverter = new RecordTypeConverter(
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("RPRM"),
+                new RecordType("RPRF")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("FTSM"),
+                new RecordType("FTSF")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("AHCM"),
+                new RecordType("AHCF")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("DFTM"),
+                new RecordType("DFTF")));
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2785,23 +5202,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.AttachParentSlots = null;
             item.Height.Male = default;
             item.Height.Female = default;
-            item.DefaultWeight.Male = default;
-            item.DefaultWeight.Female = default;
+            item.DefaultWeight.Male.Clear();
+            item.DefaultWeight.Female.Clear();
             item.Flags = default;
             item.AccelerationRate = default;
             item.DecelerationRate = default;
             item.Size = default;
-            item.Unknown = new byte[16];
+            item.Unknown = new byte[8];
             item.InjuredHealthPercent = default;
             item.ShieldBipedObject = Race._ShieldBipedObject_Default;
-            item.BearddBipedObject = Race._BearddBipedObject_Default;
+            item.BeardBipedObject = Race._BeardBipedObject_Default;
             item.BodyBipedObject = Race._BodyBipedObject_Default;
             item.AimAngleTolerance = default;
             item.FlightRadius = default;
             item.AngularAccelerationRate = default;
             item.AngularTolerance = default;
-            item.Flags2 = default;
-            item.Unknown2 = new byte[72];
+            item.Unknown2 = new byte[36];
             item.PipboyBipedObject = Race._PipboyBipedObject_Default;
             item.XPValue = default;
             item.SeverableDebrisScale = default;
@@ -2816,12 +5232,61 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.ExplodableExplosion.Clear();
             item.ExplodableDebris.Clear();
             item.ExplodableImpactDataSet.Clear();
+            item.OnCrippleDebrisScale = default;
             item.OnCrippleDebrisCount = default;
             item.OnCrippleDecalCount = default;
             item.OnCrippleExplosion.Clear();
             item.OnCrippleDebris.Clear();
             item.OnCrippleImpactDataSet.Clear();
             item.ExplodableSubsegmentExplosion.Clear();
+            item.OrientationLimitsPitch = default;
+            item.OrientationLimitsRoll = default;
+            item.SkeletalModel = null;
+            item.MovementTypeNames.Clear();
+            item.Voices.Male = FormLink<IVoiceTypeGetter>.Null;
+            item.Voices.Female = FormLink<IVoiceTypeGetter>.Null;
+            item.DefaultHairColors = null;
+            item.NumberOfTintsInList = default;
+            item.FacegenMainClamp = default;
+            item.FacegenFaceClamp = default;
+            item.AttackRace.Clear();
+            item.Attacks.Clear();
+            item.BodyData.Male = null;
+            item.BodyData.Female = null;
+            item.BodyPartData.Clear();
+            item.BehaviorGraph.Male = null;
+            item.BehaviorGraph.Female = null;
+            item.ImpactMaterialType.Clear();
+            item.ImpactDataSet.Clear();
+            item.DispemberBloodArt.Clear();
+            item.MeatCapTextureSet.Clear();
+            item.CollarTextureSet.Clear();
+            item.SoundOpenCorpse.Clear();
+            item.SoundCloseCorpse.Clear();
+            item.BipedObjects.Clear();
+            item.MovementDataOverrides.Clear();
+            item.EquipmentFlags = default;
+            item.EquipmentSlots.Clear();
+            item.UnarmedWeapon.Clear();
+            item.FaceFxPhonemes.Clear();
+            item.BaseMovementDefault.Clear();
+            item.BaseMovementDefaultSwim.Clear();
+            item.BaseMovementDefaultFly.Clear();
+            item.BaseMovementDefaultSneak.Clear();
+            item.HeadData = null;
+            item.MorphRace.Clear();
+            item.ArmorRace.Clear();
+            item.SubgraphTemplateRace.Clear();
+            item.SubgraphAdditiveRace.Clear();
+            item.Subgraphs.Clear();
+            item.IdleChatterTimeMin = default;
+            item.IdleChatterTimeMax = default;
+            item.MorphValues.Clear();
+            item.HairColorLookupTexture = default;
+            item.HairColorExtendedLookupTexture = default;
+            item.DialogueQuest.Clear();
+            item.BoneData.Male = null;
+            item.BoneData.Female = null;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -2844,6 +5309,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.ActorEffect?.RemapLinks(mapping);
             obj.Skin.Relink(mapping);
             obj.Keywords?.RemapLinks(mapping);
+            obj.Properties?.RemapLinks(mapping);
             obj.AttachParentSlots?.RemapLinks(mapping);
             obj.SeverableExplosion.Relink(mapping);
             obj.SeverableDebris.Relink(mapping);
@@ -2855,6 +5321,35 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.OnCrippleDebris.Relink(mapping);
             obj.OnCrippleImpactDataSet.Relink(mapping);
             obj.ExplodableSubsegmentExplosion.Relink(mapping);
+            obj.SkeletalModel?.RemapLinks(mapping);
+            obj.Voices.RemapLinks(mapping);
+            obj.DefaultHairColors?.RemapLinks(mapping);
+            obj.AttackRace.Relink(mapping);
+            obj.Attacks.RemapLinks(mapping);
+            obj.BodyData.RemapLinks(mapping);
+            obj.BodyPartData.Relink(mapping);
+            obj.BehaviorGraph.RemapLinks(mapping);
+            obj.ImpactMaterialType.Relink(mapping);
+            obj.ImpactDataSet.Relink(mapping);
+            obj.DispemberBloodArt.Relink(mapping);
+            obj.MeatCapTextureSet.Relink(mapping);
+            obj.CollarTextureSet.Relink(mapping);
+            obj.SoundOpenCorpse.Relink(mapping);
+            obj.SoundCloseCorpse.Relink(mapping);
+            obj.MovementDataOverrides.RemapLinks(mapping);
+            obj.EquipmentSlots.RemapLinks(mapping);
+            obj.UnarmedWeapon.Relink(mapping);
+            obj.BaseMovementDefault.Relink(mapping);
+            obj.BaseMovementDefaultSwim.Relink(mapping);
+            obj.BaseMovementDefaultFly.Relink(mapping);
+            obj.BaseMovementDefaultSneak.Relink(mapping);
+            obj.HeadData?.RemapLinks(mapping);
+            obj.MorphRace.Relink(mapping);
+            obj.ArmorRace.Relink(mapping);
+            obj.SubgraphTemplateRace.Relink(mapping);
+            obj.SubgraphAdditiveRace.Relink(mapping);
+            obj.Subgraphs.RemapLinks(mapping);
+            obj.DialogueQuest.Relink(mapping);
         }
         
         #endregion
@@ -2940,10 +5435,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Properties = EqualsMaskHelper.EqualsHelper(
-                item.Properties,
+            ret.Properties = item.Properties.CollectionEqualsHelper(
                 rhs.Properties,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.AttachParentSlots = item.AttachParentSlots.CollectionEqualsHelper(
                 rhs.AttachParentSlots,
@@ -2952,9 +5446,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Height = new GenderedItem<bool>(
                 male: item.Height.Male.EqualsWithin(rhs.Height.Male),
                 female: item.Height.Female.EqualsWithin(rhs.Height.Female));
-            ret.DefaultWeight = new GenderedItem<bool>(
-                male: item.DefaultWeight.Male.EqualsWithin(rhs.DefaultWeight.Male),
-                female: item.DefaultWeight.Female.EqualsWithin(rhs.DefaultWeight.Female));
+            ret.DefaultWeight = GenderedItem.EqualityMaskHelper(
+                lhs: item.DefaultWeight,
+                rhs: rhs.DefaultWeight,
+                maskGetter: (l, r, i) => l.GetEqualsMask(r, i),
+                include: include);
             ret.Flags = item.Flags == rhs.Flags;
             ret.AccelerationRate = item.AccelerationRate.EqualsWithin(rhs.AccelerationRate);
             ret.DecelerationRate = item.DecelerationRate.EqualsWithin(rhs.DecelerationRate);
@@ -2962,13 +5458,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
             ret.InjuredHealthPercent = item.InjuredHealthPercent.EqualsWithin(rhs.InjuredHealthPercent);
             ret.ShieldBipedObject = item.ShieldBipedObject == rhs.ShieldBipedObject;
-            ret.BearddBipedObject = item.BearddBipedObject == rhs.BearddBipedObject;
+            ret.BeardBipedObject = item.BeardBipedObject == rhs.BeardBipedObject;
             ret.BodyBipedObject = item.BodyBipedObject == rhs.BodyBipedObject;
             ret.AimAngleTolerance = item.AimAngleTolerance.EqualsWithin(rhs.AimAngleTolerance);
             ret.FlightRadius = item.FlightRadius.EqualsWithin(rhs.FlightRadius);
             ret.AngularAccelerationRate = item.AngularAccelerationRate.EqualsWithin(rhs.AngularAccelerationRate);
             ret.AngularTolerance = item.AngularTolerance.EqualsWithin(rhs.AngularTolerance);
-            ret.Flags2 = item.Flags2 == rhs.Flags2;
             ret.Unknown2 = MemoryExtensions.SequenceEqual(item.Unknown2.Span, rhs.Unknown2.Span);
             ret.PipboyBipedObject = item.PipboyBipedObject == rhs.PipboyBipedObject;
             ret.XPValue = item.XPValue == rhs.XPValue;
@@ -2984,12 +5479,103 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.ExplodableExplosion = item.ExplodableExplosion.Equals(rhs.ExplodableExplosion);
             ret.ExplodableDebris = item.ExplodableDebris.Equals(rhs.ExplodableDebris);
             ret.ExplodableImpactDataSet = item.ExplodableImpactDataSet.Equals(rhs.ExplodableImpactDataSet);
+            ret.OnCrippleDebrisScale = item.OnCrippleDebrisScale.EqualsWithin(rhs.OnCrippleDebrisScale);
             ret.OnCrippleDebrisCount = item.OnCrippleDebrisCount == rhs.OnCrippleDebrisCount;
             ret.OnCrippleDecalCount = item.OnCrippleDecalCount == rhs.OnCrippleDecalCount;
             ret.OnCrippleExplosion = item.OnCrippleExplosion.Equals(rhs.OnCrippleExplosion);
             ret.OnCrippleDebris = item.OnCrippleDebris.Equals(rhs.OnCrippleDebris);
             ret.OnCrippleImpactDataSet = item.OnCrippleImpactDataSet.Equals(rhs.OnCrippleImpactDataSet);
             ret.ExplodableSubsegmentExplosion = item.ExplodableSubsegmentExplosion.Equals(rhs.ExplodableSubsegmentExplosion);
+            ret.OrientationLimitsPitch = item.OrientationLimitsPitch.EqualsWithin(rhs.OrientationLimitsPitch);
+            ret.OrientationLimitsRoll = item.OrientationLimitsRoll.EqualsWithin(rhs.OrientationLimitsRoll);
+            ret.SkeletalModel = GenderedItem.EqualityMaskHelper(
+                lhs: item.SkeletalModel,
+                rhs: rhs.SkeletalModel,
+                maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
+                include: include);
+            ret.MovementTypeNames = item.MovementTypeNames.CollectionEqualsHelper(
+                rhs.MovementTypeNames,
+                (l, r) => string.Equals(l, r),
+                include);
+            ret.Voices = new GenderedItem<bool>(
+                male: object.Equals(item.Voices.Male, rhs.Voices.Male),
+                female: object.Equals(item.Voices.Female, rhs.Voices.Female));
+            ret.DefaultHairColors = GenderedItem.EqualityMaskHelper(
+                lhs: item.DefaultHairColors,
+                rhs: rhs.DefaultHairColors,
+                maskGetter: (l, r, i) => EqualityComparer<IFormLinkGetter<IColorRecordGetter>>.Default.Equals(l, r),
+                include: include);
+            ret.NumberOfTintsInList = item.NumberOfTintsInList == rhs.NumberOfTintsInList;
+            ret.FacegenMainClamp = item.FacegenMainClamp.EqualsWithin(rhs.FacegenMainClamp);
+            ret.FacegenFaceClamp = item.FacegenFaceClamp.EqualsWithin(rhs.FacegenFaceClamp);
+            ret.AttackRace = item.AttackRace.Equals(rhs.AttackRace);
+            ret.Attacks = item.Attacks.CollectionEqualsHelper(
+                rhs.Attacks,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.BodyData = GenderedItem.EqualityMaskHelper(
+                lhs: item.BodyData,
+                rhs: rhs.BodyData,
+                maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
+                include: include);
+            ret.BodyPartData = item.BodyPartData.Equals(rhs.BodyPartData);
+            ret.BehaviorGraph = GenderedItem.EqualityMaskHelper(
+                lhs: item.BehaviorGraph,
+                rhs: rhs.BehaviorGraph,
+                maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
+                include: include);
+            ret.ImpactMaterialType = item.ImpactMaterialType.Equals(rhs.ImpactMaterialType);
+            ret.ImpactDataSet = item.ImpactDataSet.Equals(rhs.ImpactDataSet);
+            ret.DispemberBloodArt = item.DispemberBloodArt.Equals(rhs.DispemberBloodArt);
+            ret.MeatCapTextureSet = item.MeatCapTextureSet.Equals(rhs.MeatCapTextureSet);
+            ret.CollarTextureSet = item.CollarTextureSet.Equals(rhs.CollarTextureSet);
+            ret.SoundOpenCorpse = item.SoundOpenCorpse.Equals(rhs.SoundOpenCorpse);
+            ret.SoundCloseCorpse = item.SoundCloseCorpse.Equals(rhs.SoundCloseCorpse);
+            ret.BipedObjects = EqualsMaskHelper.DictEqualsHelper(
+                lhs: item.BipedObjects,
+                rhs: rhs.BipedObjects,
+                maskGetter: (k, l, r) => l.GetEqualsMask(r, include),
+                include: include);
+            ret.MovementDataOverrides = item.MovementDataOverrides.CollectionEqualsHelper(
+                rhs.MovementDataOverrides,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.EquipmentFlags = item.EquipmentFlags == rhs.EquipmentFlags;
+            ret.EquipmentSlots = item.EquipmentSlots.CollectionEqualsHelper(
+                rhs.EquipmentSlots,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.UnarmedWeapon = item.UnarmedWeapon.Equals(rhs.UnarmedWeapon);
+            ret.FaceFxPhonemes = MaskItemExt.Factory(item.FaceFxPhonemes.GetEqualsMask(rhs.FaceFxPhonemes, include), include);
+            ret.BaseMovementDefault = item.BaseMovementDefault.Equals(rhs.BaseMovementDefault);
+            ret.BaseMovementDefaultSwim = item.BaseMovementDefaultSwim.Equals(rhs.BaseMovementDefaultSwim);
+            ret.BaseMovementDefaultFly = item.BaseMovementDefaultFly.Equals(rhs.BaseMovementDefaultFly);
+            ret.BaseMovementDefaultSneak = item.BaseMovementDefaultSneak.Equals(rhs.BaseMovementDefaultSneak);
+            ret.HeadData = GenderedItem.EqualityMaskHelper(
+                lhs: item.HeadData,
+                rhs: rhs.HeadData,
+                maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
+                include: include);
+            ret.MorphRace = item.MorphRace.Equals(rhs.MorphRace);
+            ret.ArmorRace = item.ArmorRace.Equals(rhs.ArmorRace);
+            ret.SubgraphTemplateRace = item.SubgraphTemplateRace.Equals(rhs.SubgraphTemplateRace);
+            ret.SubgraphAdditiveRace = item.SubgraphAdditiveRace.Equals(rhs.SubgraphAdditiveRace);
+            ret.Subgraphs = item.Subgraphs.CollectionEqualsHelper(
+                rhs.Subgraphs,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.IdleChatterTimeMin = item.IdleChatterTimeMin.EqualsWithin(rhs.IdleChatterTimeMin);
+            ret.IdleChatterTimeMax = item.IdleChatterTimeMax.EqualsWithin(rhs.IdleChatterTimeMax);
+            ret.MorphValues = item.MorphValues.CollectionEqualsHelper(
+                rhs.MorphValues,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.HairColorLookupTexture = string.Equals(item.HairColorLookupTexture, rhs.HairColorLookupTexture);
+            ret.HairColorExtendedLookupTexture = string.Equals(item.HairColorExtendedLookupTexture, rhs.HairColorExtendedLookupTexture);
+            ret.DialogueQuest = item.DialogueQuest.Equals(rhs.DialogueQuest);
+            ret.BoneData = new GenderedItem<bool>(
+                male: item.BoneData.Male.SequenceEqualNullable(rhs.BoneData.Male),
+                female: item.BoneData.Female.SequenceEqualNullable(rhs.BoneData.Female));
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -3105,7 +5691,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if ((printMask?.Properties?.Overall ?? true)
                 && item.Properties is {} PropertiesItem)
             {
-                PropertiesItem?.ToString(fg, "Properties");
+                fg.AppendLine("Properties =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in PropertiesItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
             }
             if ((printMask?.AttachParentSlots?.Overall ?? true)
                 && item.AttachParentSlots is {} AttachParentSlotsItem)
@@ -3162,9 +5762,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 fg.AppendItem(item.ShieldBipedObject, "ShieldBipedObject");
             }
-            if (printMask?.BearddBipedObject ?? true)
+            if (printMask?.BeardBipedObject ?? true)
             {
-                fg.AppendItem(item.BearddBipedObject, "BearddBipedObject");
+                fg.AppendItem(item.BeardBipedObject, "BeardBipedObject");
             }
             if (printMask?.BodyBipedObject ?? true)
             {
@@ -3185,10 +5785,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (printMask?.AngularTolerance ?? true)
             {
                 fg.AppendItem(item.AngularTolerance, "AngularTolerance");
-            }
-            if (printMask?.Flags2 ?? true)
-            {
-                fg.AppendItem(item.Flags2, "Flags2");
             }
             if (printMask?.Unknown2 ?? true)
             {
@@ -3250,6 +5846,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 fg.AppendItem(item.ExplodableImpactDataSet.FormKey, "ExplodableImpactDataSet");
             }
+            if (printMask?.OnCrippleDebrisScale ?? true)
+            {
+                fg.AppendItem(item.OnCrippleDebrisScale, "OnCrippleDebrisScale");
+            }
             if (printMask?.OnCrippleDebrisCount ?? true)
             {
                 fg.AppendItem(item.OnCrippleDebrisCount, "OnCrippleDebrisCount");
@@ -3273,6 +5873,291 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (printMask?.ExplodableSubsegmentExplosion ?? true)
             {
                 fg.AppendItem(item.ExplodableSubsegmentExplosion.FormKey, "ExplodableSubsegmentExplosion");
+            }
+            if (printMask?.OrientationLimitsPitch ?? true)
+            {
+                fg.AppendItem(item.OrientationLimitsPitch, "OrientationLimitsPitch");
+            }
+            if (printMask?.OrientationLimitsRoll ?? true)
+            {
+                fg.AppendItem(item.OrientationLimitsRoll, "OrientationLimitsRoll");
+            }
+            if ((printMask?.SkeletalModel?.Overall ?? true)
+                && item.SkeletalModel is {} SkeletalModelItem)
+            {
+                SkeletalModelItem?.ToString(fg, "SkeletalModel");
+            }
+            if (printMask?.MovementTypeNames?.Overall ?? true)
+            {
+                fg.AppendLine("MovementTypeNames =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.MovementTypeNames)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (true)
+            {
+                item.Voices.ToString(fg, "Voices");
+            }
+            if ((printMask?.DefaultHairColors?.Overall ?? true)
+                && item.DefaultHairColors is {} DefaultHairColorsItem)
+            {
+                DefaultHairColorsItem?.ToString(fg, "DefaultHairColors");
+            }
+            if ((printMask?.NumberOfTintsInList ?? true)
+                && item.NumberOfTintsInList is {} NumberOfTintsInListItem)
+            {
+                fg.AppendItem(NumberOfTintsInListItem, "NumberOfTintsInList");
+            }
+            if (printMask?.FacegenMainClamp ?? true)
+            {
+                fg.AppendItem(item.FacegenMainClamp, "FacegenMainClamp");
+            }
+            if (printMask?.FacegenFaceClamp ?? true)
+            {
+                fg.AppendItem(item.FacegenFaceClamp, "FacegenFaceClamp");
+            }
+            if (printMask?.AttackRace ?? true)
+            {
+                fg.AppendItem(item.AttackRace.FormKeyNullable, "AttackRace");
+            }
+            if (printMask?.Attacks?.Overall ?? true)
+            {
+                fg.AppendLine("Attacks =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Attacks)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (true)
+            {
+                item.BodyData.ToString(fg, "BodyData");
+            }
+            if (printMask?.BodyPartData ?? true)
+            {
+                fg.AppendItem(item.BodyPartData.FormKeyNullable, "BodyPartData");
+            }
+            if (true)
+            {
+                item.BehaviorGraph.ToString(fg, "BehaviorGraph");
+            }
+            if (printMask?.ImpactMaterialType ?? true)
+            {
+                fg.AppendItem(item.ImpactMaterialType.FormKeyNullable, "ImpactMaterialType");
+            }
+            if (printMask?.ImpactDataSet ?? true)
+            {
+                fg.AppendItem(item.ImpactDataSet.FormKeyNullable, "ImpactDataSet");
+            }
+            if (printMask?.DispemberBloodArt ?? true)
+            {
+                fg.AppendItem(item.DispemberBloodArt.FormKeyNullable, "DispemberBloodArt");
+            }
+            if (printMask?.MeatCapTextureSet ?? true)
+            {
+                fg.AppendItem(item.MeatCapTextureSet.FormKeyNullable, "MeatCapTextureSet");
+            }
+            if (printMask?.CollarTextureSet ?? true)
+            {
+                fg.AppendItem(item.CollarTextureSet.FormKeyNullable, "CollarTextureSet");
+            }
+            if (printMask?.SoundOpenCorpse ?? true)
+            {
+                fg.AppendItem(item.SoundOpenCorpse.FormKeyNullable, "SoundOpenCorpse");
+            }
+            if (printMask?.SoundCloseCorpse ?? true)
+            {
+                fg.AppendItem(item.SoundCloseCorpse.FormKeyNullable, "SoundCloseCorpse");
+            }
+            if ((printMask?.BipedObjects?.Overall ?? true)
+                && item.BipedObjects is {} BipedObjectsItem)
+            {
+                fg.AppendLine("BipedObjects =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in BipedObjectsItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem.Key);
+                            subItem.Value?.ToString(fg, "Value");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.MovementDataOverrides?.Overall ?? true)
+            {
+                fg.AppendLine("MovementDataOverrides =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.MovementDataOverrides)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.EquipmentFlags ?? true)
+                && item.EquipmentFlags is {} EquipmentFlagsItem)
+            {
+                fg.AppendItem(EquipmentFlagsItem, "EquipmentFlags");
+            }
+            if (printMask?.EquipmentSlots?.Overall ?? true)
+            {
+                fg.AppendLine("EquipmentSlots =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.EquipmentSlots)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.UnarmedWeapon ?? true)
+            {
+                fg.AppendItem(item.UnarmedWeapon.FormKeyNullable, "UnarmedWeapon");
+            }
+            if (printMask?.FaceFxPhonemes?.Overall ?? true)
+            {
+                item.FaceFxPhonemes?.ToString(fg, "FaceFxPhonemes");
+            }
+            if (printMask?.BaseMovementDefault ?? true)
+            {
+                fg.AppendItem(item.BaseMovementDefault.FormKeyNullable, "BaseMovementDefault");
+            }
+            if (printMask?.BaseMovementDefaultSwim ?? true)
+            {
+                fg.AppendItem(item.BaseMovementDefaultSwim.FormKeyNullable, "BaseMovementDefaultSwim");
+            }
+            if (printMask?.BaseMovementDefaultFly ?? true)
+            {
+                fg.AppendItem(item.BaseMovementDefaultFly.FormKeyNullable, "BaseMovementDefaultFly");
+            }
+            if (printMask?.BaseMovementDefaultSneak ?? true)
+            {
+                fg.AppendItem(item.BaseMovementDefaultSneak.FormKeyNullable, "BaseMovementDefaultSneak");
+            }
+            if ((printMask?.HeadData?.Overall ?? true)
+                && item.HeadData is {} HeadDataItem)
+            {
+                HeadDataItem?.ToString(fg, "HeadData");
+            }
+            if (printMask?.MorphRace ?? true)
+            {
+                fg.AppendItem(item.MorphRace.FormKeyNullable, "MorphRace");
+            }
+            if (printMask?.ArmorRace ?? true)
+            {
+                fg.AppendItem(item.ArmorRace.FormKeyNullable, "ArmorRace");
+            }
+            if (printMask?.SubgraphTemplateRace ?? true)
+            {
+                fg.AppendItem(item.SubgraphTemplateRace.FormKeyNullable, "SubgraphTemplateRace");
+            }
+            if (printMask?.SubgraphAdditiveRace ?? true)
+            {
+                fg.AppendItem(item.SubgraphAdditiveRace.FormKeyNullable, "SubgraphAdditiveRace");
+            }
+            if (printMask?.Subgraphs?.Overall ?? true)
+            {
+                fg.AppendLine("Subgraphs =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Subgraphs)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.IdleChatterTimeMin ?? true)
+                && item.IdleChatterTimeMin is {} IdleChatterTimeMinItem)
+            {
+                fg.AppendItem(IdleChatterTimeMinItem, "IdleChatterTimeMin");
+            }
+            if ((printMask?.IdleChatterTimeMax ?? true)
+                && item.IdleChatterTimeMax is {} IdleChatterTimeMaxItem)
+            {
+                fg.AppendItem(IdleChatterTimeMaxItem, "IdleChatterTimeMax");
+            }
+            if (printMask?.MorphValues?.Overall ?? true)
+            {
+                fg.AppendLine("MorphValues =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.MorphValues)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.HairColorLookupTexture ?? true)
+                && item.HairColorLookupTexture is {} HairColorLookupTextureItem)
+            {
+                fg.AppendItem(HairColorLookupTextureItem, "HairColorLookupTexture");
+            }
+            if ((printMask?.HairColorExtendedLookupTexture ?? true)
+                && item.HairColorExtendedLookupTexture is {} HairColorExtendedLookupTextureItem)
+            {
+                fg.AppendItem(HairColorExtendedLookupTextureItem, "HairColorExtendedLookupTexture");
+            }
+            if (printMask?.DialogueQuest ?? true)
+            {
+                fg.AppendItem(item.DialogueQuest.FormKeyNullable, "DialogueQuest");
+            }
+            if (true)
+            {
+                item.BoneData.ToString(fg, "BoneData");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
@@ -3360,11 +6245,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Properties) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Properties, rhs.Properties, out var lhsProperties, out var rhsProperties, out var isPropertiesEqual))
-                {
-                    if (!((PropertiesCommon)((IPropertiesGetter)lhsProperties).CommonInstance()!).Equals(lhsProperties, rhsProperties, crystal?.GetSubCrystal((int)Race_FieldIndex.Properties))) return false;
-                }
-                else if (!isPropertiesEqual) return false;
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AttachParentSlots) ?? true))
             {
@@ -3406,9 +6287,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 if (lhs.ShieldBipedObject != rhs.ShieldBipedObject) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BearddBipedObject) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BeardBipedObject) ?? true))
             {
-                if (lhs.BearddBipedObject != rhs.BearddBipedObject) return false;
+                if (lhs.BeardBipedObject != rhs.BeardBipedObject) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyBipedObject) ?? true))
             {
@@ -3429,10 +6310,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AngularTolerance) ?? true))
             {
                 if (!lhs.AngularTolerance.EqualsWithin(rhs.AngularTolerance)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Flags2) ?? true))
-            {
-                if (lhs.Flags2 != rhs.Flags2) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Unknown2) ?? true))
             {
@@ -3494,6 +6371,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 if (!lhs.ExplodableImpactDataSet.Equals(rhs.ExplodableImpactDataSet)) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleDebrisScale) ?? true))
+            {
+                if (!lhs.OnCrippleDebrisScale.EqualsWithin(rhs.OnCrippleDebrisScale)) return false;
+            }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleDebrisCount) ?? true))
             {
                 if (lhs.OnCrippleDebrisCount != rhs.OnCrippleDebrisCount) return false;
@@ -3517,6 +6398,186 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ExplodableSubsegmentExplosion) ?? true))
             {
                 if (!lhs.ExplodableSubsegmentExplosion.Equals(rhs.ExplodableSubsegmentExplosion)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OrientationLimitsPitch) ?? true))
+            {
+                if (!lhs.OrientationLimitsPitch.EqualsWithin(rhs.OrientationLimitsPitch)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OrientationLimitsRoll) ?? true))
+            {
+                if (!lhs.OrientationLimitsRoll.EqualsWithin(rhs.OrientationLimitsRoll)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkeletalModel) ?? true))
+            {
+                if (!Equals(lhs.SkeletalModel, rhs.SkeletalModel)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MovementTypeNames) ?? true))
+            {
+                if (!lhs.MovementTypeNames.SequenceEqualNullable(rhs.MovementTypeNames)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
+            {
+                if (!Equals(lhs.Voices, rhs.Voices)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColors) ?? true))
+            {
+                if (!Equals(lhs.DefaultHairColors, rhs.DefaultHairColors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.NumberOfTintsInList) ?? true))
+            {
+                if (lhs.NumberOfTintsInList != rhs.NumberOfTintsInList) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FacegenMainClamp) ?? true))
+            {
+                if (!lhs.FacegenMainClamp.EqualsWithin(rhs.FacegenMainClamp)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FacegenFaceClamp) ?? true))
+            {
+                if (!lhs.FacegenFaceClamp.EqualsWithin(rhs.FacegenFaceClamp)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AttackRace) ?? true))
+            {
+                if (!lhs.AttackRace.Equals(rhs.AttackRace)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Attacks) ?? true))
+            {
+                if (!lhs.Attacks.SequenceEqualNullable(rhs.Attacks)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
+            {
+                if (!Equals(lhs.BodyData, rhs.BodyData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyPartData) ?? true))
+            {
+                if (!lhs.BodyPartData.Equals(rhs.BodyPartData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BehaviorGraph) ?? true))
+            {
+                if (!Equals(lhs.BehaviorGraph, rhs.BehaviorGraph)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ImpactMaterialType) ?? true))
+            {
+                if (!lhs.ImpactMaterialType.Equals(rhs.ImpactMaterialType)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ImpactDataSet) ?? true))
+            {
+                if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DispemberBloodArt) ?? true))
+            {
+                if (!lhs.DispemberBloodArt.Equals(rhs.DispemberBloodArt)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MeatCapTextureSet) ?? true))
+            {
+                if (!lhs.MeatCapTextureSet.Equals(rhs.MeatCapTextureSet)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.CollarTextureSet) ?? true))
+            {
+                if (!lhs.CollarTextureSet.Equals(rhs.CollarTextureSet)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SoundOpenCorpse) ?? true))
+            {
+                if (!lhs.SoundOpenCorpse.Equals(rhs.SoundOpenCorpse)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SoundCloseCorpse) ?? true))
+            {
+                if (!lhs.SoundCloseCorpse.Equals(rhs.SoundCloseCorpse)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BipedObjects) ?? true))
+            {
+                if (!lhs.BipedObjects.SequenceEqualNullable(rhs.BipedObjects)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MovementDataOverrides) ?? true))
+            {
+                if (!lhs.MovementDataOverrides.SequenceEqualNullable(rhs.MovementDataOverrides)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.EquipmentFlags) ?? true))
+            {
+                if (lhs.EquipmentFlags != rhs.EquipmentFlags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.EquipmentSlots) ?? true))
+            {
+                if (!lhs.EquipmentSlots.SequenceEqualNullable(rhs.EquipmentSlots)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.UnarmedWeapon) ?? true))
+            {
+                if (!lhs.UnarmedWeapon.Equals(rhs.UnarmedWeapon)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FaceFxPhonemes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.FaceFxPhonemes, rhs.FaceFxPhonemes, out var lhsFaceFxPhonemes, out var rhsFaceFxPhonemes, out var isFaceFxPhonemesEqual))
+                {
+                    if (!((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)lhsFaceFxPhonemes).CommonInstance()!).Equals(lhsFaceFxPhonemes, rhsFaceFxPhonemes, crystal?.GetSubCrystal((int)Race_FieldIndex.FaceFxPhonemes))) return false;
+                }
+                else if (!isFaceFxPhonemesEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefault) ?? true))
+            {
+                if (!lhs.BaseMovementDefault.Equals(rhs.BaseMovementDefault)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSwim) ?? true))
+            {
+                if (!lhs.BaseMovementDefaultSwim.Equals(rhs.BaseMovementDefaultSwim)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultFly) ?? true))
+            {
+                if (!lhs.BaseMovementDefaultFly.Equals(rhs.BaseMovementDefaultFly)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSneak) ?? true))
+            {
+                if (!lhs.BaseMovementDefaultSneak.Equals(rhs.BaseMovementDefaultSneak)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.HeadData) ?? true))
+            {
+                if (!Equals(lhs.HeadData, rhs.HeadData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MorphRace) ?? true))
+            {
+                if (!lhs.MorphRace.Equals(rhs.MorphRace)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ArmorRace) ?? true))
+            {
+                if (!lhs.ArmorRace.Equals(rhs.ArmorRace)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SubgraphTemplateRace) ?? true))
+            {
+                if (!lhs.SubgraphTemplateRace.Equals(rhs.SubgraphTemplateRace)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SubgraphAdditiveRace) ?? true))
+            {
+                if (!lhs.SubgraphAdditiveRace.Equals(rhs.SubgraphAdditiveRace)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Subgraphs) ?? true))
+            {
+                if (!lhs.Subgraphs.SequenceEqualNullable(rhs.Subgraphs)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.IdleChatterTimeMin) ?? true))
+            {
+                if (!lhs.IdleChatterTimeMin.EqualsWithin(rhs.IdleChatterTimeMin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.IdleChatterTimeMax) ?? true))
+            {
+                if (!lhs.IdleChatterTimeMax.EqualsWithin(rhs.IdleChatterTimeMax)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MorphValues) ?? true))
+            {
+                if (!lhs.MorphValues.SequenceEqualNullable(rhs.MorphValues)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.HairColorLookupTexture) ?? true))
+            {
+                if (!string.Equals(lhs.HairColorLookupTexture, rhs.HairColorLookupTexture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.HairColorExtendedLookupTexture) ?? true))
+            {
+                if (!string.Equals(lhs.HairColorExtendedLookupTexture, rhs.HairColorExtendedLookupTexture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DialogueQuest) ?? true))
+            {
+                if (!lhs.DialogueQuest.Equals(rhs.DialogueQuest)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BoneData) ?? true))
+            {
+                if (!Equals(lhs.BoneData, rhs.BoneData)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -3563,10 +6624,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 hash.Add(BipedBodyTemplateitem);
             }
             hash.Add(item.Keywords);
-            if (item.Properties is {} Propertiesitem)
-            {
-                hash.Add(Propertiesitem);
-            }
+            hash.Add(item.Properties);
             hash.Add(item.AttachParentSlots);
             hash.Add(HashCode.Combine(item.Height.Male, item.Height.Female));
             hash.Add(HashCode.Combine(item.DefaultWeight.Male, item.DefaultWeight.Female));
@@ -3577,13 +6635,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.Unknown);
             hash.Add(item.InjuredHealthPercent);
             hash.Add(item.ShieldBipedObject);
-            hash.Add(item.BearddBipedObject);
+            hash.Add(item.BeardBipedObject);
             hash.Add(item.BodyBipedObject);
             hash.Add(item.AimAngleTolerance);
             hash.Add(item.FlightRadius);
             hash.Add(item.AngularAccelerationRate);
             hash.Add(item.AngularTolerance);
-            hash.Add(item.Flags2);
             hash.Add(item.Unknown2);
             hash.Add(item.PipboyBipedObject);
             hash.Add(item.XPValue);
@@ -3599,12 +6656,84 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.ExplodableExplosion);
             hash.Add(item.ExplodableDebris);
             hash.Add(item.ExplodableImpactDataSet);
+            hash.Add(item.OnCrippleDebrisScale);
             hash.Add(item.OnCrippleDebrisCount);
             hash.Add(item.OnCrippleDecalCount);
             hash.Add(item.OnCrippleExplosion);
             hash.Add(item.OnCrippleDebris);
             hash.Add(item.OnCrippleImpactDataSet);
             hash.Add(item.ExplodableSubsegmentExplosion);
+            hash.Add(item.OrientationLimitsPitch);
+            hash.Add(item.OrientationLimitsRoll);
+            if (item.SkeletalModel is {} SkeletalModelitem)
+            {
+                hash.Add(HashCode.Combine(SkeletalModelitem.Male, SkeletalModelitem.Female));
+            }
+            hash.Add(item.MovementTypeNames);
+            hash.Add(HashCode.Combine(item.Voices.Male, item.Voices.Female));
+            if (item.DefaultHairColors is {} DefaultHairColorsitem)
+            {
+                hash.Add(HashCode.Combine(DefaultHairColorsitem.Male, DefaultHairColorsitem.Female));
+            }
+            if (item.NumberOfTintsInList is {} NumberOfTintsInListitem)
+            {
+                hash.Add(NumberOfTintsInListitem);
+            }
+            hash.Add(item.FacegenMainClamp);
+            hash.Add(item.FacegenFaceClamp);
+            hash.Add(item.AttackRace);
+            hash.Add(item.Attacks);
+            hash.Add(HashCode.Combine(item.BodyData.Male, item.BodyData.Female));
+            hash.Add(item.BodyPartData);
+            hash.Add(HashCode.Combine(item.BehaviorGraph.Male, item.BehaviorGraph.Female));
+            hash.Add(item.ImpactMaterialType);
+            hash.Add(item.ImpactDataSet);
+            hash.Add(item.DispemberBloodArt);
+            hash.Add(item.MeatCapTextureSet);
+            hash.Add(item.CollarTextureSet);
+            hash.Add(item.SoundOpenCorpse);
+            hash.Add(item.SoundCloseCorpse);
+            hash.Add(item.BipedObjects);
+            hash.Add(item.MovementDataOverrides);
+            if (item.EquipmentFlags is {} EquipmentFlagsitem)
+            {
+                hash.Add(EquipmentFlagsitem);
+            }
+            hash.Add(item.EquipmentSlots);
+            hash.Add(item.UnarmedWeapon);
+            hash.Add(item.FaceFxPhonemes);
+            hash.Add(item.BaseMovementDefault);
+            hash.Add(item.BaseMovementDefaultSwim);
+            hash.Add(item.BaseMovementDefaultFly);
+            hash.Add(item.BaseMovementDefaultSneak);
+            if (item.HeadData is {} HeadDataitem)
+            {
+                hash.Add(HashCode.Combine(HeadDataitem.Male, HeadDataitem.Female));
+            }
+            hash.Add(item.MorphRace);
+            hash.Add(item.ArmorRace);
+            hash.Add(item.SubgraphTemplateRace);
+            hash.Add(item.SubgraphAdditiveRace);
+            hash.Add(item.Subgraphs);
+            if (item.IdleChatterTimeMin is {} IdleChatterTimeMinitem)
+            {
+                hash.Add(IdleChatterTimeMinitem);
+            }
+            if (item.IdleChatterTimeMax is {} IdleChatterTimeMaxitem)
+            {
+                hash.Add(IdleChatterTimeMaxitem);
+            }
+            hash.Add(item.MorphValues);
+            if (item.HairColorLookupTexture is {} HairColorLookupTextureitem)
+            {
+                hash.Add(HairColorLookupTextureitem);
+            }
+            if (item.HairColorExtendedLookupTexture is {} HairColorExtendedLookupTextureitem)
+            {
+                hash.Add(HairColorExtendedLookupTextureitem);
+            }
+            hash.Add(item.DialogueQuest);
+            hash.Add(HashCode.Combine(item.BoneData.Male, item.BoneData.Female));
             hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -3657,6 +6786,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
+            if (obj.Properties is {} PropertiesItem)
+            {
+                foreach (var item in PropertiesItem.SelectMany(f => f.ContainedFormLinks))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
             if (obj.AttachParentSlots is {} AttachParentSlotsItem)
             {
                 foreach (var item in AttachParentSlotsItem)
@@ -3674,6 +6810,131 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             yield return FormLinkInformation.Factory(obj.OnCrippleDebris);
             yield return FormLinkInformation.Factory(obj.OnCrippleImpactDataSet);
             yield return FormLinkInformation.Factory(obj.ExplodableSubsegmentExplosion);
+            if (obj.SkeletalModel is {} SkeletalModelItem)
+            {
+                foreach (var item in SkeletalModelItem.NotNull().SelectMany(f => f.ContainedFormLinks))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            foreach (var item in obj.Voices)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.DefaultHairColors is {} DefaultHairColorsItem)
+            {
+                foreach (var item in DefaultHairColorsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.AttackRace.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.AttackRace);
+            }
+            foreach (var item in obj.Attacks.SelectMany(f => f.ContainedFormLinks))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.ContainedFormLinks))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.BodyPartData.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.BodyPartData);
+            }
+            foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.ContainedFormLinks))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.ImpactMaterialType.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.ImpactMaterialType);
+            }
+            if (obj.ImpactDataSet.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.ImpactDataSet);
+            }
+            if (obj.DispemberBloodArt.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.DispemberBloodArt);
+            }
+            if (obj.MeatCapTextureSet.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.MeatCapTextureSet);
+            }
+            if (obj.CollarTextureSet.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.CollarTextureSet);
+            }
+            if (obj.SoundOpenCorpse.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.SoundOpenCorpse);
+            }
+            if (obj.SoundCloseCorpse.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.SoundCloseCorpse);
+            }
+            foreach (var item in obj.MovementDataOverrides.SelectMany(f => f.ContainedFormLinks))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.EquipmentSlots.SelectMany(f => f.ContainedFormLinks))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.UnarmedWeapon.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.UnarmedWeapon);
+            }
+            if (obj.BaseMovementDefault.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.BaseMovementDefault);
+            }
+            if (obj.BaseMovementDefaultSwim.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.BaseMovementDefaultSwim);
+            }
+            if (obj.BaseMovementDefaultFly.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.BaseMovementDefaultFly);
+            }
+            if (obj.BaseMovementDefaultSneak.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.BaseMovementDefaultSneak);
+            }
+            if (obj.HeadData is {} HeadDataItem)
+            {
+                foreach (var item in HeadDataItem.NotNull().SelectMany(f => f.ContainedFormLinks))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.MorphRace.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.MorphRace);
+            }
+            if (obj.ArmorRace.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.ArmorRace);
+            }
+            if (obj.SubgraphTemplateRace.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.SubgraphTemplateRace);
+            }
+            if (obj.SubgraphAdditiveRace.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.SubgraphAdditiveRace);
+            }
+            foreach (var item in obj.Subgraphs.SelectMany(f => f.ContainedFormLinks))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.DialogueQuest.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.DialogueQuest);
+            }
             yield break;
         }
         
@@ -3849,15 +7110,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Properties);
                 try
                 {
-                    if(rhs.Properties is {} rhsProperties)
+                    if ((rhs.Properties != null))
                     {
-                        item.Properties = rhsProperties.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Race_FieldIndex.Properties));
+                        item.Properties = 
+                            rhs.Properties
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ObjectProperty>();
                     }
                     else
                     {
-                        item.Properties = default;
+                        item.Properties = null;
                     }
                 }
                 catch (Exception ex)
@@ -3900,9 +7167,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Height = new GenderedItem<Single>(
                 male: rhs.Height.Male,
                 female: rhs.Height.Female);
-            item.DefaultWeight = new GenderedItem<Single>(
-                male: rhs.DefaultWeight.Male,
-                female: rhs.DefaultWeight.Female);
+            item.DefaultWeight = new GenderedItem<RaceWeight>(
+                male: rhs.DefaultWeight.Male.DeepCopy(
+                    errorMask: errorMask,
+                    default(TranslationCrystal)),
+                female: rhs.DefaultWeight.Female.DeepCopy(
+                    errorMask: errorMask,
+                    default(TranslationCrystal)));
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
@@ -3931,9 +7202,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 item.ShieldBipedObject = rhs.ShieldBipedObject;
             }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BearddBipedObject) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BeardBipedObject) ?? true))
             {
-                item.BearddBipedObject = rhs.BearddBipedObject;
+                item.BeardBipedObject = rhs.BeardBipedObject;
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BodyBipedObject) ?? true))
             {
@@ -3954,10 +7225,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.AngularTolerance) ?? true))
             {
                 item.AngularTolerance = rhs.AngularTolerance;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Flags2) ?? true))
-            {
-                item.Flags2 = rhs.Flags2;
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Unknown2) ?? true))
             {
@@ -4019,6 +7286,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 item.ExplodableImpactDataSet.SetTo(rhs.ExplodableImpactDataSet.FormKey);
             }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleDebrisScale) ?? true))
+            {
+                item.OnCrippleDebrisScale = rhs.OnCrippleDebrisScale;
+            }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleDebrisCount) ?? true))
             {
                 item.OnCrippleDebrisCount = rhs.OnCrippleDebrisCount;
@@ -4043,6 +7314,351 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 item.ExplodableSubsegmentExplosion.SetTo(rhs.ExplodableSubsegmentExplosion.FormKey);
             }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.OrientationLimitsPitch) ?? true))
+            {
+                item.OrientationLimitsPitch = rhs.OrientationLimitsPitch;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.OrientationLimitsRoll) ?? true))
+            {
+                item.OrientationLimitsRoll = rhs.OrientationLimitsRoll;
+            }
+            if (rhs.SkeletalModel is not {} rhsSkeletalModelitem)
+            {
+                item.SkeletalModel = null;
+            }
+            else
+            {
+                item.SkeletalModel = new GenderedItem<SimpleModel?>(
+                    male: rhsSkeletalModelitem.Male?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)),
+                    female: rhsSkeletalModelitem.Female?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)));
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MovementTypeNames) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.MovementTypeNames);
+                try
+                {
+                    item.MovementTypeNames.SetTo(rhs.MovementTypeNames);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            item.Voices = new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(
+                male: new FormLink<IVoiceTypeGetter>(rhs.Voices.Male.FormKey),
+                female: new FormLink<IVoiceTypeGetter>(rhs.Voices.Female.FormKey));
+            if (rhs.DefaultHairColors is not {} rhsDefaultHairColorsitem)
+            {
+                item.DefaultHairColors = null;
+            }
+            else
+            {
+                item.DefaultHairColors = new GenderedItem<IFormLinkGetter<IColorRecordGetter>>(
+                    male: new FormLink<IColorRecordGetter>(rhsDefaultHairColorsitem.Male.FormKey),
+                    female: new FormLink<IColorRecordGetter>(rhsDefaultHairColorsitem.Female.FormKey));
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.NumberOfTintsInList) ?? true))
+            {
+                item.NumberOfTintsInList = rhs.NumberOfTintsInList;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.FacegenMainClamp) ?? true))
+            {
+                item.FacegenMainClamp = rhs.FacegenMainClamp;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.FacegenFaceClamp) ?? true))
+            {
+                item.FacegenFaceClamp = rhs.FacegenFaceClamp;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.AttackRace) ?? true))
+            {
+                item.AttackRace.SetTo(rhs.AttackRace.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Attacks) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.Attacks);
+                try
+                {
+                    item.Attacks.SetTo(
+                        rhs.Attacks
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            item.BodyData = new GenderedItem<BodyData?>(
+                male: rhs.BodyData.Male?.DeepCopy(
+                    errorMask: errorMask,
+                    default(TranslationCrystal)),
+                female: rhs.BodyData.Female?.DeepCopy(
+                    errorMask: errorMask,
+                    default(TranslationCrystal)));
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BodyPartData) ?? true))
+            {
+                item.BodyPartData.SetTo(rhs.BodyPartData.FormKeyNullable);
+            }
+            item.BehaviorGraph = new GenderedItem<Model?>(
+                male: rhs.BehaviorGraph.Male?.DeepCopy(
+                    errorMask: errorMask,
+                    default(TranslationCrystal)),
+                female: rhs.BehaviorGraph.Female?.DeepCopy(
+                    errorMask: errorMask,
+                    default(TranslationCrystal)));
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.ImpactMaterialType) ?? true))
+            {
+                item.ImpactMaterialType.SetTo(rhs.ImpactMaterialType.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.ImpactDataSet) ?? true))
+            {
+                item.ImpactDataSet.SetTo(rhs.ImpactDataSet.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DispemberBloodArt) ?? true))
+            {
+                item.DispemberBloodArt.SetTo(rhs.DispemberBloodArt.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MeatCapTextureSet) ?? true))
+            {
+                item.MeatCapTextureSet.SetTo(rhs.MeatCapTextureSet.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.CollarTextureSet) ?? true))
+            {
+                item.CollarTextureSet.SetTo(rhs.CollarTextureSet.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SoundOpenCorpse) ?? true))
+            {
+                item.SoundOpenCorpse.SetTo(rhs.SoundOpenCorpse.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SoundCloseCorpse) ?? true))
+            {
+                item.SoundCloseCorpse.SetTo(rhs.SoundCloseCorpse.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BipedObjects) ?? true))
+            {
+                item.BipedObjects.SetTo(
+                    rhs.BipedObjects
+                        .Select((r) =>
+                        {
+                            var value = r.Value.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                            return new KeyValuePair<BipedObject, BipedObjectData>(r.Key, value);
+                        }));
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MovementDataOverrides) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.MovementDataOverrides);
+                try
+                {
+                    item.MovementDataOverrides.SetTo(
+                        rhs.MovementDataOverrides
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.EquipmentFlags) ?? true))
+            {
+                item.EquipmentFlags = rhs.EquipmentFlags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.EquipmentSlots) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.EquipmentSlots);
+                try
+                {
+                    item.EquipmentSlots.SetTo(
+                        rhs.EquipmentSlots
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.UnarmedWeapon) ?? true))
+            {
+                item.UnarmedWeapon.SetTo(rhs.UnarmedWeapon.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.FaceFxPhonemes) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.FaceFxPhonemes);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.FaceFxPhonemes) ?? true))
+                    {
+                        item.FaceFxPhonemes = rhs.FaceFxPhonemes.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Race_FieldIndex.FaceFxPhonemes),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefault) ?? true))
+            {
+                item.BaseMovementDefault.SetTo(rhs.BaseMovementDefault.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSwim) ?? true))
+            {
+                item.BaseMovementDefaultSwim.SetTo(rhs.BaseMovementDefaultSwim.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultFly) ?? true))
+            {
+                item.BaseMovementDefaultFly.SetTo(rhs.BaseMovementDefaultFly.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSneak) ?? true))
+            {
+                item.BaseMovementDefaultSneak.SetTo(rhs.BaseMovementDefaultSneak.FormKeyNullable);
+            }
+            if (rhs.HeadData is not {} rhsHeadDataitem)
+            {
+                item.HeadData = null;
+            }
+            else
+            {
+                item.HeadData = new GenderedItem<HeadData?>(
+                    male: rhsHeadDataitem.Male?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)),
+                    female: rhsHeadDataitem.Female?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)));
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MorphRace) ?? true))
+            {
+                item.MorphRace.SetTo(rhs.MorphRace.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.ArmorRace) ?? true))
+            {
+                item.ArmorRace.SetTo(rhs.ArmorRace.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SubgraphTemplateRace) ?? true))
+            {
+                item.SubgraphTemplateRace.SetTo(rhs.SubgraphTemplateRace.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SubgraphAdditiveRace) ?? true))
+            {
+                item.SubgraphAdditiveRace.SetTo(rhs.SubgraphAdditiveRace.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Subgraphs) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.Subgraphs);
+                try
+                {
+                    item.Subgraphs.SetTo(
+                        rhs.Subgraphs
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.IdleChatterTimeMin) ?? true))
+            {
+                item.IdleChatterTimeMin = rhs.IdleChatterTimeMin;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.IdleChatterTimeMax) ?? true))
+            {
+                item.IdleChatterTimeMax = rhs.IdleChatterTimeMax;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MorphValues) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.MorphValues);
+                try
+                {
+                    item.MorphValues.SetTo(
+                        rhs.MorphValues
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.HairColorLookupTexture) ?? true))
+            {
+                item.HairColorLookupTexture = rhs.HairColorLookupTexture;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.HairColorExtendedLookupTexture) ?? true))
+            {
+                item.HairColorExtendedLookupTexture = rhs.HairColorExtendedLookupTexture;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DialogueQuest) ?? true))
+            {
+                item.DialogueQuest.SetTo(rhs.DialogueQuest.FormKeyNullable);
+            }
+            item.BoneData = new GenderedItem<ExtendedList<Bone>?>(
+                male: rhs.BoneData.Male?.Select(x => x.DeepCopy()).ToExtendedList(),
+                female: rhs.BoneData.Female?.Select(x => x.DeepCopy()).ToExtendedList());
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
@@ -4202,6 +7818,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
+            RaceBinaryWriteTranslation.WriteBinaryExtraNAM2(
+                writer: writer,
+                item: item);
         }
 
         public static void WriteRecordTypes(
@@ -4264,13 +7883,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            if (item.Properties is {} PropertiesItem)
-            {
-                ((PropertiesBinaryWriteTranslation)((IBinaryItem)PropertiesItem).BinaryWriteTranslator).Write(
-                    item: PropertiesItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IObjectPropertyGetter>.Instance.Write(
+                writer: writer,
+                items: item.Properties,
+                recordType: translationParams.ConvertToCustom(RecordTypes.PRPS),
+                transl: (MutagenWriter subWriter, IObjectPropertyGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((ObjectPropertyBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.AttachParentSlots,
@@ -4287,14 +7911,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     writer: writer,
                     item: item.Height,
                     transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
-                GenderedItemBinaryTranslation.Write(
+                if (writer.MetaData.FormVersion!.Value >= 109)
+                {
+                    GenderedItemBinaryTranslation.Write(
+                        writer: writer,
+                        item: item.DefaultWeight,
+                        transl: (MutagenWriter subWriter, IRaceWeightGetter subItem) =>
+                        {
+                            var Item = subItem;
+                            ((RaceWeightBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                                item: Item,
+                                writer: subWriter);
+                        });
+                }
+                RaceBinaryWriteTranslation.WriteBinaryFlags(
                     writer: writer,
-                    item: item.DefaultWeight,
-                    transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
-                EnumBinaryTranslation<Race.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    length: 4);
+                    item: item);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AccelerationRate);
@@ -4315,10 +7947,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     writer,
                     item.ShieldBipedObject,
                     length: 4);
-                EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.BearddBipedObject,
-                    length: 4);
+                if (writer.MetaData.FormVersion!.Value >= 124)
+                {
+                    EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer,
+                        item.BeardBipedObject,
+                        length: 4);
+                }
                 EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.BodyBipedObject,
@@ -4335,10 +7970,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AngularTolerance);
-                EnumBinaryTranslation<Race.Flag2, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.Flags2,
-                    length: 4);
+                RaceBinaryWriteTranslation.WriteBinaryFlags2(
+                    writer: writer,
+                    item: item);
                 ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Unknown2);
@@ -4375,21 +8009,430 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ExplodableImpactDataSet);
-                writer.Write(item.OnCrippleDebrisCount);
-                writer.Write(item.OnCrippleDecalCount);
-                FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.OnCrippleExplosion);
-                FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.OnCrippleDebris);
-                FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.OnCrippleImpactDataSet);
-                FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ExplodableSubsegmentExplosion);
+                if (writer.MetaData.FormVersion!.Value >= 96)
+                {
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.OnCrippleDebrisScale);
+                }
+                if (writer.MetaData.FormVersion!.Value >= 96)
+                {
+                    writer.Write(item.OnCrippleDebrisCount);
+                }
+                if (writer.MetaData.FormVersion!.Value >= 96)
+                {
+                    writer.Write(item.OnCrippleDecalCount);
+                }
+                if (writer.MetaData.FormVersion!.Value >= 96)
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.OnCrippleExplosion);
+                }
+                if (writer.MetaData.FormVersion!.Value >= 96)
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.OnCrippleDebris);
+                }
+                if (writer.MetaData.FormVersion!.Value >= 96)
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.OnCrippleImpactDataSet);
+                }
+                if (writer.MetaData.FormVersion!.Value >= 118)
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.ExplodableSubsegmentExplosion);
+                }
+                if (writer.MetaData.FormVersion!.Value >= 98)
+                {
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.OrientationLimitsPitch);
+                }
+                if (writer.MetaData.FormVersion!.Value >= 98)
+                {
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.OrientationLimitsRoll);
+                }
             }
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.SkeletalModel,
+                maleMarker: RecordTypes.MNAM,
+                femaleMarker: RecordTypes.FNAM,
+                markerWrap: false,
+                transl: (MutagenWriter subWriter, ISimpleModelGetter? subItem, TypedWriteParams? conv) =>
+                {
+                    if (subItem is {} Item)
+                    {
+                        ((SimpleModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            translationParams: conv.With(Race_Registration.SkeletalModelConverter));
+                    }
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Write(
+                writer: writer,
+                items: item.MovementTypeNames,
+                transl: (MutagenWriter subWriter, String subItem) =>
+                {
+                    StringBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.MTNM),
+                        binaryType: StringBinaryType.Plain);
+                });
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.Voices,
+                recordType: RecordTypes.VTCK,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IVoiceTypeGetter> subItem, TypedWriteParams? conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.DefaultHairColors,
+                recordType: RecordTypes.HCLF,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IColorRecordGetter> subItem, TypedWriteParams? conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.NumberOfTintsInList,
+                header: translationParams.ConvertToCustom(RecordTypes.TINL));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.FacegenMainClamp,
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.FacegenFaceClamp,
+                header: translationParams.ConvertToCustom(RecordTypes.UNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AttackRace,
+                header: translationParams.ConvertToCustom(RecordTypes.ATKR));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAttackGetter>.Instance.Write(
+                writer: writer,
+                items: item.Attacks,
+                transl: (MutagenWriter subWriter, IAttackGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((AttackBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.BodyData,
+                markerType: RecordTypes.NAM1,
+                maleMarker: RecordTypes.MNAM,
+                femaleMarker: RecordTypes.FNAM,
+                markerWrap: false,
+                transl: (MutagenWriter subWriter, IBodyDataGetter? subItem, TypedWriteParams? conv) =>
+                {
+                    if (subItem is {} Item)
+                    {
+                        ((BodyDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            translationParams: conv);
+                    }
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.BodyPartData,
+                header: translationParams.ConvertToCustom(RecordTypes.GNAM));
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.BehaviorGraph,
+                markerType: RecordTypes.NAM3,
+                maleMarker: RecordTypes.MNAM,
+                femaleMarker: RecordTypes.FNAM,
+                markerWrap: false,
+                transl: (MutagenWriter subWriter, IModelGetter? subItem, TypedWriteParams? conv) =>
+                {
+                    if (subItem is {} Item)
+                    {
+                        ((ModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            translationParams: conv);
+                    }
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ImpactMaterialType,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM4));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ImpactDataSet,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM5));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DispemberBloodArt,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM7));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MeatCapTextureSet,
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.CollarTextureSet,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM2));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SoundOpenCorpse,
+                header: translationParams.ConvertToCustom(RecordTypes.ONAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SoundCloseCorpse,
+                header: translationParams.ConvertToCustom(RecordTypes.LNAM));
+            RaceBinaryWriteTranslation.WriteBinaryBipedObjects(
+                writer: writer,
+                item: item);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IMovementDataOverrideGetter>.Instance.Write(
+                writer: writer,
+                items: item.MovementDataOverrides,
+                transl: (MutagenWriter subWriter, IMovementDataOverrideGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((MovementDataOverrideBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            EnumBinaryTranslation<EquipTypeFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.EquipmentFlags,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.VNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IEquipmentSlotGetter>.Instance.Write(
+                writer: writer,
+                items: item.EquipmentSlots,
+                transl: (MutagenWriter subWriter, IEquipmentSlotGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((EquipmentSlotBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.UnarmedWeapon,
+                header: translationParams.ConvertToCustom(RecordTypes.UNWP));
+            RaceBinaryWriteTranslation.WriteBinaryFaceFxPhonemesListingParsing(
+                writer: writer,
+                item: item);
+            RaceBinaryWriteTranslation.WriteBinaryFaceFxPhonemesRawParsing(
+                writer: writer,
+                item: item);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.BaseMovementDefault,
+                header: translationParams.ConvertToCustom(RecordTypes.WKMV));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.BaseMovementDefaultSwim,
+                header: translationParams.ConvertToCustom(RecordTypes.SWMV));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.BaseMovementDefaultFly,
+                header: translationParams.ConvertToCustom(RecordTypes.FLMV));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.BaseMovementDefaultSneak,
+                header: translationParams.ConvertToCustom(RecordTypes.SNMV));
+            GenderedItemBinaryTranslation.WriteMarkerPerItem(
+                writer: writer,
+                item: item.HeadData,
+                markerType: RecordTypes.NAM0,
+                maleMarker: RecordTypes.MNAM,
+                femaleMarker: RecordTypes.FNAM,
+                markerWrap: false,
+                femaleRecordConverter: Race_Registration.HeadDataFemaleConverter,
+                transl: (MutagenWriter subWriter, IHeadDataGetter? subItem, TypedWriteParams? conv) =>
+                {
+                    if (subItem is {} Item)
+                    {
+                        ((HeadDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            translationParams: conv);
+                    }
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MorphRace,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM8));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ArmorRace,
+                header: translationParams.ConvertToCustom(RecordTypes.RNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SubgraphTemplateRace,
+                header: translationParams.ConvertToCustom(RecordTypes.SRAC));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SubgraphAdditiveRace,
+                header: translationParams.ConvertToCustom(RecordTypes.SADD));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ISubgraphGetter>.Instance.Write(
+                writer: writer,
+                items: item.Subgraphs,
+                transl: (MutagenWriter subWriter, ISubgraphGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((SubgraphBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.IdleChatterTimeMin,
+                header: translationParams.ConvertToCustom(RecordTypes.PTOP));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.IdleChatterTimeMax,
+                header: translationParams.ConvertToCustom(RecordTypes.NTOP));
+            RaceBinaryWriteTranslation.WriteBinaryMorphValues(
+                writer: writer,
+                item: item);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.HairColorLookupTexture,
+                header: translationParams.ConvertToCustom(RecordTypes.HNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.HairColorExtendedLookupTexture,
+                header: translationParams.ConvertToCustom(RecordTypes.HLTX),
+                binaryType: StringBinaryType.NullTerminate);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DialogueQuest,
+                header: translationParams.ConvertToCustom(RecordTypes.QSTI));
+            RaceBinaryWriteTranslation.WriteBinaryBoneDataParse(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryFlagsCustom(
+            MutagenWriter writer,
+            IRaceGetter item);
+
+        public static void WriteBinaryFlags(
+            MutagenWriter writer,
+            IRaceGetter item)
+        {
+            WriteBinaryFlagsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryFlags2Custom(
+            MutagenWriter writer,
+            IRaceGetter item);
+
+        public static void WriteBinaryFlags2(
+            MutagenWriter writer,
+            IRaceGetter item)
+        {
+            WriteBinaryFlags2Custom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryExtraNAM2Custom(
+            MutagenWriter writer,
+            IRaceGetter item);
+
+        public static void WriteBinaryExtraNAM2(
+            MutagenWriter writer,
+            IRaceGetter item)
+        {
+            WriteBinaryExtraNAM2Custom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryBipedObjectsCustom(
+            MutagenWriter writer,
+            IRaceGetter item);
+
+        public static void WriteBinaryBipedObjects(
+            MutagenWriter writer,
+            IRaceGetter item)
+        {
+            WriteBinaryBipedObjectsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryFaceFxPhonemesListingParsingCustom(
+            MutagenWriter writer,
+            IRaceGetter item);
+
+        public static void WriteBinaryFaceFxPhonemesListingParsing(
+            MutagenWriter writer,
+            IRaceGetter item)
+        {
+            WriteBinaryFaceFxPhonemesListingParsingCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryFaceFxPhonemesRawParsingCustom(
+            MutagenWriter writer,
+            IRaceGetter item);
+
+        public static void WriteBinaryFaceFxPhonemesRawParsing(
+            MutagenWriter writer,
+            IRaceGetter item)
+        {
+            WriteBinaryFaceFxPhonemesRawParsingCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryMorphValuesCustom(
+            MutagenWriter writer,
+            IRaceGetter item);
+
+        public static void WriteBinaryMorphValues(
+            MutagenWriter writer,
+            IRaceGetter item)
+        {
+            WriteBinaryMorphValuesCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryBoneDataParseCustom(
+            MutagenWriter writer,
+            IRaceGetter item);
+
+        public static void WriteBinaryBoneDataParse(
+            MutagenWriter writer,
+            IRaceGetter item)
+        {
+            WriteBinaryBoneDataParseCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(
@@ -4467,6 +8510,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
+            RaceBinaryCreateTranslation.FillBinaryExtraNAM2Custom(
+                frame: frame,
+                item: item);
         }
 
         public static ParseResult FillBinaryRecordTypes(
@@ -4543,7 +8589,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.PRPS:
                 {
-                    item.Properties = Mutagen.Bethesda.Fallout4.Properties.CreateFromBinary(frame: frame);
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Properties = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ObjectProperty>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: ObjectProperty.TryCreateFromBinary)
+                        .CastExtendedList<ObjectProperty>();
                     return (int)Race_FieldIndex.Properties;
                 }
                 case RecordTypeInts.APPR:
@@ -4563,25 +8614,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.Height = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
                         frame: frame,
                         transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
-                    item.DefaultWeight = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
-                        frame: frame,
-                        transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
-                    item.Flags = EnumBinaryTranslation<Race.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 4);
+                    if (frame.MetaData.FormVersion!.Value >= 109)
+                    {
+                        item.DefaultWeight = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<RaceWeight>(
+                            frame: frame,
+                            transl: RaceWeight.TryCreateFromBinary);
+                    }
+                    RaceBinaryCreateTranslation.FillBinaryFlagsCustom(
+                        frame: dataFrame,
+                        item: item);
                     item.AccelerationRate = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.DecelerationRate = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.Size = EnumBinaryTranslation<Size, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
-                    item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(16));
+                    item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(8));
                     item.InjuredHealthPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.ShieldBipedObject = EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
-                    item.BearddBipedObject = EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 4);
+                    if (frame.MetaData.FormVersion!.Value >= 124)
+                    {
+                        item.BeardBipedObject = EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Parse(
+                            reader: dataFrame,
+                            length: 4);
+                    }
                     item.BodyBipedObject = EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
@@ -4589,10 +8646,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.FlightRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.AngularAccelerationRate = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.AngularTolerance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    item.Flags2 = EnumBinaryTranslation<Race.Flag2, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 4);
-                    item.Unknown2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(72));
+                    RaceBinaryCreateTranslation.FillBinaryFlags2Custom(
+                        frame: dataFrame,
+                        item: item);
+                    item.Unknown2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(36));
                     item.PipboyBipedObject = EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
@@ -4609,13 +8666,369 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.ExplodableExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.ExplodableDebris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.ExplodableImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.OnCrippleDebrisCount = dataFrame.ReadUInt8();
-                    item.OnCrippleDecalCount = dataFrame.ReadUInt8();
-                    item.OnCrippleExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.OnCrippleDebris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.OnCrippleImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.ExplodableSubsegmentExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Race_FieldIndex.ExplodableSubsegmentExplosion;
+                    if (frame.MetaData.FormVersion!.Value >= 96)
+                    {
+                        item.OnCrippleDebrisScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    }
+                    if (frame.MetaData.FormVersion!.Value >= 96)
+                    {
+                        item.OnCrippleDebrisCount = dataFrame.ReadUInt8();
+                    }
+                    if (frame.MetaData.FormVersion!.Value >= 96)
+                    {
+                        item.OnCrippleDecalCount = dataFrame.ReadUInt8();
+                    }
+                    if (frame.MetaData.FormVersion!.Value >= 96)
+                    {
+                        item.OnCrippleExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
+                    if (frame.MetaData.FormVersion!.Value >= 96)
+                    {
+                        item.OnCrippleDebris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
+                    if (frame.MetaData.FormVersion!.Value >= 96)
+                    {
+                        item.OnCrippleImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
+                    if (frame.MetaData.FormVersion!.Value >= 118)
+                    {
+                        item.ExplodableSubsegmentExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
+                    if (frame.MetaData.FormVersion!.Value >= 98)
+                    {
+                        item.OrientationLimitsPitch = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    }
+                    if (frame.MetaData.FormVersion!.Value >= 98)
+                    {
+                        item.OrientationLimitsRoll = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    }
+                    return (int)Race_FieldIndex.OrientationLimitsRoll;
+                }
+                case RecordTypeInts.MNAM:
+                case RecordTypeInts.FNAM:
+                {
+                    item.SkeletalModel = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<SimpleModel>(
+                        frame: frame,
+                        maleMarker: RecordTypes.MNAM,
+                        femaleMarker: RecordTypes.FNAM,
+                        parseParams: Race_Registration.SkeletalModelConverter,
+                        transl: SimpleModel.TryCreateFromBinary);
+                    return (int)Race_FieldIndex.SkeletalModel;
+                }
+                case RecordTypeInts.MTNM:
+                {
+                    item.MovementTypeNames.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.MTNM),
+                            transl: (MutagenFrame r, [MaybeNullWhen(false)] out String listSubItem) =>
+                            {
+                                return StringBinaryTranslation.Instance.Parse(
+                                    r,
+                                    item: out listSubItem,
+                                    parseWhole: true,
+                                    binaryType: StringBinaryType.Plain);
+                            }));
+                    return (int)Race_FieldIndex.MovementTypeNames;
+                }
+                case RecordTypeInts.VTCK:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Voices = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<IFormLinkGetter<IVoiceTypeGetter>>(
+                        frame: frame,
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    return (int)Race_FieldIndex.Voices;
+                }
+                case RecordTypeInts.HCLF:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DefaultHairColors = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<IFormLinkGetter<IColorRecordGetter>>(
+                        frame: frame,
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    return (int)Race_FieldIndex.DefaultHairColors;
+                }
+                case RecordTypeInts.TINL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NumberOfTintsInList = frame.ReadUInt16();
+                    return (int)Race_FieldIndex.NumberOfTintsInList;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FacegenMainClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Race_FieldIndex.FacegenMainClamp;
+                }
+                case RecordTypeInts.UNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FacegenFaceClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Race_FieldIndex.FacegenFaceClamp;
+                }
+                case RecordTypeInts.ATKR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AttackRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.AttackRace;
+                }
+                case RecordTypeInts.ATKD:
+                case RecordTypeInts.ATKE:
+                case RecordTypeInts.ATKW:
+                case RecordTypeInts.ATKS:
+                case RecordTypeInts.ATKT:
+                {
+                    item.Attacks.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Attack>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Attack_Registration.TriggeringRecordTypes,
+                            translationParams: translationParams,
+                            transl: Attack.TryCreateFromBinary));
+                    return (int)Race_FieldIndex.Attacks;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
+                    item.BodyData = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<BodyData>(
+                        frame: frame,
+                        maleMarker: RecordTypes.MNAM,
+                        femaleMarker: RecordTypes.FNAM,
+                        transl: BodyData.TryCreateFromBinary);
+                    return (int)Race_FieldIndex.BodyData;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BodyPartData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.BodyPartData;
+                }
+                case RecordTypeInts.NAM3:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
+                    item.BehaviorGraph = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Model>(
+                        frame: frame,
+                        maleMarker: RecordTypes.MNAM,
+                        femaleMarker: RecordTypes.FNAM,
+                        transl: Model.TryCreateFromBinary);
+                    return (int)Race_FieldIndex.BehaviorGraph;
+                }
+                case RecordTypeInts.NAM4:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ImpactMaterialType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.ImpactMaterialType;
+                }
+                case RecordTypeInts.NAM5:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.ImpactDataSet;
+                }
+                case RecordTypeInts.NAM7:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DispemberBloodArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.DispemberBloodArt;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MeatCapTextureSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.MeatCapTextureSet;
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CollarTextureSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.CollarTextureSet;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SoundOpenCorpse.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.SoundOpenCorpse;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SoundCloseCorpse.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.SoundCloseCorpse;
+                }
+                case RecordTypeInts.NAME:
+                {
+                    RaceBinaryCreateTranslation.FillBinaryBipedObjectsCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return (int)Race_FieldIndex.BipedObjects;
+                }
+                case RecordTypeInts.MTYP:
+                case RecordTypeInts.SPED:
+                {
+                    item.MovementDataOverrides.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MovementDataOverride>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: MovementDataOverride_Registration.TriggeringRecordTypes,
+                            translationParams: translationParams,
+                            transl: MovementDataOverride.TryCreateFromBinary));
+                    return (int)Race_FieldIndex.MovementDataOverrides;
+                }
+                case RecordTypeInts.VNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EquipmentFlags = EnumBinaryTranslation<EquipTypeFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Race_FieldIndex.EquipmentFlags;
+                }
+                case RecordTypeInts.QNAM:
+                case RecordTypeInts.ZNAM:
+                {
+                    item.EquipmentSlots.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<EquipmentSlot>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: EquipmentSlot_Registration.TriggeringRecordTypes,
+                            translationParams: translationParams,
+                            transl: EquipmentSlot.TryCreateFromBinary));
+                    return (int)Race_FieldIndex.EquipmentSlots;
+                }
+                case RecordTypeInts.UNWP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.UnarmedWeapon.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.UnarmedWeapon;
+                }
+                case RecordTypeInts.PHTN:
+                {
+                    return RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesListingParsingCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                }
+                case RecordTypeInts.PHWT:
+                {
+                    return RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesRawParsingCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                }
+                case RecordTypeInts.WKMV:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BaseMovementDefault.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.BaseMovementDefault;
+                }
+                case RecordTypeInts.SWMV:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BaseMovementDefaultSwim.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.BaseMovementDefaultSwim;
+                }
+                case RecordTypeInts.FLMV:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BaseMovementDefaultFly.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.BaseMovementDefaultFly;
+                }
+                case RecordTypeInts.SNMV:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BaseMovementDefaultSneak.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.BaseMovementDefaultSneak;
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    item.HeadData = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseMarkerPerItem<HeadData>(
+                        frame: frame,
+                        maleMarker: RecordTypes.MNAM,
+                        femaleMarker: RecordTypes.FNAM,
+                        marker: RecordTypes.NAM0,
+                        femaleRecordConverter: Race_Registration.HeadDataFemaleConverter,
+                        transl: HeadData.TryCreateFromBinary);
+                    return (int)Race_FieldIndex.HeadData;
+                }
+                case RecordTypeInts.NAM8:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MorphRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.MorphRace;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ArmorRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.ArmorRace;
+                }
+                case RecordTypeInts.SRAC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SubgraphTemplateRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.SubgraphTemplateRace;
+                }
+                case RecordTypeInts.SADD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SubgraphAdditiveRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.SubgraphAdditiveRace;
+                }
+                case RecordTypeInts.SGNM:
+                case RecordTypeInts.SAKD:
+                case RecordTypeInts.STKD:
+                case RecordTypeInts.SAPT:
+                case RecordTypeInts.SRAF:
+                {
+                    item.Subgraphs.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Subgraph>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Subgraph_Registration.TriggeringRecordTypes,
+                            translationParams: translationParams,
+                            transl: Subgraph.TryCreateFromBinary));
+                    return (int)Race_FieldIndex.Subgraphs;
+                }
+                case RecordTypeInts.PTOP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.IdleChatterTimeMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Race_FieldIndex.IdleChatterTimeMin;
+                }
+                case RecordTypeInts.NTOP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.IdleChatterTimeMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Race_FieldIndex.IdleChatterTimeMax;
+                }
+                case RecordTypeInts.MSID:
+                case RecordTypeInts.MSM0:
+                case RecordTypeInts.MSM1:
+                {
+                    RaceBinaryCreateTranslation.FillBinaryMorphValuesCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return (int)Race_FieldIndex.MorphValues;
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HairColorLookupTexture = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Race_FieldIndex.HairColorLookupTexture;
+                }
+                case RecordTypeInts.HLTX:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HairColorExtendedLookupTexture = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Race_FieldIndex.HairColorExtendedLookupTexture;
+                }
+                case RecordTypeInts.QSTI:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DialogueQuest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.DialogueQuest;
+                }
+                case RecordTypeInts.BSMP:
+                {
+                    return RaceBinaryCreateTranslation.FillBinaryBoneDataParseCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -4627,6 +9040,38 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         contentLength: contentLength);
             }
         }
+
+        public static partial void FillBinaryFlagsCustom(
+            MutagenFrame frame,
+            IRaceInternal item);
+
+        public static partial void FillBinaryFlags2Custom(
+            MutagenFrame frame,
+            IRaceInternal item);
+
+        public static partial void FillBinaryExtraNAM2Custom(
+            MutagenFrame frame,
+            IRaceInternal item);
+
+        public static partial void FillBinaryBipedObjectsCustom(
+            MutagenFrame frame,
+            IRaceInternal item);
+
+        public static partial ParseResult FillBinaryFaceFxPhonemesListingParsingCustom(
+            MutagenFrame frame,
+            IRaceInternal item);
+
+        public static partial ParseResult FillBinaryFaceFxPhonemesRawParsingCustom(
+            MutagenFrame frame,
+            IRaceInternal item);
+
+        public static partial void FillBinaryMorphValuesCustom(
+            MutagenFrame frame,
+            IRaceInternal item);
+
+        public static partial ParseResult FillBinaryBoneDataParseCustom(
+            MutagenFrame frame,
+            IRaceInternal item);
 
     }
 
@@ -4674,7 +9119,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         protected override Type LinkType => typeof(IRace);
 
-        public Race.MajorFlag MajorFlags => (Race.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region AnimationSound
         private int? _AnimationSoundLocation;
@@ -4705,10 +9149,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
-        #region Properties
-        private RangeInt32? _PropertiesLocation;
-        public IPropertiesGetter? Properties => _PropertiesLocation.HasValue ? PropertiesBinaryOverlay.PropertiesFactory(new OverlayStream(_data.Slice(_PropertiesLocation!.Value.Min), _package), _package) : default;
-        #endregion
+        public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; private set; }
         private int? _DATALocation;
         public Race.DATADataType DATADataTypeState { get; private set; }
@@ -4729,193 +9170,406 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region DefaultWeight
         private int _DefaultWeightLocation => _DATALocation!.Value + 0x8;
-        private bool _DefaultWeight_IsSet => _DATALocation.HasValue;
-        public IGenderedItemGetter<Single> DefaultWeight
+        private bool _DefaultWeight_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 109;
+        public IGenderedItemGetter<IRaceWeightGetter> DefaultWeight
         {
             get
             {
-                if (!_DefaultWeight_IsSet) return new GenderedItem<Single>(default, default);
+                if (!_DefaultWeight_IsSet) return new GenderedItem<IRaceWeightGetter>(new RaceWeight(), new RaceWeight());
                 var data = _data.Slice(_DefaultWeightLocation);
-                return new GenderedItem<Single>(
-                    data.Float(),
-                    data.Slice(4).Float());
+                return new GenderedItem<IRaceWeightGetter>(
+                    RaceWeightBinaryOverlay.RaceWeightFactory(data, _package),
+                    RaceWeightBinaryOverlay.RaceWeightFactory(data.Slice(12), _package));
             }
         }
+        int DefaultWeightVersioningOffset => _package.FormVersion!.FormVersion!.Value < 109 ? -24 : 0;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x10;
-        private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Race.Flag Flags => _Flags_IsSet ? (Race.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        private int _FlagsLocation => _DATALocation!.Value + DefaultWeightVersioningOffset + 0x20;
+        public Race.Flag Flags => GetFlagsCustom();
         #endregion
         #region AccelerationRate
-        private int _AccelerationRateLocation => _DATALocation!.Value + 0x14;
+        private int _AccelerationRateLocation => _DATALocation!.Value + DefaultWeightVersioningOffset + 0x24;
         private bool _AccelerationRate_IsSet => _DATALocation.HasValue;
         public Single AccelerationRate => _AccelerationRate_IsSet ? _data.Slice(_AccelerationRateLocation, 4).Float() : default;
         #endregion
         #region DecelerationRate
-        private int _DecelerationRateLocation => _DATALocation!.Value + 0x18;
+        private int _DecelerationRateLocation => _DATALocation!.Value + DefaultWeightVersioningOffset + 0x28;
         private bool _DecelerationRate_IsSet => _DATALocation.HasValue;
         public Single DecelerationRate => _DecelerationRate_IsSet ? _data.Slice(_DecelerationRateLocation, 4).Float() : default;
         #endregion
         #region Size
-        private int _SizeLocation => _DATALocation!.Value + 0x1C;
+        private int _SizeLocation => _DATALocation!.Value + DefaultWeightVersioningOffset + 0x2C;
         private bool _Size_IsSet => _DATALocation.HasValue;
         public Size Size => _Size_IsSet ? (Size)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SizeLocation, 0x4)) : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _DATALocation!.Value + 0x20;
+        private int _UnknownLocation => _DATALocation!.Value + DefaultWeightVersioningOffset + 0x30;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _data.Span.Slice(_UnknownLocation, 16).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _data.Span.Slice(_UnknownLocation, 8).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region InjuredHealthPercent
-        private int _InjuredHealthPercentLocation => _DATALocation!.Value + 0x30;
+        private int _InjuredHealthPercentLocation => _DATALocation!.Value + DefaultWeightVersioningOffset + 0x38;
         private bool _InjuredHealthPercent_IsSet => _DATALocation.HasValue;
         public Single InjuredHealthPercent => _InjuredHealthPercent_IsSet ? _data.Slice(_InjuredHealthPercentLocation, 4).Float() : default;
         #endregion
         #region ShieldBipedObject
-        private int _ShieldBipedObjectLocation => _DATALocation!.Value + 0x34;
+        private int _ShieldBipedObjectLocation => _DATALocation!.Value + DefaultWeightVersioningOffset + 0x3C;
         private bool _ShieldBipedObject_IsSet => _DATALocation.HasValue;
         public BipedObject ShieldBipedObject => _ShieldBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ShieldBipedObjectLocation, 0x4)) : default;
         #endregion
-        #region BearddBipedObject
-        private int _BearddBipedObjectLocation => _DATALocation!.Value + 0x38;
-        private bool _BearddBipedObject_IsSet => _DATALocation.HasValue;
-        public BipedObject BearddBipedObject => _BearddBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_BearddBipedObjectLocation, 0x4)) : default;
+        #region BeardBipedObject
+        private int _BeardBipedObjectLocation => _DATALocation!.Value + DefaultWeightVersioningOffset + 0x40;
+        private bool _BeardBipedObject_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 124;
+        public BipedObject BeardBipedObject => _BeardBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_BeardBipedObjectLocation, 0x4)) : default;
+        int BeardBipedObjectVersioningOffset => DefaultWeightVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 124 ? -4 : 0);
         #endregion
         #region BodyBipedObject
-        private int _BodyBipedObjectLocation => _DATALocation!.Value + 0x3C;
+        private int _BodyBipedObjectLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0x44;
         private bool _BodyBipedObject_IsSet => _DATALocation.HasValue;
         public BipedObject BodyBipedObject => _BodyBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_BodyBipedObjectLocation, 0x4)) : default;
         #endregion
         #region AimAngleTolerance
-        private int _AimAngleToleranceLocation => _DATALocation!.Value + 0x40;
+        private int _AimAngleToleranceLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0x48;
         private bool _AimAngleTolerance_IsSet => _DATALocation.HasValue;
         public Single AimAngleTolerance => _AimAngleTolerance_IsSet ? _data.Slice(_AimAngleToleranceLocation, 4).Float() : default;
         #endregion
         #region FlightRadius
-        private int _FlightRadiusLocation => _DATALocation!.Value + 0x44;
+        private int _FlightRadiusLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0x4C;
         private bool _FlightRadius_IsSet => _DATALocation.HasValue;
         public Single FlightRadius => _FlightRadius_IsSet ? _data.Slice(_FlightRadiusLocation, 4).Float() : default;
         #endregion
         #region AngularAccelerationRate
-        private int _AngularAccelerationRateLocation => _DATALocation!.Value + 0x48;
+        private int _AngularAccelerationRateLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0x50;
         private bool _AngularAccelerationRate_IsSet => _DATALocation.HasValue;
         public Single AngularAccelerationRate => _AngularAccelerationRate_IsSet ? _data.Slice(_AngularAccelerationRateLocation, 4).Float() : default;
         #endregion
         #region AngularTolerance
-        private int _AngularToleranceLocation => _DATALocation!.Value + 0x4C;
+        private int _AngularToleranceLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0x54;
         private bool _AngularTolerance_IsSet => _DATALocation.HasValue;
         public Single AngularTolerance => _AngularTolerance_IsSet ? _data.Slice(_AngularToleranceLocation, 4).Float() : default;
         #endregion
         #region Flags2
-        private int _Flags2Location => _DATALocation!.Value + 0x50;
+        private int _Flags2Location => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0x58;
         private bool _Flags2_IsSet => _DATALocation.HasValue;
-        public Race.Flag2 Flags2 => _Flags2_IsSet ? (Race.Flag2)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_Flags2Location, 0x4)) : default;
+        partial void Flags2CustomParse(
+            OverlayStream stream,
+            int offset);
         #endregion
         #region Unknown2
-        private int _Unknown2Location => _DATALocation!.Value + 0x54;
+        private int _Unknown2Location => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0x5C;
         private bool _Unknown2_IsSet => _DATALocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown2 => _Unknown2_IsSet ? _data.Span.Slice(_Unknown2Location, 72).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unknown2 => _Unknown2_IsSet ? _data.Span.Slice(_Unknown2Location, 36).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region PipboyBipedObject
-        private int _PipboyBipedObjectLocation => _DATALocation!.Value + 0x9C;
+        private int _PipboyBipedObjectLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0x80;
         private bool _PipboyBipedObject_IsSet => _DATALocation.HasValue;
         public BipedObject PipboyBipedObject => _PipboyBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_PipboyBipedObjectLocation, 0x4)) : default;
         #endregion
         #region XPValue
-        private int _XPValueLocation => _DATALocation!.Value + 0xA0;
+        private int _XPValueLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0x84;
         private bool _XPValue_IsSet => _DATALocation.HasValue;
         public Int16 XPValue => _XPValue_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_XPValueLocation, 2)) : default;
         #endregion
         #region SeverableDebrisScale
-        private int _SeverableDebrisScaleLocation => _DATALocation!.Value + 0xA2;
+        private int _SeverableDebrisScaleLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0x86;
         private bool _SeverableDebrisScale_IsSet => _DATALocation.HasValue;
         public Single SeverableDebrisScale => _SeverableDebrisScale_IsSet ? _data.Slice(_SeverableDebrisScaleLocation, 4).Float() : default;
         #endregion
         #region SeverableDebrisCount
-        private int _SeverableDebrisCountLocation => _DATALocation!.Value + 0xA6;
+        private int _SeverableDebrisCountLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0x8A;
         private bool _SeverableDebrisCount_IsSet => _DATALocation.HasValue;
         public Byte SeverableDebrisCount => _SeverableDebrisCount_IsSet ? _data.Span[_SeverableDebrisCountLocation] : default;
         #endregion
         #region SeverableDecalCount
-        private int _SeverableDecalCountLocation => _DATALocation!.Value + 0xA7;
+        private int _SeverableDecalCountLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0x8B;
         private bool _SeverableDecalCount_IsSet => _DATALocation.HasValue;
         public Byte SeverableDecalCount => _SeverableDecalCount_IsSet ? _data.Span[_SeverableDecalCountLocation] : default;
         #endregion
         #region ExplodableDebrisScale
-        private int _ExplodableDebrisScaleLocation => _DATALocation!.Value + 0xA8;
+        private int _ExplodableDebrisScaleLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0x8C;
         private bool _ExplodableDebrisScale_IsSet => _DATALocation.HasValue;
         public Single ExplodableDebrisScale => _ExplodableDebrisScale_IsSet ? _data.Slice(_ExplodableDebrisScaleLocation, 4).Float() : default;
         #endregion
         #region ExplodableDebrisCount
-        private int _ExplodableDebrisCountLocation => _DATALocation!.Value + 0xAC;
+        private int _ExplodableDebrisCountLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0x90;
         private bool _ExplodableDebrisCount_IsSet => _DATALocation.HasValue;
         public Byte ExplodableDebrisCount => _ExplodableDebrisCount_IsSet ? _data.Span[_ExplodableDebrisCountLocation] : default;
         #endregion
         #region ExplodableDecalCount
-        private int _ExplodableDecalCountLocation => _DATALocation!.Value + 0xAD;
+        private int _ExplodableDecalCountLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0x91;
         private bool _ExplodableDecalCount_IsSet => _DATALocation.HasValue;
         public Byte ExplodableDecalCount => _ExplodableDecalCount_IsSet ? _data.Span[_ExplodableDecalCountLocation] : default;
         #endregion
         #region SeverableExplosion
-        private int _SeverableExplosionLocation => _DATALocation!.Value + 0xAE;
+        private int _SeverableExplosionLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0x92;
         private bool _SeverableExplosion_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IExplosionGetter> SeverableExplosion => _SeverableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SeverableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region SeverableDebris
-        private int _SeverableDebrisLocation => _DATALocation!.Value + 0xB2;
+        private int _SeverableDebrisLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0x96;
         private bool _SeverableDebris_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IDebrisGetter> SeverableDebris => _SeverableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SeverableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region SeverableImpactDataSet
-        private int _SeverableImpactDataSetLocation => _DATALocation!.Value + 0xB6;
+        private int _SeverableImpactDataSetLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0x9A;
         private bool _SeverableImpactDataSet_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IImpactDataSetGetter> SeverableImpactDataSet => _SeverableImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SeverableImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region ExplodableExplosion
-        private int _ExplodableExplosionLocation => _DATALocation!.Value + 0xBA;
+        private int _ExplodableExplosionLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0x9E;
         private bool _ExplodableExplosion_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IExplosionGetter> ExplodableExplosion => _ExplodableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region ExplodableDebris
-        private int _ExplodableDebrisLocation => _DATALocation!.Value + 0xBE;
+        private int _ExplodableDebrisLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0xA2;
         private bool _ExplodableDebris_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IDebrisGetter> ExplodableDebris => _ExplodableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region ExplodableImpactDataSet
-        private int _ExplodableImpactDataSetLocation => _DATALocation!.Value + 0xC2;
+        private int _ExplodableImpactDataSetLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0xA6;
         private bool _ExplodableImpactDataSet_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IImpactDataSetGetter> ExplodableImpactDataSet => _ExplodableImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
+        #region OnCrippleDebrisScale
+        private int _OnCrippleDebrisScaleLocation => _DATALocation!.Value + BeardBipedObjectVersioningOffset + 0xAA;
+        private bool _OnCrippleDebrisScale_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
+        public Single OnCrippleDebrisScale => _OnCrippleDebrisScale_IsSet ? _data.Slice(_OnCrippleDebrisScaleLocation, 4).Float() : default;
+        int OnCrippleDebrisScaleVersioningOffset => BeardBipedObjectVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -4 : 0);
+        #endregion
         #region OnCrippleDebrisCount
-        private int _OnCrippleDebrisCountLocation => _DATALocation!.Value + 0xC6;
-        private bool _OnCrippleDebrisCount_IsSet => _DATALocation.HasValue;
+        private int _OnCrippleDebrisCountLocation => _DATALocation!.Value + OnCrippleDebrisScaleVersioningOffset + 0xAE;
+        private bool _OnCrippleDebrisCount_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
         public Byte OnCrippleDebrisCount => _OnCrippleDebrisCount_IsSet ? _data.Span[_OnCrippleDebrisCountLocation] : default;
+        int OnCrippleDebrisCountVersioningOffset => OnCrippleDebrisScaleVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -1 : 0);
         #endregion
         #region OnCrippleDecalCount
-        private int _OnCrippleDecalCountLocation => _DATALocation!.Value + 0xC7;
-        private bool _OnCrippleDecalCount_IsSet => _DATALocation.HasValue;
+        private int _OnCrippleDecalCountLocation => _DATALocation!.Value + OnCrippleDebrisCountVersioningOffset + 0xAF;
+        private bool _OnCrippleDecalCount_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
         public Byte OnCrippleDecalCount => _OnCrippleDecalCount_IsSet ? _data.Span[_OnCrippleDecalCountLocation] : default;
+        int OnCrippleDecalCountVersioningOffset => OnCrippleDebrisCountVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -1 : 0);
         #endregion
         #region OnCrippleExplosion
-        private int _OnCrippleExplosionLocation => _DATALocation!.Value + 0xC8;
-        private bool _OnCrippleExplosion_IsSet => _DATALocation.HasValue;
+        private int _OnCrippleExplosionLocation => _DATALocation!.Value + OnCrippleDecalCountVersioningOffset + 0xB0;
+        private bool _OnCrippleExplosion_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
         public IFormLinkGetter<IExplosionGetter> OnCrippleExplosion => _OnCrippleExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OnCrippleExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        int OnCrippleExplosionVersioningOffset => OnCrippleDecalCountVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -4 : 0);
         #endregion
         #region OnCrippleDebris
-        private int _OnCrippleDebrisLocation => _DATALocation!.Value + 0xCC;
-        private bool _OnCrippleDebris_IsSet => _DATALocation.HasValue;
+        private int _OnCrippleDebrisLocation => _DATALocation!.Value + OnCrippleExplosionVersioningOffset + 0xB4;
+        private bool _OnCrippleDebris_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
         public IFormLinkGetter<IDebrisGetter> OnCrippleDebris => _OnCrippleDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OnCrippleDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        int OnCrippleDebrisVersioningOffset => OnCrippleExplosionVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -4 : 0);
         #endregion
         #region OnCrippleImpactDataSet
-        private int _OnCrippleImpactDataSetLocation => _DATALocation!.Value + 0xD0;
-        private bool _OnCrippleImpactDataSet_IsSet => _DATALocation.HasValue;
+        private int _OnCrippleImpactDataSetLocation => _DATALocation!.Value + OnCrippleDebrisVersioningOffset + 0xB8;
+        private bool _OnCrippleImpactDataSet_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
         public IFormLinkGetter<IImpactDataSetGetter> OnCrippleImpactDataSet => _OnCrippleImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OnCrippleImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        int OnCrippleImpactDataSetVersioningOffset => OnCrippleDebrisVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -4 : 0);
         #endregion
         #region ExplodableSubsegmentExplosion
-        private int _ExplodableSubsegmentExplosionLocation => _DATALocation!.Value + 0xD4;
-        private bool _ExplodableSubsegmentExplosion_IsSet => _DATALocation.HasValue;
+        private int _ExplodableSubsegmentExplosionLocation => _DATALocation!.Value + OnCrippleImpactDataSetVersioningOffset + 0xBC;
+        private bool _ExplodableSubsegmentExplosion_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 118;
         public IFormLinkGetter<IExplosionGetter> ExplodableSubsegmentExplosion => _ExplodableSubsegmentExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableSubsegmentExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        int ExplodableSubsegmentExplosionVersioningOffset => OnCrippleImpactDataSetVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 118 ? -4 : 0);
+        #endregion
+        #region OrientationLimitsPitch
+        private int _OrientationLimitsPitchLocation => _DATALocation!.Value + ExplodableSubsegmentExplosionVersioningOffset + 0xC0;
+        private bool _OrientationLimitsPitch_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 98;
+        public Single OrientationLimitsPitch => _OrientationLimitsPitch_IsSet ? _data.Slice(_OrientationLimitsPitchLocation, 4).Float() : default;
+        int OrientationLimitsPitchVersioningOffset => ExplodableSubsegmentExplosionVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 98 ? -4 : 0);
+        #endregion
+        #region OrientationLimitsRoll
+        private int _OrientationLimitsRollLocation => _DATALocation!.Value + OrientationLimitsPitchVersioningOffset + 0xC4;
+        private bool _OrientationLimitsRoll_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 98;
+        public Single OrientationLimitsRoll => _OrientationLimitsRoll_IsSet ? _data.Slice(_OrientationLimitsRollLocation, 4).Float() : default;
+        int OrientationLimitsRollVersioningOffset => OrientationLimitsPitchVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 98 ? -4 : 0);
+        #endregion
+        #region SkeletalModel
+        private IGenderedItemGetter<ISimpleModelGetter?>? _SkeletalModelOverlay;
+        public IGenderedItemGetter<ISimpleModelGetter?>? SkeletalModel => _SkeletalModelOverlay;
+        #endregion
+        public IReadOnlyList<String> MovementTypeNames { get; private set; } = ListExt.Empty<String>();
+        #region Voices
+        private int? _VoicesLocation;
+        public IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>> Voices
+        {
+            get
+            {
+                if (!_VoicesLocation.HasValue) return new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(FormLink<IVoiceTypeGetter>.Null, FormLink<IVoiceTypeGetter>.Null);
+                var data = HeaderTranslation.ExtractSubrecordMemory(_data, _VoicesLocation.Value, _package.MetaData.Constants);
+                return new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(
+                    new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
+                    new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
+            }
+        }
+        #endregion
+        #region DefaultHairColors
+        private int? _DefaultHairColorsLocation;
+        public IGenderedItemGetter<IFormLinkGetter<IColorRecordGetter>>? DefaultHairColors
+        {
+            get
+            {
+                if (!_DefaultHairColorsLocation.HasValue) return default;
+                var data = HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultHairColorsLocation.Value, _package.MetaData.Constants);
+                return new GenderedItem<IFormLinkGetter<IColorRecordGetter>>(
+                    new FormLink<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
+                    new FormLink<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
+            }
+        }
+        #endregion
+        #region NumberOfTintsInList
+        private int? _NumberOfTintsInListLocation;
+        public UInt16? NumberOfTintsInList => _NumberOfTintsInListLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NumberOfTintsInListLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        #endregion
+        #region FacegenMainClamp
+        private int? _FacegenMainClampLocation;
+        public Single FacegenMainClamp => _FacegenMainClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FacegenMainClampLocation.Value, _package.MetaData.Constants).Float() : default;
+        #endregion
+        #region FacegenFaceClamp
+        private int? _FacegenFaceClampLocation;
+        public Single FacegenFaceClamp => _FacegenFaceClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FacegenFaceClampLocation.Value, _package.MetaData.Constants).Float() : default;
+        #endregion
+        #region AttackRace
+        private int? _AttackRaceLocation;
+        public IFormLinkNullableGetter<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        #endregion
+        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = ListExt.Empty<AttackBinaryOverlay>();
+        #region BodyData
+        private IGenderedItemGetter<IBodyDataGetter?>? _BodyDataOverlay;
+        public IGenderedItemGetter<IBodyDataGetter?> BodyData => _BodyDataOverlay ?? new GenderedItem<IBodyDataGetter?>(default, default);
+        #endregion
+        #region BodyPartData
+        private int? _BodyPartDataLocation;
+        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => _BodyPartDataLocation.HasValue ? new FormLinkNullable<IBodyPartDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BodyPartDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IBodyPartDataGetter>.Null;
+        #endregion
+        #region ExtraNAM2
+        partial void ExtraNAM2CustomParse(
+            OverlayStream stream,
+            int offset);
+        protected int ExtraNAM2EndingPos;
+        #endregion
+        #region BehaviorGraph
+        private IGenderedItemGetter<IModelGetter?>? _BehaviorGraphOverlay;
+        public IGenderedItemGetter<IModelGetter?> BehaviorGraph => _BehaviorGraphOverlay ?? new GenderedItem<IModelGetter?>(default, default);
+        #endregion
+        #region ImpactMaterialType
+        private int? _ImpactMaterialTypeLocation;
+        public IFormLinkNullableGetter<IMaterialTypeGetter> ImpactMaterialType => _ImpactMaterialTypeLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImpactMaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        #endregion
+        #region ImpactDataSet
+        private int? _ImpactDataSetLocation;
+        public IFormLinkNullableGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
+        #endregion
+        #region DispemberBloodArt
+        private int? _DispemberBloodArtLocation;
+        public IFormLinkNullableGetter<IArtObjectGetter> DispemberBloodArt => _DispemberBloodArtLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DispemberBloodArtLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
+        #endregion
+        #region MeatCapTextureSet
+        private int? _MeatCapTextureSetLocation;
+        public IFormLinkNullableGetter<ITextureSetGetter> MeatCapTextureSet => _MeatCapTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MeatCapTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        #endregion
+        #region CollarTextureSet
+        private int? _CollarTextureSetLocation;
+        public IFormLinkNullableGetter<ITextureSetGetter> CollarTextureSet => _CollarTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CollarTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        #endregion
+        #region SoundOpenCorpse
+        private int? _SoundOpenCorpseLocation;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundOpenCorpse => _SoundOpenCorpseLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundOpenCorpseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        #endregion
+        #region SoundCloseCorpse
+        private int? _SoundCloseCorpseLocation;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundCloseCorpse => _SoundCloseCorpseLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundCloseCorpseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        #endregion
+        public IReadOnlyList<IMovementDataOverrideGetter> MovementDataOverrides { get; private set; } = ListExt.Empty<MovementDataOverrideBinaryOverlay>();
+        #region EquipmentFlags
+        private int? _EquipmentFlagsLocation;
+        public EquipTypeFlag? EquipmentFlags => _EquipmentFlagsLocation.HasValue ? (EquipTypeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentFlagsLocation!.Value, _package.MetaData.Constants)) : default(EquipTypeFlag?);
+        #endregion
+        public IReadOnlyList<IEquipmentSlotGetter> EquipmentSlots { get; private set; } = ListExt.Empty<EquipmentSlotBinaryOverlay>();
+        #region UnarmedWeapon
+        private int? _UnarmedWeaponLocation;
+        public IFormLinkNullableGetter<IWeaponGetter> UnarmedWeapon => _UnarmedWeaponLocation.HasValue ? new FormLinkNullable<IWeaponGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnarmedWeaponLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWeaponGetter>.Null;
+        #endregion
+        #region FaceFxPhonemesListingParsing
+        public partial ParseResult FaceFxPhonemesListingParsingCustomParse(
+            OverlayStream stream,
+            int offset);
+        #endregion
+        #region FaceFxPhonemesRawParsing
+        public partial ParseResult FaceFxPhonemesRawParsingCustomParse(
+            OverlayStream stream,
+            int offset);
+        #endregion
+        #region BaseMovementDefault
+        private int? _BaseMovementDefaultLocation;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefault => _BaseMovementDefaultLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        #endregion
+        #region BaseMovementDefaultSwim
+        private int? _BaseMovementDefaultSwimLocation;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSwim => _BaseMovementDefaultSwimLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultSwimLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        #endregion
+        #region BaseMovementDefaultFly
+        private int? _BaseMovementDefaultFlyLocation;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultFly => _BaseMovementDefaultFlyLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultFlyLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        #endregion
+        #region BaseMovementDefaultSneak
+        private int? _BaseMovementDefaultSneakLocation;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSneak => _BaseMovementDefaultSneakLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultSneakLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        #endregion
+        #region HeadData
+        private IGenderedItemGetter<IHeadDataGetter?>? _HeadDataOverlay;
+        public IGenderedItemGetter<IHeadDataGetter?>? HeadData => _HeadDataOverlay;
+        #endregion
+        #region MorphRace
+        private int? _MorphRaceLocation;
+        public IFormLinkNullableGetter<IRaceGetter> MorphRace => _MorphRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MorphRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        #endregion
+        #region ArmorRace
+        private int? _ArmorRaceLocation;
+        public IFormLinkNullableGetter<IRaceGetter> ArmorRace => _ArmorRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ArmorRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        #endregion
+        #region SubgraphTemplateRace
+        private int? _SubgraphTemplateRaceLocation;
+        public IFormLinkNullableGetter<IRaceGetter> SubgraphTemplateRace => _SubgraphTemplateRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SubgraphTemplateRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        #endregion
+        #region SubgraphAdditiveRace
+        private int? _SubgraphAdditiveRaceLocation;
+        public IFormLinkNullableGetter<IRaceGetter> SubgraphAdditiveRace => _SubgraphAdditiveRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SubgraphAdditiveRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        #endregion
+        public IReadOnlyList<ISubgraphGetter> Subgraphs { get; private set; } = ListExt.Empty<SubgraphBinaryOverlay>();
+        #region IdleChatterTimeMin
+        private int? _IdleChatterTimeMinLocation;
+        public Single? IdleChatterTimeMin => _IdleChatterTimeMinLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _IdleChatterTimeMinLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region IdleChatterTimeMax
+        private int? _IdleChatterTimeMaxLocation;
+        public Single? IdleChatterTimeMax => _IdleChatterTimeMaxLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _IdleChatterTimeMaxLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region MorphValues
+        partial void MorphValuesCustomParse(
+            OverlayStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed);
+        #endregion
+        #region HairColorLookupTexture
+        private int? _HairColorLookupTextureLocation;
+        public String? HairColorLookupTexture => _HairColorLookupTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _HairColorLookupTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region HairColorExtendedLookupTexture
+        private int? _HairColorExtendedLookupTextureLocation;
+        public String? HairColorExtendedLookupTexture => _HairColorExtendedLookupTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _HairColorExtendedLookupTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region DialogueQuest
+        private int? _DialogueQuestLocation;
+        public IFormLinkNullableGetter<IQuestGetter> DialogueQuest => _DialogueQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DialogueQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        #endregion
+        #region BoneDataParse
+        public partial ParseResult BoneDataParseCustomParse(
+            OverlayStream stream,
+            int offset);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -5036,7 +9690,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.PRPS:
                 {
-                    _PropertiesLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    var subMeta = stream.ReadSubrecord();
+                    var subLen = subMeta.ContentLength;
+                    this.Properties = BinaryOverlayList.FactoryByStartIndex<ObjectPropertyBinaryOverlay>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
+                    stream.Position += subLen;
                     return (int)Race_FieldIndex.Properties;
                 }
                 case RecordTypeInts.APPR:
@@ -5054,7 +9715,298 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return (int)Race_FieldIndex.ExplodableSubsegmentExplosion;
+                    return (int)Race_FieldIndex.OrientationLimitsRoll;
+                }
+                case RecordTypeInts.MNAM:
+                case RecordTypeInts.FNAM:
+                {
+                    _SkeletalModelOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<ISimpleModelGetter>(
+                        package: _package,
+                        male: RecordTypes.MNAM,
+                        female: RecordTypes.FNAM,
+                        stream: stream,
+                        creator: (s, p, r) => SimpleModelBinaryOverlay.SimpleModelFactory(s, p, r),
+                        parseParams: Race_Registration.SkeletalModelConverter);
+                    return (int)Race_FieldIndex.SkeletalModel;
+                }
+                case RecordTypeInts.MTNM:
+                {
+                    this.MovementTypeNames = BinaryOverlayList.FactoryByArray<String>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordFrame(s).Content, encoding: p.MetaData.Encodings.NonTranslated),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: type,
+                            skipHeader: false,
+                            parseParams: parseParams));
+                    return (int)Race_FieldIndex.MovementTypeNames;
+                }
+                case RecordTypeInts.VTCK:
+                {
+                    _VoicesLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.Voices;
+                }
+                case RecordTypeInts.HCLF:
+                {
+                    _DefaultHairColorsLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.DefaultHairColors;
+                }
+                case RecordTypeInts.TINL:
+                {
+                    _NumberOfTintsInListLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.NumberOfTintsInList;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    _FacegenMainClampLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.FacegenMainClamp;
+                }
+                case RecordTypeInts.UNAM:
+                {
+                    _FacegenFaceClampLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.FacegenFaceClamp;
+                }
+                case RecordTypeInts.ATKR:
+                {
+                    _AttackRaceLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.AttackRace;
+                }
+                case RecordTypeInts.ATKD:
+                case RecordTypeInts.ATKE:
+                case RecordTypeInts.ATKW:
+                case RecordTypeInts.ATKS:
+                case RecordTypeInts.ATKT:
+                {
+                    this.Attacks = this.ParseRepeatedTypelessSubrecord<AttackBinaryOverlay>(
+                        stream: stream,
+                        parseParams: parseParams,
+                        trigger: Attack_Registration.TriggeringRecordTypes,
+                        factory: AttackBinaryOverlay.AttackFactory);
+                    return (int)Race_FieldIndex.Attacks;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
+                    _BodyDataOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IBodyDataGetter>(
+                        package: _package,
+                        male: RecordTypes.MNAM,
+                        female: RecordTypes.FNAM,
+                        stream: stream,
+                        creator: (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
+                        parseParams: parseParams);
+                    return (int)Race_FieldIndex.BodyData;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    _BodyPartDataLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.BodyPartData;
+                }
+                case RecordTypeInts.NAM3:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
+                    _BehaviorGraphOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IModelGetter>(
+                        package: _package,
+                        male: RecordTypes.MNAM,
+                        female: RecordTypes.FNAM,
+                        stream: stream,
+                        creator: (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
+                        parseParams: parseParams);
+                    return (int)Race_FieldIndex.BehaviorGraph;
+                }
+                case RecordTypeInts.NAM4:
+                {
+                    _ImpactMaterialTypeLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.ImpactMaterialType;
+                }
+                case RecordTypeInts.NAM5:
+                {
+                    _ImpactDataSetLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.ImpactDataSet;
+                }
+                case RecordTypeInts.NAM7:
+                {
+                    _DispemberBloodArtLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.DispemberBloodArt;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _MeatCapTextureSetLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.MeatCapTextureSet;
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    _CollarTextureSetLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.CollarTextureSet;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    _SoundOpenCorpseLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.SoundOpenCorpse;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    _SoundCloseCorpseLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.SoundCloseCorpse;
+                }
+                case RecordTypeInts.NAME:
+                {
+                    BipedObjectsCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset);
+                    return (int)Race_FieldIndex.BipedObjects;
+                }
+                case RecordTypeInts.MTYP:
+                case RecordTypeInts.SPED:
+                {
+                    this.MovementDataOverrides = this.ParseRepeatedTypelessSubrecord<MovementDataOverrideBinaryOverlay>(
+                        stream: stream,
+                        parseParams: parseParams,
+                        trigger: MovementDataOverride_Registration.TriggeringRecordTypes,
+                        factory: MovementDataOverrideBinaryOverlay.MovementDataOverrideFactory);
+                    return (int)Race_FieldIndex.MovementDataOverrides;
+                }
+                case RecordTypeInts.VNAM:
+                {
+                    _EquipmentFlagsLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.EquipmentFlags;
+                }
+                case RecordTypeInts.QNAM:
+                case RecordTypeInts.ZNAM:
+                {
+                    this.EquipmentSlots = this.ParseRepeatedTypelessSubrecord<EquipmentSlotBinaryOverlay>(
+                        stream: stream,
+                        parseParams: parseParams,
+                        trigger: EquipmentSlot_Registration.TriggeringRecordTypes,
+                        factory: EquipmentSlotBinaryOverlay.EquipmentSlotFactory);
+                    return (int)Race_FieldIndex.EquipmentSlots;
+                }
+                case RecordTypeInts.UNWP:
+                {
+                    _UnarmedWeaponLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.UnarmedWeapon;
+                }
+                case RecordTypeInts.PHTN:
+                {
+                    return FaceFxPhonemesListingParsingCustomParse(
+                        stream,
+                        offset);
+                }
+                case RecordTypeInts.PHWT:
+                {
+                    return FaceFxPhonemesRawParsingCustomParse(
+                        stream,
+                        offset);
+                }
+                case RecordTypeInts.WKMV:
+                {
+                    _BaseMovementDefaultLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.BaseMovementDefault;
+                }
+                case RecordTypeInts.SWMV:
+                {
+                    _BaseMovementDefaultSwimLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.BaseMovementDefaultSwim;
+                }
+                case RecordTypeInts.FLMV:
+                {
+                    _BaseMovementDefaultFlyLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.BaseMovementDefaultFly;
+                }
+                case RecordTypeInts.SNMV:
+                {
+                    _BaseMovementDefaultSneakLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.BaseMovementDefaultSneak;
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    _HeadDataOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IHeadDataGetter>(
+                        package: _package,
+                        male: RecordTypes.MNAM,
+                        female: RecordTypes.FNAM,
+                        marker: RecordTypes.NAM0,
+                        stream: stream,
+                        creator: (s, p, r) => HeadDataBinaryOverlay.HeadDataFactory(s, p, r),
+                        femaleRecordConverter: Race_Registration.HeadDataFemaleConverter);
+                    return (int)Race_FieldIndex.HeadData;
+                }
+                case RecordTypeInts.NAM8:
+                {
+                    _MorphRaceLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.MorphRace;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    _ArmorRaceLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.ArmorRace;
+                }
+                case RecordTypeInts.SRAC:
+                {
+                    _SubgraphTemplateRaceLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.SubgraphTemplateRace;
+                }
+                case RecordTypeInts.SADD:
+                {
+                    _SubgraphAdditiveRaceLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.SubgraphAdditiveRace;
+                }
+                case RecordTypeInts.SGNM:
+                case RecordTypeInts.SAKD:
+                case RecordTypeInts.STKD:
+                case RecordTypeInts.SAPT:
+                case RecordTypeInts.SRAF:
+                {
+                    this.Subgraphs = this.ParseRepeatedTypelessSubrecord<SubgraphBinaryOverlay>(
+                        stream: stream,
+                        parseParams: parseParams,
+                        trigger: Subgraph_Registration.TriggeringRecordTypes,
+                        factory: SubgraphBinaryOverlay.SubgraphFactory);
+                    return (int)Race_FieldIndex.Subgraphs;
+                }
+                case RecordTypeInts.PTOP:
+                {
+                    _IdleChatterTimeMinLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.IdleChatterTimeMin;
+                }
+                case RecordTypeInts.NTOP:
+                {
+                    _IdleChatterTimeMaxLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.IdleChatterTimeMax;
+                }
+                case RecordTypeInts.MSID:
+                case RecordTypeInts.MSM0:
+                case RecordTypeInts.MSM1:
+                {
+                    MorphValuesCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+                    return (int)Race_FieldIndex.MorphValues;
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    _HairColorLookupTextureLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.HairColorLookupTexture;
+                }
+                case RecordTypeInts.HLTX:
+                {
+                    _HairColorExtendedLookupTextureLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.HairColorExtendedLookupTexture;
+                }
+                case RecordTypeInts.QSTI:
+                {
+                    _DialogueQuestLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.DialogueQuest;
+                }
+                case RecordTypeInts.BSMP:
+                {
+                    return BoneDataParseCustomParse(
+                        stream,
+                        offset);
                 }
                 default:
                     return base.FillRecordType(

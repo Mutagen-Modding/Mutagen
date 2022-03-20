@@ -35,32 +35,27 @@ using System.Text;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class Properties :
-        IEquatable<IPropertiesGetter>,
-        ILoquiObjectSetter<Properties>,
-        IProperties
+    public partial class RaceWeight :
+        IEquatable<IRaceWeightGetter>,
+        ILoquiObjectSetter<RaceWeight>,
+        IRaceWeight
     {
         #region Ctor
-        public Properties()
+        public RaceWeight()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region PropertyList
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Single> _PropertyList = new ExtendedList<Single>();
-        public ExtendedList<Single> PropertyList
-        {
-            get => this._PropertyList;
-            init => this._PropertyList = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<Single> IPropertiesGetter.PropertyList => _PropertyList;
+        #region Thin
+        public Single Thin { get; set; } = default;
         #endregion
-
+        #region Muscular
+        public Single Muscular { get; set; } = default;
+        #endregion
+        #region Fat
+        public Single Fat { get; set; } = default;
         #endregion
 
         #region To String
@@ -69,7 +64,7 @@ namespace Mutagen.Bethesda.Fallout4
             FileGeneration fg,
             string? name = null)
         {
-            PropertiesMixIn.ToString(
+            RaceWeightMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -79,16 +74,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IPropertiesGetter rhs) return false;
-            return ((PropertiesCommon)((IPropertiesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IRaceWeightGetter rhs) return false;
+            return ((RaceWeightCommon)((IRaceWeightGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IPropertiesGetter? obj)
+        public bool Equals(IRaceWeightGetter? obj)
         {
-            return ((PropertiesCommon)((IPropertiesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RaceWeightCommon)((IRaceWeightGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((PropertiesCommon)((IPropertiesGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((RaceWeightCommon)((IRaceWeightGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -98,9 +93,21 @@ namespace Mutagen.Bethesda.Fallout4
             IMask<TItem>
         {
             #region Ctors
-            public Mask(TItem PropertyList)
+            public Mask(TItem initialValue)
             {
-                this.PropertyList = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PropertyList, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Thin = initialValue;
+                this.Muscular = initialValue;
+                this.Fat = initialValue;
+            }
+
+            public Mask(
+                TItem Thin,
+                TItem Muscular,
+                TItem Fat)
+            {
+                this.Thin = Thin;
+                this.Muscular = Muscular;
+                this.Fat = Fat;
             }
 
             #pragma warning disable CS8618
@@ -112,7 +119,9 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? PropertyList;
+            public TItem Thin;
+            public TItem Muscular;
+            public TItem Fat;
             #endregion
 
             #region Equals
@@ -125,13 +134,17 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.PropertyList, rhs.PropertyList)) return false;
+                if (!object.Equals(this.Thin, rhs.Thin)) return false;
+                if (!object.Equals(this.Muscular, rhs.Muscular)) return false;
+                if (!object.Equals(this.Fat, rhs.Fat)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.PropertyList);
+                hash.Add(this.Thin);
+                hash.Add(this.Muscular);
+                hash.Add(this.Fat);
                 return hash.ToHashCode();
             }
 
@@ -140,17 +153,9 @@ namespace Mutagen.Bethesda.Fallout4
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (this.PropertyList != null)
-                {
-                    if (!eval(this.PropertyList.Overall)) return false;
-                    if (this.PropertyList.Specific != null)
-                    {
-                        foreach (var item in this.PropertyList.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
-                }
+                if (!eval(this.Thin)) return false;
+                if (!eval(this.Muscular)) return false;
+                if (!eval(this.Fat)) return false;
                 return true;
             }
             #endregion
@@ -158,17 +163,9 @@ namespace Mutagen.Bethesda.Fallout4
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (this.PropertyList != null)
-                {
-                    if (eval(this.PropertyList.Overall)) return true;
-                    if (this.PropertyList.Specific != null)
-                    {
-                        foreach (var item in this.PropertyList.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
-                }
+                if (eval(this.Thin)) return true;
+                if (eval(this.Muscular)) return true;
+                if (eval(this.Fat)) return true;
                 return false;
             }
             #endregion
@@ -176,27 +173,16 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Properties.Mask<R>();
+                var ret = new RaceWeight.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                if (PropertyList != null)
-                {
-                    obj.PropertyList = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PropertyList.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (PropertyList.Specific != null)
-                    {
-                        var l = new List<(int Index, R Item)>();
-                        obj.PropertyList.Specific = l;
-                        foreach (var item in PropertyList.Specific)
-                        {
-                            R mask = eval(item.Value);
-                            l.Add((item.Index, mask));
-                        }
-                    }
-                }
+                obj.Thin = eval(this.Thin);
+                obj.Muscular = eval(this.Muscular);
+                obj.Fat = eval(this.Fat);
             }
             #endregion
 
@@ -206,41 +192,30 @@ namespace Mutagen.Bethesda.Fallout4
                 return ToString(printMask: null);
             }
 
-            public string ToString(Properties.Mask<bool>? printMask = null)
+            public string ToString(RaceWeight.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, Properties.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, RaceWeight.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Properties.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(RaceWeight.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if ((printMask?.PropertyList?.Overall ?? true)
-                        && PropertyList is {} PropertyListItem)
+                    if (printMask?.Thin ?? true)
                     {
-                        fg.AppendLine("PropertyList =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendItem(PropertyListItem.Overall);
-                            if (PropertyListItem.Specific != null)
-                            {
-                                foreach (var subItem in PropertyListItem.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendItem(subItem, "Value");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                        fg.AppendLine("]");
+                        fg.AppendItem(Thin, "Thin");
+                    }
+                    if (printMask?.Muscular ?? true)
+                    {
+                        fg.AppendItem(Muscular, "Muscular");
+                    }
+                    if (printMask?.Fat ?? true)
+                    {
+                        fg.AppendItem(Fat, "Fat");
                     }
                 }
                 fg.AppendLine("]");
@@ -267,17 +242,23 @@ namespace Mutagen.Bethesda.Fallout4
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? PropertyList;
+            public Exception? Thin;
+            public Exception? Muscular;
+            public Exception? Fat;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                Properties_FieldIndex enu = (Properties_FieldIndex)index;
+                RaceWeight_FieldIndex enu = (RaceWeight_FieldIndex)index;
                 switch (enu)
                 {
-                    case Properties_FieldIndex.PropertyList:
-                        return PropertyList;
+                    case RaceWeight_FieldIndex.Thin:
+                        return Thin;
+                    case RaceWeight_FieldIndex.Muscular:
+                        return Muscular;
+                    case RaceWeight_FieldIndex.Fat:
+                        return Fat;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -285,11 +266,17 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthException(int index, Exception ex)
             {
-                Properties_FieldIndex enu = (Properties_FieldIndex)index;
+                RaceWeight_FieldIndex enu = (RaceWeight_FieldIndex)index;
                 switch (enu)
                 {
-                    case Properties_FieldIndex.PropertyList:
-                        this.PropertyList = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case RaceWeight_FieldIndex.Thin:
+                        this.Thin = ex;
+                        break;
+                    case RaceWeight_FieldIndex.Muscular:
+                        this.Muscular = ex;
+                        break;
+                    case RaceWeight_FieldIndex.Fat:
+                        this.Fat = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -298,11 +285,17 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthMask(int index, object obj)
             {
-                Properties_FieldIndex enu = (Properties_FieldIndex)index;
+                RaceWeight_FieldIndex enu = (RaceWeight_FieldIndex)index;
                 switch (enu)
                 {
-                    case Properties_FieldIndex.PropertyList:
-                        this.PropertyList = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case RaceWeight_FieldIndex.Thin:
+                        this.Thin = (Exception?)obj;
+                        break;
+                    case RaceWeight_FieldIndex.Muscular:
+                        this.Muscular = (Exception?)obj;
+                        break;
+                    case RaceWeight_FieldIndex.Fat:
+                        this.Fat = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -312,7 +305,9 @@ namespace Mutagen.Bethesda.Fallout4
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (PropertyList != null) return true;
+                if (Thin != null) return true;
+                if (Muscular != null) return true;
+                if (Fat != null) return true;
                 return false;
             }
             #endregion
@@ -347,28 +342,9 @@ namespace Mutagen.Bethesda.Fallout4
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                if (PropertyList is {} PropertyListItem)
-                {
-                    fg.AppendLine("PropertyList =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendItem(PropertyListItem.Overall);
-                        if (PropertyListItem.Specific != null)
-                        {
-                            foreach (var subItem in PropertyListItem.Specific)
-                            {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
-                                {
-                                    fg.AppendItem(subItem, "Value");
-                                }
-                                fg.AppendLine("]");
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
+                fg.AppendItem(Thin, "Thin");
+                fg.AppendItem(Muscular, "Muscular");
+                fg.AppendItem(Fat, "Fat");
             }
             #endregion
 
@@ -377,7 +353,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.PropertyList = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PropertyList?.Overall, rhs.PropertyList?.Overall), ExceptionExt.Combine(this.PropertyList?.Specific, rhs.PropertyList?.Specific));
+                ret.Thin = this.Thin.Combine(rhs.Thin);
+                ret.Muscular = this.Muscular.Combine(rhs.Muscular);
+                ret.Fat = this.Fat.Combine(rhs.Fat);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -401,7 +379,9 @@ namespace Mutagen.Bethesda.Fallout4
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool PropertyList;
+            public bool Thin;
+            public bool Muscular;
+            public bool Fat;
             #endregion
 
             #region Ctors
@@ -411,7 +391,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.PropertyList = defaultOn;
+                this.Thin = defaultOn;
+                this.Muscular = defaultOn;
+                this.Fat = defaultOn;
             }
 
             #endregion
@@ -427,7 +409,9 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((PropertyList, null));
+                ret.Add((Thin, null));
+                ret.Add((Muscular, null));
+                ret.Add((Fat, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -438,31 +422,27 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = Properties_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => PropertiesBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => RaceWeightBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((PropertiesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((RaceWeightBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static Properties CreateFromBinary(
+        public static RaceWeight CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new Properties();
-            ((PropertiesSetterCommon)((IPropertiesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new RaceWeight();
+            ((RaceWeightSetterCommon)((IRaceWeightGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -473,7 +453,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Properties item,
+            out RaceWeight item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -488,29 +468,31 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((PropertiesSetterCommon)((IPropertiesGetter)this).CommonSetterInstance()!).Clear(this);
+            ((RaceWeightSetterCommon)((IRaceWeightGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static Properties GetNew()
+        internal static RaceWeight GetNew()
         {
-            return new Properties();
+            return new RaceWeight();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IProperties :
-        ILoquiObjectSetter<IProperties>,
-        IPropertiesGetter
+    public partial interface IRaceWeight :
+        ILoquiObjectSetter<IRaceWeight>,
+        IRaceWeightGetter
     {
-        new ExtendedList<Single> PropertyList { get; }
+        new Single Thin { get; set; }
+        new Single Muscular { get; set; }
+        new Single Fat { get; set; }
     }
 
-    public partial interface IPropertiesGetter :
+    public partial interface IRaceWeightGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IPropertiesGetter>
+        ILoquiObject<IRaceWeightGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -518,50 +500,52 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => Properties_Registration.Instance;
-        IReadOnlyList<Single> PropertyList { get; }
+        static ILoquiRegistration StaticRegistration => RaceWeight_Registration.Instance;
+        Single Thin { get; }
+        Single Muscular { get; }
+        Single Fat { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class PropertiesMixIn
+    public static partial class RaceWeightMixIn
     {
-        public static void Clear(this IProperties item)
+        public static void Clear(this IRaceWeight item)
         {
-            ((PropertiesSetterCommon)((IPropertiesGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((RaceWeightSetterCommon)((IRaceWeightGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Properties.Mask<bool> GetEqualsMask(
-            this IPropertiesGetter item,
-            IPropertiesGetter rhs,
+        public static RaceWeight.Mask<bool> GetEqualsMask(
+            this IRaceWeightGetter item,
+            IRaceWeightGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PropertiesCommon)((IPropertiesGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((RaceWeightCommon)((IRaceWeightGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IPropertiesGetter item,
+            this IRaceWeightGetter item,
             string? name = null,
-            Properties.Mask<bool>? printMask = null)
+            RaceWeight.Mask<bool>? printMask = null)
         {
-            return ((PropertiesCommon)((IPropertiesGetter)item).CommonInstance()!).ToString(
+            return ((RaceWeightCommon)((IRaceWeightGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IPropertiesGetter item,
+            this IRaceWeightGetter item,
             FileGeneration fg,
             string? name = null,
-            Properties.Mask<bool>? printMask = null)
+            RaceWeight.Mask<bool>? printMask = null)
         {
-            ((PropertiesCommon)((IPropertiesGetter)item).CommonInstance()!).ToString(
+            ((RaceWeightCommon)((IRaceWeightGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -569,21 +553,21 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IPropertiesGetter item,
-            IPropertiesGetter rhs,
-            Properties.TranslationMask? equalsMask = null)
+            this IRaceWeightGetter item,
+            IRaceWeightGetter rhs,
+            RaceWeight.TranslationMask? equalsMask = null)
         {
-            return ((PropertiesCommon)((IPropertiesGetter)item).CommonInstance()!).Equals(
+            return ((RaceWeightCommon)((IRaceWeightGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IProperties lhs,
-            IPropertiesGetter rhs)
+            this IRaceWeight lhs,
+            IRaceWeightGetter rhs)
         {
-            ((PropertiesSetterTranslationCommon)((IPropertiesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((RaceWeightSetterTranslationCommon)((IRaceWeightGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -592,11 +576,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IProperties lhs,
-            IPropertiesGetter rhs,
-            Properties.TranslationMask? copyMask = null)
+            this IRaceWeight lhs,
+            IRaceWeightGetter rhs,
+            RaceWeight.TranslationMask? copyMask = null)
         {
-            ((PropertiesSetterTranslationCommon)((IPropertiesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((RaceWeightSetterTranslationCommon)((IRaceWeightGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -605,28 +589,28 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IProperties lhs,
-            IPropertiesGetter rhs,
-            out Properties.ErrorMask errorMask,
-            Properties.TranslationMask? copyMask = null)
+            this IRaceWeight lhs,
+            IRaceWeightGetter rhs,
+            out RaceWeight.ErrorMask errorMask,
+            RaceWeight.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((PropertiesSetterTranslationCommon)((IPropertiesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((RaceWeightSetterTranslationCommon)((IRaceWeightGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Properties.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RaceWeight.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IProperties lhs,
-            IPropertiesGetter rhs,
+            this IRaceWeight lhs,
+            IRaceWeightGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((PropertiesSetterTranslationCommon)((IPropertiesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((RaceWeightSetterTranslationCommon)((IRaceWeightGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -634,32 +618,32 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static Properties DeepCopy(
-            this IPropertiesGetter item,
-            Properties.TranslationMask? copyMask = null)
+        public static RaceWeight DeepCopy(
+            this IRaceWeightGetter item,
+            RaceWeight.TranslationMask? copyMask = null)
         {
-            return ((PropertiesSetterTranslationCommon)((IPropertiesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((RaceWeightSetterTranslationCommon)((IRaceWeightGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Properties DeepCopy(
-            this IPropertiesGetter item,
-            out Properties.ErrorMask errorMask,
-            Properties.TranslationMask? copyMask = null)
+        public static RaceWeight DeepCopy(
+            this IRaceWeightGetter item,
+            out RaceWeight.ErrorMask errorMask,
+            RaceWeight.TranslationMask? copyMask = null)
         {
-            return ((PropertiesSetterTranslationCommon)((IPropertiesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((RaceWeightSetterTranslationCommon)((IRaceWeightGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Properties DeepCopy(
-            this IPropertiesGetter item,
+        public static RaceWeight DeepCopy(
+            this IRaceWeightGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((PropertiesSetterTranslationCommon)((IPropertiesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((RaceWeightSetterTranslationCommon)((IRaceWeightGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -667,11 +651,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IProperties item,
+            this IRaceWeight item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((PropertiesSetterCommon)((IPropertiesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((RaceWeightSetterCommon)((IRaceWeightGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -687,47 +671,49 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     #region Field Index
-    public enum Properties_FieldIndex
+    public enum RaceWeight_FieldIndex
     {
-        PropertyList = 0,
+        Thin = 0,
+        Muscular = 1,
+        Fat = 2,
     }
     #endregion
 
     #region Registration
-    public partial class Properties_Registration : ILoquiRegistration
+    public partial class RaceWeight_Registration : ILoquiRegistration
     {
-        public static readonly Properties_Registration Instance = new Properties_Registration();
+        public static readonly RaceWeight_Registration Instance = new RaceWeight_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 52,
+            msgID: 245,
             version: 0);
 
-        public const string GUID = "0beb0841-2461-40b8-8588-3cacf0811883";
+        public const string GUID = "81e4197a-7adb-4406-a15e-02095555c257";
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 1;
+        public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(Properties.Mask<>);
+        public static readonly Type MaskType = typeof(RaceWeight.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Properties.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(RaceWeight.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Properties);
+        public static readonly Type ClassType = typeof(RaceWeight);
 
-        public static readonly Type GetterType = typeof(IPropertiesGetter);
+        public static readonly Type GetterType = typeof(IRaceWeightGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IProperties);
+        public static readonly Type SetterType = typeof(IRaceWeight);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.Properties";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.RaceWeight";
 
-        public const string Name = "Properties";
+        public const string Name = "RaceWeight";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -735,8 +721,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.PRPS;
-        public static readonly Type BinaryWriteTranslation = typeof(PropertiesBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(RaceWeightBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -769,20 +754,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class PropertiesSetterCommon
+    public partial class RaceWeightSetterCommon
     {
-        public static readonly PropertiesSetterCommon Instance = new PropertiesSetterCommon();
+        public static readonly RaceWeightSetterCommon Instance = new RaceWeightSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IProperties item)
+        public void Clear(IRaceWeight item)
         {
             ClearPartial();
-            item.PropertyList.Clear();
+            item.Thin = default;
+            item.Muscular = default;
+            item.Fat = default;
         }
         
         #region Mutagen
-        public void RemapLinks(IProperties obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IRaceWeight obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -790,35 +777,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IProperties item,
+            IRaceWeight item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                translationParams.ConvertToCustom(RecordTypes.PRPS),
-                translationParams?.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: PropertiesBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: RaceWeightBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    public partial class PropertiesCommon
+    public partial class RaceWeightCommon
     {
-        public static readonly PropertiesCommon Instance = new PropertiesCommon();
+        public static readonly RaceWeightCommon Instance = new RaceWeightCommon();
 
-        public Properties.Mask<bool> GetEqualsMask(
-            IPropertiesGetter item,
-            IPropertiesGetter rhs,
+        public RaceWeight.Mask<bool> GetEqualsMask(
+            IRaceWeightGetter item,
+            IRaceWeightGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Properties.Mask<bool>(false);
-            ((PropertiesCommon)((IPropertiesGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new RaceWeight.Mask<bool>(false);
+            ((RaceWeightCommon)((IRaceWeightGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -827,22 +810,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void FillEqualsMask(
-            IPropertiesGetter item,
-            IPropertiesGetter rhs,
-            Properties.Mask<bool> ret,
+            IRaceWeightGetter item,
+            IRaceWeightGetter rhs,
+            RaceWeight.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.PropertyList = item.PropertyList.CollectionEqualsHelper(
-                rhs.PropertyList,
-                (l, r) => l.EqualsWithin(r),
-                include);
+            ret.Thin = item.Thin.EqualsWithin(rhs.Thin);
+            ret.Muscular = item.Muscular.EqualsWithin(rhs.Muscular);
+            ret.Fat = item.Fat.EqualsWithin(rhs.Fat);
         }
         
         public string ToString(
-            IPropertiesGetter item,
+            IRaceWeightGetter item,
             string? name = null,
-            Properties.Mask<bool>? printMask = null)
+            RaceWeight.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -854,18 +836,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void ToString(
-            IPropertiesGetter item,
+            IRaceWeightGetter item,
             FileGeneration fg,
             string? name = null,
-            Properties.Mask<bool>? printMask = null)
+            RaceWeight.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Properties =>");
+                fg.AppendLine($"RaceWeight =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Properties) =>");
+                fg.AppendLine($"{name} (RaceWeight) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -879,48 +861,52 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         protected static void ToStringFields(
-            IPropertiesGetter item,
+            IRaceWeightGetter item,
             FileGeneration fg,
-            Properties.Mask<bool>? printMask = null)
+            RaceWeight.Mask<bool>? printMask = null)
         {
-            if (printMask?.PropertyList?.Overall ?? true)
+            if (printMask?.Thin ?? true)
             {
-                fg.AppendLine("PropertyList =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.PropertyList)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendItem(subItem, "Value");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
+                fg.AppendItem(item.Thin, "Thin");
+            }
+            if (printMask?.Muscular ?? true)
+            {
+                fg.AppendItem(item.Muscular, "Muscular");
+            }
+            if (printMask?.Fat ?? true)
+            {
+                fg.AppendItem(item.Fat, "Fat");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IPropertiesGetter? lhs,
-            IPropertiesGetter? rhs,
+            IRaceWeightGetter? lhs,
+            IRaceWeightGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Properties_FieldIndex.PropertyList) ?? true))
+            if ((crystal?.GetShouldTranslate((int)RaceWeight_FieldIndex.Thin) ?? true))
             {
-                if (!lhs.PropertyList.SequenceEqualNullable(rhs.PropertyList)) return false;
+                if (!lhs.Thin.EqualsWithin(rhs.Thin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceWeight_FieldIndex.Muscular) ?? true))
+            {
+                if (!lhs.Muscular.EqualsWithin(rhs.Muscular)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceWeight_FieldIndex.Fat) ?? true))
+            {
+                if (!lhs.Fat.EqualsWithin(rhs.Fat)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IPropertiesGetter item)
+        public virtual int GetHashCode(IRaceWeightGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.PropertyList);
+            hash.Add(item.Thin);
+            hash.Add(item.Muscular);
+            hash.Add(item.Fat);
             return hash.ToHashCode();
         }
         
@@ -929,11 +915,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public object GetNew()
         {
-            return Properties.GetNew();
+            return RaceWeight.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPropertiesGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRaceWeightGetter obj)
         {
             yield break;
         }
@@ -941,45 +927,40 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class PropertiesSetterTranslationCommon
+    public partial class RaceWeightSetterTranslationCommon
     {
-        public static readonly PropertiesSetterTranslationCommon Instance = new PropertiesSetterTranslationCommon();
+        public static readonly RaceWeightSetterTranslationCommon Instance = new RaceWeightSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IProperties item,
-            IPropertiesGetter rhs,
+            IRaceWeight item,
+            IRaceWeightGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)Properties_FieldIndex.PropertyList) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)RaceWeight_FieldIndex.Thin) ?? true))
             {
-                errorMask?.PushIndex((int)Properties_FieldIndex.PropertyList);
-                try
-                {
-                    item.PropertyList.SetTo(rhs.PropertyList);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Thin = rhs.Thin;
+            }
+            if ((copyMask?.GetShouldTranslate((int)RaceWeight_FieldIndex.Muscular) ?? true))
+            {
+                item.Muscular = rhs.Muscular;
+            }
+            if ((copyMask?.GetShouldTranslate((int)RaceWeight_FieldIndex.Fat) ?? true))
+            {
+                item.Fat = rhs.Fat;
             }
         }
         
         #endregion
         
-        public Properties DeepCopy(
-            IPropertiesGetter item,
-            Properties.TranslationMask? copyMask = null)
+        public RaceWeight DeepCopy(
+            IRaceWeightGetter item,
+            RaceWeight.TranslationMask? copyMask = null)
         {
-            Properties ret = (Properties)((PropertiesCommon)((IPropertiesGetter)item).CommonInstance()!).GetNew();
-            ((PropertiesSetterTranslationCommon)((IPropertiesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            RaceWeight ret = (RaceWeight)((RaceWeightCommon)((IRaceWeightGetter)item).CommonInstance()!).GetNew();
+            ((RaceWeightSetterTranslationCommon)((IRaceWeightGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -988,30 +969,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
         
-        public Properties DeepCopy(
-            IPropertiesGetter item,
-            out Properties.ErrorMask errorMask,
-            Properties.TranslationMask? copyMask = null)
+        public RaceWeight DeepCopy(
+            IRaceWeightGetter item,
+            out RaceWeight.ErrorMask errorMask,
+            RaceWeight.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Properties ret = (Properties)((PropertiesCommon)((IPropertiesGetter)item).CommonInstance()!).GetNew();
-            ((PropertiesSetterTranslationCommon)((IPropertiesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            RaceWeight ret = (RaceWeight)((RaceWeightCommon)((IRaceWeightGetter)item).CommonInstance()!).GetNew();
+            ((RaceWeightSetterTranslationCommon)((IRaceWeightGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Properties.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RaceWeight.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Properties DeepCopy(
-            IPropertiesGetter item,
+        public RaceWeight DeepCopy(
+            IRaceWeightGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Properties ret = (Properties)((PropertiesCommon)((IPropertiesGetter)item).CommonInstance()!).GetNew();
-            ((PropertiesSetterTranslationCommon)((IPropertiesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            RaceWeight ret = (RaceWeight)((RaceWeightCommon)((IRaceWeightGetter)item).CommonInstance()!).GetNew();
+            ((RaceWeightSetterTranslationCommon)((IRaceWeightGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1027,27 +1008,27 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class Properties
+    public partial class RaceWeight
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Properties_Registration.Instance;
-        public static Properties_Registration StaticRegistration => Properties_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => RaceWeight_Registration.Instance;
+        public static RaceWeight_Registration StaticRegistration => RaceWeight_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => PropertiesCommon.Instance;
+        protected object CommonInstance() => RaceWeightCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return PropertiesSetterCommon.Instance;
+            return RaceWeightSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => PropertiesSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => RaceWeightSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IPropertiesGetter.CommonInstance() => this.CommonInstance();
+        object IRaceWeightGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IPropertiesGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IRaceWeightGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IPropertiesGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IRaceWeightGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1058,35 +1039,33 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class PropertiesBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class RaceWeightBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PropertiesBinaryWriteTranslation Instance = new PropertiesBinaryWriteTranslation();
+        public readonly static RaceWeightBinaryWriteTranslation Instance = new RaceWeightBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IPropertiesGetter item,
+            IRaceWeightGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Single>.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                items: item.PropertyList,
-                transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+                item: item.Thin);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Muscular);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Fat);
         }
 
         public void Write(
             MutagenWriter writer,
-            IPropertiesGetter item,
+            IRaceWeightGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Subrecord(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.PRPS),
-                overflowRecord: translationParams?.OverflowRecordType,
-                out var writerToUse))
-            {
-                WriteEmbedded(
-                    item: item,
-                    writer: writerToUse);
-            }
+            WriteEmbedded(
+                item: item,
+                writer: writer);
         }
 
         public void Write(
@@ -1095,25 +1074,24 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IPropertiesGetter)item,
+                item: (IRaceWeightGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    public partial class PropertiesBinaryCreateTranslation
+    public partial class RaceWeightBinaryCreateTranslation
     {
-        public readonly static PropertiesBinaryCreateTranslation Instance = new PropertiesBinaryCreateTranslation();
+        public readonly static RaceWeightBinaryCreateTranslation Instance = new RaceWeightBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IProperties item,
+            IRaceWeight item,
             MutagenFrame frame)
         {
-            item.PropertyList.SetTo(
-                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Single>.Instance.Parse(
-                    reader: frame,
-                    transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
+            item.Thin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Muscular = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Fat = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1122,14 +1100,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class PropertiesBinaryTranslationMixIn
+    public static class RaceWeightBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IPropertiesGetter item,
+            this IRaceWeightGetter item,
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((PropertiesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((RaceWeightBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1142,54 +1120,53 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class PropertiesBinaryOverlay :
+    public partial class RaceWeightBinaryOverlay :
         PluginBinaryOverlay,
-        IPropertiesGetter
+        IRaceWeightGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Properties_Registration.Instance;
-        public static Properties_Registration StaticRegistration => Properties_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => RaceWeight_Registration.Instance;
+        public static RaceWeight_Registration StaticRegistration => RaceWeight_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => PropertiesCommon.Instance;
+        protected object CommonInstance() => RaceWeightCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => PropertiesSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => RaceWeightSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IPropertiesGetter.CommonInstance() => this.CommonInstance();
+        object IRaceWeightGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IPropertiesGetter.CommonSetterInstance() => null;
+        object? IRaceWeightGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IPropertiesGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IRaceWeightGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => PropertiesBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => RaceWeightBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((PropertiesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((RaceWeightBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        #region PropertyList
-        public IReadOnlyList<Single> PropertyList => BinaryOverlayList.FactoryByStartIndex<Single>(_data, _package, 4, (s, p) => s.Float());
-        protected int PropertyListEndingPos;
-        #endregion
+        public Single Thin => _data.Slice(0x0, 0x4).Float();
+        public Single Muscular => _data.Slice(0x4, 0x4).Float();
+        public Single Fat => _data.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected PropertiesBinaryOverlay(
+        protected RaceWeightBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1199,17 +1176,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             this.CustomCtor();
         }
 
-        public static PropertiesBinaryOverlay PropertiesFactory(
+        public static RaceWeightBinaryOverlay RaceWeightFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new PropertiesBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+            var ret = new RaceWeightBinaryOverlay(
+                bytes: stream.RemainingMemory.Slice(0, 0xC),
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            ret.PropertyListEndingPos = ret._data.Length;
+            int offset = stream.Position;
+            stream.Position += 0xC;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1217,12 +1193,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
 
-        public static PropertiesBinaryOverlay PropertiesFactory(
+        public static RaceWeightBinaryOverlay RaceWeightFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return PropertiesFactory(
+            return RaceWeightFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1234,7 +1210,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FileGeneration fg,
             string? name = null)
         {
-            PropertiesMixIn.ToString(
+            RaceWeightMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1244,16 +1220,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IPropertiesGetter rhs) return false;
-            return ((PropertiesCommon)((IPropertiesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IRaceWeightGetter rhs) return false;
+            return ((RaceWeightCommon)((IRaceWeightGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IPropertiesGetter? obj)
+        public bool Equals(IRaceWeightGetter? obj)
         {
-            return ((PropertiesCommon)((IPropertiesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RaceWeightCommon)((IRaceWeightGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((PropertiesCommon)((IPropertiesGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((RaceWeightCommon)((IRaceWeightGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

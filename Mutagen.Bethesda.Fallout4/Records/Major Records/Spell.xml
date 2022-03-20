@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Spell" recordType="SPEL" objType="Record" baseClass="Fallout4MajorRecord" GUID="9e79e9ae-bd86-4521-ac80-5872e989d6ed" ID="130">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />
+      <String name="Description" recordType="DESC" nullable="False" translated="DL" />
+      <Data recordType="SPIT">
+        <Fields>
+          <UInt32 name="BaseCost" />
+          <Enum name="Flags" enumName="SpellDataFlag" byteLength="4" />
+          <Enum name="Type" enumName="SpellType" byteLength="4" />
+          <Float name="ChargeTime" />
+          <Enum name="CastType" enumName="CastType" byteLength="4" />
+          <Enum name="TargetType" enumName="TargetType" byteLength="4" />
+          <Float name="CastDuration" />
+          <Float name="Range" />
+          <FormLink name="CastingPerk" refName="Perk" />
+        </Fields>
+      </Data>
+      <RefList name="Effects" refName="Effect" nullable="False" />
+    </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IEffectRecord</LinkInterface>1
+    <LinkInterface>ISpellRecord</LinkInterface>
+  </Object>
+</Loqui>

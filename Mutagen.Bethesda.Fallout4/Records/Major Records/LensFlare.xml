@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LensFlare" recordType="LENS" baseClass="Fallout4MajorRecord" objType="Record" GUID="86dffb98-5938-4df0-81e8-640e64783482" ID="195">
+  </Object>
+</Loqui>

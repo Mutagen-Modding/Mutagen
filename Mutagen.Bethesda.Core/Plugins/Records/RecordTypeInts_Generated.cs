@@ -59,6 +59,7 @@ public partial class RecordTypeInts
     public const int FSTS = 0x53545346;
     public const int FULL = 0x4C4C5546;
     public const int FURN = 0x4E525546;
+    public const int GDRY = 0x59524447;
     public const int GLOB = 0x424F4C47;
     public const int GMST = 0x54534D47;
     public const int GRAS = 0x53415247;
@@ -71,6 +72,7 @@ public partial class RecordTypeInts
     public const int IMGS = 0x53474D49;
     public const int INFO = 0x4F464E49;
     public const int INGR = 0x52474E49;
+    public const int INNR = 0x524E4E49;
     public const int IPCT = 0x54435049;
     public const int IPDS = 0x53445049;
     public const int KEYM = 0x4D59454B;
@@ -101,7 +103,9 @@ public partial class RecordTypeInts
     public const int NAME = 0x454D414E;
     public const int NAVI = 0x4956414E;
     public const int NAVM = 0x4D56414E;
+    public const int NOTE = 0x45544F4E;
     public const int NPC_ = 0x5F43504E;
+    public const int OMOD = 0x444F4D4F;
     public const int OTFT = 0x5446544F;
     public const int PACK = 0x4B434150;
     public const int PARW = 0x57524150;
@@ -126,6 +130,7 @@ public partial class RecordTypeInts
     public const int ROAD = 0x44414F52;
     public const int SBSP = 0x50534253;
     public const int SCEN = 0x4E454353;
+    public const int SCOL = 0x4C4F4353;
     public const int SCPT = 0x54504353;
     public const int SCRL = 0x4C524353;
     public const int SGST = 0x54534753;
@@ -145,6 +150,7 @@ public partial class RecordTypeInts
     public const int STAG = 0x47415453;
     public const int STAT = 0x54415453;
     public const int TACT = 0x54434154;
+    public const int TERM = 0x4D524554;
     public const int TREE = 0x45455254;
     public const int TRNS = 0x534E5254;
     public const int TXST = 0x54535854;

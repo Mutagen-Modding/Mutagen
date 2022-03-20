@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="IdleMarker" recordType="IDLM" baseClass="Fallout4MajorRecord" majorFlag="true" objType="Record" GUID="50c1215a-a33e-41ac-87a8-9b94874cb2ef" ID="233">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <Enum name="Flags" enumName="IdleMarker.Flag" recordType="IDLF" byteLength="1" />
+      <CustomLogic name="AnimationCount" recordType="IDLC" />
+      <Float name="IdleTimer" recordType="IDLT" />
+      <List name="Animations" recordType="IDLA" binary="Custom">
+        <FormLink refName="IdleAnimation" />
+      </List>
+      <FormLink name="Unknown" refName="Keyword" recordType="QNAM" />
+      <RefDirect name="Model" refName="Model" />
+    </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
+  </Object>
+</Loqui>

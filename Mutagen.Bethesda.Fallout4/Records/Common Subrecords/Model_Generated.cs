@@ -107,14 +107,14 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(
                 TItem File,
                 TItem ColorRemappingIndex,
-                TItem MaterialSwap,
                 TItem Data,
+                TItem MaterialSwap,
                 TItem Unknown)
             : base(
                 File: File,
                 ColorRemappingIndex: ColorRemappingIndex,
-                MaterialSwap: MaterialSwap,
-                Data: Data)
+                Data: Data,
+                MaterialSwap: MaterialSwap)
             {
                 this.Unknown = Unknown;
             }
@@ -589,8 +589,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         File = 0,
         ColorRemappingIndex = 1,
-        MaterialSwap = 2,
-        Data = 3,
+        Data = 2,
+        MaterialSwap = 3,
         Unknown = 4,
     }
     #endregion
@@ -817,9 +817,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     return (Model_FieldIndex)((int)index);
                 case SimpleModel_FieldIndex.ColorRemappingIndex:
                     return (Model_FieldIndex)((int)index);
-                case SimpleModel_FieldIndex.MaterialSwap:
-                    return (Model_FieldIndex)((int)index);
                 case SimpleModel_FieldIndex.Data:
+                    return (Model_FieldIndex)((int)index);
+                case SimpleModel_FieldIndex.MaterialSwap:
                     return (Model_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

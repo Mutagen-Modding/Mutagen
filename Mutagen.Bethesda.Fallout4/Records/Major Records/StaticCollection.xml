@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="StaticCollection" recordType="SCOL" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord" GUID="8ced1ea5-9689-40cf-aba2-ec935ddac390" ID="197">
+    <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+    <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+    <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+    <String name="Name" recordType="FULL" translated="Normal" />
+    <String name="Filter" recordType="FLTR" />
+    <RefList name="Parts" refName="StaticPart" />
+  </Object>
+  <Object name="StaticPart" objType="Subrecord" GUID="24d0a7c0-8933-4abb-9d66-c56a3ce655fa" ID="198">
+    <Fields>
+      <FormLink name="Static" refName="Static" recordType="ONAM" />
+      <RefList name="Placements" refName="Placement" recordType="DATA" />
+    </Fields>
+  </Object>
+  <Object name="Placement" objType="Subrecord" GUID="caddd826-3213-4e45-b983-17447ba30c77" ID="199">
+    <Fields>
+		<Data>
+			<Interface>IPositionRotation</Interface>
+			<Fields>
+				<P3Float name="Position" />
+				<P3Float name="Rotation" />
+				<Float name="Scale" />
+			</Fields>
+		</Data>
+	</Fields>
+  </Object>
+</Loqui>

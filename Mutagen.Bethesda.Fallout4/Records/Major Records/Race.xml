@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Race" recordType="RACE" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true" GUID="6aa2e080-6569-4300-86f2-cc15ca14e935" ID="88">
+  <Object name="Race" recordType="RACE" objType="Record" baseClass="Fallout4MajorRecord" GUID="653cc994-ac13-436b-907d-6a4c43bcd98a" ID="244">
     <Fields>
       <FormLink name="AnimationSound" refName="AnimationSoundTagSet" recordType="STCP" />
       <String name="Name" recordType="FULL" />
       <String name="Description" recordType="DESC" nullable="False" translated="DL" />
       <List name="ActorEffect" counterRecType="SPCT">
-        <FormLink recordType="SPLO" >
+        <FormLink recordType="SPLO">
           <Interface>ISpellRecord</Interface>
         </FormLink>
       </List>
@@ -15,7 +15,7 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
-      <RefDirect name="Properties" refName="Properties" />
+	  <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
       <List name="AttachParentSlots" recordType="APPR">
         <FormLink refName="Keyword" />
       </List>
@@ -27,27 +27,28 @@
             </Fields>
           </Gendered>
           <Gendered name="DefaultWeight">
+            <Versioning formVersion="109" />
             <Fields>
-              <Float name="Thin" />
-              <Float name="Muscular" />
-              <Float name="Fat" />
+              <RefDirect refName="RaceWeight" />
             </Fields>
           </Gendered>
-          <Enum name="Flags" enumName="Race.Flag" byteLength="4" />
+          <Enum name="Flags" enumName="Race.Flag" byteLength="4" binary="Custom" />
           <Float name="AccelerationRate" />
           <Float name="DecelerationRate" />
           <Enum name="Size" enumName="Size" byteLength="4" />
-          <ByteArray name="Unknown" byteLength="16" nullable="False" />
+          <ByteArray name="Unknown" byteLength="8" nullable="False" />
           <Float name="InjuredHealthPercent" />
           <Enum name="ShieldBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
-          <Enum name="BearddBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
+          <Enum name="BeardBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None">
+            <Versioning formVersion="124" />
+          </Enum>
           <Enum name="BodyBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
           <Float name="AimAngleTolerance" />
           <Float name="FlightRadius" />
           <Float name="AngularAccelerationRate" />
           <Float name="AngularTolerance" />
-          <Enum name="Flags2" enumName="Race.Flag2" byteLength="4" />
-          <ByteArray name="Unknown2" byteLength="72" nullable="False" />
+          <CustomLogic name="Flags2" byteLength="4" />
+          <ByteArray name="Unknown2" byteLength="36" nullable="False" />
           <Enum name="PipboyBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
           <Int16 name="XPValue" />
           <Float name="SeverableDebrisScale" />
@@ -62,23 +63,372 @@
           <FormLink name="ExplodableExplosion" refName="Explosion" />
           <FormLink name="ExplodableDebris" refName="Debris" />
           <FormLink name="ExplodableImpactDataSet" refName="ImpactDataSet" />
-
-          <!--when this tag is commented in, it switches to the "Frame did not have enough remaining" error-->
-          <!--<Float name="OnCrippleDebrisScale" />-->
-          <UInt8 name="OnCrippleDebrisCount" />
-          <UInt8 name="OnCrippleDecalCount" />
-
-          <FormLink name="OnCrippleExplosion" refName="Explosion" />
-          <FormLink name="OnCrippleDebris" refName="Debris" />
-          <FormLink name="OnCrippleImpactDataSet" refName="ImpactDataSet" />
-          <FormLink name="ExplodableSubsegmentExplosion" refName="Explosion" />
-
-          <!--when one of these tags are commented in, it switches to the "Frame did not have enough remaining" error-->
-          <!--<Float name="OrientationLimitsPitch" />
-          <Float name="OrientationLimitsRoll" />-->
+          <Float name="OnCrippleDebrisScale">
+            <Versioning formVersion="96" />
+          </Float>
+          <UInt8 name="OnCrippleDebrisCount">
+            <Versioning formVersion="96" />
+          </UInt8>
+          <UInt8 name="OnCrippleDecalCount">
+            <Versioning formVersion="96" />
+          </UInt8>
+          <FormLink name="OnCrippleExplosion" refName="Explosion">
+            <Versioning formVersion="96" />
+          </FormLink>
+          <FormLink name="OnCrippleDebris" refName="Debris">
+            <Versioning formVersion="96" />
+          </FormLink>
+          <FormLink name="OnCrippleImpactDataSet" refName="ImpactDataSet">
+            <Versioning formVersion="96" />
+          </FormLink>
+          <FormLink name="ExplodableSubsegmentExplosion" refName="Explosion">
+            <Versioning formVersion="118" />
+          </FormLink>
+          <Float name="OrientationLimitsPitch">
+            <Versioning formVersion="98" />
+          </Float>
+          <Float name="OrientationLimitsRoll">
+            <Versioning formVersion="98" />
+          </Float>
         </Fields>
       </Data>
+      <Gendered name="SkeletalModel" maleMarker="MNAM" femaleMarker="FNAM">
+        <Fields>
+          <RefDirect refName="SimpleModel" recordType="ANAM">
+            <RecordTypeOverrides>
+              <Mapping From="MODL" To="ANAM" />
+            </RecordTypeOverrides>
+          </RefDirect>
+        </Fields>
+      </Gendered>
+      <List name="MovementTypeNames">
+        <String recordType="MTNM" binaryType="Plain" />
+      </List>
+      <Gendered name="Voices" recordType="VTCK" nullable="False">
+        <Fields>
+          <FormLink refName="VoiceType" />
+        </Fields>
+      </Gendered>
+      <Gendered name="DefaultHairColors" recordType="HCLF">
+        <Fields>
+          <FormLink refName="ColorRecord" />
+        </Fields>
+      </Gendered>
+      <!-- ToDo: Need to remove and turn into derivative field -->
+      <UInt16 name="NumberOfTintsInList" recordType="TINL" />
+      <Float name="FacegenMainClamp" recordType="PNAM" nullable="False" />
+      <Float name="FacegenFaceClamp" recordType="UNAM" nullable="False" />
+      <FormLink name="AttackRace" recordType="ATKR" refName="Race" />
+      <RefList name="Attacks" refName="Attack" />
+      <Gendered name="BodyData" markerType="NAM1" maleMarker="MNAM" femaleMarker="FNAM" nullable="False">
+        <Fields>
+          <RefDirect refName="BodyData" />
+        </Fields>
+      </Gendered>
+      <FormLink name="BodyPartData" refName="BodyPartData" recordType="GNAM" />
+      <CustomLogic name="ExtraNAM2" />
+      <Gendered name="BehaviorGraph" markerType="NAM3" maleMarker="MNAM" femaleMarker="FNAM" nullable="False">
+        <Fields>
+          <RefDirect refName="Model" />
+        </Fields>
+      </Gendered>
+      <FormLink name="ImpactMaterialType" recordType="NAM4" refName="MaterialType" />
+      <FormLink name="ImpactDataSet" recordType="NAM5" refName="ImpactDataSet" />
+      <FormLink name="DispemberBloodArt" recordType="NAM7" refName="ArtObject" />
+      <FormLink name="MeatCapTextureSet" recordType="CNAM" refName="TextureSet" />
+      <FormLink name="CollarTextureSet" recordType="NAM2" refName="TextureSet" />
+      <FormLink name="SoundOpenCorpse" recordType="ONAM" refName="SoundDescriptor" />
+      <FormLink name="SoundCloseCorpse" recordType="LNAM" refName="SoundDescriptor" />
+      <Dict name="BipedObjects" binary="Custom" recordType="NAME">
+        <Key>
+          <Enum enumName="BipedObject" />
+        </Key>
+        <Value>
+          <RefDirect refName="BipedObjectData" />
+        </Value>
+      </Dict>
+      <RefList name="MovementDataOverrides" refName="MovementDataOverride" />
+      <Enum name="EquipmentFlags" enumName="EquipTypeFlag" byteLength="4" recordType="VNAM" />
+      <RefList name="EquipmentSlots" refName="EquipmentSlot" />
+      <FormLink name="UnarmedWeapon" recordType="UNWP" refName="Weapon" />
+      <CustomLogic name="FaceFxPhonemesListingParsing" recordType="PHTN" />
+      <CustomLogic name="FaceFxPhonemesRawParsing" recordType="PHWT" />
+      <RefDirect name="FaceFxPhonemes" refName="FaceFxPhonemes" binary="NoGeneration" />
+      <FormLink name="BaseMovementDefault" refName="MovementType" recordType="WKMV" />
+      <FormLink name="BaseMovementDefaultSwim" refName="MovementType" recordType="SWMV" />
+      <FormLink name="BaseMovementDefaultFly" refName="MovementType" recordType="FLMV" />
+      <FormLink name="BaseMovementDefaultSneak" refName="MovementType" recordType="SNMV" />
+      <Gendered name="HeadData" markerType="NAM0" maleMarker="MNAM" femaleMarker="FNAM" markerPerGender="true">
+        <FemaleTypeOverrides>
+          <Mapping From="RPRM" To="RPRF" />
+          <Mapping From="FTSM" To="FTSF" />
+          <Mapping From="AHCM" To="AHCF" />
+          <Mapping From="DFTM" To="DFTF" />
+        </FemaleTypeOverrides>
+        <Fields>
+          <RefDirect refName="HeadData" />
+        </Fields>
+      </Gendered>
+      <FormLink name="MorphRace" recordType="NAM8" refName="Race" />
+      <FormLink name="ArmorRace" recordType="RNAM" refName="Race" />
+      <FormLink name="SubgraphTemplateRace" recordType="SRAC" refName="Race" />
+      <FormLink name="SubgraphAdditiveRace" recordType="SADD" refName="Race" />
+      <RefList name="Subgraphs" refName="Subgraph" />
+      <Float name="IdleChatterTimeMin" recordType="PTOP" />
+      <Float name="IdleChatterTimeMax" recordType="NTOP" />
+      <RefList name="MorphValues" refName="MorphValue" binary="Custom" />
+      <String name="HairColorLookupTexture" recordType="HNAM" />
+      <String name="HairColorExtendedLookupTexture" recordType="HLTX" />
+      <FormLink name="DialogueQuest" refName="Quest" recordType="QSTI" />
+      <CustomLogic name="BoneDataParse" recordType="BSMP" />
+      <Gendered name="BoneData" nullable="false" binary="NoGeneration">
+        <Fields>
+          <RefList refName="Bone" nullable="True" />
+        </Fields>
+      </Gendered>
     </Fields>
     <LinkInterface>IRelatable</LinkInterface>
+  </Object>
+  <Object name="RaceWeight" objType="Subrecord" GUID="81e4197a-7adb-4406-a15e-02095555c257" ID="245">
+    <Fields>
+      <Float name="Thin" />
+      <Float name="Muscular" />
+      <Float name="Fat" />
+    </Fields>
+  </Object>
+  <Object name="BodyData" objType="Subrecord" GUID="c98c6552-aa95-472c-b07d-61440dce57b2" ID="246">
+    <Fields>
+      <Enum name="Index" enumName="BodyData.PartIndex" byteLength="4" recordType="INDX" />
+      <RefDirect name="Model" refName="Model" />
+    </Fields>
+  </Object>
+  <Object name="BipedObjectData" objType="Subrecord" GUID="55ef2302-604e-49bb-beac-842f234edec5" ID="247">
+    <Fields>
+      <String name="Name" binary="NoGeneration" />
+      <FormLink name="Conditions" refName="ActorValueInformation" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="MovementDataOverride" objType="Subrecord" GUID="d44d5e3b-c6d7-4de4-90a2-58132102ff1a" ID="248">
+    <Fields>
+      <FormLink name="MovementType" recordType="MTYP" refName="MovementType" />
+      <RefDirect name="MovementData" recordType="SPED" refName="MovementData" />
+    </Fields>
+  </Object>
+  <Object name="MovementData" objType="Subrecord" GUID="04ef2528-6125-4b56-8eb8-cbb711f8e311" ID="249">
+    <Fields>
+      <RefDirect name="Left" refName="MovementDirectionData" />
+      <RefDirect name="Right" refName="MovementDirectionData" />
+      <RefDirect name="Forward" refName="MovementDirectionData" />
+      <RefDirect name="Back" refName="MovementDirectionData" />
+      <RefDirect name="Pitch" refName="MovementRotationData" />
+      <RefDirect name="Roll" refName="MovementRotationData" />
+      <RefDirect name="Yaw" refName="MovementRotationData" />
+      <ByteArray name="Unused" byteLength="12" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="MovementDirectionData" objType="Subrecord" GUID="03bc6cd4-dadd-47ef-86fe-996407171f64" ID="250">
+    <Fields>
+      <Int32 name="Unused1" />
+      <Float name="Walk" />
+      <Float name="Run" />
+      <Int32 name="Unused2" />
+    </Fields>
+  </Object>
+  <Object name="MovementRotationData" objType="Subrecord" GUID="6e5d85c7-a48f-4365-bb7d-4b97b9dfc82a" ID="251">
+    <Fields>
+      <Int32 name="Unused1" />
+      <Float name="Walk" isRotation="true" />
+      <Float name="Run" isRotation="true" />
+      <Int32 name="Unused2" />
+    </Fields>
+  </Object>
+  <Object name="FaceFxPhonemes" objType="Subrecord" GUID="9319b560-0d83-4c5a-9133-281ed67d8d2f" ID="252">
+    <Fields>
+      <Bool name="ForceNames" binary="NoGeneration" />
+      <RefDirect name="Aah_LipBigAah" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="BigAah_LipDST" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="BMP_LipEee" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="ChJSh_LipFV" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="DST_LipK" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="Eee_LipL" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="Eh_LipR" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="FV_LipTh" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="I" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="K" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="N" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="Oh" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="OohQ" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="R" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="Th" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="W" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefList name="Unknowns" refName="Phoneme" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="Phoneme" objType="Subrecord" GUID="3d986dc9-0861-4e9d-9f73-339253f68cbb" ID="253">
+    <Fields>
+      <String name="Name" binary="NoGeneration" />
+      <Float name="IY" binary="NoGeneration" />
+      <Float name="IH" binary="NoGeneration" />
+      <Float name="EH" binary="NoGeneration" />
+      <Float name="EY" binary="NoGeneration" />
+      <Float name="AE" binary="NoGeneration" />
+      <Float name="AA" binary="NoGeneration" />
+      <Float name="AW" binary="NoGeneration" />
+      <Float name="AY" binary="NoGeneration" />
+      <Float name="AH" binary="NoGeneration" />
+      <Float name="AO" binary="NoGeneration" />
+      <Float name="OY" binary="NoGeneration" />
+      <Float name="OW" binary="NoGeneration" />
+      <Float name="UH" binary="NoGeneration" />
+      <Float name="UW" binary="NoGeneration" />
+      <Float name="ER" binary="NoGeneration" />
+      <Float name="AX" binary="NoGeneration" />
+      <Float name="S" binary="NoGeneration" />
+      <Float name="SH" binary="NoGeneration" />
+      <Float name="Z" binary="NoGeneration" />
+      <Float name="ZH" binary="NoGeneration" />
+      <Float name="F" binary="NoGeneration" />
+      <Float name="TH" binary="NoGeneration" />
+      <Float name="V" binary="NoGeneration" />
+      <Float name="DH" binary="NoGeneration" />
+      <Float name="M" binary="NoGeneration" />
+      <Float name="N" binary="NoGeneration" />
+      <Float name="NG" binary="NoGeneration" />
+      <Float name="L" binary="NoGeneration" />
+      <Float name="R" binary="NoGeneration" />
+      <Float name="W" binary="NoGeneration" />
+      <Float name="Y" binary="NoGeneration" />
+      <Float name="HH" binary="NoGeneration" />
+      <Float name="B" binary="NoGeneration" />
+      <Float name="D" binary="NoGeneration" />
+      <Float name="JH" binary="NoGeneration" />
+      <Float name="G" binary="NoGeneration" />
+      <Float name="P" binary="NoGeneration" />
+      <Float name="T" binary="NoGeneration" />
+      <Float name="K" binary="NoGeneration" />
+      <Float name="CH" binary="NoGeneration" />
+      <Float name="SIL" binary="NoGeneration" />
+      <Float name="SHOTSIL" binary="NoGeneration" />
+      <Float name="FLAP" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="HeadData" objType="Subrecord" GUID="4fb44f2a-d848-41f9-aa0a-4339022a3400" ID="254">
+    <Fields>
+      <RefDirect name="NeckFatAdjustmentsScale" recordType="NNAM" refName="NeckFatAdjustmentsScale" />
+      <RefList name="HeadParts" refName="HeadPartReference" />
+      <List name="RacePresets">
+        <FormLink refName="Npc" recordType="RPRM" />
+      </List>
+      <List name="AvailableHairColors">
+        <FormLink refName="ColorRecord" recordType="AHCM" />
+      </List>
+      <List name="FaceDetails">
+        <FormLink refName="TextureSet" recordType="FTSM" />
+      </List>
+      <FormLink name="DefaultFaceTexture" refName="TextureSet" recordType="DFTM" />
+      <RefList name="TintLayers" refName="TintGroup" />
+      <RefList name="MorphGroups" refName="MorphGroup" />
+      <RefList name="FaceMorphs" refName="FaceMorph" />
+      <String name="MaleWrinkleMapPath" recordType="WMAP" />
+    </Fields>
+  </Object>
+  <Object name="NeckFatAdjustmentsScale" objType="Subrecord" GUID="9a750944-2ce7-4dec-bf22-3e190d9d3070" ID="255">
+    <Fields>
+      <UInt32 name="Unknown" />
+      <Float name="X" />
+      <Float name="Y" />
+    </Fields>
+  </Object>
+  <Object name="HeadPartReference" objType="Subrecord" GUID="358f9c73-2168-4c5e-9be6-2437ed14cfc0" ID="256">
+    <Fields>
+      <Int32 name="Number" recordType="INDX" />
+      <FormLink name="Head" refName="HeadPart" recordType="HEAD" />
+    </Fields>
+  </Object>
+  <Object name="TintGroup" objType="Subrecord" GUID="e9d66df5-fbeb-4f9b-98d4-a5369ed0c741" ID="257">
+    <Fields>
+      <String name="Name" recordType="TTGP" translated="Normal" />
+      <RefList name="Options" refName="TintTemplateOption" />
+      <UInt32 name="CategoryIndex" recordType="TTGE" />
+    </Fields>
+  </Object>
+  <Object name="TintTemplateOption" objType="Subrecord" GUID="f16b47d8-d290-4bd8-9678-673778a46050" ID="258">
+    <Fields>
+      <Data recordType="TETI">
+        <Fields>
+          <Enum name="Slot" enumName="TintTemplateOption.TintSlot" byteLength="2" />
+          <UInt16 name="Index" />
+        </Fields>
+      </Data>
+      <String name="Name" recordType="TTGP" translated="Normal" />
+      <Enum name="Flags" enumName="TintTemplateOption.Flag" byteLength="2" recordType="TTEF" />
+      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <List name="Textures">
+        <String recordType="TTET" />
+      </List>
+      <Enum name="BlendOperation" enumName="BlendOperation" byteLength="4" recordType="TTEB" />
+      <RefList name="TemplateColors" refName="TintTemplateColor" recordType="TTEC" />
+      <Float name="Default" recordType="TTED" />
+    </Fields>
+  </Object>
+  <Object name="TintTemplateColor" objType="Subrecord" GUID="7a65ccac-22b3-4b22-999c-e7041d1116d9" ID="259">
+    <Fields>
+      <FormLink name="Color" refName="ColorRecord" />
+      <Float name="Alpha" />
+      <Int16 name="TemplateIndex" />
+      <Enum name="BlendOperation" enumName="BlendOperation" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="MorphGroup" objType="Subrecord" GUID="f6ad0ece-f514-44d3-99e5-4c6b52e3b85f" ID="260">
+    <Fields>
+      <String name="Name" recordType="MPGN" />
+      <RefList name="MorphPresets" refName="MorphPreset" counterRecType="MPPC" />
+      <ByteArray name="UnknownMPPK" recordType="MPPK" />
+      <ByteArray name="UnknownMPGS" recordType="MPGS" />
+    </Fields>
+  </Object>
+  <Object name="MorphPreset" objType="Subrecord" GUID="c06ee700-01b5-46fe-8047-6cbd4eeeb74d" ID="261">
+    <Fields>
+      <UInt32 name="Index" recordType="MPPI" />
+      <String name="Name" recordType="MPPN" translated="Normal" />
+      <String name="UnknownMPPM" recordType="MPPM" />
+      <FormLink name="Texture" recordType="MPPT" refName="TextureSet" />
+      <ByteArray name="UnknownMPPF" recordType="MPPF" />
+    </Fields>
+  </Object>
+  <Object name="FaceMorph" objType="Subrecord" GUID="0b0f2ecd-d3a5-4659-8ed0-52ca56395482" ID="262">
+    <Fields>
+      <UInt32 name="Index" recordType="FMRI" />
+      <String name="Name" recordType="FMRN" />
+    </Fields>
+  </Object>
+  <Object name="Subgraph" objType="Subrecord" GUID="ffb4e210-de52-4021-a797-6384123f8a01" ID="263" shortCircuitToLastRequired="true">
+    <Fields>
+      <String name="BehaviorGraph" recordType="SGNM" />
+      <List name="ActorKeywords">
+        <FormLink recordType="SAKD" refName="Keyword" />
+      </List>
+      <List name="TargetKeywords">
+        <FormLink recordType="STKD" refName="Keyword" />
+      </List>
+      <List name="AnimationPaths">
+        <String recordType="SAPT" />
+      </List>
+      <Enum name="Role" enumName="Subgraph.SubgraphRole" binary="Custom" recordType="SRAF" nullable="False" />
+      <Enum name="Perspective" enumName="Perspective" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="MorphValue" objType="Subrecord" GUID="60ecab47-8ab4-491c-998b-330f30ebfba2" ID="264">
+    <Fields>
+      <Int32 name="Index" recordType="MSID" />
+      <String name="MinName" recordType="MSM0" />
+      <String name="MaxName" recordType="MSM1" />
+    </Fields>
+  </Object>
+  <Object name="EquipmentSlot" objType="Subrecord" GUID="a01724f1-1a38-49ec-8762-ddf47baa785e" ID="265">
+    <Fields>
+      <FormLink name="Slot" recordType="QNAM" refName="EquipType" />
+      <String name="Node" recordType="ZNAM" />
+    </Fields>
   </Object>
 </Loqui>

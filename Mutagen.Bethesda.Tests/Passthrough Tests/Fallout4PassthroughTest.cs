@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Processing;
 using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
@@ -17,10 +18,44 @@ namespace Mutagen.Bethesda.Tests
         {
             GameRelease = GameRelease.Fallout4;
         }
-        
+
         public override AlignmentRules GetAlignmentRules()
         {
             var ret = new AlignmentRules();
+            ret.StartMarkers.Add(RecordTypes.RACE, new[]
+            {
+                RecordTypes.SGNM,
+                RecordTypes.SAKD,
+                RecordTypes.STKD,
+                RecordTypes.SAPT,
+                RecordTypes.SRAF,
+            });
+            ret.StopMarkers.Add(RecordTypes.RACE, new[]
+            {
+                RecordTypes.BSMP,
+            });
+            ret.AddAlignments(
+                RecordTypes.RACE,
+                AlignmentRepeatedRule.Sorted(
+                    new AlignmentRepeatedSubrule(RecordTypes.SGNM, Single: true),
+                    new AlignmentRepeatedSubrule(RecordTypes.SAKD, Single: false),
+                    new AlignmentRepeatedSubrule(RecordTypes.STKD, Single: false),
+                    new AlignmentRepeatedSubrule(RecordTypes.SAPT, Single: false),
+                    new AlignmentRepeatedSubrule(RecordTypes.SRAF, Single: true)
+                    {
+                        Ender = true
+                    }),
+                RecordTypes.PTOP,
+                RecordTypes.NTOP,
+                AlignmentRepeatedRule.Basic(
+                    RecordTypes.MSID,
+                    RecordTypes.MSM0,
+                    RecordTypes.MSM1),
+                RecordTypes.MLSI,
+                RecordTypes.HNAM,
+                RecordTypes.HLTX,
+                RecordTypes.QSTI
+            );
             return ret;
         }
 

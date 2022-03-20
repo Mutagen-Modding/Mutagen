@@ -72,6 +72,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="shortCircuitToLastRequired" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to short circuit only to the last required field
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
           <xs:attribute name="customRecordFallback" type="xs:boolean" >
             <xs:annotation>
               <xs:documentation>
@@ -361,7 +368,14 @@
           <xs:attribute name="nullIfCounterZero" type="xs:boolean" >
             <xs:annotation>
               <xs:documentation>
-                If has a counter record type, should list be null if count is zero.
+                If has a counter record type, should single record typed list be null if count is zero.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="allowNoCounter" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to expect/allow a list to have no counter when one is defined
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>

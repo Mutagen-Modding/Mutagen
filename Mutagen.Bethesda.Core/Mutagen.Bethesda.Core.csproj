@@ -403,6 +403,7 @@
     <Compile Include="Plugins\Records\Internals\IModRegistration.cs" />
     <Compile Include="Plugins\Records\Internals\InterfaceEnumerationHelper.cs" />
     <Compile Include="Plugins\Records\Internals\InterfaceMappingResult.cs" />
+    <Compile Include="Plugins\Records\RecordTypeInts.cs" />
     <Compile Include="Plugins\Records\RecordTypes.cs" />
     <Compile Include="Plugins\RecordTypeMapping\AssociatedRecordTypesAttribute.cs" />
     <Compile Include="Plugins\RecordTypeMapping\RecordTypeLookup.cs" />

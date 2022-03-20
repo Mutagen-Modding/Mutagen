@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Records;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Mutagen.Bethesda.Plugins.Analysis;
 
@@ -13,8 +14,9 @@ namespace Mutagen.Bethesda.Plugins.Utility
     /// </summary>
     public class RecordTypeInfoCacheReader
     {
+        private record CacheItem(IReadOnlyList<FormKey> List, HashSet<FormKey> Set);
         private readonly Func<IMutagenReadStream> _streamCreator;
-        private readonly Dictionary<Type, HashSet<FormKey>> _cachedLocs = new();
+        private ImmutableDictionary<Type, CacheItem> _cachedLocs = ImmutableDictionary<Type, CacheItem>.Empty;
 
         public RecordTypeInfoCacheReader(Func<IMutagenReadStream> streamCreator)
         {
@@ -25,21 +27,34 @@ namespace Mutagen.Bethesda.Plugins.Utility
             where T : IMajorRecordGetter
         {
             if (formKey.IsNull) return false;
-            lock (_cachedLocs)
-            {
-                if (!_cachedLocs.TryGetValue(typeof(T), out var cache))
-                {
-                    using var stream = _streamCreator();
-                    var locs = RecordLocator.GetLocations(
-                        stream,
-                        new RecordInterest(
-                            interestingTypes: PluginUtilityTranslation.GetRecordType<T>()));
-                    cache = locs.FormKeys.ToHashSet();
+            return GetCacheItem<T>().Set.Contains(formKey);
+        }
 
-                    _cachedLocs.Add(typeof(T), cache);
-                }
-                return cache.Contains(formKey);
+        public FormKey GetNthFormKey<T>(int n)
+            where T : IMajorRecordGetter
+        {
+            var list = GetCacheItem<T>().List;
+            if (list.Count <= n)
+            {
+                throw new ArgumentOutOfRangeException(
+                    $"Nth FormKey for type {typeof(T)} was requested that was too large: {n} >= {list.Count}");
             }
+            return list[n];
+        }
+
+        private CacheItem GetCacheItem<T>()
+        {
+            if (_cachedLocs.TryGetValue(typeof(T), out var cache)) return cache;
+            
+            using var stream = _streamCreator();
+            var locs = RecordLocator.GetLocations(
+                stream,
+                new RecordInterest(
+                    interestingTypes: PluginUtilityTranslation.GetRecordType<T>()));
+            cache = new(locs.FormKeys.ToList(), locs.FormKeys.ToHashSet());
+
+            _cachedLocs = _cachedLocs.Add(typeof(T), cache);
+            return cache;
         }
     }
 }

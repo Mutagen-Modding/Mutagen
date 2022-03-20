@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Quest" recordType="QUST" objType="Record" baseClass="Fallout4MajorRecord" GUID="3299b1c9-621b-4a10-961a-698116d54617" ID="154">
+  </Object>
+</Loqui>

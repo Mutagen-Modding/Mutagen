@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Npc" recordType="NPC_" objType="Record" baseClass="Fallout4MajorRecord" GUID="8074d783-8164-453f-bdd2-f39627cf7a6b" ID="166">
+    <LinkInterface>IObjectId</LinkInterface>
+  </Object>
+</Loqui>

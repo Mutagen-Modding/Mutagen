@@ -61,6 +61,7 @@ public partial class RecordTypes
     public static readonly RecordType FSTS = new(0x53545346);
     public static readonly RecordType FULL = new(0x4C4C5546);
     public static readonly RecordType FURN = new(0x4E525546);
+    public static readonly RecordType GDRY = new(0x59524447);
     public static readonly RecordType GLOB = new(0x424F4C47);
     public static readonly RecordType GMST = new(0x54534D47);
     public static readonly RecordType GRAS = new(0x53415247);
@@ -73,6 +74,7 @@ public partial class RecordTypes
     public static readonly RecordType IMGS = new(0x53474D49);
     public static readonly RecordType INFO = new(0x4F464E49);
     public static readonly RecordType INGR = new(0x52474E49);
+    public static readonly RecordType INNR = new(0x524E4E49);
     public static readonly RecordType IPCT = new(0x54435049);
     public static readonly RecordType IPDS = new(0x53445049);
     public static readonly RecordType KEYM = new(0x4D59454B);
@@ -103,7 +105,9 @@ public partial class RecordTypes
     public static readonly RecordType NAME = new(0x454D414E);
     public static readonly RecordType NAVI = new(0x4956414E);
     public static readonly RecordType NAVM = new(0x4D56414E);
+    public static readonly RecordType NOTE = new(0x45544F4E);
     public static readonly RecordType NPC_ = new(0x5F43504E);
+    public static readonly RecordType OMOD = new(0x444F4D4F);
     public static readonly RecordType OTFT = new(0x5446544F);
     public static readonly RecordType PACK = new(0x4B434150);
     public static readonly RecordType PARW = new(0x57524150);
@@ -128,6 +132,7 @@ public partial class RecordTypes
     public static readonly RecordType ROAD = new(0x44414F52);
     public static readonly RecordType SBSP = new(0x50534253);
     public static readonly RecordType SCEN = new(0x4E454353);
+    public static readonly RecordType SCOL = new(0x4C4F4353);
     public static readonly RecordType SCPT = new(0x54504353);
     public static readonly RecordType SCRL = new(0x4C524353);
     public static readonly RecordType SGST = new(0x54534753);
@@ -147,6 +152,7 @@ public partial class RecordTypes
     public static readonly RecordType STAG = new(0x47415453);
     public static readonly RecordType STAT = new(0x54415453);
     public static readonly RecordType TACT = new(0x54434154);
+    public static readonly RecordType TERM = new(0x4D524554);
     public static readonly RecordType TREE = new(0x45455254);
     public static readonly RecordType TRNS = new(0x534E5254);
     public static readonly RecordType TXST = new(0x54535854);

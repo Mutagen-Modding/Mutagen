@@ -74,15 +74,15 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
         #endregion
         #endregion
-        #region AmbientSound
-        private readonly IFormLinkNullable<ISoundDescriptorGetter> _AmbientSound = new FormLinkNullable<ISoundDescriptorGetter>();
-        public IFormLinkNullable<ISoundDescriptorGetter> AmbientSound
+        #region LoopingSound
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _LoopingSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> LoopingSound
         {
-            get => _AmbientSound;
-            set => _AmbientSound.SetTo(value);
+            get => _LoopingSound;
+            set => _LoopingSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ISoundDescriptorGetter> IAcousticSpaceGetter.AmbientSound => this.AmbientSound;
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IAcousticSpaceGetter.LoopingSound => this.LoopingSound;
         #endregion
         #region UseSoundFromRegion
         private readonly IFormLinkNullable<IRegionGetter> _UseSoundFromRegion = new FormLinkNullable<IRegionGetter>();
@@ -109,10 +109,10 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Boolean? IAcousticSpaceGetter.IsInterior => this.IsInterior;
         #endregion
-        #region WeatherAttenuation
-        public Single? WeatherAttenuation { get; set; }
+        #region WeatherAttenuationDb
+        public Single? WeatherAttenuationDb { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IAcousticSpaceGetter.WeatherAttenuation => this.WeatherAttenuation;
+        Single? IAcousticSpaceGetter.WeatherAttenuationDb => this.WeatherAttenuationDb;
         #endregion
 
         #region To String
@@ -139,11 +139,11 @@ namespace Mutagen.Bethesda.Fallout4
             : base(initialValue)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
-                this.AmbientSound = initialValue;
+                this.LoopingSound = initialValue;
                 this.UseSoundFromRegion = initialValue;
                 this.EnvironmentType = initialValue;
                 this.IsInterior = initialValue;
-                this.WeatherAttenuation = initialValue;
+                this.WeatherAttenuationDb = initialValue;
             }
 
             public Mask(
@@ -154,11 +154,11 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem FormVersion,
                 TItem Version2,
                 TItem ObjectBounds,
-                TItem AmbientSound,
+                TItem LoopingSound,
                 TItem UseSoundFromRegion,
                 TItem EnvironmentType,
                 TItem IsInterior,
-                TItem WeatherAttenuation)
+                TItem WeatherAttenuationDb)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -168,11 +168,11 @@ namespace Mutagen.Bethesda.Fallout4
                 Version2: Version2)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
-                this.AmbientSound = AmbientSound;
+                this.LoopingSound = LoopingSound;
                 this.UseSoundFromRegion = UseSoundFromRegion;
                 this.EnvironmentType = EnvironmentType;
                 this.IsInterior = IsInterior;
-                this.WeatherAttenuation = WeatherAttenuation;
+                this.WeatherAttenuationDb = WeatherAttenuationDb;
             }
 
             #pragma warning disable CS8618
@@ -185,11 +185,11 @@ namespace Mutagen.Bethesda.Fallout4
 
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
-            public TItem AmbientSound;
+            public TItem LoopingSound;
             public TItem UseSoundFromRegion;
             public TItem EnvironmentType;
             public TItem IsInterior;
-            public TItem WeatherAttenuation;
+            public TItem WeatherAttenuationDb;
             #endregion
 
             #region Equals
@@ -204,22 +204,22 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
-                if (!object.Equals(this.AmbientSound, rhs.AmbientSound)) return false;
+                if (!object.Equals(this.LoopingSound, rhs.LoopingSound)) return false;
                 if (!object.Equals(this.UseSoundFromRegion, rhs.UseSoundFromRegion)) return false;
                 if (!object.Equals(this.EnvironmentType, rhs.EnvironmentType)) return false;
                 if (!object.Equals(this.IsInterior, rhs.IsInterior)) return false;
-                if (!object.Equals(this.WeatherAttenuation, rhs.WeatherAttenuation)) return false;
+                if (!object.Equals(this.WeatherAttenuationDb, rhs.WeatherAttenuationDb)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
-                hash.Add(this.AmbientSound);
+                hash.Add(this.LoopingSound);
                 hash.Add(this.UseSoundFromRegion);
                 hash.Add(this.EnvironmentType);
                 hash.Add(this.IsInterior);
-                hash.Add(this.WeatherAttenuation);
+                hash.Add(this.WeatherAttenuationDb);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -235,11 +235,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.ObjectBounds.Overall)) return false;
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
-                if (!eval(this.AmbientSound)) return false;
+                if (!eval(this.LoopingSound)) return false;
                 if (!eval(this.UseSoundFromRegion)) return false;
                 if (!eval(this.EnvironmentType)) return false;
                 if (!eval(this.IsInterior)) return false;
-                if (!eval(this.WeatherAttenuation)) return false;
+                if (!eval(this.WeatherAttenuationDb)) return false;
                 return true;
             }
             #endregion
@@ -253,11 +253,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.ObjectBounds.Overall)) return true;
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
-                if (eval(this.AmbientSound)) return true;
+                if (eval(this.LoopingSound)) return true;
                 if (eval(this.UseSoundFromRegion)) return true;
                 if (eval(this.EnvironmentType)) return true;
                 if (eval(this.IsInterior)) return true;
-                if (eval(this.WeatherAttenuation)) return true;
+                if (eval(this.WeatherAttenuationDb)) return true;
                 return false;
             }
             #endregion
@@ -274,11 +274,11 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
-                obj.AmbientSound = eval(this.AmbientSound);
+                obj.LoopingSound = eval(this.LoopingSound);
                 obj.UseSoundFromRegion = eval(this.UseSoundFromRegion);
                 obj.EnvironmentType = eval(this.EnvironmentType);
                 obj.IsInterior = eval(this.IsInterior);
-                obj.WeatherAttenuation = eval(this.WeatherAttenuation);
+                obj.WeatherAttenuationDb = eval(this.WeatherAttenuationDb);
             }
             #endregion
 
@@ -305,9 +305,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         ObjectBounds?.ToString(fg);
                     }
-                    if (printMask?.AmbientSound ?? true)
+                    if (printMask?.LoopingSound ?? true)
                     {
-                        fg.AppendItem(AmbientSound, "AmbientSound");
+                        fg.AppendItem(LoopingSound, "LoopingSound");
                     }
                     if (printMask?.UseSoundFromRegion ?? true)
                     {
@@ -321,9 +321,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         fg.AppendItem(IsInterior, "IsInterior");
                     }
-                    if (printMask?.WeatherAttenuation ?? true)
+                    if (printMask?.WeatherAttenuationDb ?? true)
                     {
-                        fg.AppendItem(WeatherAttenuation, "WeatherAttenuation");
+                        fg.AppendItem(WeatherAttenuationDb, "WeatherAttenuationDb");
                     }
                 }
                 fg.AppendLine("]");
@@ -338,11 +338,11 @@ namespace Mutagen.Bethesda.Fallout4
         {
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
-            public Exception? AmbientSound;
+            public Exception? LoopingSound;
             public Exception? UseSoundFromRegion;
             public Exception? EnvironmentType;
             public Exception? IsInterior;
-            public Exception? WeatherAttenuation;
+            public Exception? WeatherAttenuationDb;
             #endregion
 
             #region IErrorMask
@@ -353,16 +353,16 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     case AcousticSpace_FieldIndex.ObjectBounds:
                         return ObjectBounds;
-                    case AcousticSpace_FieldIndex.AmbientSound:
-                        return AmbientSound;
+                    case AcousticSpace_FieldIndex.LoopingSound:
+                        return LoopingSound;
                     case AcousticSpace_FieldIndex.UseSoundFromRegion:
                         return UseSoundFromRegion;
                     case AcousticSpace_FieldIndex.EnvironmentType:
                         return EnvironmentType;
                     case AcousticSpace_FieldIndex.IsInterior:
                         return IsInterior;
-                    case AcousticSpace_FieldIndex.WeatherAttenuation:
-                        return WeatherAttenuation;
+                    case AcousticSpace_FieldIndex.WeatherAttenuationDb:
+                        return WeatherAttenuationDb;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -376,8 +376,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case AcousticSpace_FieldIndex.ObjectBounds:
                         this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
                         break;
-                    case AcousticSpace_FieldIndex.AmbientSound:
-                        this.AmbientSound = ex;
+                    case AcousticSpace_FieldIndex.LoopingSound:
+                        this.LoopingSound = ex;
                         break;
                     case AcousticSpace_FieldIndex.UseSoundFromRegion:
                         this.UseSoundFromRegion = ex;
@@ -388,8 +388,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case AcousticSpace_FieldIndex.IsInterior:
                         this.IsInterior = ex;
                         break;
-                    case AcousticSpace_FieldIndex.WeatherAttenuation:
-                        this.WeatherAttenuation = ex;
+                    case AcousticSpace_FieldIndex.WeatherAttenuationDb:
+                        this.WeatherAttenuationDb = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -405,8 +405,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case AcousticSpace_FieldIndex.ObjectBounds:
                         this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
                         break;
-                    case AcousticSpace_FieldIndex.AmbientSound:
-                        this.AmbientSound = (Exception?)obj;
+                    case AcousticSpace_FieldIndex.LoopingSound:
+                        this.LoopingSound = (Exception?)obj;
                         break;
                     case AcousticSpace_FieldIndex.UseSoundFromRegion:
                         this.UseSoundFromRegion = (Exception?)obj;
@@ -417,8 +417,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case AcousticSpace_FieldIndex.IsInterior:
                         this.IsInterior = (Exception?)obj;
                         break;
-                    case AcousticSpace_FieldIndex.WeatherAttenuation:
-                        this.WeatherAttenuation = (Exception?)obj;
+                    case AcousticSpace_FieldIndex.WeatherAttenuationDb:
+                        this.WeatherAttenuationDb = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -430,11 +430,11 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
-                if (AmbientSound != null) return true;
+                if (LoopingSound != null) return true;
                 if (UseSoundFromRegion != null) return true;
                 if (EnvironmentType != null) return true;
                 if (IsInterior != null) return true;
-                if (WeatherAttenuation != null) return true;
+                if (WeatherAttenuationDb != null) return true;
                 return false;
             }
             #endregion
@@ -471,11 +471,11 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 base.ToString_FillInternal(fg);
                 ObjectBounds?.ToString(fg);
-                fg.AppendItem(AmbientSound, "AmbientSound");
+                fg.AppendItem(LoopingSound, "LoopingSound");
                 fg.AppendItem(UseSoundFromRegion, "UseSoundFromRegion");
                 fg.AppendItem(EnvironmentType, "EnvironmentType");
                 fg.AppendItem(IsInterior, "IsInterior");
-                fg.AppendItem(WeatherAttenuation, "WeatherAttenuation");
+                fg.AppendItem(WeatherAttenuationDb, "WeatherAttenuationDb");
             }
             #endregion
 
@@ -485,11 +485,11 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
-                ret.AmbientSound = this.AmbientSound.Combine(rhs.AmbientSound);
+                ret.LoopingSound = this.LoopingSound.Combine(rhs.LoopingSound);
                 ret.UseSoundFromRegion = this.UseSoundFromRegion.Combine(rhs.UseSoundFromRegion);
                 ret.EnvironmentType = this.EnvironmentType.Combine(rhs.EnvironmentType);
                 ret.IsInterior = this.IsInterior.Combine(rhs.IsInterior);
-                ret.WeatherAttenuation = this.WeatherAttenuation.Combine(rhs.WeatherAttenuation);
+                ret.WeatherAttenuationDb = this.WeatherAttenuationDb.Combine(rhs.WeatherAttenuationDb);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -513,11 +513,11 @@ namespace Mutagen.Bethesda.Fallout4
         {
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
-            public bool AmbientSound;
+            public bool LoopingSound;
             public bool UseSoundFromRegion;
             public bool EnvironmentType;
             public bool IsInterior;
-            public bool WeatherAttenuation;
+            public bool WeatherAttenuationDb;
             #endregion
 
             #region Ctors
@@ -526,11 +526,11 @@ namespace Mutagen.Bethesda.Fallout4
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.AmbientSound = defaultOn;
+                this.LoopingSound = defaultOn;
                 this.UseSoundFromRegion = defaultOn;
                 this.EnvironmentType = defaultOn;
                 this.IsInterior = defaultOn;
-                this.WeatherAttenuation = defaultOn;
+                this.WeatherAttenuationDb = defaultOn;
             }
 
             #endregion
@@ -539,11 +539,11 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
-                ret.Add((AmbientSound, null));
+                ret.Add((LoopingSound, null));
                 ret.Add((UseSoundFromRegion, null));
                 ret.Add((EnvironmentType, null));
                 ret.Add((IsInterior, null));
-                ret.Add((WeatherAttenuation, null));
+                ret.Add((WeatherAttenuationDb, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -689,11 +689,11 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> AmbientSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; set; }
         new IFormLinkNullable<IRegionGetter> UseSoundFromRegion { get; set; }
         new IFormLinkNullable<IReverbParametersGetter> EnvironmentType { get; set; }
         new Boolean? IsInterior { get; set; }
-        new Single? WeatherAttenuation { get; set; }
+        new Single? WeatherAttenuationDb { get; set; }
     }
 
     public partial interface IAcousticSpaceInternal :
@@ -719,11 +719,11 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
-        IFormLinkNullableGetter<ISoundDescriptorGetter> AmbientSound { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> LoopingSound { get; }
         IFormLinkNullableGetter<IRegionGetter> UseSoundFromRegion { get; }
         IFormLinkNullableGetter<IReverbParametersGetter> EnvironmentType { get; }
         Boolean? IsInterior { get; }
-        Single? WeatherAttenuation { get; }
+        Single? WeatherAttenuationDb { get; }
 
     }
 
@@ -889,11 +889,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         FormVersion = 4,
         Version2 = 5,
         ObjectBounds = 6,
-        AmbientSound = 7,
+        LoopingSound = 7,
         UseSoundFromRegion = 8,
         EnvironmentType = 9,
         IsInterior = 10,
-        WeatherAttenuation = 11,
+        WeatherAttenuationDb = 11,
     }
     #endregion
 
@@ -983,11 +983,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             ClearPartial();
             item.ObjectBounds.Clear();
-            item.AmbientSound.Clear();
+            item.LoopingSound.Clear();
             item.UseSoundFromRegion.Clear();
             item.EnvironmentType.Clear();
             item.IsInterior = default;
-            item.WeatherAttenuation = default;
+            item.WeatherAttenuationDb = default;
             base.Clear(item);
         }
         
@@ -1005,7 +1005,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(IAcousticSpace obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.AmbientSound.Relink(mapping);
+            obj.LoopingSound.Relink(mapping);
             obj.UseSoundFromRegion.Relink(mapping);
             obj.EnvironmentType.Relink(mapping);
         }
@@ -1077,11 +1077,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.AmbientSound = item.AmbientSound.Equals(rhs.AmbientSound);
+            ret.LoopingSound = item.LoopingSound.Equals(rhs.LoopingSound);
             ret.UseSoundFromRegion = item.UseSoundFromRegion.Equals(rhs.UseSoundFromRegion);
             ret.EnvironmentType = item.EnvironmentType.Equals(rhs.EnvironmentType);
             ret.IsInterior = item.IsInterior == rhs.IsInterior;
-            ret.WeatherAttenuation = item.WeatherAttenuation.EqualsWithin(rhs.WeatherAttenuation);
+            ret.WeatherAttenuationDb = item.WeatherAttenuationDb.EqualsWithin(rhs.WeatherAttenuationDb);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1137,9 +1137,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
-            if (printMask?.AmbientSound ?? true)
+            if (printMask?.LoopingSound ?? true)
             {
-                fg.AppendItem(item.AmbientSound.FormKeyNullable, "AmbientSound");
+                fg.AppendItem(item.LoopingSound.FormKeyNullable, "LoopingSound");
             }
             if (printMask?.UseSoundFromRegion ?? true)
             {
@@ -1154,10 +1154,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 fg.AppendItem(IsInteriorItem, "IsInterior");
             }
-            if ((printMask?.WeatherAttenuation ?? true)
-                && item.WeatherAttenuation is {} WeatherAttenuationItem)
+            if ((printMask?.WeatherAttenuationDb ?? true)
+                && item.WeatherAttenuationDb is {} WeatherAttenuationDbItem)
             {
-                fg.AppendItem(WeatherAttenuationItem, "WeatherAttenuation");
+                fg.AppendItem(WeatherAttenuationDbItem, "WeatherAttenuationDb");
             }
         }
         
@@ -1215,9 +1215,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AcousticSpace_FieldIndex.AmbientSound) ?? true))
+            if ((crystal?.GetShouldTranslate((int)AcousticSpace_FieldIndex.LoopingSound) ?? true))
             {
-                if (!lhs.AmbientSound.Equals(rhs.AmbientSound)) return false;
+                if (!lhs.LoopingSound.Equals(rhs.LoopingSound)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)AcousticSpace_FieldIndex.UseSoundFromRegion) ?? true))
             {
@@ -1231,9 +1231,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 if (lhs.IsInterior != rhs.IsInterior) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AcousticSpace_FieldIndex.WeatherAttenuation) ?? true))
+            if ((crystal?.GetShouldTranslate((int)AcousticSpace_FieldIndex.WeatherAttenuationDb) ?? true))
             {
-                if (!lhs.WeatherAttenuation.EqualsWithin(rhs.WeatherAttenuation)) return false;
+                if (!lhs.WeatherAttenuationDb.EqualsWithin(rhs.WeatherAttenuationDb)) return false;
             }
             return true;
         }
@@ -1264,16 +1264,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            hash.Add(item.AmbientSound);
+            hash.Add(item.LoopingSound);
             hash.Add(item.UseSoundFromRegion);
             hash.Add(item.EnvironmentType);
             if (item.IsInterior is {} IsInterioritem)
             {
                 hash.Add(IsInterioritem);
             }
-            if (item.WeatherAttenuation is {} WeatherAttenuationitem)
+            if (item.WeatherAttenuationDb is {} WeatherAttenuationDbitem)
             {
-                hash.Add(WeatherAttenuationitem);
+                hash.Add(WeatherAttenuationDbitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1304,9 +1304,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
-            if (obj.AmbientSound.FormKeyNullable.HasValue)
+            if (obj.LoopingSound.FormKeyNullable.HasValue)
             {
-                yield return FormLinkInformation.Factory(obj.AmbientSound);
+                yield return FormLinkInformation.Factory(obj.LoopingSound);
             }
             if (obj.UseSoundFromRegion.FormKeyNullable.HasValue)
             {
@@ -1412,9 +1412,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.AmbientSound) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.LoopingSound) ?? true))
             {
-                item.AmbientSound.SetTo(rhs.AmbientSound.FormKeyNullable);
+                item.LoopingSound.SetTo(rhs.LoopingSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.UseSoundFromRegion) ?? true))
             {
@@ -1428,9 +1428,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 item.IsInterior = rhs.IsInterior;
             }
-            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.WeatherAttenuation) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.WeatherAttenuationDb) ?? true))
             {
-                item.WeatherAttenuation = rhs.WeatherAttenuation;
+                item.WeatherAttenuationDb = rhs.WeatherAttenuationDb;
             }
         }
         
@@ -1596,7 +1596,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 translationParams: translationParams);
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.AmbientSound,
+                item: item.LoopingSound,
                 header: translationParams.ConvertToCustom(RecordTypes.SNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1612,7 +1612,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 header: translationParams.ConvertToCustom(RecordTypes.XTRI));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.WeatherAttenuation,
+                item: item.WeatherAttenuationDb,
                 integerType: FloatIntegerType.UShort,
                 multiplier: 0.01,
                 header: translationParams.ConvertToCustom(RecordTypes.WNAM));
@@ -1715,8 +1715,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AmbientSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)AcousticSpace_FieldIndex.AmbientSound;
+                    item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)AcousticSpace_FieldIndex.LoopingSound;
                 }
                 case RecordTypeInts.RDAT:
                 {
@@ -1739,11 +1739,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WeatherAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.WeatherAttenuationDb = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         integerType: FloatIntegerType.UShort,
                         multiplier: 0.01);
-                    return (int)AcousticSpace_FieldIndex.WeatherAttenuation;
+                    return (int)AcousticSpace_FieldIndex.WeatherAttenuationDb;
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1808,9 +1808,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
-        #region AmbientSound
-        private int? _AmbientSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> AmbientSound => _AmbientSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AmbientSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        #region LoopingSound
+        private int? _LoopingSoundLocation;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> LoopingSound => _LoopingSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoopingSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region UseSoundFromRegion
         private int? _UseSoundFromRegionLocation;
@@ -1824,9 +1824,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private int? _IsInteriorLocation;
         public Boolean? IsInterior => _IsInteriorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _IsInteriorLocation.Value, _package.MetaData.Constants)[0] == 1 : default(Boolean?);
         #endregion
-        #region WeatherAttenuation
-        private int? _WeatherAttenuationLocation;
-        public Single? WeatherAttenuation => _WeatherAttenuationLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _WeatherAttenuationLocation.Value, _package.MetaData.Constants), FloatIntegerType.UShort, 0.01) : default(Single?);
+        #region WeatherAttenuationDb
+        private int? _WeatherAttenuationDbLocation;
+        public Single? WeatherAttenuationDb => _WeatherAttenuationDbLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _WeatherAttenuationDbLocation.Value, _package.MetaData.Constants), FloatIntegerType.UShort, 0.01) : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1901,8 +1901,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _AmbientSoundLocation = (stream.Position - offset);
-                    return (int)AcousticSpace_FieldIndex.AmbientSound;
+                    _LoopingSoundLocation = (stream.Position - offset);
+                    return (int)AcousticSpace_FieldIndex.LoopingSound;
                 }
                 case RecordTypeInts.RDAT:
                 {
@@ -1921,8 +1921,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    _WeatherAttenuationLocation = (stream.Position - offset);
-                    return (int)AcousticSpace_FieldIndex.WeatherAttenuation;
+                    _WeatherAttenuationDbLocation = (stream.Position - offset);
+                    return (int)AcousticSpace_FieldIndex.WeatherAttenuationDb;
                 }
                 default:
                     return base.FillRecordType(

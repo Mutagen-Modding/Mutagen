@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="PlacedObject" recordType="REFR" baseClass="Fallout4MajorRecord" objType="Record" GUID="9f17225a-a9f1-4e82-a287-6e1b20a495ed" ID="76">
+    <LinkInterface>ILocationTargetable</LinkInterface>
   </Object>
 </Loqui>

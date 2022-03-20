@@ -72,6 +72,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ParallaxPasses
         public Byte ParallaxPasses { get; set; } = default;
+        public static RangeUInt8 ParallaxPasses_Range = new RangeUInt8(Byte.MinValue, 30);
         #endregion
         #region Flags
         public Decal.Flag Flags { get; set; } = default;

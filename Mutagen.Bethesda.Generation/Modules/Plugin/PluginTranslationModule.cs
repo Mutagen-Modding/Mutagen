@@ -831,6 +831,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                             fg: fg,
                                             field: field,
                                             doublesPotential: false,
+                                            lastRequiredIndex: obj.GetObjectData().GetLastRequiredFieldIndexToUse(),
                                             nextRecAccessor: "nextRecordType",
                                             toDo: async () =>
                                             {
@@ -873,6 +874,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                                         fg: fg,
                                                         field: doublesField,
                                                         doublesPotential: true,
+                                                        lastRequiredIndex: obj.GetObjectData().GetLastRequiredFieldIndexToUse(),
                                                         nextRecAccessor: "nextRecordType",
                                                         toDo: async () =>
                                                         {
@@ -1085,6 +1087,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
         protected override async Task GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator, string frameAccessor)
         {
+            var fieldData = field.GetFieldData();
             if (field is DataType set)
             {
                 fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
@@ -1181,6 +1184,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         obj: obj,
                         fg: fg,
                         field: field.GetIndexData(),
+                        lastRequiredIndex: obj.GetObjectData().GetLastRequiredFieldIndexToUse(),
                         doublesPotential: false,
                         nextRecAccessor: "nextRecordType",
                         toDo: async () =>
@@ -1245,6 +1249,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             FileGeneration fg,
             (int PublicIndex, int InternalIndex, TypeGeneration Field) field,
             bool doublesPotential,
+            int? lastRequiredIndex,
             Accessor nextRecAccessor,
             Func<Task> toDo)
         {
@@ -1253,6 +1258,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             var typelessStruct = obj.IsTypelessStruct();
             if (typelessStruct && field.Field.GetFieldData().IsTriggerForObject)
             {
+                var lastReqField = lastRequiredIndex == null ? null : obj.Fields[lastRequiredIndex.Value];
+                if (field.PublicIndex >= lastRequiredIndex)
+                {
+                    lastReqField = null;
+                }
                 if (dataSet != null)
                 {
                     fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){dataSet.SubFields.Last().IndexEnumName}) return {nameof(ParseResult)}.Stop;");
@@ -1262,18 +1272,15 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     var objFields = obj.IterateFieldIndices(nonIntegrated: false).ToList();
                     var nextField = objFields.FirstOrDefault((i) => i.InternalIndex > field.InternalIndex);
                     var prevField = objFields.LastOrDefault((i) => i.InternalIndex < field.InternalIndex);
-                    if (nextField.Field != null)
+                    var enumName = lastReqField?.IndexEnumName ?? nextField.Field?.IndexEnumName ?? prevField.Field?.IndexEnumName;
+                    if (enumName != null)
                     {
-                        fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){nextField.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
-                    }
-                    else if (prevField.Field != null)
-                    {
-                        fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){prevField.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
+                        fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){enumName}) return {nameof(ParseResult)}.Stop;");
                     }
                 }
-                else if (!(field.Field is MarkerType))
+                else if (field.Field is not MarkerType)
                 {
-                    fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){field.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
+                    fg.AppendLine($"if (lastParsed.{nameof(PreviousParse.ParsedIndex)}.HasValue && lastParsed.{nameof(PreviousParse.ParsedIndex)}.Value >= (int){lastReqField?.IndexEnumName ?? field.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
                 }
             }
             await toDo();
@@ -1418,6 +1425,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                             fg: fg,
                                             field: field,
                                             doublesPotential: false,
+                                            lastRequiredIndex: obj.GetObjectData().GetLastRequiredFieldIndexToUse(),
                                             nextRecAccessor: "type",
                                             toDo: async () =>
                                             {
@@ -1478,6 +1486,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                                         fg: fg,
                                                         field: doublesField,
                                                         doublesPotential: true,
+                                                        lastRequiredIndex: obj.GetObjectData().GetLastRequiredFieldIndexToUse(),
                                                         nextRecAccessor: "type",
                                                         toDo: async () =>
                                                         {

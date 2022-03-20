@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="EffectShader" recordType="EFSH" objType="Record" baseClass="Fallout4MajorRecord" GUID="998828d0-071f-422e-b81d-7897d9765458" ID="268">
+  </Object>
+</Loqui>

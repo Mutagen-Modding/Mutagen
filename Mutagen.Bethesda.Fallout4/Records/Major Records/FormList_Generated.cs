@@ -428,7 +428,8 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IFormList :
         IFallout4MajorRecordInternal,
         IFormListGetter,
-        ILoquiObjectSetter<IFormListInternal>
+        ILoquiObjectSetter<IFormListInternal>,
+        IObjectId
     {
     }
 
@@ -444,7 +445,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IFormListGetter>,
-        IMapsToGetter<IFormListGetter>
+        IMapsToGetter<IFormListGetter>,
+        IObjectIdGetter
     {
         static new ILoquiRegistration StaticRegistration => FormList_Registration.Instance;
 

@@ -60,16 +60,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? ISimpleModelGetter.ColorRemappingIndex => this.ColorRemappingIndex;
         #endregion
-        #region MaterialSwap
-        private readonly IFormLinkNullable<IMaterialSwapGetter> _MaterialSwap = new FormLinkNullable<IMaterialSwapGetter>();
-        public IFormLinkNullable<IMaterialSwapGetter> MaterialSwap
-        {
-            get => _MaterialSwap;
-            set => _MaterialSwap.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IMaterialSwapGetter> ISimpleModelGetter.MaterialSwap => this.MaterialSwap;
-        #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected MemorySlice<Byte>? _Data;
@@ -80,6 +70,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? ISimpleModelGetter.Data => this.Data;
+        #endregion
+        #region MaterialSwap
+        private readonly IFormLinkNullable<IMaterialSwapGetter> _MaterialSwap = new FormLinkNullable<IMaterialSwapGetter>();
+        public IFormLinkNullable<IMaterialSwapGetter> MaterialSwap
+        {
+            get => _MaterialSwap;
+            set => _MaterialSwap.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMaterialSwapGetter> ISimpleModelGetter.MaterialSwap => this.MaterialSwap;
         #endregion
 
         #region To String
@@ -121,20 +121,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.File = initialValue;
                 this.ColorRemappingIndex = initialValue;
-                this.MaterialSwap = initialValue;
                 this.Data = initialValue;
+                this.MaterialSwap = initialValue;
             }
 
             public Mask(
                 TItem File,
                 TItem ColorRemappingIndex,
-                TItem MaterialSwap,
-                TItem Data)
+                TItem Data,
+                TItem MaterialSwap)
             {
                 this.File = File;
                 this.ColorRemappingIndex = ColorRemappingIndex;
-                this.MaterialSwap = MaterialSwap;
                 this.Data = Data;
+                this.MaterialSwap = MaterialSwap;
             }
 
             #pragma warning disable CS8618
@@ -148,8 +148,8 @@ namespace Mutagen.Bethesda.Fallout4
             #region Members
             public TItem File;
             public TItem ColorRemappingIndex;
-            public TItem MaterialSwap;
             public TItem Data;
+            public TItem MaterialSwap;
             #endregion
 
             #region Equals
@@ -164,8 +164,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return false;
                 if (!object.Equals(this.File, rhs.File)) return false;
                 if (!object.Equals(this.ColorRemappingIndex, rhs.ColorRemappingIndex)) return false;
-                if (!object.Equals(this.MaterialSwap, rhs.MaterialSwap)) return false;
                 if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.MaterialSwap, rhs.MaterialSwap)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -173,8 +173,8 @@ namespace Mutagen.Bethesda.Fallout4
                 var hash = new HashCode();
                 hash.Add(this.File);
                 hash.Add(this.ColorRemappingIndex);
-                hash.Add(this.MaterialSwap);
                 hash.Add(this.Data);
+                hash.Add(this.MaterialSwap);
                 return hash.ToHashCode();
             }
 
@@ -185,8 +185,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!eval(this.File)) return false;
                 if (!eval(this.ColorRemappingIndex)) return false;
-                if (!eval(this.MaterialSwap)) return false;
                 if (!eval(this.Data)) return false;
+                if (!eval(this.MaterialSwap)) return false;
                 return true;
             }
             #endregion
@@ -196,8 +196,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (eval(this.File)) return true;
                 if (eval(this.ColorRemappingIndex)) return true;
-                if (eval(this.MaterialSwap)) return true;
                 if (eval(this.Data)) return true;
+                if (eval(this.MaterialSwap)) return true;
                 return false;
             }
             #endregion
@@ -214,8 +214,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 obj.File = eval(this.File);
                 obj.ColorRemappingIndex = eval(this.ColorRemappingIndex);
-                obj.MaterialSwap = eval(this.MaterialSwap);
                 obj.Data = eval(this.Data);
+                obj.MaterialSwap = eval(this.MaterialSwap);
             }
             #endregion
 
@@ -246,13 +246,13 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         fg.AppendItem(ColorRemappingIndex, "ColorRemappingIndex");
                     }
-                    if (printMask?.MaterialSwap ?? true)
-                    {
-                        fg.AppendItem(MaterialSwap, "MaterialSwap");
-                    }
                     if (printMask?.Data ?? true)
                     {
                         fg.AppendItem(Data, "Data");
+                    }
+                    if (printMask?.MaterialSwap ?? true)
+                    {
+                        fg.AppendItem(MaterialSwap, "MaterialSwap");
                     }
                 }
                 fg.AppendLine("]");
@@ -281,8 +281,8 @@ namespace Mutagen.Bethesda.Fallout4
             }
             public Exception? File;
             public Exception? ColorRemappingIndex;
-            public Exception? MaterialSwap;
             public Exception? Data;
+            public Exception? MaterialSwap;
             #endregion
 
             #region IErrorMask
@@ -295,10 +295,10 @@ namespace Mutagen.Bethesda.Fallout4
                         return File;
                     case SimpleModel_FieldIndex.ColorRemappingIndex:
                         return ColorRemappingIndex;
-                    case SimpleModel_FieldIndex.MaterialSwap:
-                        return MaterialSwap;
                     case SimpleModel_FieldIndex.Data:
                         return Data;
+                    case SimpleModel_FieldIndex.MaterialSwap:
+                        return MaterialSwap;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -315,11 +315,11 @@ namespace Mutagen.Bethesda.Fallout4
                     case SimpleModel_FieldIndex.ColorRemappingIndex:
                         this.ColorRemappingIndex = ex;
                         break;
-                    case SimpleModel_FieldIndex.MaterialSwap:
-                        this.MaterialSwap = ex;
-                        break;
                     case SimpleModel_FieldIndex.Data:
                         this.Data = ex;
+                        break;
+                    case SimpleModel_FieldIndex.MaterialSwap:
+                        this.MaterialSwap = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -337,11 +337,11 @@ namespace Mutagen.Bethesda.Fallout4
                     case SimpleModel_FieldIndex.ColorRemappingIndex:
                         this.ColorRemappingIndex = (Exception?)obj;
                         break;
-                    case SimpleModel_FieldIndex.MaterialSwap:
-                        this.MaterialSwap = (Exception?)obj;
-                        break;
                     case SimpleModel_FieldIndex.Data:
                         this.Data = (Exception?)obj;
+                        break;
+                    case SimpleModel_FieldIndex.MaterialSwap:
+                        this.MaterialSwap = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -353,8 +353,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Overall != null) return true;
                 if (File != null) return true;
                 if (ColorRemappingIndex != null) return true;
-                if (MaterialSwap != null) return true;
                 if (Data != null) return true;
+                if (MaterialSwap != null) return true;
                 return false;
             }
             #endregion
@@ -391,8 +391,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 fg.AppendItem(File, "File");
                 fg.AppendItem(ColorRemappingIndex, "ColorRemappingIndex");
-                fg.AppendItem(MaterialSwap, "MaterialSwap");
                 fg.AppendItem(Data, "Data");
+                fg.AppendItem(MaterialSwap, "MaterialSwap");
             }
             #endregion
 
@@ -403,8 +403,8 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.File = this.File.Combine(rhs.File);
                 ret.ColorRemappingIndex = this.ColorRemappingIndex.Combine(rhs.ColorRemappingIndex);
-                ret.MaterialSwap = this.MaterialSwap.Combine(rhs.MaterialSwap);
                 ret.Data = this.Data.Combine(rhs.Data);
+                ret.MaterialSwap = this.MaterialSwap.Combine(rhs.MaterialSwap);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -430,8 +430,8 @@ namespace Mutagen.Bethesda.Fallout4
             public bool OnOverall;
             public bool File;
             public bool ColorRemappingIndex;
-            public bool MaterialSwap;
             public bool Data;
+            public bool MaterialSwap;
             #endregion
 
             #region Ctors
@@ -443,8 +443,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.OnOverall = onOverall;
                 this.File = defaultOn;
                 this.ColorRemappingIndex = defaultOn;
-                this.MaterialSwap = defaultOn;
                 this.Data = defaultOn;
+                this.MaterialSwap = defaultOn;
             }
 
             #endregion
@@ -462,8 +462,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 ret.Add((File, null));
                 ret.Add((ColorRemappingIndex, null));
-                ret.Add((MaterialSwap, null));
                 ret.Add((Data, null));
+                ret.Add((MaterialSwap, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -548,8 +548,8 @@ namespace Mutagen.Bethesda.Fallout4
     {
         new String File { get; set; }
         new Single? ColorRemappingIndex { get; set; }
-        new IFormLinkNullable<IMaterialSwapGetter> MaterialSwap { get; set; }
         new MemorySlice<Byte>? Data { get; set; }
+        new IFormLinkNullable<IMaterialSwapGetter> MaterialSwap { get; set; }
     }
 
     /// <summary>
@@ -570,8 +570,8 @@ namespace Mutagen.Bethesda.Fallout4
         static ILoquiRegistration StaticRegistration => SimpleModel_Registration.Instance;
         String File { get; }
         Single? ColorRemappingIndex { get; }
-        IFormLinkNullableGetter<IMaterialSwapGetter> MaterialSwap { get; }
         ReadOnlyMemorySlice<Byte>? Data { get; }
+        IFormLinkNullableGetter<IMaterialSwapGetter> MaterialSwap { get; }
 
     }
 
@@ -743,8 +743,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         File = 0,
         ColorRemappingIndex = 1,
-        MaterialSwap = 2,
-        Data = 3,
+        Data = 2,
+        MaterialSwap = 3,
     }
     #endregion
 
@@ -835,8 +835,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ClearPartial();
             item.File = string.Empty;
             item.ColorRemappingIndex = default;
-            item.MaterialSwap.Clear();
             item.Data = default;
+            item.MaterialSwap.Clear();
         }
         
         #region Mutagen
@@ -891,8 +891,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (rhs == null) return;
             ret.File = string.Equals(item.File, rhs.File);
             ret.ColorRemappingIndex = item.ColorRemappingIndex.EqualsWithin(rhs.ColorRemappingIndex);
-            ret.MaterialSwap = item.MaterialSwap.Equals(rhs.MaterialSwap);
             ret.Data = MemorySliceExt.Equal(item.Data, rhs.Data);
+            ret.MaterialSwap = item.MaterialSwap.Equals(rhs.MaterialSwap);
         }
         
         public string ToString(
@@ -948,14 +948,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 fg.AppendItem(ColorRemappingIndexItem, "ColorRemappingIndex");
             }
-            if (printMask?.MaterialSwap ?? true)
-            {
-                fg.AppendItem(item.MaterialSwap.FormKeyNullable, "MaterialSwap");
-            }
             if ((printMask?.Data ?? true)
                 && item.Data is {} DataItem)
             {
                 fg.AppendLine($"Data => {SpanExt.ToHexString(DataItem)}");
+            }
+            if (printMask?.MaterialSwap ?? true)
+            {
+                fg.AppendItem(item.MaterialSwap.FormKeyNullable, "MaterialSwap");
             }
         }
         
@@ -974,13 +974,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 if (!lhs.ColorRemappingIndex.EqualsWithin(rhs.ColorRemappingIndex)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SimpleModel_FieldIndex.MaterialSwap) ?? true))
-            {
-                if (!lhs.MaterialSwap.Equals(rhs.MaterialSwap)) return false;
-            }
             if ((crystal?.GetShouldTranslate((int)SimpleModel_FieldIndex.Data) ?? true))
             {
                 if (!MemorySliceExt.Equal(lhs.Data, rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SimpleModel_FieldIndex.MaterialSwap) ?? true))
+            {
+                if (!lhs.MaterialSwap.Equals(rhs.MaterialSwap)) return false;
             }
             return true;
         }
@@ -993,11 +993,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 hash.Add(ColorRemappingIndexitem);
             }
-            hash.Add(item.MaterialSwap);
             if (item.Data is {} DataItem)
             {
                 hash.Add(DataItem);
             }
+            hash.Add(item.MaterialSwap);
             return hash.ToHashCode();
         }
         
@@ -1042,10 +1042,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 item.ColorRemappingIndex = rhs.ColorRemappingIndex;
             }
-            if ((copyMask?.GetShouldTranslate((int)SimpleModel_FieldIndex.MaterialSwap) ?? true))
-            {
-                item.MaterialSwap.SetTo(rhs.MaterialSwap.FormKeyNullable);
-            }
             if ((copyMask?.GetShouldTranslate((int)SimpleModel_FieldIndex.Data) ?? true))
             {
                 if(rhs.Data is {} Datarhs)
@@ -1056,6 +1052,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     item.Data = default;
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SimpleModel_FieldIndex.MaterialSwap) ?? true))
+            {
+                item.MaterialSwap.SetTo(rhs.MaterialSwap.FormKeyNullable);
             }
         }
         
@@ -1163,14 +1163,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 item: item.ColorRemappingIndex,
                 header: translationParams.ConvertToCustom(RecordTypes.MODC));
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.MaterialSwap,
-                header: translationParams.ConvertToCustom(RecordTypes.MODS));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Data,
                 header: translationParams.ConvertToCustom(RecordTypes.MODT));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MaterialSwap,
+                header: translationParams.ConvertToCustom(RecordTypes.MODS));
         }
 
         public virtual void Write(
@@ -1234,17 +1234,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.ColorRemappingIndex = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SimpleModel_FieldIndex.ColorRemappingIndex;
                 }
-                case RecordTypeInts.MODS:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaterialSwap.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)SimpleModel_FieldIndex.MaterialSwap;
-                }
                 case RecordTypeInts.MODT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Data = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SimpleModel_FieldIndex.Data;
+                }
+                case RecordTypeInts.MODS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MaterialSwap.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)SimpleModel_FieldIndex.MaterialSwap;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1323,13 +1323,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private int? _ColorRemappingIndexLocation;
         public Single? ColorRemappingIndex => _ColorRemappingIndexLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorRemappingIndexLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        #region MaterialSwap
-        private int? _MaterialSwapLocation;
-        public IFormLinkNullableGetter<IMaterialSwapGetter> MaterialSwap => _MaterialSwapLocation.HasValue ? new FormLinkNullable<IMaterialSwapGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialSwapLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialSwapGetter>.Null;
-        #endregion
         #region Data
         private int? _DataLocation;
         public ReadOnlyMemorySlice<Byte>? Data => _DataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region MaterialSwap
+        private int? _MaterialSwapLocation;
+        public IFormLinkNullableGetter<IMaterialSwapGetter> MaterialSwap => _MaterialSwapLocation.HasValue ? new FormLinkNullable<IMaterialSwapGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialSwapLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialSwapGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1399,15 +1399,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     _ColorRemappingIndexLocation = (stream.Position - offset);
                     return (int)SimpleModel_FieldIndex.ColorRemappingIndex;
                 }
-                case RecordTypeInts.MODS:
-                {
-                    _MaterialSwapLocation = (stream.Position - offset);
-                    return (int)SimpleModel_FieldIndex.MaterialSwap;
-                }
                 case RecordTypeInts.MODT:
                 {
                     _DataLocation = (stream.Position - offset);
                     return (int)SimpleModel_FieldIndex.Data;
+                }
+                case RecordTypeInts.MODS:
+                {
+                    _MaterialSwapLocation = (stream.Position - offset);
+                    return (int)SimpleModel_FieldIndex.MaterialSwap;
                 }
                 default:
                     return ParseResult.Stop;

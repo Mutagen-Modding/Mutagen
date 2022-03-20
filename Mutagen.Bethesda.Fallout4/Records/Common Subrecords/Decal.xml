@@ -9,7 +9,7 @@
       <Float name="Depth" />
       <Float name="Shininess" />
       <Float name="ParallaxScale" />
-      <UInt8 name="ParallaxPasses" />
+      <UInt8 name="ParallaxPasses" max="30" />
       <Enum name="Flags" enumName="Decal.Flag" byteLength="1" />
       <UInt16 name="AlphaThreshold" />
       <Color name="Color" binaryType="Alpha" />

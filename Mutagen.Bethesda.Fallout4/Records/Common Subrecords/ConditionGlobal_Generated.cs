@@ -641,10 +641,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 55,
+            msgID: 289,
             version: 0);
 
-        public const string GUID = "976e8455-ce40-407a-9975-19ef9de54cf9";
+        public const string GUID = "780500bb-6522-43c9-a8f6-784eb76c7ad7";
 
         public const ushort AdditionalFieldCount = 2;
 
@@ -1106,10 +1106,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ComparisonValue);
-            var DataItem = item.Data;
-            ((ConditionDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                item: DataItem,
-                writer: writer);
+            ConditionGlobalBinaryWriteTranslation.WriteBinaryData(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryDataCustom(
+            MutagenWriter writer,
+            IConditionGlobalGetter item);
+
+        public static void WriteBinaryData(
+            MutagenWriter writer,
+            IConditionGlobalGetter item)
+        {
+            WriteBinaryDataCustom(
+                writer: writer,
+                item: item);
         }
 
         public static partial void CustomBinaryEndExport(
@@ -1179,8 +1191,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item,
                 frame: frame);
             item.ComparisonValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Data = Mutagen.Bethesda.Fallout4.ConditionData.CreateFromBinary(frame: frame);
+            ConditionGlobalBinaryCreateTranslation.FillBinaryDataCustom(
+                frame: frame,
+                item: item);
         }
+
+        public static partial void FillBinaryDataCustom(
+            MutagenFrame frame,
+            IConditionGlobal item);
 
         public static partial void CustomBinaryEndImport(
             MutagenFrame frame,
@@ -1240,8 +1258,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public IFormLinkGetter<IGlobalGetter> ComparisonValue => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         #region Data
-        public IConditionDataGetter Data => ConditionDataBinaryOverlay.ConditionDataFactory(new OverlayStream(_data.Slice(0x8), _package), _package, default(TypedParseParams));
+        public override IConditionDataGetter Data => GetDataCustom(location: 0x8);
         protected int DataEndingPos;
+        partial void CustomDataEndPos();
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1273,6 +1292,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+            ret.CustomDataEndPos();
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

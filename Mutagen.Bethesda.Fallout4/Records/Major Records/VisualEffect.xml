@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="VisualEffect" recordType="RFCT" objType="Record" baseClass="Fallout4MajorRecord" GUID="a392cd2c-a76b-42c0-ac4f-02dab056aac8" ID="285">
+  </Object>
+</Loqui>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Note" recordType="NOTE" objType="Record" baseClass="Fallout4MajorRecord" GUID="2bbbff8d-bde9-4838-8c78-87cbd8407d32" ID="235">
+    <LinkInterface>IObjectId</LinkInterface>
+  </Object>
+</Loqui>

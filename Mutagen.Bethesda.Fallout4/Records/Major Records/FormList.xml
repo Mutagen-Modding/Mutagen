@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="FormList" recordType="FLST" objType="Record" baseClass="Fallout4MajorRecord" GUID="154ca65c-cc1a-44f3-9d52-4a27e29839bf" ID="74">
+    <LinkInterface>IObjectId</LinkInterface>
   </Object>
 </Loqui>

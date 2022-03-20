@@ -549,6 +549,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IActionRecord);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -644,6 +649,10 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
+        #region Mutagen
+        new ActionRecord.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IActionRecordInternal :
@@ -674,6 +683,10 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: INamedGetter, INamedRequiredGetter
         /// </summary>
         String? Name { get; }
+        #endregion
+
+        #region Mutagen
+        ActionRecord.MajorFlag MajorFlags { get; }
         #endregion
 
     }
@@ -1707,6 +1720,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         protected override Type LinkType => typeof(IActionRecord);
 
+        public ActionRecord.MajorFlag MajorFlags => (ActionRecord.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region Color
         private int? _ColorLocation;

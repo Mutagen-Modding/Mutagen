@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Worldspace" recordType="WRLD" objType="Record" baseClass="Fallout4MajorRecord" GUID="bfb0097a-7cb4-4c2b-82e1-8c58d6d73720" ID="191">
+  </Object>
+</Loqui>

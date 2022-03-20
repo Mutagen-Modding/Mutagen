@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ArtObject" objType="Record" recordType="ARTO" baseClass="Fallout4MajorRecord" GUID="fb3eec42-b062-441b-ab25-da703ad31526" ID="139">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <RefDirect name="Model" refName="Model" />
+      <Enum name="Type" enumName="ArtObject.TypeEnum" byteLength="4" recordType="DNAM" />
+    </Fields>
+  </Object>
+</Loqui>

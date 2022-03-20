@@ -1,3 +1,4 @@
+using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
 
@@ -19,6 +20,15 @@ public class KeywordedAspect : AspectFieldInterfaceDefinition
             {
                 fg.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;");
                 fg.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;");
+                if (!tg.Nullable)
+                {
+                    fg.AppendLine("ExtendedList<IFormLinkGetter<IKeywordGetter>>? IKeyworded<IKeywordGetter>.Keywords");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine($"get => this._Keywords;");
+                        fg.AppendLine($"set => this._Keywords = value ?? new();");
+                    }
+                }
             }),
             new(LoquiInterfaceType.IGetter, "Keywords", (o, tg, fg) =>
             {

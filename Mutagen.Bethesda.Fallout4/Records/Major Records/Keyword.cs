@@ -1,35 +1,35 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Fallout4;
+
+public partial class Keyword
 {
-    public partial class Keyword
+    [Flags]
+    public enum MajorFlag
     {
+        Restricted = 0x0008_0000
+    }
 
-        public enum TypeEnum
-        {
-            None,
-            ComponentTechLevel,
-            AttachPoint,
-            ComponentProperty,
-            InstantiationFilter,
-            ModAssociation,
-            Sound,
-            AnimArchetype,
-            FunctionCall,
-            RecipeFilter,
-            AttractionType,
-            DialogueSubtype,
-            QuestTarget,
-            AnimFlavor,
-            AnimGender,
-            AnimFace,
-            QuestGroup,
-            AnimInjured,
-            DispelEffect,
-        }
+    public enum TypeEnum
+    {
+        None,
+        ComponentTechLevel,
+        AttachPoint,
+        ComponentProperty,
+        InstantiationFilter,
+        ModAssociation,
+        Sound,
+        AnimArchetype,
+        FunctionCall,
+        RecipeFilter,
+        AttractionType,
+        DialogueSubtype,
+        QuestTarget,
+        AnimFlavor,
+        AnimGender,
+        AnimFace,
+        QuestGroup,
+        AnimInjured,
+        DispelEffect,
     }
 }

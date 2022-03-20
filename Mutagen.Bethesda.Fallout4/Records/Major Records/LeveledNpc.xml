@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LeveledNpc" recordType="LVLN" baseClass="Fallout4MajorRecord" objType="Record" GUID="7a65a4bc-1f74-49c8-9f75-a8660250303f" ID="214">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <UInt8 name="ChanceNone" recordType="LVLD" nullable="False" />
+      <UInt8 name="MaxCount" recordType="LVLM" nullable="False" />
+      <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledNpc.Flag" byteLength="1" />
+      <FormLink name="Global" recordType="LVLG" refName="Global" />
+      <RefList name="Entries" counterRecType="LLCT" refName="LeveledNpcEntry" counterLength="1" />
+      <RefList name="FilterKeywordChances" refName="FilterKeywordChance" />
+      <RefDirect name="Model" refName="Model" />
+    </Fields>
+    <LinkInterface>INpcSpawn</LinkInterface>
+  </Object>
+  <Object name="LeveledNpcEntry" objType="Subrecord" GUID="e33c0ba1-7e56-404a-a61a-8015375de740" ID="215">
+    <Fields>
+      <RefDirect name="Data" refName="LeveledNpcEntryData" />
+      <RefDirect name="ExtraData" refName="ExtraData" />
+    </Fields>
+  </Object>
+  <Object name="LeveledNpcEntryData" objType="Subrecord" recordType="LVLO" GUID="b94ddb66-8b30-4378-a860-c9cd438b9acf" ID="216">
+    <Fields>
+      <Int16 name="Level" />
+      <Int16 name="Unknown" />
+      <FormLink name="Reference">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+      <Int16 name="Count" />
+      <Int16 name="Unknown2" />
+    </Fields>
+  </Object>
+</Loqui>

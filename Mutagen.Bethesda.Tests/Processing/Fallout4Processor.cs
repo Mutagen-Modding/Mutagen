@@ -6,6 +6,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,6 +28,7 @@ public class Fallout4Processor : Processor
         base.AddDynamicProcessorInstructions();
         AddDynamicProcessing(RecordTypes.GMST, ProcessGameSettings);
         AddDynamicProcessing(RecordTypes.TRNS, ProcessTransforms);
+        AddDynamicProcessing(RecordTypes.RACE, ProcessRaces);
     }
 
     private void ProcessGameSettings(
@@ -47,6 +49,37 @@ public class Fallout4Processor : Processor
         if (!majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec)) return;
         int offset = 0;
         ProcessZeroFloats(dataRec, fileOffset, ref offset, 9);
+    }
+
+    private void ProcessRaces(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (!majorFrame.TryLocateSubrecordPinFrame(RecordTypes.MLSI, out var mlsi)) return;
+
+        if (majorFrame.TryLocateSubrecord(RecordTypes.MSID, out _))
+        {
+            var max = majorFrame.FindEnumerateSubrecords(RecordTypes.MSID)
+                .Select(x => x.AsInt32())
+                .Max(0);
+
+            var existing = mlsi.AsInt32();
+            if (existing == max) return;
+
+            byte[] sub = new byte[4];
+            BinaryPrimitives.WriteInt32LittleEndian(sub, max);
+            _instructions.SetSubstitution(
+                fileOffset + mlsi.Location + mlsi.HeaderLength,
+                sub);
+        }
+        else
+        {
+            _instructions.SetRemove(RangeInt64.FromLength(fileOffset + mlsi.Location, mlsi.TotalLength));
+            ProcessLengths(
+                majorFrame,
+                -mlsi.TotalLength,
+                fileOffset);
+        }
     }
 
     public void GameSettingStringHandler(
@@ -72,41 +105,34 @@ public class Fallout4Processor : Processor
                 return new AStringsAlignment[]
                 {
                     new StringsAlignmentCustom("GMST", GameSettingStringHandler),
-                    new RecordType[] { "KYWD", "FULL" }
+                    new RecordType[] { "KYWD", "FULL" },
+                    new RecordType[] { "ENCH", "FULL" },
+                    new RecordType[] { "SPEL", "FULL" },
+                    new RecordType[] { "MGEF", "FULL", "DNAM" },
+                    new RecordType[] { "ACTI", "FULL", "ATTX" },
+                    new RecordType[] { "RACE", "TTGP", "MPPN" },
+                    new RecordType[] { "ACTI", "FULL", "ATTX" },
+                    new RecordType[] { "TACT", "FULL" },
+                    new RecordType[] { "ARMO", "FULL", "DESC" },
+                    new RecordType[] { "BOOK", "FULL" },
+                    new RecordType[] { "CONT", "FULL" },
+                    new RecordType[] { "DOOR", "FULL" },
+                    new RecordType[] { "INGR", "FULL" },
+                    new RecordType[] { "LIGH", "FULL" },
+                    new RecordType[] { "MISC", "FULL" },
                 };
-            //case StringsSource.DL:
-            //    ProcessStringsFiles(
-            //        modKey,
-            //        dataFolder,
-            //        language,
-            //        StringsSource.DL,
-            //        strict: true,
-            //        RenumberStringsFileEntries(
-            //            modKey,
-            //            stream,
-            //            dataFolder,
-            //            language,
-            //            StringsSource.DL,
-            //            new RecordType[] { "SCRL", "DESC" },
-            //        ));
-            //    break;
-            //case StringsSource.IL:
-            //    ProcessStringsFiles(
-            //        modKey,
-            //        dataFolder,
-            //        language,
-            //        StringsSource.IL,
-            //        strict: true,
-            //        RenumberStringsFileEntries(
-            //            modKey,
-            //            stream,
-            //            dataFolder,
-            //            language,
-            //            StringsSource.IL,
-            //            new RecordType[] { "DIAL" },
-            //            new RecordType[] { "INFO", "NAM1" }
-            //        ));
-            //    break;
+            case StringsSource.DL:
+                return new AStringsAlignment[]
+                {
+                    new RecordType[] { "RACE", "DESC" },
+                    new RecordType[] { "SPEL", "DESC" },
+                    new RecordType[] { "BOOK", "CNAM", "DESC" },
+                    new RecordType[] { "DOOR", "ONAM", "CNAM" },
+                };
+            case StringsSource.IL:
+                return new AStringsAlignment[]
+                {
+                };
             default:
                 throw new NotImplementedException();
         }

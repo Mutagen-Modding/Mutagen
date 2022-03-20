@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ImageSpaceAdapter" objType="Record" recordType="IMAD" baseClass="Fallout4MajorRecord" GUID="41703d5d-cf96-4b22-9b54-6bbdbb24fabb" ID="273">
+    <Fields>
+      <Data recordType="DNAM">
+        <Fields>
+          <Enum name="Flags" enumName="ImageSpaceAdapter.Flag" byteLength="4" />
+          <Float name="Duration" />
+          <CustomLogic name="Counts1" byteLength="192" />
+          <Enum name="RadialBlurFlags" enumName="ImageSpaceAdapter.RadialBlurFlag" byteLength="4" />
+          <P2Float name="RadialBlurCenter" />
+          <CustomLogic name="Counts2" byteLength="12" />
+          <Enum name="DepthOfFieldFlags" enumName="ImageSpaceAdapter.DepthOfFieldFlag" byteLength="4" />
+          <CustomLogic name="Counts3" byteLength="16" />
+          <!--TODO Vignette -->
+        </Fields>
+      </Data>
+      <RefList name="BlurRadius" refName="KeyFrame" recordType="BNAM" />
+      <RefList name="DoubleVisionStrength" refName="KeyFrame" recordType="VNAM" />
+      <RefList name="TintColor" refName="ColorFrame" recordType="TNAM" />
+      <RefList name="FadeColor" refName="ColorFrame" recordType="NAM3" />
+      <RefList name="RadialBlurStrength" refName="KeyFrame" recordType="RNAM" />
+      <RefList name="RadialBlurRampUp" refName="KeyFrame" recordType="SNAM" />
+      <RefList name="RadialBlurStart" refName="KeyFrame" recordType="UNAM" />
+      <RefList name="RadialBlurRampDown" refName="KeyFrame" recordType="NAM1" />
+      <RefList name="RadialBlurDownStart" refName="KeyFrame" recordType="NAM2" />
+      <RefList name="DepthOfFieldStrength" refName="KeyFrame" recordType="WNAM" />
+      <RefList name="DepthOfFieldDistance" refName="KeyFrame" recordType="XNAM" />
+      <RefList name="DepthOfFieldRange" refName="KeyFrame" recordType="YNAM" />
+      <RefList name="MotionBlurStrength" refName="KeyFrame" recordType="NAM4" />
+      <RefList name="HdrEyeAdaptSpeedMult" refName="KeyFrame" recordTypeHex="0x44414900" />
+      <RefList name="HdrEyeAdaptSpeedAdd" refName="KeyFrame" recordTypeHex="0x44414940" />
+      <RefList name="HdrBloomBlurRadiusMult" refName="KeyFrame" recordTypeHex="0x44414901" />
+      <RefList name="HdrBloomBlurRadiusAdd" refName="KeyFrame" recordTypeHex="0x44414941" />
+      <RefList name="HdrBloomThresholdMult" refName="KeyFrame" recordTypeHex="0x44414902" />
+      <RefList name="HdrBloomThresholdAdd" refName="KeyFrame" recordTypeHex="0x44414942" />
+      <RefList name="HdrBloomScaleMult" refName="KeyFrame" recordTypeHex="0x44414903" />
+      <RefList name="HdrBloomScaleAdd" refName="KeyFrame" recordTypeHex="0x44414943" />
+      <RefList name="HdrTargetLumMinMult" refName="KeyFrame" recordTypeHex="0x44414904" />
+      <RefList name="HdrTargetLumMinAdd" refName="KeyFrame" recordTypeHex="0x44414944" />
+      <RefList name="HdrTargetLumMaxMult" refName="KeyFrame" recordTypeHex="0x44414905" />
+      <RefList name="HdrTargetLumMaxAdd" refName="KeyFrame" recordTypeHex="0x44414945" />
+      <RefList name="HdrSunlightScaleMult" refName="KeyFrame" recordTypeHex="0x44414906" />
+      <RefList name="HdrSunlightScaleAdd" refName="KeyFrame" recordTypeHex="0x44414946" />
+      <RefList name="HdrSkyScaleMult" refName="KeyFrame" recordTypeHex="0x44414907" />
+      <RefList name="HdrSkyScaleAdd" refName="KeyFrame" recordTypeHex="0x44414947" />
+      <RefList name="Unknown08" refName="KeyFrame" recordTypeHex="0x44414908" />
+      <RefList name="Unknown48" refName="KeyFrame" recordTypeHex="0x44414948" />
+      <RefList name="Unknown09" refName="KeyFrame" recordTypeHex="0x44414909" />
+      <RefList name="Unknown49" refName="KeyFrame" recordTypeHex="0x44414949" />
+      <RefList name="Unknown0A" refName="KeyFrame" recordTypeHex="0x4441490A" />
+      <RefList name="Unknown4A" refName="KeyFrame" recordTypeHex="0x4441494A" />
+      <RefList name="Unknown0B" refName="KeyFrame" recordTypeHex="0x4441490B" />
+      <RefList name="Unknown4B" refName="KeyFrame" recordTypeHex="0x4441494B" />
+      <RefList name="Unknown0C" refName="KeyFrame" recordTypeHex="0x4441490C" />
+      <RefList name="Unknown4C" refName="KeyFrame" recordTypeHex="0x4441494C" />
+      <RefList name="Unknown0D" refName="KeyFrame" recordTypeHex="0x4441490D" />
+      <RefList name="Unknown4D" refName="KeyFrame" recordTypeHex="0x4441494D" />
+      <RefList name="Unknown0E" refName="KeyFrame" recordTypeHex="0x4441490E" />
+      <RefList name="Unknown4E" refName="KeyFrame" recordTypeHex="0x4441494E" />
+      <RefList name="Unknown0F" refName="KeyFrame" recordTypeHex="0x4441490F" />
+      <RefList name="Unknown4F" refName="KeyFrame" recordTypeHex="0x4441494F" />
+      <RefList name="Unknown10" refName="KeyFrame" recordTypeHex="0x44414910" />
+      <RefList name="Unknown50" refName="KeyFrame" recordTypeHex="0x44414950" />
+      <RefList name="CinematicSaturationMult" refName="KeyFrame" recordTypeHex="0x44414911" />
+      <RefList name="CinematicSaturationAdd" refName="KeyFrame" recordTypeHex="0x44414951" />
+      <RefList name="CinematicBrightnessMult" refName="KeyFrame" recordTypeHex="0x44414912" />
+      <RefList name="CinematicBrightnessAdd" refName="KeyFrame" recordTypeHex="0x44414952" />
+      <RefList name="CinematicContrastMult" refName="KeyFrame" recordTypeHex="0x44414913" />
+      <RefList name="CinematicContrastAdd" refName="KeyFrame" recordTypeHex="0x44414953" />
+      <RefList name="Unknown14" refName="KeyFrame" recordTypeHex="0x44414914" />
+      <RefList name="Unknown54" refName="KeyFrame" recordTypeHex="0x44414954" />
+    </Fields>
+  </Object>
+  <Object name="KeyFrame" objType="Subrecord" GUID="a142fc98-5296-427a-966e-69c7e59e2599" ID="239">
+    <Fields>
+      <Float name="Time" />
+      <Float name="Value" />
+    </Fields>
+  </Object>
+  <Object name="ColorFrame" objType="Subrecord" GUID="d47b46e4-4e4b-405f-b0a2-df87b4a5231e" ID="269">
+    <Fields>
+      <Float name="Time" />
+      <Color name="Color" binaryType="AlphaFloat" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -30,25 +30,7 @@ namespace Mutagen.Bethesda.Fallout4
             AliasForCollection = 14
         }
     }
-
-
-    // FO4 sigReferences 
-    //  'NULL', 'PLYR', 'ACHR', 'REFR', 'PGRE', 'PHZD','PMIS', 'PARW', 'PBAR', 'PBEA', 'PCON', 'PFLA'
-    // skyrim: 
-    //   NULL, DOOR, PLYR, ACHR, REFR, PGRE, PHZD, PMIS, PARW, PBAR, PBEA, PCON, PFLA
-    //--> new in FO4: 
-    //--> not in FO4: DOOR
-
-    //FO4 ObjectId references: 
-    // wbFormIDCkNoReach('Object ID', [NULL, ACTI, DOOR, STAT, MSTT, FURN, SPEL, NPC_, CONT, ARMO, AMMO, MISC, WEAP, OMOD, BOOK, NOTE, KEYM, ALCH, INGR, LIGH, FACT, FLST, IDLM, TXST, PROJ]),
-    //Skyrim: 
-    // wbFormIDCkNoReach('Object ID', [NULL, ACTI, DOOR, STAT, MSTT, FURN, SPEL, SCRL, NPC_, CONT, ARMO, AMMO, MISC, WEAP, BOOK, KEYM, ALCH, INGR, LIGH, FACT, FLST, IDLM, SHOU]),
-    //--> new in FO4: OMOD, NOTE, TXST, PROJ
-    //--> not in FO4: SCRL, SHOU
-
-
-
-
+    
     namespace Internals
     {
         public partial class LocationTargetRadiusBinaryCreateTranslation

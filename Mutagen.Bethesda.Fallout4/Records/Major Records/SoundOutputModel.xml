@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SoundOutputModel" recordType="SOPM" objType="Record" baseClass="Fallout4MajorRecord" GUID="c4291e81-0689-4557-ab6c-d26328f2419a" ID="167">
+  </Object>
+</Loqui>

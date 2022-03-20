@@ -604,6 +604,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IKeyword);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -706,6 +711,10 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         new TranslatedString? Name { get; set; }
         new String? DisplayName { get; set; }
+        #region Mutagen
+        new Keyword.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IKeywordInternal :
@@ -744,6 +753,10 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter? Name { get; }
         #endregion
         String? DisplayName { get; }
+
+        #region Mutagen
+        Keyword.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -1811,6 +1824,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         protected override Type LinkType => typeof(IKeyword);
 
+        public Keyword.MajorFlag MajorFlags => (Keyword.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region Color
         private int? _ColorLocation;

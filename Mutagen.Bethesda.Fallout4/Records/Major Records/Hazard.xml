@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Hazard" recordType="HAZD" objType="Record" baseClass="Fallout4MajorRecord" GUID="d61b1bde-1cf4-40d1-9eec-63626d1f147a" ID="241">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="ImageSpaceModifier" refName="ImageSpaceAdapter" recordType="MNAM" />
+      <Data recordType="DNAM">
+        <Fields>
+          <UInt32 name="Limit" />
+          <Float name="Radius" />
+          <Float name="Lifetime" />
+          <Float name="ImageSpaceRadius" />
+          <Float name="TargetInterval" />
+          <Enum name="Flags" enumName="Hazard.Flag" byteLength="4" />
+          <FormLink name="Effect">
+            <Interface>IEffectRecord</Interface>
+          </FormLink>
+          <FormLink name="Light" refName="Light" />
+          <FormLink name="ImpactDataSet" refName="ImpactDataSet" />
+          <FormLink name="Sound" refName="SoundDescriptor" />
+		  <!--TaperEffectiveness TODO Ugly :D-->
+		  <Float name="FullEffectRadius" />
+		  <Float name="TaperWeight" />
+		  <Float name="TaperCurse" />
+        </Fields>
+      </Data>
+    </Fields>
+    <LinkInterface>IPlacedTrapTarget</LinkInterface>
+  </Object>
+</Loqui>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MovementType" recordType="MOVT" baseClass="Fallout4MajorRecord" objType="Record" GUID="f82d6eee-4520-4ffe-8a9c-2a93ea8837d5" ID="207">
+  </Object>
+</Loqui>

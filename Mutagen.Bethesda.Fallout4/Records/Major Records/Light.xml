@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Light" recordType="LIGH" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true" GUID="e0a72b05-9730-493d-96df-7fc91bae436b" ID="196">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+	  <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+      <RefDirect name="Model" refName="Model" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefDirect name="Destructible" refName="Destructible" />
+	  <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <String name="InventoryImage" recordType="ICON" translated="DL" />
+      <String name="MessageIcon" recordType="MICO" translated="DL" />
+      <Data>
+        <Fields>
+          <Int32 name="Time" />
+          <UInt32 name="Radius" />
+          <Color name="Color" binaryType="Alpha" />
+          <Enum name="Flags" enumName="Light.Flag" byteLength="4" />
+          <Float name="FalloffExponent" />
+          <Float name="FOV" />
+          <Float name="NearClip" />
+          <Float name="FlickerPeriod" />
+          <Float name="FlickerIntensityAmplitude" />
+          <Float name="FlickerMovementAmplitude" />
+          <Float name="Constant" />
+          <Float name="Scalar" />
+          <Break />
+          <Float name="Exponent" />
+          <Float name="GodRaysNearClip" />
+          <UInt32 name="Value" />
+          <Break />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+      <Float name="FadeValue" recordType="FNAM" nullable="False" />
+      <String name="Gobo" recordType="NAM0" />
+      <FormLink name="Lens" refName="LensFlare" recordType="LNAM" />
+      <FormLink name="GodRays" refName="GodRays" recordType="WGDR" />
+      <FormLink name="Sound" refName="SoundDescriptor" recordType="SNAM" />
+    </Fields>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IEmittance</LinkInterface>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
+  </Object>
+</Loqui>

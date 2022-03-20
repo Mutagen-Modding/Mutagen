@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Bone" objType="Subrecord" GUID="963d0a50-740b-45d5-aa41-3687b5df251c" ID="206">
+    <Fields>
+      <String name="Name" recordType="BSMB" />
+      <List name="Values" recordType="BSMS">
+        <Float />
+      </List>
+      <ByteArray name="BMMP" recordType="BMMP" />
+    </Fields>
+  </Object>
+</Loqui>

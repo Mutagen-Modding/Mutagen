@@ -1,27 +1,49 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Fallout4Mod" objType="Mod" ctorPermission="protected" GUID="9cae6baa-1084-4862-ae0a-07c79b9f2a3a" ID="19">
-    <Fields>
-      <RefDirect name="ModHeader" refName="Fallout4ModHeader" singleton="true" />
-      <Group name="GameSettings" refName="GameSetting" />
-      <Group name="Keywords" refName="Keyword" />
-      <Group name="LocationReferenceTypes" refName="LocationReferenceType" />
-      <Group name="Actions" refName="ActionRecord" />
-      <Group name="Transforms" refName="Transform" />
-      <Group name="Components" refName="Component" />
-      <Group name="TextureSets" refName="TextureSet" />
-      <Group name="Globals" refName="Global" />
-      <Group name="DamageTypes" refName="ADamageType" />
-      <Group name="Classes" refName="Class" />
-      <Group name="Factions" refName="Faction" />
-      <Group name="HeadParts" refName="HeadPart" />
-      <!--<Group name="Races" refName="Race" />-->
-      <Group name="SoundMarkers" refName="SoundMarker" />
-	  <Group name="AcousticSpaces" refName="AcousticSpace" />
-	  <!--<Group name="MagicEffects" refName="MagicEffect" />-->
-	  <Group name="LandscapeTextures" refName="LandscapeTexture" />
-	  <Group name="Grasses" refName="Grass" />
-	  <Group name="MaterialTypes" refName="MaterialType" />
-	</Fields>
-  </Object>
+	<Object name="Fallout4Mod" objType="Mod" ctorPermission="protected" GUID="9cae6baa-1084-4862-ae0a-07c79b9f2a3a" ID="19">
+		<Fields>
+			<RefDirect name="ModHeader" refName="Fallout4ModHeader" singleton="true" />
+			<Group name="GameSettings" refName="GameSetting" />
+			<Group name="Keywords" refName="Keyword" />
+			<Group name="LocationReferenceTypes" refName="LocationReferenceType" />
+			<Group name="Actions" refName="ActionRecord" />
+			<Group name="Transforms" refName="Transform" />
+			<Group name="Components" refName="Component" />
+			<Group name="TextureSets" refName="TextureSet" />
+			<Group name="Globals" refName="Global" />
+			<Group name="DamageTypes" refName="ADamageType" />
+			<Group name="Classes" refName="Class" />
+			<Group name="Factions" refName="Faction" />
+			<Group name="HeadParts" refName="HeadPart" />
+			<Group name="Races" refName="Race" />
+			<Group name="SoundMarkers" refName="SoundMarker" />
+			<Group name="AcousticSpaces" refName="AcousticSpace" />
+			<Group name="MagicEffects" refName="MagicEffect" />
+			<Group name="LandscapeTextures" refName="LandscapeTexture" />
+			<Group name="ObjectEffects" refName="ObjectEffect" />
+			<Group name="Spells" refName="Spell" />
+			<Group name="Activators" refName="Activator" />
+			<Group name="TalkingActivators" refName="TalkingActivator" />
+			<Group name="Armors" refName="Armor" />
+			<Group name="Books" refName="Book" />
+			<Group name="Containers" refName="Container" />
+			<Group name="Doors" refName="Door" />
+			<Group name="Ingredients" refName="Ingredient" />
+			<Group name="Lights" refName="Light" />
+			<Group name="MiscItems" refName="MiscItem" />
+<!--			<Group name="Statics" refName="Static" />-->
+<!--			<Group name="StaticCollections" refName="StaticCollection" />-->
+<!--			<Group name="MoveableStatics" refName="MoveableStatic" />-->
+<!--			<Group name="Grasses" refName="Grass" />-->
+<!--			<Group name="Trees" refName="Tree" />-->
+<!--			<Group name="Florae" refName="Flora" />-->
+<!--			<Group name="VoiceTypes" refName="VoiceType" />-->
+<!--			<Group name="Quests" refName="Quest" />-->
+<!--			<Group name="MaterialTypes" refName="MaterialType" />-->
+<!--			<Group name="ArmorAddons" refName="ArmorAddon" />-->
+<!--			<Group name="Messages" refName="Message" />-->
+<!--			<Group name="MusicTypes" refName="MusicType" />-->
+<!--			<Group name="MusicTracks" refName="MusicTrack" />-->
+		</Fields>
+	</Object>
 </Loqui>

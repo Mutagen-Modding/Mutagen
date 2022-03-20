@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout4
 {
     /// <summary>
-    /// Implemented by: [LeveledSpell]
+    /// Implemented by: [LeveledSpell, Spell]
     /// </summary>
     public partial interface ISpellRecord :
         IFallout4MajorRecordInternal,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [LeveledSpell]
+    /// Implemented by: [LeveledSpell, Spell]
     /// </summary>
     public partial interface ISpellRecordGetter : IFallout4MajorRecordGetter
     {

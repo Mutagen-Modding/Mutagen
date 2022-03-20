@@ -4,7 +4,6 @@
     <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <!--ref SNDR-->
       <FormLink name="SoundDescriptor" recordType="SDSC" refName="SoundDescriptor" />
       <RefDirect name="Repeat" refName="SoundRepeat" />
     </Fields>

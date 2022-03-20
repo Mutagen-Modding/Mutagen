@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Footstep" recordType="FSTP" objType="Record" baseClass="Fallout4MajorRecord" GUID="5338babf-59cb-4785-a139-bd743d682aec" ID="140">
+    <Fields>
+      <FormLink name="ImpactDataSet" recordType="DATA" refName="ImpactDataSet" nullable="False" />
+      <String name="Tag" recordType="ANAM" nullable="False" />
+    </Fields>
+  </Object>
+</Loqui>

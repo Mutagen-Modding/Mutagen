@@ -7,6 +7,8 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics;
+using Mutagen.Bethesda.Translations.Binary;
 using static Mutagen.Bethesda.Fallout4.Condition;
 using Mutagen.Bethesda.Plugins.Internals;
 
@@ -14,7 +16,12 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class Condition
     {
-        // ToDo: (copied from Skyrim) Confirm correctness and completeness
+        public abstract ConditionData Data { get; set; }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IConditionDataGetter IConditionGetter.Data => this.Data;
+        
+        // ToDo: (copied from Fallout4) Confirm correctness and completeness
         [Flags]
         public enum Flag
         {
@@ -44,7 +51,7 @@ namespace Mutagen.Bethesda.Fallout4
         public enum ParameterType
         {
             None = 0,
-            String = 1, //new
+            String = 1,
             Integer = 2,
             Float = 3,
             Actor = 4,
@@ -99,10 +106,10 @@ namespace Mutagen.Bethesda.Fallout4
             WardState = 53,
             Weather = 54,
             Worldspace = 55,
-            DamageType = 56 //new
+            DamageType = 56
         }
 
-        public enum FunctionType
+        public enum Function
         {
             GetWantBlocking = 0,
             GetDistance = 1,
@@ -169,7 +176,7 @@ namespace Mutagen.Bethesda.Fallout4
             GetCurrentAIPackage = 110,
             IsWaiting = 111,
             IsIdlePlaying = 112,
-            IsIntimidatebyPlayer = 116,
+            IsIntimidatedbyPlayer = 116,
             IsPlayerInRegion = 117,
             GetActorAggroRadiusViolated = 118,
             GetCrime = 122,
@@ -363,7 +370,7 @@ namespace Mutagen.Bethesda.Fallout4
             GetVATSLeftAreaFree = 516,
             GetVATSBackAreaFree = 517,
             GetVATSFrontAreaFree = 518,
-            GetLockIsBroken = 519,
+            GetIsLockBroken = 519,
             IsPS3 = 520,
             IsWindowsPC = 521,
             GetVATSRightTargetVisible = 522,
@@ -444,7 +451,7 @@ namespace Mutagen.Bethesda.Fallout4
             IsInFavorState = 635,
             HasTwoHandedWeaponEquipped = 636,
             IsFurnitureExitType = 637,
-            IsInFriendStateWithPlayer = 638,
+            IsInFriendStatewithPlayer = 638,
             GetWithinDistance = 639,
             GetValuePercent = 640,
             IsUnique = 641,
@@ -582,7 +589,7 @@ namespace Mutagen.Bethesda.Fallout4
             GetPathingRequestedQuickTurn = 812,
             EPIsCalculatingBaseDamage = 813,
             GetReanimating = 814,
-            IsInRobotWorkbench = 817
+            IsInRobotWorkbench = 817,
         }
 
         public enum ParameterCategory
@@ -592,9 +599,10 @@ namespace Mutagen.Bethesda.Fallout4
             Form,
             String
         }
-        public static (ParameterType First, ParameterType Second, ParameterType Third) GetParameterTypes(ushort function)
+
+        public static (ParameterType First, ParameterType Second, ParameterType Third) GetParameterTypes(Function function)
         {
-            return function switch
+            return ((ushort)function) switch
             {
                 1 => (ParameterType.ObjectReference, ParameterType.None, ParameterType.None),
                 6 => (ParameterType.Axis, ParameterType.None, ParameterType.None),
@@ -828,15 +836,18 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 throw new ArgumentException();
             }
+
             var flagByte = frame.GetUInt8(subRecMeta.HeaderLength);
             Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(flagByte);
             if (flag.HasFlag(Condition.Flag.UseGlobal))
             {
-                return ConditionGlobal.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength, checkFraming: false));
+                return ConditionGlobal.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength,
+                    checkFraming: false));
             }
             else
             {
-                return ConditionFloat.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength, checkFraming: false));
+                return ConditionFloat.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength,
+                    checkFraming: false));
             }
         }
 
@@ -850,7 +861,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
     }
 
-    public partial class ConditionMixIn
+    public static class ParameterTypeMixIn
     {
         public static Condition.ParameterCategory GetCategory(this Condition.ParameterType type)
         {
@@ -921,7 +932,11 @@ namespace Mutagen.Bethesda.Fallout4
                     throw new NotImplementedException();
             }
         }
+    }
 
+    public partial interface IConditionGetter
+    {
+        IConditionDataGetter Data { get; }
     }
 
     namespace Internals
@@ -941,6 +956,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             public const byte CompareMask = 0xE0;
             public const byte FlagMask = 0x1F;
+            public const int EventFunctionIndex = 4672;
 
             public static Condition.Flag GetFlag(byte b)
             {
@@ -979,19 +995,22 @@ namespace Mutagen.Bethesda.Fallout4
 
             public static void CustomStringImports(MutagenFrame frame, IConditionData item)
             {
-                if (!frame.Reader.TryGetSubrecordFrame(out var subMeta)) return;
-                switch (subMeta.RecordType.TypeInt)
+                if (!(item is IFunctionConditionData funcData)) return;
+                while (frame.Reader.TryGetSubrecordFrame(out var subMeta))
                 {
-                    case 0x31534943: // CIS1
-                        item.ParameterOneString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
-                        break;
-                    case 0x32534943: // CIS2
-                        item.ParameterTwoString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
-                        break;
-                    default:
-                        return;
+                    switch (subMeta.RecordType.TypeInt)
+                    {
+                        case 0x31534943: // CIS1
+                            funcData.ParameterOneString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
+                            break;
+                        case 0x32534943: // CIS2
+                            funcData.ParameterTwoString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
+                            break;
+                        default:
+                            return;
+                    }
+                    frame.Position += subMeta.TotalLength;
                 }
-                frame.Position += subMeta.TotalLength;
             }
         }
 
@@ -1019,14 +1038,15 @@ namespace Mutagen.Bethesda.Fallout4
 
             public static void CustomStringExports(MutagenWriter writer, IConditionDataGetter obj)
             {
-                if (obj.ParameterOneString is { } param1)
+                if (!(obj is IFunctionConditionDataGetter funcData)) return;
+                if (funcData.ParameterOneString is { } param1)
                 {
                     using (HeaderExport.Subrecord(writer, Condition_Registration.CIS1))
                     {
                         StringBinaryTranslation.Instance.Write(writer, param1, StringBinaryType.NullTerminate);
                     }
                 }
-                if (obj.ParameterTwoString is { } param2)
+                if (funcData.ParameterTwoString is { } param2)
                 {
                     using (HeaderExport.Subrecord(writer, Condition_Registration.CIS2))
                     {
@@ -1036,8 +1056,12 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
 
-        public partial class ConditionBinaryOverlay
+        public abstract partial class ConditionBinaryOverlay
         {
+            public abstract IConditionDataGetter Data { get; }
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            IConditionDataGetter IConditionGetter.Data => this.Data;
+
             private static TriggeringRecordCollection IncludeTriggers = new TriggeringRecordCollection(
                 new RecordType("CIS1"),
                 new RecordType("CIS2"));
@@ -1046,6 +1070,24 @@ namespace Mutagen.Bethesda.Fallout4
             public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_data.Span[0]);
 
             public static ConditionBinaryOverlay ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package)
+            {
+                var subRecMeta = stream.GetSubrecordFrame();
+                if (subRecMeta.RecordType != RecordTypes.CTDA)
+                {
+                    throw new ArgumentException();
+                }
+                Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(subRecMeta.Content[0]);
+                if (flag.HasFlag(Condition.Flag.UseGlobal))
+                {
+                    return ConditionGlobalBinaryOverlay.ConditionGlobalFactory(stream, package);
+                }
+                else
+                {
+                    return ConditionFloatBinaryOverlay.ConditionFloatFactory(stream, package);
+                }
+            }
+
+            public static ConditionBinaryOverlay ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package, TypedParseParams? _)
             {
                 var subRecMeta = stream.GetSubrecordFrame();
                 if (subRecMeta.RecordType != RecordTypes.CTDA)
@@ -1102,6 +1144,19 @@ namespace Mutagen.Bethesda.Fallout4
 
         public partial class ConditionGlobalBinaryCreateTranslation
         {
+            public static partial void FillBinaryDataCustom(MutagenFrame frame, IConditionGlobal item)
+            {
+                var functionIndex = frame.GetUInt16();
+                if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
+                {
+                    item.Data = GetEventData.CreateFromBinary(frame);
+                }
+                else
+                {
+                    item.Data = FunctionConditionData.CreateFromBinary(frame);
+                }
+            }
+
             public static partial void CustomBinaryEndImport(MutagenFrame frame, IConditionGlobal obj)
             {
                 ConditionBinaryCreateTranslation.CustomStringImports(frame, obj.Data);
@@ -1110,6 +1165,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         public partial class ConditionGlobalBinaryWriteTranslation
         {
+            public static partial void WriteBinaryDataCustom(MutagenWriter writer, IConditionGlobalGetter item)
+            {
+                item.Data.WriteToBinary(writer);
+            }
+
             public static partial void CustomBinaryEndExport(MutagenWriter writer, IConditionGlobalGetter obj)
             {
                 ConditionBinaryWriteTranslation.CustomStringExports(writer, obj.Data);
@@ -1118,6 +1178,19 @@ namespace Mutagen.Bethesda.Fallout4
 
         public partial class ConditionFloatBinaryCreateTranslation
         {
+            public static partial void FillBinaryDataCustom(MutagenFrame frame, IConditionFloat item)
+            {
+                var functionIndex = frame.GetUInt16();
+                if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
+                {
+                    item.Data = GetEventData.CreateFromBinary(frame);
+                }
+                else
+                {
+                    item.Data = FunctionConditionData.CreateFromBinary(frame);
+                }
+            }
+
             public static partial void CustomBinaryEndImport(MutagenFrame frame, IConditionFloat obj)
             {
                 ConditionBinaryCreateTranslation.CustomStringImports(frame, obj.Data);
@@ -1126,42 +1199,61 @@ namespace Mutagen.Bethesda.Fallout4
 
         public partial class ConditionFloatBinaryWriteTranslation
         {
+            public static partial void WriteBinaryDataCustom(MutagenWriter writer, IConditionFloatGetter item)
+            {
+                item.Data.WriteToBinary(writer);
+            }
+
             public static partial void CustomBinaryEndExport(MutagenWriter writer, IConditionFloatGetter obj)
             {
                 ConditionBinaryWriteTranslation.CustomStringExports(writer, obj.Data);
             }
         }
 
-        public partial class ConditionDataBinaryCreateTranslation
+        public partial class FunctionConditionDataBinaryCreateTranslation
         {
-            public static partial void FillBinaryParameterParsingCustom(MutagenFrame frame, IConditionData item)
+            public static partial void FillBinaryParameterParsingCustom(MutagenFrame frame, IFunctionConditionData item)
             {
                 item.ParameterOneNumber = frame.ReadInt32();
                 item.ParameterTwoNumber = frame.ReadInt32();
-                item.ParameterOneRecord.SetTo(FormKey.Factory(frame.MetaData.MasterReferences!, (uint)item.ParameterOneNumber));
-                item.ParameterTwoRecord.SetTo(FormKey.Factory(frame.MetaData.MasterReferences!, (uint)item.ParameterTwoNumber));
-                item.RunOnType = (Condition.RunOnType)frame.ReadInt32();
-                item.Unknown4 = frame.ReadInt32();
-                item.ParameterThreeNumber = frame.ReadInt32();
+                item.ParameterOneRecord.FormKey = FormKey.Factory(frame.MetaData.MasterReferences!, (uint)item.ParameterOneNumber);
+                item.ParameterTwoRecord.FormKey = FormKey.Factory(frame.MetaData.MasterReferences!, (uint)item.ParameterTwoNumber);
+                GetEventDataBinaryCreateTranslation.FillEndingParams(frame, item);
             }
         }
 
-        public partial class ConditionDataBinaryWriteTranslation
+        public partial class GetEventDataBinaryCreateTranslation
         {
-            public static partial void WriteBinaryParameterParsingCustom(MutagenWriter writer, IConditionDataGetter item)
+            public static void FillEndingParams(MutagenFrame frame, IConditionData item)
             {
-                var paramTypes = Condition.GetParameterTypes((ushort)item.Function);
+                item.RunOnType = EnumBinaryTranslation<Condition.RunOnType, MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(4));
+                item.Reference.SetTo(
+                    FormLinkBinaryTranslation.Instance.Parse(
+                        reader: frame,
+                        defaultVal: FormKey.Null));
+                item.Unknown3 = frame.ReadInt32();
+            }
+
+            public static partial void FillBinaryParameterParsingCustom(MutagenFrame frame, IGetEventData item)
+            {
+                FillEndingParams(frame, item);
+            }
+        }
+
+        public partial class FunctionConditionDataBinaryWriteTranslation
+        {
+            public static partial void WriteBinaryParameterParsingCustom(MutagenWriter writer, IFunctionConditionDataGetter item)
+            {
+                var paramTypes = Condition.GetParameterTypes(item.Function);
                 switch (paramTypes.First.GetCategory())
                 {
                     case Condition.ParameterCategory.None:
                     case Condition.ParameterCategory.Number:
+                    case Condition.ParameterCategory.String:
                         writer.Write(item.ParameterOneNumber);
                         break;
                     case Condition.ParameterCategory.Form:
                         FormKeyBinaryTranslation.Instance.Write(writer, item.ParameterOneRecord.FormKey);
-                        break;
-                    case Condition.ParameterCategory.String:
-                        BinaryStringUtility.Write(writer, item.ParameterOneString, writer.MetaData.Encodings.NonTranslated);
                         break;
                     default:
                         throw new NotImplementedException();
@@ -1170,34 +1262,91 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     case Condition.ParameterCategory.None:
                     case Condition.ParameterCategory.Number:
+                    case Condition.ParameterCategory.String:
                         writer.Write(item.ParameterTwoNumber);
                         break;
                     case Condition.ParameterCategory.Form:
                         FormKeyBinaryTranslation.Instance.Write(writer, item.ParameterTwoRecord.FormKey);
                         break;
-                    case Condition.ParameterCategory.String:
-                        BinaryStringUtility.Write(writer, item.ParameterTwoString, writer.MetaData.Encodings.NonTranslated);
-                        break;
                     default:
                         throw new NotImplementedException();
                 }
-                writer.Write((int)item.RunOnType);
-                writer.Write(item.Unknown4);
-                switch (paramTypes.Third.GetCategory())
+                GetEventDataBinaryWriteTranslation.WriteCommonParams(writer, item);
+            }
+        }
+
+        public partial class GetEventDataBinaryWriteTranslation
+        {
+            public static void WriteCommonParams(MutagenWriter writer, IConditionDataGetter item)
+            {
+                EnumBinaryTranslation<Condition.RunOnType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.RunOnType,
+                    length: 4);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Reference);
+                writer.Write(item.Unknown3);
+            }
+
+            public static partial void WriteBinaryParameterParsingCustom(MutagenWriter writer, IGetEventDataGetter item)
+            {
+                WriteCommonParams(writer, item);
+            }
+        }
+
+        public partial class ConditionFloatBinaryOverlay
+        {
+            private IConditionDataGetter GetDataCustom(int location)
+            {
+                var functionIndex = BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(location));
+                if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
                 {
-                    case Condition.ParameterCategory.None:
-                    case Condition.ParameterCategory.Number:
-                        writer.Write(item.ParameterThreeNumber);
-                        break;
-                    case Condition.ParameterCategory.Form:
-                    case Condition.ParameterCategory.String:
-                    default:
-                        throw new NotImplementedException();
+                    return GetEventDataBinaryOverlay.GetEventDataFactory(new OverlayStream(_data.Slice(location), _package), _package);
                 }
+                else
+                {
+                    return FunctionConditionDataBinaryOverlay.FunctionConditionDataFactory(new OverlayStream(_data.Slice(location), _package), _package);
+                }
+            }
+
+            partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
+            {
+                stream.Position = offset;
+                _data = stream.RemainingMemory;
+            }
+        }
+
+        public partial class ConditionGlobalBinaryOverlay
+        {
+            private IConditionDataGetter GetDataCustom(int location)
+            {
+                var functionIndex = BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(location));
+                if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
+                {
+                    return GetEventDataBinaryOverlay.GetEventDataFactory(new OverlayStream(_data.Slice(location), _package), _package);
+                }
+                else
+                {
+                    return FunctionConditionDataBinaryOverlay.FunctionConditionDataFactory(new OverlayStream(_data.Slice(location), _package), _package);
+                }
+            }
+
+            partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
+            {
+                stream.Position = offset;
+                _data = stream.RemainingMemory;
             }
         }
 
         public partial class ConditionDataBinaryOverlay
+        {
+            public Condition.RunOnType RunOnType => (Condition.RunOnType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
+            public IFormLinkGetter<IFallout4MajorRecordGetter> Reference => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x10, 0x4))));
+            public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x14, 0x4));
+        }
+
+        public partial class FunctionConditionDataBinaryOverlay
         {
             private ReadOnlyMemorySlice<byte> _data2;
 
@@ -1209,35 +1358,37 @@ namespace Mutagen.Bethesda.Fallout4
 
             public int ParameterTwoNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(4));
 
-            public RunOnType RunOnType => (RunOnType)BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(8));
-
-            public int Unknown4 => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(12));
-
-            public int ParameterThreeNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(16));
-
             private ReadOnlyMemorySlice<byte> _stringParamData1;
-            public bool ParameterOneString_IsSet { get; private set; }
-            public string? ParameterOneString => ParameterOneString_IsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData1, _package.MetaData.Encodings.NonTranslated) : null;
+            public bool ParameterOneStringIsSet { get; private set; }
+            public string? ParameterOneString => ParameterOneStringIsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData1, _package.MetaData.Encodings.NonTranslated) : null;
 
             private ReadOnlyMemorySlice<byte> _stringParamData2;
-            public bool ParameterTwoString_IsSet { get; private set; }
-            public string? ParameterTwoString => ParameterTwoString_IsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData2, _package.MetaData.Encodings.NonTranslated) : null;
+            public bool ParameterTwoStringIsSet { get; private set; }
+            public string? ParameterTwoString => ParameterTwoStringIsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData2, _package.MetaData.Encodings.NonTranslated) : null;
 
             partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {
                 stream.Position -= 0x4;
                 _data2 = stream.RemainingMemory.Slice(4, 0x14);
                 stream.Position += 0x18;
+                ParseStringParameter(stream);
+                ParseStringParameter(stream);
+            }
+
+            private void ParseStringParameter(OverlayStream stream)
+            {
                 if (stream.Complete || !stream.TryGetSubrecord(out var subFrame)) return;
                 switch (subFrame.RecordTypeInt)
                 {
-                    case 0x31534943: // CIS1
+                    case RecordTypeInts.CIS1:
                         _stringParamData1 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.ContentLength);
-                        ParameterOneString_IsSet = true;
+                        ParameterOneStringIsSet = true;
+                        stream.Position += subFrame.TotalLength;
                         break;
-                    case 0x32534943: // CIS2
+                    case RecordTypeInts.CIS2:
                         _stringParamData2 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.ContentLength);
-                        ParameterTwoString_IsSet = true;
+                        ParameterTwoStringIsSet = true;
+                        stream.Position += subFrame.TotalLength;
                         break;
                     default:
                         break;

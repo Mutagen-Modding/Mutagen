@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Key" recordType="KEYM" baseClass="Fallout4MajorRecord" majorFlag="true" objType="Record" GUID="e9a9564d-a727-49de-8f83-483d0a93415d" ID="221">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+	  <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+      <String name="Name" recordType="FULL" nullable="False" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <String name="InventoryImage" recordType="ICON" translated="DL" />
+      <String name="MessageIcon" recordType="MICO" translated="DL" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
+      <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <Data>
+        <Fields>
+          <UInt32 name="Value" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+    </Fields>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
+  </Object>
+</Loqui>

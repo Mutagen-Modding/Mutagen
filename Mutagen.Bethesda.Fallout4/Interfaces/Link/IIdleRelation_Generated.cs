@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout4
 {
     /// <summary>
-    /// Implemented by: [ActionRecord]
+    /// Implemented by: [ActionRecord, IdleAnimation]
     /// </summary>
     public partial interface IIdleRelation :
         IFallout4MajorRecordInternal,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [ActionRecord]
+    /// Implemented by: [ActionRecord, IdleAnimation]
     /// </summary>
     public partial interface IIdleRelationGetter : IFallout4MajorRecordGetter
     {

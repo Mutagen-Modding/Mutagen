@@ -334,7 +334,7 @@ public abstract class Processor
 
         // Modify Length 
         byte[] lenData = new byte[4];
-        BinaryPrimitives.WriteUInt32LittleEndian(lenData.AsSpan(), (ushort)(frame.ContentLength + amount));
+        BinaryPrimitives.WriteUInt32LittleEndian(lenData.AsSpan(), checked((uint)(frame.ContentLength + amount)));
         _instructions.SetSubstitution(
             loc: refLoc + Constants.HeaderLength,
             sub: lenData);
@@ -641,7 +641,7 @@ public abstract class Processor
 
         foreach (var entry in stringEntries.OrderBy(x => x.FileLocation))
         {
-            var knownDeadKeys = deadKeys.GetOrDefault((ModKey, entry.Source));
+            var knownDeadKeys = deadKeys?.GetOrDefault((ModKey, entry.Source));
             List<KeyValuePair<Language, string>> toWrite = new();
             var dict = overlays[entry.Source];
             foreach (var lang in dict.Item1)

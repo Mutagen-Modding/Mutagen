@@ -59,9 +59,15 @@ namespace Mutagen.Bethesda.Fallout4
         Color? ILocationReferenceTypeGetter.Color => this.Color;
         #endregion
         #region TNAM
-        public String? TNAM { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ILocationReferenceTypeGetter.TNAM => this.TNAM;
+        protected MemorySlice<Byte>? _TNAM;
+        public MemorySlice<Byte>? TNAM
+        {
+            get => this._TNAM;
+            set => this._TNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ILocationReferenceTypeGetter.TNAM => this.TNAM;
         #endregion
 
         #region To String
@@ -513,7 +519,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<ILocationReferenceTypeInternal>
     {
         new Color? Color { get; set; }
-        new String? TNAM { get; set; }
+        new MemorySlice<Byte>? TNAM { get; set; }
     }
 
     public partial interface ILocationReferenceTypeInternal :
@@ -533,7 +539,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         static new ILoquiRegistration StaticRegistration => LocationReferenceType_Registration.Instance;
         Color? Color { get; }
-        String? TNAM { get; }
+        ReadOnlyMemorySlice<Byte>? TNAM { get; }
 
     }
 
@@ -876,7 +882,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             if (rhs == null) return;
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
-            ret.TNAM = string.Equals(item.TNAM, rhs.TNAM);
+            ret.TNAM = MemorySliceExt.Equal(item.TNAM, rhs.TNAM);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -936,7 +942,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if ((printMask?.TNAM ?? true)
                 && item.TNAM is {} TNAMItem)
             {
-                fg.AppendItem(TNAMItem, "TNAM");
+                fg.AppendLine($"TNAM => {SpanExt.ToHexString(TNAMItem)}");
             }
         }
         
@@ -992,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((crystal?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.TNAM) ?? true))
             {
-                if (!string.Equals(lhs.TNAM, rhs.TNAM)) return false;
+                if (!MemorySliceExt.Equal(lhs.TNAM, rhs.TNAM)) return false;
             }
             return true;
         }
@@ -1026,9 +1032,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 hash.Add(Coloritem);
             }
-            if (item.TNAM is {} TNAMitem)
+            if (item.TNAM is {} TNAMItem)
             {
-                hash.Add(TNAMitem);
+                hash.Add(TNAMItem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1139,7 +1145,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.TNAM) ?? true))
             {
-                item.TNAM = rhs.TNAM;
+                if(rhs.TNAM is {} TNAMrhs)
+                {
+                    item.TNAM = TNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.TNAM = default;
+                }
             }
         }
         
@@ -1302,11 +1315,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 item: item.Color,
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM));
-            StringBinaryTranslation.Instance.WriteNullable(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.TNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.TNAM),
-                binaryType: StringBinaryType.NullTerminate);
+                header: translationParams.ConvertToCustom(RecordTypes.TNAM));
         }
 
         public void Write(
@@ -1407,9 +1419,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TNAM = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.TNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)LocationReferenceType_FieldIndex.TNAM;
                 }
                 default:
@@ -1475,7 +1485,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region TNAM
         private int? _TNAMLocation;
-        public String? TNAM => _TNAMLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TNAMLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ReadOnlyMemorySlice<Byte>? TNAM => _TNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

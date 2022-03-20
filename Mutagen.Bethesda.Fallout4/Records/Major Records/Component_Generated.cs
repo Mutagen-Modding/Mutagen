@@ -103,9 +103,9 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ISoundDescriptorGetter> IComponentGetter.CraftingSound => this.CraftingSound;
         #endregion
         #region AutoCalcValue
-        public Int32? AutoCalcValue { get; set; }
+        public UInt32? AutoCalcValue { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? IComponentGetter.AutoCalcValue => this.AutoCalcValue;
+        UInt32? IComponentGetter.AutoCalcValue => this.AutoCalcValue;
         #endregion
         #region ScrapItem
         private readonly IFormLinkNullable<IMiscItemGetter> _ScrapItem = new FormLinkNullable<IMiscItemGetter>();
@@ -709,7 +709,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         new String? Name { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> CraftingSound { get; set; }
-        new Int32? AutoCalcValue { get; set; }
+        new UInt32? AutoCalcValue { get; set; }
         new IFormLinkNullable<IMiscItemGetter> ScrapItem { get; set; }
         new IFormLinkNullable<IGlobalGetter> ModScrapScalar { get; set; }
     }
@@ -746,7 +746,7 @@ namespace Mutagen.Bethesda.Fallout4
         String? Name { get; }
         #endregion
         IFormLinkNullableGetter<ISoundDescriptorGetter> CraftingSound { get; }
-        Int32? AutoCalcValue { get; }
+        UInt32? AutoCalcValue { get; }
         IFormLinkNullableGetter<IMiscItemGetter> ScrapItem { get; }
         IFormLinkNullableGetter<IGlobalGetter> ModScrapScalar { get; }
 
@@ -1628,7 +1628,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 item: item.CraftingSound,
                 header: translationParams.ConvertToCustom(RecordTypes.CUSD));
-            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.AutoCalcValue,
                 header: translationParams.ConvertToCustom(RecordTypes.DATA));
@@ -1753,7 +1753,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AutoCalcValue = frame.ReadInt32();
+                    item.AutoCalcValue = frame.ReadUInt32();
                     return (int)Component_FieldIndex.AutoCalcValue;
                 }
                 case RecordTypeInts.MNAM:
@@ -1845,7 +1845,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region AutoCalcValue
         private int? _AutoCalcValueLocation;
-        public Int32? AutoCalcValue => _AutoCalcValueLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AutoCalcValueLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        public UInt32? AutoCalcValue => _AutoCalcValueLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AutoCalcValueLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         #region ScrapItem
         private int? _ScrapItemLocation;

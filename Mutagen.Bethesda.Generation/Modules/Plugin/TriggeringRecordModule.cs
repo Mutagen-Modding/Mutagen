@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Generation.Fields;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
+using BoolType = Mutagen.Bethesda.Generation.Fields.BoolType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
@@ -397,7 +398,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 }
                 // If has count, mark as has been set
                 var hasCounter = (listType.CustomData.TryGetValue(PluginListBinaryTranslationGeneration.CounterRecordType, out var counter)
-                    && counter != null);
+                                  && counter != null);
                 if (hasCounter 
                     && (previouslyTurnedOff || !listType.NullableProperty.Value.HasBeenSet))
                 {
@@ -549,6 +550,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 LoquiType loqui = field as LoquiType;
                 if (!field.Nullable 
                     && fieldData.Binary != BinaryGenerationType.Custom
+                    && (field is not BoolType bt || !bt.BoolAsMarker.HasValue)
                     && !(field is CustomLogic))
                 {
                     break;
@@ -662,7 +664,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 if (field.CustomData.TryGetValue(PluginListBinaryTranslationGeneration.CounterRecordType, out var counterObj)
                     && counterObj is string counterTypeStr)
                 {
-                    //data.TriggeringRecordTypes.Clear();
+                    var allowNoCounter = (bool)field.CustomData[PluginListBinaryTranslationGeneration.AllowNoCounter];
+                    if (!allowNoCounter)
+                    {
+                        data.TriggeringRecordTypes.Clear();
+                    }
                     data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(new RecordType(counterTypeStr)));
                     data.TriggeringRecordTypes.Add(new RecordType(counterTypeStr));
                 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Weather" recordType="WTHR" objType="Record" baseClass="Fallout4MajorRecord" GUID="f7bedd11-8b56-481c-9fe6-605dc20bff8c" ID="190">
+  </Object>
+</Loqui>

@@ -11,15 +11,18 @@ using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
@@ -52,6 +55,193 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IDoorGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IDoorGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region PreviewTransform
+        private readonly IFormLinkNullable<ITransformGetter> _PreviewTransform = new FormLinkNullable<ITransformGetter>();
+        public IFormLinkNullable<ITransformGetter> PreviewTransform
+        {
+            get => _PreviewTransform;
+            set => _PreviewTransform.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ITransformGetter> IDoorGetter.PreviewTransform => this.PreviewTransform;
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IDoorGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IDoorGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region Destructible
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Destructible? _Destructible;
+        public Destructible? Destructible
+        {
+            get => _Destructible;
+            set => _Destructible = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IDoorGetter.Destructible => this.Destructible;
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IDoorGetter.Keywords => _Keywords;
+        #endregion
+
+        #region Aspects
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #endregion
+        #region NativeTerminal
+        private readonly IFormLinkNullable<ITerminalGetter> _NativeTerminal = new FormLinkNullable<ITerminalGetter>();
+        public IFormLinkNullable<ITerminalGetter> NativeTerminal
+        {
+            get => _NativeTerminal;
+            set => _NativeTerminal.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ITerminalGetter> IDoorGetter.NativeTerminal => this.NativeTerminal;
+        #endregion
+        #region OpenSound
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _OpenSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> OpenSound
+        {
+            get => _OpenSound;
+            set => _OpenSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IDoorGetter.OpenSound => this.OpenSound;
+        #endregion
+        #region CloseSound
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _CloseSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> CloseSound
+        {
+            get => _CloseSound;
+            set => _CloseSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IDoorGetter.CloseSound => this.CloseSound;
+        #endregion
+        #region LoopSound
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _LoopSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> LoopSound
+        {
+            get => _LoopSound;
+            set => _LoopSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IDoorGetter.LoopSound => this.LoopSound;
+        #endregion
+        #region Flags
+        public Door.Flag Flags { get; set; } = default;
+        #endregion
+        #region AlternateTextOpen
+        public TranslatedString? AlternateTextOpen { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IDoorGetter.AlternateTextOpen => this.AlternateTextOpen;
+        #endregion
+        #region AlternateTextClose
+        public TranslatedString? AlternateTextClose { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IDoorGetter.AlternateTextClose => this.AlternateTextClose;
+        #endregion
 
         #region To String
 
@@ -76,6 +266,20 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.PreviewTransform = initialValue;
+                this.Name = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.NativeTerminal = initialValue;
+                this.OpenSound = initialValue;
+                this.CloseSound = initialValue;
+                this.LoopSound = initialValue;
+                this.Flags = initialValue;
+                this.AlternateTextOpen = initialValue;
+                this.AlternateTextClose = initialValue;
             }
 
             public Mask(
@@ -84,7 +288,21 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem VirtualMachineAdapter,
+                TItem ObjectBounds,
+                TItem PreviewTransform,
+                TItem Name,
+                TItem Model,
+                TItem Destructible,
+                TItem Keywords,
+                TItem NativeTerminal,
+                TItem OpenSound,
+                TItem CloseSound,
+                TItem LoopSound,
+                TItem Flags,
+                TItem AlternateTextOpen,
+                TItem AlternateTextClose)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -93,6 +311,20 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.PreviewTransform = PreviewTransform;
+                this.Name = Name;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.NativeTerminal = NativeTerminal;
+                this.OpenSound = OpenSound;
+                this.CloseSound = CloseSound;
+                this.LoopSound = LoopSound;
+                this.Flags = Flags;
+                this.AlternateTextOpen = AlternateTextOpen;
+                this.AlternateTextClose = AlternateTextClose;
             }
 
             #pragma warning disable CS8618
@@ -101,6 +333,23 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem PreviewTransform;
+            public TItem Name;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public TItem NativeTerminal;
+            public TItem OpenSound;
+            public TItem CloseSound;
+            public TItem LoopSound;
+            public TItem Flags;
+            public TItem AlternateTextOpen;
+            public TItem AlternateTextClose;
             #endregion
 
             #region Equals
@@ -114,11 +363,39 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.PreviewTransform, rhs.PreviewTransform)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.NativeTerminal, rhs.NativeTerminal)) return false;
+                if (!object.Equals(this.OpenSound, rhs.OpenSound)) return false;
+                if (!object.Equals(this.CloseSound, rhs.CloseSound)) return false;
+                if (!object.Equals(this.LoopSound, rhs.LoopSound)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.AlternateTextOpen, rhs.AlternateTextOpen)) return false;
+                if (!object.Equals(this.AlternateTextClose, rhs.AlternateTextClose)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.PreviewTransform);
+                hash.Add(this.Name);
+                hash.Add(this.Model);
+                hash.Add(this.Destructible);
+                hash.Add(this.Keywords);
+                hash.Add(this.NativeTerminal);
+                hash.Add(this.OpenSound);
+                hash.Add(this.CloseSound);
+                hash.Add(this.LoopSound);
+                hash.Add(this.Flags);
+                hash.Add(this.AlternateTextOpen);
+                hash.Add(this.AlternateTextClose);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -129,6 +406,46 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.PreviewTransform)) return false;
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (Destructible != null)
+                {
+                    if (!eval(this.Destructible.Overall)) return false;
+                    if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
+                }
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.NativeTerminal)) return false;
+                if (!eval(this.OpenSound)) return false;
+                if (!eval(this.CloseSound)) return false;
+                if (!eval(this.LoopSound)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.AlternateTextOpen)) return false;
+                if (!eval(this.AlternateTextClose)) return false;
                 return true;
             }
             #endregion
@@ -137,6 +454,46 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.PreviewTransform)) return true;
+                if (eval(this.Name)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (Destructible != null)
+                {
+                    if (eval(this.Destructible.Overall)) return true;
+                    if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
+                }
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.NativeTerminal)) return true;
+                if (eval(this.OpenSound)) return true;
+                if (eval(this.CloseSound)) return true;
+                if (eval(this.LoopSound)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.AlternateTextOpen)) return true;
+                if (eval(this.AlternateTextClose)) return true;
                 return false;
             }
             #endregion
@@ -152,6 +509,33 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.PreviewTransform = eval(this.PreviewTransform);
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.NativeTerminal = eval(this.NativeTerminal);
+                obj.OpenSound = eval(this.OpenSound);
+                obj.CloseSound = eval(this.CloseSound);
+                obj.LoopSound = eval(this.LoopSound);
+                obj.Flags = eval(this.Flags);
+                obj.AlternateTextOpen = eval(this.AlternateTextOpen);
+                obj.AlternateTextClose = eval(this.AlternateTextClose);
             }
             #endregion
 
@@ -174,6 +558,81 @@ namespace Mutagen.Bethesda.Fallout4
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.ToString(fg);
+                    }
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.ToString(fg);
+                    }
+                    if (printMask?.PreviewTransform ?? true)
+                    {
+                        fg.AppendItem(PreviewTransform, "PreviewTransform");
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Destructible?.Overall ?? true)
+                    {
+                        Destructible?.ToString(fg);
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
+                    {
+                        fg.AppendLine("Keywords =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.NativeTerminal ?? true)
+                    {
+                        fg.AppendItem(NativeTerminal, "NativeTerminal");
+                    }
+                    if (printMask?.OpenSound ?? true)
+                    {
+                        fg.AppendItem(OpenSound, "OpenSound");
+                    }
+                    if (printMask?.CloseSound ?? true)
+                    {
+                        fg.AppendItem(CloseSound, "CloseSound");
+                    }
+                    if (printMask?.LoopSound ?? true)
+                    {
+                        fg.AppendItem(LoopSound, "LoopSound");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.AlternateTextOpen ?? true)
+                    {
+                        fg.AppendItem(AlternateTextOpen, "AlternateTextOpen");
+                    }
+                    if (printMask?.AlternateTextClose ?? true)
+                    {
+                        fg.AppendItem(AlternateTextClose, "AlternateTextClose");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -185,12 +644,57 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? PreviewTransform;
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public Exception? NativeTerminal;
+            public Exception? OpenSound;
+            public Exception? CloseSound;
+            public Exception? LoopSound;
+            public Exception? Flags;
+            public Exception? AlternateTextOpen;
+            public Exception? AlternateTextClose;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Door_FieldIndex enu = (Door_FieldIndex)index;
                 switch (enu)
                 {
+                    case Door_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case Door_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case Door_FieldIndex.PreviewTransform:
+                        return PreviewTransform;
+                    case Door_FieldIndex.Name:
+                        return Name;
+                    case Door_FieldIndex.Model:
+                        return Model;
+                    case Door_FieldIndex.Destructible:
+                        return Destructible;
+                    case Door_FieldIndex.Keywords:
+                        return Keywords;
+                    case Door_FieldIndex.NativeTerminal:
+                        return NativeTerminal;
+                    case Door_FieldIndex.OpenSound:
+                        return OpenSound;
+                    case Door_FieldIndex.CloseSound:
+                        return CloseSound;
+                    case Door_FieldIndex.LoopSound:
+                        return LoopSound;
+                    case Door_FieldIndex.Flags:
+                        return Flags;
+                    case Door_FieldIndex.AlternateTextOpen:
+                        return AlternateTextOpen;
+                    case Door_FieldIndex.AlternateTextClose:
+                        return AlternateTextClose;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +705,48 @@ namespace Mutagen.Bethesda.Fallout4
                 Door_FieldIndex enu = (Door_FieldIndex)index;
                 switch (enu)
                 {
+                    case Door_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case Door_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case Door_FieldIndex.PreviewTransform:
+                        this.PreviewTransform = ex;
+                        break;
+                    case Door_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Door_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Door_FieldIndex.Destructible:
+                        this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
+                        break;
+                    case Door_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Door_FieldIndex.NativeTerminal:
+                        this.NativeTerminal = ex;
+                        break;
+                    case Door_FieldIndex.OpenSound:
+                        this.OpenSound = ex;
+                        break;
+                    case Door_FieldIndex.CloseSound:
+                        this.CloseSound = ex;
+                        break;
+                    case Door_FieldIndex.LoopSound:
+                        this.LoopSound = ex;
+                        break;
+                    case Door_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Door_FieldIndex.AlternateTextOpen:
+                        this.AlternateTextOpen = ex;
+                        break;
+                    case Door_FieldIndex.AlternateTextClose:
+                        this.AlternateTextClose = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +758,48 @@ namespace Mutagen.Bethesda.Fallout4
                 Door_FieldIndex enu = (Door_FieldIndex)index;
                 switch (enu)
                 {
+                    case Door_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
+                    case Door_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case Door_FieldIndex.PreviewTransform:
+                        this.PreviewTransform = (Exception?)obj;
+                        break;
+                    case Door_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Door_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Door_FieldIndex.Destructible:
+                        this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
+                        break;
+                    case Door_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Door_FieldIndex.NativeTerminal:
+                        this.NativeTerminal = (Exception?)obj;
+                        break;
+                    case Door_FieldIndex.OpenSound:
+                        this.OpenSound = (Exception?)obj;
+                        break;
+                    case Door_FieldIndex.CloseSound:
+                        this.CloseSound = (Exception?)obj;
+                        break;
+                    case Door_FieldIndex.LoopSound:
+                        this.LoopSound = (Exception?)obj;
+                        break;
+                    case Door_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Door_FieldIndex.AlternateTextOpen:
+                        this.AlternateTextOpen = (Exception?)obj;
+                        break;
+                    case Door_FieldIndex.AlternateTextClose:
+                        this.AlternateTextClose = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +809,20 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (ObjectBounds != null) return true;
+                if (PreviewTransform != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Destructible != null) return true;
+                if (Keywords != null) return true;
+                if (NativeTerminal != null) return true;
+                if (OpenSound != null) return true;
+                if (CloseSound != null) return true;
+                if (LoopSound != null) return true;
+                if (Flags != null) return true;
+                if (AlternateTextOpen != null) return true;
+                if (AlternateTextClose != null) return true;
                 return false;
             }
             #endregion
@@ -256,6 +858,41 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                VirtualMachineAdapter?.ToString(fg);
+                ObjectBounds?.ToString(fg);
+                fg.AppendItem(PreviewTransform, "PreviewTransform");
+                fg.AppendItem(Name, "Name");
+                Model?.ToString(fg);
+                Destructible?.ToString(fg);
+                if (Keywords is {} KeywordsItem)
+                {
+                    fg.AppendLine("Keywords =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(NativeTerminal, "NativeTerminal");
+                fg.AppendItem(OpenSound, "OpenSound");
+                fg.AppendItem(CloseSound, "CloseSound");
+                fg.AppendItem(LoopSound, "LoopSound");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(AlternateTextOpen, "AlternateTextOpen");
+                fg.AppendItem(AlternateTextClose, "AlternateTextClose");
             }
             #endregion
 
@@ -264,6 +901,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.PreviewTransform = this.PreviewTransform.Combine(rhs.PreviewTransform);
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.NativeTerminal = this.NativeTerminal.Combine(rhs.NativeTerminal);
+                ret.OpenSound = this.OpenSound.Combine(rhs.OpenSound);
+                ret.CloseSound = this.CloseSound.Combine(rhs.CloseSound);
+                ret.LoopSound = this.LoopSound.Combine(rhs.LoopSound);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.AlternateTextOpen = this.AlternateTextOpen.Combine(rhs.AlternateTextOpen);
+                ret.AlternateTextClose = this.AlternateTextClose.Combine(rhs.AlternateTextClose);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -285,15 +936,61 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool PreviewTransform;
+            public bool Name;
+            public Model.TranslationMask? Model;
+            public Destructible.TranslationMask? Destructible;
+            public bool Keywords;
+            public bool NativeTerminal;
+            public bool OpenSound;
+            public bool CloseSound;
+            public bool LoopSound;
+            public bool Flags;
+            public bool AlternateTextOpen;
+            public bool AlternateTextClose;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.PreviewTransform = defaultOn;
+                this.Name = defaultOn;
+                this.Keywords = defaultOn;
+                this.NativeTerminal = defaultOn;
+                this.OpenSound = defaultOn;
+                this.CloseSound = defaultOn;
+                this.LoopSound = defaultOn;
+                this.Flags = defaultOn;
+                this.AlternateTextOpen = defaultOn;
+                this.AlternateTextClose = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((PreviewTransform, null));
+                ret.Add((Name, null));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
+                ret.Add((Keywords, null));
+                ret.Add((NativeTerminal, null));
+                ret.Add((OpenSound, null));
+                ret.Add((CloseSound, null));
+                ret.Add((LoopSound, null));
+                ret.Add((Flags, null));
+                ret.Add((AlternateTextOpen, null));
+                ret.Add((AlternateTextClose, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -305,6 +1002,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Door_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => DoorCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorSetterCommon.Instance.RemapLinks(this, mapping);
         public Door(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -347,6 +1046,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IDoor);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -428,10 +1132,51 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IDoor :
         IDoorGetter,
         IFallout4MajorRecordInternal,
-        ILocationTargetable,
+        IFormLinkContainer,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IDoorInternal>,
-        IObjectId
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectId,
+        IScripted,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        new IFormLinkNullable<ITransformGetter> PreviewTransform { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        new Destructible? Destructible { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new IFormLinkNullable<ITerminalGetter> NativeTerminal { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> CloseSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> LoopSound { get; set; }
+        new Door.Flag Flags { get; set; }
+        new TranslatedString? AlternateTextOpen { get; set; }
+        new TranslatedString? AlternateTextClose { get; set; }
+        #region Mutagen
+        new Door.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IDoorInternal :
@@ -445,12 +1190,63 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IDoorGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
-        ILocationTargetableGetter,
+        IFormLinkContainerGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IDoorGetter>,
         IMapsToGetter<IDoorGetter>,
-        IObjectIdGetter
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectIdGetter,
+        IScriptedGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Door_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        IFormLinkNullableGetter<ITransformGetter> PreviewTransform { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        IDestructibleGetter? Destructible { get; }
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
+        IFormLinkNullableGetter<ITerminalGetter> NativeTerminal { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> OpenSound { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> CloseSound { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> LoopSound { get; }
+        Door.Flag Flags { get; }
+        ITranslatedStringGetter? AlternateTextOpen { get; }
+        ITranslatedStringGetter? AlternateTextClose { get; }
+
+        #region Mutagen
+        Door.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -615,6 +1411,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        VirtualMachineAdapter = 6,
+        ObjectBounds = 7,
+        PreviewTransform = 8,
+        Name = 9,
+        Model = 10,
+        Destructible = 11,
+        Keywords = 12,
+        NativeTerminal = 13,
+        OpenSound = 14,
+        CloseSound = 15,
+        LoopSound = 16,
+        Flags = 17,
+        AlternateTextOpen = 18,
+        AlternateTextClose = 19,
     }
     #endregion
 
@@ -632,9 +1442,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "a7b54091-ef8c-4eec-ac2e-f17b2ae6c1b3";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(Door.Mask<>);
 
@@ -703,6 +1513,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Clear(IDoorInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.ObjectBounds.Clear();
+            item.PreviewTransform.Clear();
+            item.Name = default;
+            item.Model = null;
+            item.Destructible = null;
+            item.Keywords = null;
+            item.NativeTerminal.Clear();
+            item.OpenSound.Clear();
+            item.CloseSound.Clear();
+            item.LoopSound.Clear();
+            item.Flags = default;
+            item.AlternateTextOpen = default;
+            item.AlternateTextClose = default;
             base.Clear(item);
         }
         
@@ -720,6 +1544,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(IDoor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.PreviewTransform.Relink(mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.Destructible?.RemapLinks(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.NativeTerminal.Relink(mapping);
+            obj.OpenSound.Relink(mapping);
+            obj.CloseSound.Relink(mapping);
+            obj.LoopSound.Relink(mapping);
         }
         
         #endregion
@@ -788,6 +1621,35 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.PreviewTransform = item.PreviewTransform.Equals(rhs.PreviewTransform);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Destructible = EqualsMaskHelper.EqualsHelper(
+                item.Destructible,
+                rhs.Destructible,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.NativeTerminal = item.NativeTerminal.Equals(rhs.NativeTerminal);
+            ret.OpenSound = item.OpenSound.Equals(rhs.OpenSound);
+            ret.CloseSound = item.CloseSound.Equals(rhs.CloseSound);
+            ret.LoopSound = item.LoopSound.Equals(rhs.LoopSound);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.AlternateTextOpen = object.Equals(item.AlternateTextOpen, rhs.AlternateTextOpen);
+            ret.AlternateTextClose = object.Equals(item.AlternateTextClose, rhs.AlternateTextClose);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1701,83 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+            }
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+            }
+            if (printMask?.PreviewTransform ?? true)
+            {
+                fg.AppendItem(item.PreviewTransform.FormKeyNullable, "PreviewTransform");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.ToString(fg, "Model");
+            }
+            if ((printMask?.Destructible?.Overall ?? true)
+                && item.Destructible is {} DestructibleItem)
+            {
+                DestructibleItem?.ToString(fg, "Destructible");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords is {} KeywordsItem)
+            {
+                fg.AppendLine("Keywords =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem.FormKey);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.NativeTerminal ?? true)
+            {
+                fg.AppendItem(item.NativeTerminal.FormKeyNullable, "NativeTerminal");
+            }
+            if (printMask?.OpenSound ?? true)
+            {
+                fg.AppendItem(item.OpenSound.FormKeyNullable, "OpenSound");
+            }
+            if (printMask?.CloseSound ?? true)
+            {
+                fg.AppendItem(item.CloseSound.FormKeyNullable, "CloseSound");
+            }
+            if (printMask?.LoopSound ?? true)
+            {
+                fg.AppendItem(item.LoopSound.FormKeyNullable, "LoopSound");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if ((printMask?.AlternateTextOpen ?? true)
+                && item.AlternateTextOpen is {} AlternateTextOpenItem)
+            {
+                fg.AppendItem(AlternateTextOpenItem, "AlternateTextOpen");
+            }
+            if ((printMask?.AlternateTextClose ?? true)
+                && item.AlternateTextClose is {} AlternateTextCloseItem)
+            {
+                fg.AppendItem(AlternateTextCloseItem, "AlternateTextClose");
+            }
         }
         
         public static Door_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -887,6 +1826,78 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Door_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Door_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.PreviewTransform) ?? true))
+            {
+                if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Door_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.Destructible) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
+                {
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Door_FieldIndex.Destructible))) return false;
+                }
+                else if (!isDestructibleEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.NativeTerminal) ?? true))
+            {
+                if (!lhs.NativeTerminal.Equals(rhs.NativeTerminal)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.OpenSound) ?? true))
+            {
+                if (!lhs.OpenSound.Equals(rhs.OpenSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.CloseSound) ?? true))
+            {
+                if (!lhs.CloseSound.Equals(rhs.CloseSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.LoopSound) ?? true))
+            {
+                if (!lhs.LoopSound.Equals(rhs.LoopSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.AlternateTextOpen) ?? true))
+            {
+                if (!object.Equals(lhs.AlternateTextOpen, rhs.AlternateTextOpen)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.AlternateTextClose) ?? true))
+            {
+                if (!object.Equals(lhs.AlternateTextClose, rhs.AlternateTextClose)) return false;
+            }
             return true;
         }
         
@@ -915,6 +1926,38 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(IDoorGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            hash.Add(item.ObjectBounds);
+            hash.Add(item.PreviewTransform);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            if (item.Destructible is {} Destructibleitem)
+            {
+                hash.Add(Destructibleitem);
+            }
+            hash.Add(item.Keywords);
+            hash.Add(item.NativeTerminal);
+            hash.Add(item.OpenSound);
+            hash.Add(item.CloseSound);
+            hash.Add(item.LoopSound);
+            hash.Add(item.Flags);
+            if (item.AlternateTextOpen is {} AlternateTextOpenitem)
+            {
+                hash.Add(AlternateTextOpenitem);
+            }
+            if (item.AlternateTextClose is {} AlternateTextCloseitem)
+            {
+                hash.Add(AlternateTextCloseitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -943,6 +1986,54 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.PreviewTransform.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.PreviewTransform);
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.ContainedFormLinks)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.ContainedFormLinks)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Keywords is {} KeywordsItem)
+            {
+                foreach (var item in KeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.NativeTerminal.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.NativeTerminal);
+            }
+            if (obj.OpenSound.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.OpenSound);
+            }
+            if (obj.CloseSound.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.CloseSound);
+            }
+            if (obj.LoopSound.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.LoopSound);
             }
             yield break;
         }
@@ -1018,6 +2109,169 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)Door_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Door_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Door_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Door_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.PreviewTransform) ?? true))
+            {
+                item.PreviewTransform.SetTo(rhs.PreviewTransform.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)Door_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Door_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.Destructible) ?? true))
+            {
+                errorMask?.PushIndex((int)Door_FieldIndex.Destructible);
+                try
+                {
+                    if(rhs.Destructible is {} rhsDestructible)
+                    {
+                        item.Destructible = rhsDestructible.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Door_FieldIndex.Destructible));
+                    }
+                    else
+                    {
+                        item.Destructible = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)Door_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.NativeTerminal) ?? true))
+            {
+                item.NativeTerminal.SetTo(rhs.NativeTerminal.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.OpenSound) ?? true))
+            {
+                item.OpenSound.SetTo(rhs.OpenSound.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.CloseSound) ?? true))
+            {
+                item.CloseSound.SetTo(rhs.CloseSound.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.LoopSound) ?? true))
+            {
+                item.LoopSound.SetTo(rhs.LoopSound.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.AlternateTextOpen) ?? true))
+            {
+                item.AlternateTextOpen = rhs.AlternateTextOpen?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.AlternateTextClose) ?? true))
+            {
+                item.AlternateTextClose = rhs.AlternateTextClose?.DeepCopy();
+            }
         }
         
         public override void DeepCopyIn(
@@ -1166,6 +2420,98 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public new readonly static DoorBinaryWriteTranslation Instance = new DoorBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IDoorGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PreviewTransform,
+                header: translationParams.ConvertToCustom(RecordTypes.PTRN));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.Destructible is {} DestructibleItem)
+            {
+                ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
+                    item: DestructibleItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: RecordTypes.KSIZ,
+                counterLength: 4,
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.NativeTerminal,
+                header: translationParams.ConvertToCustom(RecordTypes.NTRM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.OpenSound,
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.CloseSound,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.LoopSound,
+                header: translationParams.ConvertToCustom(RecordTypes.BNAM));
+            EnumBinaryTranslation<Door.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 1,
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AlternateTextOpen,
+                header: translationParams.ConvertToCustom(RecordTypes.ONAM),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AlternateTextClose,
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
+        }
+
         public void Write(
             MutagenWriter writer,
             IDoorGetter item,
@@ -1180,10 +2526,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1241,6 +2589,135 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IDoorInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Fallout4.VirtualMachineAdapter.CreateFromBinary(frame: frame);
+                    return (int)Door_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Fallout4.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)Door_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.PTRN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Door_FieldIndex.PreviewTransform;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Door_FieldIndex.Name;
+                }
+                case RecordTypeInts.MODL:
+                {
+                    item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams);
+                    return (int)Door_FieldIndex.Model;
+                }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DAMC:
+                case RecordTypeInts.DSTD:
+                case RecordTypeInts.DSTA:
+                case RecordTypeInts.DMDL:
+                {
+                    item.Destructible = Mutagen.Bethesda.Fallout4.Destructible.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams);
+                    return (int)Door_FieldIndex.Destructible;
+                }
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
+                {
+                    item.Keywords = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)Door_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.NTRM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NativeTerminal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Door_FieldIndex.NativeTerminal;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.OpenSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Door_FieldIndex.OpenSound;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CloseSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Door_FieldIndex.CloseSound;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LoopSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Door_FieldIndex.LoopSound;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<Door.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Door_FieldIndex.Flags;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AlternateTextOpen = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Door_FieldIndex.AlternateTextOpen;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AlternateTextClose = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Door_FieldIndex.AlternateTextClose;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1273,6 +2750,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => DoorCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DoorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1286,7 +2764,67 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         protected override Type LinkType => typeof(IDoor);
 
+        public Door.MajorFlag MajorFlags => (Door.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region VirtualMachineAdapter
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        #endregion
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region PreviewTransform
+        private int? _PreviewTransformLocation;
+        public IFormLinkNullableGetter<ITransformGetter> PreviewTransform => _PreviewTransformLocation.HasValue ? new FormLinkNullable<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PreviewTransformLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITransformGetter>.Null;
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        public IModelGetter? Model { get; private set; }
+        public IDestructibleGetter? Destructible { get; private set; }
+        #region Keywords
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #region NativeTerminal
+        private int? _NativeTerminalLocation;
+        public IFormLinkNullableGetter<ITerminalGetter> NativeTerminal => _NativeTerminalLocation.HasValue ? new FormLinkNullable<ITerminalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NativeTerminalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITerminalGetter>.Null;
+        #endregion
+        #region OpenSound
+        private int? _OpenSoundLocation;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OpenSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        #endregion
+        #region CloseSound
+        private int? _CloseSoundLocation;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> CloseSound => _CloseSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CloseSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        #endregion
+        #region LoopSound
+        private int? _LoopSoundLocation;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> LoopSound => _LoopSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoopSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public Door.Flag Flags => _FlagsLocation.HasValue ? (Door.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Door.Flag);
+        #endregion
+        #region AlternateTextOpen
+        private int? _AlternateTextOpenLocation;
+        public ITranslatedStringGetter? AlternateTextOpen => _AlternateTextOpenLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _AlternateTextOpenLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #endregion
+        #region AlternateTextClose
+        private int? _AlternateTextCloseLocation;
+        public ITranslatedStringGetter? AlternateTextClose => _AlternateTextCloseLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _AlternateTextCloseLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1341,6 +2879,116 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Door_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Door_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.PTRN:
+                {
+                    _PreviewTransformLocation = (stream.Position - offset);
+                    return (int)Door_FieldIndex.PreviewTransform;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Door_FieldIndex.Name;
+                }
+                case RecordTypeInts.MODL:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        parseParams: parseParams);
+                    return (int)Door_FieldIndex.Model;
+                }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DAMC:
+                case RecordTypeInts.DSTD:
+                case RecordTypeInts.DSTA:
+                case RecordTypeInts.DMDL:
+                {
+                    this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
+                        stream: stream,
+                        package: _package,
+                        parseParams: parseParams);
+                    return (int)Door_FieldIndex.Destructible;
+                }
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
+                {
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.KSIZ,
+                        subrecordType: RecordTypes.KWDA,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)Door_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.NTRM:
+                {
+                    _NativeTerminalLocation = (stream.Position - offset);
+                    return (int)Door_FieldIndex.NativeTerminal;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    _OpenSoundLocation = (stream.Position - offset);
+                    return (int)Door_FieldIndex.OpenSound;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _CloseSoundLocation = (stream.Position - offset);
+                    return (int)Door_FieldIndex.CloseSound;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    _LoopSoundLocation = (stream.Position - offset);
+                    return (int)Door_FieldIndex.LoopSound;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)Door_FieldIndex.Flags;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    _AlternateTextOpenLocation = (stream.Position - offset);
+                    return (int)Door_FieldIndex.AlternateTextOpen;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _AlternateTextCloseLocation = (stream.Position - offset);
+                    return (int)Door_FieldIndex.AlternateTextClose;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void ToString(
