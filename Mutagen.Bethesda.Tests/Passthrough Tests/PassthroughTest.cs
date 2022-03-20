@@ -16,6 +16,7 @@ using System.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings.DI;
@@ -59,7 +60,7 @@ public abstract class PassthroughTest
         Meta = GameConstants.Get(this.GameRelease);
     }
 
-    public abstract ModRecordAligner.AlignmentRules GetAlignmentRules();
+    public abstract AlignmentRules GetAlignmentRules();
 
     public (TempFolder TempFolder, Test Test) SetupProcessedFiles()
     {

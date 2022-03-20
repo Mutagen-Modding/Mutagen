@@ -55,7 +55,6 @@
     <Compile Include="Processing\BinaryFileProcessor.cs" />
     <Compile Include="ComparisonStream.cs" />
     <Compile Include="FlattenedMod_Tests.cs" />
-    <Compile Include="Processing\ModRecordAligner.cs" />
     <Compile Include="Processing\OblivionProcessor.cs" />
     <Compile Include="Processing\Processor.cs" />
     <Compile Include="Processing\Fallout4Processor.cs" />

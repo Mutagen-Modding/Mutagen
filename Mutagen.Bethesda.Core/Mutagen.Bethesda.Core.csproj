@@ -172,6 +172,12 @@
     <Compile Include="Plugins\Binary\Parameters\NextFormIDOption.cs" />
     <Compile Include="Plugins\Binary\Parameters\ParallelWriteParameters.cs" />
     <Compile Include="Plugins\Binary\Parameters\RecordCountOption.cs" />
+    <Compile Include="Plugins\Binary\Processing\Alignment\AlignmentRepeatedRule.cs" />
+    <Compile Include="Plugins\Binary\Processing\Alignment\AlignmentRule.cs" />
+    <Compile Include="Plugins\Binary\Processing\Alignment\AlignmentRules.cs" />
+    <Compile Include="Plugins\Binary\Processing\Alignment\AlignmentStraightRecord.cs" />
+    <Compile Include="Plugins\Binary\Processing\Alignment\AlignmentSubRule.cs" />
+    <Compile Include="Plugins\Binary\Processing\Alignment\ModRecordAligner.cs" />
     <Compile Include="Plugins\Binary\Processing\ModGroupMerger.cs" />
     <Compile Include="Plugins\Binary\Processing\ModTrimmer.cs" />
     <Compile Include="Plugins\Binary\Streams\EncodingBundle.cs" />
@@ -583,7 +589,6 @@
     <Compile Include="Plugins\Binary\Translations\LoquiBinaryOverlayTranslation.cs" />
     <Compile Include="Plugins\Meta\GameConstants.cs" />
     <Compile Include="Plugins\Binary\Processing\BinaryFileProcessor.cs" />
-    <Compile Include="Plugins\Binary\Processing\ModRecordAligner.cs" />
     <Compile Include="Plugins\Binary\Translations\BinaryStringUtility.cs" />
     <Compile Include="Plugins\Internals\Constants.cs" />
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
