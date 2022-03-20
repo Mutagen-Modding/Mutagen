@@ -502,9 +502,10 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
         await GenerateInterfaceImplementation(obj, fg, getter: false);
     }
 
-    private async Task<bool> ShouldGenerate(ObjectGeneration obj)
+    public static async Task<bool> ShouldGenerate(ObjectGeneration obj)
     {
-        if (obj.GetObjectType() != ObjectType.Mod)
+        if (obj.GetObjectType() != ObjectType.Mod
+            && obj.GetObjectType() != ObjectType.Group)
         {
             var linkCase = await HasLinks(obj, includeBaseClass: false);
             if (linkCase == Case.No) return false;
@@ -520,8 +521,8 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
 
         if (!getter)
         {
-            fg.AppendLine($"public{await obj.FunctionOverride(async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}IEnumerable<{nameof(IAssetLink)}> {nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}() => {obj.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Instance.{nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}(this);");
-            fg.AppendLine($"public{await obj.FunctionOverride(async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}void {nameof(IAssetLinkContainer.RemapListedAssetLinks)}(IReadOnlyDictionary<{nameof(IAssetLinkGetter)}, string> mapping) => {obj.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Instance.RemapListedAssetLinks(this, mapping);");
+            fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}IEnumerable<{nameof(IAssetLink)}> {nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}() => {obj.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Instance.{nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}(this);");
+            fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}void {nameof(IAssetLinkContainer.RemapListedAssetLinks)}(IReadOnlyDictionary<{nameof(IAssetLinkGetter)}, string> mapping) => {obj.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Instance.RemapListedAssetLinks(this, mapping);");
         }
     }
 }

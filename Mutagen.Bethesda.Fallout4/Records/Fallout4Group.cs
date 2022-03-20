@@ -23,11 +23,6 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         protected override ICache<T, FormKey> ProtectedCache => this.RecordCache;
-        
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 
     public partial interface IFallout4Group<T> : IGroup<T>
@@ -77,11 +72,6 @@ namespace Mutagen.Bethesda.Fallout4
                     _data,
                     _package,
                     offset);
-            }
-
-            public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit)
-            {
-                throw new System.NotImplementedException();
             }
         }
     }

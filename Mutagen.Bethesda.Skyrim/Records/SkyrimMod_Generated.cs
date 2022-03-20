@@ -8910,376 +8910,125 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ISkyrimMod obj)
         {
-            if (obj.GameSettings is IAssetLinkContainer GameSettingslinkCont)
+            foreach (var item in obj.HeadParts.EnumerateListedAssetLinks())
             {
-                foreach (var item in GameSettingslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Keywords is IAssetLinkContainer KeywordslinkCont)
+            foreach (var item in obj.Scrolls.EnumerateListedAssetLinks())
             {
-                foreach (var item in KeywordslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.LocationReferenceTypes is IAssetLinkContainer LocationReferenceTypeslinkCont)
+            foreach (var item in obj.Activators.EnumerateListedAssetLinks())
             {
-                foreach (var item in LocationReferenceTypeslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Actions is IAssetLinkContainer ActionslinkCont)
+            foreach (var item in obj.TalkingActivators.EnumerateListedAssetLinks())
             {
-                foreach (var item in ActionslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.TextureSets is IAssetLinkContainer TextureSetslinkCont)
+            foreach (var item in obj.Armors.EnumerateListedAssetLinks())
             {
-                foreach (var item in TextureSetslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Globals is IAssetLinkContainer GlobalslinkCont)
+            foreach (var item in obj.Books.EnumerateListedAssetLinks())
             {
-                foreach (var item in GlobalslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Classes is IAssetLinkContainer ClasseslinkCont)
+            foreach (var item in obj.Containers.EnumerateListedAssetLinks())
             {
-                foreach (var item in ClasseslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Factions is IAssetLinkContainer FactionslinkCont)
+            foreach (var item in obj.Doors.EnumerateListedAssetLinks())
             {
-                foreach (var item in FactionslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.HeadParts is IAssetLinkContainer HeadPartslinkCont)
+            foreach (var item in obj.Ingredients.EnumerateListedAssetLinks())
             {
-                foreach (var item in HeadPartslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Hairs is IAssetLinkContainer HairslinkCont)
+            foreach (var item in obj.Lights.EnumerateListedAssetLinks())
             {
-                foreach (var item in HairslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Eyes is IAssetLinkContainer EyeslinkCont)
+            foreach (var item in obj.MiscItems.EnumerateListedAssetLinks())
             {
-                foreach (var item in EyeslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Races is IAssetLinkContainer RaceslinkCont)
+            foreach (var item in obj.AlchemicalApparatuses.EnumerateListedAssetLinks())
             {
-                foreach (var item in RaceslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.SoundMarkers is IAssetLinkContainer SoundMarkerslinkCont)
+            foreach (var item in obj.Statics.EnumerateListedAssetLinks())
             {
-                foreach (var item in SoundMarkerslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.AcousticSpaces is IAssetLinkContainer AcousticSpaceslinkCont)
+            foreach (var item in obj.MoveableStatics.EnumerateListedAssetLinks())
             {
-                foreach (var item in AcousticSpaceslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.MagicEffects is IAssetLinkContainer MagicEffectslinkCont)
+            foreach (var item in obj.Grasses.EnumerateListedAssetLinks())
             {
-                foreach (var item in MagicEffectslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.LandscapeTextures is IAssetLinkContainer LandscapeTextureslinkCont)
+            foreach (var item in obj.Trees.EnumerateListedAssetLinks())
             {
-                foreach (var item in LandscapeTextureslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.ObjectEffects is IAssetLinkContainer ObjectEffectslinkCont)
+            foreach (var item in obj.Florae.EnumerateListedAssetLinks())
             {
-                foreach (var item in ObjectEffectslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Spells is IAssetLinkContainer SpellslinkCont)
+            foreach (var item in obj.Furniture.EnumerateListedAssetLinks())
             {
-                foreach (var item in SpellslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Scrolls is IAssetLinkContainer ScrollslinkCont)
+            foreach (var item in obj.Weapons.EnumerateListedAssetLinks())
             {
-                foreach (var item in ScrollslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Activators is IAssetLinkContainer ActivatorslinkCont)
+            foreach (var item in obj.Ammunitions.EnumerateListedAssetLinks())
             {
-                foreach (var item in ActivatorslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.TalkingActivators is IAssetLinkContainer TalkingActivatorslinkCont)
+            foreach (var item in obj.Npcs.EnumerateListedAssetLinks())
             {
-                foreach (var item in TalkingActivatorslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Armors is IAssetLinkContainer ArmorslinkCont)
+            foreach (var item in obj.LeveledNpcs.EnumerateListedAssetLinks())
             {
-                foreach (var item in ArmorslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Books is IAssetLinkContainer BookslinkCont)
+            foreach (var item in obj.Keys.EnumerateListedAssetLinks())
             {
-                foreach (var item in BookslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Containers is IAssetLinkContainer ContainerslinkCont)
+            foreach (var item in obj.Ingestibles.EnumerateListedAssetLinks())
             {
-                foreach (var item in ContainerslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Doors is IAssetLinkContainer DoorslinkCont)
+            foreach (var item in obj.IdleMarkers.EnumerateListedAssetLinks())
             {
-                foreach (var item in DoorslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Ingredients is IAssetLinkContainer IngredientslinkCont)
+            foreach (var item in obj.Projectiles.EnumerateListedAssetLinks())
             {
-                foreach (var item in IngredientslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Lights is IAssetLinkContainer LightslinkCont)
+            foreach (var item in obj.Hazards.EnumerateListedAssetLinks())
             {
-                foreach (var item in LightslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.MiscItems is IAssetLinkContainer MiscItemslinkCont)
+            foreach (var item in obj.SoulGems.EnumerateListedAssetLinks())
             {
-                foreach (var item in MiscItemslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.AlchemicalApparatuses is IAssetLinkContainer AlchemicalApparatuseslinkCont)
+            foreach (var item in obj.Weathers.EnumerateListedAssetLinks())
             {
-                foreach (var item in AlchemicalApparatuseslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Statics is IAssetLinkContainer StaticslinkCont)
+            foreach (var item in obj.Climates.EnumerateListedAssetLinks())
             {
-                foreach (var item in StaticslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.MoveableStatics is IAssetLinkContainer MoveableStaticslinkCont)
-            {
-                foreach (var item in MoveableStaticslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Grasses is IAssetLinkContainer GrasseslinkCont)
-            {
-                foreach (var item in GrasseslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Trees is IAssetLinkContainer TreeslinkCont)
-            {
-                foreach (var item in TreeslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Florae is IAssetLinkContainer FloraelinkCont)
-            {
-                foreach (var item in FloraelinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Furniture is IAssetLinkContainer FurniturelinkCont)
-            {
-                foreach (var item in FurniturelinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Weapons is IAssetLinkContainer WeaponslinkCont)
-            {
-                foreach (var item in WeaponslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Ammunitions is IAssetLinkContainer AmmunitionslinkCont)
-            {
-                foreach (var item in AmmunitionslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Npcs is IAssetLinkContainer NpcslinkCont)
-            {
-                foreach (var item in NpcslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.LeveledNpcs is IAssetLinkContainer LeveledNpcslinkCont)
-            {
-                foreach (var item in LeveledNpcslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Keys is IAssetLinkContainer KeyslinkCont)
-            {
-                foreach (var item in KeyslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Ingestibles is IAssetLinkContainer IngestibleslinkCont)
-            {
-                foreach (var item in IngestibleslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.IdleMarkers is IAssetLinkContainer IdleMarkerslinkCont)
-            {
-                foreach (var item in IdleMarkerslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.ConstructibleObjects is IAssetLinkContainer ConstructibleObjectslinkCont)
-            {
-                foreach (var item in ConstructibleObjectslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Projectiles is IAssetLinkContainer ProjectileslinkCont)
-            {
-                foreach (var item in ProjectileslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Hazards is IAssetLinkContainer HazardslinkCont)
-            {
-                foreach (var item in HazardslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.SoulGems is IAssetLinkContainer SoulGemslinkCont)
-            {
-                foreach (var item in SoulGemslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.LeveledItems is IAssetLinkContainer LeveledItemslinkCont)
-            {
-                foreach (var item in LeveledItemslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Weathers is IAssetLinkContainer WeatherslinkCont)
-            {
-                foreach (var item in WeatherslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Climates is IAssetLinkContainer ClimateslinkCont)
-            {
-                foreach (var item in ClimateslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.ShaderParticleGeometries is IAssetLinkContainer ShaderParticleGeometrieslinkCont)
-            {
-                foreach (var item in ShaderParticleGeometrieslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.VisualEffects is IAssetLinkContainer VisualEffectslinkCont)
-            {
-                foreach (var item in VisualEffectslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Regions is IAssetLinkContainer RegionslinkCont)
-            {
-                foreach (var item in RegionslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.NavigationMeshInfoMaps is IAssetLinkContainer NavigationMeshInfoMapslinkCont)
-            {
-                foreach (var item in NavigationMeshInfoMapslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             if (obj.Cells is IAssetLinkContainer CellslinkCont)
             {
@@ -9295,435 +9044,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.DialogTopics is IAssetLinkContainer DialogTopicslinkCont)
+            foreach (var item in obj.AnimatedObjects.EnumerateListedAssetLinks())
             {
-                foreach (var item in DialogTopicslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Quests is IAssetLinkContainer QuestslinkCont)
+            foreach (var item in obj.Explosions.EnumerateListedAssetLinks())
             {
-                foreach (var item in QuestslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.IdleAnimations is IAssetLinkContainer IdleAnimationslinkCont)
+            foreach (var item in obj.BodyParts.EnumerateListedAssetLinks())
             {
-                foreach (var item in IdleAnimationslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Packages is IAssetLinkContainer PackageslinkCont)
+            foreach (var item in obj.AddonNodes.EnumerateListedAssetLinks())
             {
-                foreach (var item in PackageslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.CombatStyles is IAssetLinkContainer CombatStyleslinkCont)
+            foreach (var item in obj.CameraShots.EnumerateListedAssetLinks())
             {
-                foreach (var item in CombatStyleslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.LoadScreens is IAssetLinkContainer LoadScreenslinkCont)
+            foreach (var item in obj.Impacts.EnumerateListedAssetLinks())
             {
-                foreach (var item in LoadScreenslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.LeveledSpells is IAssetLinkContainer LeveledSpellslinkCont)
+            foreach (var item in obj.ArtObjects.EnumerateListedAssetLinks())
             {
-                foreach (var item in LeveledSpellslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.AnimatedObjects is IAssetLinkContainer AnimatedObjectslinkCont)
+            foreach (var item in obj.MaterialObjects.EnumerateListedAssetLinks())
             {
-                foreach (var item in AnimatedObjectslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Waters is IAssetLinkContainer WaterslinkCont)
-            {
-                foreach (var item in WaterslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.EffectShaders is IAssetLinkContainer EffectShaderslinkCont)
-            {
-                foreach (var item in EffectShaderslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Explosions is IAssetLinkContainer ExplosionslinkCont)
-            {
-                foreach (var item in ExplosionslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Debris is IAssetLinkContainer DebrislinkCont)
-            {
-                foreach (var item in DebrislinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.ImageSpaces is IAssetLinkContainer ImageSpaceslinkCont)
-            {
-                foreach (var item in ImageSpaceslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.ImageSpaceAdapters is IAssetLinkContainer ImageSpaceAdapterslinkCont)
-            {
-                foreach (var item in ImageSpaceAdapterslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.FormLists is IAssetLinkContainer FormListslinkCont)
-            {
-                foreach (var item in FormListslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Perks is IAssetLinkContainer PerkslinkCont)
-            {
-                foreach (var item in PerkslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.BodyParts is IAssetLinkContainer BodyPartslinkCont)
-            {
-                foreach (var item in BodyPartslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.AddonNodes is IAssetLinkContainer AddonNodeslinkCont)
-            {
-                foreach (var item in AddonNodeslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.ActorValueInformation is IAssetLinkContainer ActorValueInformationlinkCont)
-            {
-                foreach (var item in ActorValueInformationlinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.CameraShots is IAssetLinkContainer CameraShotslinkCont)
-            {
-                foreach (var item in CameraShotslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.CameraPaths is IAssetLinkContainer CameraPathslinkCont)
-            {
-                foreach (var item in CameraPathslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.VoiceTypes is IAssetLinkContainer VoiceTypeslinkCont)
-            {
-                foreach (var item in VoiceTypeslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.MaterialTypes is IAssetLinkContainer MaterialTypeslinkCont)
-            {
-                foreach (var item in MaterialTypeslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Impacts is IAssetLinkContainer ImpactslinkCont)
-            {
-                foreach (var item in ImpactslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.ImpactDataSets is IAssetLinkContainer ImpactDataSetslinkCont)
-            {
-                foreach (var item in ImpactDataSetslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.ArmorAddons is IAssetLinkContainer ArmorAddonslinkCont)
-            {
-                foreach (var item in ArmorAddonslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.EncounterZones is IAssetLinkContainer EncounterZoneslinkCont)
-            {
-                foreach (var item in EncounterZoneslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Locations is IAssetLinkContainer LocationslinkCont)
-            {
-                foreach (var item in LocationslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Messages is IAssetLinkContainer MessageslinkCont)
-            {
-                foreach (var item in MessageslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.DefaultObjectManagers is IAssetLinkContainer DefaultObjectManagerslinkCont)
-            {
-                foreach (var item in DefaultObjectManagerslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.LightingTemplates is IAssetLinkContainer LightingTemplateslinkCont)
-            {
-                foreach (var item in LightingTemplateslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.MusicTypes is IAssetLinkContainer MusicTypeslinkCont)
-            {
-                foreach (var item in MusicTypeslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Footsteps is IAssetLinkContainer FootstepslinkCont)
-            {
-                foreach (var item in FootstepslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.FootstepSets is IAssetLinkContainer FootstepSetslinkCont)
-            {
-                foreach (var item in FootstepSetslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.StoryManagerBranchNodes is IAssetLinkContainer StoryManagerBranchNodeslinkCont)
-            {
-                foreach (var item in StoryManagerBranchNodeslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.StoryManagerQuestNodes is IAssetLinkContainer StoryManagerQuestNodeslinkCont)
-            {
-                foreach (var item in StoryManagerQuestNodeslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.StoryManagerEventNodes is IAssetLinkContainer StoryManagerEventNodeslinkCont)
-            {
-                foreach (var item in StoryManagerEventNodeslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.DialogBranches is IAssetLinkContainer DialogBrancheslinkCont)
-            {
-                foreach (var item in DialogBrancheslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.MusicTracks is IAssetLinkContainer MusicTrackslinkCont)
-            {
-                foreach (var item in MusicTrackslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.DialogViews is IAssetLinkContainer DialogViewslinkCont)
-            {
-                foreach (var item in DialogViewslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.WordsOfPower is IAssetLinkContainer WordsOfPowerlinkCont)
-            {
-                foreach (var item in WordsOfPowerlinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Shouts is IAssetLinkContainer ShoutslinkCont)
-            {
-                foreach (var item in ShoutslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.EquipTypes is IAssetLinkContainer EquipTypeslinkCont)
-            {
-                foreach (var item in EquipTypeslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Relationships is IAssetLinkContainer RelationshipslinkCont)
-            {
-                foreach (var item in RelationshipslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Scenes is IAssetLinkContainer SceneslinkCont)
-            {
-                foreach (var item in SceneslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.AssociationTypes is IAssetLinkContainer AssociationTypeslinkCont)
-            {
-                foreach (var item in AssociationTypeslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Outfits is IAssetLinkContainer OutfitslinkCont)
-            {
-                foreach (var item in OutfitslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.ArtObjects is IAssetLinkContainer ArtObjectslinkCont)
-            {
-                foreach (var item in ArtObjectslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.MaterialObjects is IAssetLinkContainer MaterialObjectslinkCont)
-            {
-                foreach (var item in MaterialObjectslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.MovementTypes is IAssetLinkContainer MovementTypeslinkCont)
-            {
-                foreach (var item in MovementTypeslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.SoundDescriptors is IAssetLinkContainer SoundDescriptorslinkCont)
-            {
-                foreach (var item in SoundDescriptorslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.DualCastData is IAssetLinkContainer DualCastDatalinkCont)
-            {
-                foreach (var item in DualCastDatalinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.SoundCategories is IAssetLinkContainer SoundCategorieslinkCont)
-            {
-                foreach (var item in SoundCategorieslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.SoundOutputModels is IAssetLinkContainer SoundOutputModelslinkCont)
-            {
-                foreach (var item in SoundOutputModelslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.CollisionLayers is IAssetLinkContainer CollisionLayerslinkCont)
-            {
-                foreach (var item in CollisionLayerslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Colors is IAssetLinkContainer ColorslinkCont)
-            {
-                foreach (var item in ColorslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.ReverbParameters is IAssetLinkContainer ReverbParameterslinkCont)
-            {
-                foreach (var item in ReverbParameterslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.VolumetricLightings is IAssetLinkContainer VolumetricLightingslinkCont)
-            {
-                foreach (var item in VolumetricLightingslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
         
         public void RemapListedAssetLinks(ISkyrimMod obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
         {
-            obj.GameSettings.RemapListedAssetLinks(mapping);
-            obj.Keywords.RemapListedAssetLinks(mapping);
-            obj.LocationReferenceTypes.RemapListedAssetLinks(mapping);
-            obj.Actions.RemapListedAssetLinks(mapping);
-            obj.TextureSets.RemapListedAssetLinks(mapping);
-            obj.Globals.RemapListedAssetLinks(mapping);
-            obj.Classes.RemapListedAssetLinks(mapping);
-            obj.Factions.RemapListedAssetLinks(mapping);
             obj.HeadParts.RemapListedAssetLinks(mapping);
-            obj.Hairs.RemapListedAssetLinks(mapping);
-            obj.Eyes.RemapListedAssetLinks(mapping);
-            obj.Races.RemapListedAssetLinks(mapping);
-            obj.SoundMarkers.RemapListedAssetLinks(mapping);
-            obj.AcousticSpaces.RemapListedAssetLinks(mapping);
-            obj.MagicEffects.RemapListedAssetLinks(mapping);
-            obj.LandscapeTextures.RemapListedAssetLinks(mapping);
-            obj.ObjectEffects.RemapListedAssetLinks(mapping);
-            obj.Spells.RemapListedAssetLinks(mapping);
             obj.Scrolls.RemapListedAssetLinks(mapping);
             obj.Activators.RemapListedAssetLinks(mapping);
             obj.TalkingActivators.RemapListedAssetLinks(mapping);
@@ -9748,77 +9106,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.Keys.RemapListedAssetLinks(mapping);
             obj.Ingestibles.RemapListedAssetLinks(mapping);
             obj.IdleMarkers.RemapListedAssetLinks(mapping);
-            obj.ConstructibleObjects.RemapListedAssetLinks(mapping);
             obj.Projectiles.RemapListedAssetLinks(mapping);
             obj.Hazards.RemapListedAssetLinks(mapping);
             obj.SoulGems.RemapListedAssetLinks(mapping);
-            obj.LeveledItems.RemapListedAssetLinks(mapping);
             obj.Weathers.RemapListedAssetLinks(mapping);
             obj.Climates.RemapListedAssetLinks(mapping);
-            obj.ShaderParticleGeometries.RemapListedAssetLinks(mapping);
-            obj.VisualEffects.RemapListedAssetLinks(mapping);
-            obj.Regions.RemapListedAssetLinks(mapping);
-            obj.NavigationMeshInfoMaps.RemapListedAssetLinks(mapping);
             obj.Cells.RemapListedAssetLinks(mapping);
             obj.Worldspaces.RemapListedAssetLinks(mapping);
-            obj.DialogTopics.RemapListedAssetLinks(mapping);
-            obj.Quests.RemapListedAssetLinks(mapping);
-            obj.IdleAnimations.RemapListedAssetLinks(mapping);
-            obj.Packages.RemapListedAssetLinks(mapping);
-            obj.CombatStyles.RemapListedAssetLinks(mapping);
-            obj.LoadScreens.RemapListedAssetLinks(mapping);
-            obj.LeveledSpells.RemapListedAssetLinks(mapping);
             obj.AnimatedObjects.RemapListedAssetLinks(mapping);
-            obj.Waters.RemapListedAssetLinks(mapping);
-            obj.EffectShaders.RemapListedAssetLinks(mapping);
             obj.Explosions.RemapListedAssetLinks(mapping);
-            obj.Debris.RemapListedAssetLinks(mapping);
-            obj.ImageSpaces.RemapListedAssetLinks(mapping);
-            obj.ImageSpaceAdapters.RemapListedAssetLinks(mapping);
-            obj.FormLists.RemapListedAssetLinks(mapping);
-            obj.Perks.RemapListedAssetLinks(mapping);
             obj.BodyParts.RemapListedAssetLinks(mapping);
             obj.AddonNodes.RemapListedAssetLinks(mapping);
-            obj.ActorValueInformation.RemapListedAssetLinks(mapping);
             obj.CameraShots.RemapListedAssetLinks(mapping);
-            obj.CameraPaths.RemapListedAssetLinks(mapping);
-            obj.VoiceTypes.RemapListedAssetLinks(mapping);
-            obj.MaterialTypes.RemapListedAssetLinks(mapping);
             obj.Impacts.RemapListedAssetLinks(mapping);
-            obj.ImpactDataSets.RemapListedAssetLinks(mapping);
-            obj.ArmorAddons.RemapListedAssetLinks(mapping);
-            obj.EncounterZones.RemapListedAssetLinks(mapping);
-            obj.Locations.RemapListedAssetLinks(mapping);
-            obj.Messages.RemapListedAssetLinks(mapping);
-            obj.DefaultObjectManagers.RemapListedAssetLinks(mapping);
-            obj.LightingTemplates.RemapListedAssetLinks(mapping);
-            obj.MusicTypes.RemapListedAssetLinks(mapping);
-            obj.Footsteps.RemapListedAssetLinks(mapping);
-            obj.FootstepSets.RemapListedAssetLinks(mapping);
-            obj.StoryManagerBranchNodes.RemapListedAssetLinks(mapping);
-            obj.StoryManagerQuestNodes.RemapListedAssetLinks(mapping);
-            obj.StoryManagerEventNodes.RemapListedAssetLinks(mapping);
-            obj.DialogBranches.RemapListedAssetLinks(mapping);
-            obj.MusicTracks.RemapListedAssetLinks(mapping);
-            obj.DialogViews.RemapListedAssetLinks(mapping);
-            obj.WordsOfPower.RemapListedAssetLinks(mapping);
-            obj.Shouts.RemapListedAssetLinks(mapping);
-            obj.EquipTypes.RemapListedAssetLinks(mapping);
-            obj.Relationships.RemapListedAssetLinks(mapping);
-            obj.Scenes.RemapListedAssetLinks(mapping);
-            obj.AssociationTypes.RemapListedAssetLinks(mapping);
-            obj.Outfits.RemapListedAssetLinks(mapping);
             obj.ArtObjects.RemapListedAssetLinks(mapping);
             obj.MaterialObjects.RemapListedAssetLinks(mapping);
-            obj.MovementTypes.RemapListedAssetLinks(mapping);
-            obj.SoundDescriptors.RemapListedAssetLinks(mapping);
-            obj.DualCastData.RemapListedAssetLinks(mapping);
-            obj.SoundCategories.RemapListedAssetLinks(mapping);
-            obj.SoundOutputModels.RemapListedAssetLinks(mapping);
-            obj.CollisionLayers.RemapListedAssetLinks(mapping);
-            obj.Colors.RemapListedAssetLinks(mapping);
-            obj.ReverbParameters.RemapListedAssetLinks(mapping);
-            obj.VolumetricLightings.RemapListedAssetLinks(mapping);
         }
         
         #endregion
@@ -17128,376 +16430,125 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ISkyrimModGetter obj, ILinkCache? linkCache, bool includeImplicit)
         {
-            if (obj.GameSettings is IAssetLinkContainerGetter GameSettingslinkCont)
+            foreach (var item in obj.HeadParts.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in GameSettingslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Keywords is IAssetLinkContainerGetter KeywordslinkCont)
+            foreach (var item in obj.Scrolls.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in KeywordslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.LocationReferenceTypes is IAssetLinkContainerGetter LocationReferenceTypeslinkCont)
+            foreach (var item in obj.Activators.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in LocationReferenceTypeslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Actions is IAssetLinkContainerGetter ActionslinkCont)
+            foreach (var item in obj.TalkingActivators.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in ActionslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.TextureSets is IAssetLinkContainerGetter TextureSetslinkCont)
+            foreach (var item in obj.Armors.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in TextureSetslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Globals is IAssetLinkContainerGetter GlobalslinkCont)
+            foreach (var item in obj.Books.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in GlobalslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Classes is IAssetLinkContainerGetter ClasseslinkCont)
+            foreach (var item in obj.Containers.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in ClasseslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Factions is IAssetLinkContainerGetter FactionslinkCont)
+            foreach (var item in obj.Doors.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in FactionslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.HeadParts is IAssetLinkContainerGetter HeadPartslinkCont)
+            foreach (var item in obj.Ingredients.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in HeadPartslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Hairs is IAssetLinkContainerGetter HairslinkCont)
+            foreach (var item in obj.Lights.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in HairslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Eyes is IAssetLinkContainerGetter EyeslinkCont)
+            foreach (var item in obj.MiscItems.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in EyeslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Races is IAssetLinkContainerGetter RaceslinkCont)
+            foreach (var item in obj.AlchemicalApparatuses.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in RaceslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.SoundMarkers is IAssetLinkContainerGetter SoundMarkerslinkCont)
+            foreach (var item in obj.Statics.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in SoundMarkerslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.AcousticSpaces is IAssetLinkContainerGetter AcousticSpaceslinkCont)
+            foreach (var item in obj.MoveableStatics.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in AcousticSpaceslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.MagicEffects is IAssetLinkContainerGetter MagicEffectslinkCont)
+            foreach (var item in obj.Grasses.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in MagicEffectslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.LandscapeTextures is IAssetLinkContainerGetter LandscapeTextureslinkCont)
+            foreach (var item in obj.Trees.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in LandscapeTextureslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.ObjectEffects is IAssetLinkContainerGetter ObjectEffectslinkCont)
+            foreach (var item in obj.Florae.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in ObjectEffectslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Spells is IAssetLinkContainerGetter SpellslinkCont)
+            foreach (var item in obj.Furniture.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in SpellslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Scrolls is IAssetLinkContainerGetter ScrollslinkCont)
+            foreach (var item in obj.Weapons.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in ScrollslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Activators is IAssetLinkContainerGetter ActivatorslinkCont)
+            foreach (var item in obj.Ammunitions.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in ActivatorslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.TalkingActivators is IAssetLinkContainerGetter TalkingActivatorslinkCont)
+            foreach (var item in obj.Npcs.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in TalkingActivatorslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Armors is IAssetLinkContainerGetter ArmorslinkCont)
+            foreach (var item in obj.LeveledNpcs.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in ArmorslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Books is IAssetLinkContainerGetter BookslinkCont)
+            foreach (var item in obj.Keys.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in BookslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Containers is IAssetLinkContainerGetter ContainerslinkCont)
+            foreach (var item in obj.Ingestibles.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in ContainerslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Doors is IAssetLinkContainerGetter DoorslinkCont)
+            foreach (var item in obj.IdleMarkers.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in DoorslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Ingredients is IAssetLinkContainerGetter IngredientslinkCont)
+            foreach (var item in obj.Projectiles.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in IngredientslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Lights is IAssetLinkContainerGetter LightslinkCont)
+            foreach (var item in obj.Hazards.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in LightslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.MiscItems is IAssetLinkContainerGetter MiscItemslinkCont)
+            foreach (var item in obj.SoulGems.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in MiscItemslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.AlchemicalApparatuses is IAssetLinkContainerGetter AlchemicalApparatuseslinkCont)
+            foreach (var item in obj.Weathers.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in AlchemicalApparatuseslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Statics is IAssetLinkContainerGetter StaticslinkCont)
+            foreach (var item in obj.Climates.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in StaticslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.MoveableStatics is IAssetLinkContainerGetter MoveableStaticslinkCont)
-            {
-                foreach (var item in MoveableStaticslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Grasses is IAssetLinkContainerGetter GrasseslinkCont)
-            {
-                foreach (var item in GrasseslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Trees is IAssetLinkContainerGetter TreeslinkCont)
-            {
-                foreach (var item in TreeslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Florae is IAssetLinkContainerGetter FloraelinkCont)
-            {
-                foreach (var item in FloraelinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Furniture is IAssetLinkContainerGetter FurniturelinkCont)
-            {
-                foreach (var item in FurniturelinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Weapons is IAssetLinkContainerGetter WeaponslinkCont)
-            {
-                foreach (var item in WeaponslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Ammunitions is IAssetLinkContainerGetter AmmunitionslinkCont)
-            {
-                foreach (var item in AmmunitionslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Npcs is IAssetLinkContainerGetter NpcslinkCont)
-            {
-                foreach (var item in NpcslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.LeveledNpcs is IAssetLinkContainerGetter LeveledNpcslinkCont)
-            {
-                foreach (var item in LeveledNpcslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Keys is IAssetLinkContainerGetter KeyslinkCont)
-            {
-                foreach (var item in KeyslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Ingestibles is IAssetLinkContainerGetter IngestibleslinkCont)
-            {
-                foreach (var item in IngestibleslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.IdleMarkers is IAssetLinkContainerGetter IdleMarkerslinkCont)
-            {
-                foreach (var item in IdleMarkerslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.ConstructibleObjects is IAssetLinkContainerGetter ConstructibleObjectslinkCont)
-            {
-                foreach (var item in ConstructibleObjectslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Projectiles is IAssetLinkContainerGetter ProjectileslinkCont)
-            {
-                foreach (var item in ProjectileslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Hazards is IAssetLinkContainerGetter HazardslinkCont)
-            {
-                foreach (var item in HazardslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.SoulGems is IAssetLinkContainerGetter SoulGemslinkCont)
-            {
-                foreach (var item in SoulGemslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.LeveledItems is IAssetLinkContainerGetter LeveledItemslinkCont)
-            {
-                foreach (var item in LeveledItemslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Weathers is IAssetLinkContainerGetter WeatherslinkCont)
-            {
-                foreach (var item in WeatherslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Climates is IAssetLinkContainerGetter ClimateslinkCont)
-            {
-                foreach (var item in ClimateslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.ShaderParticleGeometries is IAssetLinkContainerGetter ShaderParticleGeometrieslinkCont)
-            {
-                foreach (var item in ShaderParticleGeometrieslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.VisualEffects is IAssetLinkContainerGetter VisualEffectslinkCont)
-            {
-                foreach (var item in VisualEffectslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Regions is IAssetLinkContainerGetter RegionslinkCont)
-            {
-                foreach (var item in RegionslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.NavigationMeshInfoMaps is IAssetLinkContainerGetter NavigationMeshInfoMapslinkCont)
-            {
-                foreach (var item in NavigationMeshInfoMapslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             if (obj.Cells is IAssetLinkContainerGetter CellslinkCont)
             {
@@ -17513,411 +16564,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.DialogTopics is IAssetLinkContainerGetter DialogTopicslinkCont)
+            foreach (var item in obj.AnimatedObjects.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in DialogTopicslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Quests is IAssetLinkContainerGetter QuestslinkCont)
+            foreach (var item in obj.Explosions.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in QuestslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.IdleAnimations is IAssetLinkContainerGetter IdleAnimationslinkCont)
+            foreach (var item in obj.BodyParts.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in IdleAnimationslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.Packages is IAssetLinkContainerGetter PackageslinkCont)
+            foreach (var item in obj.AddonNodes.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in PackageslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.CombatStyles is IAssetLinkContainerGetter CombatStyleslinkCont)
+            foreach (var item in obj.CameraShots.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in CombatStyleslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.LoadScreens is IAssetLinkContainerGetter LoadScreenslinkCont)
+            foreach (var item in obj.Impacts.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in LoadScreenslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.LeveledSpells is IAssetLinkContainerGetter LeveledSpellslinkCont)
+            foreach (var item in obj.ArtObjects.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in LeveledSpellslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.AnimatedObjects is IAssetLinkContainerGetter AnimatedObjectslinkCont)
+            foreach (var item in obj.MaterialObjects.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
             {
-                foreach (var item in AnimatedObjectslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Waters is IAssetLinkContainerGetter WaterslinkCont)
-            {
-                foreach (var item in WaterslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.EffectShaders is IAssetLinkContainerGetter EffectShaderslinkCont)
-            {
-                foreach (var item in EffectShaderslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Explosions is IAssetLinkContainerGetter ExplosionslinkCont)
-            {
-                foreach (var item in ExplosionslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Debris is IAssetLinkContainerGetter DebrislinkCont)
-            {
-                foreach (var item in DebrislinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.ImageSpaces is IAssetLinkContainerGetter ImageSpaceslinkCont)
-            {
-                foreach (var item in ImageSpaceslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.ImageSpaceAdapters is IAssetLinkContainerGetter ImageSpaceAdapterslinkCont)
-            {
-                foreach (var item in ImageSpaceAdapterslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.FormLists is IAssetLinkContainerGetter FormListslinkCont)
-            {
-                foreach (var item in FormListslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Perks is IAssetLinkContainerGetter PerkslinkCont)
-            {
-                foreach (var item in PerkslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.BodyParts is IAssetLinkContainerGetter BodyPartslinkCont)
-            {
-                foreach (var item in BodyPartslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.AddonNodes is IAssetLinkContainerGetter AddonNodeslinkCont)
-            {
-                foreach (var item in AddonNodeslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.ActorValueInformation is IAssetLinkContainerGetter ActorValueInformationlinkCont)
-            {
-                foreach (var item in ActorValueInformationlinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.CameraShots is IAssetLinkContainerGetter CameraShotslinkCont)
-            {
-                foreach (var item in CameraShotslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.CameraPaths is IAssetLinkContainerGetter CameraPathslinkCont)
-            {
-                foreach (var item in CameraPathslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.VoiceTypes is IAssetLinkContainerGetter VoiceTypeslinkCont)
-            {
-                foreach (var item in VoiceTypeslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.MaterialTypes is IAssetLinkContainerGetter MaterialTypeslinkCont)
-            {
-                foreach (var item in MaterialTypeslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Impacts is IAssetLinkContainerGetter ImpactslinkCont)
-            {
-                foreach (var item in ImpactslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.ImpactDataSets is IAssetLinkContainerGetter ImpactDataSetslinkCont)
-            {
-                foreach (var item in ImpactDataSetslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.ArmorAddons is IAssetLinkContainerGetter ArmorAddonslinkCont)
-            {
-                foreach (var item in ArmorAddonslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.EncounterZones is IAssetLinkContainerGetter EncounterZoneslinkCont)
-            {
-                foreach (var item in EncounterZoneslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Locations is IAssetLinkContainerGetter LocationslinkCont)
-            {
-                foreach (var item in LocationslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Messages is IAssetLinkContainerGetter MessageslinkCont)
-            {
-                foreach (var item in MessageslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.DefaultObjectManagers is IAssetLinkContainerGetter DefaultObjectManagerslinkCont)
-            {
-                foreach (var item in DefaultObjectManagerslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.LightingTemplates is IAssetLinkContainerGetter LightingTemplateslinkCont)
-            {
-                foreach (var item in LightingTemplateslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.MusicTypes is IAssetLinkContainerGetter MusicTypeslinkCont)
-            {
-                foreach (var item in MusicTypeslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Footsteps is IAssetLinkContainerGetter FootstepslinkCont)
-            {
-                foreach (var item in FootstepslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.FootstepSets is IAssetLinkContainerGetter FootstepSetslinkCont)
-            {
-                foreach (var item in FootstepSetslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.StoryManagerBranchNodes is IAssetLinkContainerGetter StoryManagerBranchNodeslinkCont)
-            {
-                foreach (var item in StoryManagerBranchNodeslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.StoryManagerQuestNodes is IAssetLinkContainerGetter StoryManagerQuestNodeslinkCont)
-            {
-                foreach (var item in StoryManagerQuestNodeslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.StoryManagerEventNodes is IAssetLinkContainerGetter StoryManagerEventNodeslinkCont)
-            {
-                foreach (var item in StoryManagerEventNodeslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.DialogBranches is IAssetLinkContainerGetter DialogBrancheslinkCont)
-            {
-                foreach (var item in DialogBrancheslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.MusicTracks is IAssetLinkContainerGetter MusicTrackslinkCont)
-            {
-                foreach (var item in MusicTrackslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.DialogViews is IAssetLinkContainerGetter DialogViewslinkCont)
-            {
-                foreach (var item in DialogViewslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.WordsOfPower is IAssetLinkContainerGetter WordsOfPowerlinkCont)
-            {
-                foreach (var item in WordsOfPowerlinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Shouts is IAssetLinkContainerGetter ShoutslinkCont)
-            {
-                foreach (var item in ShoutslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.EquipTypes is IAssetLinkContainerGetter EquipTypeslinkCont)
-            {
-                foreach (var item in EquipTypeslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Relationships is IAssetLinkContainerGetter RelationshipslinkCont)
-            {
-                foreach (var item in RelationshipslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Scenes is IAssetLinkContainerGetter SceneslinkCont)
-            {
-                foreach (var item in SceneslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.AssociationTypes is IAssetLinkContainerGetter AssociationTypeslinkCont)
-            {
-                foreach (var item in AssociationTypeslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Outfits is IAssetLinkContainerGetter OutfitslinkCont)
-            {
-                foreach (var item in OutfitslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.ArtObjects is IAssetLinkContainerGetter ArtObjectslinkCont)
-            {
-                foreach (var item in ArtObjectslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.MaterialObjects is IAssetLinkContainerGetter MaterialObjectslinkCont)
-            {
-                foreach (var item in MaterialObjectslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.MovementTypes is IAssetLinkContainerGetter MovementTypeslinkCont)
-            {
-                foreach (var item in MovementTypeslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.SoundDescriptors is IAssetLinkContainerGetter SoundDescriptorslinkCont)
-            {
-                foreach (var item in SoundDescriptorslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.DualCastData is IAssetLinkContainerGetter DualCastDatalinkCont)
-            {
-                foreach (var item in DualCastDatalinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.SoundCategories is IAssetLinkContainerGetter SoundCategorieslinkCont)
-            {
-                foreach (var item in SoundCategorieslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.SoundOutputModels is IAssetLinkContainerGetter SoundOutputModelslinkCont)
-            {
-                foreach (var item in SoundOutputModelslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.CollisionLayers is IAssetLinkContainerGetter CollisionLayerslinkCont)
-            {
-                foreach (var item in CollisionLayerslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Colors is IAssetLinkContainerGetter ColorslinkCont)
-            {
-                foreach (var item in ColorslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.ReverbParameters is IAssetLinkContainerGetter ReverbParameterslinkCont)
-            {
-                foreach (var item in ReverbParameterslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.VolumetricLightings is IAssetLinkContainerGetter VolumetricLightingslinkCont)
-            {
-                foreach (var item in VolumetricLightingslinkCont.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }

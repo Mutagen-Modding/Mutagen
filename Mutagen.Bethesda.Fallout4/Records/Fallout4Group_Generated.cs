@@ -6,6 +6,7 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Fallout4.Records;
@@ -145,6 +146,9 @@ namespace Mutagen.Bethesda.Fallout4
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<T, TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<T, TMajor>(records, throwIfUnknown);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => Fallout4GroupCommon<T>.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => Fallout4GroupSetterCommon<T>.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => Fallout4GroupSetterCommon<T>.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -206,6 +210,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IFallout4Group<T> :
+        IAssetLinkContainer,
         IFallout4GroupGetter<T>,
         IFormLinkContainer,
         ILoquiObjectSetter<IFallout4Group<T>>,
@@ -220,6 +225,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IFallout4GroupGetter<out T> :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IFallout4GroupGetter<T>>,
@@ -871,6 +877,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFallout4Group<T> obj)
+        {
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IFallout4Group<T> obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1126,6 +1141,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     }
                     yield break;
             }
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IFallout4GroupGetter<T> obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            yield break;
         }
         
         #endregion
@@ -1461,6 +1481,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4GroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => Fallout4GroupCommon<T>.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

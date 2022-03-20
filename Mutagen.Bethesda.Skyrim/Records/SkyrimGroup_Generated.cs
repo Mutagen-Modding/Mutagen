@@ -147,8 +147,8 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<T, TMajor>(records, throwIfUnknown);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => SkyrimGroupCommon<T>.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SkyrimGroupSetterCommon<T>.Instance.EnumerateListedAssetLinks(this);
-        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SkyrimGroupSetterCommon<T>.Instance.RemapListedAssetLinks(this, mapping);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SkyrimGroupSetterCommon<T>.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SkyrimGroupSetterCommon<T>.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation

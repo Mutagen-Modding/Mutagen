@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         new IEnumerable<TMajor> Records { get; }
     }
 
-    public interface IGroup : IGroupGetter
+    public interface IGroup : IGroupGetter, IAssetLinkContainer
     {
         /// <summary>
         /// Adds

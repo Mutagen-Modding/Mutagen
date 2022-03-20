@@ -159,6 +159,12 @@ namespace Mutagen.Bethesda.Plugins.Records
         
         /// <inheritdoc />
         public abstract IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit);
+
+        /// <inheritdoc />
+        public abstract void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping);
+
+        /// <inheritdoc />
+        public abstract IEnumerable<IAssetLink> EnumerateListedAssetLinks();
     }
 
     namespace Internals

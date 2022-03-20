@@ -144,8 +144,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<T, TMajor>(records, throwIfUnknown);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => OblivionGroupCommon<T>.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => OblivionGroupSetterCommon<T>.Instance.EnumerateListedAssetLinks(this);
-        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => OblivionGroupSetterCommon<T>.Instance.RemapListedAssetLinks(this, mapping);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => OblivionGroupSetterCommon<T>.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => OblivionGroupSetterCommon<T>.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation
