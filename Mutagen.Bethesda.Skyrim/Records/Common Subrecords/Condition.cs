@@ -1139,12 +1139,12 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case Condition.ParameterCategory.None:
                     case Condition.ParameterCategory.Number:
+                    case Condition.ParameterCategory.String:
                         writer.Write(item.ParameterOneNumber);
                         break;
                     case Condition.ParameterCategory.Form:
                         FormKeyBinaryTranslation.Instance.Write(writer, item.ParameterOneRecord.FormKey);
                         break;
-                    case Condition.ParameterCategory.String:
                     default:
                         throw new NotImplementedException();
                 }
@@ -1152,12 +1152,12 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case Condition.ParameterCategory.None:
                     case Condition.ParameterCategory.Number:
+                    case Condition.ParameterCategory.String:
                         writer.Write(item.ParameterTwoNumber);
                         break;
                     case Condition.ParameterCategory.Form:
                         FormKeyBinaryTranslation.Instance.Write(writer, item.ParameterTwoRecord.FormKey);
                         break;
-                    case Condition.ParameterCategory.String:
                     default:
                         throw new NotImplementedException();
                 }
