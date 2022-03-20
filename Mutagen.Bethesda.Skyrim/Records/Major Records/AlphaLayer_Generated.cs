@@ -361,6 +361,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = AlphaLayer_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => AlphaLayerCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AlphaLayerSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation

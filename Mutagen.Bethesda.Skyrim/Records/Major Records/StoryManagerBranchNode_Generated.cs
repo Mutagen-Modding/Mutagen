@@ -397,6 +397,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = StoryManagerBranchNode_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => StoryManagerBranchNodeCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerBranchNodeSetterCommon.Instance.RemapLinks(this, mapping);
         public StoryManagerBranchNode(
             FormKey formKey,
             SkyrimRelease gameRelease)
