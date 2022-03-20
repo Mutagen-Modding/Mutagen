@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 public abstract class AContainedLinksModule<TLinkType> : GenerationModule
     where TLinkType : TypeGeneration
 {
-    public static async Task<Case> HasLinks(LoquiType loqui, bool includeBaseClass, GenericSpecification? specifications = null)
+    public virtual async Task<Case> HasLinks(LoquiType loqui, bool includeBaseClass, GenericSpecification? specifications = null)
     {
         if (specifications != null)
         {
@@ -27,7 +27,7 @@ public abstract class AContainedLinksModule<TLinkType> : GenerationModule
         }
     }
     
-    public static async Task<Case> HasLinks(ObjectGeneration obj, bool includeBaseClass, GenericSpecification specifications = null)
+    public virtual async Task<Case> HasLinks(ObjectGeneration obj, bool includeBaseClass, GenericSpecification specifications = null)
     {
         if (obj.Name == "MajorRecord") return Case.Yes;
         if (obj.IterateFields(includeBaseClass: includeBaseClass).Any((f) => f is TLinkType)) return Case.Yes;

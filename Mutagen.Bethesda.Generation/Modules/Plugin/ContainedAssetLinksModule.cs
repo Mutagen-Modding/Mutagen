@@ -9,6 +9,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
 public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
 {
+    public static ContainedAssetLinksModule Instance = new();
+
     public override async IAsyncEnumerable<string> RequiredUsingStatements(ObjectGeneration obj)
     {
         await foreach (var b in base.RequiredUsingStatements(obj))
@@ -502,7 +504,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
         await GenerateInterfaceImplementation(obj, fg, getter: false);
     }
 
-    public static async Task<bool> ShouldGenerate(ObjectGeneration obj)
+    public async Task<bool> ShouldGenerate(ObjectGeneration obj)
     {
         if (obj.GetObjectType() != ObjectType.Mod
             && obj.GetObjectType() != ObjectType.Group)
@@ -514,7 +516,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
         return true;
     }
 
-    public static async Task GenerateInterfaceImplementation(ObjectGeneration obj, FileGeneration fg, bool getter)
+    public async Task GenerateInterfaceImplementation(ObjectGeneration obj, FileGeneration fg, bool getter)
     {
         var shouldAlwaysOverride = obj.IsTopLevelGroup();
         fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}IEnumerable<{nameof(IAssetLinkGetter)}> {nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(ILinkCache? linkCache, bool includeImplicit) => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);");

@@ -11,6 +11,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
 public class ContainedFormLinksModule : AContainedLinksModule<FormLinkType>
 {
+    public static ContainedFormLinksModule Instance = new();
+    
     public override async IAsyncEnumerable<(LoquiInterfaceType Location, string Interface)> Interfaces(ObjectGeneration obj)
     {
         if (await HasLinks(obj, includeBaseClass: false) != Case.No)
@@ -328,7 +330,7 @@ public class ContainedFormLinksModule : AContainedLinksModule<FormLinkType>
         await GenerateInterfaceImplementation(obj, fg, getter: false);
     }
 
-    public static async Task GenerateInterfaceImplementation(ObjectGeneration obj, FileGeneration fg, bool getter)
+    public async Task GenerateInterfaceImplementation(ObjectGeneration obj, FileGeneration fg, bool getter)
     {
         var shouldAlwaysOverride = obj.IsTopLevelGroup();
         fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}IEnumerable<{nameof(IFormLinkGetter)}> {nameof(IFormLinkContainerGetter.ContainedFormLinks)} => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetContainedFormLinks(this);");
