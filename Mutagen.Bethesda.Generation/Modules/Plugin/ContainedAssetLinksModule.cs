@@ -76,10 +76,14 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                 
                 if (obj.GetObjectData().HasMetaAssets)
                 {
-                    fg.AppendLine($"foreach (var additional in GetAdditionalAssetLinks())");
+                    fg.AppendLine("if (includeImplicit)");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine("yield return additional;");
+                        fg.AppendLine($"foreach (var additional in GetAdditionalAssetLinks())");
+                        using (new BraceWrapper(fg))
+                        {
+                            fg.AppendLine("yield return additional;");
+                        }
                     }
                 }
                 
