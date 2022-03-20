@@ -55,7 +55,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
         {
             if (obj.GetObjectData().HasMetaAssets)
             {
-                fg.AppendLine($"public static partial IEnumerable<IAssetLink> GetAdditionalAssetLinks();");
+                fg.AppendLine($"public static partial IEnumerable<IAssetLink> GetAdditionalAssetLinks(ILinkCache linkCache);");
             }
             
             fg.AppendLine($"public IEnumerable<{nameof(IAssetLinkGetter)}> EnumerateAssetLinks({obj.Interface(getter: true)} obj, ILinkCache? linkCache, bool includeImplicit)");
@@ -76,10 +76,10 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                 
                 if (obj.GetObjectData().HasMetaAssets)
                 {
-                    fg.AppendLine("if (includeImplicit)");
+                    fg.AppendLine("if (includeImplicit && linkCache != null)");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"foreach (var additional in GetAdditionalAssetLinks())");
+                        fg.AppendLine($"foreach (var additional in GetAdditionalAssetLinks(linkCache))");
                         using (new BraceWrapper(fg))
                         {
                             fg.AppendLine("yield return additional;");
