@@ -115,6 +115,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Door_Registration.Instance,
                 PlacedNpc_Registration.Instance,
                 PlacedObject_Registration.Instance,
+                APlacedTrap_Registration.Instance,
             });
             dict[typeof(ILocationTargetableGetter)] = dict[typeof(ILocationTargetable)] with { Setter = false };
             dict[typeof(IOwner)] = new InterfaceMappingResult(true, new ILoquiRegistration[]

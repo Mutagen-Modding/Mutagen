@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Skyrim
 {
     /// <summary>
-    /// Implemented by: [Door, PlacedNpc, PlacedObject]
+    /// Implemented by: [Door, PlacedNpc, PlacedObject, APlacedTrap]
     /// </summary>
     public partial interface ILocationTargetable :
         ILocationTargetableGetter,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     /// <summary>
-    /// Implemented by: [Door, PlacedNpc, PlacedObject]
+    /// Implemented by: [Door, PlacedNpc, PlacedObject, APlacedTrap]
     /// </summary>
     public partial interface ILocationTargetableGetter : ISkyrimMajorRecordGetter
     {
