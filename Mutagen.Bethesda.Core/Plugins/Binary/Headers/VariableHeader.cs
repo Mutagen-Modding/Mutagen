@@ -82,5 +82,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         /// The length of the content, excluding the header bytes.
         /// </summary>
         public long ContentLength => Constants.HeaderIncludedInLength ? RecordLength - HeaderLength : RecordLength;
+
+        /// <inheritdoc/>
+        public override string ToString() => $"{RecordType.ToString()} => 0x{ContentLength.ToString("X")}";
     }
 }
