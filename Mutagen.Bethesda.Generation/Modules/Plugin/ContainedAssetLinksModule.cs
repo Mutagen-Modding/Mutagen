@@ -3,6 +3,7 @@ using Loqui.Generation;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Noggog;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
@@ -10,6 +11,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
 {
     public static ContainedAssetLinksModule Instance = new();
+
+    public override async Task<Case> HasLinks(ObjectGeneration obj, bool includeBaseClass, GenericSpecification specifications = null)
+    {
+        if (obj.GetObjectData().HasMetaAssets) return Case.Yes;
+        return await base.HasLinks(obj, includeBaseClass, specifications);
+    }
 
     public override async IAsyncEnumerable<string> RequiredUsingStatements(ObjectGeneration obj)
     {
@@ -23,6 +30,12 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
             yield break;
         }
         yield return "Mutagen.Bethesda.Assets";
+    }
+
+    public override async Task PostLoad(ObjectGeneration obj)
+    {
+        await base.PostLoad(obj);
+        obj.GetObjectData().HasMetaAssets = obj.Node.GetAttribute("metaAssets", false);
     }
 
     public override async IAsyncEnumerable<(LoquiInterfaceType Location, string Interface)> Interfaces(
@@ -40,6 +53,11 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
         if (!await ShouldGenerate(obj)) return;
         if (maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class))
         {
+            if (obj.GetObjectData().HasMetaAssets)
+            {
+                fg.AppendLine($"public static partial IEnumerable<IAssetLink> GetAdditionalAssetLinks();");
+            }
+            
             fg.AppendLine($"public IEnumerable<{nameof(IAssetLinkGetter)}> EnumerateAssetLinks({obj.Interface(getter: true)} obj, ILinkCache? linkCache, bool includeImplicit)");
             using (new BraceWrapper(fg))
             {
@@ -55,6 +73,16 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         break;
                     }
                 }
+                
+                if (obj.GetObjectData().HasMetaAssets)
+                {
+                    fg.AppendLine($"foreach (var additional in GetAdditionalAssetLinks())");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine("yield return additional;");
+                    }
+                }
+                
                 var startCount = fg.Count;
                 foreach (var field in obj.IterateFields(nonIntegrated: true))
                 {

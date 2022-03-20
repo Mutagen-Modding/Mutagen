@@ -153,6 +153,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="metaAssets" type="xs:boolean" use="optional" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether a record has implicit or meta assets present
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
           <xs:attribute name="markerType" type="xs:string" >
             <xs:annotation>
               <xs:documentation>
