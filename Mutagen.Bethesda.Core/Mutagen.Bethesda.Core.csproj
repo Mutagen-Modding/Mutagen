@@ -397,6 +397,7 @@
     <Compile Include="Plugins\Records\Internals\IModRegistration.cs" />
     <Compile Include="Plugins\Records\Internals\InterfaceEnumerationHelper.cs" />
     <Compile Include="Plugins\Records\Internals\InterfaceMappingResult.cs" />
+    <Compile Include="Plugins\Records\RecordTypes.cs" />
     <Compile Include="Plugins\RecordTypeMapping\AssociatedRecordTypesAttribute.cs" />
     <Compile Include="Plugins\RecordTypeMapping\RecordTypeLookup.cs" />
     <Compile Include="Strings\DI\MutagenEncodingProvider.cs" />
@@ -510,8 +511,6 @@
     <Compile Include="Plugins\Binary\Headers\StreamHeaderMixIn.cs" />
     <Compile Include="Plugins\Binary\Headers\SubrecordHeader.cs" />
     <Compile Include="Plugins\Binary\Headers\VariableHeader.cs" />
-    <Compile Include="Plugins\Internals\RecordTypeInts.cs" />
-    <Compile Include="Plugins\Internals\RecordTypes.cs" />
     <Compile Include="Plugins\Binary\Streams\WritingBundle.cs" />
     <Compile Include="Plugins\Binary\Streams\ParsingBundle.cs" />
     <Compile Include="Strings\IStringsLookup.cs" />

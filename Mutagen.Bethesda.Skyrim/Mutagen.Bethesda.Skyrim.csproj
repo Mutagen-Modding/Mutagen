@@ -167,6 +167,7 @@
     <Compile Include="Records\Major Records\Landscape.cs">
       <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\RecordTypes.cs" />
     <Compile Include="Records\SkyrimGroupWrapper.cs">
       <DependentUpon>SkyrimGroup.xml</DependentUpon>
     </Compile>

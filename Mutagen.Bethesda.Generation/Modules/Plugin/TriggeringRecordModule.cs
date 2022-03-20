@@ -712,7 +712,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
         public override async Task FinalizeGeneration(ProtocolGeneration proto)
         {
             await base.FinalizeGeneration(proto);
-            if (proto.DefaultNamespace.Equals("Mutagen.Bethesda")) return;
             HashSet<RecordType> recordTypes = new HashSet<RecordType>();
             foreach (var obj in proto.ObjectGenerationsByID.Values)
             {
@@ -722,10 +721,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             fg.AppendLine("using Mutagen.Bethesda.Plugins;");
             fg.AppendLine();
 
-            using (var n = new NamespaceWrapper(fg, $"{proto.DefaultNamespace}.Internals", fileScoped: false))
+            using (var n = new NamespaceWrapper(fg, $"{proto.DefaultNamespace}.Internals"))
             {
                 using (var c = new ClassWrapper(fg, "RecordTypes"))
                 {
+                    c.Partial = true;
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -739,10 +739,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             fg.Generate(path);
             proto.GeneratedFiles.Add(path, ProjItemType.Compile);
             fg = new FileGeneration();
-            using (var n = new NamespaceWrapper(fg, $"{proto.DefaultNamespace}.Internals", fileScoped: false))
+            using (var n = new NamespaceWrapper(fg, $"{proto.DefaultNamespace}.Internals"))
             {
                 using (var c = new ClassWrapper(fg, "RecordTypeInts"))
                 {
+                    c.Partial = true;
                 }
                 using (new BraceWrapper(fg))
                 {
