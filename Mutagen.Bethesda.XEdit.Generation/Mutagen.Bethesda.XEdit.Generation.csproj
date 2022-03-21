@@ -8,8 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Loqui.Generation" Version="2.39.0.1-dev" />
-      <PackageReference Include="Noggog.CSharpExt" Version="2.39.0.1-dev" />
+      <PackageReference Include="Loqui.Generation" Version="2.40.0.1-dev" />
+      <PackageReference Include="Noggog.CSharpExt" Version="2.40.0.1-dev" />
     </ItemGroup>
 
     <ItemGroup>

@@ -52,13 +52,13 @@ public static class BinaryOverlayArray2d
 
         public T this[P2Int index] => this[index.X, index.Y];
 
-        public IEnumerator<KeyValuePair<P2Int, T>> GetEnumerator()
+        public IEnumerator<IKeyValue<P2Int, T>> GetEnumerator()
         {
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    yield return new KeyValuePair<P2Int, T>(new P2Int(x, y), this[x, y]);
+                    yield return new KeyValue<P2Int, T>(new P2Int(x, y), this[x, y]);
                 }
             }
         }
@@ -80,11 +80,6 @@ public static class BinaryOverlayArray2d
             }
 
             return ret;
-        }
-
-        object IShallowCloneable.ShallowClone()
-        {
-            return ShallowClone();
         }
     }
 }

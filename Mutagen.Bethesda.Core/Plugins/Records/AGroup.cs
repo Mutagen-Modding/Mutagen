@@ -230,14 +230,14 @@ namespace Mutagen.Bethesda.Plugins.Records
 
             public bool ContainsKey(FormKey key) => this._locs.ContainsKey(key);
 
-            public IEnumerator<IKeyValue<T, FormKey>> GetEnumerator()
+            public IEnumerator<IKeyValue<FormKey, T>> GetEnumerator()
             {
                 foreach (var kv in this._locs)
                 {
-                    KeyValue<T, FormKey> item;
+                    KeyValue<FormKey, T> item;
                     try
                     {
-                        item = new KeyValue<T, FormKey>(kv.Key, ConstructWrapper(kv.Value));
+                        item = new KeyValue<FormKey, T>(kv.Key, ConstructWrapper(kv.Value));
                     }
                     catch (Exception ex)
                     {

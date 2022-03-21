@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         bool ContainsKey(ModKey key);
     }
 
-    public interface ILoadOrderGetter<out TListing> : ILoadOrderGetter, IReadOnlyList<Noggog.IKeyValue<TListing, ModKey>>, IReadOnlyCache<TListing, ModKey>
+    public interface ILoadOrderGetter<out TListing> : ILoadOrderGetter, IReadOnlyList<Noggog.IKeyValue<ModKey, TListing>>, IReadOnlyCache<TListing, ModKey>
         where TListing : IModKeyed
     {
         new TListing this[int index] { get; }
@@ -610,12 +610,12 @@ namespace Mutagen.Bethesda.Plugins.Order
 
         IEnumerable<ModKey> ILoadOrderGetter.PriorityOrder => _byLoadOrder.Select(x => x.Item.ModKey).Reverse();
 
-        Noggog.IKeyValue<TListing, ModKey> IReadOnlyList<Noggog.IKeyValue<TListing, ModKey>>.this[int index]
+        Noggog.IKeyValue<ModKey, TListing> IReadOnlyList<Noggog.IKeyValue<ModKey, TListing>>.this[int index]
         {
             get
             {
                 var cont = _byLoadOrder[index];
-                return new KeyValue<TListing, ModKey>(cont.Item.ModKey, cont.Item);
+                return new KeyValue<ModKey, TListing>(cont.Item.ModKey, cont.Item);
             }
         }
 
@@ -817,9 +817,9 @@ namespace Mutagen.Bethesda.Plugins.Order
             }
         }
 
-        IEnumerator<Noggog.IKeyValue<TListing, ModKey>> IEnumerable<Noggog.IKeyValue<TListing, ModKey>>.GetEnumerator()
+        IEnumerator<Noggog.IKeyValue<ModKey, TListing>> IEnumerable<Noggog.IKeyValue<ModKey, TListing>>.GetEnumerator()
         {
-            return ListedOrder.Select(x => new KeyValue<TListing, ModKey>(x.ModKey, x)).GetEnumerator();
+            return ListedOrder.Select(x => (Noggog.IKeyValue<ModKey, TListing>)new KeyValue<ModKey, TListing>(x.ModKey, x)).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();

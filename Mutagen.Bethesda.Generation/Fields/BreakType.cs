@@ -34,7 +34,7 @@ public class BreakType : TypeGeneration
         throw new NotImplementedException();
     }
 
-    public override void GenerateForClass(FileGeneration fg)
+    public override async Task GenerateForClass(FileGeneration fg)
     {
         throw new NotImplementedException();
     }

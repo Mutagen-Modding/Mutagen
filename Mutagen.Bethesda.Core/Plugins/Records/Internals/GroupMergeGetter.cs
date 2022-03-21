@@ -73,7 +73,7 @@ public class GroupMergeGetter<TGroup, TMajor> : IGroupGetter<TMajor>, IReadOnlyC
     public IEnumerable<FormKey> Keys => SubGroups.SelectMany(x => x.FormKeys);
     public IEnumerable<TMajor> Items => Records;
 
-    IEnumerator<IKeyValue<TMajor, FormKey>> IEnumerable<IKeyValue<TMajor, FormKey>>.GetEnumerator() =>
+    IEnumerator<IKeyValue<FormKey, TMajor>> IEnumerable<IKeyValue<FormKey, TMajor>>.GetEnumerator() =>
         SubGroups.SelectMany(x => x.RecordCache).GetEnumerator();
 
     public TMajor? TryGetValue(FormKey key)

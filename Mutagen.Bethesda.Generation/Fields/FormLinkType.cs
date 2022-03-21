@@ -165,7 +165,7 @@ public class FormLinkType : ClassType
         fg.AppendLine($".Select(r => ({TypeName(getter: false, needsCovariance: true)})new {DirectTypeName(getter: false)}(r.{FormIDTypeString}))");
     }
 
-    public override void GenerateForClass(FileGeneration fg)
+    public override async Task GenerateForClass(FileGeneration fg)
     {
         // Want to intercept any sets and wrap, to make sure it's not sharing a ref with another record
         fg.AppendLine($"private readonly {this.TypeName(getter: false)} _{this.Name} = {GetNewForNonNullable()};");
