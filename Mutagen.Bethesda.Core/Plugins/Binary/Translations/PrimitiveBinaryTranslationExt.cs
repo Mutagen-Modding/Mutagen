@@ -5,65 +5,67 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using System;
 
-namespace Mutagen.Bethesda.Translations.Binary
+namespace Mutagen.Bethesda.Translations.Binary;
+
+public static class PrimitiveBinaryTranslationExt
 {
-    public static class PrimitiveBinaryTranslationExt
+    public static void Write<TItem, TReader>(
+        this PrimitiveBinaryTranslation<TItem, TReader, MutagenWriter> transl,
+        MutagenWriter writer,
+        TItem item,
+        RecordType header,
+        Action<MutagenWriter, TItem>? write = null)
+        where TItem : struct
+        where TReader : IMutagenReadStream
     {
-        public static void Write<T>(
-            this PrimitiveBinaryTranslation<T, MutagenFrame, MutagenWriter> transl,
-            MutagenWriter writer,
-            T item,
-            RecordType header,
-            Action<MutagenWriter, T>? write = null)
-            where T : struct
+        write ??= transl.Write;
+        try
         {
-            write ??= transl.Write;
-            try
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
-                using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
-                {
-                    write(writer, item);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw SubrecordException.Factory(ex, header);
+                write(writer, item);
             }
         }
+        catch (Exception ex)
+        {
+            throw SubrecordException.Enrich(ex, header);
+        }
+    }
 
-        public static void WriteNullable<T>(
-            this PrimitiveBinaryTranslation<T, MutagenFrame, MutagenWriter> transl,
-            MutagenWriter writer,
-            T? item,
-            RecordType header,
-            Action<MutagenWriter, T>? write = null)
-            where T : struct
+    public static void WriteNullable<TItem, TReader>(
+        this PrimitiveBinaryTranslation<TItem, TReader, MutagenWriter> transl,
+        MutagenWriter writer,
+        TItem? item,
+        RecordType header,
+        Action<MutagenWriter, TItem>? write = null)
+        where TItem : struct
+        where TReader : IMutagenReadStream
+    {
+        if (!item.HasValue) return;
+        write ??= transl.Write;
+        try
         {
-            if (!item.HasValue) return;
-            write ??= transl.Write;
-            try
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
-                using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
-                {
-                    write(writer, item.Value);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw SubrecordException.Factory(ex, header);
+                write(writer, item.Value);
             }
         }
+        catch (Exception ex)
+        {
+            throw SubrecordException.Enrich(ex, header);
+        }
+    }
 
-        public static void WriteNullable<T>(
-            this PrimitiveBinaryTranslation<T, MutagenFrame, MutagenWriter> transl,
-            MutagenWriter writer,
-            T? item,
-            Action<MutagenWriter, T>? write = null)
-            where T : struct
-        {
-            if (!item.HasValue) return;
-            write ??= transl.Write;
-            write(writer, item.Value);
-        }
+    public static void WriteNullable<TItem, TReader>(
+        this PrimitiveBinaryTranslation<TItem, TReader, MutagenWriter> transl,
+        MutagenWriter writer,
+        TItem? item,
+        Action<MutagenWriter, TItem>? write = null)
+        where TItem : struct
+        where TReader : IMutagenReadStream
+    {
+        if (!item.HasValue) return;
+        write ??= transl.Write;
+        write(writer, item.Value);
     }
 }

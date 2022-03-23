@@ -7,34 +7,37 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
 {
     public static class FloatBinaryTranslationExt
     {
-        public static void Write(
-            this PrimitiveBinaryTranslation<float, MutagenFrame, MutagenWriter> transl,
+        public static void Write<TReader>(
+            this PrimitiveBinaryTranslation<float, TReader, MutagenWriter> transl,
             MutagenWriter writer,
             float item,
             RecordType header,
             float multiplier)
+        where TReader : IMutagenReadStream
         {
             transl.Write(writer, item / multiplier, header);
         }
 
-        public static void WriteNullable(
-            this PrimitiveBinaryTranslation<float, MutagenFrame, MutagenWriter> transl,
+        public static void WriteNullable<TReader>(
+            this PrimitiveBinaryTranslation<float, TReader, MutagenWriter> transl,
             MutagenWriter writer,
             float? item,
             RecordType header,
             float multiplier)
+        where TReader : IMutagenReadStream
         {
             if (!item.HasValue) return;
             transl.Write(writer, item.Value / multiplier, header);
         }
 
-        public static void Write(
-            this PrimitiveBinaryTranslation<float, MutagenFrame, MutagenWriter> transl,
+        public static void Write<TReader>(
+            this PrimitiveBinaryTranslation<float, TReader, MutagenWriter> transl,
             MutagenWriter writer,
             float? item,
             RecordType header,
             FloatIntegerType integerType,
             double multiplier)
+        where TReader : IMutagenReadStream
         {
             try
             {
@@ -46,7 +49,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             }
             catch (Exception ex)
             {
-                throw SubrecordException.Factory(ex, header);
+                throw SubrecordException.Enrich(ex, header);
             }
         }
     }

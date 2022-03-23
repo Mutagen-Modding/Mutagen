@@ -8,7 +8,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
     {
         public static readonly FilePathBinaryTranslation Instance = new();
 
-        public bool Parse(MutagenFrame reader, out FilePath item)
+        public bool Parse<TReader>(TReader reader, out FilePath item)
+            where TReader : IMutagenReadStream
         {
             if (!StringBinaryTranslation.Instance.Parse(reader, out var str))
             {

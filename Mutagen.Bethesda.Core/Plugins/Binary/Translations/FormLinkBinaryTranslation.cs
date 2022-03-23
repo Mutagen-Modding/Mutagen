@@ -10,9 +10,10 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
     {
         public readonly static FormLinkBinaryTranslation Instance = new();
 
-        public bool Parse(
-            MutagenFrame reader,
+        public bool Parse<TReader>(
+            TReader reader,
             out FormKey item)
+            where TReader : IMutagenReadStream
         {
             if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id))
             {

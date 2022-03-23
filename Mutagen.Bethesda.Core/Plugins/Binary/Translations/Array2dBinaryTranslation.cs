@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Exceptions;
@@ -11,10 +11,11 @@ public class Array2dBinaryTranslation<T>
 {
     public static readonly Array2dBinaryTranslation<T> Instance = new();
 
-    public IArray2d<T> Parse(
-        MutagenFrame reader,
+    public IArray2d<T> Parse<TReader>(
+        TReader reader,
         P2Int size,
-        BinarySubParseDelegate<MutagenFrame, T> transl)
+        BinarySubParseDelegate<TReader, T> transl)
+        where TReader : IMutagenReadStream
     {
         var ret = new Array2d<T>(size);
         for (int y = 0; y < size.Y; y++)

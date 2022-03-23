@@ -20,9 +20,10 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             return FormKey.Factory(masterReferences, id);
         }
 
-        public bool Parse(
-            MutagenFrame reader,
+        public bool Parse<TReader>(
+            TReader reader,
             out FormKey item)
+            where TReader : IMutagenReadStream
         {
             item = Parse(
                 reader.ReadSpan(4),
@@ -30,7 +31,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
             return true;
         }
 
-        public FormKey Parse(MutagenFrame reader)
+        public FormKey Parse<TReader>(TReader reader)
+            where TReader : IMutagenReadStream
         {
             return Parse(
                 reader.ReadSpan(4),
