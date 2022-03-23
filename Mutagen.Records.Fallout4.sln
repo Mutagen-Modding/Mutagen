@@ -30,6 +30,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Generation
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Fallout4.Generator", "Mutagen.Bethesda.Fallout4.Generator\Mutagen.Bethesda.Fallout4.Generator.csproj", "{E59AF68B-0F52-44EF-AC9A-9FFB0A765C90}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Tests.GUI", "Mutagen.Bethesda.Tests.GUI\Mutagen.Bethesda.Tests.GUI.csproj", "{5E68BD02-7602-4CF2-978F-F25DF5F80AE7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Tests", "Mutagen.Bethesda.Tests\Mutagen.Bethesda.Tests.csproj", "{76C4452A-340E-4A5D-87FA-635DEAA7D4AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +88,14 @@ Global
 		{E59AF68B-0F52-44EF-AC9A-9FFB0A765C90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E59AF68B-0F52-44EF-AC9A-9FFB0A765C90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E59AF68B-0F52-44EF-AC9A-9FFB0A765C90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E68BD02-7602-4CF2-978F-F25DF5F80AE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E68BD02-7602-4CF2-978F-F25DF5F80AE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E68BD02-7602-4CF2-978F-F25DF5F80AE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E68BD02-7602-4CF2-978F-F25DF5F80AE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76C4452A-340E-4A5D-87FA-635DEAA7D4AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76C4452A-340E-4A5D-87FA-635DEAA7D4AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76C4452A-340E-4A5D-87FA-635DEAA7D4AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76C4452A-340E-4A5D-87FA-635DEAA7D4AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +111,8 @@ Global
 		{930001F7-10D2-4E18-B900-D8AC1B9A9A73} = {5665EE3D-F3C2-4F07-B4EE-7FCC8D2BF6D2}
 		{3F86B4F2-ECDD-4C7B-8D57-4AAC4C22176A} = {5665EE3D-F3C2-4F07-B4EE-7FCC8D2BF6D2}
 		{8BBD0C4D-7B3A-4720-B97B-F8D5CF13C9C6} = {B2ECDCA3-4F7F-4066-A5B8-339F7E96DCBD}
+		{5E68BD02-7602-4CF2-978F-F25DF5F80AE7} = {5665EE3D-F3C2-4F07-B4EE-7FCC8D2BF6D2}
+		{76C4452A-340E-4A5D-87FA-635DEAA7D4AD} = {5665EE3D-F3C2-4F07-B4EE-7FCC8D2BF6D2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3C76E1C6-5B27-4005-8051-03C82E3A4849}

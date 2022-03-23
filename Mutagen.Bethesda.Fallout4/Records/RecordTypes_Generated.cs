@@ -239,6 +239,7 @@ public partial class RecordTypes
     public static readonly RecordType NPC_ = new(0x5F43504E);
     public static readonly RecordType NTOP = new(0x504F544E);
     public static readonly RecordType NTRM = new(0x4D52544E);
+    public static readonly RecordType NVNM = new(0x4D4E564E);
     public static readonly RecordType OBND = new(0x444E424F);
     public static readonly RecordType OBTE = new(0x4554424F);
     public static readonly RecordType OBTF = new(0x4654424F);

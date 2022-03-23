@@ -314,6 +314,17 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
+        #region NavmeshGeometry
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private NavmeshGeometry? _NavmeshGeometry;
+        public NavmeshGeometry? NavmeshGeometry
+        {
+            get => _NavmeshGeometry;
+            set => _NavmeshGeometry = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INavmeshGeometryGetter? IActivatorGetter.NavmeshGeometry => this.NavmeshGeometry;
+        #endregion
 
         #region To String
 
@@ -358,6 +369,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.InteractionKeyword = initialValue;
                 this.RadioReceiver = new MaskItem<TItem, RadioReceiver.Mask<TItem>?>(initialValue, new RadioReceiver.Mask<TItem>(initialValue));
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(initialValue, new NavmeshGeometry.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -386,7 +398,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Flags,
                 TItem InteractionKeyword,
                 TItem RadioReceiver,
-                TItem Conditions)
+                TItem Conditions,
+                TItem NavmeshGeometry)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -415,6 +428,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.InteractionKeyword = InteractionKeyword;
                 this.RadioReceiver = new MaskItem<TItem, RadioReceiver.Mask<TItem>?>(RadioReceiver, new RadioReceiver.Mask<TItem>(RadioReceiver));
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(NavmeshGeometry, new NavmeshGeometry.Mask<TItem>(NavmeshGeometry));
             }
 
             #pragma warning disable CS8618
@@ -446,6 +460,7 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem InteractionKeyword;
             public MaskItem<TItem, RadioReceiver.Mask<TItem>?>? RadioReceiver { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>? NavmeshGeometry { get; set; }
             #endregion
 
             #region Equals
@@ -479,6 +494,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.InteractionKeyword, rhs.InteractionKeyword)) return false;
                 if (!object.Equals(this.RadioReceiver, rhs.RadioReceiver)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.NavmeshGeometry, rhs.NavmeshGeometry)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -504,6 +520,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.InteractionKeyword);
                 hash.Add(this.RadioReceiver);
                 hash.Add(this.Conditions);
+                hash.Add(this.NavmeshGeometry);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -586,6 +603,11 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
+                if (NavmeshGeometry != null)
+                {
+                    if (!eval(this.NavmeshGeometry.Overall)) return false;
+                    if (this.NavmeshGeometry.Specific != null && !this.NavmeshGeometry.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -666,6 +688,11 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
+                if (NavmeshGeometry != null)
+                {
+                    if (eval(this.NavmeshGeometry.Overall)) return true;
+                    if (this.NavmeshGeometry.Specific != null && this.NavmeshGeometry.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -742,6 +769,7 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
+                obj.NavmeshGeometry = this.NavmeshGeometry == null ? null : new MaskItem<R, NavmeshGeometry.Mask<R>?>(eval(this.NavmeshGeometry.Overall), this.NavmeshGeometry.Specific?.Translate(eval));
             }
             #endregion
 
@@ -901,6 +929,10 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                         fg.AppendLine("]");
                     }
+                    if (printMask?.NavmeshGeometry?.Overall ?? true)
+                    {
+                        NavmeshGeometry?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -933,6 +965,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? InteractionKeyword;
             public MaskItem<Exception?, RadioReceiver.ErrorMask?>? RadioReceiver;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public MaskItem<Exception?, NavmeshGeometry.ErrorMask?>? NavmeshGeometry;
             #endregion
 
             #region IErrorMask
@@ -981,6 +1014,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return RadioReceiver;
                     case Activator_FieldIndex.Conditions:
                         return Conditions;
+                    case Activator_FieldIndex.NavmeshGeometry:
+                        return NavmeshGeometry;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1050,6 +1085,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Activator_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Activator_FieldIndex.NavmeshGeometry:
+                        this.NavmeshGeometry = new MaskItem<Exception?, NavmeshGeometry.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1122,6 +1160,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Activator_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
+                    case Activator_FieldIndex.NavmeshGeometry:
+                        this.NavmeshGeometry = (MaskItem<Exception?, NavmeshGeometry.ErrorMask?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1151,6 +1192,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (InteractionKeyword != null) return true;
                 if (RadioReceiver != null) return true;
                 if (Conditions != null) return true;
+                if (NavmeshGeometry != null) return true;
                 return false;
             }
             #endregion
@@ -1269,6 +1311,7 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     fg.AppendLine("]");
                 }
+                NavmeshGeometry?.ToString(fg);
             }
             #endregion
 
@@ -1297,6 +1340,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.InteractionKeyword = this.InteractionKeyword.Combine(rhs.InteractionKeyword);
                 ret.RadioReceiver = this.RadioReceiver.Combine(rhs.RadioReceiver, (l, r) => l.Combine(r));
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.NavmeshGeometry = this.NavmeshGeometry.Combine(rhs.NavmeshGeometry, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1339,6 +1383,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool InteractionKeyword;
             public RadioReceiver.TranslationMask? RadioReceiver;
             public Condition.TranslationMask? Conditions;
+            public NavmeshGeometry.TranslationMask? NavmeshGeometry;
             #endregion
 
             #region Ctors
@@ -1387,6 +1432,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((InteractionKeyword, null));
                 ret.Add((RadioReceiver != null ? RadioReceiver.OnOverall : DefaultOn, RadioReceiver?.GetCrystal()));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((NavmeshGeometry != null ? NavmeshGeometry.OnOverall : DefaultOn, NavmeshGeometry?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1576,6 +1622,7 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<IKeywordGetter> InteractionKeyword { get; set; }
         new RadioReceiver? RadioReceiver { get; set; }
         new ExtendedList<Condition>? Conditions { get; set; }
+        new NavmeshGeometry? NavmeshGeometry { get; set; }
         #region Mutagen
         new Activator.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1652,6 +1699,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IKeywordGetter> InteractionKeyword { get; }
         IRadioReceiverGetter? RadioReceiver { get; }
         IReadOnlyList<IConditionGetter>? Conditions { get; }
+        INavmeshGeometryGetter? NavmeshGeometry { get; }
 
         #region Mutagen
         Activator.MajorFlag MajorFlags { get; }
@@ -1840,6 +1888,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         InteractionKeyword = 23,
         RadioReceiver = 24,
         Conditions = 25,
+        NavmeshGeometry = 26,
     }
     #endregion
 
@@ -1857,9 +1906,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "e5dd8417-9b46-4754-bfe1-1db51332bfa4";
 
-        public const ushort AdditionalFieldCount = 20;
+        public const ushort AdditionalFieldCount = 21;
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(Activator.Mask<>);
 
@@ -1948,6 +1997,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.InteractionKeyword.Clear();
             item.RadioReceiver = null;
             item.Conditions = null;
+            item.NavmeshGeometry = null;
             base.Clear(item);
         }
         
@@ -1980,6 +2030,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.InteractionKeyword.Relink(mapping);
             obj.RadioReceiver?.RemapLinks(mapping);
             obj.Conditions?.RemapLinks(mapping);
+            obj.NavmeshGeometry?.RemapLinks(mapping);
         }
         
         #endregion
@@ -2092,6 +2143,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.NavmeshGeometry = EqualsMaskHelper.EqualsHelper(
+                item.NavmeshGeometry,
+                rhs.NavmeshGeometry,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -2277,6 +2333,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 fg.AppendLine("]");
             }
+            if ((printMask?.NavmeshGeometry?.Overall ?? true)
+                && item.NavmeshGeometry is {} NavmeshGeometryItem)
+            {
+                NavmeshGeometryItem?.ToString(fg, "NavmeshGeometry");
+            }
         }
         
         public static Activator_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -2425,6 +2486,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.NavmeshGeometry) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.NavmeshGeometry, rhs.NavmeshGeometry, out var lhsNavmeshGeometry, out var rhsNavmeshGeometry, out var isNavmeshGeometryEqual))
+                {
+                    if (!((NavmeshGeometryCommon)((INavmeshGeometryGetter)lhsNavmeshGeometry).CommonInstance()!).Equals(lhsNavmeshGeometry, rhsNavmeshGeometry, crystal?.GetSubCrystal((int)Activator_FieldIndex.NavmeshGeometry))) return false;
+                }
+                else if (!isNavmeshGeometryEqual) return false;
+            }
             return true;
         }
         
@@ -2497,6 +2566,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 hash.Add(RadioReceiveritem);
             }
             hash.Add(item.Conditions);
+            if (item.NavmeshGeometry is {} NavmeshGeometryitem)
+            {
+                hash.Add(NavmeshGeometryitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2606,6 +2679,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     .SelectMany((f) => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.NavmeshGeometry is IFormLinkContainerGetter NavmeshGeometrylinkCont)
+            {
+                foreach (var item in NavmeshGeometrylinkCont.ContainedFormLinks)
+                {
+                    yield return item;
                 }
             }
             yield break;
@@ -2947,6 +3027,32 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.NavmeshGeometry) ?? true))
+            {
+                errorMask?.PushIndex((int)Activator_FieldIndex.NavmeshGeometry);
+                try
+                {
+                    if(rhs.NavmeshGeometry is {} rhsNavmeshGeometry)
+                    {
+                        item.NavmeshGeometry = rhsNavmeshGeometry.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Activator_FieldIndex.NavmeshGeometry));
+                    }
+                    else
+                    {
+                        item.NavmeshGeometry = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -3227,6 +3333,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         writer: subWriter,
                         translationParams: conv);
                 });
+            if (item.NavmeshGeometry is {} NavmeshGeometryItem)
+            {
+                ((NavmeshGeometryBinaryWriteTranslation)((IBinaryItem)NavmeshGeometryItem).BinaryWriteTranslator).Write(
+                    item: NavmeshGeometryItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
         }
 
         public void Write(
@@ -3468,6 +3581,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         .CastExtendedList<Condition>();
                     return (int)Activator_FieldIndex.Conditions;
                 }
+                case RecordTypeInts.NVNM:
+                {
+                    item.NavmeshGeometry = Mutagen.Bethesda.Fallout4.NavmeshGeometry.CreateFromBinary(frame: frame);
+                    return (int)Activator_FieldIndex.NavmeshGeometry;
+                }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -3610,6 +3728,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             int offset,
             RecordType type,
             PreviousParse lastParsed);
+        #endregion
+        #region NavmeshGeometry
+        private RangeInt32? _NavmeshGeometryLocation;
+        public INavmeshGeometryGetter? NavmeshGeometry => _NavmeshGeometryLocation.HasValue ? NavmeshGeometryBinaryOverlay.NavmeshGeometryFactory(new OverlayStream(_data.Slice(_NavmeshGeometryLocation!.Value.Min), _package), _package) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3807,6 +3929,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         type: type,
                         lastParsed: lastParsed);
                     return (int)Activator_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.NVNM:
+                {
+                    _NavmeshGeometryLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Activator_FieldIndex.NavmeshGeometry;
                 }
                 default:
                     return base.FillRecordType(

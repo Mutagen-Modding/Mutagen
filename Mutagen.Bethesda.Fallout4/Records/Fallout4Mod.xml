@@ -31,7 +31,7 @@
 			<Group name="Ingredients" refName="Ingredient" />
 			<Group name="Lights" refName="Light" />
 			<Group name="MiscItems" refName="MiscItem" />
-<!--			<Group name="Statics" refName="Static" />-->
+			<Group name="Statics" refName="Static" />
 <!--			<Group name="StaticCollections" refName="StaticCollection" />-->
 <!--			<Group name="MoveableStatics" refName="MoveableStatic" />-->
 <!--			<Group name="Grasses" refName="Grass" />-->

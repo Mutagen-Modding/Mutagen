@@ -71,6 +71,12 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Records\Common Subrecords\NavmeshGeometry.cs">
+      <DependentUpon>NavmeshGeometry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\NavmeshTriangle.cs">
+      <DependentUpon>NavmeshGeometry.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\ObjectModProperty.cs" />
     <Compile Include="Records\Common Subrecords\AttackData.cs">
       <DependentUpon>Attack.xml</DependentUpon>
@@ -134,6 +140,9 @@
     </Compile>
     <Compile Include="Records\Major Records\ADamageType.cs">
       <DependentUpon>DamageType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ANavigationMesh_Generated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Armor.cs">
       <DependentUpon>Armor.xml</DependentUpon>
@@ -285,6 +294,9 @@
     <Compile Include="Records\Major Records\MagicEffectSummonCreatureArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\MaterialObject_Generated.cs">
+      <DependentUpon>MaterialObject.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\MaterialType.cs">
       <DependentUpon>MaterialType.xml</DependentUpon>
     </Compile>
@@ -338,6 +350,9 @@
     </Compile>
     <Compile Include="Records\Major Records\RegionSound.cs">
       <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Static.cs">
+      <DependentUpon>Static.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\StaticCollection.cs">
       <DependentUpon>StaticCollection.xml</DependentUpon>
@@ -1217,6 +1232,36 @@
     <Compile Include="Interfaces\Link\INpcSpawn_Generated.cs" />
     <Compile Include="Interfaces\Link\IEmittance_Generated.cs" />
     <Compile Include="Interfaces\Link\IEffectRecord_Generated.cs" />
+    <Compile Include="Records\Common Subrecords\NavmeshGeometry_Generated.cs">
+      <DependentUpon>NavmeshGeometry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ANavmeshParent_Generated.cs">
+      <DependentUpon>NavmeshGeometry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\WorldspaceNavmeshParent_Generated.cs">
+      <DependentUpon>NavmeshGeometry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\CellNavmeshParent_Generated.cs">
+      <DependentUpon>NavmeshGeometry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\NavmeshTriangle_Generated.cs">
+      <DependentUpon>NavmeshGeometry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\EdgeLink_Generated.cs">
+      <DependentUpon>NavmeshGeometry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\DoorTriangle_Generated.cs">
+      <DependentUpon>NavmeshGeometry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\NavmeshGrid_Generated.cs">
+      <DependentUpon>NavmeshGeometry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\NavmeshGridArray_Generated.cs">
+      <DependentUpon>NavmeshGeometry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DistantLod_Generated.cs">
+      <DependentUpon>Static.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

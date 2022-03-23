@@ -24,7 +24,7 @@
       <FormLink name="InteractionKeyword" refName="Keyword" recordType="KNAM" />
       <RefDirect name="RadioReceiver" refName="RadioReceiver" />
       <RefList name="Conditions" refName="Condition" counterRecType="CITC" binaryOverlay="Custom" />
-      <!--TODO NVNM NavigationMesh. Note: No ACTI in FO4.esm uses it.-->
+      <RefDirect name="NavmeshGeometry" refName="NavmeshGeometry" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
   </Object>

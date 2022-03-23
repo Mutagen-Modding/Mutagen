@@ -237,6 +237,7 @@ public partial class RecordTypeInts
     public const int NPC_ = 0x5F43504E;
     public const int NTOP = 0x504F544E;
     public const int NTRM = 0x4D52544E;
+    public const int NVNM = 0x4D4E564E;
     public const int OBND = 0x444E424F;
     public const int OBTE = 0x4554424F;
     public const int OBTF = 0x4654424F;

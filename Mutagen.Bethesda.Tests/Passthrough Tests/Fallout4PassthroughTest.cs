@@ -56,6 +56,26 @@ namespace Mutagen.Bethesda.Tests
                 RecordTypes.HLTX,
                 RecordTypes.QSTI
             );
+            ret.StartMarkers.Add(RecordTypes.STAT, new[]
+            {
+                RecordTypes.MODL,
+                RecordTypes.MODC,
+                RecordTypes.MODT,
+                RecordTypes.MODS
+            });
+            ret.StopMarkers.Add(RecordTypes.STAT, new[]
+            {
+                RecordTypes.PRPS,
+                RecordTypes.FULL,
+                RecordTypes.DNAM
+            });
+            ret.AddAlignments(
+                RecordTypes.STAT,
+                RecordTypes.MODL,
+                RecordTypes.MODC,
+                RecordTypes.MODT,
+                RecordTypes.MODS
+            );
             return ret;
         }
 

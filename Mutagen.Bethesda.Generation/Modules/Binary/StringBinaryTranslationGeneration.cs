@@ -248,7 +248,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             ObjectGeneration objGen, 
             TypeGeneration typeGen, 
             int? passedLength, 
-            string passedLengthAccessor) 
+            string? passedLengthAccessor) 
         { 
             StringType str = typeGen as StringType; 
             switch (str.BinaryType) 
@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                     fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadUInt16LittleEndian(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 2;"); 
                     break; 
                 case StringBinaryType.NullTerminate: 
-                    fg.AppendLine($"ret.{typeGen.Name} = {(str.Translated.HasValue ? $"({nameof(TranslatedString)})" : string.Empty)}{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}(ret._data.Slice({passedLengthAccessor}), package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)});"); 
+                    fg.AppendLine($"ret.{typeGen.Name} = {(str.Translated.HasValue ? $"({nameof(TranslatedString)})" : string.Empty)}{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)});"); 
                     fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}{(str.Translated == null ? $"ret.{typeGen.Name}.Length + 1" : "5")};"); 
                     break; 
                 default: 

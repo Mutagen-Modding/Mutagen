@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="NavigationMesh" recordType="NAVM" objType="Record" baseClass="Fallout4MajorRecord" GUID="35cce2b5-c4b4-40e7-98ef-ecac3ddb2914" ID="168">
+  <Object name="ANavigationMesh" recordType="NAVM" objType="Record" abstract="true" baseClass="Fallout4MajorRecord" GUID="35cce2b5-c4b4-40e7-98ef-ecac3ddb2914" ID="168">
   </Object>
 </Loqui>

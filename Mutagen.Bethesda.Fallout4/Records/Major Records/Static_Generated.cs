@@ -11,15 +11,18 @@ using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
@@ -52,6 +55,200 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IStaticGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IStaticGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region PreviewTransform
+        private readonly IFormLinkNullable<ITransformGetter> _PreviewTransform = new FormLinkNullable<ITransformGetter>();
+        public IFormLinkNullable<ITransformGetter> PreviewTransform
+        {
+            get => _PreviewTransform;
+            set => _PreviewTransform.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ITransformGetter> IStaticGetter.PreviewTransform => this.PreviewTransform;
+        #endregion
+        #region ForcedLocRefType
+        private readonly IFormLinkNullable<ILocationReferenceTypeGetter> _ForcedLocRefType = new FormLinkNullable<ILocationReferenceTypeGetter>();
+        public IFormLinkNullable<ILocationReferenceTypeGetter> ForcedLocRefType
+        {
+            get => _ForcedLocRefType;
+            set => _ForcedLocRefType.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILocationReferenceTypeGetter> IStaticGetter.ForcedLocRefType => this.ForcedLocRefType;
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IStaticGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region Properties
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ObjectProperty>? _Properties;
+        public ExtendedList<ObjectProperty>? Properties
+        {
+            get => this._Properties;
+            set => this._Properties = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IObjectPropertyGetter>? IStaticGetter.Properties => _Properties;
+        #endregion
+
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IStaticGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region MaxAngle
+        public Single MaxAngle { get; set; } = default;
+        public static RangeFloat MaxAngle_Range = new RangeFloat(30f, 120f);
+        #endregion
+        #region Material
+        private readonly IFormLink<IMaterialObjectGetter> _Material = new FormLink<IMaterialObjectGetter>();
+        public IFormLink<IMaterialObjectGetter> Material
+        {
+            get => _Material;
+            set => _Material.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IMaterialObjectGetter> IStaticGetter.Material => this.Material;
+        #endregion
+        #region LeafAmplitude
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _LeafAmplitude;
+        public Single LeafAmplitude
+        {
+            get => this._LeafAmplitude;
+            set
+            {
+                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
+                this._LeafAmplitude = value;
+            }
+        }
+        #endregion
+        #region LeafFrequency
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _LeafFrequency;
+        public Single LeafFrequency
+        {
+            get => this._LeafFrequency;
+            set
+            {
+                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
+                this._LeafFrequency = value;
+            }
+        }
+        #endregion
+        #region NavmeshGeometry
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private NavmeshGeometry? _NavmeshGeometry;
+        public NavmeshGeometry? NavmeshGeometry
+        {
+            get => _NavmeshGeometry;
+            set => _NavmeshGeometry = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INavmeshGeometryGetter? IStaticGetter.NavmeshGeometry => this.NavmeshGeometry;
+        #endregion
+        #region DistantLods
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<DistantLod> _DistantLods = new ExtendedList<DistantLod>();
+        public ExtendedList<DistantLod> DistantLods
+        {
+            get => this._DistantLods;
+            init => this._DistantLods = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IDistantLodGetter> IStaticGetter.DistantLods => _DistantLods;
+        #endregion
+
+        #endregion
+        #region DNAMDataTypeState
+        public Static.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -76,6 +273,20 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.PreviewTransform = initialValue;
+                this.ForcedLocRefType = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.Name = initialValue;
+                this.MaxAngle = initialValue;
+                this.Material = initialValue;
+                this.LeafAmplitude = initialValue;
+                this.LeafFrequency = initialValue;
+                this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(initialValue, new NavmeshGeometry.Mask<TItem>(initialValue));
+                this.DistantLods = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DistantLod.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DistantLod.Mask<TItem>?>>());
+                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -84,7 +295,21 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem VirtualMachineAdapter,
+                TItem ObjectBounds,
+                TItem PreviewTransform,
+                TItem ForcedLocRefType,
+                TItem Model,
+                TItem Properties,
+                TItem Name,
+                TItem MaxAngle,
+                TItem Material,
+                TItem LeafAmplitude,
+                TItem LeafFrequency,
+                TItem NavmeshGeometry,
+                TItem DistantLods,
+                TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -93,6 +318,20 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.PreviewTransform = PreviewTransform;
+                this.ForcedLocRefType = ForcedLocRefType;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.Name = Name;
+                this.MaxAngle = MaxAngle;
+                this.Material = Material;
+                this.LeafAmplitude = LeafAmplitude;
+                this.LeafFrequency = LeafFrequency;
+                this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(NavmeshGeometry, new NavmeshGeometry.Mask<TItem>(NavmeshGeometry));
+                this.DistantLods = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DistantLod.Mask<TItem>?>>?>(DistantLods, Enumerable.Empty<MaskItemIndexed<TItem, DistantLod.Mask<TItem>?>>());
+                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -101,6 +340,23 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem PreviewTransform;
+            public TItem ForcedLocRefType;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties;
+            public TItem Name;
+            public TItem MaxAngle;
+            public TItem Material;
+            public TItem LeafAmplitude;
+            public TItem LeafFrequency;
+            public MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>? NavmeshGeometry { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DistantLod.Mask<TItem>?>>?>? DistantLods;
+            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -114,11 +370,39 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.PreviewTransform, rhs.PreviewTransform)) return false;
+                if (!object.Equals(this.ForcedLocRefType, rhs.ForcedLocRefType)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Properties, rhs.Properties)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.MaxAngle, rhs.MaxAngle)) return false;
+                if (!object.Equals(this.Material, rhs.Material)) return false;
+                if (!object.Equals(this.LeafAmplitude, rhs.LeafAmplitude)) return false;
+                if (!object.Equals(this.LeafFrequency, rhs.LeafFrequency)) return false;
+                if (!object.Equals(this.NavmeshGeometry, rhs.NavmeshGeometry)) return false;
+                if (!object.Equals(this.DistantLods, rhs.DistantLods)) return false;
+                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.PreviewTransform);
+                hash.Add(this.ForcedLocRefType);
+                hash.Add(this.Model);
+                hash.Add(this.Properties);
+                hash.Add(this.Name);
+                hash.Add(this.MaxAngle);
+                hash.Add(this.Material);
+                hash.Add(this.LeafAmplitude);
+                hash.Add(this.LeafFrequency);
+                hash.Add(this.NavmeshGeometry);
+                hash.Add(this.DistantLods);
+                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -129,6 +413,58 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.PreviewTransform)) return false;
+                if (!eval(this.ForcedLocRefType)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (this.Properties != null)
+                {
+                    if (!eval(this.Properties.Overall)) return false;
+                    if (this.Properties.Specific != null)
+                    {
+                        foreach (var item in this.Properties.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Name)) return false;
+                if (!eval(this.MaxAngle)) return false;
+                if (!eval(this.Material)) return false;
+                if (!eval(this.LeafAmplitude)) return false;
+                if (!eval(this.LeafFrequency)) return false;
+                if (NavmeshGeometry != null)
+                {
+                    if (!eval(this.NavmeshGeometry.Overall)) return false;
+                    if (this.NavmeshGeometry.Specific != null && !this.NavmeshGeometry.Specific.All(eval)) return false;
+                }
+                if (this.DistantLods != null)
+                {
+                    if (!eval(this.DistantLods.Overall)) return false;
+                    if (this.DistantLods.Specific != null)
+                    {
+                        foreach (var item in this.DistantLods.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -137,6 +473,58 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.PreviewTransform)) return true;
+                if (eval(this.ForcedLocRefType)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (this.Properties != null)
+                {
+                    if (eval(this.Properties.Overall)) return true;
+                    if (this.Properties.Specific != null)
+                    {
+                        foreach (var item in this.Properties.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Name)) return true;
+                if (eval(this.MaxAngle)) return true;
+                if (eval(this.Material)) return true;
+                if (eval(this.LeafAmplitude)) return true;
+                if (eval(this.LeafFrequency)) return true;
+                if (NavmeshGeometry != null)
+                {
+                    if (eval(this.NavmeshGeometry.Overall)) return true;
+                    if (this.NavmeshGeometry.Specific != null && this.NavmeshGeometry.Specific.Any(eval)) return true;
+                }
+                if (this.DistantLods != null)
+                {
+                    if (eval(this.DistantLods.Overall)) return true;
+                    if (this.DistantLods.Specific != null)
+                    {
+                        foreach (var item in this.DistantLods.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -152,6 +540,48 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.PreviewTransform = eval(this.PreviewTransform);
+                obj.ForcedLocRefType = eval(this.ForcedLocRefType);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                if (Properties != null)
+                {
+                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>());
+                    if (Properties.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>();
+                        obj.Properties.Specific = l;
+                        foreach (var item in Properties.Specific)
+                        {
+                            MaskItemIndexed<R, ObjectProperty.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ObjectProperty.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Name = eval(this.Name);
+                obj.MaxAngle = eval(this.MaxAngle);
+                obj.Material = eval(this.Material);
+                obj.LeafAmplitude = eval(this.LeafAmplitude);
+                obj.LeafFrequency = eval(this.LeafFrequency);
+                obj.NavmeshGeometry = this.NavmeshGeometry == null ? null : new MaskItem<R, NavmeshGeometry.Mask<R>?>(eval(this.NavmeshGeometry.Overall), this.NavmeshGeometry.Specific?.Translate(eval));
+                if (DistantLods != null)
+                {
+                    obj.DistantLods = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DistantLod.Mask<R>?>>?>(eval(this.DistantLods.Overall), Enumerable.Empty<MaskItemIndexed<R, DistantLod.Mask<R>?>>());
+                    if (DistantLods.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, DistantLod.Mask<R>?>>();
+                        obj.DistantLods.Specific = l;
+                        foreach (var item in DistantLods.Specific)
+                        {
+                            MaskItemIndexed<R, DistantLod.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, DistantLod.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -174,6 +604,100 @@ namespace Mutagen.Bethesda.Fallout4
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.ToString(fg);
+                    }
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.ToString(fg);
+                    }
+                    if (printMask?.PreviewTransform ?? true)
+                    {
+                        fg.AppendItem(PreviewTransform, "PreviewTransform");
+                    }
+                    if (printMask?.ForcedLocRefType ?? true)
+                    {
+                        fg.AppendItem(ForcedLocRefType, "ForcedLocRefType");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if ((printMask?.Properties?.Overall ?? true)
+                        && Properties is {} PropertiesItem)
+                    {
+                        fg.AppendLine("Properties =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(PropertiesItem.Overall);
+                            if (PropertiesItem.Specific != null)
+                            {
+                                foreach (var subItem in PropertiesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.MaxAngle ?? true)
+                    {
+                        fg.AppendItem(MaxAngle, "MaxAngle");
+                    }
+                    if (printMask?.Material ?? true)
+                    {
+                        fg.AppendItem(Material, "Material");
+                    }
+                    if (printMask?.LeafAmplitude ?? true)
+                    {
+                        fg.AppendItem(LeafAmplitude, "LeafAmplitude");
+                    }
+                    if (printMask?.LeafFrequency ?? true)
+                    {
+                        fg.AppendItem(LeafFrequency, "LeafFrequency");
+                    }
+                    if (printMask?.NavmeshGeometry?.Overall ?? true)
+                    {
+                        NavmeshGeometry?.ToString(fg);
+                    }
+                    if ((printMask?.DistantLods?.Overall ?? true)
+                        && DistantLods is {} DistantLodsItem)
+                    {
+                        fg.AppendLine("DistantLods =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(DistantLodsItem.Overall);
+                            if (DistantLodsItem.Specific != null)
+                            {
+                                foreach (var subItem in DistantLodsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.DNAMDataTypeState ?? true)
+                    {
+                        fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -185,12 +709,57 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? PreviewTransform;
+            public Exception? ForcedLocRefType;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties;
+            public Exception? Name;
+            public Exception? MaxAngle;
+            public Exception? Material;
+            public Exception? LeafAmplitude;
+            public Exception? LeafFrequency;
+            public MaskItem<Exception?, NavmeshGeometry.ErrorMask?>? NavmeshGeometry;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DistantLod.ErrorMask?>>?>? DistantLods;
+            public Exception? DNAMDataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Static_FieldIndex enu = (Static_FieldIndex)index;
                 switch (enu)
                 {
+                    case Static_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case Static_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case Static_FieldIndex.PreviewTransform:
+                        return PreviewTransform;
+                    case Static_FieldIndex.ForcedLocRefType:
+                        return ForcedLocRefType;
+                    case Static_FieldIndex.Model:
+                        return Model;
+                    case Static_FieldIndex.Properties:
+                        return Properties;
+                    case Static_FieldIndex.Name:
+                        return Name;
+                    case Static_FieldIndex.MaxAngle:
+                        return MaxAngle;
+                    case Static_FieldIndex.Material:
+                        return Material;
+                    case Static_FieldIndex.LeafAmplitude:
+                        return LeafAmplitude;
+                    case Static_FieldIndex.LeafFrequency:
+                        return LeafFrequency;
+                    case Static_FieldIndex.NavmeshGeometry:
+                        return NavmeshGeometry;
+                    case Static_FieldIndex.DistantLods:
+                        return DistantLods;
+                    case Static_FieldIndex.DNAMDataTypeState:
+                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +770,48 @@ namespace Mutagen.Bethesda.Fallout4
                 Static_FieldIndex enu = (Static_FieldIndex)index;
                 switch (enu)
                 {
+                    case Static_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case Static_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case Static_FieldIndex.PreviewTransform:
+                        this.PreviewTransform = ex;
+                        break;
+                    case Static_FieldIndex.ForcedLocRefType:
+                        this.ForcedLocRefType = ex;
+                        break;
+                    case Static_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Static_FieldIndex.Properties:
+                        this.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Static_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Static_FieldIndex.MaxAngle:
+                        this.MaxAngle = ex;
+                        break;
+                    case Static_FieldIndex.Material:
+                        this.Material = ex;
+                        break;
+                    case Static_FieldIndex.LeafAmplitude:
+                        this.LeafAmplitude = ex;
+                        break;
+                    case Static_FieldIndex.LeafFrequency:
+                        this.LeafFrequency = ex;
+                        break;
+                    case Static_FieldIndex.NavmeshGeometry:
+                        this.NavmeshGeometry = new MaskItem<Exception?, NavmeshGeometry.ErrorMask?>(ex, null);
+                        break;
+                    case Static_FieldIndex.DistantLods:
+                        this.DistantLods = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DistantLod.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Static_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +823,48 @@ namespace Mutagen.Bethesda.Fallout4
                 Static_FieldIndex enu = (Static_FieldIndex)index;
                 switch (enu)
                 {
+                    case Static_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
+                    case Static_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case Static_FieldIndex.PreviewTransform:
+                        this.PreviewTransform = (Exception?)obj;
+                        break;
+                    case Static_FieldIndex.ForcedLocRefType:
+                        this.ForcedLocRefType = (Exception?)obj;
+                        break;
+                    case Static_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Static_FieldIndex.Properties:
+                        this.Properties = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>)obj;
+                        break;
+                    case Static_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Static_FieldIndex.MaxAngle:
+                        this.MaxAngle = (Exception?)obj;
+                        break;
+                    case Static_FieldIndex.Material:
+                        this.Material = (Exception?)obj;
+                        break;
+                    case Static_FieldIndex.LeafAmplitude:
+                        this.LeafAmplitude = (Exception?)obj;
+                        break;
+                    case Static_FieldIndex.LeafFrequency:
+                        this.LeafFrequency = (Exception?)obj;
+                        break;
+                    case Static_FieldIndex.NavmeshGeometry:
+                        this.NavmeshGeometry = (MaskItem<Exception?, NavmeshGeometry.ErrorMask?>?)obj;
+                        break;
+                    case Static_FieldIndex.DistantLods:
+                        this.DistantLods = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DistantLod.ErrorMask?>>?>)obj;
+                        break;
+                    case Static_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +874,20 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (ObjectBounds != null) return true;
+                if (PreviewTransform != null) return true;
+                if (ForcedLocRefType != null) return true;
+                if (Model != null) return true;
+                if (Properties != null) return true;
+                if (Name != null) return true;
+                if (MaxAngle != null) return true;
+                if (Material != null) return true;
+                if (LeafAmplitude != null) return true;
+                if (LeafFrequency != null) return true;
+                if (NavmeshGeometry != null) return true;
+                if (DistantLods != null) return true;
+                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -256,6 +923,62 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                VirtualMachineAdapter?.ToString(fg);
+                ObjectBounds?.ToString(fg);
+                fg.AppendItem(PreviewTransform, "PreviewTransform");
+                fg.AppendItem(ForcedLocRefType, "ForcedLocRefType");
+                Model?.ToString(fg);
+                if (Properties is {} PropertiesItem)
+                {
+                    fg.AppendLine("Properties =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(PropertiesItem.Overall);
+                        if (PropertiesItem.Specific != null)
+                        {
+                            foreach (var subItem in PropertiesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(MaxAngle, "MaxAngle");
+                fg.AppendItem(Material, "Material");
+                fg.AppendItem(LeafAmplitude, "LeafAmplitude");
+                fg.AppendItem(LeafFrequency, "LeafFrequency");
+                NavmeshGeometry?.ToString(fg);
+                if (DistantLods is {} DistantLodsItem)
+                {
+                    fg.AppendLine("DistantLods =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(DistantLodsItem.Overall);
+                        if (DistantLodsItem.Specific != null)
+                        {
+                            foreach (var subItem in DistantLodsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
             }
             #endregion
 
@@ -264,6 +987,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.PreviewTransform = this.PreviewTransform.Combine(rhs.PreviewTransform);
+                ret.ForcedLocRefType = this.ForcedLocRefType.Combine(rhs.ForcedLocRefType);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.MaxAngle = this.MaxAngle.Combine(rhs.MaxAngle);
+                ret.Material = this.Material.Combine(rhs.Material);
+                ret.LeafAmplitude = this.LeafAmplitude.Combine(rhs.LeafAmplitude);
+                ret.LeafFrequency = this.LeafFrequency.Combine(rhs.LeafFrequency);
+                ret.NavmeshGeometry = this.NavmeshGeometry.Combine(rhs.NavmeshGeometry, (l, r) => l.Combine(r));
+                ret.DistantLods = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DistantLod.ErrorMask?>>?>(ExceptionExt.Combine(this.DistantLods?.Overall, rhs.DistantLods?.Overall), ExceptionExt.Combine(this.DistantLods?.Specific, rhs.DistantLods?.Specific));
+                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -285,15 +1022,59 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool PreviewTransform;
+            public bool ForcedLocRefType;
+            public Model.TranslationMask? Model;
+            public ObjectProperty.TranslationMask? Properties;
+            public bool Name;
+            public bool MaxAngle;
+            public bool Material;
+            public bool LeafAmplitude;
+            public bool LeafFrequency;
+            public NavmeshGeometry.TranslationMask? NavmeshGeometry;
+            public DistantLod.TranslationMask? DistantLods;
+            public bool DNAMDataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.PreviewTransform = defaultOn;
+                this.ForcedLocRefType = defaultOn;
+                this.Name = defaultOn;
+                this.MaxAngle = defaultOn;
+                this.Material = defaultOn;
+                this.LeafAmplitude = defaultOn;
+                this.LeafFrequency = defaultOn;
+                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((PreviewTransform, null));
+                ret.Add((ForcedLocRefType, null));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((MaxAngle, null));
+                ret.Add((Material, null));
+                ret.Add((LeafAmplitude, null));
+                ret.Add((LeafFrequency, null));
+                ret.Add((NavmeshGeometry != null ? NavmeshGeometry.OnOverall : DefaultOn, NavmeshGeometry?.GetCrystal()));
+                ret.Add((DistantLods == null ? DefaultOn : !DistantLods.GetCrystal().CopyNothing, DistantLods?.GetCrystal()));
+                ret.Add((DNAMDataTypeState, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -305,6 +1086,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Static_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => StaticCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StaticSetterCommon.Instance.RemapLinks(this, mapping);
         public Static(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -347,6 +1130,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IStatic);
 
+        [Flags]
+        public enum DNAMDataType
+        {
+            Break0 = 1
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -427,10 +1215,44 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IStatic :
         IFallout4MajorRecordInternal,
+        IFormLinkContainer,
         ILoquiObjectSetter<IStaticInternal>,
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
         IObjectId,
-        IStaticGetter
+        IScripted,
+        IStaticGetter,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        new IFormLinkNullable<ITransformGetter> PreviewTransform { get; set; }
+        new IFormLinkNullable<ILocationReferenceTypeGetter> ForcedLocRefType { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        new ExtendedList<ObjectProperty>? Properties { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new Single MaxAngle { get; set; }
+        new IFormLink<IMaterialObjectGetter> Material { get; set; }
+        new Single LeafAmplitude { get; set; }
+        new Single LeafFrequency { get; set; }
+        new NavmeshGeometry? NavmeshGeometry { get; set; }
+        new ExtendedList<DistantLod> DistantLods { get; }
+        new Static.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IStaticInternal :
@@ -444,11 +1266,53 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IStaticGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IStaticGetter>,
         IMapsToGetter<IStaticGetter>,
-        IObjectIdGetter
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectIdGetter,
+        IScriptedGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Static_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        IFormLinkNullableGetter<ITransformGetter> PreviewTransform { get; }
+        IFormLinkNullableGetter<ILocationReferenceTypeGetter> ForcedLocRefType { get; }
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        Single MaxAngle { get; }
+        IFormLinkGetter<IMaterialObjectGetter> Material { get; }
+        Single LeafAmplitude { get; }
+        Single LeafFrequency { get; }
+        INavmeshGeometryGetter? NavmeshGeometry { get; }
+        IReadOnlyList<IDistantLodGetter> DistantLods { get; }
+        Static.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -613,6 +1477,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        VirtualMachineAdapter = 6,
+        ObjectBounds = 7,
+        PreviewTransform = 8,
+        ForcedLocRefType = 9,
+        Model = 10,
+        Properties = 11,
+        Name = 12,
+        MaxAngle = 13,
+        Material = 14,
+        LeafAmplitude = 15,
+        LeafFrequency = 16,
+        NavmeshGeometry = 17,
+        DistantLods = 18,
+        DNAMDataTypeState = 19,
     }
     #endregion
 
@@ -630,9 +1508,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "ecd28406-13ba-4ad0-b206-c6b54b791a0b";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(Static.Mask<>);
 
@@ -701,6 +1579,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Clear(IStaticInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.ObjectBounds.Clear();
+            item.PreviewTransform.Clear();
+            item.ForcedLocRefType.Clear();
+            item.Model = null;
+            item.Properties = null;
+            item.Name = default;
+            item.MaxAngle = default;
+            item.Material.Clear();
+            item.LeafAmplitude = default;
+            item.LeafFrequency = default;
+            item.NavmeshGeometry = null;
+            item.DistantLods.Clear();
+            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -718,6 +1610,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(IStatic obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.PreviewTransform.Relink(mapping);
+            obj.ForcedLocRefType.Relink(mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.Properties?.RemapLinks(mapping);
+            obj.Material.Relink(mapping);
+            obj.NavmeshGeometry?.RemapLinks(mapping);
         }
         
         #endregion
@@ -786,6 +1685,38 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.PreviewTransform = item.PreviewTransform.Equals(rhs.PreviewTransform);
+            ret.ForcedLocRefType = item.ForcedLocRefType.Equals(rhs.ForcedLocRefType);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Properties = item.Properties.CollectionEqualsHelper(
+                rhs.Properties,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.MaxAngle = item.MaxAngle.EqualsWithin(rhs.MaxAngle);
+            ret.Material = item.Material.Equals(rhs.Material);
+            ret.LeafAmplitude = item.LeafAmplitude.EqualsWithin(rhs.LeafAmplitude);
+            ret.LeafFrequency = item.LeafFrequency.EqualsWithin(rhs.LeafFrequency);
+            ret.NavmeshGeometry = EqualsMaskHelper.EqualsHelper(
+                item.NavmeshGeometry,
+                rhs.NavmeshGeometry,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.DistantLods = item.DistantLods.CollectionEqualsHelper(
+                rhs.DistantLods,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -837,6 +1768,95 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+            }
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+            }
+            if (printMask?.PreviewTransform ?? true)
+            {
+                fg.AppendItem(item.PreviewTransform.FormKeyNullable, "PreviewTransform");
+            }
+            if (printMask?.ForcedLocRefType ?? true)
+            {
+                fg.AppendItem(item.ForcedLocRefType.FormKeyNullable, "ForcedLocRefType");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.ToString(fg, "Model");
+            }
+            if ((printMask?.Properties?.Overall ?? true)
+                && item.Properties is {} PropertiesItem)
+            {
+                fg.AppendLine("Properties =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in PropertiesItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.MaxAngle ?? true)
+            {
+                fg.AppendItem(item.MaxAngle, "MaxAngle");
+            }
+            if (printMask?.Material ?? true)
+            {
+                fg.AppendItem(item.Material.FormKey, "Material");
+            }
+            if (printMask?.LeafAmplitude ?? true)
+            {
+                fg.AppendItem(item.LeafAmplitude, "LeafAmplitude");
+            }
+            if (printMask?.LeafFrequency ?? true)
+            {
+                fg.AppendItem(item.LeafFrequency, "LeafFrequency");
+            }
+            if ((printMask?.NavmeshGeometry?.Overall ?? true)
+                && item.NavmeshGeometry is {} NavmeshGeometryItem)
+            {
+                NavmeshGeometryItem?.ToString(fg, "NavmeshGeometry");
+            }
+            if (printMask?.DistantLods?.Overall ?? true)
+            {
+                fg.AppendLine("DistantLods =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.DistantLods)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.DNAMDataTypeState ?? true)
+            {
+                fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+            }
         }
         
         public static Static_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -885,6 +1905,78 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Static_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Static_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Static_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Static_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Static_FieldIndex.PreviewTransform) ?? true))
+            {
+                if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Static_FieldIndex.ForcedLocRefType) ?? true))
+            {
+                if (!lhs.ForcedLocRefType.Equals(rhs.ForcedLocRefType)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Static_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Static_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Static_FieldIndex.Properties) ?? true))
+            {
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Static_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Static_FieldIndex.MaxAngle) ?? true))
+            {
+                if (!lhs.MaxAngle.EqualsWithin(rhs.MaxAngle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Static_FieldIndex.Material) ?? true))
+            {
+                if (!lhs.Material.Equals(rhs.Material)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Static_FieldIndex.LeafAmplitude) ?? true))
+            {
+                if (!lhs.LeafAmplitude.EqualsWithin(rhs.LeafAmplitude)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Static_FieldIndex.LeafFrequency) ?? true))
+            {
+                if (!lhs.LeafFrequency.EqualsWithin(rhs.LeafFrequency)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Static_FieldIndex.NavmeshGeometry) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.NavmeshGeometry, rhs.NavmeshGeometry, out var lhsNavmeshGeometry, out var rhsNavmeshGeometry, out var isNavmeshGeometryEqual))
+                {
+                    if (!((NavmeshGeometryCommon)((INavmeshGeometryGetter)lhsNavmeshGeometry).CommonInstance()!).Equals(lhsNavmeshGeometry, rhsNavmeshGeometry, crystal?.GetSubCrystal((int)Static_FieldIndex.NavmeshGeometry))) return false;
+                }
+                else if (!isNavmeshGeometryEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Static_FieldIndex.DistantLods) ?? true))
+            {
+                if (!lhs.DistantLods.SequenceEqualNullable(rhs.DistantLods)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Static_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
+            }
             return true;
         }
         
@@ -913,6 +2005,32 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(IStaticGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            hash.Add(item.ObjectBounds);
+            hash.Add(item.PreviewTransform);
+            hash.Add(item.ForcedLocRefType);
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            hash.Add(item.Properties);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.MaxAngle);
+            hash.Add(item.Material);
+            hash.Add(item.LeafAmplitude);
+            hash.Add(item.LeafFrequency);
+            if (item.NavmeshGeometry is {} NavmeshGeometryitem)
+            {
+                hash.Add(NavmeshGeometryitem);
+            }
+            hash.Add(item.DistantLods);
+            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -941,6 +2059,43 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.PreviewTransform.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.PreviewTransform);
+            }
+            if (obj.ForcedLocRefType.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.ForcedLocRefType);
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.ContainedFormLinks)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Properties is {} PropertiesItem)
+            {
+                foreach (var item in PropertiesItem.SelectMany(f => f.ContainedFormLinks))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            yield return FormLinkInformation.Factory(obj.Material);
+            if (obj.NavmeshGeometry is IFormLinkContainerGetter NavmeshGeometrylinkCont)
+            {
+                foreach (var item in NavmeshGeometrylinkCont.ContainedFormLinks)
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1016,6 +2171,194 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)Static_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Static_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Static_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Static_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.PreviewTransform) ?? true))
+            {
+                item.PreviewTransform.SetTo(rhs.PreviewTransform.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.ForcedLocRefType) ?? true))
+            {
+                item.ForcedLocRefType.SetTo(rhs.ForcedLocRefType.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)Static_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Static_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Properties) ?? true))
+            {
+                errorMask?.PushIndex((int)Static_FieldIndex.Properties);
+                try
+                {
+                    if ((rhs.Properties != null))
+                    {
+                        item.Properties = 
+                            rhs.Properties
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ObjectProperty>();
+                    }
+                    else
+                    {
+                        item.Properties = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.MaxAngle) ?? true))
+            {
+                item.MaxAngle = rhs.MaxAngle;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Material) ?? true))
+            {
+                item.Material.SetTo(rhs.Material.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.LeafAmplitude) ?? true))
+            {
+                item.LeafAmplitude = rhs.LeafAmplitude;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.LeafFrequency) ?? true))
+            {
+                item.LeafFrequency = rhs.LeafFrequency;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.NavmeshGeometry) ?? true))
+            {
+                errorMask?.PushIndex((int)Static_FieldIndex.NavmeshGeometry);
+                try
+                {
+                    if(rhs.NavmeshGeometry is {} rhsNavmeshGeometry)
+                    {
+                        item.NavmeshGeometry = rhsNavmeshGeometry.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Static_FieldIndex.NavmeshGeometry));
+                    }
+                    else
+                    {
+                        item.NavmeshGeometry = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.DistantLods) ?? true))
+            {
+                errorMask?.PushIndex((int)Static_FieldIndex.DistantLods);
+                try
+                {
+                    item.DistantLods.SetTo(
+                        rhs.DistantLods
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1164,6 +2507,112 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public new readonly static StaticBinaryWriteTranslation Instance = new StaticBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IStaticGetter item,
+            MutagenWriter writer)
+        {
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IStaticGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PreviewTransform,
+                header: translationParams.ConvertToCustom(RecordTypes.PTRN));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ForcedLocRefType,
+                header: translationParams.ConvertToCustom(RecordTypes.FTYP));
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IObjectPropertyGetter>.Instance.Write(
+                writer: writer,
+                items: item.Properties,
+                recordType: translationParams.ConvertToCustom(RecordTypes.PRPS),
+                transl: (MutagenWriter subWriter, IObjectPropertyGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((ObjectPropertyBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.MaxAngle);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Material);
+                if (!item.DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0))
+                {
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.LeafAmplitude);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.LeafFrequency);
+                }
+            }
+            if (item.NavmeshGeometry is {} NavmeshGeometryItem)
+            {
+                ((NavmeshGeometryBinaryWriteTranslation)((IBinaryItem)NavmeshGeometryItem).BinaryWriteTranslator).Write(
+                    item: NavmeshGeometryItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            StaticBinaryWriteTranslation.WriteBinaryDistantLodParsing(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryDistantLodParsingCustom(
+            MutagenWriter writer,
+            IStaticGetter item);
+
+        public static void WriteBinaryDistantLodParsing(
+            MutagenWriter writer,
+            IStaticGetter item)
+        {
+            WriteBinaryDistantLodParsingCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IStaticGetter item,
@@ -1175,13 +2624,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1239,6 +2690,107 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IStaticInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Fallout4.VirtualMachineAdapter.CreateFromBinary(frame: frame);
+                    return (int)Static_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Fallout4.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)Static_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.PTRN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Static_FieldIndex.PreviewTransform;
+                }
+                case RecordTypeInts.FTYP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ForcedLocRefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Static_FieldIndex.ForcedLocRefType;
+                }
+                case RecordTypeInts.MODL:
+                {
+                    item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams);
+                    return (int)Static_FieldIndex.Model;
+                }
+                case RecordTypeInts.PRPS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Properties = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ObjectProperty>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: ObjectProperty.TryCreateFromBinary)
+                        .CastExtendedList<ObjectProperty>();
+                    return (int)Static_FieldIndex.Properties;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Static_FieldIndex.Name;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.MaxAngle = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.Material.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Complete)
+                    {
+                        item.DNAMDataTypeState |= Static.DNAMDataType.Break0;
+                        return (int)Static_FieldIndex.Material;
+                    }
+                    item.LeafAmplitude = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.LeafFrequency = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)Static_FieldIndex.LeafFrequency;
+                }
+                case RecordTypeInts.NVNM:
+                {
+                    item.NavmeshGeometry = Mutagen.Bethesda.Fallout4.NavmeshGeometry.CreateFromBinary(frame: frame);
+                    return (int)Static_FieldIndex.NavmeshGeometry;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    return StaticBinaryCreateTranslation.FillBinaryDistantLodParsingCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
+        public static partial ParseResult FillBinaryDistantLodParsingCustom(
+            MutagenFrame frame,
+            IStaticInternal item);
+
     }
 
 }
@@ -1271,6 +2823,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => StaticCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => StaticBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1285,6 +2838,68 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         protected override Type LinkType => typeof(IStatic);
 
 
+        #region VirtualMachineAdapter
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        #endregion
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region PreviewTransform
+        private int? _PreviewTransformLocation;
+        public IFormLinkNullableGetter<ITransformGetter> PreviewTransform => _PreviewTransformLocation.HasValue ? new FormLinkNullable<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PreviewTransformLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITransformGetter>.Null;
+        #endregion
+        #region ForcedLocRefType
+        private int? _ForcedLocRefTypeLocation;
+        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> ForcedLocRefType => _ForcedLocRefTypeLocation.HasValue ? new FormLinkNullable<ILocationReferenceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ForcedLocRefTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationReferenceTypeGetter>.Null;
+        #endregion
+        public IModelGetter? Model { get; private set; }
+        public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        private int? _DNAMLocation;
+        public Static.DNAMDataType DNAMDataTypeState { get; private set; }
+        #region MaxAngle
+        private int _MaxAngleLocation => _DNAMLocation!.Value;
+        private bool _MaxAngle_IsSet => _DNAMLocation.HasValue;
+        public Single MaxAngle => _MaxAngle_IsSet ? _data.Slice(_MaxAngleLocation, 4).Float() : default;
+        #endregion
+        #region Material
+        private int _MaterialLocation => _DNAMLocation!.Value + 0x4;
+        private bool _Material_IsSet => _DNAMLocation.HasValue;
+        public IFormLinkGetter<IMaterialObjectGetter> Material => _Material_IsSet ? new FormLink<IMaterialObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MaterialLocation, 0x4)))) : FormLink<IMaterialObjectGetter>.Null;
+        #endregion
+        #region LeafAmplitude
+        private int _LeafAmplitudeLocation => _DNAMLocation!.Value + 0x8;
+        private bool _LeafAmplitude_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0);
+        public Single LeafAmplitude => _LeafAmplitude_IsSet ? _data.Slice(_LeafAmplitudeLocation, 4).Float() : default;
+        #endregion
+        #region LeafFrequency
+        private int _LeafFrequencyLocation => _DNAMLocation!.Value + 0xC;
+        private bool _LeafFrequency_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0);
+        public Single LeafFrequency => _LeafFrequency_IsSet ? _data.Slice(_LeafFrequencyLocation, 4).Float() : default;
+        #endregion
+        #region NavmeshGeometry
+        private RangeInt32? _NavmeshGeometryLocation;
+        public INavmeshGeometryGetter? NavmeshGeometry => _NavmeshGeometryLocation.HasValue ? NavmeshGeometryBinaryOverlay.NavmeshGeometryFactory(new OverlayStream(_data.Slice(_NavmeshGeometryLocation!.Value.Min), _package), _package) : default;
+        #endregion
+        #region DistantLodParsing
+        public partial ParseResult DistantLodParsingCustomParse(
+            OverlayStream stream,
+            int offset);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1339,6 +2954,94 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Static_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Static_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.PTRN:
+                {
+                    _PreviewTransformLocation = (stream.Position - offset);
+                    return (int)Static_FieldIndex.PreviewTransform;
+                }
+                case RecordTypeInts.FTYP:
+                {
+                    _ForcedLocRefTypeLocation = (stream.Position - offset);
+                    return (int)Static_FieldIndex.ForcedLocRefType;
+                }
+                case RecordTypeInts.MODL:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        parseParams: parseParams);
+                    return (int)Static_FieldIndex.Model;
+                }
+                case RecordTypeInts.PRPS:
+                {
+                    var subMeta = stream.ReadSubrecord();
+                    var subLen = subMeta.ContentLength;
+                    this.Properties = BinaryOverlayList.FactoryByStartIndex<ObjectPropertyBinaryOverlay>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)Static_FieldIndex.Properties;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Static_FieldIndex.Name;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0x8)
+                    {
+                        this.DNAMDataTypeState |= Static.DNAMDataType.Break0;
+                    }
+                    return (int)Static_FieldIndex.LeafFrequency;
+                }
+                case RecordTypeInts.NVNM:
+                {
+                    _NavmeshGeometryLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Static_FieldIndex.NavmeshGeometry;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    return DistantLodParsingCustomParse(
+                        stream,
+                        offset);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void ToString(
