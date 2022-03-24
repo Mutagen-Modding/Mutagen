@@ -428,6 +428,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ITerminal :
         IFallout4MajorRecordInternal,
         ILoquiObjectSetter<ITerminalInternal>,
+        IStaticObject,
         ITerminalGetter
     {
     }
@@ -444,7 +445,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordGetter,
         IBinaryItem,
         ILoquiObject<ITerminalGetter>,
-        IMapsToGetter<ITerminalGetter>
+        IMapsToGetter<ITerminalGetter>,
+        IStaticObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Terminal_Registration.Instance;
 

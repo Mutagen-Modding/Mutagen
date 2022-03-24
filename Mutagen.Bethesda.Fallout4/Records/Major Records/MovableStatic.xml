@@ -17,5 +17,6 @@
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IRegionTarget</LinkInterface>
+    <LinkInterface>IStaticObject</LinkInterface>
   </Object>
 </Loqui>

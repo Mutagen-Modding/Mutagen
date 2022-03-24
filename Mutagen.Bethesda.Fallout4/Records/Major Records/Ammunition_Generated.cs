@@ -429,7 +429,8 @@ namespace Mutagen.Bethesda.Fallout4
         IAmmunitionGetter,
         IFallout4MajorRecordInternal,
         ILoquiObjectSetter<IAmmunitionInternal>,
-        IObjectId
+        IObjectId,
+        IStaticObject
     {
     }
 
@@ -446,7 +447,8 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryItem,
         ILoquiObject<IAmmunitionGetter>,
         IMapsToGetter<IAmmunitionGetter>,
-        IObjectIdGetter
+        IObjectIdGetter,
+        IStaticObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Ammunition_Registration.Instance;
 

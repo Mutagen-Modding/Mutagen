@@ -420,6 +420,11 @@ public abstract class Processor
         return true;
     }
 
+    public bool ProcessZeroFloats(SubrecordPinFrame pin, long offsetLoc, ref int loc)
+    {
+        return ProcessZeroFloats(pin, offsetLoc, ref loc, pin.ContentLength / 4);
+    }
+
     public bool ProcessZeroFloat(SubrecordPinFrame pin, long offsetLoc)
     {
         int loc = 0;
@@ -430,6 +435,12 @@ public abstract class Processor
     {
         int loc = 0;
         return ProcessZeroFloats(pin, offsetLoc, ref loc, amount);
+    }
+
+    public bool ProcessZeroFloats(SubrecordPinFrame pin, long offsetLoc)
+    {
+        int loc = 0;
+        return ProcessZeroFloats(pin, offsetLoc, ref loc, pin.ContentLength / 4);
     }
 
     public bool ProcessZeroFloats(SubrecordPinFrame pin, long offsetLoc, ref int loc, int amount)

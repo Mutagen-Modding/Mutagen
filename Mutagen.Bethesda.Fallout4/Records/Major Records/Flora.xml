@@ -23,5 +23,6 @@
       <RefDirect name="Production" refName="SeasonalIngredientProduction" />
     </Fields>
     <LinkInterface>IRegionTarget</LinkInterface>
+    <LinkInterface>IStaticObject</LinkInterface>
   </Object>
 </Loqui>

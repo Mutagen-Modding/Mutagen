@@ -429,6 +429,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordInternal,
         ILoquiObjectSetter<IWeaponInternal>,
         IObjectId,
+        IStaticObject,
         IWeaponGetter
     {
     }
@@ -446,7 +447,8 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryItem,
         ILoquiObject<IWeaponGetter>,
         IMapsToGetter<IWeaponGetter>,
-        IObjectIdGetter
+        IObjectIdGetter,
+        IStaticObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Weapon_Registration.Instance;
 

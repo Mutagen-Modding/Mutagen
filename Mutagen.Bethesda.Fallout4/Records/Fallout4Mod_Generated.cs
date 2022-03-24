@@ -86,6 +86,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Lights_Object = new Fallout4Group<Light>(this);
             _MiscItems_Object = new Fallout4Group<MiscItem>(this);
             _Statics_Object = new Fallout4Group<Static>(this);
+            _StaticCollections_Object = new Fallout4Group<StaticCollection>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -301,6 +302,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IStaticGetter> IFallout4ModGetter.Statics => _Statics_Object;
         #endregion
+        #region StaticCollections
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<StaticCollection> _StaticCollections_Object;
+        public Fallout4Group<StaticCollection> StaticCollections => _StaticCollections_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IStaticCollectionGetter> IFallout4ModGetter.StaticCollections => _StaticCollections_Object;
+        #endregion
 
         #region To String
 
@@ -369,6 +377,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Lights = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.MiscItems = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Statics = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.StaticCollections = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -401,7 +410,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Ingredients,
                 TItem Lights,
                 TItem MiscItems,
-                TItem Statics)
+                TItem Statics,
+                TItem StaticCollections)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -433,6 +443,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Lights = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Lights, new Fallout4Group.Mask<TItem>(Lights));
                 this.MiscItems = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(MiscItems, new Fallout4Group.Mask<TItem>(MiscItems));
                 this.Statics = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Statics, new Fallout4Group.Mask<TItem>(Statics));
+                this.StaticCollections = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(StaticCollections, new Fallout4Group.Mask<TItem>(StaticCollections));
             }
 
             #pragma warning disable CS8618
@@ -474,6 +485,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Lights { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? MiscItems { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Statics { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? StaticCollections { get; set; }
             #endregion
 
             #region Equals
@@ -516,6 +528,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Lights, rhs.Lights)) return false;
                 if (!object.Equals(this.MiscItems, rhs.MiscItems)) return false;
                 if (!object.Equals(this.Statics, rhs.Statics)) return false;
+                if (!object.Equals(this.StaticCollections, rhs.StaticCollections)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -551,6 +564,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Lights);
                 hash.Add(this.MiscItems);
                 hash.Add(this.Statics);
+                hash.Add(this.StaticCollections);
                 return hash.ToHashCode();
             }
 
@@ -709,6 +723,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Statics.Overall)) return false;
                     if (this.Statics.Specific != null && !this.Statics.Specific.All(eval)) return false;
                 }
+                if (StaticCollections != null)
+                {
+                    if (!eval(this.StaticCollections.Overall)) return false;
+                    if (this.StaticCollections.Specific != null && !this.StaticCollections.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -866,6 +885,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Statics.Overall)) return true;
                     if (this.Statics.Specific != null && this.Statics.Specific.Any(eval)) return true;
                 }
+                if (StaticCollections != null)
+                {
+                    if (eval(this.StaticCollections.Overall)) return true;
+                    if (this.StaticCollections.Specific != null && this.StaticCollections.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -910,6 +934,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Lights = this.Lights == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Lights.Overall), this.Lights.Specific?.Translate(eval));
                 obj.MiscItems = this.MiscItems == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.MiscItems.Overall), this.MiscItems.Specific?.Translate(eval));
                 obj.Statics = this.Statics == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Statics.Overall), this.Statics.Specific?.Translate(eval));
+                obj.StaticCollections = this.StaticCollections == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.StaticCollections.Overall), this.StaticCollections.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1052,6 +1077,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Statics?.ToString(fg);
                     }
+                    if (printMask?.StaticCollections?.Overall ?? true)
+                    {
+                        StaticCollections?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1107,6 +1136,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Light.ErrorMask>?>? Lights;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<MiscItem.ErrorMask>?>? MiscItems;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Static.ErrorMask>?>? Statics;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<StaticCollection.ErrorMask>?>? StaticCollections;
             #endregion
 
             #region IErrorMask
@@ -1175,6 +1205,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return MiscItems;
                     case Fallout4Mod_FieldIndex.Statics:
                         return Statics;
+                    case Fallout4Mod_FieldIndex.StaticCollections:
+                        return StaticCollections;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1274,6 +1306,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.Statics:
                         this.Statics = new MaskItem<Exception?, Fallout4Group.ErrorMask<Static.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.StaticCollections:
+                        this.StaticCollections = new MaskItem<Exception?, Fallout4Group.ErrorMask<StaticCollection.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1375,6 +1410,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.Statics:
                         this.Statics = (MaskItem<Exception?, Fallout4Group.ErrorMask<Static.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.StaticCollections:
+                        this.StaticCollections = (MaskItem<Exception?, Fallout4Group.ErrorMask<StaticCollection.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1413,6 +1451,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Lights != null) return true;
                 if (MiscItems != null) return true;
                 if (Statics != null) return true;
+                if (StaticCollections != null) return true;
                 return false;
             }
             #endregion
@@ -1477,6 +1516,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Lights?.ToString(fg);
                 MiscItems?.ToString(fg);
                 Statics?.ToString(fg);
+                StaticCollections?.ToString(fg);
             }
             #endregion
 
@@ -1515,6 +1555,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Lights = this.Lights.Combine(rhs.Lights, (l, r) => l.Combine(r));
                 ret.MiscItems = this.MiscItems.Combine(rhs.MiscItems, (l, r) => l.Combine(r));
                 ret.Statics = this.Statics.Combine(rhs.Statics, (l, r) => l.Combine(r));
+                ret.StaticCollections = this.StaticCollections.Combine(rhs.StaticCollections, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1568,6 +1609,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<Light.TranslationMask>? Lights;
             public Fallout4Group.TranslationMask<MiscItem.TranslationMask>? MiscItems;
             public Fallout4Group.TranslationMask<Static.TranslationMask>? Statics;
+            public Fallout4Group.TranslationMask<StaticCollection.TranslationMask>? StaticCollections;
             #endregion
 
             #region Ctors
@@ -1622,6 +1664,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Lights != null ? Lights.OnOverall : DefaultOn, Lights?.GetCrystal()));
                 ret.Add((MiscItems != null ? MiscItems.OnOverall : DefaultOn, MiscItems?.GetCrystal()));
                 ret.Add((Statics != null ? Statics.OnOverall : DefaultOn, Statics?.GetCrystal()));
+                ret.Add((StaticCollections != null ? StaticCollections.OnOverall : DefaultOn, StaticCollections?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1693,6 +1736,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Lights_Object = new Fallout4Group<Light>(this);
             _MiscItems_Object = new Fallout4Group<MiscItem>(this);
             _Statics_Object = new Fallout4Group<Static>(this);
+            _StaticCollections_Object = new Fallout4Group<StaticCollection>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -1815,6 +1859,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Statics.RecordCache.Set(rhsMod.Statics.RecordCache.Items);
             }
+            if (mask?.StaticCollections ?? true)
+            {
+                this.StaticCollections.RecordCache.Set(rhsMod.StaticCollections.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -1854,6 +1902,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += Lights.RecordCache.Count > 0 ? 1 : default(uint);
             count += MiscItems.RecordCache.Count > 0 ? 1 : default(uint);
             count += Statics.RecordCache.Count > 0 ? 1 : default(uint);
+            count += StaticCollections.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -2132,6 +2181,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<Light> Lights { get; }
         new Fallout4Group<MiscItem> MiscItems { get; }
         new Fallout4Group<Static> Statics { get; }
+        new Fallout4Group<StaticCollection> StaticCollections { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -2180,6 +2230,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<ILightGetter> Lights { get; }
         IFallout4GroupGetter<IMiscItemGetter> MiscItems { get; }
         IFallout4GroupGetter<IStaticGetter> Statics { get; }
+        IFallout4GroupGetter<IStaticCollectionGetter> StaticCollections { get; }
 
     }
 
@@ -2772,6 +2823,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Lights = 27,
         MiscItems = 28,
         Statics = 29,
+        StaticCollections = 30,
     }
     #endregion
 
@@ -2789,9 +2841,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 30;
+        public const ushort AdditionalFieldCount = 31;
 
-        public const ushort FieldCount = 30;
+        public const ushort FieldCount = 31;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -2889,6 +2941,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Lights.Clear();
             item.MiscItems.Clear();
             item.Statics.Clear();
+            item.StaticCollections.Clear();
         }
         
         #region Mutagen
@@ -2919,6 +2972,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Lights.RemapLinks(mapping);
             obj.MiscItems.RemapLinks(mapping);
             obj.Statics.RemapLinks(mapping);
+            obj.StaticCollections.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -2982,6 +3036,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Lights.Remove(keys);
             obj.MiscItems.Remove(keys);
             obj.Statics.Remove(keys);
+            obj.StaticCollections.Remove(keys);
         }
         
         public void Remove(
@@ -3277,6 +3332,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         type: type,
                         keys: keys);
                     break;
+                case "StaticCollection":
+                case "IStaticCollectionGetter":
+                case "IStaticCollection":
+                case "IStaticCollectionInternal":
+                    obj.StaticCollections.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
@@ -3295,6 +3358,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IStaticObject":
+                case "IStaticObjectGetter":
+                    Remove(obj, keys, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IItem":
                 case "IItemGetter":
@@ -3449,6 +3521,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Lights = MaskItemExt.Factory(item.Lights.GetEqualsMask(rhs.Lights, include), include);
             ret.MiscItems = MaskItemExt.Factory(item.MiscItems.GetEqualsMask(rhs.MiscItems, include), include);
             ret.Statics = MaskItemExt.Factory(item.Statics.GetEqualsMask(rhs.Statics, include), include);
+            ret.StaticCollections = MaskItemExt.Factory(item.StaticCollections.GetEqualsMask(rhs.StaticCollections, include), include);
         }
         
         public string ToString(
@@ -3614,6 +3687,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (printMask?.Statics?.Overall ?? true)
             {
                 item.Statics?.ToString(fg, "Statics");
+            }
+            if (printMask?.StaticCollections?.Overall ?? true)
+            {
+                item.StaticCollections?.ToString(fg, "StaticCollections");
             }
         }
         
@@ -3864,6 +3941,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 else if (!isStaticsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.StaticCollections) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.StaticCollections, rhs.StaticCollections, out var lhsStaticCollections, out var rhsStaticCollections, out var isStaticCollectionsEqual))
+                {
+                    if (!object.Equals(lhsStaticCollections, rhsStaticCollections)) return false;
+                }
+                else if (!isStaticCollectionsEqual) return false;
+            }
             return true;
         }
         
@@ -3900,6 +3985,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.Lights);
             hash.Add(item.MiscItems);
             hash.Add(item.Statics);
+            hash.Add(item.StaticCollections);
             return hash.ToHashCode();
         }
         
@@ -4063,6 +4149,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IStatic":
                 case "IStaticInternal":
                     return obj.Statics;
+                case "StaticCollection":
+                case "IStaticCollectionGetter":
+                case "IStaticCollection":
+                case "IStaticCollectionInternal":
+                    return obj.StaticCollections;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -4087,7 +4178,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[29];
+            Stream[] outputStreams = new Stream[30];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -4118,6 +4209,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             toDo.Add(() => WriteGroupParallel(item.Lights, 26, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.MiscItems, 27, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Statics, 28, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.StaticCollections, 29, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -4265,6 +4357,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
+            foreach (var item in obj.StaticCollections.ContainedFormLinks)
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -4383,6 +4479,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 yield return item;
             }
             foreach (var item in obj.Statics.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.StaticCollections.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -4682,6 +4782,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         yield return item;
                     }
                     yield break;
+                case "StaticCollection":
+                case "IStaticCollectionGetter":
+                case "IStaticCollection":
+                case "IStaticCollectionInternal":
+                    foreach (var item in obj.StaticCollections.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout4, obj, type, out var linkInterfaces))
                     {
@@ -4964,6 +5073,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 modKey: obj.ModKey,
                 group: (m) => m.Statics,
                 groupGetter: (m) => m.Statics))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, StaticCollection, IStaticCollectionGetter>(
+                srcGroup: obj.StaticCollections,
+                type: typeof(IStaticCollectionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.StaticCollections,
+                groupGetter: (m) => m.StaticCollections))
             {
                 yield return item;
             }
@@ -5400,6 +5518,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         modKey: obj.ModKey,
                         group: (m) => m.Statics,
                         groupGetter: (m) => m.Statics))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "StaticCollection":
+                case "IStaticCollectionGetter":
+                case "IStaticCollection":
+                case "IStaticCollectionInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, StaticCollection, IStaticCollectionGetter>(
+                        srcGroup: obj.StaticCollections,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.StaticCollections,
+                        groupGetter: (m) => m.StaticCollections))
                     {
                         yield return item;
                     }
@@ -6044,6 +6176,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.StaticCollections) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.StaticCollections);
+                try
+                {
+                    item.StaticCollections.DeepCopyIn(
+                        rhs: rhs.StaticCollections,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.StaticCollections));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -6163,6 +6315,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Lights;
         public bool MiscItems;
         public bool Statics;
+        public bool StaticCollections;
         public GroupMask()
         {
         }
@@ -6197,6 +6350,7 @@ namespace Mutagen.Bethesda.Fallout4
             Lights = defaultValue;
             MiscItems = defaultValue;
             Statics = defaultValue;
+            StaticCollections = defaultValue;
         }
     }
 
@@ -6543,6 +6697,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)StaticsItem).BinaryWriteTranslator).Write<IStaticGetter>(
                         item: StaticsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.StaticCollections ?? true)
+            {
+                var StaticCollectionsItem = item.StaticCollections;
+                if (StaticCollectionsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)StaticCollectionsItem).BinaryWriteTranslator).Write<IStaticCollectionGetter>(
+                        item: StaticCollectionsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -7019,6 +7184,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     }
                     return (int)Fallout4Mod_FieldIndex.Statics;
                 }
+                case RecordTypeInts.SCOL:
+                {
+                    if (importMask?.StaticCollections ?? true)
+                    {
+                        item.StaticCollections.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.StaticCollections;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -7325,6 +7504,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private IFallout4GroupGetter<IStaticGetter>? _Statics => _StaticsLocations != null ? Fallout4GroupBinaryOverlay<IStaticGetter>.Fallout4GroupFactory(_data, _StaticsLocations, _package) : default;
         public IFallout4GroupGetter<IStaticGetter> Statics => _Statics ?? new Fallout4Group<Static>(this);
         #endregion
+        #region StaticCollections
+        private List<RangeInt64>? _StaticCollectionsLocations;
+        private IFallout4GroupGetter<IStaticCollectionGetter>? _StaticCollections => _StaticCollectionsLocations != null ? Fallout4GroupBinaryOverlay<IStaticCollectionGetter>.Fallout4GroupFactory(_data, _StaticCollectionsLocations, _package) : default;
+        public IFallout4GroupGetter<IStaticCollectionGetter> StaticCollections => _StaticCollections ?? new Fallout4Group<StaticCollection>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -7586,6 +7770,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     _StaticsLocations ??= new();
                     _StaticsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Statics;
+                }
+                case RecordTypeInts.SCOL:
+                {
+                    _StaticCollectionsLocations ??= new();
+                    _StaticCollectionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.StaticCollections;
                 }
                 default:
                     return default(int?);

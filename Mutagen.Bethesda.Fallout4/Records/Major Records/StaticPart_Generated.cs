@@ -51,14 +51,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Static
-        private readonly IFormLinkNullable<IStaticGetter> _Static = new FormLinkNullable<IStaticGetter>();
-        public IFormLinkNullable<IStaticGetter> Static
+        private readonly IFormLinkNullable<IStaticObjectGetter> _Static = new FormLinkNullable<IStaticObjectGetter>();
+        public IFormLinkNullable<IStaticObjectGetter> Static
         {
             get => _Static;
             set => _Static.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IStaticGetter> IStaticPartGetter.Static => this.Static;
+        IFormLinkNullableGetter<IStaticObjectGetter> IStaticPartGetter.Static => this.Static;
         #endregion
         #region Placements
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IStaticPart>,
         IStaticPartGetter
     {
-        new IFormLinkNullable<IStaticGetter> Static { get; set; }
+        new IFormLinkNullable<IStaticObjectGetter> Static { get; set; }
         new ExtendedList<Placement>? Placements { get; set; }
     }
 
@@ -571,7 +571,7 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => StaticPart_Registration.Instance;
-        IFormLinkNullableGetter<IStaticGetter> Static { get; }
+        IFormLinkNullableGetter<IStaticObjectGetter> Static { get; }
         IReadOnlyList<IPlacementGetter>? Placements { get; }
 
     }
@@ -1167,6 +1167,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPlacementGetter>.Instance.Write(
                 writer: writer,
                 items: item.Placements,
+                recordType: translationParams.ConvertToCustom(RecordTypes.DATA),
                 transl: (MutagenWriter subWriter, IPlacementGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
@@ -1233,11 +1234,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.DATA:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)StaticPart_FieldIndex.Placements) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Placements = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Placement>.Instance.Parse(
-                            reader: frame,
-                            triggeringRecord: RecordTypes.DATA,
-                            translationParams: translationParams,
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: Placement.TryCreateFromBinary)
                         .CastExtendedList<Placement>();
                     return (int)StaticPart_FieldIndex.Placements;
@@ -1313,7 +1313,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #region Static
         private int? _StaticLocation;
-        public IFormLinkNullableGetter<IStaticGetter> Static => _StaticLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StaticLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
+        public IFormLinkNullableGetter<IStaticObjectGetter> Static => _StaticLocation.HasValue ? new FormLinkNullable<IStaticObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StaticLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticObjectGetter>.Null;
         #endregion
         public IReadOnlyList<IPlacementGetter>? Placements { get; private set; }
         partial void CustomFactoryEnd(
@@ -1382,11 +1382,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.DATA:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)StaticPart_FieldIndex.Placements) return ParseResult.Stop;
-                    this.Placements = this.ParseRepeatedTypelessSubrecord<PlacementBinaryOverlay>(
-                        stream: stream,
-                        parseParams: parseParams,
-                        trigger: RecordTypes.DATA,
-                        factory: PlacementBinaryOverlay.PlacementFactory);
+                    var subMeta = stream.ReadSubrecord();
+                    var subLen = subMeta.ContentLength;
+                    this.Placements = BinaryOverlayList.FactoryByStartIndex<PlacementBinaryOverlay>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 28,
+                        getter: (s, p) => PlacementBinaryOverlay.PlacementFactory(s, p));
+                    stream.Position += subLen;
                     return (int)StaticPart_FieldIndex.Placements;
                 }
                 default:

@@ -27,5 +27,6 @@
 	  <FormLink name="FilterList" refName="FormList" recordType="ONAM" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IStaticObject</LinkInterface>
   </Object>
 </Loqui>

@@ -1404,6 +1404,7 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectBounded,
         IObjectId,
         IScripted,
+        IStaticObject,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
@@ -1469,6 +1470,7 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectBoundedGetter,
         IObjectIdGetter,
         IScriptedGetter,
+        IStaticObjectGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {

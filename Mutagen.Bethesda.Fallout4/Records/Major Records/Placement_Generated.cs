@@ -57,9 +57,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region Scale
         public Single Scale { get; set; } = default;
         #endregion
-        #region DATADataTypeState
-        public Placement.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -101,19 +98,16 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Position = initialValue;
                 this.Rotation = initialValue;
                 this.Scale = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
                 TItem Position,
                 TItem Rotation,
-                TItem Scale,
-                TItem DATADataTypeState)
+                TItem Scale)
             {
                 this.Position = Position;
                 this.Rotation = Rotation;
                 this.Scale = Scale;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -128,7 +122,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Position;
             public TItem Rotation;
             public TItem Scale;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -144,7 +137,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Position, rhs.Position)) return false;
                 if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
                 if (!object.Equals(this.Scale, rhs.Scale)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -153,7 +145,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Position);
                 hash.Add(this.Rotation);
                 hash.Add(this.Scale);
-                hash.Add(this.DATADataTypeState);
                 return hash.ToHashCode();
             }
 
@@ -165,7 +156,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.Position)) return false;
                 if (!eval(this.Rotation)) return false;
                 if (!eval(this.Scale)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -176,7 +166,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.Position)) return true;
                 if (eval(this.Rotation)) return true;
                 if (eval(this.Scale)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -194,7 +183,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Position = eval(this.Position);
                 obj.Rotation = eval(this.Rotation);
                 obj.Scale = eval(this.Scale);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -229,10 +217,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         fg.AppendItem(Scale, "Scale");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -261,7 +245,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Position;
             public Exception? Rotation;
             public Exception? Scale;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -276,8 +259,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Rotation;
                     case Placement_FieldIndex.Scale:
                         return Scale;
-                    case Placement_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -296,9 +277,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Placement_FieldIndex.Scale:
                         this.Scale = ex;
-                        break;
-                    case Placement_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -319,9 +297,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Placement_FieldIndex.Scale:
                         this.Scale = (Exception?)obj;
                         break;
-                    case Placement_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -333,7 +308,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Position != null) return true;
                 if (Rotation != null) return true;
                 if (Scale != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -371,7 +345,6 @@ namespace Mutagen.Bethesda.Fallout4
                 fg.AppendItem(Position, "Position");
                 fg.AppendItem(Rotation, "Rotation");
                 fg.AppendItem(Scale, "Scale");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -383,7 +356,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Position = this.Position.Combine(rhs.Position);
                 ret.Rotation = this.Rotation.Combine(rhs.Rotation);
                 ret.Scale = this.Scale.Combine(rhs.Scale);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -410,7 +382,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Position;
             public bool Rotation;
             public bool Scale;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -423,7 +394,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Position = defaultOn;
                 this.Rotation = defaultOn;
                 this.Scale = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -442,7 +412,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Position, null));
                 ret.Add((Rotation, null));
                 ret.Add((Scale, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -450,14 +419,6 @@ namespace Mutagen.Bethesda.Fallout4
                 return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
-        }
-        #endregion
-
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = Placement_Registration.TriggeringRecordType;
-        [Flags]
-        public enum DATADataType
-        {
         }
         #endregion
 
@@ -521,18 +482,19 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IPlacement :
         ILoquiObjectSetter<IPlacement>,
-        IPlacementGetter
+        IPlacementGetter,
+        IPositionRotation
     {
         new P3Float Position { get; set; }
         new P3Float Rotation { get; set; }
         new Single Scale { get; set; }
-        new Placement.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IPlacementGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IPlacementGetter>
+        ILoquiObject<IPlacementGetter>,
+        IPositionRotationGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -544,7 +506,6 @@ namespace Mutagen.Bethesda.Fallout4
         P3Float Position { get; }
         P3Float Rotation { get; }
         Single Scale { get; }
-        Placement.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -717,7 +678,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Position = 0,
         Rotation = 1,
         Scale = 2,
-        DATADataTypeState = 3,
     }
     #endregion
 
@@ -735,9 +695,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "caddd826-3213-4e45-b983-17447ba30c77";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(Placement.Mask<>);
 
@@ -763,7 +723,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
         public static readonly Type BinaryWriteTranslation = typeof(PlacementBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -809,7 +768,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Position = default;
             item.Rotation = default;
             item.Scale = default;
-            item.DATADataTypeState = default;
         }
         
         #region Mutagen
@@ -829,8 +787,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: PlacementBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: PlacementBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: PlacementBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -864,7 +821,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Position = item.Position.Equals(rhs.Position);
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
         }
         
         public string ToString(
@@ -923,10 +879,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 fg.AppendItem(item.Scale, "Scale");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         #region Equals and Hash
@@ -948,10 +900,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Placement_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -961,7 +909,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.Position);
             hash.Add(item.Rotation);
             hash.Add(item.Scale);
-            hash.Add(item.DATADataTypeState);
             return hash.ToHashCode();
         }
         
@@ -1005,10 +952,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if ((copyMask?.GetShouldTranslate((int)Placement_FieldIndex.Scale) ?? true))
             {
                 item.Scale = rhs.Scale;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Placement_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -1106,25 +1049,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IPlacementGetter item,
             MutagenWriter writer)
         {
-        }
-
-        public static void WriteRecordTypes(
-            IPlacementGetter item,
-            MutagenWriter writer,
-            TypedWriteParams? translationParams)
-        {
-            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
-            {
-                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.Position);
-                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.Rotation);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.Scale);
-            }
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Position);
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Rotation);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Scale);
         }
 
         public void Write(
@@ -1135,10 +1068,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             WriteEmbedded(
                 item: item,
                 writer: writer);
-            WriteRecordTypes(
-                item: item,
-                writer: writer,
-                translationParams: translationParams);
         }
 
         public void Write(
@@ -1162,33 +1091,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IPlacement item,
             MutagenFrame frame)
         {
-        }
-
-        public static ParseResult FillBinaryRecordTypes(
-            IPlacement item,
-            MutagenFrame frame,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
-            RecordType nextRecordType,
-            int contentLength,
-            TypedParseParams? translationParams = null)
-        {
-            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case RecordTypeInts.DATA:
-                {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Placement_FieldIndex.Scale) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Position = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    item.Rotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    return (int)Placement_FieldIndex.Scale;
-                }
-                default:
-                    return ParseResult.Stop;
-            }
+            item.Position = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Rotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1254,23 +1159,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 translationParams: translationParams);
         }
 
-        private int? _DATALocation;
-        public Placement.DATADataType DATADataTypeState { get; private set; }
-        #region Position
-        private int _PositionLocation => _DATALocation!.Value;
-        private bool _Position_IsSet => _DATALocation.HasValue;
-        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_PositionLocation, 12)) : default;
-        #endregion
-        #region Rotation
-        private int _RotationLocation => _DATALocation!.Value + 0xC;
-        private bool _Rotation_IsSet => _DATALocation.HasValue;
-        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_RotationLocation, 12)) : default;
-        #endregion
-        #region Scale
-        private int _ScaleLocation => _DATALocation!.Value + 0x18;
-        private bool _Scale_IsSet => _DATALocation.HasValue;
-        public Single Scale => _Scale_IsSet ? _data.Slice(_ScaleLocation, 4).Float() : default;
-        #endregion
+        public P3Float Position => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0xC));
+        public P3Float Rotation => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0xC, 0xC));
+        public Single Scale => _data.Slice(0x18, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1293,15 +1184,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedParseParams? parseParams = null)
         {
             var ret = new PlacementBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                bytes: stream.RemainingMemory.Slice(0, 0x1C),
                 package: package);
             int offset = stream.Position;
-            ret.FillTypelessSubrecordTypes(
+            stream.Position += 0x1C;
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
-                offset: offset,
-                parseParams: parseParams,
-                fill: ret.FillRecordType);
+                offset: offset);
             return ret;
         }
 
@@ -1316,28 +1206,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 parseParams: parseParams);
         }
 
-        public ParseResult FillRecordType(
-            OverlayStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
-        {
-            type = parseParams.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case RecordTypeInts.DATA:
-                {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Placement_FieldIndex.Scale) return ParseResult.Stop;
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return (int)Placement_FieldIndex.Scale;
-                }
-                default:
-                    return ParseResult.Stop;
-            }
-        }
         #region To String
 
         public void ToString(

@@ -2293,9 +2293,9 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on StaticCollection</returns>
-        public static TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IStaticCollection, IStaticCollectionGetter> StaticCollection(this IEnumerable<IModListingGetter<IFallout4ModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IStaticCollection, IStaticCollectionGetter> StaticCollection(this IEnumerable<IModListingGetter<IFallout4ModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IStaticCollection, IStaticCollectionGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IStaticCollection, IStaticCollectionGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IStaticCollectionGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IStaticCollection, IStaticCollectionGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -2305,9 +2305,9 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on StaticCollection</returns>
-        public static TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IStaticCollection, IStaticCollectionGetter> StaticCollection(this IEnumerable<IFallout4ModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IStaticCollection, IStaticCollectionGetter> StaticCollection(this IEnumerable<IFallout4ModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IStaticCollection, IStaticCollectionGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IStaticCollection, IStaticCollectionGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IStaticCollectionGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IStaticCollection, IStaticCollectionGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -2625,6 +2625,30 @@ namespace Mutagen.Bethesda.Fallout4
             return new TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IObjectId, IObjectIdGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IObjectIdGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IObjectId, IObjectIdGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IStaticObject
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on IStaticObject</returns>
+        public static TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IStaticObject, IStaticObjectGetter> IStaticObject(this IEnumerable<IModListingGetter<IFallout4ModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IStaticObject, IStaticObjectGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IStaticObjectGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IStaticObject, IStaticObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IStaticObject
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on IStaticObject</returns>
+        public static TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IStaticObject, IStaticObjectGetter> IStaticObject(this IEnumerable<IFallout4ModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IStaticObject, IStaticObjectGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IStaticObjectGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IStaticObject, IStaticObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>

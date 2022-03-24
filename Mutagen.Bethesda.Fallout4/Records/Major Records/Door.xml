@@ -20,5 +20,6 @@
 		<String name="AlternateTextClose" recordType="CNAM" translated="DL" />
 	</Fields>
 	<LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IStaticObject</LinkInterface>
   </Object>
 </Loqui>

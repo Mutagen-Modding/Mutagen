@@ -53,6 +53,23 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 Weapon_Registration.Instance,
             });
             dict[typeof(IObjectIdGetter)] = dict[typeof(IObjectId)] with { Setter = false };
+            dict[typeof(IStaticObject)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Activator_Registration.Instance,
+                Ammunition_Registration.Instance,
+                Book_Registration.Instance,
+                Container_Registration.Instance,
+                Door_Registration.Instance,
+                Flora_Registration.Instance,
+                Furniture_Registration.Instance,
+                Ingestible_Registration.Instance,
+                MiscItem_Registration.Instance,
+                MoveableStatic_Registration.Instance,
+                Static_Registration.Instance,
+                Terminal_Registration.Instance,
+                Weapon_Registration.Instance,
+            });
+            dict[typeof(IStaticObjectGetter)] = dict[typeof(IStaticObject)] with { Setter = false };
             dict[typeof(IDamageTypeTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 ActorValueInformation_Registration.Instance,

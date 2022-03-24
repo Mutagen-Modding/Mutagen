@@ -1262,6 +1262,7 @@
     <Compile Include="Records\Major Records\DistantLod_Generated.cs">
       <DependentUpon>Static.xml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\Link\IStaticObject_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

@@ -2,5 +2,6 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Ammunition" recordType="AMMO" objType="Record" baseClass="Fallout4MajorRecord" GUID="e57765cc-e2e1-43c7-a220-8db84c93b1f1" ID="230">
     <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IStaticObject</LinkInterface>
   </Object>
 </Loqui>

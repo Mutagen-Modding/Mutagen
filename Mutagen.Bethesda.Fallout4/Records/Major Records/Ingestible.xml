@@ -33,5 +33,6 @@
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IStaticObject</LinkInterface>
   </Object>
 </Loqui>

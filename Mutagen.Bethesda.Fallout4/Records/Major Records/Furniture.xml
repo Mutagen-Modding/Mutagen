@@ -32,6 +32,7 @@
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IStaticObject</LinkInterface>
   </Object>
   <Object name="WorkbenchData" objType="Subrecord" recordType="WBDT" GUID="31f37852-fcfa-40f2-827f-6c6161c76b64" ID="205">
     <Fields>

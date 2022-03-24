@@ -2,5 +2,6 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Weapon" recordType="WEAP" baseClass="Fallout4MajorRecord" objType="Record" GUID="ea1189a0-716d-4099-ad06-721ccd313caa" ID="286">
     <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IStaticObject</LinkInterface>
   </Object>
 </Loqui>

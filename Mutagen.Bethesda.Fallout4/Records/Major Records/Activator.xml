@@ -27,6 +27,7 @@
       <RefDirect name="NavmeshGeometry" refName="NavmeshGeometry" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IStaticObject</LinkInterface>
   </Object>
   <Object name="RadioReceiver" objType="Subrecord" recordType="RADR" GUID="8be06abd-cae8-4862-a510-a942533bda27" ID="223">
     <Fields>

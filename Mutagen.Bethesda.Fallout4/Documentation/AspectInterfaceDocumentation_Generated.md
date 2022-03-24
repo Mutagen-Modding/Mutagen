@@ -59,6 +59,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MoveableStatic
 - Projectile
 - Static
+- StaticCollection
 - TalkingActivator
 - Tree
 ### INamed
@@ -117,6 +118,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ScriptVariableProperty
 - Spell
 - Static
+- StaticCollection
 - TalkingActivator
 - TintGroup
 - TintTemplateOption
@@ -148,6 +150,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - SoundMarker
 - Spell
 - Static
+- StaticCollection
 - TalkingActivator
 - TextureSet
 - Tree
@@ -166,6 +169,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MiscItem
 - MoveableStatic
 - Static
+- StaticCollection
 - TalkingActivator
 - Tree
 ### IWeightValue
@@ -392,6 +396,11 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 ### Static
+- IModeled
+- INamed
+- IObjectBounded
+- IScripted
+### StaticCollection
 - IModeled
 - INamed
 - IObjectBounded

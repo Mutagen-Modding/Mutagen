@@ -29,6 +29,7 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.GMST, ProcessGameSettings);
         AddDynamicProcessing(RecordTypes.TRNS, ProcessTransforms);
         AddDynamicProcessing(RecordTypes.RACE, ProcessRaces);
+        AddDynamicProcessing(RecordTypes.SCOL, ProcessStaticCollections);
     }
 
     private void ProcessGameSettings(
@@ -82,6 +83,17 @@ public class Fallout4Processor : Processor
         }
     }
 
+    private void ProcessStaticCollections(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var frame in majorFrame.FindEnumerateSubrecords(RecordTypes.DATA))
+        {
+            int offset = 0;
+            ProcessZeroFloats(frame, fileOffset, ref offset);
+        }
+    }
+
     public void GameSettingStringHandler(
         IMutagenReadStream stream,
         MajorRecordHeader major,
@@ -121,6 +133,7 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "LIGH", "FULL" },
                     new RecordType[] { "MISC", "FULL" },
                     new RecordType[] { "STAT", "FULL" },
+                    new RecordType[] { "SCOL", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]

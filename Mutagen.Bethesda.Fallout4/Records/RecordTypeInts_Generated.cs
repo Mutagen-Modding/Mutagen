@@ -96,6 +96,7 @@ public partial class RecordTypeInts
     public const int FLMV = 0x564D4C46;
     public const int FLOR = 0x524F4C46;
     public const int FLST = 0x54534C46;
+    public const int FLTR = 0x52544C46;
     public const int FLTV = 0x56544C46;
     public const int FMRI = 0x49524D46;
     public const int FMRN = 0x4E524D46;

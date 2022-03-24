@@ -1443,6 +1443,7 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectBounded,
         IObjectId,
         IScripted,
+        IStaticObject,
         ITranslatedNamed,
         ITranslatedNamedRequired,
         IWeightValue
@@ -1510,6 +1511,7 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectBoundedGetter,
         IObjectIdGetter,
         IScriptedGetter,
+        IStaticObjectGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter,
         IWeightValueGetter

@@ -98,6 +98,7 @@ public partial class RecordTypes
     public static readonly RecordType FLMV = new(0x564D4C46);
     public static readonly RecordType FLOR = new(0x524F4C46);
     public static readonly RecordType FLST = new(0x54534C46);
+    public static readonly RecordType FLTR = new(0x52544C46);
     public static readonly RecordType FLTV = new(0x56544C46);
     public static readonly RecordType FMRI = new(0x49524D46);
     public static readonly RecordType FMRN = new(0x4E524D46);
