@@ -630,8 +630,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TriggeringRecordType = RecordTypes.ATXT;
         public static RecordTypeConverter BaseConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("BTXT"),
-                new RecordType("ATXT")));
+                RecordTypes.BTXT,
+                RecordTypes.ATXT));
         public static readonly Type BinaryWriteTranslation = typeof(AlphaLayerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

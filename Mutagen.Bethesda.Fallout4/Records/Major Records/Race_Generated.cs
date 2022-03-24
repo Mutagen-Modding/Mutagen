@@ -5134,22 +5134,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly RecordType TriggeringRecordType = RecordTypes.RACE;
         public static RecordTypeConverter SkeletalModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODL"),
-                new RecordType("ANAM")));
+                RecordTypes.MODL,
+                RecordTypes.ANAM));
         public static readonly Type BinaryWriteTranslation = typeof(RaceBinaryWriteTranslation);
         public static RecordTypeConverter HeadDataFemaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("RPRM"),
-                new RecordType("RPRF")),
+                RecordTypes.RPRM,
+                RecordTypes.RPRF),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("FTSM"),
-                new RecordType("FTSF")),
+                RecordTypes.FTSM,
+                RecordTypes.FTSF),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("AHCM"),
-                new RecordType("AHCF")),
+                RecordTypes.AHCM,
+                RecordTypes.AHCF),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("DFTM"),
-                new RecordType("DFTF")));
+                RecordTypes.DFTM,
+                RecordTypes.DFTF));
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;

@@ -94,6 +94,12 @@ public partial class RecordTypeInts
     public const int MGEF = 0x4645474D;
     public const int MISC = 0x4353494D;
     public const int MNAM = 0x4D414E4D;
+    public const int MO2B = 0x42324F4D;
+    public const int MO2T = 0x54324F4D;
+    public const int MO3B = 0x42334F4D;
+    public const int MO3T = 0x54334F4D;
+    public const int MO4B = 0x42344F4D;
+    public const int MO4T = 0x54344F4D;
     public const int MOD2 = 0x32444F4D;
     public const int MOD3 = 0x33444F4D;
     public const int MOD4 = 0x34444F4D;

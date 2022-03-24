@@ -1213,34 +1213,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TriggeringRecordType = RecordTypes.CLOT;
         public static RecordTypeConverter MaleWorldModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODL"),
-                new RecordType("MOD2")),
+                RecordTypes.MODL,
+                RecordTypes.MOD2),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODB"),
-                new RecordType("MO2B")),
+                RecordTypes.MODB,
+                RecordTypes.MO2B),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODT"),
-                new RecordType("MO2T")));
+                RecordTypes.MODT,
+                RecordTypes.MO2T));
         public static RecordTypeConverter FemaleBipedModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODL"),
-                new RecordType("MOD3")),
+                RecordTypes.MODL,
+                RecordTypes.MOD3),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODB"),
-                new RecordType("MO3B")),
+                RecordTypes.MODB,
+                RecordTypes.MO3B),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODT"),
-                new RecordType("MO3T")));
+                RecordTypes.MODT,
+                RecordTypes.MO3T));
         public static RecordTypeConverter FemaleWorldModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODL"),
-                new RecordType("MOD4")),
+                RecordTypes.MODL,
+                RecordTypes.MOD4),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODB"),
-                new RecordType("MO4B")),
+                RecordTypes.MODB,
+                RecordTypes.MO4B),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODT"),
-                new RecordType("MO4T")));
+                RecordTypes.MODT,
+                RecordTypes.MO4T));
         public static readonly Type BinaryWriteTranslation = typeof(ClothingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

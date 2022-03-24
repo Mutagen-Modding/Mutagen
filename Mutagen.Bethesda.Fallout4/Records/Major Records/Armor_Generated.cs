@@ -2482,30 +2482,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type BinaryWriteTranslation = typeof(ArmorBinaryWriteTranslation);
         public static RecordTypeConverter WorldModelFemaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODL"),
-                new RecordType("MOD4")),
+                RecordTypes.MODL,
+                RecordTypes.MOD4),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODT"),
-                new RecordType("MO4T")),
+                RecordTypes.MODT,
+                RecordTypes.MO4T),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODS"),
-                new RecordType("MO4S")),
+                RecordTypes.MODS,
+                RecordTypes.MO4S),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("ICON"),
-                new RecordType("ICO2")),
+                RecordTypes.ICON,
+                RecordTypes.ICO2),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MICO"),
-                new RecordType("MIC2")));
+                RecordTypes.MICO,
+                RecordTypes.MIC2));
         public static RecordTypeConverter WorldModelMaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODL"),
-                new RecordType("MOD2")),
+                RecordTypes.MODL,
+                RecordTypes.MOD2),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODT"),
-                new RecordType("MO2T")),
+                RecordTypes.MODT,
+                RecordTypes.MO2T),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODS"),
-                new RecordType("MO2S")));
+                RecordTypes.MODS,
+                RecordTypes.MO2S));
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;

@@ -1402,44 +1402,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type BinaryWriteTranslation = typeof(ArmorAddonBinaryWriteTranslation);
         public static RecordTypeConverter WorldModelFemaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODL"),
-                new RecordType("MOD3")),
+                RecordTypes.MODL,
+                RecordTypes.MOD3),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODT"),
-                new RecordType("MO3T")),
+                RecordTypes.MODT,
+                RecordTypes.MO3T),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODS"),
-                new RecordType("MO3S")));
+                RecordTypes.MODS,
+                RecordTypes.MO3S));
         public static RecordTypeConverter WorldModelMaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODL"),
-                new RecordType("MOD2")),
+                RecordTypes.MODL,
+                RecordTypes.MOD2),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODT"),
-                new RecordType("MO2T")),
+                RecordTypes.MODT,
+                RecordTypes.MO2T),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODS"),
-                new RecordType("MO2S")));
+                RecordTypes.MODS,
+                RecordTypes.MO2S));
         public static RecordTypeConverter FirstPersonModelFemaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODL"),
-                new RecordType("MOD5")),
+                RecordTypes.MODL,
+                RecordTypes.MOD5),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODT"),
-                new RecordType("MO5T")),
+                RecordTypes.MODT,
+                RecordTypes.MO5T),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODS"),
-                new RecordType("MO5S")));
+                RecordTypes.MODS,
+                RecordTypes.MO5S));
         public static RecordTypeConverter FirstPersonModelMaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODL"),
-                new RecordType("MOD4")),
+                RecordTypes.MODL,
+                RecordTypes.MOD4),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODT"),
-                new RecordType("MO4T")),
+                RecordTypes.MODT,
+                RecordTypes.MO4T),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODS"),
-                new RecordType("MO4S")));
+                RecordTypes.MODS,
+                RecordTypes.MO4S));
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;

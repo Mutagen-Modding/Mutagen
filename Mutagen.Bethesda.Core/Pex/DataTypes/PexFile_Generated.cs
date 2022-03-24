@@ -1338,7 +1338,7 @@ namespace Mutagen.Bethesda.Pex.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PexFile_FieldIndex.UserFlags) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual<string>(lhs.UserFlags.Span!, rhs.UserFlags.Span!)) return false;
+                if (!MemoryExtensions.SequenceEqual<String>(lhs.UserFlags.Span!, rhs.UserFlags.Span!)) return false;
             }
             return true;
         }

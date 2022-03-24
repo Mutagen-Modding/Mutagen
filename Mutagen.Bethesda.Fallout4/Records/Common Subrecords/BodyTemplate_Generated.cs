@@ -764,8 +764,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         });
         public static RecordTypeConverter Version44Converter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("BODT"),
-                new RecordType("BOD2")));
+                RecordTypes.BODT,
+                RecordTypes.BOD2));
         public static RecordTypeConverter? Get(int? version)
         {
             if (version == null) return default(RecordTypeConverter);

@@ -96,6 +96,12 @@ public partial class RecordTypes
     public static readonly RecordType MGEF = new(0x4645474D);
     public static readonly RecordType MISC = new(0x4353494D);
     public static readonly RecordType MNAM = new(0x4D414E4D);
+    public static readonly RecordType MO2B = new(0x42324F4D);
+    public static readonly RecordType MO2T = new(0x54324F4D);
+    public static readonly RecordType MO3B = new(0x42334F4D);
+    public static readonly RecordType MO3T = new(0x54334F4D);
+    public static readonly RecordType MO4B = new(0x42344F4D);
+    public static readonly RecordType MO4T = new(0x54344F4D);
     public static readonly RecordType MOD2 = new(0x32444F4D);
     public static readonly RecordType MOD3 = new(0x33444F4D);
     public static readonly RecordType MOD4 = new(0x34444F4D);

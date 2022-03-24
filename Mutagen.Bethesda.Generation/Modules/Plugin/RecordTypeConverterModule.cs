@@ -154,8 +154,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         using (var args2 = new FunctionWrapper(gen,
                             "new KeyValuePair<RecordType, RecordType>"))
                         {
-                            args2.Add($"new RecordType(\"{conv.Key.Type}\")");
-                            args2.Add($"new RecordType(\"{conv.Value.Type}\")");
+                            args2.Add($"RecordTypes.{conv.Key.Type}");
+                            args2.Add($"RecordTypes.{conv.Value.Type}");
                         }
                     });
                 }

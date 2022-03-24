@@ -2243,14 +2243,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType TriggeringRecordType = RecordTypes.WEAP;
         public static RecordTypeConverter ScopeModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODL"),
-                new RecordType("MOD3")),
+                RecordTypes.MODL,
+                RecordTypes.MOD3),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODT"),
-                new RecordType("MO3T")),
+                RecordTypes.MODT,
+                RecordTypes.MO3T),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODS"),
-                new RecordType("MO3S")));
+                RecordTypes.MODS,
+                RecordTypes.MO3S));
         public static readonly Type BinaryWriteTranslation = typeof(WeaponBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

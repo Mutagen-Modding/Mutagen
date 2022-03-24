@@ -19,6 +19,7 @@ public partial class RecordTypeInts
     public const int ACTI = 0x49544341;
     public const int ACUN = 0x4E554341;
     public const int ADDN = 0x4E444441;
+    public const int AHCF = 0x46434841;
     public const int AHCM = 0x4D434841;
     public const int AIAD = 0x44414941;
     public const int AIDT = 0x54444941;
@@ -114,6 +115,7 @@ public partial class RecordTypeInts
     public const int DESC = 0x43534544;
     public const int DEST = 0x54534544;
     public const int DEVA = 0x41564544;
+    public const int DFTF = 0x46544644;
     public const int DFTM = 0x4D544644;
     public const int DIAD = 0x44414944;
     public const int DIAL = 0x4C414944;
@@ -121,6 +123,8 @@ public partial class RecordTypeInts
     public const int DLVW = 0x57564C44;
     public const int DMAX = 0x58414D44;
     public const int DMDL = 0x4C444D44;
+    public const int DMDS = 0x53444D44;
+    public const int DMDT = 0x54444D44;
     public const int DMIN = 0x4E494D44;
     public const int DNAM = 0x4D414E44;
     public const int DOBJ = 0x4A424F44;
@@ -164,6 +168,7 @@ public partial class RecordTypeInts
     public const int FPRT = 0x54525046;
     public const int FSTP = 0x50545346;
     public const int FSTS = 0x53545346;
+    public const int FTSF = 0x46535446;
     public const int FTSM = 0x4D535446;
     public const int FTST = 0x54535446;
     public const int FULL = 0x4C4C5546;
@@ -266,9 +271,18 @@ public partial class RecordTypeInts
     public const int MGEF = 0x4645474D;
     public const int MHDT = 0x5444484D;
     public const int MIAD = 0x4441494D;
+    public const int MIC2 = 0x3243494D;
     public const int MICO = 0x4F43494D;
     public const int MISC = 0x4353494D;
     public const int MNAM = 0x4D414E4D;
+    public const int MO2S = 0x53324F4D;
+    public const int MO2T = 0x54324F4D;
+    public const int MO3S = 0x53334F4D;
+    public const int MO3T = 0x54334F4D;
+    public const int MO4S = 0x53344F4D;
+    public const int MO4T = 0x54344F4D;
+    public const int MO5S = 0x53354F4D;
+    public const int MO5T = 0x54354F4D;
     public const int MOD2 = 0x32444F4D;
     public const int MOD3 = 0x33444F4D;
     public const int MOD4 = 0x34444F4D;
@@ -381,6 +395,7 @@ public partial class RecordTypeInts
     public const int RNMV = 0x564D4E52;
     public const int RPLD = 0x444C5052;
     public const int RPLI = 0x494C5052;
+    public const int RPRF = 0x46525052;
     public const int RPRM = 0x4D525052;
     public const int SCDA = 0x41444353;
     public const int SCEN = 0x4E454353;

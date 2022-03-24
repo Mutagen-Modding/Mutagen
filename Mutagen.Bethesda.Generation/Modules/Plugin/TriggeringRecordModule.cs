@@ -140,6 +140,13 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
             {
                 var fieldData = field.GetFieldData();
+                if (fieldData.RecordTypeConverter != null)
+                {
+                    foreach (var type in fieldData.RecordTypeConverter.FromConversions.Values)
+                    {
+                        recordTypes.Add(type);
+                    }
+                }
                 if (fieldData.RecordType.HasValue)
                 {
                     recordTypes.Add(fieldData.RecordType.Value);
@@ -210,6 +217,20 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     if (subData.RecordType != null)
                     {
                         recordTypes.Add(subData.RecordType.Value);
+                    }
+                    if (gendered.MaleConversions != null)
+                    {
+                        foreach (var type in gendered.MaleConversions.FromConversions.Values)
+                        {
+                            recordTypes.Add(type);
+                        }
+                    }
+                    if (gendered.FemaleConversions != null)
+                    {
+                        foreach (var type in gendered.FemaleConversions.FromConversions.Values)
+                        {
+                            recordTypes.Add(type);
+                        }
                     }
                 }
             }

@@ -4191,7 +4191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.CloudTextures) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual<string>(lhs.CloudTextures.Span!, rhs.CloudTextures.Span!)) return false;
+                if (!MemoryExtensions.SequenceEqual<String>(lhs.CloudTextures.Span!, rhs.CloudTextures.Span!)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.DNAM) ?? true))
             {

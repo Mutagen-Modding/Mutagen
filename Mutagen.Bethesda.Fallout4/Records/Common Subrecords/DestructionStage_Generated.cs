@@ -790,14 +790,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         });
         public static RecordTypeConverter ModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODL"),
-                new RecordType("DMDL")),
+                RecordTypes.MODL,
+                RecordTypes.DMDL),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODT"),
-                new RecordType("DMDT")),
+                RecordTypes.MODT,
+                RecordTypes.DMDT),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODS"),
-                new RecordType("DMDS")));
+                RecordTypes.MODS,
+                RecordTypes.DMDS));
         public static readonly Type BinaryWriteTranslation = typeof(DestructionStageBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
