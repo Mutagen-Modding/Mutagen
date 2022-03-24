@@ -76,6 +76,35 @@ namespace Mutagen.Bethesda.Tests
                 RecordTypes.MODT,
                 RecordTypes.MODS
             );
+            ret.AddAlignments(
+                RecordTypes.MSTT,
+                RecordTypes.EDID,
+                RecordTypes.VMAD,
+                RecordTypes.OBND,
+                RecordTypes.PTRN,
+                RecordTypes.FULL,
+                RecordTypes.MODL,
+                RecordTypes.MODC,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
+                RecordTypes.MODF
+            );
+            ret.StopMarkers.Add(RecordTypes.MSTT, new[]
+            {
+                RecordTypes.DEST,
+                RecordTypes.DAMC,
+                RecordTypes.DSTD,
+                RecordTypes.DSTA,
+                RecordTypes.DMDL,
+                RecordTypes.DMDT,
+                RecordTypes.DMDS,
+                RecordTypes.DSTF,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.PRPS,
+                RecordTypes.DATA,
+                RecordTypes.SNAM
+            });
             return ret;
         }
 

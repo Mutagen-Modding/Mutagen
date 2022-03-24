@@ -1,4 +1,3 @@
-using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
@@ -8,10 +7,7 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -134,6 +130,7 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "MISC", "FULL" },
                     new RecordType[] { "STAT", "FULL" },
                     new RecordType[] { "SCOL", "FULL" },
+                    new RecordType[] { "MSTT", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]

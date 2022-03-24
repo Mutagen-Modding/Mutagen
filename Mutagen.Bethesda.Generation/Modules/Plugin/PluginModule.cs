@@ -42,6 +42,7 @@ public class PluginModule : GenerationModule
         SubModules.Add(new DuplicateModule());
         SubModules.Add(new GameCategoryExtensionsModule());
         SubModules.Add(new InterfaceDocumentationModule());
+        SubModules.Add(new RecordTypeOrderExporterModule());
         SubModules.Add(new LastRequiredFieldModule());
         SubModules.Add(new MapsToGetterModule());
         SubModules.Add(new GameEnvironmentStateModule());
