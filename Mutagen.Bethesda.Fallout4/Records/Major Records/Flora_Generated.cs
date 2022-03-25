@@ -203,15 +203,10 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? IFloraGetter.PNAM => this.PNAM;
         #endregion
-        #region ATTXActivateTextOverride
-        public TranslatedString? ATTXActivateTextOverride { get; set; }
+        #region ActivateTextOverride
+        public TranslatedString? ActivateTextOverride { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IFloraGetter.ATTXActivateTextOverride => this.ATTXActivateTextOverride;
-        #endregion
-        #region RNAMActivateTextOverride
-        public TranslatedString? RNAMActivateTextOverride { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IFloraGetter.RNAMActivateTextOverride => this.RNAMActivateTextOverride;
+        ITranslatedStringGetter? IFloraGetter.ActivateTextOverride => this.ActivateTextOverride;
         #endregion
         #region FNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -288,8 +283,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.PNAM = initialValue;
-                this.ATTXActivateTextOverride = initialValue;
-                this.RNAMActivateTextOverride = initialValue;
+                this.ActivateTextOverride = initialValue;
                 this.FNAM = initialValue;
                 this.Ingredient = initialValue;
                 this.HarvestSound = initialValue;
@@ -312,8 +306,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Keywords,
                 TItem Properties,
                 TItem PNAM,
-                TItem ATTXActivateTextOverride,
-                TItem RNAMActivateTextOverride,
+                TItem ActivateTextOverride,
                 TItem FNAM,
                 TItem Ingredient,
                 TItem HarvestSound,
@@ -335,8 +328,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.PNAM = PNAM;
-                this.ATTXActivateTextOverride = ATTXActivateTextOverride;
-                this.RNAMActivateTextOverride = RNAMActivateTextOverride;
+                this.ActivateTextOverride = ActivateTextOverride;
                 this.FNAM = FNAM;
                 this.Ingredient = Ingredient;
                 this.HarvestSound = HarvestSound;
@@ -361,8 +353,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties;
             public TItem PNAM;
-            public TItem ATTXActivateTextOverride;
-            public TItem RNAMActivateTextOverride;
+            public TItem ActivateTextOverride;
             public TItem FNAM;
             public TItem Ingredient;
             public TItem HarvestSound;
@@ -389,8 +380,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 if (!object.Equals(this.Properties, rhs.Properties)) return false;
                 if (!object.Equals(this.PNAM, rhs.PNAM)) return false;
-                if (!object.Equals(this.ATTXActivateTextOverride, rhs.ATTXActivateTextOverride)) return false;
-                if (!object.Equals(this.RNAMActivateTextOverride, rhs.RNAMActivateTextOverride)) return false;
+                if (!object.Equals(this.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
                 if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
                 if (!object.Equals(this.Ingredient, rhs.Ingredient)) return false;
                 if (!object.Equals(this.HarvestSound, rhs.HarvestSound)) return false;
@@ -409,8 +399,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Keywords);
                 hash.Add(this.Properties);
                 hash.Add(this.PNAM);
-                hash.Add(this.ATTXActivateTextOverride);
-                hash.Add(this.RNAMActivateTextOverride);
+                hash.Add(this.ActivateTextOverride);
                 hash.Add(this.FNAM);
                 hash.Add(this.Ingredient);
                 hash.Add(this.HarvestSound);
@@ -471,8 +460,7 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 if (!eval(this.PNAM)) return false;
-                if (!eval(this.ATTXActivateTextOverride)) return false;
-                if (!eval(this.RNAMActivateTextOverride)) return false;
+                if (!eval(this.ActivateTextOverride)) return false;
                 if (!eval(this.FNAM)) return false;
                 if (!eval(this.Ingredient)) return false;
                 if (!eval(this.HarvestSound)) return false;
@@ -535,8 +523,7 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 if (eval(this.PNAM)) return true;
-                if (eval(this.ATTXActivateTextOverride)) return true;
-                if (eval(this.RNAMActivateTextOverride)) return true;
+                if (eval(this.ActivateTextOverride)) return true;
                 if (eval(this.FNAM)) return true;
                 if (eval(this.Ingredient)) return true;
                 if (eval(this.HarvestSound)) return true;
@@ -596,8 +583,7 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 obj.PNAM = eval(this.PNAM);
-                obj.ATTXActivateTextOverride = eval(this.ATTXActivateTextOverride);
-                obj.RNAMActivateTextOverride = eval(this.RNAMActivateTextOverride);
+                obj.ActivateTextOverride = eval(this.ActivateTextOverride);
                 obj.FNAM = eval(this.FNAM);
                 obj.Ingredient = eval(this.Ingredient);
                 obj.HarvestSound = eval(this.HarvestSound);
@@ -698,13 +684,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         fg.AppendItem(PNAM, "PNAM");
                     }
-                    if (printMask?.ATTXActivateTextOverride ?? true)
+                    if (printMask?.ActivateTextOverride ?? true)
                     {
-                        fg.AppendItem(ATTXActivateTextOverride, "ATTXActivateTextOverride");
-                    }
-                    if (printMask?.RNAMActivateTextOverride ?? true)
-                    {
-                        fg.AppendItem(RNAMActivateTextOverride, "RNAMActivateTextOverride");
+                        fg.AppendItem(ActivateTextOverride, "ActivateTextOverride");
                     }
                     if (printMask?.FNAM ?? true)
                     {
@@ -743,8 +725,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties;
             public Exception? PNAM;
-            public Exception? ATTXActivateTextOverride;
-            public Exception? RNAMActivateTextOverride;
+            public Exception? ActivateTextOverride;
             public Exception? FNAM;
             public Exception? Ingredient;
             public Exception? HarvestSound;
@@ -775,10 +756,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Properties;
                     case Flora_FieldIndex.PNAM:
                         return PNAM;
-                    case Flora_FieldIndex.ATTXActivateTextOverride:
-                        return ATTXActivateTextOverride;
-                    case Flora_FieldIndex.RNAMActivateTextOverride:
-                        return RNAMActivateTextOverride;
+                    case Flora_FieldIndex.ActivateTextOverride:
+                        return ActivateTextOverride;
                     case Flora_FieldIndex.FNAM:
                         return FNAM;
                     case Flora_FieldIndex.Ingredient:
@@ -824,11 +803,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Flora_FieldIndex.PNAM:
                         this.PNAM = ex;
                         break;
-                    case Flora_FieldIndex.ATTXActivateTextOverride:
-                        this.ATTXActivateTextOverride = ex;
-                        break;
-                    case Flora_FieldIndex.RNAMActivateTextOverride:
-                        this.RNAMActivateTextOverride = ex;
+                    case Flora_FieldIndex.ActivateTextOverride:
+                        this.ActivateTextOverride = ex;
                         break;
                     case Flora_FieldIndex.FNAM:
                         this.FNAM = ex;
@@ -880,11 +856,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Flora_FieldIndex.PNAM:
                         this.PNAM = (Exception?)obj;
                         break;
-                    case Flora_FieldIndex.ATTXActivateTextOverride:
-                        this.ATTXActivateTextOverride = (Exception?)obj;
-                        break;
-                    case Flora_FieldIndex.RNAMActivateTextOverride:
-                        this.RNAMActivateTextOverride = (Exception?)obj;
+                    case Flora_FieldIndex.ActivateTextOverride:
+                        this.ActivateTextOverride = (Exception?)obj;
                         break;
                     case Flora_FieldIndex.FNAM:
                         this.FNAM = (Exception?)obj;
@@ -916,8 +889,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Keywords != null) return true;
                 if (Properties != null) return true;
                 if (PNAM != null) return true;
-                if (ATTXActivateTextOverride != null) return true;
-                if (RNAMActivateTextOverride != null) return true;
+                if (ActivateTextOverride != null) return true;
                 if (FNAM != null) return true;
                 if (Ingredient != null) return true;
                 if (HarvestSound != null) return true;
@@ -1008,8 +980,7 @@ namespace Mutagen.Bethesda.Fallout4
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(PNAM, "PNAM");
-                fg.AppendItem(ATTXActivateTextOverride, "ATTXActivateTextOverride");
-                fg.AppendItem(RNAMActivateTextOverride, "RNAMActivateTextOverride");
+                fg.AppendItem(ActivateTextOverride, "ActivateTextOverride");
                 fg.AppendItem(FNAM, "FNAM");
                 fg.AppendItem(Ingredient, "Ingredient");
                 fg.AppendItem(HarvestSound, "HarvestSound");
@@ -1031,8 +1002,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.PNAM = this.PNAM.Combine(rhs.PNAM);
-                ret.ATTXActivateTextOverride = this.ATTXActivateTextOverride.Combine(rhs.ATTXActivateTextOverride);
-                ret.RNAMActivateTextOverride = this.RNAMActivateTextOverride.Combine(rhs.RNAMActivateTextOverride);
+                ret.ActivateTextOverride = this.ActivateTextOverride.Combine(rhs.ActivateTextOverride);
                 ret.FNAM = this.FNAM.Combine(rhs.FNAM);
                 ret.Ingredient = this.Ingredient.Combine(rhs.Ingredient);
                 ret.HarvestSound = this.HarvestSound.Combine(rhs.HarvestSound);
@@ -1068,8 +1038,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Keywords;
             public ObjectProperty.TranslationMask? Properties;
             public bool PNAM;
-            public bool ATTXActivateTextOverride;
-            public bool RNAMActivateTextOverride;
+            public bool ActivateTextOverride;
             public bool FNAM;
             public bool Ingredient;
             public bool HarvestSound;
@@ -1086,8 +1055,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Name = defaultOn;
                 this.Keywords = defaultOn;
                 this.PNAM = defaultOn;
-                this.ATTXActivateTextOverride = defaultOn;
-                this.RNAMActivateTextOverride = defaultOn;
+                this.ActivateTextOverride = defaultOn;
                 this.FNAM = defaultOn;
                 this.Ingredient = defaultOn;
                 this.HarvestSound = defaultOn;
@@ -1107,8 +1075,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Keywords, null));
                 ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
                 ret.Add((PNAM, null));
-                ret.Add((ATTXActivateTextOverride, null));
-                ret.Add((RNAMActivateTextOverride, null));
+                ret.Add((ActivateTextOverride, null));
                 ret.Add((FNAM, null));
                 ret.Add((Ingredient, null));
                 ret.Add((HarvestSound, null));
@@ -1285,8 +1252,7 @@ namespace Mutagen.Bethesda.Fallout4
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new ExtendedList<ObjectProperty>? Properties { get; set; }
         new MemorySlice<Byte>? PNAM { get; set; }
-        new TranslatedString? ATTXActivateTextOverride { get; set; }
-        new TranslatedString? RNAMActivateTextOverride { get; set; }
+        new TranslatedString? ActivateTextOverride { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new IFormLinkNullable<IHarvestTargetGetter> Ingredient { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; set; }
@@ -1351,8 +1317,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
         ReadOnlyMemorySlice<Byte>? PNAM { get; }
-        ITranslatedStringGetter? ATTXActivateTextOverride { get; }
-        ITranslatedStringGetter? RNAMActivateTextOverride { get; }
+        ITranslatedStringGetter? ActivateTextOverride { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         IFormLinkNullableGetter<IHarvestTargetGetter> Ingredient { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> HarvestSound { get; }
@@ -1530,12 +1495,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Keywords = 12,
         Properties = 13,
         PNAM = 14,
-        ATTXActivateTextOverride = 15,
-        RNAMActivateTextOverride = 16,
-        FNAM = 17,
-        Ingredient = 18,
-        HarvestSound = 19,
-        Production = 20,
+        ActivateTextOverride = 15,
+        FNAM = 16,
+        Ingredient = 17,
+        HarvestSound = 18,
+        Production = 19,
     }
     #endregion
 
@@ -1553,9 +1517,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "d58de0e7-4b5b-45f8-ad85-5491e0c56509";
 
-        public const ushort AdditionalFieldCount = 15;
+        public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(Flora.Mask<>);
 
@@ -1633,8 +1597,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Keywords = null;
             item.Properties = null;
             item.PNAM = default;
-            item.ATTXActivateTextOverride = default;
-            item.RNAMActivateTextOverride = default;
+            item.ActivateTextOverride = default;
             item.FNAM = default;
             item.Ingredient.Clear();
             item.HarvestSound.Clear();
@@ -1759,8 +1722,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.PNAM = MemorySliceExt.Equal(item.PNAM, rhs.PNAM);
-            ret.ATTXActivateTextOverride = object.Equals(item.ATTXActivateTextOverride, rhs.ATTXActivateTextOverride);
-            ret.RNAMActivateTextOverride = object.Equals(item.RNAMActivateTextOverride, rhs.RNAMActivateTextOverride);
+            ret.ActivateTextOverride = object.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
             ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
             ret.Ingredient = item.Ingredient.Equals(rhs.Ingredient);
             ret.HarvestSound = item.HarvestSound.Equals(rhs.HarvestSound);
@@ -1890,15 +1852,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 fg.AppendLine($"PNAM => {SpanExt.ToHexString(PNAMItem)}");
             }
-            if ((printMask?.ATTXActivateTextOverride ?? true)
-                && item.ATTXActivateTextOverride is {} ATTXActivateTextOverrideItem)
+            if ((printMask?.ActivateTextOverride ?? true)
+                && item.ActivateTextOverride is {} ActivateTextOverrideItem)
             {
-                fg.AppendItem(ATTXActivateTextOverrideItem, "ATTXActivateTextOverride");
-            }
-            if ((printMask?.RNAMActivateTextOverride ?? true)
-                && item.RNAMActivateTextOverride is {} RNAMActivateTextOverrideItem)
-            {
-                fg.AppendItem(RNAMActivateTextOverrideItem, "RNAMActivateTextOverride");
+                fg.AppendItem(ActivateTextOverrideItem, "ActivateTextOverride");
             }
             if ((printMask?.FNAM ?? true)
                 && item.FNAM is {} FNAMItem)
@@ -2018,13 +1975,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Flora_FieldIndex.ATTXActivateTextOverride) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Flora_FieldIndex.ActivateTextOverride) ?? true))
             {
-                if (!object.Equals(lhs.ATTXActivateTextOverride, rhs.ATTXActivateTextOverride)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Flora_FieldIndex.RNAMActivateTextOverride) ?? true))
-            {
-                if (!object.Equals(lhs.RNAMActivateTextOverride, rhs.RNAMActivateTextOverride)) return false;
+                if (!object.Equals(lhs.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Flora_FieldIndex.FNAM) ?? true))
             {
@@ -2095,13 +2048,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 hash.Add(PNAMItem);
             }
-            if (item.ATTXActivateTextOverride is {} ATTXActivateTextOverrideitem)
+            if (item.ActivateTextOverride is {} ActivateTextOverrideitem)
             {
-                hash.Add(ATTXActivateTextOverrideitem);
-            }
-            if (item.RNAMActivateTextOverride is {} RNAMActivateTextOverrideitem)
-            {
-                hash.Add(RNAMActivateTextOverrideitem);
+                hash.Add(ActivateTextOverrideitem);
             }
             if (item.FNAM is {} FNAMItem)
             {
@@ -2441,13 +2390,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.PNAM = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.ATTXActivateTextOverride) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.ActivateTextOverride) ?? true))
             {
-                item.ATTXActivateTextOverride = rhs.ATTXActivateTextOverride?.DeepCopy();
-            }
-            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.RNAMActivateTextOverride) ?? true))
-            {
-                item.RNAMActivateTextOverride = rhs.RNAMActivateTextOverride?.DeepCopy();
+                item.ActivateTextOverride = rhs.ActivateTextOverride?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.FNAM) ?? true))
             {
@@ -2717,14 +2662,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 header: translationParams.ConvertToCustom(RecordTypes.PNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ATTXActivateTextOverride,
+                item: item.ActivateTextOverride,
                 header: translationParams.ConvertToCustom(RecordTypes.ATTX),
-                binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.Normal);
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.RNAMActivateTextOverride,
-                header: translationParams.ConvertToCustom(RecordTypes.RNAM),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -2912,20 +2851,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.ATTX:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ATTXActivateTextOverride = StringBinaryTranslation.Instance.Parse(
+                    item.ActivateTextOverride = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)Flora_FieldIndex.ATTXActivateTextOverride;
-                }
-                case RecordTypeInts.RNAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RNAMActivateTextOverride = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)Flora_FieldIndex.RNAMActivateTextOverride;
+                    return (int)Flora_FieldIndex.ActivateTextOverride;
                 }
                 case RecordTypeInts.FNAM:
                 {
@@ -3040,13 +2970,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private int? _PNAMLocation;
         public ReadOnlyMemorySlice<Byte>? PNAM => _PNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region ATTXActivateTextOverride
-        private int? _ATTXActivateTextOverrideLocation;
-        public ITranslatedStringGetter? ATTXActivateTextOverride => _ATTXActivateTextOverrideLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ATTXActivateTextOverrideLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
-        #endregion
-        #region RNAMActivateTextOverride
-        private int? _RNAMActivateTextOverrideLocation;
-        public ITranslatedStringGetter? RNAMActivateTextOverride => _RNAMActivateTextOverrideLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _RNAMActivateTextOverrideLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region ActivateTextOverride
+        private int? _ActivateTextOverrideLocation;
+        public ITranslatedStringGetter? ActivateTextOverride => _ActivateTextOverrideLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ActivateTextOverrideLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         #region FNAM
         private int? _FNAMLocation;
@@ -3202,13 +3128,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.ATTX:
                 {
-                    _ATTXActivateTextOverrideLocation = (stream.Position - offset);
-                    return (int)Flora_FieldIndex.ATTXActivateTextOverride;
-                }
-                case RecordTypeInts.RNAM:
-                {
-                    _RNAMActivateTextOverrideLocation = (stream.Position - offset);
-                    return (int)Flora_FieldIndex.RNAMActivateTextOverride;
+                    _ActivateTextOverrideLocation = (stream.Position - offset);
+                    return (int)Flora_FieldIndex.ActivateTextOverride;
                 }
                 case RecordTypeInts.FNAM:
                 {

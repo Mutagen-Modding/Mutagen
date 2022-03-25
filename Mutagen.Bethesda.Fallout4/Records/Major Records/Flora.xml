@@ -13,8 +13,7 @@
       </List>
 	  <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
       <ByteArray name="PNAM" recordType="PNAM" />
-      <String name="ATTXActivateTextOverride" recordType="ATTX" translated="Normal" />
-      <String name="RNAMActivateTextOverride" recordType="RNAM" translated="Normal" />
+      <String name="ActivateTextOverride" recordType="ATTX" translated="Normal" />
       <ByteArray name="FNAM" recordType="FNAM" />
       <FormLink name="Ingredient" recordType="PFIG">
         <Interface>IHarvestTarget</Interface>
