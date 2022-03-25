@@ -428,6 +428,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IAmmunition :
         IAmmunitionGetter,
         IFallout4MajorRecordInternal,
+        IHarvestTarget,
         ILoquiObjectSetter<IAmmunitionInternal>,
         IObjectId,
         IStaticObject
@@ -445,6 +446,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IAmmunitionGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IHarvestTargetGetter,
         ILoquiObject<IAmmunitionGetter>,
         IMapsToGetter<IAmmunitionGetter>,
         IObjectIdGetter,

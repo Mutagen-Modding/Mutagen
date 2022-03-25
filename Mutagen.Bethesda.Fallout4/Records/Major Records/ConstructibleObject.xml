@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ConstructibleObject" recordType="COBJ" objType="Record" baseClass="Fallout4MajorRecord" GUID="b850f468-7ad2-4415-872c-e3a390f1c0e0" ID="332">
+    <LinkInterface>IHarvestTarget</LinkInterface>
+  </Object>
+</Loqui>

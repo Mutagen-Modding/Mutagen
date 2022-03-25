@@ -38,14 +38,14 @@ using System.Text;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class Note :
+    public partial class Holotape :
         Fallout4MajorRecord,
-        IEquatable<INoteGetter>,
-        ILoquiObjectSetter<Note>,
-        INoteInternal
+        IEquatable<IHolotapeGetter>,
+        IHolotapeInternal,
+        ILoquiObjectSetter<Holotape>
     {
         #region Ctor
-        protected Note()
+        protected Holotape()
         {
             CustomCtor();
         }
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Fallout4
             FileGeneration fg,
             string? name = null)
         {
-            NoteMixIn.ToString(
+            HolotapeMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Note.Mask<R>();
+                var ret = new Holotape.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -161,16 +161,16 @@ namespace Mutagen.Bethesda.Fallout4
                 return ToString(printMask: null);
             }
 
-            public string ToString(Note.Mask<bool>? printMask = null)
+            public string ToString(Holotape.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, Note.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, Holotape.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Note.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(Holotape.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Note_FieldIndex enu = (Note_FieldIndex)index;
+                Holotape_FieldIndex enu = (Holotape_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthException(int index, Exception ex)
             {
-                Note_FieldIndex enu = (Note_FieldIndex)index;
+                Holotape_FieldIndex enu = (Holotape_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthMask(int index, object obj)
             {
-                Note_FieldIndex enu = (Note_FieldIndex)index;
+                Holotape_FieldIndex enu = (Holotape_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -304,14 +304,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Note_Registration.TriggeringRecordType;
-        public Note(FormKey formKey)
+        public static readonly RecordType GrupRecordType = Holotape_Registration.TriggeringRecordType;
+        public Holotape(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        private Note(
+        private Holotape(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -320,7 +320,7 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        internal Note(
+        internal Holotape(
             FormKey formKey,
             ushort formVersion)
         {
@@ -329,12 +329,12 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        public Note(IFallout4Mod mod)
+        public Holotape(IFallout4Mod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Note(IFallout4Mod mod, string editorID)
+        public Holotape(IFallout4Mod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -342,10 +342,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Note>.ToString(this);
+            return MajorRecordPrinter<Holotape>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(INote);
+        protected override Type LinkType => typeof(IHolotape);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -354,16 +354,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not INoteGetter rhs) return false;
-            return ((NoteCommon)((INoteGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IHolotapeGetter rhs) return false;
+            return ((HolotapeCommon)((IHolotapeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(INoteGetter? obj)
+        public bool Equals(IHolotapeGetter? obj)
         {
-            return ((NoteCommon)((INoteGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HolotapeCommon)((IHolotapeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((NoteCommon)((INoteGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((HolotapeCommon)((IHolotapeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -371,23 +371,23 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => NoteBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => HolotapeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((NoteBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((HolotapeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static Note CreateFromBinary(
+        public new static Holotape CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new Note();
-            ((NoteSetterCommon)((INoteGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new Holotape();
+            ((HolotapeSetterCommon)((IHolotapeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Note item,
+            out Holotape item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -413,84 +413,86 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((NoteSetterCommon)((INoteGetter)this).CommonSetterInstance()!).Clear(this);
+            ((HolotapeSetterCommon)((IHolotapeGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Note GetNew()
+        internal static new Holotape GetNew()
         {
-            return new Note();
+            return new Holotape();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface INote :
+    public partial interface IHolotape :
         IFallout4MajorRecordInternal,
-        ILoquiObjectSetter<INoteInternal>,
-        INoteGetter,
+        IHarvestTarget,
+        IHolotapeGetter,
+        ILoquiObjectSetter<IHolotapeInternal>,
         IObjectId
     {
     }
 
-    public partial interface INoteInternal :
+    public partial interface IHolotapeInternal :
         IFallout4MajorRecordInternal,
-        INote,
-        INoteGetter
+        IHolotape,
+        IHolotapeGetter
     {
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.NOTE)]
-    public partial interface INoteGetter :
+    public partial interface IHolotapeGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<INoteGetter>,
-        IMapsToGetter<INoteGetter>,
+        IHarvestTargetGetter,
+        ILoquiObject<IHolotapeGetter>,
+        IMapsToGetter<IHolotapeGetter>,
         IObjectIdGetter
     {
-        static new ILoquiRegistration StaticRegistration => Note_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Holotape_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class NoteMixIn
+    public static partial class HolotapeMixIn
     {
-        public static void Clear(this INoteInternal item)
+        public static void Clear(this IHolotapeInternal item)
         {
-            ((NoteSetterCommon)((INoteGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((HolotapeSetterCommon)((IHolotapeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Note.Mask<bool> GetEqualsMask(
-            this INoteGetter item,
-            INoteGetter rhs,
+        public static Holotape.Mask<bool> GetEqualsMask(
+            this IHolotapeGetter item,
+            IHolotapeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((NoteCommon)((INoteGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((HolotapeCommon)((IHolotapeGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this INoteGetter item,
+            this IHolotapeGetter item,
             string? name = null,
-            Note.Mask<bool>? printMask = null)
+            Holotape.Mask<bool>? printMask = null)
         {
-            return ((NoteCommon)((INoteGetter)item).CommonInstance()!).ToString(
+            return ((HolotapeCommon)((IHolotapeGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this INoteGetter item,
+            this IHolotapeGetter item,
             FileGeneration fg,
             string? name = null,
-            Note.Mask<bool>? printMask = null)
+            Holotape.Mask<bool>? printMask = null)
         {
-            ((NoteCommon)((INoteGetter)item).CommonInstance()!).ToString(
+            ((HolotapeCommon)((IHolotapeGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -498,39 +500,39 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this INoteGetter item,
-            INoteGetter rhs,
-            Note.TranslationMask? equalsMask = null)
+            this IHolotapeGetter item,
+            IHolotapeGetter rhs,
+            Holotape.TranslationMask? equalsMask = null)
         {
-            return ((NoteCommon)((INoteGetter)item).CommonInstance()!).Equals(
+            return ((HolotapeCommon)((IHolotapeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this INoteInternal lhs,
-            INoteGetter rhs,
-            out Note.ErrorMask errorMask,
-            Note.TranslationMask? copyMask = null)
+            this IHolotapeInternal lhs,
+            IHolotapeGetter rhs,
+            out Holotape.ErrorMask errorMask,
+            Holotape.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((NoteSetterTranslationCommon)((INoteGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((HolotapeSetterTranslationCommon)((IHolotapeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Note.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Holotape.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this INoteInternal lhs,
-            INoteGetter rhs,
+            this IHolotapeInternal lhs,
+            IHolotapeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((NoteSetterTranslationCommon)((INoteGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((HolotapeSetterTranslationCommon)((IHolotapeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -538,44 +540,44 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static Note DeepCopy(
-            this INoteGetter item,
-            Note.TranslationMask? copyMask = null)
+        public static Holotape DeepCopy(
+            this IHolotapeGetter item,
+            Holotape.TranslationMask? copyMask = null)
         {
-            return ((NoteSetterTranslationCommon)((INoteGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((HolotapeSetterTranslationCommon)((IHolotapeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Note DeepCopy(
-            this INoteGetter item,
-            out Note.ErrorMask errorMask,
-            Note.TranslationMask? copyMask = null)
+        public static Holotape DeepCopy(
+            this IHolotapeGetter item,
+            out Holotape.ErrorMask errorMask,
+            Holotape.TranslationMask? copyMask = null)
         {
-            return ((NoteSetterTranslationCommon)((INoteGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((HolotapeSetterTranslationCommon)((IHolotapeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Note DeepCopy(
-            this INoteGetter item,
+        public static Holotape DeepCopy(
+            this IHolotapeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((NoteSetterTranslationCommon)((INoteGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((HolotapeSetterTranslationCommon)((IHolotapeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static Note Duplicate(
-            this INoteGetter item,
+        public static Holotape Duplicate(
+            this IHolotapeGetter item,
             FormKey formKey,
-            Note.TranslationMask? copyMask = null)
+            Holotape.TranslationMask? copyMask = null)
         {
-            return ((NoteCommon)((INoteGetter)item).CommonInstance()!).Duplicate(
+            return ((HolotapeCommon)((IHolotapeGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
@@ -585,11 +587,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this INoteInternal item,
+            this IHolotapeInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((NoteSetterCommon)((INoteGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((HolotapeSetterCommon)((IHolotapeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -605,7 +607,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     #region Field Index
-    public enum Note_FieldIndex
+    public enum Holotape_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -617,9 +619,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Note_Registration : ILoquiRegistration
+    public partial class Holotape_Registration : ILoquiRegistration
     {
-        public static readonly Note_Registration Instance = new Note_Registration();
+        public static readonly Holotape_Registration Instance = new Holotape_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
@@ -634,23 +636,23 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(Note.Mask<>);
+        public static readonly Type MaskType = typeof(Holotape.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Note.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Holotape.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Note);
+        public static readonly Type ClassType = typeof(Holotape);
 
-        public static readonly Type GetterType = typeof(INoteGetter);
+        public static readonly Type GetterType = typeof(IHolotapeGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(INote);
+        public static readonly Type SetterType = typeof(IHolotape);
 
-        public static readonly Type? InternalSetterType = typeof(INoteInternal);
+        public static readonly Type? InternalSetterType = typeof(IHolotapeInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.Note";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.Holotape";
 
-        public const string Name = "Note";
+        public const string Name = "Holotape";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -659,7 +661,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.NOTE;
-        public static readonly Type BinaryWriteTranslation = typeof(NoteBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(HolotapeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -692,13 +694,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class NoteSetterCommon : Fallout4MajorRecordSetterCommon
+    public partial class HolotapeSetterCommon : Fallout4MajorRecordSetterCommon
     {
-        public new static readonly NoteSetterCommon Instance = new NoteSetterCommon();
+        public new static readonly HolotapeSetterCommon Instance = new HolotapeSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(INoteInternal item)
+        public void Clear(IHolotapeInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -706,16 +708,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public override void Clear(IFallout4MajorRecordInternal item)
         {
-            Clear(item: (INoteInternal)item);
+            Clear(item: (IHolotapeInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (INoteInternal)item);
+            Clear(item: (IHolotapeInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(INote obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IHolotape obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -724,16 +726,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            INoteInternal item,
+            IHolotapeInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            PluginUtilityTranslation.MajorRecordParse<INoteInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IHolotapeInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: NoteBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: NoteBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: HolotapeBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: HolotapeBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -742,7 +744,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (Note)item,
+                item: (Holotape)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -753,7 +755,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (Note)item,
+                item: (Holotape)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -761,17 +763,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class NoteCommon : Fallout4MajorRecordCommon
+    public partial class HolotapeCommon : Fallout4MajorRecordCommon
     {
-        public new static readonly NoteCommon Instance = new NoteCommon();
+        public new static readonly HolotapeCommon Instance = new HolotapeCommon();
 
-        public Note.Mask<bool> GetEqualsMask(
-            INoteGetter item,
-            INoteGetter rhs,
+        public Holotape.Mask<bool> GetEqualsMask(
+            IHolotapeGetter item,
+            IHolotapeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Note.Mask<bool>(false);
-            ((NoteCommon)((INoteGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new Holotape.Mask<bool>(false);
+            ((HolotapeCommon)((IHolotapeGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -780,9 +782,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void FillEqualsMask(
-            INoteGetter item,
-            INoteGetter rhs,
-            Note.Mask<bool> ret,
+            IHolotapeGetter item,
+            IHolotapeGetter rhs,
+            Holotape.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -790,9 +792,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public string ToString(
-            INoteGetter item,
+            IHolotapeGetter item,
             string? name = null,
-            Note.Mask<bool>? printMask = null)
+            Holotape.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -804,18 +806,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void ToString(
-            INoteGetter item,
+            IHolotapeGetter item,
             FileGeneration fg,
             string? name = null,
-            Note.Mask<bool>? printMask = null)
+            Holotape.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Note =>");
+                fg.AppendLine($"Holotape =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Note) =>");
+                fg.AppendLine($"{name} (Holotape) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -829,9 +831,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         protected static void ToStringFields(
-            INoteGetter item,
+            IHolotapeGetter item,
             FileGeneration fg,
-            Note.Mask<bool>? printMask = null)
+            Holotape.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
@@ -839,39 +841,39 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 printMask: printMask);
         }
         
-        public static Note_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
+        public static Holotape_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout4MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Note_FieldIndex)((int)index);
+                    return (Holotape_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormKey:
-                    return (Note_FieldIndex)((int)index);
+                    return (Holotape_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.VersionControl:
-                    return (Note_FieldIndex)((int)index);
+                    return (Holotape_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.EditorID:
-                    return (Note_FieldIndex)((int)index);
+                    return (Holotape_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
-                    return (Note_FieldIndex)((int)index);
+                    return (Holotape_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
-                    return (Note_FieldIndex)((int)index);
+                    return (Holotape_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new Note_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Holotape_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Note_FieldIndex)((int)index);
+                    return (Holotape_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Note_FieldIndex)((int)index);
+                    return (Holotape_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (Note_FieldIndex)((int)index);
+                    return (Holotape_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Note_FieldIndex)((int)index);
+                    return (Holotape_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -879,8 +881,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            INoteGetter? lhs,
-            INoteGetter? rhs,
+            IHolotapeGetter? lhs,
+            IHolotapeGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -894,8 +896,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (INoteGetter?)lhs,
-                rhs: rhs as INoteGetter,
+                lhs: (IHolotapeGetter?)lhs,
+                rhs: rhs as IHolotapeGetter,
                 crystal: crystal);
         }
         
@@ -905,12 +907,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (INoteGetter?)lhs,
-                rhs: rhs as INoteGetter,
+                lhs: (IHolotapeGetter?)lhs,
+                rhs: rhs as IHolotapeGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(INoteGetter item)
+        public virtual int GetHashCode(IHolotapeGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -919,12 +921,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public override int GetHashCode(IFallout4MajorRecordGetter item)
         {
-            return GetHashCode(item: (INoteGetter)item);
+            return GetHashCode(item: (IHolotapeGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (INoteGetter)item);
+            return GetHashCode(item: (IHolotapeGetter)item);
         }
         
         #endregion
@@ -932,11 +934,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public override object GetNew()
         {
-            return Note.GetNew();
+            return Holotape.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INoteGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IHolotapeGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -946,12 +948,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Duplicate
-        public Note Duplicate(
-            INoteGetter item,
+        public Holotape Duplicate(
+            IHolotapeGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Note(formKey);
+            var newRec = new Holotape(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -962,7 +964,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (INoteGetter)item,
+                item: (IHolotapeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -973,7 +975,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (INoteGetter)item,
+                item: (IHolotapeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -983,14 +985,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class NoteSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    public partial class HolotapeSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
-        public new static readonly NoteSetterTranslationCommon Instance = new NoteSetterTranslationCommon();
+        public new static readonly HolotapeSetterTranslationCommon Instance = new HolotapeSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            INoteInternal item,
-            INoteGetter rhs,
+            IHolotapeInternal item,
+            IHolotapeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1004,8 +1006,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void DeepCopyIn(
-            INote item,
-            INoteGetter rhs,
+            IHolotape item,
+            IHolotapeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1026,8 +1028,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (INoteInternal)item,
-                rhs: (INoteGetter)rhs,
+                item: (IHolotapeInternal)item,
+                rhs: (IHolotapeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1041,8 +1043,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (INote)item,
-                rhs: (INoteGetter)rhs,
+                item: (IHolotape)item,
+                rhs: (IHolotapeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1056,8 +1058,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (INoteInternal)item,
-                rhs: (INoteGetter)rhs,
+                item: (IHolotapeInternal)item,
+                rhs: (IHolotapeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1071,8 +1073,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (INote)item,
-                rhs: (INoteGetter)rhs,
+                item: (IHolotape)item,
+                rhs: (IHolotapeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1080,12 +1082,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #endregion
         
-        public Note DeepCopy(
-            INoteGetter item,
-            Note.TranslationMask? copyMask = null)
+        public Holotape DeepCopy(
+            IHolotapeGetter item,
+            Holotape.TranslationMask? copyMask = null)
         {
-            Note ret = (Note)((NoteCommon)((INoteGetter)item).CommonInstance()!).GetNew();
-            ((NoteSetterTranslationCommon)((INoteGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Holotape ret = (Holotape)((HolotapeCommon)((IHolotapeGetter)item).CommonInstance()!).GetNew();
+            ((HolotapeSetterTranslationCommon)((IHolotapeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1094,30 +1096,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
         
-        public Note DeepCopy(
-            INoteGetter item,
-            out Note.ErrorMask errorMask,
-            Note.TranslationMask? copyMask = null)
+        public Holotape DeepCopy(
+            IHolotapeGetter item,
+            out Holotape.ErrorMask errorMask,
+            Holotape.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Note ret = (Note)((NoteCommon)((INoteGetter)item).CommonInstance()!).GetNew();
-            ((NoteSetterTranslationCommon)((INoteGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Holotape ret = (Holotape)((HolotapeCommon)((IHolotapeGetter)item).CommonInstance()!).GetNew();
+            ((HolotapeSetterTranslationCommon)((IHolotapeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Note.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Holotape.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Note DeepCopy(
-            INoteGetter item,
+        public Holotape DeepCopy(
+            IHolotapeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Note ret = (Note)((NoteCommon)((INoteGetter)item).CommonInstance()!).GetNew();
-            ((NoteSetterTranslationCommon)((INoteGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Holotape ret = (Holotape)((HolotapeCommon)((IHolotapeGetter)item).CommonInstance()!).GetNew();
+            ((HolotapeSetterTranslationCommon)((IHolotapeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1133,21 +1135,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class Note
+    public partial class Holotape
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Note_Registration.Instance;
-        public new static Note_Registration StaticRegistration => Note_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Holotape_Registration.Instance;
+        public new static Holotape_Registration StaticRegistration => Holotape_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => NoteCommon.Instance;
+        protected override object CommonInstance() => HolotapeCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return NoteSetterCommon.Instance;
+            return HolotapeSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => NoteSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => HolotapeSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1158,15 +1160,15 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class NoteBinaryWriteTranslation :
+    public partial class HolotapeBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static NoteBinaryWriteTranslation Instance = new NoteBinaryWriteTranslation();
+        public new readonly static HolotapeBinaryWriteTranslation Instance = new HolotapeBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
-            INoteGetter item,
+            IHolotapeGetter item,
             TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Record(
@@ -1196,7 +1198,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (INoteGetter)item,
+                item: (IHolotapeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1207,7 +1209,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (INoteGetter)item,
+                item: (IHolotapeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1218,20 +1220,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (INoteGetter)item,
+                item: (IHolotapeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    public partial class NoteBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    public partial class HolotapeBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static NoteBinaryCreateTranslation Instance = new NoteBinaryCreateTranslation();
+        public new readonly static HolotapeBinaryCreateTranslation Instance = new HolotapeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.NOTE;
         public static void FillBinaryStructs(
-            INoteInternal item,
+            IHolotapeInternal item,
             MutagenFrame frame)
         {
             Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
@@ -1245,7 +1247,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class NoteBinaryTranslationMixIn
+    public static class HolotapeBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1254,35 +1256,35 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class NoteBinaryOverlay :
+    public partial class HolotapeBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
-        INoteGetter
+        IHolotapeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Note_Registration.Instance;
-        public new static Note_Registration StaticRegistration => Note_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Holotape_Registration.Instance;
+        public new static Holotape_Registration StaticRegistration => Holotape_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => NoteCommon.Instance;
+        protected override object CommonInstance() => HolotapeCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => NoteSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => HolotapeSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => NoteBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => HolotapeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((NoteBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((HolotapeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(INote);
+        protected override Type LinkType => typeof(IHolotape);
 
 
         partial void CustomFactoryEnd(
@@ -1291,7 +1293,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             int offset);
 
         partial void CustomCtor();
-        protected NoteBinaryOverlay(
+        protected HolotapeBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1301,13 +1303,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             this.CustomCtor();
         }
 
-        public static NoteBinaryOverlay NoteFactory(
+        public static HolotapeBinaryOverlay HolotapeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
             stream = PluginUtilityTranslation.DecompressStream(stream);
-            var ret = new NoteBinaryOverlay(
+            var ret = new HolotapeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
@@ -1328,12 +1330,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
 
-        public static NoteBinaryOverlay NoteFactory(
+        public static HolotapeBinaryOverlay HolotapeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return NoteFactory(
+            return HolotapeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1345,7 +1347,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FileGeneration fg,
             string? name = null)
         {
-            NoteMixIn.ToString(
+            HolotapeMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1354,7 +1356,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Note>.ToString(this);
+            return MajorRecordPrinter<Holotape>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1364,16 +1366,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 return formLink.Equals(this);
             }
-            if (obj is not INoteGetter rhs) return false;
-            return ((NoteCommon)((INoteGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IHolotapeGetter rhs) return false;
+            return ((HolotapeCommon)((IHolotapeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(INoteGetter? obj)
+        public bool Equals(IHolotapeGetter? obj)
         {
-            return ((NoteCommon)((INoteGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HolotapeCommon)((IHolotapeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((NoteCommon)((INoteGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((HolotapeCommon)((IHolotapeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -1012,9 +1012,6 @@
     <Compile Include="Records\Major Records\Key_Generated.cs">
       <DependentUpon>Key.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Note_Generated.cs">
-      <DependentUpon>Note.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ObjectModification_Generated.cs">
       <DependentUpon>ObjectModification.xml</DependentUpon>
     </Compile>
@@ -1263,6 +1260,12 @@
     <Compile Include="Records\Major Records\MovableStatic_Generated.cs">
       <DependentUpon>MovableStatic.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ConstructibleObject_Generated.cs">
+      <DependentUpon>ConstructibleObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Holotape_Generated.cs">
+      <DependentUpon>Holotape.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">
@@ -1288,7 +1291,7 @@
       <DefaultPackFolder>none</DefaultPackFolder>
       <BuildAction>None</BuildAction>
     </None>
-    <None Update="Records\Major Records\Note.xml">
+    <None Update="Records\Major Records\Holotape.xml">
       <DefaultPackFolder>none</DefaultPackFolder>
       <BuildAction>None</BuildAction>
     </None>

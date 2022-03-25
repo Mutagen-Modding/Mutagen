@@ -15,6 +15,7 @@
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IOutfitTarget</LinkInterface>
+    <LinkInterface>IHarvestTarget</LinkInterface>
   </Object>
   <Object name="LeveledItemEntry" objType="Subrecord" GUID="dd7621bd-5dc8-442d-80ba-9ee8f28f13dc" ID="219">
     <Fields>

@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 Faction_Registration.Instance,
                 FormList_Registration.Instance,
                 Furniture_Registration.Instance,
+                Holotape_Registration.Instance,
                 IdleMarker_Registration.Instance,
                 Ingestible_Registration.Instance,
                 Ingredient_Registration.Instance,
@@ -43,7 +44,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 Light_Registration.Instance,
                 MiscItem_Registration.Instance,
                 MovableStatic_Registration.Instance,
-                Note_Registration.Instance,
                 Npc_Registration.Instance,
                 ObjectModification_Registration.Instance,
                 Projectile_Registration.Instance,
@@ -75,6 +75,23 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 ActorValueInformation_Registration.Instance,
             });
             dict[typeof(IDamageTypeTargetGetter)] = dict[typeof(IDamageTypeTarget)] with { Setter = false };
+            dict[typeof(IHarvestTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Ammunition_Registration.Instance,
+                Armor_Registration.Instance,
+                Book_Registration.Instance,
+                ConstructibleObject_Registration.Instance,
+                Holotape_Registration.Instance,
+                Ingestible_Registration.Instance,
+                Ingredient_Registration.Instance,
+                Key_Registration.Instance,
+                LeveledItem_Registration.Instance,
+                LeveledItem_Registration.Instance,
+                Light_Registration.Instance,
+                MiscItem_Registration.Instance,
+                Weapon_Registration.Instance,
+            });
+            dict[typeof(IHarvestTargetGetter)] = dict[typeof(IHarvestTarget)] with { Setter = false };
             dict[typeof(IItem)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Armor_Registration.Instance,
@@ -140,14 +157,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 Projectile_Registration.Instance,
             });
             dict[typeof(IPlacedTrapTargetGetter)] = dict[typeof(IPlacedTrapTarget)] with { Setter = false };
-            dict[typeof(IHarvestTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-            {
-                Ingestible_Registration.Instance,
-                Ingredient_Registration.Instance,
-                LeveledItem_Registration.Instance,
-                MiscItem_Registration.Instance,
-            });
-            dict[typeof(IHarvestTargetGetter)] = dict[typeof(IHarvestTarget)] with { Setter = false };
             dict[typeof(IKeywordLinkedReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Keyword_Registration.Instance,

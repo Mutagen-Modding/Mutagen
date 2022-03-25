@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout4
 {
     /// <summary>
-    /// Implemented by: [Ingestible, Ingredient, LeveledItem, MiscItem]
+    /// Implemented by: [Ammunition, Armor, Book, ConstructibleObject, Holotape, Ingestible, Ingredient, Key, LeveledItem, Light, MiscItem, Weapon]
     /// </summary>
     public partial interface IHarvestTarget :
         IFallout4MajorRecordInternal,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [Ingestible, Ingredient, LeveledItem, MiscItem]
+    /// Implemented by: [Ammunition, Armor, Book, ConstructibleObject, Holotape, Ingestible, Ingredient, Key, LeveledItem, Light, MiscItem, Weapon]
     /// </summary>
     public partial interface IHarvestTargetGetter : IFallout4MajorRecordGetter
     {

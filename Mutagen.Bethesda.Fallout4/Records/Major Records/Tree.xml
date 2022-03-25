@@ -12,7 +12,7 @@
 			<FormLink name="HarvestSound" recordType="SNAM" refName="SoundDescriptor" />
 			<RefDirect name="Production" refName="SeasonalIngredientProduction" />
 			<String name="Name" recordType="FULL" translated="Normal" />
-			<Data name="TreeData" recordType="CNAM">
+			<Data recordType="CNAM">
 				<Fields>
 					<Float name="TrunkFlexibility"/>
 					<Float name="BranchFlexibility"/>

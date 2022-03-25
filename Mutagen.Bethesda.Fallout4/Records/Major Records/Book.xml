@@ -38,6 +38,7 @@
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IStaticObject</LinkInterface>
+    <LinkInterface>IHarvestTarget</LinkInterface>
   </Object>
   <Object name="BookTeachTarget" abstract="true" objType="Subrecord" GUID="882ce8ae-f4ee-46cf-9943-307e3e6e8945" ID="147" />
   <Object name="BookActorValue" objType="Subrecord" baseClass="BookTeachTarget" GUID="57859959-1b9f-40b0-a637-afa7838fc143" ID="148">

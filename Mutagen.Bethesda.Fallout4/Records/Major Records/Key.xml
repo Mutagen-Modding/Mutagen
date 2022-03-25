@@ -25,5 +25,6 @@
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IHarvestTarget</LinkInterface>
   </Object>
 </Loqui>

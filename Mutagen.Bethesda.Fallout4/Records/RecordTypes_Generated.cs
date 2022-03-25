@@ -54,6 +54,7 @@ public partial class RecordTypes
     public static readonly RecordType CMPO = new(0x4F504D43);
     public static readonly RecordType CNAM = new(0x4D414E43);
     public static readonly RecordType CNTO = new(0x4F544E43);
+    public static readonly RecordType COBJ = new(0x4A424F43);
     public static readonly RecordType COCT = new(0x54434F43);
     public static readonly RecordType COED = new(0x44454F43);
     public static readonly RecordType COLL = new(0x4C4C4F43);

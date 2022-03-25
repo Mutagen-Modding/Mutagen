@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Weapon" recordType="WEAP" baseClass="Fallout4MajorRecord" objType="Record" GUID="ea1189a0-716d-4099-ad06-721ccd313caa" ID="286">
+  <Object name="Holotape" recordType="NOTE" objType="Record" baseClass="Fallout4MajorRecord" GUID="2bbbff8d-bde9-4838-8c78-87cbd8407d32" ID="235">
     <LinkInterface>IObjectId</LinkInterface>
-    <LinkInterface>IStaticObject</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
   </Object>
 </Loqui>

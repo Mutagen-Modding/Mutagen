@@ -52,6 +52,7 @@ public partial class RecordTypeInts
     public const int CMPO = 0x4F504D43;
     public const int CNAM = 0x4D414E43;
     public const int CNTO = 0x4F544E43;
+    public const int COBJ = 0x4A424F43;
     public const int COCT = 0x54434F43;
     public const int COED = 0x44454F43;
     public const int COLL = 0x4C4C4F43;

@@ -46,5 +46,6 @@
     <LinkInterface>IEmittance</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IHarvestTarget</LinkInterface>
   </Object>
 </Loqui>
