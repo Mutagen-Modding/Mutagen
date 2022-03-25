@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 Key_Registration.Instance,
                 Light_Registration.Instance,
                 MiscItem_Registration.Instance,
-                MoveableStatic_Registration.Instance,
+                MovableStatic_Registration.Instance,
                 Note_Registration.Instance,
                 Npc_Registration.Instance,
                 ObjectModification_Registration.Instance,
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 Furniture_Registration.Instance,
                 Ingestible_Registration.Instance,
                 MiscItem_Registration.Instance,
-                MoveableStatic_Registration.Instance,
+                MovableStatic_Registration.Instance,
                 Static_Registration.Instance,
                 Terminal_Registration.Instance,
                 Weapon_Registration.Instance,
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 Flora_Registration.Instance,
                 LandscapeTexture_Registration.Instance,
-                MoveableStatic_Registration.Instance,
+                MovableStatic_Registration.Instance,
                 Tree_Registration.Instance,
             });
             dict[typeof(IRegionTargetGetter)] = dict[typeof(IRegionTarget)] with { Setter = false };

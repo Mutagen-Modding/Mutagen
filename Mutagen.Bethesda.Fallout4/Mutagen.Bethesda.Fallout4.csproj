@@ -309,7 +309,7 @@
     <Compile Include="Records\Major Records\MiscItem.cs">
       <DependentUpon>MiscItem.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\MoveableStatic.cs">
+    <Compile Include="Records\Major Records\MovableStatic.cs">
       <DependentUpon>MovableStatic.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\MusicTrack.cs">
@@ -901,9 +901,6 @@
     <Compile Include="Records\Major Records\Placement_Generated.cs">
       <DependentUpon>StaticCollection.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\MoveableStatic_Generated.cs">
-      <DependentUpon>MovableStatic.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\SeasonalIngredientProduction_Generated.cs">
       <DependentUpon>SeasonalIngredientProduction.xml</DependentUpon>
     </Compile>
@@ -1263,6 +1260,9 @@
       <DependentUpon>Static.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IStaticObject_Generated.cs" />
+    <Compile Include="Records\Major Records\MovableStatic_Generated.cs">
+      <DependentUpon>MovableStatic.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

@@ -69,7 +69,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Key
 - Light
 - MiscItem
-- MoveableStatic
+- MovableStatic
 - Note
 - Npc
 - ObjectModification
@@ -89,7 +89,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IRegionTarget
 - Flora
 - LandscapeTexture
-- MoveableStatic
+- MovableStatic
 - Tree
 ### IRelatable
 - Faction
@@ -107,7 +107,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Furniture
 - Ingestible
 - MiscItem
-- MoveableStatic
+- MovableStatic
 - Static
 - Terminal
 - Weapon
@@ -201,7 +201,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IItem
 - IObjectId
 - IStaticObject
-### MoveableStatic
+### MovableStatic
 - IObjectId
 - IRegionTarget
 - IStaticObject

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class MoveableStatic
+    public partial class MovableStatic
     {
         [Flags]
         public enum MajorFlag

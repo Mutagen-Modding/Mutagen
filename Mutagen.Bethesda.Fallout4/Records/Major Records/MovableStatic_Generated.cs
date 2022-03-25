@@ -41,14 +41,14 @@ using System.Text;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class MoveableStatic :
+    public partial class MovableStatic :
         Fallout4MajorRecord,
-        IEquatable<IMoveableStaticGetter>,
-        ILoquiObjectSetter<MoveableStatic>,
-        IMoveableStaticInternal
+        IEquatable<IMovableStaticGetter>,
+        ILoquiObjectSetter<MovableStatic>,
+        IMovableStaticInternal
     {
         #region Ctor
-        protected MoveableStatic()
+        protected MovableStatic()
         {
             CustomCtor();
         }
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Fallout4
             set => _VirtualMachineAdapter = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IVirtualMachineAdapterGetter? IMoveableStaticGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IVirtualMachineAdapterGetter? IMovableStaticGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter IMoveableStaticGetter.ObjectBounds => ObjectBounds;
+        IObjectBoundsGetter IMovableStaticGetter.ObjectBounds => ObjectBounds;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ObjectBounds? IObjectBoundedOptional.ObjectBounds
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Fallout4
             set => _PreviewTransform.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ITransformGetter> IMoveableStaticGetter.PreviewTransform => this.PreviewTransform;
+        IFormLinkNullableGetter<ITransformGetter> IMovableStaticGetter.PreviewTransform => this.PreviewTransform;
         #endregion
         #region Name
         /// <summary>
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IMoveableStaticGetter.Name => this.Name;
+        ITranslatedStringGetter? IMovableStaticGetter.Name => this.Name;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Fallout4
             set => _Model = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter? IMoveableStaticGetter.Model => this.Model;
+        IModelGetter? IMovableStaticGetter.Model => this.Model;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IModeledGetter.Model => this.Model;
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Fallout4
             set => _Destructible = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IDestructibleGetter? IMoveableStaticGetter.Destructible => this.Destructible;
+        IDestructibleGetter? IMovableStaticGetter.Destructible => this.Destructible;
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IMoveableStaticGetter.Keywords => _Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IMovableStaticGetter.Keywords => _Keywords;
         #endregion
 
         #region Aspects
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IObjectPropertyGetter>? IMoveableStaticGetter.Properties => _Properties;
+        IReadOnlyList<IObjectPropertyGetter>? IMovableStaticGetter.Properties => _Properties;
         #endregion
 
         #endregion
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Fallout4
             set => _LoopingSound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ISoundDescriptorGetter> IMoveableStaticGetter.LoopingSound => this.LoopingSound;
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IMovableStaticGetter.LoopingSound => this.LoopingSound;
         #endregion
 
         #region To String
@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Fallout4
             FileGeneration fg,
             string? name = null)
         {
-            MoveableStaticMixIn.ToString(
+            MovableStaticMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new MoveableStatic.Mask<R>();
+                var ret = new MovableStatic.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -519,16 +519,16 @@ namespace Mutagen.Bethesda.Fallout4
                 return ToString(printMask: null);
             }
 
-            public string ToString(MoveableStatic.Mask<bool>? printMask = null)
+            public string ToString(MovableStatic.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, MoveableStatic.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, MovableStatic.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MoveableStatic.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(MovableStatic.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -637,28 +637,28 @@ namespace Mutagen.Bethesda.Fallout4
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                MoveableStatic_FieldIndex enu = (MoveableStatic_FieldIndex)index;
+                MovableStatic_FieldIndex enu = (MovableStatic_FieldIndex)index;
                 switch (enu)
                 {
-                    case MoveableStatic_FieldIndex.VirtualMachineAdapter:
+                    case MovableStatic_FieldIndex.VirtualMachineAdapter:
                         return VirtualMachineAdapter;
-                    case MoveableStatic_FieldIndex.ObjectBounds:
+                    case MovableStatic_FieldIndex.ObjectBounds:
                         return ObjectBounds;
-                    case MoveableStatic_FieldIndex.PreviewTransform:
+                    case MovableStatic_FieldIndex.PreviewTransform:
                         return PreviewTransform;
-                    case MoveableStatic_FieldIndex.Name:
+                    case MovableStatic_FieldIndex.Name:
                         return Name;
-                    case MoveableStatic_FieldIndex.Model:
+                    case MovableStatic_FieldIndex.Model:
                         return Model;
-                    case MoveableStatic_FieldIndex.Destructible:
+                    case MovableStatic_FieldIndex.Destructible:
                         return Destructible;
-                    case MoveableStatic_FieldIndex.Keywords:
+                    case MovableStatic_FieldIndex.Keywords:
                         return Keywords;
-                    case MoveableStatic_FieldIndex.Properties:
+                    case MovableStatic_FieldIndex.Properties:
                         return Properties;
-                    case MoveableStatic_FieldIndex.OnLocalMap:
+                    case MovableStatic_FieldIndex.OnLocalMap:
                         return OnLocalMap;
-                    case MoveableStatic_FieldIndex.LoopingSound:
+                    case MovableStatic_FieldIndex.LoopingSound:
                         return LoopingSound;
                     default:
                         return base.GetNthMask(index);
@@ -667,37 +667,37 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthException(int index, Exception ex)
             {
-                MoveableStatic_FieldIndex enu = (MoveableStatic_FieldIndex)index;
+                MovableStatic_FieldIndex enu = (MovableStatic_FieldIndex)index;
                 switch (enu)
                 {
-                    case MoveableStatic_FieldIndex.VirtualMachineAdapter:
+                    case MovableStatic_FieldIndex.VirtualMachineAdapter:
                         this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
                         break;
-                    case MoveableStatic_FieldIndex.ObjectBounds:
+                    case MovableStatic_FieldIndex.ObjectBounds:
                         this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
                         break;
-                    case MoveableStatic_FieldIndex.PreviewTransform:
+                    case MovableStatic_FieldIndex.PreviewTransform:
                         this.PreviewTransform = ex;
                         break;
-                    case MoveableStatic_FieldIndex.Name:
+                    case MovableStatic_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case MoveableStatic_FieldIndex.Model:
+                    case MovableStatic_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
-                    case MoveableStatic_FieldIndex.Destructible:
+                    case MovableStatic_FieldIndex.Destructible:
                         this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
                         break;
-                    case MoveableStatic_FieldIndex.Keywords:
+                    case MovableStatic_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case MoveableStatic_FieldIndex.Properties:
+                    case MovableStatic_FieldIndex.Properties:
                         this.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ex, null);
                         break;
-                    case MoveableStatic_FieldIndex.OnLocalMap:
+                    case MovableStatic_FieldIndex.OnLocalMap:
                         this.OnLocalMap = ex;
                         break;
-                    case MoveableStatic_FieldIndex.LoopingSound:
+                    case MovableStatic_FieldIndex.LoopingSound:
                         this.LoopingSound = ex;
                         break;
                     default:
@@ -708,37 +708,37 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthMask(int index, object obj)
             {
-                MoveableStatic_FieldIndex enu = (MoveableStatic_FieldIndex)index;
+                MovableStatic_FieldIndex enu = (MovableStatic_FieldIndex)index;
                 switch (enu)
                 {
-                    case MoveableStatic_FieldIndex.VirtualMachineAdapter:
+                    case MovableStatic_FieldIndex.VirtualMachineAdapter:
                         this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
                         break;
-                    case MoveableStatic_FieldIndex.ObjectBounds:
+                    case MovableStatic_FieldIndex.ObjectBounds:
                         this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
                         break;
-                    case MoveableStatic_FieldIndex.PreviewTransform:
+                    case MovableStatic_FieldIndex.PreviewTransform:
                         this.PreviewTransform = (Exception?)obj;
                         break;
-                    case MoveableStatic_FieldIndex.Name:
+                    case MovableStatic_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case MoveableStatic_FieldIndex.Model:
+                    case MovableStatic_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case MoveableStatic_FieldIndex.Destructible:
+                    case MovableStatic_FieldIndex.Destructible:
                         this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
                         break;
-                    case MoveableStatic_FieldIndex.Keywords:
+                    case MovableStatic_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case MoveableStatic_FieldIndex.Properties:
+                    case MovableStatic_FieldIndex.Properties:
                         this.Properties = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>)obj;
                         break;
-                    case MoveableStatic_FieldIndex.OnLocalMap:
+                    case MovableStatic_FieldIndex.OnLocalMap:
                         this.OnLocalMap = (Exception?)obj;
                         break;
-                    case MoveableStatic_FieldIndex.LoopingSound:
+                    case MovableStatic_FieldIndex.LoopingSound:
                         this.LoopingSound = (Exception?)obj;
                         break;
                     default:
@@ -938,16 +938,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = MoveableStatic_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MoveableStaticCommon.Instance.GetContainedFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MoveableStaticSetterCommon.Instance.RemapLinks(this, mapping);
-        public MoveableStatic(FormKey formKey)
+        public static readonly RecordType GrupRecordType = MovableStatic_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MovableStaticCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MovableStaticSetterCommon.Instance.RemapLinks(this, mapping);
+        public MovableStatic(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        private MoveableStatic(
+        private MovableStatic(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        internal MoveableStatic(
+        internal MovableStatic(
             FormKey formKey,
             ushort formVersion)
         {
@@ -965,12 +965,12 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        public MoveableStatic(IFallout4Mod mod)
+        public MovableStatic(IFallout4Mod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public MoveableStatic(IFallout4Mod mod, string editorID)
+        public MovableStatic(IFallout4Mod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -978,10 +978,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<MoveableStatic>.ToString(this);
+            return MajorRecordPrinter<MovableStatic>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IMoveableStatic);
+        protected override Type LinkType => typeof(IMovableStatic);
 
         public MajorFlag MajorFlags
         {
@@ -995,16 +995,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IMoveableStaticGetter rhs) return false;
-            return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IMovableStaticGetter rhs) return false;
+            return ((MovableStaticCommon)((IMovableStaticGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IMoveableStaticGetter? obj)
+        public bool Equals(IMovableStaticGetter? obj)
         {
-            return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MovableStaticCommon)((IMovableStaticGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MovableStaticCommon)((IMovableStaticGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -1012,23 +1012,23 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => MoveableStaticBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => MovableStaticBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((MoveableStaticBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MovableStaticBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static MoveableStatic CreateFromBinary(
+        public new static MovableStatic CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new MoveableStatic();
-            ((MoveableStaticSetterCommon)((IMoveableStaticGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new MovableStatic();
+            ((MovableStaticSetterCommon)((IMovableStaticGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -1039,7 +1039,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out MoveableStatic item,
+            out MovableStatic item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -1054,25 +1054,25 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((MoveableStaticSetterCommon)((IMoveableStaticGetter)this).CommonSetterInstance()!).Clear(this);
+            ((MovableStaticSetterCommon)((IMovableStaticGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new MoveableStatic GetNew()
+        internal static new MovableStatic GetNew()
         {
-            return new MoveableStatic();
+            return new MovableStatic();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IMoveableStatic :
+    public partial interface IMovableStatic :
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
-        ILoquiObjectSetter<IMoveableStaticInternal>,
+        ILoquiObjectSetter<IMovableStaticInternal>,
         IModeled,
-        IMoveableStaticGetter,
+        IMovableStaticGetter,
         INamed,
         INamedRequired,
         IObjectBounded,
@@ -1109,26 +1109,26 @@ namespace Mutagen.Bethesda.Fallout4
         new Boolean OnLocalMap { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; set; }
         #region Mutagen
-        new MoveableStatic.MajorFlag MajorFlags { get; set; }
+        new MovableStatic.MajorFlag MajorFlags { get; set; }
         #endregion
 
     }
 
-    public partial interface IMoveableStaticInternal :
+    public partial interface IMovableStaticInternal :
         IFallout4MajorRecordInternal,
-        IMoveableStatic,
-        IMoveableStaticGetter
+        IMovableStatic,
+        IMovableStaticGetter
     {
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.MSTT)]
-    public partial interface IMoveableStaticGetter :
+    public partial interface IMovableStaticGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
-        ILoquiObject<IMoveableStaticGetter>,
-        IMapsToGetter<IMoveableStaticGetter>,
+        ILoquiObject<IMovableStaticGetter>,
+        IMapsToGetter<IMovableStaticGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
@@ -1140,7 +1140,7 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration StaticRegistration => MoveableStatic_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MovableStatic_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
         /// Aspects: IScriptedGetter
@@ -1178,7 +1178,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ISoundDescriptorGetter> LoopingSound { get; }
 
         #region Mutagen
-        MoveableStatic.MajorFlag MajorFlags { get; }
+        MovableStatic.MajorFlag MajorFlags { get; }
         #endregion
 
     }
@@ -1186,42 +1186,42 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common MixIn
-    public static partial class MoveableStaticMixIn
+    public static partial class MovableStaticMixIn
     {
-        public static void Clear(this IMoveableStaticInternal item)
+        public static void Clear(this IMovableStaticInternal item)
         {
-            ((MoveableStaticSetterCommon)((IMoveableStaticGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((MovableStaticSetterCommon)((IMovableStaticGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static MoveableStatic.Mask<bool> GetEqualsMask(
-            this IMoveableStaticGetter item,
-            IMoveableStaticGetter rhs,
+        public static MovableStatic.Mask<bool> GetEqualsMask(
+            this IMovableStaticGetter item,
+            IMovableStaticGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MoveableStaticCommon)((IMoveableStaticGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((MovableStaticCommon)((IMovableStaticGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IMoveableStaticGetter item,
+            this IMovableStaticGetter item,
             string? name = null,
-            MoveableStatic.Mask<bool>? printMask = null)
+            MovableStatic.Mask<bool>? printMask = null)
         {
-            return ((MoveableStaticCommon)((IMoveableStaticGetter)item).CommonInstance()!).ToString(
+            return ((MovableStaticCommon)((IMovableStaticGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IMoveableStaticGetter item,
+            this IMovableStaticGetter item,
             FileGeneration fg,
             string? name = null,
-            MoveableStatic.Mask<bool>? printMask = null)
+            MovableStatic.Mask<bool>? printMask = null)
         {
-            ((MoveableStaticCommon)((IMoveableStaticGetter)item).CommonInstance()!).ToString(
+            ((MovableStaticCommon)((IMovableStaticGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1229,39 +1229,39 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IMoveableStaticGetter item,
-            IMoveableStaticGetter rhs,
-            MoveableStatic.TranslationMask? equalsMask = null)
+            this IMovableStaticGetter item,
+            IMovableStaticGetter rhs,
+            MovableStatic.TranslationMask? equalsMask = null)
         {
-            return ((MoveableStaticCommon)((IMoveableStaticGetter)item).CommonInstance()!).Equals(
+            return ((MovableStaticCommon)((IMovableStaticGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IMoveableStaticInternal lhs,
-            IMoveableStaticGetter rhs,
-            out MoveableStatic.ErrorMask errorMask,
-            MoveableStatic.TranslationMask? copyMask = null)
+            this IMovableStaticInternal lhs,
+            IMovableStaticGetter rhs,
+            out MovableStatic.ErrorMask errorMask,
+            MovableStatic.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((MoveableStaticSetterTranslationCommon)((IMoveableStaticGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MovableStaticSetterTranslationCommon)((IMovableStaticGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = MoveableStatic.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MovableStatic.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IMoveableStaticInternal lhs,
-            IMoveableStaticGetter rhs,
+            this IMovableStaticInternal lhs,
+            IMovableStaticGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((MoveableStaticSetterTranslationCommon)((IMoveableStaticGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MovableStaticSetterTranslationCommon)((IMovableStaticGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1269,44 +1269,44 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static MoveableStatic DeepCopy(
-            this IMoveableStaticGetter item,
-            MoveableStatic.TranslationMask? copyMask = null)
+        public static MovableStatic DeepCopy(
+            this IMovableStaticGetter item,
+            MovableStatic.TranslationMask? copyMask = null)
         {
-            return ((MoveableStaticSetterTranslationCommon)((IMoveableStaticGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MovableStaticSetterTranslationCommon)((IMovableStaticGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static MoveableStatic DeepCopy(
-            this IMoveableStaticGetter item,
-            out MoveableStatic.ErrorMask errorMask,
-            MoveableStatic.TranslationMask? copyMask = null)
+        public static MovableStatic DeepCopy(
+            this IMovableStaticGetter item,
+            out MovableStatic.ErrorMask errorMask,
+            MovableStatic.TranslationMask? copyMask = null)
         {
-            return ((MoveableStaticSetterTranslationCommon)((IMoveableStaticGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MovableStaticSetterTranslationCommon)((IMovableStaticGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static MoveableStatic DeepCopy(
-            this IMoveableStaticGetter item,
+        public static MovableStatic DeepCopy(
+            this IMovableStaticGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((MoveableStaticSetterTranslationCommon)((IMoveableStaticGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MovableStaticSetterTranslationCommon)((IMovableStaticGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static MoveableStatic Duplicate(
-            this IMoveableStaticGetter item,
+        public static MovableStatic Duplicate(
+            this IMovableStaticGetter item,
             FormKey formKey,
-            MoveableStatic.TranslationMask? copyMask = null)
+            MovableStatic.TranslationMask? copyMask = null)
         {
-            return ((MoveableStaticCommon)((IMoveableStaticGetter)item).CommonInstance()!).Duplicate(
+            return ((MovableStaticCommon)((IMovableStaticGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
@@ -1316,11 +1316,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IMoveableStaticInternal item,
+            this IMovableStaticInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((MoveableStaticSetterCommon)((IMoveableStaticGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((MovableStaticSetterCommon)((IMovableStaticGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -1336,7 +1336,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     #region Field Index
-    public enum MoveableStatic_FieldIndex
+    public enum MovableStatic_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1358,9 +1358,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class MoveableStatic_Registration : ILoquiRegistration
+    public partial class MovableStatic_Registration : ILoquiRegistration
     {
-        public static readonly MoveableStatic_Registration Instance = new MoveableStatic_Registration();
+        public static readonly MovableStatic_Registration Instance = new MovableStatic_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
@@ -1375,23 +1375,23 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const ushort FieldCount = 16;
 
-        public static readonly Type MaskType = typeof(MoveableStatic.Mask<>);
+        public static readonly Type MaskType = typeof(MovableStatic.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(MoveableStatic.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(MovableStatic.ErrorMask);
 
-        public static readonly Type ClassType = typeof(MoveableStatic);
+        public static readonly Type ClassType = typeof(MovableStatic);
 
-        public static readonly Type GetterType = typeof(IMoveableStaticGetter);
+        public static readonly Type GetterType = typeof(IMovableStaticGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IMoveableStatic);
+        public static readonly Type SetterType = typeof(IMovableStatic);
 
-        public static readonly Type? InternalSetterType = typeof(IMoveableStaticInternal);
+        public static readonly Type? InternalSetterType = typeof(IMovableStaticInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.MoveableStatic";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.MovableStatic";
 
-        public const string Name = "MoveableStatic";
+        public const string Name = "MovableStatic";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -1400,7 +1400,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.MSTT;
-        public static readonly Type BinaryWriteTranslation = typeof(MoveableStaticBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(MovableStaticBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1433,13 +1433,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class MoveableStaticSetterCommon : Fallout4MajorRecordSetterCommon
+    public partial class MovableStaticSetterCommon : Fallout4MajorRecordSetterCommon
     {
-        public new static readonly MoveableStaticSetterCommon Instance = new MoveableStaticSetterCommon();
+        public new static readonly MovableStaticSetterCommon Instance = new MovableStaticSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IMoveableStaticInternal item)
+        public void Clear(IMovableStaticInternal item)
         {
             ClearPartial();
             item.VirtualMachineAdapter = null;
@@ -1457,16 +1457,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public override void Clear(IFallout4MajorRecordInternal item)
         {
-            Clear(item: (IMoveableStaticInternal)item);
+            Clear(item: (IMovableStaticInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IMoveableStaticInternal)item);
+            Clear(item: (IMovableStaticInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IMoveableStatic obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IMovableStatic obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
@@ -1482,16 +1482,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IMoveableStaticInternal item,
+            IMovableStaticInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            PluginUtilityTranslation.MajorRecordParse<IMoveableStaticInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IMovableStaticInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: MoveableStaticBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: MoveableStaticBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: MovableStaticBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: MovableStaticBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1500,7 +1500,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (MoveableStatic)item,
+                item: (MovableStatic)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -1511,7 +1511,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (MoveableStatic)item,
+                item: (MovableStatic)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -1519,17 +1519,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MoveableStaticCommon : Fallout4MajorRecordCommon
+    public partial class MovableStaticCommon : Fallout4MajorRecordCommon
     {
-        public new static readonly MoveableStaticCommon Instance = new MoveableStaticCommon();
+        public new static readonly MovableStaticCommon Instance = new MovableStaticCommon();
 
-        public MoveableStatic.Mask<bool> GetEqualsMask(
-            IMoveableStaticGetter item,
-            IMoveableStaticGetter rhs,
+        public MovableStatic.Mask<bool> GetEqualsMask(
+            IMovableStaticGetter item,
+            IMovableStaticGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new MoveableStatic.Mask<bool>(false);
-            ((MoveableStaticCommon)((IMoveableStaticGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new MovableStatic.Mask<bool>(false);
+            ((MovableStaticCommon)((IMovableStaticGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1538,9 +1538,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void FillEqualsMask(
-            IMoveableStaticGetter item,
-            IMoveableStaticGetter rhs,
-            MoveableStatic.Mask<bool> ret,
+            IMovableStaticGetter item,
+            IMovableStaticGetter rhs,
+            MovableStatic.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1576,9 +1576,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public string ToString(
-            IMoveableStaticGetter item,
+            IMovableStaticGetter item,
             string? name = null,
-            MoveableStatic.Mask<bool>? printMask = null)
+            MovableStatic.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1590,18 +1590,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void ToString(
-            IMoveableStaticGetter item,
+            IMovableStaticGetter item,
             FileGeneration fg,
             string? name = null,
-            MoveableStatic.Mask<bool>? printMask = null)
+            MovableStatic.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MoveableStatic =>");
+                fg.AppendLine($"MovableStatic =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MoveableStatic) =>");
+                fg.AppendLine($"{name} (MovableStatic) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1615,9 +1615,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         protected static void ToStringFields(
-            IMoveableStaticGetter item,
+            IMovableStaticGetter item,
             FileGeneration fg,
-            MoveableStatic.Mask<bool>? printMask = null)
+            MovableStatic.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
@@ -1699,39 +1699,39 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
         }
         
-        public static MoveableStatic_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
+        public static MovableStatic_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout4MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (MoveableStatic_FieldIndex)((int)index);
+                    return (MovableStatic_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormKey:
-                    return (MoveableStatic_FieldIndex)((int)index);
+                    return (MovableStatic_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.VersionControl:
-                    return (MoveableStatic_FieldIndex)((int)index);
+                    return (MovableStatic_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.EditorID:
-                    return (MoveableStatic_FieldIndex)((int)index);
+                    return (MovableStatic_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
-                    return (MoveableStatic_FieldIndex)((int)index);
+                    return (MovableStatic_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
-                    return (MoveableStatic_FieldIndex)((int)index);
+                    return (MovableStatic_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new MoveableStatic_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new MovableStatic_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (MoveableStatic_FieldIndex)((int)index);
+                    return (MovableStatic_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (MoveableStatic_FieldIndex)((int)index);
+                    return (MovableStatic_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (MoveableStatic_FieldIndex)((int)index);
+                    return (MovableStatic_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (MoveableStatic_FieldIndex)((int)index);
+                    return (MovableStatic_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1739,65 +1739,65 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IMoveableStaticGetter? lhs,
-            IMoveableStaticGetter? rhs,
+            IMovableStaticGetter? lhs,
+            IMovableStaticGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)MoveableStatic_FieldIndex.VirtualMachineAdapter) ?? true))
+            if ((crystal?.GetShouldTranslate((int)MovableStatic_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)MoveableStatic_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)MovableStatic_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MoveableStatic_FieldIndex.ObjectBounds) ?? true))
+            if ((crystal?.GetShouldTranslate((int)MovableStatic_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)MoveableStatic_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)MovableStatic_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MoveableStatic_FieldIndex.PreviewTransform) ?? true))
+            if ((crystal?.GetShouldTranslate((int)MovableStatic_FieldIndex.PreviewTransform) ?? true))
             {
                 if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Name) ?? true))
+            if ((crystal?.GetShouldTranslate((int)MovableStatic_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Model) ?? true))
+            if ((crystal?.GetShouldTranslate((int)MovableStatic_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)MoveableStatic_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)MovableStatic_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Destructible) ?? true))
+            if ((crystal?.GetShouldTranslate((int)MovableStatic_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)MoveableStatic_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)MovableStatic_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Keywords) ?? true))
+            if ((crystal?.GetShouldTranslate((int)MovableStatic_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Properties) ?? true))
+            if ((crystal?.GetShouldTranslate((int)MovableStatic_FieldIndex.Properties) ?? true))
             {
                 if (!lhs.Properties.SequenceEqualNullable(rhs.Properties)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MoveableStatic_FieldIndex.OnLocalMap) ?? true))
+            if ((crystal?.GetShouldTranslate((int)MovableStatic_FieldIndex.OnLocalMap) ?? true))
             {
                 if (lhs.OnLocalMap != rhs.OnLocalMap) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MoveableStatic_FieldIndex.LoopingSound) ?? true))
+            if ((crystal?.GetShouldTranslate((int)MovableStatic_FieldIndex.LoopingSound) ?? true))
             {
                 if (!lhs.LoopingSound.Equals(rhs.LoopingSound)) return false;
             }
@@ -1810,8 +1810,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IMoveableStaticGetter?)lhs,
-                rhs: rhs as IMoveableStaticGetter,
+                lhs: (IMovableStaticGetter?)lhs,
+                rhs: rhs as IMovableStaticGetter,
                 crystal: crystal);
         }
         
@@ -1821,12 +1821,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IMoveableStaticGetter?)lhs,
-                rhs: rhs as IMoveableStaticGetter,
+                lhs: (IMovableStaticGetter?)lhs,
+                rhs: rhs as IMovableStaticGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(IMoveableStaticGetter item)
+        public virtual int GetHashCode(IMovableStaticGetter item)
         {
             var hash = new HashCode();
             if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
@@ -1857,12 +1857,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public override int GetHashCode(IFallout4MajorRecordGetter item)
         {
-            return GetHashCode(item: (IMoveableStaticGetter)item);
+            return GetHashCode(item: (IMovableStaticGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IMoveableStaticGetter)item);
+            return GetHashCode(item: (IMovableStaticGetter)item);
         }
         
         #endregion
@@ -1870,11 +1870,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public override object GetNew()
         {
-            return MoveableStatic.GetNew();
+            return MovableStatic.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMoveableStaticGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMovableStaticGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1927,12 +1927,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Duplicate
-        public MoveableStatic Duplicate(
-            IMoveableStaticGetter item,
+        public MovableStatic Duplicate(
+            IMovableStaticGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new MoveableStatic(formKey);
+            var newRec = new MovableStatic(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1943,7 +1943,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IMoveableStaticGetter)item,
+                item: (IMovableStaticGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1954,7 +1954,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IMoveableStaticGetter)item,
+                item: (IMovableStaticGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1964,14 +1964,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MoveableStaticSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    public partial class MovableStaticSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
-        public new static readonly MoveableStaticSetterTranslationCommon Instance = new MoveableStaticSetterTranslationCommon();
+        public new static readonly MovableStaticSetterTranslationCommon Instance = new MovableStaticSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IMoveableStaticInternal item,
-            IMoveableStaticGetter rhs,
+            IMovableStaticInternal item,
+            IMovableStaticGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1985,8 +1985,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void DeepCopyIn(
-            IMoveableStatic item,
-            IMoveableStaticGetter rhs,
+            IMovableStatic item,
+            IMovableStaticGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1997,16 +1997,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.VirtualMachineAdapter) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MovableStatic_FieldIndex.VirtualMachineAdapter) ?? true))
             {
-                errorMask?.PushIndex((int)MoveableStatic_FieldIndex.VirtualMachineAdapter);
+                errorMask?.PushIndex((int)MovableStatic_FieldIndex.VirtualMachineAdapter);
                 try
                 {
                     if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
                     {
                         item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)MoveableStatic_FieldIndex.VirtualMachineAdapter));
+                            copyMask?.GetSubCrystal((int)MovableStatic_FieldIndex.VirtualMachineAdapter));
                     }
                     else
                     {
@@ -2023,15 +2023,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.ObjectBounds) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MovableStatic_FieldIndex.ObjectBounds) ?? true))
             {
-                errorMask?.PushIndex((int)MoveableStatic_FieldIndex.ObjectBounds);
+                errorMask?.PushIndex((int)MovableStatic_FieldIndex.ObjectBounds);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.ObjectBounds) ?? true))
+                    if ((copyMask?.GetShouldTranslate((int)MovableStatic_FieldIndex.ObjectBounds) ?? true))
                     {
                         item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)MoveableStatic_FieldIndex.ObjectBounds),
+                            copyMask: copyMask?.GetSubCrystal((int)MovableStatic_FieldIndex.ObjectBounds),
                             errorMask: errorMask);
                     }
                 }
@@ -2045,24 +2045,24 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.PreviewTransform) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MovableStatic_FieldIndex.PreviewTransform) ?? true))
             {
                 item.PreviewTransform.SetTo(rhs.PreviewTransform.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Name) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MovableStatic_FieldIndex.Name) ?? true))
             {
                 item.Name = rhs.Name?.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Model) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MovableStatic_FieldIndex.Model) ?? true))
             {
-                errorMask?.PushIndex((int)MoveableStatic_FieldIndex.Model);
+                errorMask?.PushIndex((int)MovableStatic_FieldIndex.Model);
                 try
                 {
                     if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)MoveableStatic_FieldIndex.Model));
+                            copyMask?.GetSubCrystal((int)MovableStatic_FieldIndex.Model));
                     }
                     else
                     {
@@ -2079,16 +2079,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Destructible) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MovableStatic_FieldIndex.Destructible) ?? true))
             {
-                errorMask?.PushIndex((int)MoveableStatic_FieldIndex.Destructible);
+                errorMask?.PushIndex((int)MovableStatic_FieldIndex.Destructible);
                 try
                 {
                     if(rhs.Destructible is {} rhsDestructible)
                     {
                         item.Destructible = rhsDestructible.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)MoveableStatic_FieldIndex.Destructible));
+                            copyMask?.GetSubCrystal((int)MovableStatic_FieldIndex.Destructible));
                     }
                     else
                     {
@@ -2105,9 +2105,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Keywords) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MovableStatic_FieldIndex.Keywords) ?? true))
             {
-                errorMask?.PushIndex((int)MoveableStatic_FieldIndex.Keywords);
+                errorMask?.PushIndex((int)MovableStatic_FieldIndex.Keywords);
                 try
                 {
                     if ((rhs.Keywords != null))
@@ -2132,9 +2132,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Properties) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MovableStatic_FieldIndex.Properties) ?? true))
             {
-                errorMask?.PushIndex((int)MoveableStatic_FieldIndex.Properties);
+                errorMask?.PushIndex((int)MovableStatic_FieldIndex.Properties);
                 try
                 {
                     if ((rhs.Properties != null))
@@ -2164,11 +2164,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.OnLocalMap) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MovableStatic_FieldIndex.OnLocalMap) ?? true))
             {
                 item.OnLocalMap = rhs.OnLocalMap;
             }
-            if ((copyMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.LoopingSound) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MovableStatic_FieldIndex.LoopingSound) ?? true))
             {
                 item.LoopingSound.SetTo(rhs.LoopingSound.FormKeyNullable);
             }
@@ -2182,8 +2182,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IMoveableStaticInternal)item,
-                rhs: (IMoveableStaticGetter)rhs,
+                item: (IMovableStaticInternal)item,
+                rhs: (IMovableStaticGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -2197,8 +2197,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IMoveableStatic)item,
-                rhs: (IMoveableStaticGetter)rhs,
+                item: (IMovableStatic)item,
+                rhs: (IMovableStaticGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -2212,8 +2212,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IMoveableStaticInternal)item,
-                rhs: (IMoveableStaticGetter)rhs,
+                item: (IMovableStaticInternal)item,
+                rhs: (IMovableStaticGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -2227,8 +2227,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IMoveableStatic)item,
-                rhs: (IMoveableStaticGetter)rhs,
+                item: (IMovableStatic)item,
+                rhs: (IMovableStaticGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -2236,12 +2236,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #endregion
         
-        public MoveableStatic DeepCopy(
-            IMoveableStaticGetter item,
-            MoveableStatic.TranslationMask? copyMask = null)
+        public MovableStatic DeepCopy(
+            IMovableStaticGetter item,
+            MovableStatic.TranslationMask? copyMask = null)
         {
-            MoveableStatic ret = (MoveableStatic)((MoveableStaticCommon)((IMoveableStaticGetter)item).CommonInstance()!).GetNew();
-            ((MoveableStaticSetterTranslationCommon)((IMoveableStaticGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MovableStatic ret = (MovableStatic)((MovableStaticCommon)((IMovableStaticGetter)item).CommonInstance()!).GetNew();
+            ((MovableStaticSetterTranslationCommon)((IMovableStaticGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -2250,30 +2250,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
         
-        public MoveableStatic DeepCopy(
-            IMoveableStaticGetter item,
-            out MoveableStatic.ErrorMask errorMask,
-            MoveableStatic.TranslationMask? copyMask = null)
+        public MovableStatic DeepCopy(
+            IMovableStaticGetter item,
+            out MovableStatic.ErrorMask errorMask,
+            MovableStatic.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            MoveableStatic ret = (MoveableStatic)((MoveableStaticCommon)((IMoveableStaticGetter)item).CommonInstance()!).GetNew();
-            ((MoveableStaticSetterTranslationCommon)((IMoveableStaticGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MovableStatic ret = (MovableStatic)((MovableStaticCommon)((IMovableStaticGetter)item).CommonInstance()!).GetNew();
+            ((MovableStaticSetterTranslationCommon)((IMovableStaticGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = MoveableStatic.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MovableStatic.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public MoveableStatic DeepCopy(
-            IMoveableStaticGetter item,
+        public MovableStatic DeepCopy(
+            IMovableStaticGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            MoveableStatic ret = (MoveableStatic)((MoveableStaticCommon)((IMoveableStaticGetter)item).CommonInstance()!).GetNew();
-            ((MoveableStaticSetterTranslationCommon)((IMoveableStaticGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MovableStatic ret = (MovableStatic)((MovableStaticCommon)((IMovableStaticGetter)item).CommonInstance()!).GetNew();
+            ((MovableStaticSetterTranslationCommon)((IMovableStaticGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -2289,21 +2289,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class MoveableStatic
+    public partial class MovableStatic
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MoveableStatic_Registration.Instance;
-        public new static MoveableStatic_Registration StaticRegistration => MoveableStatic_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MovableStatic_Registration.Instance;
+        public new static MovableStatic_Registration StaticRegistration => MovableStatic_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => MoveableStaticCommon.Instance;
+        protected override object CommonInstance() => MovableStaticCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return MoveableStaticSetterCommon.Instance;
+            return MovableStaticSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => MoveableStaticSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => MovableStaticSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2314,14 +2314,14 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class MoveableStaticBinaryWriteTranslation :
+    public partial class MovableStaticBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static MoveableStaticBinaryWriteTranslation Instance = new MoveableStaticBinaryWriteTranslation();
+        public new readonly static MovableStaticBinaryWriteTranslation Instance = new MovableStaticBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
-            IMoveableStaticGetter item,
+            IMovableStaticGetter item,
             MutagenWriter writer,
             TypedWriteParams? translationParams)
         {
@@ -2401,7 +2401,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public void Write(
             MutagenWriter writer,
-            IMoveableStaticGetter item,
+            IMovableStaticGetter item,
             TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Record(
@@ -2433,7 +2433,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IMoveableStaticGetter)item,
+                item: (IMovableStaticGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -2444,7 +2444,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IMoveableStaticGetter)item,
+                item: (IMovableStaticGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -2455,20 +2455,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IMoveableStaticGetter)item,
+                item: (IMovableStaticGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    public partial class MoveableStaticBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    public partial class MovableStaticBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static MoveableStaticBinaryCreateTranslation Instance = new MoveableStaticBinaryCreateTranslation();
+        public new readonly static MovableStaticBinaryCreateTranslation Instance = new MovableStaticBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MSTT;
         public static void FillBinaryStructs(
-            IMoveableStaticInternal item,
+            IMovableStaticInternal item,
             MutagenFrame frame)
         {
             Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
@@ -2477,7 +2477,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
 
         public static ParseResult FillBinaryRecordTypes(
-            IMoveableStaticInternal item,
+            IMovableStaticInternal item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -2491,18 +2491,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Fallout4.VirtualMachineAdapter.CreateFromBinary(frame: frame);
-                    return (int)MoveableStatic_FieldIndex.VirtualMachineAdapter;
+                    return (int)MovableStatic_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Fallout4.ObjectBounds.CreateFromBinary(frame: frame);
-                    return (int)MoveableStatic_FieldIndex.ObjectBounds;
+                    return (int)MovableStatic_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.PTRN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)MoveableStatic_FieldIndex.PreviewTransform;
+                    return (int)MovableStatic_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -2511,14 +2511,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)MoveableStatic_FieldIndex.Name;
+                    return (int)MovableStatic_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Fallout4.Model.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams);
-                    return (int)MoveableStatic_FieldIndex.Model;
+                    return (int)MovableStatic_FieldIndex.Model;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DAMC:
@@ -2529,7 +2529,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.Destructible = Mutagen.Bethesda.Fallout4.Destructible.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams);
-                    return (int)MoveableStatic_FieldIndex.Destructible;
+                    return (int)MovableStatic_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -2542,7 +2542,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                             triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
-                    return (int)MoveableStatic_FieldIndex.Keywords;
+                    return (int)MovableStatic_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PRPS:
                 {
@@ -2552,19 +2552,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                             reader: frame.SpawnWithLength(contentLength),
                             transl: ObjectProperty.TryCreateFromBinary)
                         .CastExtendedList<ObjectProperty>();
-                    return (int)MoveableStatic_FieldIndex.Properties;
+                    return (int)MovableStatic_FieldIndex.Properties;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OnLocalMap = frame.ReadBoolean();
-                    return (int)MoveableStatic_FieldIndex.OnLocalMap;
+                    return (int)MovableStatic_FieldIndex.OnLocalMap;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)MoveableStatic_FieldIndex.LoopingSound;
+                    return (int)MovableStatic_FieldIndex.LoopingSound;
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2583,7 +2583,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class MoveableStaticBinaryTranslationMixIn
+    public static class MovableStaticBinaryTranslationMixIn
     {
     }
     #endregion
@@ -2592,38 +2592,38 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class MoveableStaticBinaryOverlay :
+    public partial class MovableStaticBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
-        IMoveableStaticGetter
+        IMovableStaticGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MoveableStatic_Registration.Instance;
-        public new static MoveableStatic_Registration StaticRegistration => MoveableStatic_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MovableStatic_Registration.Instance;
+        public new static MovableStatic_Registration StaticRegistration => MovableStatic_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => MoveableStaticCommon.Instance;
+        protected override object CommonInstance() => MovableStaticCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => MoveableStaticSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => MovableStaticSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MoveableStaticCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MovableStaticCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => MoveableStaticBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => MovableStaticBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((MoveableStaticBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MovableStaticBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IMoveableStatic);
+        protected override Type LinkType => typeof(IMovableStatic);
 
-        public MoveableStatic.MajorFlag MajorFlags => (MoveableStatic.MajorFlag)this.MajorRecordFlagsRaw;
+        public MovableStatic.MajorFlag MajorFlags => (MovableStatic.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
@@ -2671,7 +2671,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             int offset);
 
         partial void CustomCtor();
-        protected MoveableStaticBinaryOverlay(
+        protected MovableStaticBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2681,13 +2681,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             this.CustomCtor();
         }
 
-        public static MoveableStaticBinaryOverlay MoveableStaticFactory(
+        public static MovableStaticBinaryOverlay MovableStaticFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
             stream = PluginUtilityTranslation.DecompressStream(stream);
-            var ret = new MoveableStaticBinaryOverlay(
+            var ret = new MovableStaticBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
@@ -2708,12 +2708,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
 
-        public static MoveableStaticBinaryOverlay MoveableStaticFactory(
+        public static MovableStaticBinaryOverlay MovableStaticFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return MoveableStaticFactory(
+            return MovableStaticFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -2734,22 +2734,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)MoveableStatic_FieldIndex.VirtualMachineAdapter;
+                    return (int)MovableStatic_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)MoveableStatic_FieldIndex.ObjectBounds;
+                    return (int)MovableStatic_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.PTRN:
                 {
                     _PreviewTransformLocation = (stream.Position - offset);
-                    return (int)MoveableStatic_FieldIndex.PreviewTransform;
+                    return (int)MovableStatic_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return (int)MoveableStatic_FieldIndex.Name;
+                    return (int)MovableStatic_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -2757,7 +2757,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         stream: stream,
                         package: _package,
                         parseParams: parseParams);
-                    return (int)MoveableStatic_FieldIndex.Model;
+                    return (int)MovableStatic_FieldIndex.Model;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DAMC:
@@ -2769,7 +2769,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         stream: stream,
                         package: _package,
                         parseParams: parseParams);
-                    return (int)MoveableStatic_FieldIndex.Destructible;
+                    return (int)MovableStatic_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -2782,7 +2782,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         countType: RecordTypes.KSIZ,
                         subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    return (int)MoveableStatic_FieldIndex.Keywords;
+                    return (int)MovableStatic_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PRPS:
                 {
@@ -2794,17 +2794,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         itemLength: 8,
                         getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
                     stream.Position += subLen;
-                    return (int)MoveableStatic_FieldIndex.Properties;
+                    return (int)MovableStatic_FieldIndex.Properties;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _OnLocalMapLocation = (stream.Position - offset);
-                    return (int)MoveableStatic_FieldIndex.OnLocalMap;
+                    return (int)MovableStatic_FieldIndex.OnLocalMap;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _LoopingSoundLocation = (stream.Position - offset);
-                    return (int)MoveableStatic_FieldIndex.LoopingSound;
+                    return (int)MovableStatic_FieldIndex.LoopingSound;
                 }
                 default:
                     return base.FillRecordType(
@@ -2822,7 +2822,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FileGeneration fg,
             string? name = null)
         {
-            MoveableStaticMixIn.ToString(
+            MovableStaticMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -2831,7 +2831,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public override string ToString()
         {
-            return MajorRecordPrinter<MoveableStatic>.ToString(this);
+            return MajorRecordPrinter<MovableStatic>.ToString(this);
         }
 
         #region Equals and Hash
@@ -2841,16 +2841,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IMoveableStaticGetter rhs) return false;
-            return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IMovableStaticGetter rhs) return false;
+            return ((MovableStaticCommon)((IMovableStaticGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IMoveableStaticGetter? obj)
+        public bool Equals(IMovableStaticGetter? obj)
         {
-            return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MovableStaticCommon)((IMovableStaticGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MovableStaticCommon)((IMovableStaticGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
