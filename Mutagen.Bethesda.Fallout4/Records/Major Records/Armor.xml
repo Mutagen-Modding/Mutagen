@@ -60,8 +60,7 @@
       <List name="AttachParentSlots" recordType="APPR">
         <FormLink refName="Keyword" />
       </List>
-      <RefList name="ObjectTemplates" counterRecType="OBTE" refName="ArmorObjectTemplate" allowNoCounter="false" />
-      <ByteArray name="EndMarker" recordType="STOP" />
+      <RefList name="ObjectTemplates" counterRecType="OBTE" refName="ArmorObjectTemplate" allowNoCounter="false" endMarker="STOP" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IOutfitTarget</LinkInterface>

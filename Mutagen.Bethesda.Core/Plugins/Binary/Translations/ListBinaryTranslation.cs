@@ -1043,6 +1043,7 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
         BinaryMasterWriteDelegate<T> transl,
         byte counterLength,
         bool writeCounterIfNull = false,
+        RecordType? endMarker = null,
         RecordTypeConverter? recordTypeConverter = null)
     {
         if (items == null)
@@ -1070,6 +1071,10 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
         foreach (var item in items)
         {
             transl(writer, item, recordTypeConverter);
+        }
+        if (endMarker != null && items.Count > 0)
+        {
+            using (HeaderExport.Subrecord(writer, endMarker.Value)) { }
         }
     }
 

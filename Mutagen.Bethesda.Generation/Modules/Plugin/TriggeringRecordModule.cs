@@ -176,6 +176,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     {
                         recordTypes.Add(subData.TriggeringRecordTypes);
                     }
+                    if (contType.CustomData.TryGetValue(PluginListBinaryTranslationGeneration.EndMarker, out var endMarkerObj) && endMarkerObj is string endMarker)
+                    {
+                        recordTypes.Add(endMarker);
+                    }
                 }
                 else if (field is DictType dict)
                 {

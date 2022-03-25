@@ -22,6 +22,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
     public const string CounterByteLength = "CounterByteLength";
     public const string NullIfCounterZero = "NullIfCounterZero";
     public const string AllowNoCounter = "AllowNoCounter";
+    public const string EndMarker = "EndMarker";
 
     public override void Load(ObjectGeneration obj, TypeGeneration field, XElement node)
     {
@@ -31,6 +32,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
         listType.CustomData[CounterByteLength] = node.GetAttribute("counterLength", default(byte));
         listType.CustomData[NullIfCounterZero] = node.GetAttribute("nullIfCounterZero", false);
         listType.CustomData[AllowNoCounter] = node.GetAttribute("allowNoCounter", true);
+        listType.CustomData[EndMarker] = node.GetAttribute("endMarker", null);
         var asyncItem = node.GetAttribute<bool>("asyncItems", false);
         if (asyncItem && listType.SubTypeGeneration is LoquiType loqui)
         {
@@ -206,6 +208,10 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
             {
                 args.Add("writeCounterIfNull: true");
             }
+            if (list.CustomData.TryGetValue(EndMarker, out var endMarkerObj) && endMarkerObj is string endMarker)
+            {
+                args.Add($"endMarker: RecordTypes.{endMarker}");
+            }
             if (allowDirectWrite)
             {
                 args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration, getter: true)}.Write");
@@ -247,6 +253,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                 });
             }
         }
+
     }
 
     public override async Task GenerateCopyIn(

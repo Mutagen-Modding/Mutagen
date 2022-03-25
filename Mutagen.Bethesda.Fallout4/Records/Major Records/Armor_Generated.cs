@@ -358,17 +358,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
-        #region EndMarker
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _EndMarker;
-        public MemorySlice<Byte>? EndMarker
-        {
-            get => this._EndMarker;
-            set => this._EndMarker = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IArmorGetter.EndMarker => this.EndMarker;
-        #endregion
         #region DATADataTypeState
         public Armor.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
@@ -428,7 +417,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TemplateArmor = initialValue;
                 this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorObjectTemplate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ArmorObjectTemplate.Mask<TItem>?>>());
-                this.EndMarker = initialValue;
                 this.DATADataTypeState = initialValue;
                 this.FNAMDataTypeState = initialValue;
             }
@@ -469,7 +457,6 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem TemplateArmor,
                 TItem AttachParentSlots,
                 TItem ObjectTemplates,
-                TItem EndMarker,
                 TItem DATADataTypeState,
                 TItem FNAMDataTypeState)
             : base(
@@ -509,7 +496,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TemplateArmor = TemplateArmor;
                 this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorObjectTemplate.Mask<TItem>?>>?>(ObjectTemplates, Enumerable.Empty<MaskItemIndexed<TItem, ArmorObjectTemplate.Mask<TItem>?>>());
-                this.EndMarker = EndMarker;
                 this.DATADataTypeState = DATADataTypeState;
                 this.FNAMDataTypeState = FNAMDataTypeState;
             }
@@ -552,7 +538,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem TemplateArmor;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AttachParentSlots;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorObjectTemplate.Mask<TItem>?>>?>? ObjectTemplates;
-            public TItem EndMarker;
             public TItem DATADataTypeState;
             public TItem FNAMDataTypeState;
             #endregion
@@ -597,7 +582,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.TemplateArmor, rhs.TemplateArmor)) return false;
                 if (!object.Equals(this.AttachParentSlots, rhs.AttachParentSlots)) return false;
                 if (!object.Equals(this.ObjectTemplates, rhs.ObjectTemplates)) return false;
-                if (!object.Equals(this.EndMarker, rhs.EndMarker)) return false;
                 if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 if (!object.Equals(this.FNAMDataTypeState, rhs.FNAMDataTypeState)) return false;
                 return true;
@@ -634,7 +618,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.TemplateArmor);
                 hash.Add(this.AttachParentSlots);
                 hash.Add(this.ObjectTemplates);
-                hash.Add(this.EndMarker);
                 hash.Add(this.DATADataTypeState);
                 hash.Add(this.FNAMDataTypeState);
                 hash.Add(base.GetHashCode());
@@ -747,7 +730,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (!eval(this.EndMarker)) return false;
                 if (!eval(this.DATADataTypeState)) return false;
                 if (!eval(this.FNAMDataTypeState)) return false;
                 return true;
@@ -858,7 +840,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (eval(this.EndMarker)) return true;
                 if (eval(this.DATADataTypeState)) return true;
                 if (eval(this.FNAMDataTypeState)) return true;
                 return false;
@@ -976,7 +957,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                obj.EndMarker = eval(this.EndMarker);
                 obj.DATADataTypeState = eval(this.DATADataTypeState);
                 obj.FNAMDataTypeState = eval(this.FNAMDataTypeState);
             }
@@ -1213,10 +1193,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.EndMarker ?? true)
-                    {
-                        fg.AppendItem(EndMarker, "EndMarker");
-                    }
                     if (printMask?.DATADataTypeState ?? true)
                     {
                         fg.AppendItem(DATADataTypeState, "DATADataTypeState");
@@ -1266,7 +1242,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? TemplateArmor;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AttachParentSlots;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorObjectTemplate.ErrorMask?>>?>? ObjectTemplates;
-            public Exception? EndMarker;
             public Exception? DATADataTypeState;
             public Exception? FNAMDataTypeState;
             #endregion
@@ -1335,8 +1310,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return AttachParentSlots;
                     case Armor_FieldIndex.ObjectTemplates:
                         return ObjectTemplates;
-                    case Armor_FieldIndex.EndMarker:
-                        return EndMarker;
                     case Armor_FieldIndex.DATADataTypeState:
                         return DATADataTypeState;
                     case Armor_FieldIndex.FNAMDataTypeState:
@@ -1437,9 +1410,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Armor_FieldIndex.ObjectTemplates:
                         this.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorObjectTemplate.ErrorMask?>>?>(ex, null);
-                        break;
-                    case Armor_FieldIndex.EndMarker:
-                        this.EndMarker = ex;
                         break;
                     case Armor_FieldIndex.DATADataTypeState:
                         this.DATADataTypeState = ex;
@@ -1545,9 +1515,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Armor_FieldIndex.ObjectTemplates:
                         this.ObjectTemplates = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorObjectTemplate.ErrorMask?>>?>)obj;
                         break;
-                    case Armor_FieldIndex.EndMarker:
-                        this.EndMarker = (Exception?)obj;
-                        break;
                     case Armor_FieldIndex.DATADataTypeState:
                         this.DATADataTypeState = (Exception?)obj;
                         break;
@@ -1592,7 +1559,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (TemplateArmor != null) return true;
                 if (AttachParentSlots != null) return true;
                 if (ObjectTemplates != null) return true;
-                if (EndMarker != null) return true;
                 if (DATADataTypeState != null) return true;
                 if (FNAMDataTypeState != null) return true;
                 return false;
@@ -1767,7 +1733,6 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     fg.AppendLine("]");
                 }
-                fg.AppendItem(EndMarker, "EndMarker");
                 fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                 fg.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
             }
@@ -1807,7 +1772,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.TemplateArmor = this.TemplateArmor.Combine(rhs.TemplateArmor);
                 ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
                 ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorObjectTemplate.ErrorMask?>>?>(ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
-                ret.EndMarker = this.EndMarker.Combine(rhs.EndMarker);
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 ret.FNAMDataTypeState = this.FNAMDataTypeState.Combine(rhs.FNAMDataTypeState);
                 return ret;
@@ -1861,7 +1825,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool TemplateArmor;
             public bool AttachParentSlots;
             public ArmorObjectTemplate.TranslationMask? ObjectTemplates;
-            public bool EndMarker;
             public bool DATADataTypeState;
             public bool FNAMDataTypeState;
             #endregion
@@ -1893,7 +1856,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Unknown = defaultOn;
                 this.TemplateArmor = defaultOn;
                 this.AttachParentSlots = defaultOn;
-                this.EndMarker = defaultOn;
                 this.DATADataTypeState = defaultOn;
                 this.FNAMDataTypeState = defaultOn;
             }
@@ -1932,7 +1894,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((TemplateArmor, null));
                 ret.Add((AttachParentSlots, null));
                 ret.Add((ObjectTemplates == null ? DefaultOn : !ObjectTemplates.GetCrystal().CopyNothing, ObjectTemplates?.GetCrystal()));
-                ret.Add((EndMarker, null));
                 ret.Add((DATADataTypeState, null));
                 ret.Add((FNAMDataTypeState, null));
             }
@@ -2143,7 +2104,6 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<IArmorGetter> TemplateArmor { get; set; }
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; set; }
         new ExtendedList<ArmorObjectTemplate>? ObjectTemplates { get; set; }
-        new MemorySlice<Byte>? EndMarker { get; set; }
         new Armor.DATADataType DATADataTypeState { get; set; }
         new Armor.FNAMDataType FNAMDataTypeState { get; set; }
         #region Mutagen
@@ -2232,7 +2192,6 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IArmorGetter> TemplateArmor { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; }
         IReadOnlyList<IArmorObjectTemplateGetter>? ObjectTemplates { get; }
-        ReadOnlyMemorySlice<Byte>? EndMarker { get; }
         Armor.DATADataType DATADataTypeState { get; }
         Armor.FNAMDataType FNAMDataTypeState { get; }
 
@@ -2432,9 +2391,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         TemplateArmor = 32,
         AttachParentSlots = 33,
         ObjectTemplates = 34,
-        EndMarker = 35,
-        DATADataTypeState = 36,
-        FNAMDataTypeState = 37,
+        DATADataTypeState = 35,
+        FNAMDataTypeState = 36,
     }
     #endregion
 
@@ -2452,9 +2410,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "c4d097a3-85cc-49c7-8a94-606c9086f0ca";
 
-        public const ushort AdditionalFieldCount = 32;
+        public const ushort AdditionalFieldCount = 31;
 
-        public const ushort FieldCount = 38;
+        public const ushort FieldCount = 37;
 
         public static readonly Type MaskType = typeof(Armor.Mask<>);
 
@@ -2578,7 +2536,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.TemplateArmor.Clear();
             item.AttachParentSlots = null;
             item.ObjectTemplates = null;
-            item.EndMarker = default;
             item.DATADataTypeState = default;
             item.FNAMDataTypeState = default;
             base.Clear(item);
@@ -2744,7 +2701,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 rhs.ObjectTemplates,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.EndMarker = MemorySliceExt.Equal(item.EndMarker, rhs.EndMarker);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             ret.FNAMDataTypeState = item.FNAMDataTypeState == rhs.FNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -2994,11 +2950,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.EndMarker ?? true)
-                && item.EndMarker is {} EndMarkerItem)
-            {
-                fg.AppendLine($"EndMarker => {SpanExt.ToHexString(EndMarkerItem)}");
-            }
             if (printMask?.DATADataTypeState ?? true)
             {
                 fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
@@ -3187,10 +3138,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.EndMarker) ?? true))
-            {
-                if (!MemorySliceExt.Equal(lhs.EndMarker, rhs.EndMarker)) return false;
-            }
             if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
@@ -3274,10 +3221,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.TemplateArmor);
             hash.Add(item.AttachParentSlots);
             hash.Add(item.ObjectTemplates);
-            if (item.EndMarker is {} EndMarkerItem)
-            {
-                hash.Add(EndMarkerItem);
-            }
             hash.Add(item.DATADataTypeState);
             hash.Add(item.FNAMDataTypeState);
             hash.Add(base.GetHashCode());
@@ -3808,17 +3751,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.EndMarker) ?? true))
-            {
-                if(rhs.EndMarker is {} EndMarkerrhs)
-                {
-                    item.EndMarker = EndMarkerrhs.ToArray();
-                }
-                else
-                {
-                    item.EndMarker = default;
-                }
-            }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.DATADataTypeState) ?? true))
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
@@ -4151,6 +4083,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 items: item.ObjectTemplates,
                 counterType: RecordTypes.OBTE,
                 counterLength: 4,
+                endMarker: RecordTypes.STOP,
                 transl: (MutagenWriter subWriter, IArmorObjectTemplateGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
@@ -4159,10 +4092,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         writer: subWriter,
                         translationParams: conv);
                 });
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.EndMarker,
-                header: translationParams.ConvertToCustom(RecordTypes.STOP));
         }
 
         public void Write(
@@ -4448,12 +4377,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         .CastExtendedList<ArmorObjectTemplate>();
                     return (int)Armor_FieldIndex.ObjectTemplates;
                 }
-                case RecordTypeInts.STOP:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EndMarker = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Armor_FieldIndex.EndMarker;
-                }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -4634,10 +4557,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; private set; }
         public IReadOnlyList<IArmorObjectTemplateGetter>? ObjectTemplates { get; private set; }
-        #region EndMarker
-        private int? _EndMarkerLocation;
-        public ReadOnlyMemorySlice<Byte>? EndMarker => _EndMarkerLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _EndMarkerLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -4875,11 +4794,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         getter: (s, p, recConv) => ArmorObjectTemplateBinaryOverlay.ArmorObjectTemplateFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)Armor_FieldIndex.ObjectTemplates;
-                }
-                case RecordTypeInts.STOP:
-                {
-                    _EndMarkerLocation = (stream.Position - offset);
-                    return (int)Armor_FieldIndex.EndMarker;
                 }
                 default:
                     return base.FillRecordType(
