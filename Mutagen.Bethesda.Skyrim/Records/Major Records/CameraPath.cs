@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             int? _zoomLoc;
-            public CameraPath.ZoomType GetZoomCustom() => _zoomLoc.HasValue ? (CameraPath.ZoomType)(HeaderTranslation.ExtractSubrecordMemory(_data, _zoomLoc.Value, _package.MetaData.Constants)[0] % 128) : default;
+            public partial CameraPath.ZoomType GetZoomCustom() => _zoomLoc.HasValue ? (CameraPath.ZoomType)(HeaderTranslation.ExtractSubrecordMemory(_data, _zoomLoc.Value, _package.MetaData.Constants)[0] % 128) : default;
 
             public bool ZoomMustHaveCameraShots => _zoomLoc.HasValue && HeaderTranslation.ExtractSubrecordMemory(_data, _zoomLoc.Value, _package.MetaData.Constants)[0] < 128;
 

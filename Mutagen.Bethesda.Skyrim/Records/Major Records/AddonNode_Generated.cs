@@ -1946,6 +1946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region AlwaysLoaded
         private int _AlwaysLoadedLocation => _DNAMLocation!.Value + 0x2;
+        public partial Boolean GetAlwaysLoadedCustom();
         public Boolean AlwaysLoaded => GetAlwaysLoadedCustom();
         #endregion
         partial void CustomFactoryEnd(

@@ -1182,6 +1182,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region ScriptFragments
+        public partial ISceneScriptFragmentsGetter? GetScriptFragmentsCustom(int location);
         public ISceneScriptFragmentsGetter? ScriptFragments => GetScriptFragmentsCustom(location: ScriptsEndingPos);
         protected int ScriptFragmentsEndingPos;
         partial void CustomScriptFragmentsEndPos();

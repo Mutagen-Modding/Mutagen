@@ -1375,6 +1375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial Single GetTimerSettingCustom();
         public Single TimerSetting => GetTimerSettingCustom();
         #endregion
         #region Animations

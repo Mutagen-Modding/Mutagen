@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Skyrim
         public partial class QuestAdapterBinaryOverlay
         {
             private string _filename = string.Empty;
-            public String GetFileNameCustom(int location) => _filename;
+            public partial String GetFileNameCustom(int location) => _filename;
 
             public IReadOnlyList<IQuestScriptFragmentGetter> Fragments { get; private set; } = ListExt.Empty<IQuestScriptFragmentGetter>();
 

@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Skyrim
                 new RecordType("CIS1"),
                 new RecordType("CIS2"));
 
-            private Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_data.Span[location]);
+            public partial Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_data.Span[location]);
             public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_data.Span[0]);
 
             public static ConditionBinaryOverlay ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package)
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ConditionFloatBinaryOverlay
         {
-            private IConditionDataGetter GetDataCustom(int location)
+            public partial IConditionDataGetter GetDataCustom(int location)
             {
                 var functionIndex = BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(location));
                 if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
@@ -1209,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ConditionGlobalBinaryOverlay
         {
-            private IConditionDataGetter GetDataCustom(int location)
+            public partial IConditionDataGetter GetDataCustom(int location)
             {
                 var functionIndex = BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(location));
                 if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)

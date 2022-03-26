@@ -6828,6 +6828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial IWeatherAmbientColorSetGetter? GetDirectionalAmbientLightingColorsCustom();
         public IWeatherAmbientColorSetGetter? DirectionalAmbientLightingColors => GetDirectionalAmbientLightingColorsCustom();
         #endregion
         #region NAM2

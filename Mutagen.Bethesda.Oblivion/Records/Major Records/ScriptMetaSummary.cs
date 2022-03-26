@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class ScriptMetaSummaryBinaryOverlay
         {
-            public int GetCompiledSizeCustom(int location)
+            public partial int GetCompiledSizeCustom(int location)
             {
                 return BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(location));
             }

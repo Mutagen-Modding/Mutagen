@@ -3077,7 +3077,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte PowerAttackRight => _data.Span[0x44];
         public Single HoldTimerMin => _data.Slice(0x48, 0x4).Float();
         public Single HoldTimerMax => _data.Slice(0x4C, 0x4).Float();
+        #region Flags
+        public partial CombatStyle.Flag GetFlagsCustom(int location);
         public CombatStyle.Flag Flags => GetFlagsCustom(location: 0x50);
+        #endregion
         public Byte AcrobaticDodgePercentChance => _data.Span[0x51];
         public Single RangeMultOptimal => _data.Length <= 0x54 ? default : _data.Slice(0x54, 0x4).Float();
         public Single RangeMultMax => _data.Length <= 0x58 ? default : _data.Slice(0x58, 0x4).Float();

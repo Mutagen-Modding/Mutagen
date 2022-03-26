@@ -1532,6 +1532,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial Int32? GetDataCustom();
         public Int32? Data => GetDataCustom();
         #endregion
         partial void CustomFactoryEnd(

@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PerkAdapterBinaryOverlay
         {
-            IPerkScriptFragmentsGetter? GetScriptFragmentsCustom(int location)
+            public partial IPerkScriptFragmentsGetter? GetScriptFragmentsCustom(int location)
             {
                 if (this.ScriptsEndingPos == _data.Length) return null;
                 return PerkScriptFragmentsBinaryOverlay.PerkScriptFragmentsFactory(

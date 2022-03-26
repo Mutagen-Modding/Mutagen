@@ -63,12 +63,12 @@ namespace Mutagen.Bethesda.Oblivion
         {
             public override ReadOnlySpan<byte> Marker => SoundDataExtended.SoundDataExtendedMarker;
 
-            public float GetStopTimeCustom(int location)
+            public partial float GetStopTimeCustom(int location)
             {
                 return SoundDataExtendedBinaryCreateTranslation.ConvertTime(_data.Span[location]);
             }
 
-            public float GetStartTimeCustom(int location)
+            public partial float GetStartTimeCustom(int location)
             {
                 return SoundDataExtendedBinaryCreateTranslation.ConvertTime(_data.Span[location]);
             }

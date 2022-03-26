@@ -1216,7 +1216,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 translationParams: translationParams);
         }
 
+        #region Target
+        public partial IALocationTargetGetter GetTargetCustom(int location);
         public IALocationTargetGetter Target => GetTargetCustom(location: 0x0);
+        #endregion
         public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
         public UInt32 CollectionIndex => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(

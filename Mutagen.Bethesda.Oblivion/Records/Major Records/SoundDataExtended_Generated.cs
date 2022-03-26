@@ -1305,8 +1305,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public Single StaticAttenuation => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(0x8, 0x2), FloatIntegerType.UShort, 0.01);
+        #region StopTime
+        public partial Single GetStopTimeCustom(int location);
         public Single StopTime => GetStopTimeCustom(location: 0xA);
+        #endregion
+        #region StartTime
+        public partial Single GetStartTimeCustom(int location);
         public Single StartTime => GetStartTimeCustom(location: 0xB);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

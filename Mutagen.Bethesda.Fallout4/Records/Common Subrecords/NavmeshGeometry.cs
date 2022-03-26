@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Fallout4
                     _package,
                     trianglesStartPos: VerticesEndingPos);
 
-            public IANavmeshParentGetter GetParentCustom(int location)
+            public partial IANavmeshParentGetter GetParentCustom(int location)
             {
                 return NavmeshGeometryBinaryCreateTranslation.GetBinaryParent(new OverlayStream(_data.Slice(8), _package));
             }

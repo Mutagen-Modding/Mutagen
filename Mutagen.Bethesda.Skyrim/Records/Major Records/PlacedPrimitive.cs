@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PlacedPrimitiveBinaryOverlay
         {
-            P3Float GetBoundsCustom(int location)
+            public partial P3Float GetBoundsCustom(int location)
             {
                 return new P3Float(
                     _data.Slice(location).Float() * 2,

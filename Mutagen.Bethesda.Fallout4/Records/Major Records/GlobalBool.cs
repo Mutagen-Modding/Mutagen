@@ -56,9 +56,10 @@ namespace Mutagen.Bethesda.Fallout4
             
             private int? _DataLocation;
             public bool GetDataIsSetCustom() => _DataLocation.HasValue;
-            public bool GetDataCustom()
+            public partial bool? GetDataCustom()
             {
-                return HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation!.Value, _package.MetaData.Constants).Float() != 0;
+                if (!_DataLocation.HasValue) return null;
+                return HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants).Float() != 0;
             }
             partial void DataCustomParse(OverlayStream stream, long finalPos, int offset)
             {

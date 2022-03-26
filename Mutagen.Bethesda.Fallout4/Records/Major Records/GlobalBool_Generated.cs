@@ -1525,6 +1525,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial Boolean? GetDataCustom();
         public Boolean? Data => GetDataCustom();
         #endregion
         partial void CustomFactoryEnd(

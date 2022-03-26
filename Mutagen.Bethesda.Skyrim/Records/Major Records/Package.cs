@@ -518,10 +518,10 @@ namespace Mutagen.Bethesda.Skyrim
             public int DataInputVersion { get; private set; }
 
             ReadOnlyMemorySlice<Byte> _xnam;
-            public ReadOnlyMemorySlice<Byte> GetXnamMarkerCustom() => _xnam;
+            public partial ReadOnlyMemorySlice<Byte> GetXnamMarkerCustom() => _xnam;
 
             FormLink<IPackageGetter> _packageTemplate = null!;
-            public FormLink<IPackageGetter> GetPackageTemplateCustom() => _packageTemplate;
+            public partial IFormLinkGetter<IPackageGetter> GetPackageTemplateCustom() => _packageTemplate;
 
             partial void PackageTemplateCustomParse(OverlayStream stream, long finalPos, int offset)
             {

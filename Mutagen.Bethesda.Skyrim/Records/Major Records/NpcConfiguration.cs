@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class NpcConfigurationBinaryOverlay
         {
-            IANpcLevelGetter GetLevelCustom(int location)
+            public partial IANpcLevelGetter GetLevelCustom(int location)
             {
                 uint rawFlags = BinaryPrimitives.ReadUInt32LittleEndian(_data);
                 if (EnumExt.HasFlag(rawFlags, NpcConfigurationBinaryCreateTranslation.PcLevelMultFlag))
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            NpcConfiguration.Flag GetFlagsCustom(int location)
+            public partial NpcConfiguration.Flag GetFlagsCustom(int location)
             {
                 uint rawFlags = BinaryPrimitives.ReadUInt32LittleEndian(_data);
                 // Clear out PcLevelMult flag, as that information is kept in the field type above

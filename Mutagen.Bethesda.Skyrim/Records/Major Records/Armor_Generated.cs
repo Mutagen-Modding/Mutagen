@@ -3590,6 +3590,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial IBodyTemplateGetter? GetBodyTemplateCustom();
         public IBodyTemplateGetter? BodyTemplate => GetBodyTemplateCustom();
         #endregion
         public IDestructibleGetter? Destructible { get; private set; }

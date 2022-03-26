@@ -217,7 +217,15 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 loc = passedLenAccessor;
             }
             using (var args = new ArgsWrapper(fg,
-                $"public {typeGen.OverrideStr}{typeGen.TypeName(getter: true)}{(typeGen.IsNullable ? "?" : null)} {typeGen.Name} => Get{typeGen.Name}Custom"))
+                $"public partial {typeGen.TypeName(getter: true)}{typeGen.NullChar} Get{typeGen.Name}Custom"))
+            {
+                if (!fieldData.HasTrigger && dataType == null)
+                {
+                    args.Add($"int location");
+                }
+            }
+            using (var args = new ArgsWrapper(fg,
+                $"public {typeGen.OverrideStr}{typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => Get{typeGen.Name}Custom"))
             {
                 if (!fieldData.HasTrigger && dataType == null)
                 {

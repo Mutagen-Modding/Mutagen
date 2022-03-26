@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
         public partial class NavigationMapInfoBinaryOverlay
         {
             IIslandDataGetter? _island;
-            IIslandDataGetter? GetIslandCustom(int location) => _island;
+            public partial IIslandDataGetter? GetIslandCustom(int location) => _island;
 
             public P2Int16 ParentWorldspaceCoord
             {

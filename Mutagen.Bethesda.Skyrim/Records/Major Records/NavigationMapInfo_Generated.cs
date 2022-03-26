@@ -2184,6 +2184,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected int LinkedDoorsEndingPos;
         #endregion
         #region Island
+        public partial IIslandDataGetter? GetIslandCustom(int location);
         public IIslandDataGetter? Island => GetIslandCustom(location: LinkedDoorsEndingPos);
         protected int IslandEndingPos;
         partial void CustomIslandEndPos();

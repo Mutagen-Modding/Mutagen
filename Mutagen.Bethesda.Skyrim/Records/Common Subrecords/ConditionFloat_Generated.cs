@@ -1249,6 +1249,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Single ComparisonValue => _data.Slice(0x4, 0x4).Float();
         #region Data
+        public partial IConditionDataGetter GetDataCustom(int location);
         public override IConditionDataGetter Data => GetDataCustom(location: 0x8);
         protected int DataEndingPos;
         partial void CustomDataEndPos();

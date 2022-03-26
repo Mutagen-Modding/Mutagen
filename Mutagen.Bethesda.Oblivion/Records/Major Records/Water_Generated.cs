@@ -1932,6 +1932,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial IWaterDataGetter? GetDataCustom();
         public IWaterDataGetter? Data => GetDataCustom();
         #endregion
         #region RelatedWaters

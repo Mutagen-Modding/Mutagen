@@ -2771,6 +2771,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial IBodyTemplateGetter? GetBodyTemplateCustom();
         public IBodyTemplateGetter? BodyTemplate => GetBodyTemplateCustom();
         #endregion
         #region Race
@@ -2796,6 +2797,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region WeightSliderEnabled
         private int _WeightSliderEnabledLocation => _DNAMLocation!.Value + 0x2;
+        public partial IGenderedItemGetter<Boolean> GetWeightSliderEnabledCustom();
         public IGenderedItemGetter<Boolean> WeightSliderEnabled => GetWeightSliderEnabledCustom();
         #endregion
         #region Unknown

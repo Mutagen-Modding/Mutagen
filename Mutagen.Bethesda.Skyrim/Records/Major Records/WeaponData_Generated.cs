@@ -2462,7 +2462,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0x1, 0x3).ToArray();
         public Single Speed => _data.Slice(0x4, 0x4).Float();
         public Single Reach => _data.Slice(0x8, 0x4).Float();
+        #region Flags
+        public partial WeaponData.Flag GetFlagsCustom(int location);
         public WeaponData.Flag Flags => GetFlagsCustom(location: 0xC);
+        #endregion
         public Int16 Unused2 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xE, 0x2));
         public Single SightFOV => _data.Slice(0x10, 0x4).Float();
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x14, 0x4));

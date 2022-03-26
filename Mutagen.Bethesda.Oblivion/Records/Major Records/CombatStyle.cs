@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         public partial class CombatStyleDataBinaryOverlay
         {
             private bool GetFlagsIsSetCustom() => true;
-            private CombatStyle.Flag GetFlagsCustom(int location)
+            public partial CombatStyle.Flag GetFlagsCustom(int location)
             {
                 var ret = (CombatStyle.Flag)_data[0x50];
                 if (!this.Versioning.HasFlag(CombatStyleData.VersioningBreaks.Break4))

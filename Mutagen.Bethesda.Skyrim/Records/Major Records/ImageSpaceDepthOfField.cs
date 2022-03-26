@@ -144,10 +144,10 @@ namespace Mutagen.Bethesda.Skyrim
         public partial class ImageSpaceDepthOfFieldBinaryOverlay
         {
             byte _radius;
-            public Byte GetBlurRadiusCustom(int location) => _radius;
+            public partial Byte GetBlurRadiusCustom(int location) => _radius;
 
             bool _sky;
-            public Boolean GetSkyCustom(int location) => _sky;
+            public partial Boolean GetSkyCustom(int location) => _sky;
 
             partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {

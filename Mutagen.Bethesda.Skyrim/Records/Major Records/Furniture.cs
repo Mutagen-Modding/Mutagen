@@ -340,7 +340,7 @@ namespace Mutagen.Bethesda.Skyrim
         public partial class FurnitureBinaryOverlay
         {
             Furniture.Flag? _flags;
-            Furniture.Flag? GetFlagsCustom() => _flags;
+            public partial Furniture.Flag? GetFlagsCustom() => _flags;
 
             private ExtendedList<FurnitureMarker>? _markers;
             public IReadOnlyList<IFurnitureMarkerGetter>? Markers => _markers;

@@ -1158,8 +1158,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
+        #region Flags
+        public partial AIPackage.Flag GetFlagsCustom(int location);
         public AIPackage.Flag Flags => GetFlagsCustom(location: 0x0);
+        #endregion
+        #region Type
+        public partial AIPackage.Types GetTypeCustom(int location);
         public AIPackage.Types Type => GetTypeCustom(location: 0x4);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

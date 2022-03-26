@@ -1176,7 +1176,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 translationParams: translationParams);
         }
 
+        #region Flags
+        public partial Condition.Flag GetFlagsCustom(int location);
         public Condition.Flag Flags => GetFlagsCustom(location: 0x0);
+        #endregion
         public ReadOnlyMemorySlice<Byte> Unknown1 => _data.Span.Slice(0x1, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -1244,7 +1244,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
+        #region ArmorValue
+        public partial Single GetArmorValueCustom(int location);
         public Single ArmorValue => GetArmorValueCustom(location: 0x0);
+        #endregion
         public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x2, 0x4));
         public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x6, 0x4));
         public Single Weight => _data.Slice(0xA, 0x4).Float();

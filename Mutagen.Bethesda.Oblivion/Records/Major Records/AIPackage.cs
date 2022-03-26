@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class AIPackageDataBinaryOverlay
         {
-            public AIPackage.Flag GetFlagsCustom(int location)
+            public partial AIPackage.Flag GetFlagsCustom(int location)
             {
                 if (_data.Length > 4)
                 {
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            public AIPackage.Types GetTypeCustom(int location)
+            public partial AIPackage.Types GetTypeCustom(int location)
             {
                 if (_data.Length > 4)
                 {

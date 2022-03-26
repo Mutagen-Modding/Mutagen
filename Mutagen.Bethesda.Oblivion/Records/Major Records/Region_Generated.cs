@@ -2276,6 +2276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial String? GetIconCustom();
         public String? Icon => GetIconCustom();
         #endregion
         #region MapColor

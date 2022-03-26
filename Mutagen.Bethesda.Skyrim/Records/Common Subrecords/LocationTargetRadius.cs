@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class LocationTargetRadiusBinaryOverlay
         {
-            IALocationTargetGetter GetTargetCustom(int location)
+            public partial IALocationTargetGetter GetTargetCustom(int location)
             {
                 return LocationTargetRadiusBinaryCreateTranslation.GetLocationTarget(
                     new MutagenFrame(

@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ExtraDataBinaryOverlay
         {
-            IOwnerTargetGetter GetOwnerCustom(int location) => ExtraDataBinaryCreateTranslation.GetBinaryOwner(_data.Slice(location), _package.MetaData.RecordInfoCache!, _package.MetaData.MasterReferences!);
+            public partial IOwnerTargetGetter GetOwnerCustom(int location) => ExtraDataBinaryCreateTranslation.GetBinaryOwner(_data.Slice(location), _package.MetaData.RecordInfoCache!, _package.MetaData.MasterReferences!);
         }
     }
 }

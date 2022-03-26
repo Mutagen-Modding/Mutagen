@@ -115,13 +115,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class BookBinaryOverlay
         {
-            public Book.Flag GetFlagsCustom()
+            public partial Book.Flag GetFlagsCustom()
             {
                 if (!_DATALocation.HasValue) return default;
                 return (Book.Flag)_data[_FlagsLocation];
             }
 
-            public IBookTeachTargetGetter? GetTeachesCustom()
+            public partial IBookTeachTargetGetter? GetTeachesCustom()
             {
                 if (!_DATALocation.HasValue) return default;
                 int flags = (int)this.Flags;

@@ -1438,11 +1438,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single Range => _data.Slice(0x8, 0x4).Float();
         public Int16 Unknown => _data.Length <= 0xC ? default : BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xC, 0x2));
         #region BlurRadius
+        public partial Byte GetBlurRadiusCustom(int location);
         public Byte BlurRadius => GetBlurRadiusCustom(location: 0xE);
         protected int BlurRadiusEndingPos;
         partial void CustomBlurRadiusEndPos();
         #endregion
         #region Sky
+        public partial Boolean GetSkyCustom(int location);
         public Boolean Sky => GetSkyCustom(location: BlurRadiusEndingPos);
         protected int SkyEndingPos;
         partial void CustomSkyEndPos();

@@ -2153,6 +2153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial IPackageFlagsOverrideGetter? GetFlagsOverrideCustom();
         public IPackageFlagsOverrideGetter? FlagsOverride => GetFlagsOverrideCustom();
         #endregion
         public IReadOnlyList<ReadOnlyMemorySlice<Byte>> Unknown { get; private set; } = ListExt.Empty<ReadOnlyMemorySlice<Byte>>();

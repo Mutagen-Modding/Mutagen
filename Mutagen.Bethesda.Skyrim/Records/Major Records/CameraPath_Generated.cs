@@ -2071,6 +2071,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial CameraPath.ZoomType GetZoomCustom();
         public CameraPath.ZoomType Zoom => GetZoomCustom();
         #endregion
         public IReadOnlyList<IFormLinkGetter<ICameraShotGetter>> Shots { get; private set; } = ListExt.Empty<IFormLinkGetter<ICameraShotGetter>>();

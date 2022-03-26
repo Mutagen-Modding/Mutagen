@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public partial class LocationTargetRadiusBinaryOverlay
         {
-            IALocationTargetGetter GetTargetCustom(int location)
+            public partial IALocationTargetGetter GetTargetCustom(int location)
             {
                 return LocationTargetRadiusBinaryCreateTranslation.GetLocationTarget(
                     new MutagenFrame(

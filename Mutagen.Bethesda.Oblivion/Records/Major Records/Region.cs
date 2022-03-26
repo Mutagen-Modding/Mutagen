@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Icon
         private int? _iconLocation;
         private int? _secondaryIconLocation;
-        string? GetIconCustom()
+        public partial string? GetIconCustom()
         {
             if (_iconLocation.HasValue)
             {

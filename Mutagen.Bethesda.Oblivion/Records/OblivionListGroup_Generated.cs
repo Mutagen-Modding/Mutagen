@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn<T, TGetter>(
             this IOblivionListGroup<T> lhs,
             IOblivionListGroupGetter<TGetter> rhs)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
         {
             ((OblivionListGroupSetterTranslationCommon)((IOblivionListGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
@@ -328,7 +328,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionListGroup<T> lhs,
             IOblivionListGroupGetter<TGetter> rhs,
             OblivionListGroup.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
             where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Oblivion
             IOblivionListGroupGetter<TGetter> rhs,
             out OblivionListGroup.ErrorMask<T_ErrMask> errorMask,
             OblivionListGroup.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
             where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Oblivion
             IOblivionListGroupGetter<TGetter> rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
         {
             ((OblivionListGroupSetterTranslationCommon)((IOblivionListGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
@@ -379,7 +379,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static OblivionListGroup<T> DeepCopy<T, TGetter, T_TranslMask>(
             this IOblivionListGroupGetter<TGetter> item,
             OblivionListGroup.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
             where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionListGroupGetter<TGetter> item,
             out OblivionListGroup.ErrorMask<T_ErrMask> errorMask,
             OblivionListGroup.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
             where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionListGroupGetter<TGetter> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
         {
             return ((OblivionListGroupSetterTranslationCommon)((IOblivionListGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter>(
@@ -758,22 +758,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly OblivionListGroup_Registration<T> GenericInstance = new OblivionListGroup_Registration<T>();
 
-        public new static Type GetNthType(ushort index)
-        {
-            OblivionListGroup_FieldIndex enu = (OblivionListGroup_FieldIndex)index;
-            switch (enu)
-            {
-                case OblivionListGroup_FieldIndex.Type:
-                    return typeof(GroupTypeEnum);
-                case OblivionListGroup_FieldIndex.LastModified:
-                    return typeof(Int32);
-                case OblivionListGroup_FieldIndex.Records:
-                    return typeof(ExtendedList<T>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
     }
     #endregion
 
@@ -1115,7 +1099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
         {
             if ((copyMask?.GetShouldTranslate((int)OblivionListGroup_FieldIndex.Type) ?? true))
@@ -1155,7 +1139,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public OblivionListGroup<T> DeepCopy<T, TGetter, T_TranslMask>(
             IOblivionListGroupGetter<TGetter> item,
             OblivionListGroup.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
             where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
@@ -1173,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionListGroupGetter<TGetter> item,
             out OblivionListGroup.ErrorMask<T_ErrMask> errorMask,
             OblivionListGroup.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
             where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
@@ -1194,7 +1178,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionListGroupGetter<TGetter> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
         {
             OblivionListGroup<T> ret = (OblivionListGroup<T>)((OblivionListGroupCommon<TGetter>)((IOblivionListGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();

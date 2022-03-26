@@ -1811,6 +1811,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial Subgraph.SubgraphRole GetRoleCustom();
         public Subgraph.SubgraphRole Role => GetRoleCustom();
         #endregion
         partial void CustomFactoryEnd(

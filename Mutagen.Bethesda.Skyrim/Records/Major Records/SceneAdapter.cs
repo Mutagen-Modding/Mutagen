@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class SceneAdapterBinaryOverlay
         {
-            ISceneScriptFragmentsGetter? GetScriptFragmentsCustom(int location)
+            public partial ISceneScriptFragmentsGetter? GetScriptFragmentsCustom(int location)
             {
                 if (this.ScriptsEndingPos == _data.Length) return null;
                 return SceneScriptFragmentsBinaryOverlay.SceneScriptFragmentsFactory(

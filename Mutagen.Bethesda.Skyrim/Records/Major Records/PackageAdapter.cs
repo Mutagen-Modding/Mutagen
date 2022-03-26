@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PackageAdapterBinaryOverlay
         {
-            IPackageScriptFragmentsGetter? GetScriptFragmentsCustom(int location)
+            public partial IPackageScriptFragmentsGetter? GetScriptFragmentsCustom(int location)
             {
                 if (this.ScriptsEndingPos == _data.Length) return null;
                 return PackageScriptFragmentsBinaryOverlay.PackageScriptFragmentsFactory(

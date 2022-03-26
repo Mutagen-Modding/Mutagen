@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return ret;
             }
 
-            public Race.Flag GetFlagsCustom()
+            public partial Race.Flag GetFlagsCustom()
             {
                 if (!_DATALocation.HasValue) return default;
                 var flag = (Race.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4));
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             private int? _BodyTemplateLocation;
-            public IBodyTemplateGetter? GetBodyTemplateCustom() => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.CustomFactory(new OverlayStream(_data.Slice(_BodyTemplateLocation!.Value), _package), _package) : default;
+            public partial IBodyTemplateGetter? GetBodyTemplateCustom() => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.CustomFactory(new OverlayStream(_data.Slice(_BodyTemplateLocation!.Value), _package), _package) : default;
             public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
 
             partial void BodyTemplateCustomParse(OverlayStream stream, long finalPos, int offset)

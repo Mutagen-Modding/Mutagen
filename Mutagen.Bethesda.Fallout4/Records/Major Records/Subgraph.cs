@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
 
             private Subgraph.SubgraphRole _role;
-            public Subgraph.SubgraphRole GetRoleCustom() => _role;
+            public partial Subgraph.SubgraphRole GetRoleCustom() => _role;
             public Perspective Perspective { get; private set; }
         }
 

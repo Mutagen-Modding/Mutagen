@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public IReadOnlyList<IScriptEntryGetter> Scripts { get; private set; } = null!;
 
-            public IScriptObjectPropertyGetter GetPropertyCustom(int location) => throw new NotImplementedException();
+            public partial IScriptObjectPropertyGetter GetPropertyCustom(int location) => throw new NotImplementedException();
 
             partial void CustomCtor()
             {

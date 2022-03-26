@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Skyrim
             public IPackageFlagsOverrideGetter? FlagsOverrideUnused { get; private set; }
 
             private IPackageFlagsOverrideGetter? _flagsOverride;
-            public IPackageFlagsOverrideGetter? GetFlagsOverrideCustom() => _flagsOverride;
+            public partial IPackageFlagsOverrideGetter? GetFlagsOverrideCustom() => _flagsOverride;
 
             partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
             {

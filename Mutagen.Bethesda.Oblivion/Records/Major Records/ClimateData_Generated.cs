@@ -1498,13 +1498,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
+        #region SunriseBegin
+        public partial DateTime GetSunriseBeginCustom(int location);
         public DateTime SunriseBegin => GetSunriseBeginCustom(location: 0x0);
+        #endregion
+        #region SunriseEnd
+        public partial DateTime GetSunriseEndCustom(int location);
         public DateTime SunriseEnd => GetSunriseEndCustom(location: 0x1);
+        #endregion
+        #region SunsetBegin
+        public partial DateTime GetSunsetBeginCustom(int location);
         public DateTime SunsetBegin => GetSunsetBeginCustom(location: 0x2);
+        #endregion
+        #region SunsetEnd
+        public partial DateTime GetSunsetEndCustom(int location);
         public DateTime SunsetEnd => GetSunsetEndCustom(location: 0x3);
+        #endregion
         public Byte Volatility => _data.Span[0x4];
+        #region Phase
+        public partial Climate.MoonPhase GetPhaseCustom(int location);
         public Climate.MoonPhase Phase => GetPhaseCustom(location: 0x5);
+        #endregion
         #region PhaseLength
+        public partial Byte GetPhaseLengthCustom(int location);
         public Byte PhaseLength => GetPhaseLengthCustom(location: 0x6);
         protected int PhaseLengthEndingPos;
         partial void CustomPhaseLengthEndPos();

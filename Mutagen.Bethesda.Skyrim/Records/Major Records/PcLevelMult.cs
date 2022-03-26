@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PcLevelMultBinaryOverlay
         {
-            float GetLevelMultCustom(int location) => throw new NotImplementedException();
+            public partial float GetLevelMultCustom(int location) => throw new NotImplementedException();
         }
     }
 }

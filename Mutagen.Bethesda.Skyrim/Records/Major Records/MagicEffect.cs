@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda.Skyrim
                 stream.Position += 2;
             }
 
-            public IMagicEffectArchetypeGetter GetArchetypeCustom()
+            public partial IMagicEffectArchetypeGetter GetArchetypeCustom()
             {
                 if (!_DATALocation.HasValue) return new MagicEffectArchetype();
                 var frame = new MutagenFrame(new MutagenMemoryReadStream(_data, _package.MetaData))

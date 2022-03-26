@@ -3355,6 +3355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial Boolean GetOpenByDefaultCustom();
         public Boolean OpenByDefault => GetOpenByDefaultCustom();
         #endregion
         #region RagdollData

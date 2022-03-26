@@ -3210,6 +3210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Book.DATADataType DATADataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value;
+        public partial Book.Flag GetFlagsCustom();
         public Book.Flag Flags => GetFlagsCustom();
         #endregion
         #region Type
@@ -3224,6 +3225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Teaches
         private int _TeachesLocation => _DATALocation!.Value + 0x4;
+        public partial IBookTeachTargetGetter? GetTeachesCustom();
         public IBookTeachTargetGetter? Teaches => GetTeachesCustom();
         #endregion
         #region Value

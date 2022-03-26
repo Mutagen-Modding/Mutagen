@@ -1081,6 +1081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region LevelMult
+        public partial Single GetLevelMultCustom(int location);
         public Single LevelMult => GetLevelMultCustom(location: 0x0);
         protected int LevelMultEndingPos;
         partial void CustomLevelMultEndPos();

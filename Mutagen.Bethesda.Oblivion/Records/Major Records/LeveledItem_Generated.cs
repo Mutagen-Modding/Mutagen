@@ -1692,6 +1692,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial LeveledFlag? GetFlagsCustom();
         public LeveledFlag? Flags => GetFlagsCustom();
         #endregion
         public IReadOnlyList<ILeveledItemEntryGetter> Entries { get; private set; } = ListExt.Empty<LeveledItemEntryBinaryOverlay>();

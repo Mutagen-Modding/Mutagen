@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this._waterData = WaterBinaryCreateTranslation.CreateCustom(new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)));
             }
 
-            WaterData? GetDataCustom() => _waterData;
+            public partial IWaterDataGetter? GetDataCustom() => _waterData;
         }
     }
 }

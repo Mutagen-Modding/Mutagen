@@ -1300,8 +1300,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
+        #region MinimumAttenuationDistance
+        public partial UInt16 GetMinimumAttenuationDistanceCustom(int location);
         public UInt16 MinimumAttenuationDistance => GetMinimumAttenuationDistanceCustom(location: 0x0);
+        #endregion
+        #region MaximumAttenuationDistance
+        public partial UInt16 GetMaximumAttenuationDistanceCustom(int location);
         public UInt16 MaximumAttenuationDistance => GetMaximumAttenuationDistanceCustom(location: 0x1);
+        #endregion
         public SByte FrequencyAdjustment => (sbyte)_data.Slice(0x2, 0x1)[0];
         public SoundData.Flag Flags => (SoundData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(

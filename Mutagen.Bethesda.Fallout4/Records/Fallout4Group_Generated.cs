@@ -316,7 +316,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void DeepCopyIn<T, TGetter>(
             this IFallout4Group<T> lhs,
             IFallout4GroupGetter<TGetter> rhs)
-            where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, IFallout4MajorRecordInternal, IBinaryItem
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
         {
             ((Fallout4GroupSetterTranslationCommon)((IFallout4GroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
@@ -331,7 +331,7 @@ namespace Mutagen.Bethesda.Fallout4
             this IFallout4Group<T> lhs,
             IFallout4GroupGetter<TGetter> rhs,
             Fallout4Group.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, IFallout4MajorRecordInternal, IBinaryItem
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
             where T_TranslMask : Fallout4MajorRecord.TranslationMask, ITranslationMask
         {
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Fallout4
             IFallout4GroupGetter<TGetter> rhs,
             out Fallout4Group.ErrorMask<T_ErrMask> errorMask,
             Fallout4Group.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, IFallout4MajorRecordInternal, IBinaryItem
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
             where T_ErrMask : Fallout4MajorRecord.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : Fallout4MajorRecord.TranslationMask, ITranslationMask
@@ -368,7 +368,7 @@ namespace Mutagen.Bethesda.Fallout4
             IFallout4GroupGetter<TGetter> rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
-            where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, IFallout4MajorRecordInternal, IBinaryItem
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
         {
             ((Fallout4GroupSetterTranslationCommon)((IFallout4GroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
@@ -382,7 +382,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static Fallout4Group<T> DeepCopy<T, TGetter, T_TranslMask>(
             this IFallout4GroupGetter<TGetter> item,
             Fallout4Group.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, IFallout4MajorRecordInternal, IBinaryItem
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
             where T_TranslMask : Fallout4MajorRecord.TranslationMask, ITranslationMask
         {
@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Fallout4
             this IFallout4GroupGetter<TGetter> item,
             out Fallout4Group.ErrorMask<T_ErrMask> errorMask,
             Fallout4Group.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, IFallout4MajorRecordInternal, IBinaryItem
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
             where T_ErrMask : Fallout4MajorRecord.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : Fallout4MajorRecord.TranslationMask, ITranslationMask
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Fallout4
             this IFallout4GroupGetter<TGetter> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
-            where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, IFallout4MajorRecordInternal, IBinaryItem
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
         {
             return ((Fallout4GroupSetterTranslationCommon)((IFallout4GroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter>(
@@ -761,24 +761,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         where T : Fallout4MajorRecord, IBinaryItem
     {
         public static readonly Fallout4Group_Registration<T> GenericInstance = new Fallout4Group_Registration<T>();
-
-        public new static Type GetNthType(ushort index)
-        {
-            Fallout4Group_FieldIndex enu = (Fallout4Group_FieldIndex)index;
-            switch (enu)
-            {
-                case Fallout4Group_FieldIndex.Type:
-                    return typeof(GroupTypeEnum);
-                case Fallout4Group_FieldIndex.LastModified:
-                    return typeof(Int32);
-                case Fallout4Group_FieldIndex.Unknown:
-                    return typeof(Int32);
-                case Fallout4Group_FieldIndex.RecordCache:
-                    return typeof(ICache<T, FormKey>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
     }
     #endregion
@@ -1142,7 +1124,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
-            where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, IFallout4MajorRecordInternal, IBinaryItem
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
         {
             if ((copyMask?.GetShouldTranslate((int)Fallout4Group_FieldIndex.Type) ?? true))
@@ -1186,7 +1168,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public Fallout4Group<T> DeepCopy<T, TGetter, T_TranslMask>(
             IFallout4GroupGetter<TGetter> item,
             Fallout4Group.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, IFallout4MajorRecordInternal, IBinaryItem
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
             where T_TranslMask : Fallout4MajorRecord.TranslationMask, ITranslationMask
         {
@@ -1204,7 +1186,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IFallout4GroupGetter<TGetter> item,
             out Fallout4Group.ErrorMask<T_ErrMask> errorMask,
             Fallout4Group.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, IFallout4MajorRecordInternal, IBinaryItem
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
             where T_ErrMask : Fallout4MajorRecord.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : Fallout4MajorRecord.TranslationMask, ITranslationMask
@@ -1225,7 +1207,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IFallout4GroupGetter<TGetter> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
-            where T : class, IFallout4MajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, IFallout4MajorRecordInternal, IBinaryItem
             where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
         {
             Fallout4Group<T> ret = (Fallout4Group<T>)((Fallout4GroupCommon<TGetter>)((IFallout4GroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();

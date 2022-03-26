@@ -5495,6 +5495,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial Cell.Flag GetFlagsCustom();
         public Cell.Flag Flags => GetFlagsCustom();
         #endregion
         #region Grid

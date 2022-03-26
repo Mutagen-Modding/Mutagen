@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Fallout4
                 return null;
             }
 
-            public Race.Flag GetFlagsCustom()
+            public partial Race.Flag GetFlagsCustom()
             {
                 if (!_DATALocation.HasValue) return default;
                 var flag = (Race.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4));

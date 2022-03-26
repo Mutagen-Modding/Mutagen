@@ -4954,6 +4954,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region Archetype
         private int _ArchetypeLocation => _DATALocation!.Value + 0x40;
+        public partial IMagicEffectArchetypeGetter GetArchetypeCustom();
         public IMagicEffectArchetypeGetter Archetype => GetArchetypeCustom();
         #endregion
         #region Projectile

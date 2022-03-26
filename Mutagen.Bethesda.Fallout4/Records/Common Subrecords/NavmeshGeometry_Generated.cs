@@ -2414,7 +2414,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public UInt32 NavmeshVersion => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x0, 0x4));
         public UInt32 Magic => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
+        #region Parent
+        public partial IANavmeshParentGetter GetParentCustom(int location);
         public IANavmeshParentGetter Parent => GetParentCustom(location: 0x8);
+        #endregion
         #region Vertices
         public IReadOnlyList<P3Float> Vertices => BinaryOverlayList.FactoryByCountLength<P3Float>(_data.Slice(0x10), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
         protected int VerticesEndingPos;

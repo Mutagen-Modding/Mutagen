@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ArmorDataBinaryOverlay
     {
         public bool GetArmorValueIsSetCustom() => true;
-        public float GetArmorValueCustom(int location)
+        public partial float GetArmorValueCustom(int location)
         {
             return ArmorDataBinaryCreateTranslation.GetArmorValue(BinaryPrimitives.ReadUInt16LittleEndian(_data));
         }

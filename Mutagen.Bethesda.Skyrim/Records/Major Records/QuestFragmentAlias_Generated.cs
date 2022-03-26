@@ -1422,6 +1422,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region Property
+        public partial IScriptObjectPropertyGetter GetPropertyCustom(int location);
         public IScriptObjectPropertyGetter Property => GetPropertyCustom(location: 0x0);
         protected int PropertyEndingPos;
         partial void CustomPropertyEndPos();

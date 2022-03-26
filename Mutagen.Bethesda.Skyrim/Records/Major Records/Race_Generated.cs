@@ -8102,6 +8102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial IBodyTemplateGetter? GetBodyTemplateCustom();
         public IBodyTemplateGetter? BodyTemplate => GetBodyTemplateCustom();
         #endregion
         #region Keywords
@@ -8189,6 +8190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value + 0x20;
+        public partial Race.Flag GetFlagsCustom();
         public Race.Flag Flags => GetFlagsCustom();
         #endregion
         #region Starting

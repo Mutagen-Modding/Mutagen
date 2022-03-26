@@ -9186,6 +9186,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value + DefaultWeightVersioningOffset + 0x20;
+        public partial Race.Flag GetFlagsCustom();
         public Race.Flag Flags => GetFlagsCustom();
         #endregion
         #region AccelerationRate

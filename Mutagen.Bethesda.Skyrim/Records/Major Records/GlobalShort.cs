@@ -56,9 +56,10 @@ namespace Mutagen.Bethesda.Skyrim
 
             private int? _DataLocation;
             public bool GetDataIsSetCustom() => _DataLocation.HasValue;
-            public short GetDataCustom()
+            public partial short? GetDataCustom()
             {
-                return (short)HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation!.Value, _package.MetaData.Constants).Float();
+                if (!_DataLocation.HasValue) return default;
+                return (short)HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants).Float();
             }
             partial void DataCustomParse(OverlayStream stream, long finalPos, int offset)
             {

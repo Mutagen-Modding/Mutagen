@@ -1184,6 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial P2Float GetMinCustom();
         public P2Float Min => GetMinCustom();
         #endregion
         #region Max
@@ -1191,6 +1192,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial P2Float GetMaxCustom();
         public P2Float Max => GetMaxCustom();
         #endregion
         partial void CustomFactoryEnd(

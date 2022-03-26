@@ -1676,6 +1676,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
         #endregion
         #region FileName
+        public partial String GetFileNameCustom(int location);
         public String FileName => GetFileNameCustom(location: ScriptsEndingPos + 0x3);
         protected int FileNameEndingPos;
         partial void CustomFileNameEndPos();

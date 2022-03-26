@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         public partial class PlacedObjectBinaryOverlay
         {
             private int? _OpenByDefaultLocation;
-            public bool GetOpenByDefaultCustom() => _OpenByDefaultLocation.HasValue;
+            public partial bool GetOpenByDefaultCustom() => _OpenByDefaultLocation.HasValue;
             partial void OpenByDefaultCustomParse(OverlayStream stream, long finalPos, int offset)
             {
                 _OpenByDefaultLocation = (ushort)(stream.Position - offset);

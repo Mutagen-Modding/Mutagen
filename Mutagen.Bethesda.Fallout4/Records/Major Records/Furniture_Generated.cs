@@ -3946,6 +3946,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial Furniture.Flag? GetFlagsCustom();
         public Furniture.Flag? Flags => GetFlagsCustom();
         #endregion
         #region Conditions

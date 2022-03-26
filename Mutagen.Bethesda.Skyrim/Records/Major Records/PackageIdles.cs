@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Skyrim
             public IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>> Animations { get; private set; } = ListExt.Empty<IFormLinkGetter<IIdleAnimationGetter>>();
 
             private float _timerSetting;
-            public Single GetTimerSettingCustom() => _timerSetting;
+            public partial Single GetTimerSettingCustom() => _timerSetting;
 
             partial void TimerSettingCustomParse(OverlayStream stream, long finalPos, int offset)
             {

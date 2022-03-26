@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class WeaponDataBinaryOverlay
         {
-            WeaponData.Flag GetFlagsCustom(int location)
+            public partial WeaponData.Flag GetFlagsCustom(int location)
             {
                 var flags = (uint)BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(location, 2));
                 location += 0x1C;
@@ -120,11 +120,6 @@ namespace Mutagen.Bethesda.Skyrim
                 flags2 <<= WeaponDataBinaryCreateTranslation.UpperFlagShift;
                 flags |= flags2;
                 return (WeaponData.Flag)flags;
-            }
-
-            partial void Flags2CustomParse(OverlayStream stream, int offset)
-            {
-                stream.Position += 4;
             }
         }
     }

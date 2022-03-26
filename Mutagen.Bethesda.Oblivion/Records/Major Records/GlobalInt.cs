@@ -56,9 +56,10 @@ namespace Mutagen.Bethesda.Oblivion
 
             private int? _DataLocation;
             public bool GetDataIsSetCustom() => _DataLocation.HasValue;
-            public int GetDataCustom()
+            public partial int? GetDataCustom()
             {
-                return (int)HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation!.Value, _package.MetaData.Constants).Float();
+                if (!_DataLocation.HasValue) return default;
+                return (int)HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants).Float();
             }
             partial void DataCustomParse(OverlayStream stream, long finalPos, int offset)
             {

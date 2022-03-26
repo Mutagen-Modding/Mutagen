@@ -3435,6 +3435,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region Teaches
         private int _TeachesLocation => _DNAMLocation!.Value + 0x1;
+        public partial IBookTeachTargetGetter? GetTeachesCustom();
         public IBookTeachTargetGetter? Teaches => GetTeachesCustom();
         #endregion
         #region TextOffsetX

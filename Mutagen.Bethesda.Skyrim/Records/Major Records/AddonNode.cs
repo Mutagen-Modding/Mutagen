@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class AddonNodeBinaryOverlay
         {
-            public Boolean GetAlwaysLoadedCustom() => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_AlwaysLoadedLocation)) switch
+            public partial Boolean GetAlwaysLoadedCustom() => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_AlwaysLoadedLocation)) switch
             {
                 1 => false,
                 3 => true,

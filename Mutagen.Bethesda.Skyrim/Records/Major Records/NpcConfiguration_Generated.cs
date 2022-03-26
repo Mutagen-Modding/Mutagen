@@ -1649,10 +1649,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
+        #region Flags
+        public partial NpcConfiguration.Flag GetFlagsCustom(int location);
         public NpcConfiguration.Flag Flags => GetFlagsCustom(location: 0x0);
+        #endregion
         public Int16 MagickaOffset => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x4, 0x2));
         public Int16 StaminaOffset => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x6, 0x2));
+        #region Level
+        public partial IANpcLevelGetter GetLevelCustom(int location);
         public IANpcLevelGetter Level => GetLevelCustom(location: 0x8);
+        #endregion
         public Int16 CalcMinLevel => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xA, 0x2));
         public Int16 CalcMaxLevel => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xC, 0x2));
         public Int16 SpeedMultiplier => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xE, 0x2));

@@ -583,7 +583,7 @@ namespace Mutagen.Bethesda.Skyrim
                 _flagsLoc = (stream.Position - offset);
             }
 
-            public Cell.Flag GetFlagsCustom()
+            public partial Cell.Flag GetFlagsCustom()
             {
                 if (!_flagsLoc.HasValue) return default(Cell.Flag);
                 var subHeader = _package.MetaData.Constants.SubrecordFrame(_data.Slice(_flagsLoc.Value));

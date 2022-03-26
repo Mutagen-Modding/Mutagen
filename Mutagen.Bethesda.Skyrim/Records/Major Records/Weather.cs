@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
                 _directionalLoc = (ushort)(stream.Position - offset);
             }
 
-            IWeatherAmbientColorSetGetter? GetDirectionalAmbientLightingColorsCustom()
+            public partial IWeatherAmbientColorSetGetter? GetDirectionalAmbientLightingColorsCustom()
             {
                 if (!_directionalLoc.HasValue) return null;
                 return WeatherBinaryCreateTranslation.GetBinaryDirectionalAmbientLightingColors(

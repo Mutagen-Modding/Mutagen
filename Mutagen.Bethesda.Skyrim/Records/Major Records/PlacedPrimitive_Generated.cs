@@ -1250,7 +1250,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
+        #region Bounds
+        public partial P3Float GetBoundsCustom(int location);
         public P3Float Bounds => GetBoundsCustom(location: 0x0);
+        #endregion
         public Color Color => _data.Slice(0xC, 0xC).ReadColor(ColorBinaryType.NoAlphaFloat);
         public Single Unknown => _data.Slice(0x18, 0x4).Float();
         public PlacedPrimitive.TypeEnum Type => (PlacedPrimitive.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x1C, 0x4));
