@@ -427,6 +427,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IPerk :
         IFallout4MajorRecordInternal,
+        IFurnitureAssociation,
         ILoquiObjectSetter<IPerkInternal>,
         IPerkGetter
     {
@@ -443,6 +444,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IPerkGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFurnitureAssociationGetter,
         ILoquiObject<IPerkGetter>,
         IMapsToGetter<IPerkGetter>
     {

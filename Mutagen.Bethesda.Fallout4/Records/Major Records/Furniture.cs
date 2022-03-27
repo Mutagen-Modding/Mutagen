@@ -2,11 +2,11 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Mutagen.Bethesda.Fallout4
 {
@@ -28,47 +28,33 @@ namespace Mutagen.Bethesda.Fallout4
         public enum Flag : uint
         {
             IgnoredBySandbox = 0x0000_0002,
+            AllowAwakeSound = 0x0040_0000,
+            EnterWithWeaponDrawn = 0x0080_0000,
+            PlayAnimWhenFull = 0x0100_0000,
+            DisablesActivation = 0x0200_0000,
+            IsPerch = 0x0400_0000,
+            MustExitToTalk = 0x0800_0000,
+            UseStaticAvoidNode = 0x1000_0000,
+            HasModel = 0x4000_0000,
+            IsSleepFurniture = 0x8000_0000
         }
 
-        [Flags]
-        public enum ActiveMarkers : uint
+        public enum BenchTypes
         {
-            InteractionPoint0 = 0x00000001,
-            InteractionPoint1 = 0x00000002,
-            InteractionPoint2 = 0x00000004,
-            InteractionPoint3 = 0x00000008,
-            InteractionPoint4 = 0x00000010,
-            InteractionPoint5 = 0x00000020,
-            InteractionPoint6 = 0x00000040,
-            InteractionPoint7 = 0x00000080,
-            InteractionPoint8 = 0x00000100,
-            InteractionPoint9 = 0x00000200,
-            InteractionPoint10 = 0x00000400,
-            InteractionPoint11 = 0x00000800,
-            InteractionPoint12 = 0x00001000,
-            InteractionPoint13 = 0x00002000,
-            InteractionPoint14 = 0x00004000,
-            InteractionPoint15 = 0x00008000,
-            InteractionPoint16 = 0x00010000,
-            InteractionPoint17 = 0x00020000,
-            InteractionPoint18 = 0x00040000,
-            InteractionPoint19 = 0x00080000,
-            InteractionPoint20 = 0x00100000,
-            InteractionPoint21 = 0x00200000,
-            AllowAwakeSound = 0x00400000,
-            EnterWithWeaponDrawn = 0x00800000,
-            PlayAnimWhenFull = 0x01000000,
-            DisablesActivation = 0x02000000,
-            IsPerch = 0x04000000,
-            MustExittoTalk = 0x08000000,
-            UseStaticAvoidNode = 0x10000000,
-            //Unknown29 = 0x20000000,
-            HasModel=0x40000000,
-            IsSleepFurniture = 0x80000000
+            None = 0,
+            CreateObject = 1,
+            Weapons = 2,
+            Enchanting = 3,
+            EnchantingExperiment = 4,
+            Alchemy = 5,
+            AlchemyExperiment = 6,
+            Armor = 7,
+            PowerArmor = 8,
+            RobotMod = 9,
         }
 
         [Flags]
-        public enum Entry
+        public enum EntryPointType
         {
             Front = 0x01,
             Behind = 0x02,
@@ -78,11 +64,25 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         [Flags]
+        public enum EntryParameterType
+        {
+            Front = 0x01,
+            Behind = 0x02,
+            Right = 0x04,
+            Left = 0x08,
+            Other = 0x10
+        }
+
+        [Flags]
         public enum AnimationType
         {
             Sit = 1,
             Lay = 2,
             Lean = 4,
+        }
+
+        public enum Property
+        {
         }
     }
 
@@ -94,16 +94,8 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         public partial class FurnitureBinaryCreateTranslation
         {
-            public const uint UpperFlagsMask = 0xFF00_0000;
-            public const uint NumSits = 25;
-            public static readonly RecordType NAM0 = new RecordType("NAM0");
-            public static readonly RecordType FNMK = new RecordType("FNMK");
-            private static readonly RecordType[] _activeMarkerTypes = new RecordType[]
-            {
-                new RecordType("ENAM"),
-                NAM0,
-                FNMK,
-            };
+            public const uint UpperFlagsMask = 0xFFC0_0000;
+            public const uint NumSlots = 22;
 
             public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IFurnitureInternal item)
             {
@@ -116,13 +108,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 // Clear out old stuff
                 // This assumes flags will be parsed first.  Might need to be upgraded to not need that assumption
-                item.Markers = null;
+                item.MarkerParameters = null;
                 item.Flags = FillBinaryFlags2(frame, (i) => GetNthMarker(item, i), item.Flags);
                 return null;
             }
 
-
-            public static Furniture.Flag FillBinaryFlags2(IMutagenReadStream stream, Func<int, FurnitureMarker> getter, Furniture.Flag? existingFlag)
+            public static Furniture.Flag FillBinaryFlags2(IMutagenReadStream stream, Func<int, FurnitureMarkerParameters> getter, Furniture.Flag? existingFlag)
             {
                 var subFrame = stream.ReadSubrecordFrame();
                 uint raw = BinaryPrimitives.ReadUInt32LittleEndian(subFrame.Content);
@@ -136,9 +127,9 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = (Furniture.Flag)(curFlags | upperFlags);
 
                 // Create marker objects for sit flags
-                uint markers = raw & 0x00FF_FFFF;
+                uint markers = raw & 0x003F_FFFF;
                 uint indexToCheck = 1;
-                for (int i = 0; i < NumSits; i++)
+                for (int i = 0; i < NumSlots; i++)
                 {
                     var has = EnumExt.HasFlag(markers, indexToCheck);
                     indexToCheck <<= 1;
@@ -149,115 +140,61 @@ namespace Mutagen.Bethesda.Fallout4
                 return ret;
             }
 
-            public static FurnitureMarker GetNthMarker(IFurnitureInternal item, int index)
+            public static FurnitureMarkerParameters GetNthMarker(IFurnitureInternal item, int index)
             {
-                if (item.Markers == null)
+                if (item.MarkerParameters == null)
                 {
-                    item.Markers = new ExtendedList<FurnitureMarker>();
+                    item.MarkerParameters = new ExtendedList<FurnitureMarkerParameters>();
                 }
-                if (!item.Markers.TryGet(index, out var marker))
+                if (!item.MarkerParameters.TryGet(index, out var marker))
                 {
-                    while (item.Markers.Count <= index)
+                    while (item.MarkerParameters.Count <= index)
                     {
-                        item.Markers.Add(new FurnitureMarker());
+                        item.MarkerParameters.Add(new FurnitureMarkerParameters());
                     }
-                    marker = item.Markers[^1];
+                    marker = item.MarkerParameters[^1];
                 }
                 return marker;
             }
 
-            public static partial ParseResult FillBinaryDisabledMarkersCustom(MutagenFrame frame, IFurnitureInternal item)
+            public static partial void FillBinaryEnabledEntryPointsCustom(MutagenFrame frame, IFurnitureInternal item)
             {
-                FillBinaryDisabledMarkers(frame, (i) => GetNthMarker(item, i));
-                return null;
+                item.EnabledEntryPoints = ParseBinaryEnabledEntryPointsCustom(frame);
             }
 
-            public static void FillBinaryDisabledMarkers(IMutagenReadStream stream, Func<int, FurnitureMarker> getter)
+            public static Furniture.EntryPointType ParseBinaryEnabledEntryPointsCustom<TReader>(TReader frame)
+                where TReader : IMutagenReadStream
             {
-                while (!stream.Complete)
+                var enam = frame.ReadSubrecordFrame(RecordTypes.ENAM);
+                var index = enam.AsInt32();
+                if (index != -1)
                 {
-                    // Find next set of records that make up a marker record
-                    var next = PluginUtilityTranslation.FindNextSubrecords(
-                        stream.RemainingMemory,
-                        stream.MetaData.Constants,
-                        out var lenParsed,
-                        stopOnAlreadyEncounteredRecord: true,
-                        recordTypes: _activeMarkerTypes);
-
-                    // Process index first
-                    var enamLoc = next[0];
-                    if (enamLoc == null)
-                    {
-                        if (next[1] == null && next[2] == null)
-                        {
-                            // Other data
-                            break;
-                        }
-                        else
-                        {
-                            throw new ArgumentException("Could not locate index subrecord of marker data");
-                        }
-                    }
-                    var index = BinaryPrimitives.ReadInt32LittleEndian(stream.MetaData.Constants.SubrecordFrame(stream.RemainingMemory.Slice(enamLoc.Value)).Content);
-                    if (index > NumSits)
-                    {
-                        throw new ArgumentException($"Unexpected index value that was larger than the number of sit slots: {index} > {NumSits}");
-                    }
-
-                    var marker = getter(index);
-
-                    // Parse content
-                    foreach (var loc in next.Skip(1))
-                    {
-                        if (loc == null) continue;
-
-                        var subMeta = stream.MetaData.Constants.SubrecordFrame(stream.RemainingMemory.Slice(loc.Value));
-                        switch (subMeta.RecordTypeInt)
-                        {
-                            case 0x304D414E: // NAM0
-                                marker.DisabledEntryPoints = new EntryPoints()
-                                {
-                                    Type = (Furniture.AnimationType)BinaryPrimitives.ReadUInt16LittleEndian(subMeta.Content),
-                                    Points = (Furniture.Entry)BinaryPrimitives.ReadUInt16LittleEndian(subMeta.Content.Slice(2)),
-                                };
-                                break;
-                            case 0x4B4D4E46: // FNMK
-                                marker.MarkerKeyword.FormKey = FormKeyBinaryTranslation.Instance.Parse(subMeta.Content, stream.MetaData.MasterReferences!);
-                                break;
-                            default:
-                                throw new ArgumentException($"Unexpected record type: {subMeta.RecordType}");
-                        }
-                    }
-
-                    stream.Position += lenParsed;
+                    throw new ArgumentException($"Unexpected ENAM index: {index}");
                 }
+                var name0 = frame.ReadSubrecordFrame(RecordTypes.NAM0);
+                var zeros = BinaryPrimitives.ReadInt16LittleEndian(name0.Content);
+                if (zeros != 0)
+                {
+                    throw new ArgumentException($"Unexpected non-zero NAM0 data: {zeros}");
+                }
+                return (Furniture.EntryPointType)BinaryPrimitives.ReadInt16LittleEndian(name0.Content.Slice(2));
             }
 
-            public static partial void FillBinaryMarkersCustom(MutagenFrame frame, IFurnitureInternal item)
+            public static partial void FillBinaryMarkerParametersCustom(MutagenFrame frame, IFurnitureInternal item)
             {
                 FillBinaryMarkers(frame, (i) => GetNthMarker(item, i));
             }
 
-            public static void FillBinaryMarkers(IMutagenReadStream stream, Func<int, FurnitureMarker> getter)
+            public static void FillBinaryMarkers(MutagenFrame stream, Func<int, FurnitureMarkerParameters> getter)
             {
-                var locs = PluginUtilityTranslation.ParseRepeatingSubrecord(
-                    stream.RemainingMemory,
-                    stream.MetaData.Constants,
-                    RecordTypes.FNPR,
-                    out var parsed);
-                for (int i = 0; i < locs.Length; i++)
+                var snam = stream.ReadSubrecord(RecordTypes.SNAM);
+                stream = stream.SpawnWithLength(snam.ContentLength);
+                int i = 0;
+                while (stream.Remaining > 0)
                 {
-                    var marker = getter(i);
-
-                    var loc = locs[i];
-                    var subMeta = stream.MetaData.Constants.SubrecordFrame(stream.RemainingMemory.Slice(loc));
-                    marker.EntryPoints = new EntryPoints()
-                    {
-                        Type = (Furniture.AnimationType)BinaryPrimitives.ReadUInt16LittleEndian(subMeta.Content),
-                        Points = (Furniture.Entry)BinaryPrimitives.ReadUInt16LittleEndian(subMeta.Content.Slice(2)),
-                    };
+                    var marker = getter(i++);
+                    marker.CopyInFromBinary(stream, default);
                 }
-                stream.Position += parsed;
             }
         }
 
@@ -280,7 +217,7 @@ namespace Mutagen.Bethesda.Fallout4
                 // Trim out lower flags
                 var exportFlags = flags & FurnitureBinaryCreateTranslation.UpperFlagsMask;
 
-                var markers = item.Markers;
+                var markers = item.MarkerParameters;
                 if (markers != null)
                 {
                     // Enable appropriate sit markers
@@ -299,76 +236,39 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
 
-            public static partial void WriteBinaryDisabledMarkersCustom(MutagenWriter writer, IFurnitureGetter item)
+            public static partial void WriteBinaryEnabledEntryPointsCustom(MutagenWriter writer, IFurnitureGetter item)
             {
-                var markers = item.Markers;
-                if (markers == null) return;
-                for (int i = 0; i < markers.Count; i++)
+                var entryPts = item.EnabledEntryPoints;
+                if (entryPts == null) return;
+                using (HeaderExport.Subrecord(writer, RecordTypes.ENAM))
                 {
-                    var marker = markers[i];
-                    var disabledPts = marker.DisabledEntryPoints;
-                    var markerKeyword = marker.MarkerKeyword;
-                    if (disabledPts == null && markerKeyword.FormKeyNullable == null) continue;
-
-                    // Write out index
-                    using (HeaderExport.Subrecord(writer, RecordTypes.ENAM))
-                    {
-                        writer.Write(i);
-                    }
-
-                    if (disabledPts != null)
-                    {
-                        using (HeaderExport.Subrecord(writer, FurnitureBinaryCreateTranslation.NAM0))
-                        {
-                            writer.Write(checked((ushort)disabledPts.Type));
-                            writer.Write(checked((ushort)disabledPts.Points));
-                        }
-                    }
-
-                    if (markerKeyword.FormKeyNullable != null)
-                    {
-                        FormKeyBinaryTranslation.Instance.Write(writer, markerKeyword.FormKeyNullable.Value, FurnitureBinaryCreateTranslation.FNMK);
-                    }
+                    writer.Write(-1);
+                }
+                using (HeaderExport.Subrecord(writer, RecordTypes.NAM0))
+                {
+                    writer.Write((short)0);
+                    EnumBinaryTranslation<Furniture.EntryPointType, MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer,
+                        entryPts.Value,
+                        2);
                 }
             }
 
-            public static partial void WriteBinaryMarkersCustom(MutagenWriter writer, IFurnitureGetter item)
+
+            public static partial void WriteBinaryMarkerParametersCustom(MutagenWriter writer, IFurnitureGetter item)
             {
-                var markers = item.Markers;
-                if (markers == null) return;
-                // Find last marker that has entry point
-                int lastIndex = -1;
-                for (int i = 0; i < markers.Count; i++)
-                {
-                    if (markers[i].EntryPoints != null)
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFurnitureMarkerParametersGetter>.Instance.Write(
+                    writer: writer,
+                    items: item.MarkerParameters,
+                    recordType: RecordTypes.SNAM,
+                    transl: (MutagenWriter subWriter, IFurnitureMarkerParametersGetter subItem, TypedWriteParams? conv) =>
                     {
-                        lastIndex = i;
-                    }
-                }
-                if (lastIndex == -1) return;
-
-                // Iterate and export entries up until last not null found
-                for (int i = 0; i <= lastIndex; i++)
-                {
-                    var entryPts = markers[i].EntryPoints;
-
-                    if (entryPts == null)
-                    {
-                        using (HeaderExport.Subrecord(writer, RecordTypes.FNPR))
-                        {
-                            writer.Write(checked((uint)Furniture.AnimationType.Sit));
-                            writer.WriteZeros(2);
-                        }
-                    }
-                    else
-                    {
-                        using (HeaderExport.Subrecord(writer, RecordTypes.FNPR))
-                        {
-                            writer.Write(checked((ushort)entryPts.Type));
-                            writer.Write(checked((ushort)entryPts.Points));
-                        }
-                    }
-                }
+                        var Item = subItem;
+                        ((FurnitureMarkerParametersBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            translationParams: conv);
+                    });
             }
         }
 
@@ -377,20 +277,23 @@ namespace Mutagen.Bethesda.Fallout4
             Furniture.Flag? _flags;
             public partial Furniture.Flag? GetFlagsCustom() => _flags;
 
-            private ExtendedList<FurnitureMarker>? _markers;
-            public IReadOnlyList<IFurnitureMarkerGetter>? Markers => _markers;
+            private ExtendedList<FurnitureMarkerParameters>? _markers;
+            public IReadOnlyList<IFurnitureMarkerParametersGetter>? MarkerParameters => _markers;
 
-            private FurnitureMarker GetNthMarker(int index)
+
+            private Furniture.EntryPointType? _enabledEntryPoints;
+
+            private FurnitureMarkerParameters GetNthMarker(int index)
             {
                 if (this._markers == null)
                 {
-                    this._markers = new ExtendedList<FurnitureMarker>();
+                    this._markers = new ExtendedList<FurnitureMarkerParameters>();
                 }
                 if (!this._markers.TryGet(index, out var marker))
                 {
                     while (this._markers.Count <= index)
                     {
-                        this._markers.Add(new FurnitureMarker());
+                        this._markers.Add(new FurnitureMarkerParameters());
                     }
                     marker = this._markers[^1];
                 }
@@ -412,20 +315,13 @@ namespace Mutagen.Bethesda.Fallout4
                     this._flags);
                 return null;
             }
-
-            public partial ParseResult DisabledMarkersCustomParse(OverlayStream stream, int offset)
+            
+            partial void EnabledEntryPointsCustomParse(
+                OverlayStream stream,
+                long finalPos,
+                int offset)
             {
-                FurnitureBinaryCreateTranslation.FillBinaryDisabledMarkers(
-                    stream,
-                    this.GetNthMarker);
-                return null;
-            }
-
-            partial void MarkersCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
-            {
-                FurnitureBinaryCreateTranslation.FillBinaryMarkers(
-                    stream,
-                    this.GetNthMarker);
+                _enabledEntryPoints = FurnitureBinaryCreateTranslation.ParseBinaryEnabledEntryPointsCustom(stream);
             }
 
             public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
@@ -433,6 +329,16 @@ namespace Mutagen.Bethesda.Fallout4
             partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
             {
                 Conditions = ConditionBinaryOverlay.ConstructBinayOverlayCountedList(stream, _package);
+            }
+
+            partial void MarkerParametersCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
+            {
+                FurnitureBinaryCreateTranslation.FillBinaryMarkers(new MutagenFrame(stream), GetNthMarker);
+            }
+
+            public partial Furniture.EntryPointType? GetEnabledEntryPointsCustom()
+            {
+                return _enabledEntryPoints;
             }
         }
     }

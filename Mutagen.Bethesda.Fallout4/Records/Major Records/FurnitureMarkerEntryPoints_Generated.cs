@@ -35,26 +35,24 @@ using System.Text;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class WorkbenchData :
-        IEquatable<IWorkbenchDataGetter>,
-        ILoquiObjectSetter<WorkbenchData>,
-        IWorkbenchData
+    public partial class FurnitureMarkerEntryPoints :
+        IEquatable<IFurnitureMarkerEntryPointsGetter>,
+        IFurnitureMarkerEntryPoints,
+        ILoquiObjectSetter<FurnitureMarkerEntryPoints>
     {
         #region Ctor
-        public WorkbenchData()
+        public FurnitureMarkerEntryPoints()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region BenchType
-        public WorkbenchData.Type BenchType { get; set; } = default;
+        #region Type
+        public Furniture.AnimationType Type { get; set; } = default;
         #endregion
-        #region UsesSkill
-        public Skill? UsesSkill { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Skill? IWorkbenchDataGetter.UsesSkill => this.UsesSkill;
+        #region Points
+        public Furniture.EntryPointType Points { get; set; } = default;
         #endregion
 
         #region To String
@@ -63,7 +61,7 @@ namespace Mutagen.Bethesda.Fallout4
             FileGeneration fg,
             string? name = null)
         {
-            WorkbenchDataMixIn.ToString(
+            FurnitureMarkerEntryPointsMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -73,16 +71,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IWorkbenchDataGetter rhs) return false;
-            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IFurnitureMarkerEntryPointsGetter rhs) return false;
+            return ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IWorkbenchDataGetter? obj)
+        public bool Equals(IFurnitureMarkerEntryPointsGetter? obj)
         {
-            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -94,16 +92,16 @@ namespace Mutagen.Bethesda.Fallout4
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.BenchType = initialValue;
-                this.UsesSkill = initialValue;
+                this.Type = initialValue;
+                this.Points = initialValue;
             }
 
             public Mask(
-                TItem BenchType,
-                TItem UsesSkill)
+                TItem Type,
+                TItem Points)
             {
-                this.BenchType = BenchType;
-                this.UsesSkill = UsesSkill;
+                this.Type = Type;
+                this.Points = Points;
             }
 
             #pragma warning disable CS8618
@@ -115,8 +113,8 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public TItem BenchType;
-            public TItem UsesSkill;
+            public TItem Type;
+            public TItem Points;
             #endregion
 
             #region Equals
@@ -129,15 +127,15 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.BenchType, rhs.BenchType)) return false;
-                if (!object.Equals(this.UsesSkill, rhs.UsesSkill)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.Points, rhs.Points)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.BenchType);
-                hash.Add(this.UsesSkill);
+                hash.Add(this.Type);
+                hash.Add(this.Points);
                 return hash.ToHashCode();
             }
 
@@ -146,8 +144,8 @@ namespace Mutagen.Bethesda.Fallout4
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.BenchType)) return false;
-                if (!eval(this.UsesSkill)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.Points)) return false;
                 return true;
             }
             #endregion
@@ -155,8 +153,8 @@ namespace Mutagen.Bethesda.Fallout4
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.BenchType)) return true;
-                if (eval(this.UsesSkill)) return true;
+                if (eval(this.Type)) return true;
+                if (eval(this.Points)) return true;
                 return false;
             }
             #endregion
@@ -164,15 +162,15 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new WorkbenchData.Mask<R>();
+                var ret = new FurnitureMarkerEntryPoints.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.BenchType = eval(this.BenchType);
-                obj.UsesSkill = eval(this.UsesSkill);
+                obj.Type = eval(this.Type);
+                obj.Points = eval(this.Points);
             }
             #endregion
 
@@ -182,26 +180,26 @@ namespace Mutagen.Bethesda.Fallout4
                 return ToString(printMask: null);
             }
 
-            public string ToString(WorkbenchData.Mask<bool>? printMask = null)
+            public string ToString(FurnitureMarkerEntryPoints.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, WorkbenchData.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, FurnitureMarkerEntryPoints.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(WorkbenchData.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(FurnitureMarkerEntryPoints.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.BenchType ?? true)
+                    if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(BenchType, "BenchType");
+                        fg.AppendItem(Type, "Type");
                     }
-                    if (printMask?.UsesSkill ?? true)
+                    if (printMask?.Points ?? true)
                     {
-                        fg.AppendItem(UsesSkill, "UsesSkill");
+                        fg.AppendItem(Points, "Points");
                     }
                 }
                 fg.AppendLine("]");
@@ -228,20 +226,20 @@ namespace Mutagen.Bethesda.Fallout4
                     return _warnings;
                 }
             }
-            public Exception? BenchType;
-            public Exception? UsesSkill;
+            public Exception? Type;
+            public Exception? Points;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                WorkbenchData_FieldIndex enu = (WorkbenchData_FieldIndex)index;
+                FurnitureMarkerEntryPoints_FieldIndex enu = (FurnitureMarkerEntryPoints_FieldIndex)index;
                 switch (enu)
                 {
-                    case WorkbenchData_FieldIndex.BenchType:
-                        return BenchType;
-                    case WorkbenchData_FieldIndex.UsesSkill:
-                        return UsesSkill;
+                    case FurnitureMarkerEntryPoints_FieldIndex.Type:
+                        return Type;
+                    case FurnitureMarkerEntryPoints_FieldIndex.Points:
+                        return Points;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -249,14 +247,14 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthException(int index, Exception ex)
             {
-                WorkbenchData_FieldIndex enu = (WorkbenchData_FieldIndex)index;
+                FurnitureMarkerEntryPoints_FieldIndex enu = (FurnitureMarkerEntryPoints_FieldIndex)index;
                 switch (enu)
                 {
-                    case WorkbenchData_FieldIndex.BenchType:
-                        this.BenchType = ex;
+                    case FurnitureMarkerEntryPoints_FieldIndex.Type:
+                        this.Type = ex;
                         break;
-                    case WorkbenchData_FieldIndex.UsesSkill:
-                        this.UsesSkill = ex;
+                    case FurnitureMarkerEntryPoints_FieldIndex.Points:
+                        this.Points = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -265,14 +263,14 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthMask(int index, object obj)
             {
-                WorkbenchData_FieldIndex enu = (WorkbenchData_FieldIndex)index;
+                FurnitureMarkerEntryPoints_FieldIndex enu = (FurnitureMarkerEntryPoints_FieldIndex)index;
                 switch (enu)
                 {
-                    case WorkbenchData_FieldIndex.BenchType:
-                        this.BenchType = (Exception?)obj;
+                    case FurnitureMarkerEntryPoints_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
                         break;
-                    case WorkbenchData_FieldIndex.UsesSkill:
-                        this.UsesSkill = (Exception?)obj;
+                    case FurnitureMarkerEntryPoints_FieldIndex.Points:
+                        this.Points = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -282,8 +280,8 @@ namespace Mutagen.Bethesda.Fallout4
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (BenchType != null) return true;
-                if (UsesSkill != null) return true;
+                if (Type != null) return true;
+                if (Points != null) return true;
                 return false;
             }
             #endregion
@@ -318,8 +316,8 @@ namespace Mutagen.Bethesda.Fallout4
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(BenchType, "BenchType");
-                fg.AppendItem(UsesSkill, "UsesSkill");
+                fg.AppendItem(Type, "Type");
+                fg.AppendItem(Points, "Points");
             }
             #endregion
 
@@ -328,8 +326,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.BenchType = this.BenchType.Combine(rhs.BenchType);
-                ret.UsesSkill = this.UsesSkill.Combine(rhs.UsesSkill);
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.Points = this.Points.Combine(rhs.Points);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -353,8 +351,8 @@ namespace Mutagen.Bethesda.Fallout4
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool BenchType;
-            public bool UsesSkill;
+            public bool Type;
+            public bool Points;
             #endregion
 
             #region Ctors
@@ -364,8 +362,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.BenchType = defaultOn;
-                this.UsesSkill = defaultOn;
+                this.Type = defaultOn;
+                this.Points = defaultOn;
             }
 
             #endregion
@@ -381,8 +379,8 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((BenchType, null));
-                ret.Add((UsesSkill, null));
+                ret.Add((Type, null));
+                ret.Add((Points, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -394,30 +392,30 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = WorkbenchData_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = FurnitureMarkerEntryPoints_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => WorkbenchDataBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => FurnitureMarkerEntryPointsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((WorkbenchDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((FurnitureMarkerEntryPointsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static WorkbenchData CreateFromBinary(
+        public static FurnitureMarkerEntryPoints CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new WorkbenchData();
-            ((WorkbenchDataSetterCommon)((IWorkbenchDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new FurnitureMarkerEntryPoints();
+            ((FurnitureMarkerEntryPointsSetterCommon)((IFurnitureMarkerEntryPointsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -428,7 +426,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out WorkbenchData item,
+            out FurnitureMarkerEntryPoints item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -443,30 +441,30 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((WorkbenchDataSetterCommon)((IWorkbenchDataGetter)this).CommonSetterInstance()!).Clear(this);
+            ((FurnitureMarkerEntryPointsSetterCommon)((IFurnitureMarkerEntryPointsGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static WorkbenchData GetNew()
+        internal static FurnitureMarkerEntryPoints GetNew()
         {
-            return new WorkbenchData();
+            return new FurnitureMarkerEntryPoints();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IWorkbenchData :
-        ILoquiObjectSetter<IWorkbenchData>,
-        IWorkbenchDataGetter
+    public partial interface IFurnitureMarkerEntryPoints :
+        IFurnitureMarkerEntryPointsGetter,
+        ILoquiObjectSetter<IFurnitureMarkerEntryPoints>
     {
-        new WorkbenchData.Type BenchType { get; set; }
-        new Skill? UsesSkill { get; set; }
+        new Furniture.AnimationType Type { get; set; }
+        new Furniture.EntryPointType Points { get; set; }
     }
 
-    public partial interface IWorkbenchDataGetter :
+    public partial interface IFurnitureMarkerEntryPointsGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IWorkbenchDataGetter>
+        ILoquiObject<IFurnitureMarkerEntryPointsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -474,51 +472,51 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => WorkbenchData_Registration.Instance;
-        WorkbenchData.Type BenchType { get; }
-        Skill? UsesSkill { get; }
+        static ILoquiRegistration StaticRegistration => FurnitureMarkerEntryPoints_Registration.Instance;
+        Furniture.AnimationType Type { get; }
+        Furniture.EntryPointType Points { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class WorkbenchDataMixIn
+    public static partial class FurnitureMarkerEntryPointsMixIn
     {
-        public static void Clear(this IWorkbenchData item)
+        public static void Clear(this IFurnitureMarkerEntryPoints item)
         {
-            ((WorkbenchDataSetterCommon)((IWorkbenchDataGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((FurnitureMarkerEntryPointsSetterCommon)((IFurnitureMarkerEntryPointsGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static WorkbenchData.Mask<bool> GetEqualsMask(
-            this IWorkbenchDataGetter item,
-            IWorkbenchDataGetter rhs,
+        public static FurnitureMarkerEntryPoints.Mask<bool> GetEqualsMask(
+            this IFurnitureMarkerEntryPointsGetter item,
+            IFurnitureMarkerEntryPointsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IWorkbenchDataGetter item,
+            this IFurnitureMarkerEntryPointsGetter item,
             string? name = null,
-            WorkbenchData.Mask<bool>? printMask = null)
+            FurnitureMarkerEntryPoints.Mask<bool>? printMask = null)
         {
-            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)item).CommonInstance()!).ToString(
+            return ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IWorkbenchDataGetter item,
+            this IFurnitureMarkerEntryPointsGetter item,
             FileGeneration fg,
             string? name = null,
-            WorkbenchData.Mask<bool>? printMask = null)
+            FurnitureMarkerEntryPoints.Mask<bool>? printMask = null)
         {
-            ((WorkbenchDataCommon)((IWorkbenchDataGetter)item).CommonInstance()!).ToString(
+            ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -526,21 +524,21 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IWorkbenchDataGetter item,
-            IWorkbenchDataGetter rhs,
-            WorkbenchData.TranslationMask? equalsMask = null)
+            this IFurnitureMarkerEntryPointsGetter item,
+            IFurnitureMarkerEntryPointsGetter rhs,
+            FurnitureMarkerEntryPoints.TranslationMask? equalsMask = null)
         {
-            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)item).CommonInstance()!).Equals(
+            return ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IWorkbenchData lhs,
-            IWorkbenchDataGetter rhs)
+            this IFurnitureMarkerEntryPoints lhs,
+            IFurnitureMarkerEntryPointsGetter rhs)
         {
-            ((WorkbenchDataSetterTranslationCommon)((IWorkbenchDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FurnitureMarkerEntryPointsSetterTranslationCommon)((IFurnitureMarkerEntryPointsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -549,11 +547,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IWorkbenchData lhs,
-            IWorkbenchDataGetter rhs,
-            WorkbenchData.TranslationMask? copyMask = null)
+            this IFurnitureMarkerEntryPoints lhs,
+            IFurnitureMarkerEntryPointsGetter rhs,
+            FurnitureMarkerEntryPoints.TranslationMask? copyMask = null)
         {
-            ((WorkbenchDataSetterTranslationCommon)((IWorkbenchDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FurnitureMarkerEntryPointsSetterTranslationCommon)((IFurnitureMarkerEntryPointsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -562,28 +560,28 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IWorkbenchData lhs,
-            IWorkbenchDataGetter rhs,
-            out WorkbenchData.ErrorMask errorMask,
-            WorkbenchData.TranslationMask? copyMask = null)
+            this IFurnitureMarkerEntryPoints lhs,
+            IFurnitureMarkerEntryPointsGetter rhs,
+            out FurnitureMarkerEntryPoints.ErrorMask errorMask,
+            FurnitureMarkerEntryPoints.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((WorkbenchDataSetterTranslationCommon)((IWorkbenchDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FurnitureMarkerEntryPointsSetterTranslationCommon)((IFurnitureMarkerEntryPointsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = WorkbenchData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FurnitureMarkerEntryPoints.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IWorkbenchData lhs,
-            IWorkbenchDataGetter rhs,
+            this IFurnitureMarkerEntryPoints lhs,
+            IFurnitureMarkerEntryPointsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((WorkbenchDataSetterTranslationCommon)((IWorkbenchDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FurnitureMarkerEntryPointsSetterTranslationCommon)((IFurnitureMarkerEntryPointsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -591,32 +589,32 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static WorkbenchData DeepCopy(
-            this IWorkbenchDataGetter item,
-            WorkbenchData.TranslationMask? copyMask = null)
+        public static FurnitureMarkerEntryPoints DeepCopy(
+            this IFurnitureMarkerEntryPointsGetter item,
+            FurnitureMarkerEntryPoints.TranslationMask? copyMask = null)
         {
-            return ((WorkbenchDataSetterTranslationCommon)((IWorkbenchDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FurnitureMarkerEntryPointsSetterTranslationCommon)((IFurnitureMarkerEntryPointsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static WorkbenchData DeepCopy(
-            this IWorkbenchDataGetter item,
-            out WorkbenchData.ErrorMask errorMask,
-            WorkbenchData.TranslationMask? copyMask = null)
+        public static FurnitureMarkerEntryPoints DeepCopy(
+            this IFurnitureMarkerEntryPointsGetter item,
+            out FurnitureMarkerEntryPoints.ErrorMask errorMask,
+            FurnitureMarkerEntryPoints.TranslationMask? copyMask = null)
         {
-            return ((WorkbenchDataSetterTranslationCommon)((IWorkbenchDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FurnitureMarkerEntryPointsSetterTranslationCommon)((IFurnitureMarkerEntryPointsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static WorkbenchData DeepCopy(
-            this IWorkbenchDataGetter item,
+        public static FurnitureMarkerEntryPoints DeepCopy(
+            this IFurnitureMarkerEntryPointsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((WorkbenchDataSetterTranslationCommon)((IWorkbenchDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FurnitureMarkerEntryPointsSetterTranslationCommon)((IFurnitureMarkerEntryPointsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -624,11 +622,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IWorkbenchData item,
+            this IFurnitureMarkerEntryPoints item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((WorkbenchDataSetterCommon)((IWorkbenchDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((FurnitureMarkerEntryPointsSetterCommon)((IFurnitureMarkerEntryPointsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -644,48 +642,48 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     #region Field Index
-    public enum WorkbenchData_FieldIndex
+    public enum FurnitureMarkerEntryPoints_FieldIndex
     {
-        BenchType = 0,
-        UsesSkill = 1,
+        Type = 0,
+        Points = 1,
     }
     #endregion
 
     #region Registration
-    public partial class WorkbenchData_Registration : ILoquiRegistration
+    public partial class FurnitureMarkerEntryPoints_Registration : ILoquiRegistration
     {
-        public static readonly WorkbenchData_Registration Instance = new WorkbenchData_Registration();
+        public static readonly FurnitureMarkerEntryPoints_Registration Instance = new FurnitureMarkerEntryPoints_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 205,
+            msgID: 333,
             version: 0);
 
-        public const string GUID = "31f37852-fcfa-40f2-827f-6c6161c76b64";
+        public const string GUID = "cefc97c6-4b33-4ed3-a48a-de3409c765bd";
 
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(WorkbenchData.Mask<>);
+        public static readonly Type MaskType = typeof(FurnitureMarkerEntryPoints.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(WorkbenchData.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(FurnitureMarkerEntryPoints.ErrorMask);
 
-        public static readonly Type ClassType = typeof(WorkbenchData);
+        public static readonly Type ClassType = typeof(FurnitureMarkerEntryPoints);
 
-        public static readonly Type GetterType = typeof(IWorkbenchDataGetter);
+        public static readonly Type GetterType = typeof(IFurnitureMarkerEntryPointsGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IWorkbenchData);
+        public static readonly Type SetterType = typeof(IFurnitureMarkerEntryPoints);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.WorkbenchData";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.FurnitureMarkerEntryPoints";
 
-        public const string Name = "WorkbenchData";
+        public const string Name = "FurnitureMarkerEntryPoints";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -693,8 +691,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.WBDT;
-        public static readonly Type BinaryWriteTranslation = typeof(WorkbenchDataBinaryWriteTranslation);
+        public static readonly RecordType TriggeringRecordType = RecordTypes.FNPR;
+        public static readonly Type BinaryWriteTranslation = typeof(FurnitureMarkerEntryPointsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -727,21 +725,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class WorkbenchDataSetterCommon
+    public partial class FurnitureMarkerEntryPointsSetterCommon
     {
-        public static readonly WorkbenchDataSetterCommon Instance = new WorkbenchDataSetterCommon();
+        public static readonly FurnitureMarkerEntryPointsSetterCommon Instance = new FurnitureMarkerEntryPointsSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IWorkbenchData item)
+        public void Clear(IFurnitureMarkerEntryPoints item)
         {
             ClearPartial();
-            item.BenchType = default;
-            item.UsesSkill = default;
+            item.Type = default;
+            item.Points = default;
         }
         
         #region Mutagen
-        public void RemapLinks(IWorkbenchData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IFurnitureMarkerEntryPoints obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -749,35 +747,35 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IWorkbenchData item,
+            IFurnitureMarkerEntryPoints item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                translationParams.ConvertToCustom(RecordTypes.WBDT),
+                translationParams.ConvertToCustom(RecordTypes.FNPR),
                 translationParams?.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: WorkbenchDataBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: FurnitureMarkerEntryPointsBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    public partial class WorkbenchDataCommon
+    public partial class FurnitureMarkerEntryPointsCommon
     {
-        public static readonly WorkbenchDataCommon Instance = new WorkbenchDataCommon();
+        public static readonly FurnitureMarkerEntryPointsCommon Instance = new FurnitureMarkerEntryPointsCommon();
 
-        public WorkbenchData.Mask<bool> GetEqualsMask(
-            IWorkbenchDataGetter item,
-            IWorkbenchDataGetter rhs,
+        public FurnitureMarkerEntryPoints.Mask<bool> GetEqualsMask(
+            IFurnitureMarkerEntryPointsGetter item,
+            IFurnitureMarkerEntryPointsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new WorkbenchData.Mask<bool>(false);
-            ((WorkbenchDataCommon)((IWorkbenchDataGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new FurnitureMarkerEntryPoints.Mask<bool>(false);
+            ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -786,20 +784,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void FillEqualsMask(
-            IWorkbenchDataGetter item,
-            IWorkbenchDataGetter rhs,
-            WorkbenchData.Mask<bool> ret,
+            IFurnitureMarkerEntryPointsGetter item,
+            IFurnitureMarkerEntryPointsGetter rhs,
+            FurnitureMarkerEntryPoints.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.BenchType = item.BenchType == rhs.BenchType;
-            ret.UsesSkill = item.UsesSkill == rhs.UsesSkill;
+            ret.Type = item.Type == rhs.Type;
+            ret.Points = item.Points == rhs.Points;
         }
         
         public string ToString(
-            IWorkbenchDataGetter item,
+            IFurnitureMarkerEntryPointsGetter item,
             string? name = null,
-            WorkbenchData.Mask<bool>? printMask = null)
+            FurnitureMarkerEntryPoints.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -811,18 +809,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void ToString(
-            IWorkbenchDataGetter item,
+            IFurnitureMarkerEntryPointsGetter item,
             FileGeneration fg,
             string? name = null,
-            WorkbenchData.Mask<bool>? printMask = null)
+            FurnitureMarkerEntryPoints.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WorkbenchData =>");
+                fg.AppendLine($"FurnitureMarkerEntryPoints =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WorkbenchData) =>");
+                fg.AppendLine($"{name} (FurnitureMarkerEntryPoints) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -836,47 +834,43 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         protected static void ToStringFields(
-            IWorkbenchDataGetter item,
+            IFurnitureMarkerEntryPointsGetter item,
             FileGeneration fg,
-            WorkbenchData.Mask<bool>? printMask = null)
+            FurnitureMarkerEntryPoints.Mask<bool>? printMask = null)
         {
-            if (printMask?.BenchType ?? true)
+            if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.BenchType, "BenchType");
+                fg.AppendItem(item.Type, "Type");
             }
-            if ((printMask?.UsesSkill ?? true)
-                && item.UsesSkill is {} UsesSkillItem)
+            if (printMask?.Points ?? true)
             {
-                fg.AppendItem(UsesSkillItem, "UsesSkill");
+                fg.AppendItem(item.Points, "Points");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IWorkbenchDataGetter? lhs,
-            IWorkbenchDataGetter? rhs,
+            IFurnitureMarkerEntryPointsGetter? lhs,
+            IFurnitureMarkerEntryPointsGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)WorkbenchData_FieldIndex.BenchType) ?? true))
+            if ((crystal?.GetShouldTranslate((int)FurnitureMarkerEntryPoints_FieldIndex.Type) ?? true))
             {
-                if (lhs.BenchType != rhs.BenchType) return false;
+                if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WorkbenchData_FieldIndex.UsesSkill) ?? true))
+            if ((crystal?.GetShouldTranslate((int)FurnitureMarkerEntryPoints_FieldIndex.Points) ?? true))
             {
-                if (lhs.UsesSkill != rhs.UsesSkill) return false;
+                if (lhs.Points != rhs.Points) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IWorkbenchDataGetter item)
+        public virtual int GetHashCode(IFurnitureMarkerEntryPointsGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.BenchType);
-            if (item.UsesSkill is {} UsesSkillitem)
-            {
-                hash.Add(UsesSkillitem);
-            }
+            hash.Add(item.Type);
+            hash.Add(item.Points);
             return hash.ToHashCode();
         }
         
@@ -885,11 +879,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public object GetNew()
         {
-            return WorkbenchData.GetNew();
+            return FurnitureMarkerEntryPoints.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorkbenchDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFurnitureMarkerEntryPointsGetter obj)
         {
             yield break;
         }
@@ -897,36 +891,36 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class WorkbenchDataSetterTranslationCommon
+    public partial class FurnitureMarkerEntryPointsSetterTranslationCommon
     {
-        public static readonly WorkbenchDataSetterTranslationCommon Instance = new WorkbenchDataSetterTranslationCommon();
+        public static readonly FurnitureMarkerEntryPointsSetterTranslationCommon Instance = new FurnitureMarkerEntryPointsSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IWorkbenchData item,
-            IWorkbenchDataGetter rhs,
+            IFurnitureMarkerEntryPoints item,
+            IFurnitureMarkerEntryPointsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)WorkbenchData_FieldIndex.BenchType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FurnitureMarkerEntryPoints_FieldIndex.Type) ?? true))
             {
-                item.BenchType = rhs.BenchType;
+                item.Type = rhs.Type;
             }
-            if ((copyMask?.GetShouldTranslate((int)WorkbenchData_FieldIndex.UsesSkill) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FurnitureMarkerEntryPoints_FieldIndex.Points) ?? true))
             {
-                item.UsesSkill = rhs.UsesSkill;
+                item.Points = rhs.Points;
             }
         }
         
         #endregion
         
-        public WorkbenchData DeepCopy(
-            IWorkbenchDataGetter item,
-            WorkbenchData.TranslationMask? copyMask = null)
+        public FurnitureMarkerEntryPoints DeepCopy(
+            IFurnitureMarkerEntryPointsGetter item,
+            FurnitureMarkerEntryPoints.TranslationMask? copyMask = null)
         {
-            WorkbenchData ret = (WorkbenchData)((WorkbenchDataCommon)((IWorkbenchDataGetter)item).CommonInstance()!).GetNew();
-            ((WorkbenchDataSetterTranslationCommon)((IWorkbenchDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            FurnitureMarkerEntryPoints ret = (FurnitureMarkerEntryPoints)((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)item).CommonInstance()!).GetNew();
+            ((FurnitureMarkerEntryPointsSetterTranslationCommon)((IFurnitureMarkerEntryPointsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -935,30 +929,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
         
-        public WorkbenchData DeepCopy(
-            IWorkbenchDataGetter item,
-            out WorkbenchData.ErrorMask errorMask,
-            WorkbenchData.TranslationMask? copyMask = null)
+        public FurnitureMarkerEntryPoints DeepCopy(
+            IFurnitureMarkerEntryPointsGetter item,
+            out FurnitureMarkerEntryPoints.ErrorMask errorMask,
+            FurnitureMarkerEntryPoints.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            WorkbenchData ret = (WorkbenchData)((WorkbenchDataCommon)((IWorkbenchDataGetter)item).CommonInstance()!).GetNew();
-            ((WorkbenchDataSetterTranslationCommon)((IWorkbenchDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            FurnitureMarkerEntryPoints ret = (FurnitureMarkerEntryPoints)((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)item).CommonInstance()!).GetNew();
+            ((FurnitureMarkerEntryPointsSetterTranslationCommon)((IFurnitureMarkerEntryPointsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = WorkbenchData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FurnitureMarkerEntryPoints.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public WorkbenchData DeepCopy(
-            IWorkbenchDataGetter item,
+        public FurnitureMarkerEntryPoints DeepCopy(
+            IFurnitureMarkerEntryPointsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            WorkbenchData ret = (WorkbenchData)((WorkbenchDataCommon)((IWorkbenchDataGetter)item).CommonInstance()!).GetNew();
-            ((WorkbenchDataSetterTranslationCommon)((IWorkbenchDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            FurnitureMarkerEntryPoints ret = (FurnitureMarkerEntryPoints)((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)item).CommonInstance()!).GetNew();
+            ((FurnitureMarkerEntryPointsSetterTranslationCommon)((IFurnitureMarkerEntryPointsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -974,27 +968,27 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class WorkbenchData
+    public partial class FurnitureMarkerEntryPoints
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => WorkbenchData_Registration.Instance;
-        public static WorkbenchData_Registration StaticRegistration => WorkbenchData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => FurnitureMarkerEntryPoints_Registration.Instance;
+        public static FurnitureMarkerEntryPoints_Registration StaticRegistration => FurnitureMarkerEntryPoints_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => WorkbenchDataCommon.Instance;
+        protected object CommonInstance() => FurnitureMarkerEntryPointsCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return WorkbenchDataSetterCommon.Instance;
+            return FurnitureMarkerEntryPointsSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => WorkbenchDataSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => FurnitureMarkerEntryPointsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IWorkbenchDataGetter.CommonInstance() => this.CommonInstance();
+        object IFurnitureMarkerEntryPointsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IWorkbenchDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IFurnitureMarkerEntryPointsGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IWorkbenchDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IFurnitureMarkerEntryPointsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1005,32 +999,32 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class WorkbenchDataBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class FurnitureMarkerEntryPointsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WorkbenchDataBinaryWriteTranslation Instance = new WorkbenchDataBinaryWriteTranslation();
+        public readonly static FurnitureMarkerEntryPointsBinaryWriteTranslation Instance = new FurnitureMarkerEntryPointsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IWorkbenchDataGetter item,
+            IFurnitureMarkerEntryPointsGetter item,
             MutagenWriter writer)
         {
-            EnumBinaryTranslation<WorkbenchData.Type, MutagenFrame, MutagenWriter>.Instance.Write(
+            EnumBinaryTranslation<Furniture.AnimationType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
-                item.BenchType,
-                length: 1);
-            EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Write(
+                item.Type,
+                length: 2);
+            EnumBinaryTranslation<Furniture.EntryPointType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
-                ((int?)item.UsesSkill) ?? -1,
-                length: 1);
+                item.Points,
+                length: 2);
         }
 
         public void Write(
             MutagenWriter writer,
-            IWorkbenchDataGetter item,
+            IFurnitureMarkerEntryPointsGetter item,
             TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.WBDT),
+                record: translationParams.ConvertToCustom(RecordTypes.FNPR),
                 overflowRecord: translationParams?.OverflowRecordType,
                 out var writerToUse))
             {
@@ -1046,28 +1040,27 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IWorkbenchDataGetter)item,
+                item: (IFurnitureMarkerEntryPointsGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    public partial class WorkbenchDataBinaryCreateTranslation
+    public partial class FurnitureMarkerEntryPointsBinaryCreateTranslation
     {
-        public readonly static WorkbenchDataBinaryCreateTranslation Instance = new WorkbenchDataBinaryCreateTranslation();
+        public readonly static FurnitureMarkerEntryPointsBinaryCreateTranslation Instance = new FurnitureMarkerEntryPointsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IWorkbenchData item,
+            IFurnitureMarkerEntryPoints item,
             MutagenFrame frame)
         {
-            item.BenchType = EnumBinaryTranslation<WorkbenchData.Type, MutagenFrame, MutagenWriter>.Instance.Parse(
+            item.Type = EnumBinaryTranslation<Furniture.AnimationType, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
-                length: 1);
-            if (frame.Complete) return;
-            item.UsesSkill = EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Parse(
+                length: 2);
+            item.Points = EnumBinaryTranslation<Furniture.EntryPointType, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
-                length: 1);
+                length: 2);
         }
 
     }
@@ -1076,14 +1069,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class WorkbenchDataBinaryTranslationMixIn
+    public static class FurnitureMarkerEntryPointsBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IWorkbenchDataGetter item,
+            this IFurnitureMarkerEntryPointsGetter item,
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((WorkbenchDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((FurnitureMarkerEntryPointsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1096,62 +1089,52 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class WorkbenchDataBinaryOverlay :
+    public partial class FurnitureMarkerEntryPointsBinaryOverlay :
         PluginBinaryOverlay,
-        IWorkbenchDataGetter
+        IFurnitureMarkerEntryPointsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => WorkbenchData_Registration.Instance;
-        public static WorkbenchData_Registration StaticRegistration => WorkbenchData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => FurnitureMarkerEntryPoints_Registration.Instance;
+        public static FurnitureMarkerEntryPoints_Registration StaticRegistration => FurnitureMarkerEntryPoints_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => WorkbenchDataCommon.Instance;
+        protected object CommonInstance() => FurnitureMarkerEntryPointsCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => WorkbenchDataSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => FurnitureMarkerEntryPointsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IWorkbenchDataGetter.CommonInstance() => this.CommonInstance();
+        object IFurnitureMarkerEntryPointsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IWorkbenchDataGetter.CommonSetterInstance() => null;
+        object? IFurnitureMarkerEntryPointsGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IWorkbenchDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IFurnitureMarkerEntryPointsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => WorkbenchDataBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => FurnitureMarkerEntryPointsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((WorkbenchDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((FurnitureMarkerEntryPointsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public WorkbenchData.Type BenchType => (WorkbenchData.Type)_data.Span.Slice(0x0, 0x1)[0];
-        #region UsesSkill
-        public Skill? UsesSkill
-        {
-            get
-            {
-                var val = (Skill)_data.Span.Slice(0x1, 0x1)[0];
-                if (((int)val) == -1) return null;
-                return val;
-            }
-        }
-        #endregion
+        public Furniture.AnimationType Type => (Furniture.AnimationType)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x0, 0x2));
+        public Furniture.EntryPointType Points => (Furniture.EntryPointType)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x2, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected WorkbenchDataBinaryOverlay(
+        protected FurnitureMarkerEntryPointsBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1161,17 +1144,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             this.CustomCtor();
         }
 
-        public static WorkbenchDataBinaryOverlay WorkbenchDataFactory(
+        public static FurnitureMarkerEntryPointsBinaryOverlay FurnitureMarkerEntryPointsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new WorkbenchDataBinaryOverlay(
+            var ret = new FurnitureMarkerEntryPointsBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x2 + package.MetaData.Constants.SubConstants.HeaderLength;
+            stream.Position += 0x4 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1179,12 +1162,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
 
-        public static WorkbenchDataBinaryOverlay WorkbenchDataFactory(
+        public static FurnitureMarkerEntryPointsBinaryOverlay FurnitureMarkerEntryPointsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return WorkbenchDataFactory(
+            return FurnitureMarkerEntryPointsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1196,7 +1179,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FileGeneration fg,
             string? name = null)
         {
-            WorkbenchDataMixIn.ToString(
+            FurnitureMarkerEntryPointsMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1206,16 +1189,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IWorkbenchDataGetter rhs) return false;
-            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IFurnitureMarkerEntryPointsGetter rhs) return false;
+            return ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IWorkbenchDataGetter? obj)
+        public bool Equals(IFurnitureMarkerEntryPointsGetter? obj)
         {
-            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

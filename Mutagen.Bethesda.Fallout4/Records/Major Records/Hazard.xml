@@ -28,5 +28,6 @@
       </Data>
     </Fields>
     <LinkInterface>IPlacedTrapTarget</LinkInterface>
+    <LinkInterface>IFurnitureAssociation</LinkInterface>
   </Object>
 </Loqui>

@@ -111,6 +111,9 @@
     <Compile Include="Records\Common Subrecords\LocationTargetRadius.cs">
       <DependentUpon>LocationTargetRadius.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectTemplate.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\ScriptEntry.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
@@ -150,9 +153,6 @@
     <Compile Include="Records\Major Records\ArmorAddon.cs">
       <DependentUpon>ArmorAddon.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ArmorObjectTemplate.cs">
-      <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ArtObject.cs">
       <DependentUpon>ArtObject.xml</DependentUpon>
     </Compile>
@@ -184,6 +184,9 @@
       <DependentUpon>FootstepSet.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Furniture.cs">
+      <DependentUpon>Furniture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FurnitureMarkerParameters.cs">
       <DependentUpon>Furniture.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\GameSetting.cs">
@@ -377,9 +380,6 @@
     </Compile>
     <Compile Include="Records\Major Records\VoiceType.cs">
       <DependentUpon>VoiceType.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\WorkbenchData.cs">
-      <DependentUpon>Furniture.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\ProtocolDefinition_Fallout4.cs" />
     <Compile Include="Records\Fallout4MajorRecord.cs">
@@ -1000,9 +1000,6 @@
     <Compile Include="Records\Major Records\Ammunition_Generated.cs">
       <DependentUpon>Ammunition.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Furniture_Generated.cs">
-      <DependentUpon>Furniture.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\IdleMarker_Generated.cs">
       <DependentUpon>IdleMarker.xml</DependentUpon>
     </Compile>
@@ -1020,18 +1017,6 @@
     </Compile>
     <Compile Include="Records\Major Records\Projectile_Generated.cs">
       <DependentUpon>Projectile.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Furniture_Generated.cs">
-      <DependentUpon>Furniture.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\WorkbenchData_Generated.cs">
-      <DependentUpon>Furniture.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\FurnitureMarker_Generated.cs">
-      <DependentUpon>Furniture.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\EntryPoints_Generated.cs">
-      <DependentUpon>Furniture.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ScriptVariableProperty_Generated.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
@@ -1183,32 +1168,8 @@
     <Compile Include="Records\Common Subrecords\GetEventData_Generated.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ArmorObjectTemplate_Generated.cs">
-      <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\AArmorObjectModProperty_Generated.cs">
-      <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\ObjectTemplateInclude_Generated.cs">
       <DependentUpon>ObjectTemplateInclude.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ArmorObjectModIntProperty_Generated.cs">
-      <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ArmorObjectModFloatProperty_Generated.cs">
-      <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ArmorObjectModBoolProperty_Generated.cs">
-      <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ArmorObjectModStringProperty_Generated.cs">
-      <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ArmorObjectModFormLinkIntProperty_Generated.cs">
-      <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ArmorObjectModFormLinkFloatProperty_Generated.cs">
-      <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\ArmorResistance_Generated.cs">
       <DependentUpon>Armor.xml</DependentUpon>
@@ -1265,6 +1226,39 @@
     </Compile>
     <Compile Include="Records\Major Records\Holotape_Generated.cs">
       <DependentUpon>Holotape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectTemplate_Generated.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\AObjectModProperty_Generated.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectModIntProperty_Generated.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectModFloatProperty_Generated.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectModBoolProperty_Generated.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectModStringProperty_Generated.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectModFormLinkIntProperty_Generated.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectModFormLinkFloatProperty_Generated.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Furniture_Generated.cs">
+      <DependentUpon>Furniture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FurnitureMarkerParameters_Generated.cs">
+      <DependentUpon>Furniture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FurnitureMarkerEntryPoints_Generated.cs">
+      <DependentUpon>Furniture.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

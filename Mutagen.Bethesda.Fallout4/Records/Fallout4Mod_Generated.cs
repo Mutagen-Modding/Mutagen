@@ -91,6 +91,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Grasses_Object = new Fallout4Group<Grass>(this);
             _Trees_Object = new Fallout4Group<Tree>(this);
             _Florae_Object = new Fallout4Group<Flora>(this);
+            _Furniture_Object = new Fallout4Group<Furniture>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -341,6 +342,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IFloraGetter> IFallout4ModGetter.Florae => _Florae_Object;
         #endregion
+        #region Furniture
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<Furniture> _Furniture_Object;
+        public Fallout4Group<Furniture> Furniture => _Furniture_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IFurnitureGetter> IFallout4ModGetter.Furniture => _Furniture_Object;
+        #endregion
 
         #region To String
 
@@ -414,6 +422,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Grasses = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Trees = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Florae = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Furniture = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -451,7 +460,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem MovableStatics,
                 TItem Grasses,
                 TItem Trees,
-                TItem Florae)
+                TItem Florae,
+                TItem Furniture)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -488,6 +498,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Grasses = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Grasses, new Fallout4Group.Mask<TItem>(Grasses));
                 this.Trees = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Trees, new Fallout4Group.Mask<TItem>(Trees));
                 this.Florae = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Florae, new Fallout4Group.Mask<TItem>(Florae));
+                this.Furniture = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Furniture, new Fallout4Group.Mask<TItem>(Furniture));
             }
 
             #pragma warning disable CS8618
@@ -534,6 +545,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Grasses { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Trees { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Florae { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Furniture { get; set; }
             #endregion
 
             #region Equals
@@ -581,6 +593,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
                 if (!object.Equals(this.Trees, rhs.Trees)) return false;
                 if (!object.Equals(this.Florae, rhs.Florae)) return false;
+                if (!object.Equals(this.Furniture, rhs.Furniture)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -621,6 +634,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Grasses);
                 hash.Add(this.Trees);
                 hash.Add(this.Florae);
+                hash.Add(this.Furniture);
                 return hash.ToHashCode();
             }
 
@@ -804,6 +818,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Florae.Overall)) return false;
                     if (this.Florae.Specific != null && !this.Florae.Specific.All(eval)) return false;
                 }
+                if (Furniture != null)
+                {
+                    if (!eval(this.Furniture.Overall)) return false;
+                    if (this.Furniture.Specific != null && !this.Furniture.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -986,6 +1005,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Florae.Overall)) return true;
                     if (this.Florae.Specific != null && this.Florae.Specific.Any(eval)) return true;
                 }
+                if (Furniture != null)
+                {
+                    if (eval(this.Furniture.Overall)) return true;
+                    if (this.Furniture.Specific != null && this.Furniture.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1035,6 +1059,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Grasses = this.Grasses == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
                 obj.Trees = this.Trees == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Trees.Overall), this.Trees.Specific?.Translate(eval));
                 obj.Florae = this.Florae == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Florae.Overall), this.Florae.Specific?.Translate(eval));
+                obj.Furniture = this.Furniture == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Furniture.Overall), this.Furniture.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1197,6 +1222,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Florae?.ToString(fg);
                     }
+                    if (printMask?.Furniture?.Overall ?? true)
+                    {
+                        Furniture?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1257,6 +1286,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Grass.ErrorMask>?>? Grasses;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Tree.ErrorMask>?>? Trees;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Flora.ErrorMask>?>? Florae;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Furniture.ErrorMask>?>? Furniture;
             #endregion
 
             #region IErrorMask
@@ -1335,6 +1365,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Trees;
                     case Fallout4Mod_FieldIndex.Florae:
                         return Florae;
+                    case Fallout4Mod_FieldIndex.Furniture:
+                        return Furniture;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1449,6 +1481,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.Florae:
                         this.Florae = new MaskItem<Exception?, Fallout4Group.ErrorMask<Flora.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Furniture:
+                        this.Furniture = new MaskItem<Exception?, Fallout4Group.ErrorMask<Furniture.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1565,6 +1600,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.Florae:
                         this.Florae = (MaskItem<Exception?, Fallout4Group.ErrorMask<Flora.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.Furniture:
+                        this.Furniture = (MaskItem<Exception?, Fallout4Group.ErrorMask<Furniture.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1608,6 +1646,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Grasses != null) return true;
                 if (Trees != null) return true;
                 if (Florae != null) return true;
+                if (Furniture != null) return true;
                 return false;
             }
             #endregion
@@ -1677,6 +1716,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Grasses?.ToString(fg);
                 Trees?.ToString(fg);
                 Florae?.ToString(fg);
+                Furniture?.ToString(fg);
             }
             #endregion
 
@@ -1720,6 +1760,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Grasses = this.Grasses.Combine(rhs.Grasses, (l, r) => l.Combine(r));
                 ret.Trees = this.Trees.Combine(rhs.Trees, (l, r) => l.Combine(r));
                 ret.Florae = this.Florae.Combine(rhs.Florae, (l, r) => l.Combine(r));
+                ret.Furniture = this.Furniture.Combine(rhs.Furniture, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1778,6 +1819,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<Grass.TranslationMask>? Grasses;
             public Fallout4Group.TranslationMask<Tree.TranslationMask>? Trees;
             public Fallout4Group.TranslationMask<Flora.TranslationMask>? Florae;
+            public Fallout4Group.TranslationMask<Furniture.TranslationMask>? Furniture;
             #endregion
 
             #region Ctors
@@ -1837,6 +1879,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Grasses != null ? Grasses.OnOverall : DefaultOn, Grasses?.GetCrystal()));
                 ret.Add((Trees != null ? Trees.OnOverall : DefaultOn, Trees?.GetCrystal()));
                 ret.Add((Florae != null ? Florae.OnOverall : DefaultOn, Florae?.GetCrystal()));
+                ret.Add((Furniture != null ? Furniture.OnOverall : DefaultOn, Furniture?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1913,6 +1956,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Grasses_Object = new Fallout4Group<Grass>(this);
             _Trees_Object = new Fallout4Group<Tree>(this);
             _Florae_Object = new Fallout4Group<Flora>(this);
+            _Furniture_Object = new Fallout4Group<Furniture>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -2055,6 +2099,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Florae.RecordCache.Set(rhsMod.Florae.RecordCache.Items);
             }
+            if (mask?.Furniture ?? true)
+            {
+                this.Furniture.RecordCache.Set(rhsMod.Furniture.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -2099,6 +2147,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += Grasses.RecordCache.Count > 0 ? 1 : default(uint);
             count += Trees.RecordCache.Count > 0 ? 1 : default(uint);
             count += Florae.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Furniture.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -2382,6 +2431,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<Grass> Grasses { get; }
         new Fallout4Group<Tree> Trees { get; }
         new Fallout4Group<Flora> Florae { get; }
+        new Fallout4Group<Furniture> Furniture { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -2435,6 +2485,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IGrassGetter> Grasses { get; }
         IFallout4GroupGetter<ITreeGetter> Trees { get; }
         IFallout4GroupGetter<IFloraGetter> Florae { get; }
+        IFallout4GroupGetter<IFurnitureGetter> Furniture { get; }
 
     }
 
@@ -3032,6 +3083,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Grasses = 32,
         Trees = 33,
         Florae = 34,
+        Furniture = 35,
     }
     #endregion
 
@@ -3049,9 +3101,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 35;
+        public const ushort AdditionalFieldCount = 36;
 
-        public const ushort FieldCount = 35;
+        public const ushort FieldCount = 36;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -3154,6 +3206,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Grasses.Clear();
             item.Trees.Clear();
             item.Florae.Clear();
+            item.Furniture.Clear();
         }
         
         #region Mutagen
@@ -3189,6 +3242,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Grasses.RemapLinks(mapping);
             obj.Trees.RemapLinks(mapping);
             obj.Florae.RemapLinks(mapping);
+            obj.Furniture.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -3257,6 +3311,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Grasses.Remove(keys);
             obj.Trees.Remove(keys);
             obj.Florae.Remove(keys);
+            obj.Furniture.Remove(keys);
         }
         
         public void Remove(
@@ -3592,6 +3647,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         type: type,
                         keys: keys);
                     break;
+                case "Furniture":
+                case "IFurnitureGetter":
+                case "IFurniture":
+                case "IFurnitureInternal":
+                    obj.Furniture.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
@@ -3604,6 +3667,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Remove(obj, keys, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
@@ -3619,6 +3683,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Remove(obj, keys, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IFloraGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMovableStaticGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
@@ -3647,6 +3712,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IConstructibleGetter":
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
@@ -3658,6 +3724,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IFurnitureAssociation":
                 case "IFurnitureAssociationGetter":
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IOwner":
                 case "IOwnerGetter":
@@ -3787,6 +3854,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Grasses = MaskItemExt.Factory(item.Grasses.GetEqualsMask(rhs.Grasses, include), include);
             ret.Trees = MaskItemExt.Factory(item.Trees.GetEqualsMask(rhs.Trees, include), include);
             ret.Florae = MaskItemExt.Factory(item.Florae.GetEqualsMask(rhs.Florae, include), include);
+            ret.Furniture = MaskItemExt.Factory(item.Furniture.GetEqualsMask(rhs.Furniture, include), include);
         }
         
         public string ToString(
@@ -3972,6 +4040,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (printMask?.Florae?.Overall ?? true)
             {
                 item.Florae?.ToString(fg, "Florae");
+            }
+            if (printMask?.Furniture?.Overall ?? true)
+            {
+                item.Furniture?.ToString(fg, "Furniture");
             }
         }
         
@@ -4262,6 +4334,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 else if (!isFloraeEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Furniture) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Furniture, rhs.Furniture, out var lhsFurniture, out var rhsFurniture, out var isFurnitureEqual))
+                {
+                    if (!object.Equals(lhsFurniture, rhsFurniture)) return false;
+                }
+                else if (!isFurnitureEqual) return false;
+            }
             return true;
         }
         
@@ -4303,6 +4383,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.Grasses);
             hash.Add(item.Trees);
             hash.Add(item.Florae);
+            hash.Add(item.Furniture);
             return hash.ToHashCode();
         }
         
@@ -4491,6 +4572,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IFlora":
                 case "IFloraInternal":
                     return obj.Florae;
+                case "Furniture":
+                case "IFurnitureGetter":
+                case "IFurniture":
+                case "IFurnitureInternal":
+                    return obj.Furniture;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -4515,7 +4601,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[34];
+            Stream[] outputStreams = new Stream[35];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -4551,6 +4637,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             toDo.Add(() => WriteGroupParallel(item.Grasses, 31, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Trees, 32, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Florae, 33, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Furniture, 34, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -4718,6 +4805,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
+            foreach (var item in obj.Furniture.ContainedFormLinks)
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -4856,6 +4947,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 yield return item;
             }
             foreach (var item in obj.Florae.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Furniture.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -5200,6 +5295,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         yield return item;
                     }
                     yield break;
+                case "Furniture":
+                case "IFurnitureGetter":
+                case "IFurniture":
+                case "IFurnitureInternal":
+                    foreach (var item in obj.Furniture.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout4, obj, type, out var linkInterfaces))
                     {
@@ -5527,6 +5631,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 modKey: obj.ModKey,
                 group: (m) => m.Florae,
                 groupGetter: (m) => m.Florae))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Furniture, IFurnitureGetter>(
+                srcGroup: obj.Furniture,
+                type: typeof(IFurnitureGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Furniture,
+                groupGetter: (m) => m.Furniture))
             {
                 yield return item;
             }
@@ -6033,6 +6146,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         modKey: obj.ModKey,
                         group: (m) => m.Florae,
                         groupGetter: (m) => m.Florae))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Furniture":
+                case "IFurnitureGetter":
+                case "IFurniture":
+                case "IFurnitureInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Furniture, IFurnitureGetter>(
+                        srcGroup: obj.Furniture,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Furniture,
+                        groupGetter: (m) => m.Furniture))
                     {
                         yield return item;
                     }
@@ -6777,6 +6904,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Furniture) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Furniture);
+                try
+                {
+                    item.Furniture.DeepCopyIn(
+                        rhs: rhs.Furniture,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Furniture));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -6901,6 +7048,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Grasses;
         public bool Trees;
         public bool Florae;
+        public bool Furniture;
         public GroupMask()
         {
         }
@@ -6940,6 +7088,7 @@ namespace Mutagen.Bethesda.Fallout4
             Grasses = defaultValue;
             Trees = defaultValue;
             Florae = defaultValue;
+            Furniture = defaultValue;
         }
     }
 
@@ -7341,6 +7490,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)FloraeItem).BinaryWriteTranslator).Write<IFloraGetter>(
                         item: FloraeItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Furniture ?? true)
+            {
+                var FurnitureItem = item.Furniture;
+                if (FurnitureItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)FurnitureItem).BinaryWriteTranslator).Write<IFurnitureGetter>(
+                        item: FurnitureItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -7887,6 +8047,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     }
                     return (int)Fallout4Mod_FieldIndex.Florae;
                 }
+                case RecordTypeInts.FURN:
+                {
+                    if (importMask?.Furniture ?? true)
+                    {
+                        item.Furniture.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Furniture;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -8218,6 +8392,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private IFallout4GroupGetter<IFloraGetter>? _Florae => _FloraeLocations != null ? Fallout4GroupBinaryOverlay<IFloraGetter>.Fallout4GroupFactory(_data, _FloraeLocations, _package) : default;
         public IFallout4GroupGetter<IFloraGetter> Florae => _Florae ?? new Fallout4Group<Flora>(this);
         #endregion
+        #region Furniture
+        private List<RangeInt64>? _FurnitureLocations;
+        private IFallout4GroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocations != null ? Fallout4GroupBinaryOverlay<IFurnitureGetter>.Fallout4GroupFactory(_data, _FurnitureLocations, _package) : default;
+        public IFallout4GroupGetter<IFurnitureGetter> Furniture => _Furniture ?? new Fallout4Group<Furniture>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -8509,6 +8688,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     _FloraeLocations ??= new();
                     _FloraeLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Florae;
+                }
+                case RecordTypeInts.FURN:
+                {
+                    _FurnitureLocations ??= new();
+                    _FurnitureLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.Furniture;
                 }
                 default:
                     return default(int?);

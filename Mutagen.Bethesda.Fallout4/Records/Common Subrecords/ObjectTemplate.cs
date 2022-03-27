@@ -13,32 +13,12 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ArmorObjectTemplate
-    {
-        public enum Property
-        {
-            Enchantments,
-            BashImpactDataSet,
-            BlockMaterial,
-            Keywords,
-            Weight,
-            Value,
-            Rating,
-            AddonIndex,
-            BodyPart,
-            DamageTypeValue,
-            ActorValues,
-            Health,
-            ColorRemappingIndex,
-            MaterialSwaps
-        }
-    }
-    
     namespace Internals
     {
-        partial class ArmorObjectTemplateBinaryCreateTranslation
+        partial class ObjectTemplateBinaryCreateTranslation<T>
+            where T : struct, Enum
         {
-            public static partial ParseResult FillBinaryOBTSLogicCustom(MutagenFrame frame, IArmorObjectTemplate item,
+            public static partial ParseResult FillBinaryOBTSLogicCustom(MutagenFrame frame, IObjectTemplate<T> item,
                 PreviousParse lastParsed)
             {
                 frame.ReadSubrecord(RecordTypes.OBTS);
@@ -65,10 +45,10 @@ namespace Mutagen.Bethesda.Fallout4
                             amount: checked((int)includeCount),
                             transl: ObjectTemplateInclude.TryCreateFromBinary));
                 item.Properties.SetTo(ReadProperties(frame, checked((int)propertyCount)));
-                return (int)ArmorObjectTemplate_FieldIndex.Properties;
+                return (int)ObjectTemplate_FieldIndex.Properties;
             }
 
-            public static IEnumerable<AArmorObjectModProperty> ReadProperties(MutagenFrame stream, int count)
+            public static IEnumerable<AObjectModProperty<T>> ReadProperties(MutagenFrame stream, int count)
             {
                 for (int i = 0; i < count; i++)
                 {
@@ -76,16 +56,16 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
 
-            public static AArmorObjectModProperty ReadProperty(IMasterReferenceReader masters, ReadOnlySpan<byte> data)
+            public static AObjectModProperty<T> ReadProperty(IMasterReferenceReader masters, ReadOnlySpan<byte> data)
             {
-                AArmorObjectModProperty ret;
+                AObjectModProperty<T> ret;
                 var type = (ObjectModProperty.ValueType)data[0];
                 var enumVal = data[4];
-                var armorProp = (ArmorObjectTemplate.Property)BinaryPrimitives.ReadUInt16LittleEndian(data[8..]);
+                var Prop = EnumExt<T>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(data[8..]));
                 switch (type)
                 {
                     case ObjectModProperty.ValueType.Int:
-                        ret = new ArmorObjectModIntProperty()
+                        ret = new ObjectModIntProperty<T>()
                         {
                             FunctionType = (ObjectModProperty.FloatFunctionType)enumVal,
                             Value = BinaryPrimitives.ReadUInt32LittleEndian(data[12..]),
@@ -93,7 +73,7 @@ namespace Mutagen.Bethesda.Fallout4
                         };
                         break;
                     case ObjectModProperty.ValueType.Float:
-                        ret = new ArmorObjectModFloatProperty()
+                        ret = new ObjectModFloatProperty<T>()
                         {
                             FunctionType = (ObjectModProperty.FloatFunctionType)enumVal,
                             Value = BinaryPrimitives.ReadSingleLittleEndian(data[12..]),
@@ -101,7 +81,7 @@ namespace Mutagen.Bethesda.Fallout4
                         };
                         break;
                     case ObjectModProperty.ValueType.Bool:
-                        ret = new ArmorObjectModBoolProperty()
+                        ret = new ObjectModBoolProperty<T>()
                         {
                             FunctionType = (ObjectModProperty.BoolFunctionType)enumVal,
                             Value = data[12] > 0,
@@ -109,7 +89,7 @@ namespace Mutagen.Bethesda.Fallout4
                         };
                         break;
                     case ObjectModProperty.ValueType.String:
-                        ret = new ArmorObjectModStringProperty()
+                        ret = new ObjectModStringProperty<T>()
                         {
                             FunctionType = (ObjectModProperty.FloatFunctionType)enumVal,
                             Value = data.Slice(12, 4).ToString(),
@@ -117,40 +97,43 @@ namespace Mutagen.Bethesda.Fallout4
                         };
                         break;
                     case ObjectModProperty.ValueType.FormIdInt:
-                    {
-                        var prop = new ArmorObjectModFormLinkIntProperty()
                         {
-                            FunctionType = (ObjectModProperty.FormLinkFunctionType)enumVal,
-                        };
-                        prop.Record.SetTo(FormKeyBinaryTranslation.Instance.Parse(data[12..], masters));
-                        prop.Value = BinaryPrimitives.ReadUInt32LittleEndian(data[16..]);
-                        ret = prop;
-                        break;
-                    }
+                            var prop = new ObjectModFormLinkIntProperty<T>()
+                            {
+                                FunctionType = (ObjectModProperty.FormLinkFunctionType)enumVal,
+                            };
+                            prop.Record.SetTo(FormKeyBinaryTranslation.Instance.Parse(data[12..], masters));
+                            prop.Value = BinaryPrimitives.ReadUInt32LittleEndian(data[16..]);
+                            ret = prop;
+                            break;
+                        }
                     case ObjectModProperty.ValueType.FormIdFloat:
-                    {
-                        var prop = new ArmorObjectModFormLinkFloatProperty()
                         {
-                            FunctionType = (ObjectModProperty.FloatFunctionType)enumVal,
-                        };
-                        prop.Record.SetTo(FormKeyBinaryTranslation.Instance.Parse(data[12..], masters));
-                        prop.Value = BinaryPrimitives.ReadSingleLittleEndian(data[16..]);
-                        ret = prop;
-                        break;
-                    }
+                            var prop = new ObjectModFormLinkFloatProperty<T>()
+                            {
+                                FunctionType = (ObjectModProperty.FloatFunctionType)enumVal,
+                            };
+                            prop.Record.SetTo(FormKeyBinaryTranslation.Instance.Parse(data[12..], masters));
+                            prop.Value = BinaryPrimitives.ReadSingleLittleEndian(data[16..]);
+                            ret = prop;
+                            break;
+                        }
                     default:
                         throw new NotImplementedException();
                 }
 
-                ret.Property = armorProp;
+                ret.Property = Prop;
                 ret.Step = BinaryPrimitives.ReadSingleLittleEndian(data[20..]);
                 return ret;
             }
         }
 
-        partial class ArmorObjectTemplateBinaryWriteTranslation
+        partial class ObjectTemplateBinaryWriteTranslation
         {
-            public static partial void WriteBinaryOBTSLogicCustom(MutagenWriter writer, IArmorObjectTemplateGetter item)
+            public static partial void WriteBinaryOBTSLogicCustom<T>(
+                MutagenWriter writer,
+                IObjectTemplateGetter<T> item)
+                where T : struct, Enum
             {
                 using var header = HeaderExport.Subrecord(writer, RecordTypes.OBTS);
                 writer.Write(item.Includes.Count);
@@ -180,45 +163,46 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         subItem.WriteToBinary(subWriter);
                     });
-                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAArmorObjectModPropertyGetter>.Instance.Write(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAObjectModPropertyGetter<T>>.Instance.Write(
                     writer: writer,
                     items: item.Properties,
-                    transl: (MutagenWriter subWriter, IAArmorObjectModPropertyGetter subItem) =>
+                    transl: (MutagenWriter subWriter, IAObjectModPropertyGetter<T> subItem) =>
                     {
                         WriteProperty(subWriter, subItem);
                     });
             }
 
-            public static void WriteProperty(MutagenWriter writer, IAArmorObjectModPropertyGetter property)
+            public static void WriteProperty<T>(MutagenWriter writer, IAObjectModPropertyGetter<T> property)
+                where T : struct, Enum
             {
                 switch (property)
                 {
-                    case IArmorObjectModIntPropertyGetter intProp:
+                    case IObjectModIntPropertyGetter<T> intProp:
                         WritePropertyFields(writer, property, ObjectModProperty.ValueType.Int, intProp.FunctionType);
                         writer.Write(intProp.Value);
                         writer.Write(intProp.Value2);
                         break;
-                    case IArmorObjectModFloatPropertyGetter floatProp:
+                    case IObjectModFloatPropertyGetter<T> floatProp:
                         WritePropertyFields(writer, property, ObjectModProperty.ValueType.Float, floatProp.FunctionType);
                         writer.Write(floatProp.Value);
                         writer.Write(floatProp.Value2);
                         break;
-                    case IArmorObjectModBoolPropertyGetter boolProp:
+                    case IObjectModBoolPropertyGetter<T> boolProp:
                         WritePropertyFields(writer, property, ObjectModProperty.ValueType.Bool, boolProp.FunctionType);
                         BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(writer, boolProp.Value, 4);
                         BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(writer, boolProp.Value2, 4);
                         break;
-                    case IArmorObjectModStringPropertyGetter stringProp:
+                    case IObjectModStringPropertyGetter<T> stringProp:
                         WritePropertyFields(writer, property, ObjectModProperty.ValueType.String, stringProp.FunctionType);
                         StringBinaryTranslation.Instance.Write(writer, stringProp.Value.AsSpan().Slice(0, 4));
                         writer.Write(stringProp.Unused);
                         break;
-                    case IArmorObjectModFormLinkIntPropertyGetter linkIntProp:
+                    case IObjectModFormLinkIntPropertyGetter<T> linkIntProp:
                         WritePropertyFields(writer, property, ObjectModProperty.ValueType.FormIdInt, linkIntProp.FunctionType);
                         FormLinkBinaryTranslation.Instance.Write(writer, linkIntProp.Record);
                         writer.Write(linkIntProp.Value);
                         break;
-                    case IArmorObjectModFormLinkFloatPropertyGetter linkFloatProp:
+                    case IObjectModFormLinkFloatPropertyGetter<T> linkFloatProp:
                         WritePropertyFields(writer, property, ObjectModProperty.ValueType.FormIdFloat, linkFloatProp.FunctionType);
                         FormLinkBinaryTranslation.Instance.Write(writer, linkFloatProp.Record);
                         writer.Write(linkFloatProp.Value);
@@ -229,20 +213,21 @@ namespace Mutagen.Bethesda.Fallout4
                 writer.Write(property.Step);
             }
 
-            private static void WritePropertyFields<TEnumType, TEnumFunction>(MutagenWriter writer, IAArmorObjectModPropertyGetter prop, TEnumType type, TEnumFunction func)
-                where TEnumType : Enum, IConvertible
-                where TEnumFunction : Enum, IConvertible
+            private static void WritePropertyFields<TPropertyEnum, TValueEnum, TFunctionEnum>(MutagenWriter writer, IAObjectModPropertyGetter<TPropertyEnum> prop, TValueEnum type, TFunctionEnum func)
+                where TPropertyEnum : struct, Enum
+                where TValueEnum : struct, Enum
+                where TFunctionEnum : struct, Enum
             {
-                writer.Write((byte)type.ToInt32(null));
+                writer.Write(checked((byte)EnumExt<TValueEnum>.ConvertFrom(type)));
                 writer.WriteZeros(3);
-                writer.Write((byte)func.ToInt32(null));
+                writer.Write(checked((byte)EnumExt<TFunctionEnum>.ConvertFrom(func)));
                 writer.WriteZeros(3);
-                writer.Write((ushort)prop.Property);
+                writer.Write(checked((ushort)EnumExt<TPropertyEnum>.ConvertFrom(prop.Property)));
                 writer.WriteZeros(2);
             }
         }
 
-        partial class ArmorObjectTemplateBinaryOverlay
+        partial class ObjectTemplateBinaryOverlay<T>
         {
             private int? _obtsLoc;
             private uint _includeCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_obtsLoc!.Value));
@@ -250,7 +235,7 @@ namespace Mutagen.Bethesda.Fallout4
             private byte? _keywordCount;
             private int? _postKeywordLoc;
             private int IncludeLoc => _postKeywordLoc!.Value + 2;
-            
+
             public partial ParseResult OBTSLogicCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
             {
                 _obtsLoc = (stream.Position - offset) + stream.MetaData.Constants.SubConstants.HeaderLength;
@@ -273,8 +258,8 @@ namespace Mutagen.Bethesda.Fallout4
                     _data.Slice(IncludeLoc + includeLen, propLen),
                     _package,
                     itemLength: 24,
-                    getter: (s, p) => ArmorObjectTemplateBinaryCreateTranslation.ReadProperty(stream.MetaData.MasterReferences, s));
-                return (int)ArmorObjectTemplate_FieldIndex.Properties;
+                    getter: (s, p) => ObjectTemplateBinaryCreateTranslation<T>.ReadProperty(stream.MetaData.MasterReferences, s));
+                return (int)ObjectTemplate_FieldIndex.Properties;
             }
 
             public byte LevelMin => _data[_obtsLoc!.Value + 8];
@@ -286,7 +271,7 @@ namespace Mutagen.Bethesda.Fallout4
             public byte MinLevelForRanks => _data[_postKeywordLoc!.Value];
             public byte AltLevelsPerTier => _data[_postKeywordLoc!.Value + 1];
             public IReadOnlyList<IObjectTemplateIncludeGetter> Includes { get; private set; } = null!;
-            public IReadOnlyList<IAArmorObjectModPropertyGetter> Properties { get; private set; } = null!;
+            public IReadOnlyList<IAObjectModPropertyGetter<T>> Properties { get; private set; } = null!;
         }
     }
 }

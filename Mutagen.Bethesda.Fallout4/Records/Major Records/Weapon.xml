@@ -4,5 +4,6 @@
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IStaticObject</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
+    <LinkInterface>IFurnitureAssociation</LinkInterface>
   </Object>
 </Loqui>

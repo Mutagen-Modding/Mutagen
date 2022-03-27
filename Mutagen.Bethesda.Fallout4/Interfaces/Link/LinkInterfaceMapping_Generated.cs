@@ -130,6 +130,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             dict[typeof(IFurnitureAssociation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Armor_Registration.Instance,
+                Hazard_Registration.Instance,
+                Perk_Registration.Instance,
+                Spell_Registration.Instance,
+                Weapon_Registration.Instance,
             });
             dict[typeof(IFurnitureAssociationGetter)] = dict[typeof(IFurnitureAssociation)] with { Setter = false };
             dict[typeof(IOwner)] = new InterfaceMappingResult(true, new ILoquiRegistration[]

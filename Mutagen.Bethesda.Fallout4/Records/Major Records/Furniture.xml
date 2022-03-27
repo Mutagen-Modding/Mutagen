@@ -4,54 +4,69 @@
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-	  <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+      <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Destructible" refName="Destructible" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
-	  <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
       <FormLink name="NativeTerminal" refName="Terminal" recordType="NTRM" />
       <FormLink name="ForcedLocRefType" refName="LocationReferenceType" recordType="FTYP" />
       <ByteArray name="PNAM" recordType="PNAM" />
-      <FormLink name="WaterType" refName="Water" recordType="WNAM" />
-      <String name="ATTXActivateTextOverride" recordType="RNAM" translated="Normal" />
+      <FormLink name="DrinkingWater" refName="Water" recordType="WNAM" />
+      <String name="ActivateTextOverride" recordType="ATTX" translated="Normal" />
       <Enum name="Flags" enumName="Furniture.Flag" recordType="FNAM" binary="Custom" />
       <RefList name="Conditions" refName="Condition" counterRecType="CITC" binaryOverlay="Custom" />
       <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
-      <!--<Enum name="ActiveMarkersFlags" enumName="Furniture.ActiveMarkers" byteLength="4" recordType="MNAM" />-->
       <CustomLogic name="Flags2" recordType="MNAM" />
-      <RefDirect name="WorkbenchData" refName="WorkbenchData" />
+      <Data recordType="WBDT">
+        <Fields>
+          <Enum name="BenchType" enumName="Furniture.BenchTypes" byteLength="1" />
+          <Break />
+          <Enum name="UsesSkill" enumName="Skill" byteLength="1" nullable="True" nullableBinaryFallback="-1" />
+        </Fields>
+      </Data>
       <FormLink name="AssociatedForm" recordType="NAM1">
         <Interface>IFurnitureAssociation</Interface>
       </FormLink>
-      <CustomLogic name="DisabledMarkers" recordType="ENAM" />
-      <RefList name="Markers" refName="FurnitureMarker" recordType="FNPR" binary="Custom" />
+      <Enum name="EnabledEntryPoints" enumName="Furniture.EntryPointType" recordType="ENAM" binary="Custom" />
+      <RefList name="MarkerEntryPoints" refName="FurnitureMarkerEntryPoints" />
       <String name="ModelFilename" recordType="XMRK" />
+      <RefList name="MarkerParameters" refName="FurnitureMarkerParameters" recordType="SNAM" binary="Custom" />
+      <List name="AttachParentSlots" recordType="APPR">
+        <FormLink refName="Keyword" />
+      </List>
+      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false" endMarker="STOP">
+        <Ref>
+          <Direct refName="ObjectTemplate">
+            <GenericSpecification Definition="Furniture.Property" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+      <RefDirect name="NavmeshGeometry" refName="NavmeshGeometry" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IStaticObject</LinkInterface>
   </Object>
-  <Object name="WorkbenchData" objType="Subrecord" recordType="WBDT" GUID="31f37852-fcfa-40f2-827f-6c6161c76b64" ID="205">
+  <Object name="FurnitureMarkerParameters" objType="Subrecord" GUID="c75d9213-af7a-438c-a3d9-d953c0001d6a" ID="334">
     <Fields>
-      <Enum name="BenchType" enumName="WorkbenchData.Type" byteLength="1" />
-      <Enum name="UsesSkill" enumName="Skill" byteLength="1" nullable="True" nullableBinaryFallback="-1" />
+      <P3Float name="Offset" />
+      <Float name="RotationZ" isRotation="true" />
+      <Break />
+      <FormLink name="Keyword" refName="Keyword" />
+      <Break />
+      <Enum name="EntryTypes" byteLength="1" enumName="Furniture.EntryParameterType" />
+      <ByteArray name="Unknown" byteLength="3" nullable="False" />
+      <Bool name="Enabled" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="FurnitureMarker" objType="Subrecord" GUID="b54dee73-2a9a-4dcb-8a5d-e7be4f7fa645" ID="242">
-    <Fields>
-      <Bool name="Enabled" />
-      <RefDirect name="DisabledEntryPoints" refName="EntryPoints" nullable="True" />
-      <FormLink name="MarkerKeyword" refName="Keyword" nullable="True" />
-      <RefDirect name="EntryPoints" refName="EntryPoints" nullable="True" />
-    </Fields>
-  </Object>
-  <Object name="EntryPoints" objType="Subrecord" GUID="8f33ab1c-f60a-40f1-b075-646ede9c6ed5" ID="243">
+  <Object name="FurnitureMarkerEntryPoints" objType="Subrecord" recordType="FNPR" GUID="cefc97c6-4b33-4ed3-a48a-de3409c765bd" ID="333">
     <Fields>
       <Enum name="Type" enumName="Furniture.AnimationType" byteLength="2" />
-      <Enum name="Points" enumName="Furniture.Entry" byteLength="2" />
+      <Enum name="Points" enumName="Furniture.EntryPointType" byteLength="2" />
     </Fields>
   </Object>
 </Loqui>

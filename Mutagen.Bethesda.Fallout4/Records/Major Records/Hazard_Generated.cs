@@ -1123,6 +1123,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IHazard :
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
+        IFurnitureAssociation,
         IHazardGetter,
         ILoquiObjectSetter<IHazardInternal>,
         IModeled,
@@ -1174,6 +1175,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IFurnitureAssociationGetter,
         ILoquiObject<IHazardGetter>,
         IMapsToGetter<IHazardGetter>,
         IModeledGetter,

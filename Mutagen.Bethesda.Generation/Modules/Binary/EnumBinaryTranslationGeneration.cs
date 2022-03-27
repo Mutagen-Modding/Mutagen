@@ -267,16 +267,28 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
         public override string GenerateForTypicalWrapper(ObjectGeneration objGen, TypeGeneration typeGen, Accessor dataAccessor, Accessor packageAccessor)
         {
             var eType = typeGen as EnumType;
+            string retrieval;
             switch (eType.ByteLength)
             {
                 case 1:
-                    return $"({eType.TypeName(getter: true)}){dataAccessor}[0]";
+                    retrieval = $"{dataAccessor}[0]";
+                    break;
                 case 2:
-                    return $"({eType.TypeName(getter: true)})BinaryPrimitives.ReadUInt16LittleEndian({dataAccessor})";
+                    retrieval = $"BinaryPrimitives.ReadUInt16LittleEndian({dataAccessor})";
+                    break;
                 case 4:
-                    return $"({eType.TypeName(getter: true)})BinaryPrimitives.ReadInt32LittleEndian({dataAccessor})";
+                    retrieval = $"BinaryPrimitives.ReadInt32LittleEndian({dataAccessor})";
+                    break;
                 default:
                     throw new NotImplementedException();
+            }
+            if (eType.IsGeneric)
+            {
+                return $"EnumExt<{eType.TypeName(getter: true)}>.Convert({retrieval})";
+            }
+            else
+            {
+                return $"({eType.TypeName(getter: true)}){retrieval}";
             }
         }
     }

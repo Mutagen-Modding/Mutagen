@@ -17,7 +17,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IKeyworded
 - Activator
 - Armor
-- ArmorObjectTemplate
 - Book
 - Container
 - Door
@@ -31,6 +30,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MagicEffect
 - MiscItem
 - MovableStatic
+- ObjectTemplate
 - Race
 - RuleName
 - Spell
@@ -66,7 +66,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ActionRecord
 - Activator
 - Armor
-- ArmorObjectTemplate
 - BipedObjectData
 - Bone
 - Book
@@ -94,6 +93,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MorphPreset
 - MovableStatic
 - ObjectEffect
+- ObjectTemplate
 - Phoneme
 - Projectile
 - Race
@@ -196,9 +196,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### ArmorModel
 - IHasIcons
 - IModeled
-### ArmorObjectTemplate
-- IKeyworded
-- INamed
 ### ArtObject
 - IModeled
 - IObjectBounded
@@ -327,6 +324,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### ObjectEffect
 - INamed
 - IObjectBounded
+### ObjectTemplate
+- IKeyworded
+- INamed
 ### Phoneme
 - INamed
 ### Projectile

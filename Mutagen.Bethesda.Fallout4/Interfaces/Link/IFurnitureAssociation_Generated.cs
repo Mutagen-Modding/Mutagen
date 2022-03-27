@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout4
 {
     /// <summary>
-    /// Implemented by: [Armor]
+    /// Implemented by: [Armor, Hazard, Perk, Spell, Weapon]
     /// </summary>
     public partial interface IFurnitureAssociation :
         IFallout4MajorRecordInternal,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [Armor]
+    /// Implemented by: [Armor, Hazard, Perk, Spell, Weapon]
     /// </summary>
     public partial interface IFurnitureAssociationGetter : IFallout4MajorRecordGetter
     {

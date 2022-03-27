@@ -427,6 +427,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IWeapon :
         IFallout4MajorRecordInternal,
+        IFurnitureAssociation,
         IHarvestTarget,
         ILoquiObjectSetter<IWeaponInternal>,
         IObjectId,
@@ -446,6 +447,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IWeaponGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFurnitureAssociationGetter,
         IHarvestTargetGetter,
         ILoquiObject<IWeaponGetter>,
         IMapsToGetter<IWeaponGetter>,

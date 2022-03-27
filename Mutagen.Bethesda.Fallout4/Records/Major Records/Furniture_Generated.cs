@@ -234,20 +234,20 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? IFurnitureGetter.PNAM => this.PNAM;
         #endregion
-        #region WaterType
-        private readonly IFormLinkNullable<IWaterGetter> _WaterType = new FormLinkNullable<IWaterGetter>();
-        public IFormLinkNullable<IWaterGetter> WaterType
+        #region DrinkingWater
+        private readonly IFormLinkNullable<IWaterGetter> _DrinkingWater = new FormLinkNullable<IWaterGetter>();
+        public IFormLinkNullable<IWaterGetter> DrinkingWater
         {
-            get => _WaterType;
-            set => _WaterType.SetTo(value);
+            get => _DrinkingWater;
+            set => _DrinkingWater.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IWaterGetter> IFurnitureGetter.WaterType => this.WaterType;
+        IFormLinkNullableGetter<IWaterGetter> IFurnitureGetter.DrinkingWater => this.DrinkingWater;
         #endregion
-        #region ATTXActivateTextOverride
-        public TranslatedString? ATTXActivateTextOverride { get; set; }
+        #region ActivateTextOverride
+        public TranslatedString? ActivateTextOverride { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IFurnitureGetter.ATTXActivateTextOverride => this.ATTXActivateTextOverride;
+        ITranslatedStringGetter? IFurnitureGetter.ActivateTextOverride => this.ActivateTextOverride;
         #endregion
         #region Flags
         public Furniture.Flag? Flags { get; set; }
@@ -282,16 +282,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
-        #region WorkbenchData
+        #region BenchType
+        public Furniture.BenchTypes BenchType { get; set; } = default;
+        #endregion
+        #region UsesSkill
+        public Skill? UsesSkill { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private WorkbenchData? _WorkbenchData;
-        public WorkbenchData? WorkbenchData
-        {
-            get => _WorkbenchData;
-            set => _WorkbenchData = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IWorkbenchDataGetter? IFurnitureGetter.WorkbenchData => this.WorkbenchData;
+        Skill? IFurnitureGetter.UsesSkill => this.UsesSkill;
         #endregion
         #region AssociatedForm
         private readonly IFormLinkNullable<IFurnitureAssociationGetter> _AssociatedForm = new FormLinkNullable<IFurnitureAssociationGetter>();
@@ -303,17 +300,22 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFurnitureAssociationGetter> IFurnitureGetter.AssociatedForm => this.AssociatedForm;
         #endregion
-        #region Markers
+        #region EnabledEntryPoints
+        public Furniture.EntryPointType? EnabledEntryPoints { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<FurnitureMarker>? _Markers;
-        public ExtendedList<FurnitureMarker>? Markers
+        Furniture.EntryPointType? IFurnitureGetter.EnabledEntryPoints => this.EnabledEntryPoints;
+        #endregion
+        #region MarkerEntryPoints
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<FurnitureMarkerEntryPoints> _MarkerEntryPoints = new ExtendedList<FurnitureMarkerEntryPoints>();
+        public ExtendedList<FurnitureMarkerEntryPoints> MarkerEntryPoints
         {
-            get => this._Markers;
-            set => this._Markers = value;
+            get => this._MarkerEntryPoints;
+            init => this._MarkerEntryPoints = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFurnitureMarkerGetter>? IFurnitureGetter.Markers => _Markers;
+        IReadOnlyList<IFurnitureMarkerEntryPointsGetter> IFurnitureGetter.MarkerEntryPoints => _MarkerEntryPoints;
         #endregion
 
         #endregion
@@ -321,6 +323,62 @@ namespace Mutagen.Bethesda.Fallout4
         public String? ModelFilename { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IFurnitureGetter.ModelFilename => this.ModelFilename;
+        #endregion
+        #region MarkerParameters
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<FurnitureMarkerParameters>? _MarkerParameters;
+        public ExtendedList<FurnitureMarkerParameters>? MarkerParameters
+        {
+            get => this._MarkerParameters;
+            set => this._MarkerParameters = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFurnitureMarkerParametersGetter>? IFurnitureGetter.MarkerParameters => _MarkerParameters;
+        #endregion
+
+        #endregion
+        #region AttachParentSlots
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _AttachParentSlots;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots
+        {
+            get => this._AttachParentSlots;
+            set => this._AttachParentSlots = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IFurnitureGetter.AttachParentSlots => _AttachParentSlots;
+        #endregion
+
+        #endregion
+        #region ObjectTemplates
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ObjectTemplate<Furniture.Property>>? _ObjectTemplates;
+        public ExtendedList<ObjectTemplate<Furniture.Property>>? ObjectTemplates
+        {
+            get => this._ObjectTemplates;
+            set => this._ObjectTemplates = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IObjectTemplateGetter<Furniture.Property>>? IFurnitureGetter.ObjectTemplates => _ObjectTemplates;
+        #endregion
+
+        #endregion
+        #region NavmeshGeometry
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private NavmeshGeometry? _NavmeshGeometry;
+        public NavmeshGeometry? NavmeshGeometry
+        {
+            get => _NavmeshGeometry;
+            set => _NavmeshGeometry = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INavmeshGeometryGetter? IFurnitureGetter.NavmeshGeometry => this.NavmeshGeometry;
+        #endregion
+        #region WBDTDataTypeState
+        public Furniture.WBDTDataType WBDTDataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -357,15 +415,22 @@ namespace Mutagen.Bethesda.Fallout4
                 this.NativeTerminal = initialValue;
                 this.ForcedLocRefType = initialValue;
                 this.PNAM = initialValue;
-                this.WaterType = initialValue;
-                this.ATTXActivateTextOverride = initialValue;
+                this.DrinkingWater = initialValue;
+                this.ActivateTextOverride = initialValue;
                 this.Flags = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>());
-                this.WorkbenchData = new MaskItem<TItem, WorkbenchData.Mask<TItem>?>(initialValue, new WorkbenchData.Mask<TItem>(initialValue));
+                this.BenchType = initialValue;
+                this.UsesSkill = initialValue;
                 this.AssociatedForm = initialValue;
-                this.Markers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarker.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarker.Mask<TItem>?>>());
+                this.EnabledEntryPoints = initialValue;
+                this.MarkerEntryPoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>());
                 this.ModelFilename = initialValue;
+                this.MarkerParameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>());
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
+                this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(initialValue, new NavmeshGeometry.Mask<TItem>(initialValue));
+                this.WBDTDataTypeState = initialValue;
             }
 
             public Mask(
@@ -386,15 +451,22 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem NativeTerminal,
                 TItem ForcedLocRefType,
                 TItem PNAM,
-                TItem WaterType,
-                TItem ATTXActivateTextOverride,
+                TItem DrinkingWater,
+                TItem ActivateTextOverride,
                 TItem Flags,
                 TItem Conditions,
                 TItem Items,
-                TItem WorkbenchData,
+                TItem BenchType,
+                TItem UsesSkill,
                 TItem AssociatedForm,
-                TItem Markers,
-                TItem ModelFilename)
+                TItem EnabledEntryPoints,
+                TItem MarkerEntryPoints,
+                TItem ModelFilename,
+                TItem MarkerParameters,
+                TItem AttachParentSlots,
+                TItem ObjectTemplates,
+                TItem NavmeshGeometry,
+                TItem WBDTDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -414,15 +486,22 @@ namespace Mutagen.Bethesda.Fallout4
                 this.NativeTerminal = NativeTerminal;
                 this.ForcedLocRefType = ForcedLocRefType;
                 this.PNAM = PNAM;
-                this.WaterType = WaterType;
-                this.ATTXActivateTextOverride = ATTXActivateTextOverride;
+                this.DrinkingWater = DrinkingWater;
+                this.ActivateTextOverride = ActivateTextOverride;
                 this.Flags = Flags;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>());
-                this.WorkbenchData = new MaskItem<TItem, WorkbenchData.Mask<TItem>?>(WorkbenchData, new WorkbenchData.Mask<TItem>(WorkbenchData));
+                this.BenchType = BenchType;
+                this.UsesSkill = UsesSkill;
                 this.AssociatedForm = AssociatedForm;
-                this.Markers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarker.Mask<TItem>?>>?>(Markers, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarker.Mask<TItem>?>>());
+                this.EnabledEntryPoints = EnabledEntryPoints;
+                this.MarkerEntryPoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>?>(MarkerEntryPoints, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>());
                 this.ModelFilename = ModelFilename;
+                this.MarkerParameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>?>(MarkerParameters, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>());
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(ObjectTemplates, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
+                this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(NavmeshGeometry, new NavmeshGeometry.Mask<TItem>(NavmeshGeometry));
+                this.WBDTDataTypeState = WBDTDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -445,15 +524,22 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem NativeTerminal;
             public TItem ForcedLocRefType;
             public TItem PNAM;
-            public TItem WaterType;
-            public TItem ATTXActivateTextOverride;
+            public TItem DrinkingWater;
+            public TItem ActivateTextOverride;
             public TItem Flags;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>? Items;
-            public MaskItem<TItem, WorkbenchData.Mask<TItem>?>? WorkbenchData { get; set; }
+            public TItem BenchType;
+            public TItem UsesSkill;
             public TItem AssociatedForm;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarker.Mask<TItem>?>>?>? Markers;
+            public TItem EnabledEntryPoints;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>?>? MarkerEntryPoints;
             public TItem ModelFilename;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>?>? MarkerParameters;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AttachParentSlots;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>? ObjectTemplates;
+            public MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>? NavmeshGeometry { get; set; }
+            public TItem WBDTDataTypeState;
             #endregion
 
             #region Equals
@@ -478,15 +564,22 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.NativeTerminal, rhs.NativeTerminal)) return false;
                 if (!object.Equals(this.ForcedLocRefType, rhs.ForcedLocRefType)) return false;
                 if (!object.Equals(this.PNAM, rhs.PNAM)) return false;
-                if (!object.Equals(this.WaterType, rhs.WaterType)) return false;
-                if (!object.Equals(this.ATTXActivateTextOverride, rhs.ATTXActivateTextOverride)) return false;
+                if (!object.Equals(this.DrinkingWater, rhs.DrinkingWater)) return false;
+                if (!object.Equals(this.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 if (!object.Equals(this.Items, rhs.Items)) return false;
-                if (!object.Equals(this.WorkbenchData, rhs.WorkbenchData)) return false;
+                if (!object.Equals(this.BenchType, rhs.BenchType)) return false;
+                if (!object.Equals(this.UsesSkill, rhs.UsesSkill)) return false;
                 if (!object.Equals(this.AssociatedForm, rhs.AssociatedForm)) return false;
-                if (!object.Equals(this.Markers, rhs.Markers)) return false;
+                if (!object.Equals(this.EnabledEntryPoints, rhs.EnabledEntryPoints)) return false;
+                if (!object.Equals(this.MarkerEntryPoints, rhs.MarkerEntryPoints)) return false;
                 if (!object.Equals(this.ModelFilename, rhs.ModelFilename)) return false;
+                if (!object.Equals(this.MarkerParameters, rhs.MarkerParameters)) return false;
+                if (!object.Equals(this.AttachParentSlots, rhs.AttachParentSlots)) return false;
+                if (!object.Equals(this.ObjectTemplates, rhs.ObjectTemplates)) return false;
+                if (!object.Equals(this.NavmeshGeometry, rhs.NavmeshGeometry)) return false;
+                if (!object.Equals(this.WBDTDataTypeState, rhs.WBDTDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -503,15 +596,22 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.NativeTerminal);
                 hash.Add(this.ForcedLocRefType);
                 hash.Add(this.PNAM);
-                hash.Add(this.WaterType);
-                hash.Add(this.ATTXActivateTextOverride);
+                hash.Add(this.DrinkingWater);
+                hash.Add(this.ActivateTextOverride);
                 hash.Add(this.Flags);
                 hash.Add(this.Conditions);
                 hash.Add(this.Items);
-                hash.Add(this.WorkbenchData);
+                hash.Add(this.BenchType);
+                hash.Add(this.UsesSkill);
                 hash.Add(this.AssociatedForm);
-                hash.Add(this.Markers);
+                hash.Add(this.EnabledEntryPoints);
+                hash.Add(this.MarkerEntryPoints);
                 hash.Add(this.ModelFilename);
+                hash.Add(this.MarkerParameters);
+                hash.Add(this.AttachParentSlots);
+                hash.Add(this.ObjectTemplates);
+                hash.Add(this.NavmeshGeometry);
+                hash.Add(this.WBDTDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -570,8 +670,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.NativeTerminal)) return false;
                 if (!eval(this.ForcedLocRefType)) return false;
                 if (!eval(this.PNAM)) return false;
-                if (!eval(this.WaterType)) return false;
-                if (!eval(this.ATTXActivateTextOverride)) return false;
+                if (!eval(this.DrinkingWater)) return false;
+                if (!eval(this.ActivateTextOverride)) return false;
                 if (!eval(this.Flags)) return false;
                 if (this.Conditions != null)
                 {
@@ -597,18 +697,16 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (WorkbenchData != null)
-                {
-                    if (!eval(this.WorkbenchData.Overall)) return false;
-                    if (this.WorkbenchData.Specific != null && !this.WorkbenchData.Specific.All(eval)) return false;
-                }
+                if (!eval(this.BenchType)) return false;
+                if (!eval(this.UsesSkill)) return false;
                 if (!eval(this.AssociatedForm)) return false;
-                if (this.Markers != null)
+                if (!eval(this.EnabledEntryPoints)) return false;
+                if (this.MarkerEntryPoints != null)
                 {
-                    if (!eval(this.Markers.Overall)) return false;
-                    if (this.Markers.Specific != null)
+                    if (!eval(this.MarkerEntryPoints.Overall)) return false;
+                    if (this.MarkerEntryPoints.Specific != null)
                     {
-                        foreach (var item in this.Markers.Specific)
+                        foreach (var item in this.MarkerEntryPoints.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -616,6 +714,47 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 if (!eval(this.ModelFilename)) return false;
+                if (this.MarkerParameters != null)
+                {
+                    if (!eval(this.MarkerParameters.Overall)) return false;
+                    if (this.MarkerParameters.Specific != null)
+                    {
+                        foreach (var item in this.MarkerParameters.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.AttachParentSlots != null)
+                {
+                    if (!eval(this.AttachParentSlots.Overall)) return false;
+                    if (this.AttachParentSlots.Specific != null)
+                    {
+                        foreach (var item in this.AttachParentSlots.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ObjectTemplates != null)
+                {
+                    if (!eval(this.ObjectTemplates.Overall)) return false;
+                    if (this.ObjectTemplates.Specific != null)
+                    {
+                        foreach (var item in this.ObjectTemplates.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (NavmeshGeometry != null)
+                {
+                    if (!eval(this.NavmeshGeometry.Overall)) return false;
+                    if (this.NavmeshGeometry.Specific != null && !this.NavmeshGeometry.Specific.All(eval)) return false;
+                }
+                if (!eval(this.WBDTDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -672,8 +811,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.NativeTerminal)) return true;
                 if (eval(this.ForcedLocRefType)) return true;
                 if (eval(this.PNAM)) return true;
-                if (eval(this.WaterType)) return true;
-                if (eval(this.ATTXActivateTextOverride)) return true;
+                if (eval(this.DrinkingWater)) return true;
+                if (eval(this.ActivateTextOverride)) return true;
                 if (eval(this.Flags)) return true;
                 if (this.Conditions != null)
                 {
@@ -699,18 +838,16 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (WorkbenchData != null)
-                {
-                    if (eval(this.WorkbenchData.Overall)) return true;
-                    if (this.WorkbenchData.Specific != null && this.WorkbenchData.Specific.Any(eval)) return true;
-                }
+                if (eval(this.BenchType)) return true;
+                if (eval(this.UsesSkill)) return true;
                 if (eval(this.AssociatedForm)) return true;
-                if (this.Markers != null)
+                if (eval(this.EnabledEntryPoints)) return true;
+                if (this.MarkerEntryPoints != null)
                 {
-                    if (eval(this.Markers.Overall)) return true;
-                    if (this.Markers.Specific != null)
+                    if (eval(this.MarkerEntryPoints.Overall)) return true;
+                    if (this.MarkerEntryPoints.Specific != null)
                     {
-                        foreach (var item in this.Markers.Specific)
+                        foreach (var item in this.MarkerEntryPoints.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -718,6 +855,47 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 if (eval(this.ModelFilename)) return true;
+                if (this.MarkerParameters != null)
+                {
+                    if (eval(this.MarkerParameters.Overall)) return true;
+                    if (this.MarkerParameters.Specific != null)
+                    {
+                        foreach (var item in this.MarkerParameters.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.AttachParentSlots != null)
+                {
+                    if (eval(this.AttachParentSlots.Overall)) return true;
+                    if (this.AttachParentSlots.Specific != null)
+                    {
+                        foreach (var item in this.AttachParentSlots.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ObjectTemplates != null)
+                {
+                    if (eval(this.ObjectTemplates.Overall)) return true;
+                    if (this.ObjectTemplates.Specific != null)
+                    {
+                        foreach (var item in this.ObjectTemplates.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (NavmeshGeometry != null)
+                {
+                    if (eval(this.NavmeshGeometry.Overall)) return true;
+                    if (this.NavmeshGeometry.Specific != null && this.NavmeshGeometry.Specific.Any(eval)) return true;
+                }
+                if (eval(this.WBDTDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -771,8 +949,8 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.NativeTerminal = eval(this.NativeTerminal);
                 obj.ForcedLocRefType = eval(this.ForcedLocRefType);
                 obj.PNAM = eval(this.PNAM);
-                obj.WaterType = eval(this.WaterType);
-                obj.ATTXActivateTextOverride = eval(this.ATTXActivateTextOverride);
+                obj.DrinkingWater = eval(this.DrinkingWater);
+                obj.ActivateTextOverride = eval(this.ActivateTextOverride);
                 obj.Flags = eval(this.Flags);
                 if (Conditions != null)
                 {
@@ -804,24 +982,72 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                obj.WorkbenchData = this.WorkbenchData == null ? null : new MaskItem<R, WorkbenchData.Mask<R>?>(eval(this.WorkbenchData.Overall), this.WorkbenchData.Specific?.Translate(eval));
+                obj.BenchType = eval(this.BenchType);
+                obj.UsesSkill = eval(this.UsesSkill);
                 obj.AssociatedForm = eval(this.AssociatedForm);
-                if (Markers != null)
+                obj.EnabledEntryPoints = eval(this.EnabledEntryPoints);
+                if (MarkerEntryPoints != null)
                 {
-                    obj.Markers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FurnitureMarker.Mask<R>?>>?>(eval(this.Markers.Overall), Enumerable.Empty<MaskItemIndexed<R, FurnitureMarker.Mask<R>?>>());
-                    if (Markers.Specific != null)
+                    obj.MarkerEntryPoints = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FurnitureMarkerEntryPoints.Mask<R>?>>?>(eval(this.MarkerEntryPoints.Overall), Enumerable.Empty<MaskItemIndexed<R, FurnitureMarkerEntryPoints.Mask<R>?>>());
+                    if (MarkerEntryPoints.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, FurnitureMarker.Mask<R>?>>();
-                        obj.Markers.Specific = l;
-                        foreach (var item in Markers.Specific)
+                        var l = new List<MaskItemIndexed<R, FurnitureMarkerEntryPoints.Mask<R>?>>();
+                        obj.MarkerEntryPoints.Specific = l;
+                        foreach (var item in MarkerEntryPoints.Specific)
                         {
-                            MaskItemIndexed<R, FurnitureMarker.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, FurnitureMarker.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, FurnitureMarkerEntryPoints.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, FurnitureMarkerEntryPoints.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
                     }
                 }
                 obj.ModelFilename = eval(this.ModelFilename);
+                if (MarkerParameters != null)
+                {
+                    obj.MarkerParameters = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FurnitureMarkerParameters.Mask<R>?>>?>(eval(this.MarkerParameters.Overall), Enumerable.Empty<MaskItemIndexed<R, FurnitureMarkerParameters.Mask<R>?>>());
+                    if (MarkerParameters.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, FurnitureMarkerParameters.Mask<R>?>>();
+                        obj.MarkerParameters.Specific = l;
+                        foreach (var item in MarkerParameters.Specific)
+                        {
+                            MaskItemIndexed<R, FurnitureMarkerParameters.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, FurnitureMarkerParameters.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (AttachParentSlots != null)
+                {
+                    obj.AttachParentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttachParentSlots.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (AttachParentSlots.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.AttachParentSlots.Specific = l;
+                        foreach (var item in AttachParentSlots.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (ObjectTemplates != null)
+                {
+                    obj.ObjectTemplates = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>?>(eval(this.ObjectTemplates.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>());
+                    if (ObjectTemplates.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>();
+                        obj.ObjectTemplates.Specific = l;
+                        foreach (var item in ObjectTemplates.Specific)
+                        {
+                            MaskItemIndexed<R, ObjectTemplate.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ObjectTemplate.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.NavmeshGeometry = this.NavmeshGeometry == null ? null : new MaskItem<R, NavmeshGeometry.Mask<R>?>(eval(this.NavmeshGeometry.Overall), this.NavmeshGeometry.Specific?.Translate(eval));
+                obj.WBDTDataTypeState = eval(this.WBDTDataTypeState);
             }
             #endregion
 
@@ -926,13 +1152,13 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         fg.AppendItem(PNAM, "PNAM");
                     }
-                    if (printMask?.WaterType ?? true)
+                    if (printMask?.DrinkingWater ?? true)
                     {
-                        fg.AppendItem(WaterType, "WaterType");
+                        fg.AppendItem(DrinkingWater, "DrinkingWater");
                     }
-                    if (printMask?.ATTXActivateTextOverride ?? true)
+                    if (printMask?.ActivateTextOverride ?? true)
                     {
-                        fg.AppendItem(ATTXActivateTextOverride, "ATTXActivateTextOverride");
+                        fg.AppendItem(ActivateTextOverride, "ActivateTextOverride");
                     }
                     if (printMask?.Flags ?? true)
                     {
@@ -984,25 +1210,33 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.WorkbenchData?.Overall ?? true)
+                    if (printMask?.BenchType ?? true)
                     {
-                        WorkbenchData?.ToString(fg);
+                        fg.AppendItem(BenchType, "BenchType");
+                    }
+                    if (printMask?.UsesSkill ?? true)
+                    {
+                        fg.AppendItem(UsesSkill, "UsesSkill");
                     }
                     if (printMask?.AssociatedForm ?? true)
                     {
                         fg.AppendItem(AssociatedForm, "AssociatedForm");
                     }
-                    if ((printMask?.Markers?.Overall ?? true)
-                        && Markers is {} MarkersItem)
+                    if (printMask?.EnabledEntryPoints ?? true)
                     {
-                        fg.AppendLine("Markers =>");
+                        fg.AppendItem(EnabledEntryPoints, "EnabledEntryPoints");
+                    }
+                    if ((printMask?.MarkerEntryPoints?.Overall ?? true)
+                        && MarkerEntryPoints is {} MarkerEntryPointsItem)
+                    {
+                        fg.AppendLine("MarkerEntryPoints =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(MarkersItem.Overall);
-                            if (MarkersItem.Specific != null)
+                            fg.AppendItem(MarkerEntryPointsItem.Overall);
+                            if (MarkerEntryPointsItem.Specific != null)
                             {
-                                foreach (var subItem in MarkersItem.Specific)
+                                foreach (var subItem in MarkerEntryPointsItem.Specific)
                                 {
                                     fg.AppendLine("[");
                                     using (new DepthWrapper(fg))
@@ -1018,6 +1252,83 @@ namespace Mutagen.Bethesda.Fallout4
                     if (printMask?.ModelFilename ?? true)
                     {
                         fg.AppendItem(ModelFilename, "ModelFilename");
+                    }
+                    if ((printMask?.MarkerParameters?.Overall ?? true)
+                        && MarkerParameters is {} MarkerParametersItem)
+                    {
+                        fg.AppendLine("MarkerParameters =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(MarkerParametersItem.Overall);
+                            if (MarkerParametersItem.Specific != null)
+                            {
+                                foreach (var subItem in MarkerParametersItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.AttachParentSlots?.Overall ?? true)
+                        && AttachParentSlots is {} AttachParentSlotsItem)
+                    {
+                        fg.AppendLine("AttachParentSlots =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(AttachParentSlotsItem.Overall);
+                            if (AttachParentSlotsItem.Specific != null)
+                            {
+                                foreach (var subItem in AttachParentSlotsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.ObjectTemplates?.Overall ?? true)
+                        && ObjectTemplates is {} ObjectTemplatesItem)
+                    {
+                        fg.AppendLine("ObjectTemplates =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ObjectTemplatesItem.Overall);
+                            if (ObjectTemplatesItem.Specific != null)
+                            {
+                                foreach (var subItem in ObjectTemplatesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.NavmeshGeometry?.Overall ?? true)
+                    {
+                        NavmeshGeometry?.ToString(fg);
+                    }
+                    if (printMask?.WBDTDataTypeState ?? true)
+                    {
+                        fg.AppendItem(WBDTDataTypeState, "WBDTDataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -1042,15 +1353,22 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? NativeTerminal;
             public Exception? ForcedLocRefType;
             public Exception? PNAM;
-            public Exception? WaterType;
-            public Exception? ATTXActivateTextOverride;
+            public Exception? DrinkingWater;
+            public Exception? ActivateTextOverride;
             public Exception? Flags;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>? Items;
-            public MaskItem<Exception?, WorkbenchData.ErrorMask?>? WorkbenchData;
+            public Exception? BenchType;
+            public Exception? UsesSkill;
             public Exception? AssociatedForm;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarker.ErrorMask?>>?>? Markers;
+            public Exception? EnabledEntryPoints;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerEntryPoints.ErrorMask?>>?>? MarkerEntryPoints;
             public Exception? ModelFilename;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerParameters.ErrorMask?>>?>? MarkerParameters;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AttachParentSlots;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>? ObjectTemplates;
+            public MaskItem<Exception?, NavmeshGeometry.ErrorMask?>? NavmeshGeometry;
+            public Exception? WBDTDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1081,24 +1399,38 @@ namespace Mutagen.Bethesda.Fallout4
                         return ForcedLocRefType;
                     case Furniture_FieldIndex.PNAM:
                         return PNAM;
-                    case Furniture_FieldIndex.WaterType:
-                        return WaterType;
-                    case Furniture_FieldIndex.ATTXActivateTextOverride:
-                        return ATTXActivateTextOverride;
+                    case Furniture_FieldIndex.DrinkingWater:
+                        return DrinkingWater;
+                    case Furniture_FieldIndex.ActivateTextOverride:
+                        return ActivateTextOverride;
                     case Furniture_FieldIndex.Flags:
                         return Flags;
                     case Furniture_FieldIndex.Conditions:
                         return Conditions;
                     case Furniture_FieldIndex.Items:
                         return Items;
-                    case Furniture_FieldIndex.WorkbenchData:
-                        return WorkbenchData;
+                    case Furniture_FieldIndex.BenchType:
+                        return BenchType;
+                    case Furniture_FieldIndex.UsesSkill:
+                        return UsesSkill;
                     case Furniture_FieldIndex.AssociatedForm:
                         return AssociatedForm;
-                    case Furniture_FieldIndex.Markers:
-                        return Markers;
+                    case Furniture_FieldIndex.EnabledEntryPoints:
+                        return EnabledEntryPoints;
+                    case Furniture_FieldIndex.MarkerEntryPoints:
+                        return MarkerEntryPoints;
                     case Furniture_FieldIndex.ModelFilename:
                         return ModelFilename;
+                    case Furniture_FieldIndex.MarkerParameters:
+                        return MarkerParameters;
+                    case Furniture_FieldIndex.AttachParentSlots:
+                        return AttachParentSlots;
+                    case Furniture_FieldIndex.ObjectTemplates:
+                        return ObjectTemplates;
+                    case Furniture_FieldIndex.NavmeshGeometry:
+                        return NavmeshGeometry;
+                    case Furniture_FieldIndex.WBDTDataTypeState:
+                        return WBDTDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1142,11 +1474,11 @@ namespace Mutagen.Bethesda.Fallout4
                     case Furniture_FieldIndex.PNAM:
                         this.PNAM = ex;
                         break;
-                    case Furniture_FieldIndex.WaterType:
-                        this.WaterType = ex;
+                    case Furniture_FieldIndex.DrinkingWater:
+                        this.DrinkingWater = ex;
                         break;
-                    case Furniture_FieldIndex.ATTXActivateTextOverride:
-                        this.ATTXActivateTextOverride = ex;
+                    case Furniture_FieldIndex.ActivateTextOverride:
+                        this.ActivateTextOverride = ex;
                         break;
                     case Furniture_FieldIndex.Flags:
                         this.Flags = ex;
@@ -1157,17 +1489,38 @@ namespace Mutagen.Bethesda.Fallout4
                     case Furniture_FieldIndex.Items:
                         this.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(ex, null);
                         break;
-                    case Furniture_FieldIndex.WorkbenchData:
-                        this.WorkbenchData = new MaskItem<Exception?, WorkbenchData.ErrorMask?>(ex, null);
+                    case Furniture_FieldIndex.BenchType:
+                        this.BenchType = ex;
+                        break;
+                    case Furniture_FieldIndex.UsesSkill:
+                        this.UsesSkill = ex;
                         break;
                     case Furniture_FieldIndex.AssociatedForm:
                         this.AssociatedForm = ex;
                         break;
-                    case Furniture_FieldIndex.Markers:
-                        this.Markers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarker.ErrorMask?>>?>(ex, null);
+                    case Furniture_FieldIndex.EnabledEntryPoints:
+                        this.EnabledEntryPoints = ex;
+                        break;
+                    case Furniture_FieldIndex.MarkerEntryPoints:
+                        this.MarkerEntryPoints = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerEntryPoints.ErrorMask?>>?>(ex, null);
                         break;
                     case Furniture_FieldIndex.ModelFilename:
                         this.ModelFilename = ex;
+                        break;
+                    case Furniture_FieldIndex.MarkerParameters:
+                        this.MarkerParameters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerParameters.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Furniture_FieldIndex.AttachParentSlots:
+                        this.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Furniture_FieldIndex.ObjectTemplates:
+                        this.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Furniture_FieldIndex.NavmeshGeometry:
+                        this.NavmeshGeometry = new MaskItem<Exception?, NavmeshGeometry.ErrorMask?>(ex, null);
+                        break;
+                    case Furniture_FieldIndex.WBDTDataTypeState:
+                        this.WBDTDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1213,11 +1566,11 @@ namespace Mutagen.Bethesda.Fallout4
                     case Furniture_FieldIndex.PNAM:
                         this.PNAM = (Exception?)obj;
                         break;
-                    case Furniture_FieldIndex.WaterType:
-                        this.WaterType = (Exception?)obj;
+                    case Furniture_FieldIndex.DrinkingWater:
+                        this.DrinkingWater = (Exception?)obj;
                         break;
-                    case Furniture_FieldIndex.ATTXActivateTextOverride:
-                        this.ATTXActivateTextOverride = (Exception?)obj;
+                    case Furniture_FieldIndex.ActivateTextOverride:
+                        this.ActivateTextOverride = (Exception?)obj;
                         break;
                     case Furniture_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
@@ -1228,17 +1581,38 @@ namespace Mutagen.Bethesda.Fallout4
                     case Furniture_FieldIndex.Items:
                         this.Items = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>)obj;
                         break;
-                    case Furniture_FieldIndex.WorkbenchData:
-                        this.WorkbenchData = (MaskItem<Exception?, WorkbenchData.ErrorMask?>?)obj;
+                    case Furniture_FieldIndex.BenchType:
+                        this.BenchType = (Exception?)obj;
+                        break;
+                    case Furniture_FieldIndex.UsesSkill:
+                        this.UsesSkill = (Exception?)obj;
                         break;
                     case Furniture_FieldIndex.AssociatedForm:
                         this.AssociatedForm = (Exception?)obj;
                         break;
-                    case Furniture_FieldIndex.Markers:
-                        this.Markers = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarker.ErrorMask?>>?>)obj;
+                    case Furniture_FieldIndex.EnabledEntryPoints:
+                        this.EnabledEntryPoints = (Exception?)obj;
+                        break;
+                    case Furniture_FieldIndex.MarkerEntryPoints:
+                        this.MarkerEntryPoints = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerEntryPoints.ErrorMask?>>?>)obj;
                         break;
                     case Furniture_FieldIndex.ModelFilename:
                         this.ModelFilename = (Exception?)obj;
+                        break;
+                    case Furniture_FieldIndex.MarkerParameters:
+                        this.MarkerParameters = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerParameters.ErrorMask?>>?>)obj;
+                        break;
+                    case Furniture_FieldIndex.AttachParentSlots:
+                        this.AttachParentSlots = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Furniture_FieldIndex.ObjectTemplates:
+                        this.ObjectTemplates = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>)obj;
+                        break;
+                    case Furniture_FieldIndex.NavmeshGeometry:
+                        this.NavmeshGeometry = (MaskItem<Exception?, NavmeshGeometry.ErrorMask?>?)obj;
+                        break;
+                    case Furniture_FieldIndex.WBDTDataTypeState:
+                        this.WBDTDataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1260,15 +1634,22 @@ namespace Mutagen.Bethesda.Fallout4
                 if (NativeTerminal != null) return true;
                 if (ForcedLocRefType != null) return true;
                 if (PNAM != null) return true;
-                if (WaterType != null) return true;
-                if (ATTXActivateTextOverride != null) return true;
+                if (DrinkingWater != null) return true;
+                if (ActivateTextOverride != null) return true;
                 if (Flags != null) return true;
                 if (Conditions != null) return true;
                 if (Items != null) return true;
-                if (WorkbenchData != null) return true;
+                if (BenchType != null) return true;
+                if (UsesSkill != null) return true;
                 if (AssociatedForm != null) return true;
-                if (Markers != null) return true;
+                if (EnabledEntryPoints != null) return true;
+                if (MarkerEntryPoints != null) return true;
                 if (ModelFilename != null) return true;
+                if (MarkerParameters != null) return true;
+                if (AttachParentSlots != null) return true;
+                if (ObjectTemplates != null) return true;
+                if (NavmeshGeometry != null) return true;
+                if (WBDTDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1357,8 +1738,8 @@ namespace Mutagen.Bethesda.Fallout4
                 fg.AppendItem(NativeTerminal, "NativeTerminal");
                 fg.AppendItem(ForcedLocRefType, "ForcedLocRefType");
                 fg.AppendItem(PNAM, "PNAM");
-                fg.AppendItem(WaterType, "WaterType");
-                fg.AppendItem(ATTXActivateTextOverride, "ATTXActivateTextOverride");
+                fg.AppendItem(DrinkingWater, "DrinkingWater");
+                fg.AppendItem(ActivateTextOverride, "ActivateTextOverride");
                 fg.AppendItem(Flags, "Flags");
                 if (Conditions is {} ConditionsItem)
                 {
@@ -1404,18 +1785,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     fg.AppendLine("]");
                 }
-                WorkbenchData?.ToString(fg);
+                fg.AppendItem(BenchType, "BenchType");
+                fg.AppendItem(UsesSkill, "UsesSkill");
                 fg.AppendItem(AssociatedForm, "AssociatedForm");
-                if (Markers is {} MarkersItem)
+                fg.AppendItem(EnabledEntryPoints, "EnabledEntryPoints");
+                if (MarkerEntryPoints is {} MarkerEntryPointsItem)
                 {
-                    fg.AppendLine("Markers =>");
+                    fg.AppendLine("MarkerEntryPoints =>");
                     fg.AppendLine("[");
                     using (new DepthWrapper(fg))
                     {
-                        fg.AppendItem(MarkersItem.Overall);
-                        if (MarkersItem.Specific != null)
+                        fg.AppendItem(MarkerEntryPointsItem.Overall);
+                        if (MarkerEntryPointsItem.Specific != null)
                         {
-                            foreach (var subItem in MarkersItem.Specific)
+                            foreach (var subItem in MarkerEntryPointsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -1429,6 +1812,74 @@ namespace Mutagen.Bethesda.Fallout4
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(ModelFilename, "ModelFilename");
+                if (MarkerParameters is {} MarkerParametersItem)
+                {
+                    fg.AppendLine("MarkerParameters =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(MarkerParametersItem.Overall);
+                        if (MarkerParametersItem.Specific != null)
+                        {
+                            foreach (var subItem in MarkerParametersItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (AttachParentSlots is {} AttachParentSlotsItem)
+                {
+                    fg.AppendLine("AttachParentSlots =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(AttachParentSlotsItem.Overall);
+                        if (AttachParentSlotsItem.Specific != null)
+                        {
+                            foreach (var subItem in AttachParentSlotsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (ObjectTemplates is {} ObjectTemplatesItem)
+                {
+                    fg.AppendLine("ObjectTemplates =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ObjectTemplatesItem.Overall);
+                        if (ObjectTemplatesItem.Specific != null)
+                        {
+                            foreach (var subItem in ObjectTemplatesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                NavmeshGeometry?.ToString(fg);
+                fg.AppendItem(WBDTDataTypeState, "WBDTDataTypeState");
             }
             #endregion
 
@@ -1448,15 +1899,22 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.NativeTerminal = this.NativeTerminal.Combine(rhs.NativeTerminal);
                 ret.ForcedLocRefType = this.ForcedLocRefType.Combine(rhs.ForcedLocRefType);
                 ret.PNAM = this.PNAM.Combine(rhs.PNAM);
-                ret.WaterType = this.WaterType.Combine(rhs.WaterType);
-                ret.ATTXActivateTextOverride = this.ATTXActivateTextOverride.Combine(rhs.ATTXActivateTextOverride);
+                ret.DrinkingWater = this.DrinkingWater.Combine(rhs.DrinkingWater);
+                ret.ActivateTextOverride = this.ActivateTextOverride.Combine(rhs.ActivateTextOverride);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
-                ret.WorkbenchData = this.WorkbenchData.Combine(rhs.WorkbenchData, (l, r) => l.Combine(r));
+                ret.BenchType = this.BenchType.Combine(rhs.BenchType);
+                ret.UsesSkill = this.UsesSkill.Combine(rhs.UsesSkill);
                 ret.AssociatedForm = this.AssociatedForm.Combine(rhs.AssociatedForm);
-                ret.Markers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarker.ErrorMask?>>?>(ExceptionExt.Combine(this.Markers?.Overall, rhs.Markers?.Overall), ExceptionExt.Combine(this.Markers?.Specific, rhs.Markers?.Specific));
+                ret.EnabledEntryPoints = this.EnabledEntryPoints.Combine(rhs.EnabledEntryPoints);
+                ret.MarkerEntryPoints = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerEntryPoints.ErrorMask?>>?>(ExceptionExt.Combine(this.MarkerEntryPoints?.Overall, rhs.MarkerEntryPoints?.Overall), ExceptionExt.Combine(this.MarkerEntryPoints?.Specific, rhs.MarkerEntryPoints?.Specific));
                 ret.ModelFilename = this.ModelFilename.Combine(rhs.ModelFilename);
+                ret.MarkerParameters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerParameters.ErrorMask?>>?>(ExceptionExt.Combine(this.MarkerParameters?.Overall, rhs.MarkerParameters?.Overall), ExceptionExt.Combine(this.MarkerParameters?.Specific, rhs.MarkerParameters?.Specific));
+                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
+                ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
+                ret.NavmeshGeometry = this.NavmeshGeometry.Combine(rhs.NavmeshGeometry, (l, r) => l.Combine(r));
+                ret.WBDTDataTypeState = this.WBDTDataTypeState.Combine(rhs.WBDTDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1490,15 +1948,22 @@ namespace Mutagen.Bethesda.Fallout4
             public bool NativeTerminal;
             public bool ForcedLocRefType;
             public bool PNAM;
-            public bool WaterType;
-            public bool ATTXActivateTextOverride;
+            public bool DrinkingWater;
+            public bool ActivateTextOverride;
             public bool Flags;
             public Condition.TranslationMask? Conditions;
             public ContainerEntry.TranslationMask? Items;
-            public WorkbenchData.TranslationMask? WorkbenchData;
+            public bool BenchType;
+            public bool UsesSkill;
             public bool AssociatedForm;
-            public FurnitureMarker.TranslationMask? Markers;
+            public bool EnabledEntryPoints;
+            public FurnitureMarkerEntryPoints.TranslationMask? MarkerEntryPoints;
             public bool ModelFilename;
+            public FurnitureMarkerParameters.TranslationMask? MarkerParameters;
+            public bool AttachParentSlots;
+            public ObjectTemplate.TranslationMask? ObjectTemplates;
+            public NavmeshGeometry.TranslationMask? NavmeshGeometry;
+            public bool WBDTDataTypeState;
             #endregion
 
             #region Ctors
@@ -1513,11 +1978,16 @@ namespace Mutagen.Bethesda.Fallout4
                 this.NativeTerminal = defaultOn;
                 this.ForcedLocRefType = defaultOn;
                 this.PNAM = defaultOn;
-                this.WaterType = defaultOn;
-                this.ATTXActivateTextOverride = defaultOn;
+                this.DrinkingWater = defaultOn;
+                this.ActivateTextOverride = defaultOn;
                 this.Flags = defaultOn;
+                this.BenchType = defaultOn;
+                this.UsesSkill = defaultOn;
                 this.AssociatedForm = defaultOn;
+                this.EnabledEntryPoints = defaultOn;
                 this.ModelFilename = defaultOn;
+                this.AttachParentSlots = defaultOn;
+                this.WBDTDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1536,15 +2006,22 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((NativeTerminal, null));
                 ret.Add((ForcedLocRefType, null));
                 ret.Add((PNAM, null));
-                ret.Add((WaterType, null));
-                ret.Add((ATTXActivateTextOverride, null));
+                ret.Add((DrinkingWater, null));
+                ret.Add((ActivateTextOverride, null));
                 ret.Add((Flags, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((Items == null ? DefaultOn : !Items.GetCrystal().CopyNothing, Items?.GetCrystal()));
-                ret.Add((WorkbenchData != null ? WorkbenchData.OnOverall : DefaultOn, WorkbenchData?.GetCrystal()));
+                ret.Add((BenchType, null));
+                ret.Add((UsesSkill, null));
                 ret.Add((AssociatedForm, null));
-                ret.Add((Markers == null ? DefaultOn : !Markers.GetCrystal().CopyNothing, Markers?.GetCrystal()));
+                ret.Add((EnabledEntryPoints, null));
+                ret.Add((MarkerEntryPoints == null ? DefaultOn : !MarkerEntryPoints.GetCrystal().CopyNothing, MarkerEntryPoints?.GetCrystal()));
                 ret.Add((ModelFilename, null));
+                ret.Add((MarkerParameters == null ? DefaultOn : !MarkerParameters.GetCrystal().CopyNothing, MarkerParameters?.GetCrystal()));
+                ret.Add((AttachParentSlots, null));
+                ret.Add((ObjectTemplates == null ? DefaultOn : !ObjectTemplates.GetCrystal().CopyNothing, ObjectTemplates?.GetCrystal()));
+                ret.Add((NavmeshGeometry != null ? NavmeshGeometry.OnOverall : DefaultOn, NavmeshGeometry?.GetCrystal()));
+                ret.Add((WBDTDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1605,6 +2082,11 @@ namespace Mutagen.Bethesda.Fallout4
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        [Flags]
+        public enum WBDTDataType
+        {
+            Break0 = 1
         }
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -1727,15 +2209,22 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<ITerminalGetter> NativeTerminal { get; set; }
         new IFormLinkNullable<ILocationReferenceTypeGetter> ForcedLocRefType { get; set; }
         new MemorySlice<Byte>? PNAM { get; set; }
-        new IFormLinkNullable<IWaterGetter> WaterType { get; set; }
-        new TranslatedString? ATTXActivateTextOverride { get; set; }
+        new IFormLinkNullable<IWaterGetter> DrinkingWater { get; set; }
+        new TranslatedString? ActivateTextOverride { get; set; }
         new Furniture.Flag? Flags { get; set; }
         new ExtendedList<Condition>? Conditions { get; set; }
         new ExtendedList<ContainerEntry>? Items { get; set; }
-        new WorkbenchData? WorkbenchData { get; set; }
+        new Furniture.BenchTypes BenchType { get; set; }
+        new Skill? UsesSkill { get; set; }
         new IFormLinkNullable<IFurnitureAssociationGetter> AssociatedForm { get; set; }
-        new ExtendedList<FurnitureMarker>? Markers { get; set; }
+        new Furniture.EntryPointType? EnabledEntryPoints { get; set; }
+        new ExtendedList<FurnitureMarkerEntryPoints> MarkerEntryPoints { get; }
         new String? ModelFilename { get; set; }
+        new ExtendedList<FurnitureMarkerParameters>? MarkerParameters { get; set; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; set; }
+        new ExtendedList<ObjectTemplate<Furniture.Property>>? ObjectTemplates { get; set; }
+        new NavmeshGeometry? NavmeshGeometry { get; set; }
+        new Furniture.WBDTDataType WBDTDataTypeState { get; set; }
         #region Mutagen
         new Furniture.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1805,15 +2294,22 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ITerminalGetter> NativeTerminal { get; }
         IFormLinkNullableGetter<ILocationReferenceTypeGetter> ForcedLocRefType { get; }
         ReadOnlyMemorySlice<Byte>? PNAM { get; }
-        IFormLinkNullableGetter<IWaterGetter> WaterType { get; }
-        ITranslatedStringGetter? ATTXActivateTextOverride { get; }
+        IFormLinkNullableGetter<IWaterGetter> DrinkingWater { get; }
+        ITranslatedStringGetter? ActivateTextOverride { get; }
         Furniture.Flag? Flags { get; }
         IReadOnlyList<IConditionGetter>? Conditions { get; }
         IReadOnlyList<IContainerEntryGetter>? Items { get; }
-        IWorkbenchDataGetter? WorkbenchData { get; }
+        Furniture.BenchTypes BenchType { get; }
+        Skill? UsesSkill { get; }
         IFormLinkNullableGetter<IFurnitureAssociationGetter> AssociatedForm { get; }
-        IReadOnlyList<IFurnitureMarkerGetter>? Markers { get; }
+        Furniture.EntryPointType? EnabledEntryPoints { get; }
+        IReadOnlyList<IFurnitureMarkerEntryPointsGetter> MarkerEntryPoints { get; }
         String? ModelFilename { get; }
+        IReadOnlyList<IFurnitureMarkerParametersGetter>? MarkerParameters { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; }
+        IReadOnlyList<IObjectTemplateGetter<Furniture.Property>>? ObjectTemplates { get; }
+        INavmeshGeometryGetter? NavmeshGeometry { get; }
+        Furniture.WBDTDataType WBDTDataTypeState { get; }
 
         #region Mutagen
         Furniture.MajorFlag MajorFlags { get; }
@@ -1993,15 +2489,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         NativeTerminal = 14,
         ForcedLocRefType = 15,
         PNAM = 16,
-        WaterType = 17,
-        ATTXActivateTextOverride = 18,
+        DrinkingWater = 17,
+        ActivateTextOverride = 18,
         Flags = 19,
         Conditions = 20,
         Items = 21,
-        WorkbenchData = 22,
-        AssociatedForm = 23,
-        Markers = 24,
-        ModelFilename = 25,
+        BenchType = 22,
+        UsesSkill = 23,
+        AssociatedForm = 24,
+        EnabledEntryPoints = 25,
+        MarkerEntryPoints = 26,
+        ModelFilename = 27,
+        MarkerParameters = 28,
+        AttachParentSlots = 29,
+        ObjectTemplates = 30,
+        NavmeshGeometry = 31,
+        WBDTDataTypeState = 32,
     }
     #endregion
 
@@ -2019,9 +2522,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "37ea297d-9233-4548-b692-fe2d298b35c4";
 
-        public const ushort AdditionalFieldCount = 20;
+        public const ushort AdditionalFieldCount = 27;
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 33;
 
         public static readonly Type MaskType = typeof(Furniture.Mask<>);
 
@@ -2101,15 +2604,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.NativeTerminal.Clear();
             item.ForcedLocRefType.Clear();
             item.PNAM = default;
-            item.WaterType.Clear();
-            item.ATTXActivateTextOverride = default;
+            item.DrinkingWater.Clear();
+            item.ActivateTextOverride = default;
             item.Flags = default;
             item.Conditions = null;
             item.Items = null;
-            item.WorkbenchData = null;
+            item.BenchType = default;
+            item.UsesSkill = default;
             item.AssociatedForm.Clear();
-            item.Markers = null;
+            item.EnabledEntryPoints = default;
+            item.MarkerEntryPoints.Clear();
             item.ModelFilename = default;
+            item.MarkerParameters = null;
+            item.AttachParentSlots = null;
+            item.ObjectTemplates = null;
+            item.NavmeshGeometry = null;
+            item.WBDTDataTypeState = default;
             base.Clear(item);
         }
         
@@ -2135,11 +2645,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Properties?.RemapLinks(mapping);
             obj.NativeTerminal.Relink(mapping);
             obj.ForcedLocRefType.Relink(mapping);
-            obj.WaterType.Relink(mapping);
+            obj.DrinkingWater.Relink(mapping);
             obj.Conditions?.RemapLinks(mapping);
             obj.Items?.RemapLinks(mapping);
             obj.AssociatedForm.Relink(mapping);
-            obj.Markers?.RemapLinks(mapping);
+            obj.MarkerParameters?.RemapLinks(mapping);
+            obj.AttachParentSlots?.RemapLinks(mapping);
+            obj.ObjectTemplates?.RemapLinks(mapping);
+            obj.NavmeshGeometry?.RemapLinks(mapping);
         }
         
         #endregion
@@ -2237,8 +2750,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.NativeTerminal = item.NativeTerminal.Equals(rhs.NativeTerminal);
             ret.ForcedLocRefType = item.ForcedLocRefType.Equals(rhs.ForcedLocRefType);
             ret.PNAM = MemorySliceExt.Equal(item.PNAM, rhs.PNAM);
-            ret.WaterType = item.WaterType.Equals(rhs.WaterType);
-            ret.ATTXActivateTextOverride = object.Equals(item.ATTXActivateTextOverride, rhs.ATTXActivateTextOverride);
+            ret.DrinkingWater = item.DrinkingWater.Equals(rhs.DrinkingWater);
+            ret.ActivateTextOverride = object.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
@@ -2248,17 +2761,33 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.WorkbenchData = EqualsMaskHelper.EqualsHelper(
-                item.WorkbenchData,
-                rhs.WorkbenchData,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.BenchType = item.BenchType == rhs.BenchType;
+            ret.UsesSkill = item.UsesSkill == rhs.UsesSkill;
             ret.AssociatedForm = item.AssociatedForm.Equals(rhs.AssociatedForm);
-            ret.Markers = item.Markers.CollectionEqualsHelper(
-                rhs.Markers,
+            ret.EnabledEntryPoints = item.EnabledEntryPoints == rhs.EnabledEntryPoints;
+            ret.MarkerEntryPoints = item.MarkerEntryPoints.CollectionEqualsHelper(
+                rhs.MarkerEntryPoints,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.ModelFilename = string.Equals(item.ModelFilename, rhs.ModelFilename);
+            ret.MarkerParameters = item.MarkerParameters.CollectionEqualsHelper(
+                rhs.MarkerParameters,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.AttachParentSlots = item.AttachParentSlots.CollectionEqualsHelper(
+                rhs.AttachParentSlots,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.ObjectTemplates = item.ObjectTemplates.CollectionEqualsHelper(
+                rhs.ObjectTemplates,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.NavmeshGeometry = EqualsMaskHelper.EqualsHelper(
+                item.NavmeshGeometry,
+                rhs.NavmeshGeometry,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.WBDTDataTypeState = item.WBDTDataTypeState == rhs.WBDTDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2389,14 +2918,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 fg.AppendLine($"PNAM => {SpanExt.ToHexString(PNAMItem)}");
             }
-            if (printMask?.WaterType ?? true)
+            if (printMask?.DrinkingWater ?? true)
             {
-                fg.AppendItem(item.WaterType.FormKeyNullable, "WaterType");
+                fg.AppendItem(item.DrinkingWater.FormKeyNullable, "DrinkingWater");
             }
-            if ((printMask?.ATTXActivateTextOverride ?? true)
-                && item.ATTXActivateTextOverride is {} ATTXActivateTextOverrideItem)
+            if ((printMask?.ActivateTextOverride ?? true)
+                && item.ActivateTextOverride is {} ActivateTextOverrideItem)
             {
-                fg.AppendItem(ATTXActivateTextOverrideItem, "ATTXActivateTextOverride");
+                fg.AppendItem(ActivateTextOverrideItem, "ActivateTextOverride");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
@@ -2441,23 +2970,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.WorkbenchData?.Overall ?? true)
-                && item.WorkbenchData is {} WorkbenchDataItem)
+            if (printMask?.BenchType ?? true)
             {
-                WorkbenchDataItem?.ToString(fg, "WorkbenchData");
+                fg.AppendItem(item.BenchType, "BenchType");
+            }
+            if ((printMask?.UsesSkill ?? true)
+                && item.UsesSkill is {} UsesSkillItem)
+            {
+                fg.AppendItem(UsesSkillItem, "UsesSkill");
             }
             if (printMask?.AssociatedForm ?? true)
             {
                 fg.AppendItem(item.AssociatedForm.FormKeyNullable, "AssociatedForm");
             }
-            if ((printMask?.Markers?.Overall ?? true)
-                && item.Markers is {} MarkersItem)
+            if ((printMask?.EnabledEntryPoints ?? true)
+                && item.EnabledEntryPoints is {} EnabledEntryPointsItem)
             {
-                fg.AppendLine("Markers =>");
+                fg.AppendItem(EnabledEntryPointsItem, "EnabledEntryPoints");
+            }
+            if (printMask?.MarkerEntryPoints?.Overall ?? true)
+            {
+                fg.AppendLine("MarkerEntryPoints =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in MarkersItem)
+                    foreach (var subItem in item.MarkerEntryPoints)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -2473,6 +3010,72 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 && item.ModelFilename is {} ModelFilenameItem)
             {
                 fg.AppendItem(ModelFilenameItem, "ModelFilename");
+            }
+            if ((printMask?.MarkerParameters?.Overall ?? true)
+                && item.MarkerParameters is {} MarkerParametersItem)
+            {
+                fg.AppendLine("MarkerParameters =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in MarkerParametersItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.AttachParentSlots?.Overall ?? true)
+                && item.AttachParentSlots is {} AttachParentSlotsItem)
+            {
+                fg.AppendLine("AttachParentSlots =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in AttachParentSlotsItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem.FormKey);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.ObjectTemplates?.Overall ?? true)
+                && item.ObjectTemplates is {} ObjectTemplatesItem)
+            {
+                fg.AppendLine("ObjectTemplates =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in ObjectTemplatesItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.NavmeshGeometry?.Overall ?? true)
+                && item.NavmeshGeometry is {} NavmeshGeometryItem)
+            {
+                NavmeshGeometryItem?.ToString(fg, "NavmeshGeometry");
+            }
+            if (printMask?.WBDTDataTypeState ?? true)
+            {
+                fg.AppendItem(item.WBDTDataTypeState, "WBDTDataTypeState");
             }
         }
         
@@ -2582,13 +3185,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.WaterType) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.DrinkingWater) ?? true))
             {
-                if (!lhs.WaterType.Equals(rhs.WaterType)) return false;
+                if (!lhs.DrinkingWater.Equals(rhs.DrinkingWater)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.ATTXActivateTextOverride) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.ActivateTextOverride) ?? true))
             {
-                if (!object.Equals(lhs.ATTXActivateTextOverride, rhs.ATTXActivateTextOverride)) return false;
+                if (!object.Equals(lhs.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Flags) ?? true))
             {
@@ -2602,25 +3205,53 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.WorkbenchData) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.BenchType) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.WorkbenchData, rhs.WorkbenchData, out var lhsWorkbenchData, out var rhsWorkbenchData, out var isWorkbenchDataEqual))
-                {
-                    if (!((WorkbenchDataCommon)((IWorkbenchDataGetter)lhsWorkbenchData).CommonInstance()!).Equals(lhsWorkbenchData, rhsWorkbenchData, crystal?.GetSubCrystal((int)Furniture_FieldIndex.WorkbenchData))) return false;
-                }
-                else if (!isWorkbenchDataEqual) return false;
+                if (lhs.BenchType != rhs.BenchType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.UsesSkill) ?? true))
+            {
+                if (lhs.UsesSkill != rhs.UsesSkill) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.AssociatedForm) ?? true))
             {
                 if (!lhs.AssociatedForm.Equals(rhs.AssociatedForm)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Markers) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.EnabledEntryPoints) ?? true))
             {
-                if (!lhs.Markers.SequenceEqualNullable(rhs.Markers)) return false;
+                if (lhs.EnabledEntryPoints != rhs.EnabledEntryPoints) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerEntryPoints) ?? true))
+            {
+                if (!lhs.MarkerEntryPoints.SequenceEqualNullable(rhs.MarkerEntryPoints)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.ModelFilename) ?? true))
             {
                 if (!string.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerParameters) ?? true))
+            {
+                if (!lhs.MarkerParameters.SequenceEqualNullable(rhs.MarkerParameters)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.AttachParentSlots) ?? true))
+            {
+                if (!lhs.AttachParentSlots.SequenceEqualNullable(rhs.AttachParentSlots)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.ObjectTemplates) ?? true))
+            {
+                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.NavmeshGeometry) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.NavmeshGeometry, rhs.NavmeshGeometry, out var lhsNavmeshGeometry, out var rhsNavmeshGeometry, out var isNavmeshGeometryEqual))
+                {
+                    if (!((NavmeshGeometryCommon)((INavmeshGeometryGetter)lhsNavmeshGeometry).CommonInstance()!).Equals(lhsNavmeshGeometry, rhsNavmeshGeometry, crystal?.GetSubCrystal((int)Furniture_FieldIndex.NavmeshGeometry))) return false;
+                }
+                else if (!isNavmeshGeometryEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.WBDTDataTypeState) ?? true))
+            {
+                if (lhs.WBDTDataTypeState != rhs.WBDTDataTypeState) return false;
             }
             return true;
         }
@@ -2676,10 +3307,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 hash.Add(PNAMItem);
             }
-            hash.Add(item.WaterType);
-            if (item.ATTXActivateTextOverride is {} ATTXActivateTextOverrideitem)
+            hash.Add(item.DrinkingWater);
+            if (item.ActivateTextOverride is {} ActivateTextOverrideitem)
             {
-                hash.Add(ATTXActivateTextOverrideitem);
+                hash.Add(ActivateTextOverrideitem);
             }
             if (item.Flags is {} Flagsitem)
             {
@@ -2687,16 +3318,29 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             hash.Add(item.Conditions);
             hash.Add(item.Items);
-            if (item.WorkbenchData is {} WorkbenchDataitem)
+            hash.Add(item.BenchType);
+            if (item.UsesSkill is {} UsesSkillitem)
             {
-                hash.Add(WorkbenchDataitem);
+                hash.Add(UsesSkillitem);
             }
             hash.Add(item.AssociatedForm);
-            hash.Add(item.Markers);
+            if (item.EnabledEntryPoints is {} EnabledEntryPointsitem)
+            {
+                hash.Add(EnabledEntryPointsitem);
+            }
+            hash.Add(item.MarkerEntryPoints);
             if (item.ModelFilename is {} ModelFilenameitem)
             {
                 hash.Add(ModelFilenameitem);
             }
+            hash.Add(item.MarkerParameters);
+            hash.Add(item.AttachParentSlots);
+            hash.Add(item.ObjectTemplates);
+            if (item.NavmeshGeometry is {} NavmeshGeometryitem)
+            {
+                hash.Add(NavmeshGeometryitem);
+            }
+            hash.Add(item.WBDTDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2773,9 +3417,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return FormLinkInformation.Factory(obj.ForcedLocRefType);
             }
-            if (obj.WaterType.FormKeyNullable.HasValue)
+            if (obj.DrinkingWater.FormKeyNullable.HasValue)
             {
-                yield return FormLinkInformation.Factory(obj.WaterType);
+                yield return FormLinkInformation.Factory(obj.DrinkingWater);
             }
             if (obj.Conditions is {} ConditionsItem)
             {
@@ -2797,11 +3441,32 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return FormLinkInformation.Factory(obj.AssociatedForm);
             }
-            if (obj.Markers is {} MarkersItem)
+            if (obj.MarkerParameters is {} MarkerParametersItem)
             {
-                foreach (var item in MarkersItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in MarkerParametersItem.SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.AttachParentSlots is {} AttachParentSlotsItem)
+            {
+                foreach (var item in AttachParentSlotsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.ObjectTemplates is {} ObjectTemplatesItem)
+            {
+                foreach (var item in ObjectTemplatesItem.SelectMany(f => f.ContainedFormLinks))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.NavmeshGeometry is IFormLinkContainerGetter NavmeshGeometrylinkCont)
+            {
+                foreach (var item in NavmeshGeometrylinkCont.ContainedFormLinks)
+                {
+                    yield return item;
                 }
             }
             yield break;
@@ -3064,13 +3729,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.PNAM = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.WaterType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.DrinkingWater) ?? true))
             {
-                item.WaterType.SetTo(rhs.WaterType.FormKeyNullable);
+                item.DrinkingWater.SetTo(rhs.DrinkingWater.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.ATTXActivateTextOverride) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.ActivateTextOverride) ?? true))
             {
-                item.ATTXActivateTextOverride = rhs.ATTXActivateTextOverride?.DeepCopy();
+                item.ActivateTextOverride = rhs.ActivateTextOverride?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.Flags) ?? true))
             {
@@ -3140,57 +3805,35 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.WorkbenchData) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.BenchType) ?? true))
             {
-                errorMask?.PushIndex((int)Furniture_FieldIndex.WorkbenchData);
-                try
-                {
-                    if(rhs.WorkbenchData is {} rhsWorkbenchData)
-                    {
-                        item.WorkbenchData = rhsWorkbenchData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Furniture_FieldIndex.WorkbenchData));
-                    }
-                    else
-                    {
-                        item.WorkbenchData = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BenchType = rhs.BenchType;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.UsesSkill) ?? true))
+            {
+                item.UsesSkill = rhs.UsesSkill;
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.AssociatedForm) ?? true))
             {
                 item.AssociatedForm.SetTo(rhs.AssociatedForm.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.Markers) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.EnabledEntryPoints) ?? true))
             {
-                errorMask?.PushIndex((int)Furniture_FieldIndex.Markers);
+                item.EnabledEntryPoints = rhs.EnabledEntryPoints;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerEntryPoints) ?? true))
+            {
+                errorMask?.PushIndex((int)Furniture_FieldIndex.MarkerEntryPoints);
                 try
                 {
-                    if ((rhs.Markers != null))
-                    {
-                        item.Markers = 
-                            rhs.Markers
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<FurnitureMarker>();
-                    }
-                    else
-                    {
-                        item.Markers = null;
-                    }
+                    item.MarkerEntryPoints.SetTo(
+                        rhs.MarkerEntryPoints
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3205,6 +3848,127 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.ModelFilename) ?? true))
             {
                 item.ModelFilename = rhs.ModelFilename;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerParameters) ?? true))
+            {
+                errorMask?.PushIndex((int)Furniture_FieldIndex.MarkerParameters);
+                try
+                {
+                    if ((rhs.MarkerParameters != null))
+                    {
+                        item.MarkerParameters = 
+                            rhs.MarkerParameters
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<FurnitureMarkerParameters>();
+                    }
+                    else
+                    {
+                        item.MarkerParameters = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.AttachParentSlots) ?? true))
+            {
+                errorMask?.PushIndex((int)Furniture_FieldIndex.AttachParentSlots);
+                try
+                {
+                    if ((rhs.AttachParentSlots != null))
+                    {
+                        item.AttachParentSlots = 
+                            rhs.AttachParentSlots
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.AttachParentSlots = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.ObjectTemplates) ?? true))
+            {
+                errorMask?.PushIndex((int)Furniture_FieldIndex.ObjectTemplates);
+                try
+                {
+                    if ((rhs.ObjectTemplates != null))
+                    {
+                        item.ObjectTemplates = 
+                            rhs.ObjectTemplates
+                            .Select(r =>
+                            {
+                                return r.DeepCopy<Furniture.Property>(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ObjectTemplate<Furniture.Property>>();
+                    }
+                    else
+                    {
+                        item.ObjectTemplates = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.NavmeshGeometry) ?? true))
+            {
+                errorMask?.PushIndex((int)Furniture_FieldIndex.NavmeshGeometry);
+                try
+                {
+                    if(rhs.NavmeshGeometry is {} rhsNavmeshGeometry)
+                    {
+                        item.NavmeshGeometry = rhsNavmeshGeometry.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Furniture_FieldIndex.NavmeshGeometry));
+                    }
+                    else
+                    {
+                        item.NavmeshGeometry = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.WBDTDataTypeState) ?? true))
+            {
+                item.WBDTDataTypeState = rhs.WBDTDataTypeState;
             }
         }
         
@@ -3354,6 +4118,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public new readonly static FurnitureBinaryWriteTranslation Instance = new FurnitureBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IFurnitureGetter item,
+            MutagenWriter writer)
+        {
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
         public static void WriteRecordTypes(
             IFurnitureGetter item,
             MutagenWriter writer,
@@ -3437,12 +4210,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 header: translationParams.ConvertToCustom(RecordTypes.PNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.WaterType,
+                item: item.DrinkingWater,
                 header: translationParams.ConvertToCustom(RecordTypes.WNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ATTXActivateTextOverride,
-                header: translationParams.ConvertToCustom(RecordTypes.RNAM),
+                item: item.ActivateTextOverride,
+                header: translationParams.ConvertToCustom(RecordTypes.ATTX),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             FurnitureBinaryWriteTranslation.WriteBinaryFlags(
@@ -3477,28 +4250,77 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FurnitureBinaryWriteTranslation.WriteBinaryFlags2(
                 writer: writer,
                 item: item);
-            if (item.WorkbenchData is {} WorkbenchDataItem)
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.WBDT)))
             {
-                ((WorkbenchDataBinaryWriteTranslation)((IBinaryItem)WorkbenchDataItem).BinaryWriteTranslator).Write(
-                    item: WorkbenchDataItem,
-                    writer: writer,
-                    translationParams: translationParams);
+                EnumBinaryTranslation<Furniture.BenchTypes, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.BenchType,
+                    length: 1);
+                if (!item.WBDTDataTypeState.HasFlag(Furniture.WBDTDataType.Break0))
+                {
+                    EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer,
+                        ((int?)item.UsesSkill) ?? -1,
+                        length: 1);
+                }
             }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AssociatedForm,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM1));
-            FurnitureBinaryWriteTranslation.WriteBinaryDisabledMarkers(
+            FurnitureBinaryWriteTranslation.WriteBinaryEnabledEntryPoints(
                 writer: writer,
                 item: item);
-            FurnitureBinaryWriteTranslation.WriteBinaryMarkers(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFurnitureMarkerEntryPointsGetter>.Instance.Write(
                 writer: writer,
-                item: item);
+                items: item.MarkerEntryPoints,
+                transl: (MutagenWriter subWriter, IFurnitureMarkerEntryPointsGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((FurnitureMarkerEntryPointsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ModelFilename,
                 header: translationParams.ConvertToCustom(RecordTypes.XMRK),
                 binaryType: StringBinaryType.NullTerminate);
+            FurnitureBinaryWriteTranslation.WriteBinaryMarkerParameters(
+                writer: writer,
+                item: item);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
+                writer: writer,
+                items: item.AttachParentSlots,
+                recordType: translationParams.ConvertToCustom(RecordTypes.APPR),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IObjectTemplateGetter<Furniture.Property>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.ObjectTemplates,
+                counterType: RecordTypes.OBTE,
+                counterLength: 4,
+                endMarker: RecordTypes.STOP,
+                transl: (MutagenWriter subWriter, IObjectTemplateGetter<Furniture.Property> subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((ObjectTemplateBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<Furniture.Property>(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.NavmeshGeometry is {} NavmeshGeometryItem)
+            {
+                ((NavmeshGeometryBinaryWriteTranslation)((IBinaryItem)NavmeshGeometryItem).BinaryWriteTranslator).Write(
+                    item: NavmeshGeometryItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
         }
 
         public static partial void WriteBinaryFlagsCustom(
@@ -3527,28 +4349,28 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item);
         }
 
-        public static partial void WriteBinaryDisabledMarkersCustom(
+        public static partial void WriteBinaryEnabledEntryPointsCustom(
             MutagenWriter writer,
             IFurnitureGetter item);
 
-        public static void WriteBinaryDisabledMarkers(
+        public static void WriteBinaryEnabledEntryPoints(
             MutagenWriter writer,
             IFurnitureGetter item)
         {
-            WriteBinaryDisabledMarkersCustom(
+            WriteBinaryEnabledEntryPointsCustom(
                 writer: writer,
                 item: item);
         }
 
-        public static partial void WriteBinaryMarkersCustom(
+        public static partial void WriteBinaryMarkerParametersCustom(
             MutagenWriter writer,
             IFurnitureGetter item);
 
-        public static void WriteBinaryMarkers(
+        public static void WriteBinaryMarkerParameters(
             MutagenWriter writer,
             IFurnitureGetter item)
         {
-            WriteBinaryMarkersCustom(
+            WriteBinaryMarkerParametersCustom(
                 writer: writer,
                 item: item);
         }
@@ -3564,7 +4386,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
                     writer.MetaData.FormVersion = item.FormVersion;
@@ -3729,17 +4551,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WaterType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Furniture_FieldIndex.WaterType;
+                    item.DrinkingWater.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Furniture_FieldIndex.DrinkingWater;
                 }
-                case RecordTypeInts.RNAM:
+                case RecordTypeInts.ATTX:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ATTXActivateTextOverride = StringBinaryTranslation.Instance.Parse(
+                    item.ActivateTextOverride = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)Furniture_FieldIndex.ATTXActivateTextOverride;
+                    return (int)Furniture_FieldIndex.ActivateTextOverride;
                 }
                 case RecordTypeInts.FNAM:
                 {
@@ -3784,8 +4606,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.WBDT:
                 {
-                    item.WorkbenchData = Mutagen.Bethesda.Fallout4.WorkbenchData.CreateFromBinary(frame: frame);
-                    return (int)Furniture_FieldIndex.WorkbenchData;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.BenchType = EnumBinaryTranslation<Furniture.BenchTypes, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    if (dataFrame.Complete)
+                    {
+                        item.WBDTDataTypeState |= Furniture.WBDTDataType.Break0;
+                        return (int)Furniture_FieldIndex.BenchType;
+                    }
+                    item.UsesSkill = EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    return (int)Furniture_FieldIndex.UsesSkill;
                 }
                 case RecordTypeInts.NAM1:
                 {
@@ -3795,16 +4629,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    return FurnitureBinaryCreateTranslation.FillBinaryDisabledMarkersCustom(
+                    FurnitureBinaryCreateTranslation.FillBinaryEnabledEntryPointsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
+                    return (int)Furniture_FieldIndex.EnabledEntryPoints;
                 }
                 case RecordTypeInts.FNPR:
                 {
-                    FurnitureBinaryCreateTranslation.FillBinaryMarkersCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return (int)Furniture_FieldIndex.Markers;
+                    item.MarkerEntryPoints.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<FurnitureMarkerEntryPoints>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: RecordTypes.FNPR,
+                            translationParams: translationParams,
+                            transl: FurnitureMarkerEntryPoints.TryCreateFromBinary));
+                    return (int)Furniture_FieldIndex.MarkerEntryPoints;
                 }
                 case RecordTypeInts.XMRK:
                 {
@@ -3813,6 +4651,41 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Furniture_FieldIndex.ModelFilename;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    FurnitureBinaryCreateTranslation.FillBinaryMarkerParametersCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return (int)Furniture_FieldIndex.MarkerParameters;
+                }
+                case RecordTypeInts.APPR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AttachParentSlots = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)Furniture_FieldIndex.AttachParentSlots;
+                }
+                case RecordTypeInts.OBTE:
+                {
+                    item.ObjectTemplates = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ObjectTemplate<Furniture.Property>>.Instance.ParsePerItem(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.OBTE,
+                            triggeringRecord: ObjectTemplate_Registration.TriggeringRecordTypes,
+                            translationParams: translationParams,
+                            transl: ObjectTemplate<Furniture.Property>.TryCreateFromBinary)
+                        .CastExtendedList<ObjectTemplate<Furniture.Property>>();
+                    return (int)Furniture_FieldIndex.ObjectTemplates;
+                }
+                case RecordTypeInts.NVNM:
+                {
+                    item.NavmeshGeometry = Mutagen.Bethesda.Fallout4.NavmeshGeometry.CreateFromBinary(frame: frame);
+                    return (int)Furniture_FieldIndex.NavmeshGeometry;
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3833,11 +4706,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             MutagenFrame frame,
             IFurnitureInternal item);
 
-        public static partial ParseResult FillBinaryDisabledMarkersCustom(
+        public static partial void FillBinaryEnabledEntryPointsCustom(
             MutagenFrame frame,
             IFurnitureInternal item);
 
-        public static partial void FillBinaryMarkersCustom(
+        public static partial void FillBinaryMarkerParametersCustom(
             MutagenFrame frame,
             IFurnitureInternal item);
 
@@ -3933,13 +4806,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private int? _PNAMLocation;
         public ReadOnlyMemorySlice<Byte>? PNAM => _PNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region WaterType
-        private int? _WaterTypeLocation;
-        public IFormLinkNullableGetter<IWaterGetter> WaterType => _WaterTypeLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
+        #region DrinkingWater
+        private int? _DrinkingWaterLocation;
+        public IFormLinkNullableGetter<IWaterGetter> DrinkingWater => _DrinkingWaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DrinkingWaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
         #endregion
-        #region ATTXActivateTextOverride
-        private int? _ATTXActivateTextOverrideLocation;
-        public ITranslatedStringGetter? ATTXActivateTextOverride => _ATTXActivateTextOverrideLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ATTXActivateTextOverrideLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region ActivateTextOverride
+        private int? _ActivateTextOverrideLocation;
+        public ITranslatedStringGetter? ActivateTextOverride => _ActivateTextOverrideLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ActivateTextOverrideLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         #region Flags
         partial void FlagsCustomParse(
@@ -3963,30 +4836,56 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             OverlayStream stream,
             int offset);
         #endregion
-        #region WorkbenchData
-        private RangeInt32? _WorkbenchDataLocation;
-        public IWorkbenchDataGetter? WorkbenchData => _WorkbenchDataLocation.HasValue ? WorkbenchDataBinaryOverlay.WorkbenchDataFactory(new OverlayStream(_data.Slice(_WorkbenchDataLocation!.Value.Min), _package), _package) : default;
+        private int? _WBDTLocation;
+        public Furniture.WBDTDataType WBDTDataTypeState { get; private set; }
+        #region BenchType
+        private int _BenchTypeLocation => _WBDTLocation!.Value;
+        private bool _BenchType_IsSet => _WBDTLocation.HasValue;
+        public Furniture.BenchTypes BenchType => _BenchType_IsSet ? (Furniture.BenchTypes)_data.Span.Slice(_BenchTypeLocation, 0x1)[0] : default;
+        #endregion
+        #region UsesSkill
+        private int _UsesSkillLocation => _WBDTLocation!.Value + 0x1;
+        private bool _UsesSkill_IsSet => _WBDTLocation.HasValue && !WBDTDataTypeState.HasFlag(Furniture.WBDTDataType.Break0);
+        public Skill? UsesSkill
+        {
+            get
+            {
+                var val = (Skill)_data.Span.Slice(_UsesSkillLocation, 0x1)[0];
+                if (((int)val) == -1) return null;
+                return val;
+            }
+        }
         #endregion
         #region AssociatedForm
         private int? _AssociatedFormLocation;
         public IFormLinkNullableGetter<IFurnitureAssociationGetter> AssociatedForm => _AssociatedFormLocation.HasValue ? new FormLinkNullable<IFurnitureAssociationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AssociatedFormLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFurnitureAssociationGetter>.Null;
         #endregion
-        #region DisabledMarkers
-        public partial ParseResult DisabledMarkersCustomParse(
+        #region EnabledEntryPoints
+        partial void EnabledEntryPointsCustomParse(
             OverlayStream stream,
+            long finalPos,
             int offset);
+        public partial Furniture.EntryPointType? GetEnabledEntryPointsCustom();
+        public Furniture.EntryPointType? EnabledEntryPoints => GetEnabledEntryPointsCustom();
         #endregion
-        #region Markers
-        partial void MarkersCustomParse(
+        public IReadOnlyList<IFurnitureMarkerEntryPointsGetter> MarkerEntryPoints { get; private set; } = ListExt.Empty<FurnitureMarkerEntryPointsBinaryOverlay>();
+        #region ModelFilename
+        private int? _ModelFilenameLocation;
+        public String? ModelFilename => _ModelFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ModelFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region MarkerParameters
+        partial void MarkerParametersCustomParse(
             OverlayStream stream,
             long finalPos,
             int offset,
             RecordType type,
             PreviousParse lastParsed);
         #endregion
-        #region ModelFilename
-        private int? _ModelFilenameLocation;
-        public String? ModelFilename => _ModelFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ModelFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; private set; }
+        public IReadOnlyList<IObjectTemplateGetter<Furniture.Property>>? ObjectTemplates { get; private set; }
+        #region NavmeshGeometry
+        private RangeInt32? _NavmeshGeometryLocation;
+        public INavmeshGeometryGetter? NavmeshGeometry => _NavmeshGeometryLocation.HasValue ? NavmeshGeometryBinaryOverlay.NavmeshGeometryFactory(new OverlayStream(_data.Slice(_NavmeshGeometryLocation!.Value.Min), _package), _package) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -4136,13 +5035,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    _WaterTypeLocation = (stream.Position - offset);
-                    return (int)Furniture_FieldIndex.WaterType;
+                    _DrinkingWaterLocation = (stream.Position - offset);
+                    return (int)Furniture_FieldIndex.DrinkingWater;
                 }
-                case RecordTypeInts.RNAM:
+                case RecordTypeInts.ATTX:
                 {
-                    _ATTXActivateTextOverrideLocation = (stream.Position - offset);
-                    return (int)Furniture_FieldIndex.ATTXActivateTextOverride;
+                    _ActivateTextOverrideLocation = (stream.Position - offset);
+                    return (int)Furniture_FieldIndex.ActivateTextOverride;
                 }
                 case RecordTypeInts.FNAM:
                 {
@@ -4185,8 +5084,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.WBDT:
                 {
-                    _WorkbenchDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)Furniture_FieldIndex.WorkbenchData;
+                    _WBDTLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0x1)
+                    {
+                        this.WBDTDataTypeState |= Furniture.WBDTDataType.Break0;
+                    }
+                    return (int)Furniture_FieldIndex.UsesSkill;
                 }
                 case RecordTypeInts.NAM1:
                 {
@@ -4195,24 +5099,70 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    return DisabledMarkersCustomParse(
-                        stream,
-                        offset);
+                    EnabledEntryPointsCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset);
+                    return (int)Furniture_FieldIndex.EnabledEntryPoints;
                 }
                 case RecordTypeInts.FNPR:
                 {
-                    MarkersCustomParse(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
-                    return (int)Furniture_FieldIndex.Markers;
+                    this.MarkerEntryPoints = BinaryOverlayList.FactoryByArray<FurnitureMarkerEntryPointsBinaryOverlay>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => FurnitureMarkerEntryPointsBinaryOverlay.FurnitureMarkerEntryPointsFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: type,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)Furniture_FieldIndex.MarkerEntryPoints;
                 }
                 case RecordTypeInts.XMRK:
                 {
                     _ModelFilenameLocation = (stream.Position - offset);
                     return (int)Furniture_FieldIndex.ModelFilename;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    MarkerParametersCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+                    return (int)Furniture_FieldIndex.MarkerParameters;
+                }
+                case RecordTypeInts.APPR:
+                {
+                    var subMeta = stream.ReadSubrecord();
+                    var subLen = subMeta.ContentLength;
+                    this.AttachParentSlots = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)Furniture_FieldIndex.AttachParentSlots;
+                }
+                case RecordTypeInts.OBTE:
+                {
+                    this.ObjectTemplates = BinaryOverlayList.FactoryByCountPerItem<ObjectTemplateBinaryOverlay<Furniture.Property>>(
+                        stream: stream,
+                        package: _package,
+                        countLength: 4,
+                        subrecordType: ObjectTemplate_Registration.TriggeringRecordTypes,
+                        countType: RecordTypes.OBTE,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ObjectTemplateBinaryOverlay<Furniture.Property>.ObjectTemplateFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
+                    return (int)Furniture_FieldIndex.ObjectTemplates;
+                }
+                case RecordTypeInts.NVNM:
+                {
+                    _NavmeshGeometryLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Furniture_FieldIndex.NavmeshGeometry;
                 }
                 default:
                     return base.FillRecordType(

@@ -25,7 +25,8 @@
       <RefList name="Effects" refName="Effect" nullable="False" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
-    <LinkInterface>IEffectRecord</LinkInterface>1
+    <LinkInterface>IEffectRecord</LinkInterface>
     <LinkInterface>ISpellRecord</LinkInterface>
+    <LinkInterface>IFurnitureAssociation</LinkInterface>
   </Object>
 </Loqui>

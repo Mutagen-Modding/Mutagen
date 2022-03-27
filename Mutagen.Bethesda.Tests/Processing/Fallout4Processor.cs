@@ -26,6 +26,7 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.TRNS, ProcessTransforms);
         AddDynamicProcessing(RecordTypes.RACE, ProcessRaces);
         AddDynamicProcessing(RecordTypes.SCOL, ProcessStaticCollections);
+        AddDynamicProcessing(RecordTypes.FURN, ProcessFurniture);
     }
 
     private void ProcessGameSettings(
@@ -90,6 +91,23 @@ public class Fallout4Processor : Processor
         }
     }
 
+    private void ProcessFurniture(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.SNAM, out var frame))
+        {
+            int offset = 0;
+            int i = 0;
+            while (i * 24 < frame.ContentLength)
+            {
+                ProcessZeroFloats(frame, fileOffset, ref offset, 4);
+                i++;
+                offset = i * 24;
+            }
+        }
+    }
+
     public void GameSettingStringHandler(
         IMutagenReadStream stream,
         MajorRecordHeader major,
@@ -132,6 +150,7 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "SCOL", "FULL" },
                     new RecordType[] { "MSTT", "FULL" },
                     new RecordType[] { "FLOR", "FULL", "ATTX" },
+                    new RecordType[] { "FURN", "FULL", "ATTX" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]

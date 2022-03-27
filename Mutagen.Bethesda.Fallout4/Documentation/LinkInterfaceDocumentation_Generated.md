@@ -26,6 +26,10 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Region
 ### IFurnitureAssociation
 - Armor
+- Hazard
+- Perk
+- Spell
+- Weapon
 ### IHarvestTarget
 - Ammunition
 - Armor
@@ -170,6 +174,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IObjectId
 - IStaticObject
 ### Hazard
+- IFurnitureAssociation
 - IPlacedTrapTarget
 ### Holotape
 - IHarvestTarget
@@ -231,6 +236,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IEffectRecord
 ### ObjectModification
 - IObjectId
+### Perk
+- IFurnitureAssociation
 ### PlacedNpc
 - ILocationTargetable
 ### PlacedObject
@@ -244,6 +251,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IEmittance
 ### Spell
 - IEffectRecord
+- IFurnitureAssociation
 - IObjectId
 - ISpellRecord
 ### Static
@@ -256,6 +264,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### Tree
 - IRegionTarget
 ### Weapon
+- IFurnitureAssociation
 - IHarvestTarget
 - IObjectId
 - IStaticObject
