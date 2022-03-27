@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Ammunition" recordType="AMMO" objType="Record" baseClass="Fallout4MajorRecord" GUID="e57765cc-e2e1-43c7-a220-8db84c93b1f1" ID="230">
+  <Object name="Ammunition" recordType="AMMO" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true" GUID="e57765cc-e2e1-43c7-a220-8db84c93b1f1" ID="230">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
+      <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
+      <String name="Description" recordType="DESC" translated="Normal" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <Data>
+        <Fields>
+          <UInt32 name="Value" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+      <Data recordType="DNAM">
+        <Fields>
+          <FormLink name="Projectile" refName="Projectile" />
+          <Enum name="Flags" enumName="Ammunition.Flag" byteLength="4" />
+          <Float name="Damage" />
+          <UInt32 name="Health" />
+        </Fields>
+      </Data>
+      <String name="ShortName" recordType="ONAM" />
+      <String name="CasingModel" recordType="NAM1" />
+      <ByteArray name="ModelInfo" recordType="NAM2" />
+    </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IStaticObject</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>

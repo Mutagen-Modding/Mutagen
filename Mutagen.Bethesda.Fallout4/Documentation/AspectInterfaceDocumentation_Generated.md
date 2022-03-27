@@ -23,6 +23,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Keyword
 ### IKeyworded
 - Activator
+- Ammunition
 - Armor
 - Book
 - Container
@@ -45,6 +46,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Weapon
 ### IModeled
 - Activator
+- Ammunition
 - ArmorModel
 - ArtObject
 - BodyData
@@ -74,6 +76,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### INamed
 - ActionRecord
 - Activator
+- Ammunition
 - Armor
 - BipedObjectData
 - Bone
@@ -136,6 +139,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IObjectBounded
 - AcousticSpace
 - Activator
+- Ammunition
 - Armor
 - ArtObject
 - Book
@@ -185,6 +189,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Tree
 - Weapon
 ### IWeightValue
+- Ammunition
 - Book
 - Ingestible
 - Key
@@ -201,6 +206,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 - IScripted
+### Ammunition
+- IKeyworded
+- IModeled
+- INamed
+- IObjectBounded
+- IWeightValue
 ### Armor
 - IKeyworded
 - INamed

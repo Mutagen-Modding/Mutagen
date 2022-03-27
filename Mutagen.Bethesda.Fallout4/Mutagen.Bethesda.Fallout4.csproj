@@ -145,6 +145,7 @@
     <Compile Include="Records\Major Records\ADamageType.cs">
       <DependentUpon>DamageType.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Ammunition.cs" />
     <Compile Include="Records\Major Records\ANavigationMesh_Generated.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>

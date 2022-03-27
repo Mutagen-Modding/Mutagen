@@ -47,6 +47,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             dict[typeof(IKeyworded<IKeywordGetter>)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,
+                Ammunition_Registration.Instance,
                 Armor_Registration.Instance,
                 Book_Registration.Instance,
                 Container_Registration.Instance,
@@ -72,6 +73,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             dict[typeof(IModeled)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,
+                Ammunition_Registration.Instance,
                 ArmorModel_Registration.Instance,
                 ArtObject_Registration.Instance,
                 BodyData_Registration.Instance,
@@ -104,6 +106,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 ActionRecord_Registration.Instance,
                 Activator_Registration.Instance,
+                Ammunition_Registration.Instance,
                 Armor_Registration.Instance,
                 Bone_Registration.Instance,
                 Book_Registration.Instance,
@@ -146,6 +149,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 ActionRecord_Registration.Instance,
                 Activator_Registration.Instance,
+                Ammunition_Registration.Instance,
                 Armor_Registration.Instance,
                 BipedObjectData_Registration.Instance,
                 Bone_Registration.Instance,
@@ -210,6 +214,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             dict[typeof(ITranslatedNamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,
+                Ammunition_Registration.Instance,
                 Armor_Registration.Instance,
                 Book_Registration.Instance,
                 Container_Registration.Instance,
@@ -242,6 +247,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             dict[typeof(ITranslatedNamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,
+                Ammunition_Registration.Instance,
                 Armor_Registration.Instance,
                 Book_Registration.Instance,
                 Container_Registration.Instance,
@@ -277,6 +283,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 AcousticSpace_Registration.Instance,
                 Activator_Registration.Instance,
+                Ammunition_Registration.Instance,
                 Armor_Registration.Instance,
                 ArtObject_Registration.Instance,
                 Book_Registration.Instance,
@@ -332,6 +339,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             dict[typeof(IScriptedGetter)] = dict[typeof(IScripted)] with { Setter = false };
             dict[typeof(IWeightValue)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                Ammunition_Registration.Instance,
                 Book_Registration.Instance,
                 Ingestible_Registration.Instance,
                 Key_Registration.Instance,

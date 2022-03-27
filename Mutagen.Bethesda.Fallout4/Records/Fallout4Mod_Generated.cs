@@ -93,6 +93,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Florae_Object = new Fallout4Group<Flora>(this);
             _Furniture_Object = new Fallout4Group<Furniture>(this);
             _Weapons_Object = new Fallout4Group<Weapon>(this);
+            _Ammunitions_Object = new Fallout4Group<Ammunition>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -357,6 +358,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IWeaponGetter> IFallout4ModGetter.Weapons => _Weapons_Object;
         #endregion
+        #region Ammunitions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<Ammunition> _Ammunitions_Object;
+        public Fallout4Group<Ammunition> Ammunitions => _Ammunitions_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IAmmunitionGetter> IFallout4ModGetter.Ammunitions => _Ammunitions_Object;
+        #endregion
 
         #region To String
 
@@ -432,6 +440,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Florae = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Furniture = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Weapons = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Ammunitions = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -471,7 +480,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Trees,
                 TItem Florae,
                 TItem Furniture,
-                TItem Weapons)
+                TItem Weapons,
+                TItem Ammunitions)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -510,6 +520,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Florae = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Florae, new Fallout4Group.Mask<TItem>(Florae));
                 this.Furniture = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Furniture, new Fallout4Group.Mask<TItem>(Furniture));
                 this.Weapons = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Weapons, new Fallout4Group.Mask<TItem>(Weapons));
+                this.Ammunitions = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Ammunitions, new Fallout4Group.Mask<TItem>(Ammunitions));
             }
 
             #pragma warning disable CS8618
@@ -558,6 +569,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Florae { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Furniture { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Weapons { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Ammunitions { get; set; }
             #endregion
 
             #region Equals
@@ -607,6 +619,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Florae, rhs.Florae)) return false;
                 if (!object.Equals(this.Furniture, rhs.Furniture)) return false;
                 if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
+                if (!object.Equals(this.Ammunitions, rhs.Ammunitions)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -649,6 +662,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Florae);
                 hash.Add(this.Furniture);
                 hash.Add(this.Weapons);
+                hash.Add(this.Ammunitions);
                 return hash.ToHashCode();
             }
 
@@ -842,6 +856,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Weapons.Overall)) return false;
                     if (this.Weapons.Specific != null && !this.Weapons.Specific.All(eval)) return false;
                 }
+                if (Ammunitions != null)
+                {
+                    if (!eval(this.Ammunitions.Overall)) return false;
+                    if (this.Ammunitions.Specific != null && !this.Ammunitions.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1034,6 +1053,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Weapons.Overall)) return true;
                     if (this.Weapons.Specific != null && this.Weapons.Specific.Any(eval)) return true;
                 }
+                if (Ammunitions != null)
+                {
+                    if (eval(this.Ammunitions.Overall)) return true;
+                    if (this.Ammunitions.Specific != null && this.Ammunitions.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1085,6 +1109,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Florae = this.Florae == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Florae.Overall), this.Florae.Specific?.Translate(eval));
                 obj.Furniture = this.Furniture == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Furniture.Overall), this.Furniture.Specific?.Translate(eval));
                 obj.Weapons = this.Weapons == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
+                obj.Ammunitions = this.Ammunitions == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Ammunitions.Overall), this.Ammunitions.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1255,6 +1280,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Weapons?.ToString(fg);
                     }
+                    if (printMask?.Ammunitions?.Overall ?? true)
+                    {
+                        Ammunitions?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1317,6 +1346,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Flora.ErrorMask>?>? Florae;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Furniture.ErrorMask>?>? Furniture;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Weapon.ErrorMask>?>? Weapons;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Ammunition.ErrorMask>?>? Ammunitions;
             #endregion
 
             #region IErrorMask
@@ -1399,6 +1429,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Furniture;
                     case Fallout4Mod_FieldIndex.Weapons:
                         return Weapons;
+                    case Fallout4Mod_FieldIndex.Ammunitions:
+                        return Ammunitions;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1519,6 +1551,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.Weapons:
                         this.Weapons = new MaskItem<Exception?, Fallout4Group.ErrorMask<Weapon.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Ammunitions:
+                        this.Ammunitions = new MaskItem<Exception?, Fallout4Group.ErrorMask<Ammunition.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1641,6 +1676,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.Weapons:
                         this.Weapons = (MaskItem<Exception?, Fallout4Group.ErrorMask<Weapon.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.Ammunitions:
+                        this.Ammunitions = (MaskItem<Exception?, Fallout4Group.ErrorMask<Ammunition.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1686,6 +1724,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Florae != null) return true;
                 if (Furniture != null) return true;
                 if (Weapons != null) return true;
+                if (Ammunitions != null) return true;
                 return false;
             }
             #endregion
@@ -1757,6 +1796,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Florae?.ToString(fg);
                 Furniture?.ToString(fg);
                 Weapons?.ToString(fg);
+                Ammunitions?.ToString(fg);
             }
             #endregion
 
@@ -1802,6 +1842,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Florae = this.Florae.Combine(rhs.Florae, (l, r) => l.Combine(r));
                 ret.Furniture = this.Furniture.Combine(rhs.Furniture, (l, r) => l.Combine(r));
                 ret.Weapons = this.Weapons.Combine(rhs.Weapons, (l, r) => l.Combine(r));
+                ret.Ammunitions = this.Ammunitions.Combine(rhs.Ammunitions, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1862,6 +1903,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<Flora.TranslationMask>? Florae;
             public Fallout4Group.TranslationMask<Furniture.TranslationMask>? Furniture;
             public Fallout4Group.TranslationMask<Weapon.TranslationMask>? Weapons;
+            public Fallout4Group.TranslationMask<Ammunition.TranslationMask>? Ammunitions;
             #endregion
 
             #region Ctors
@@ -1923,6 +1965,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Florae != null ? Florae.OnOverall : DefaultOn, Florae?.GetCrystal()));
                 ret.Add((Furniture != null ? Furniture.OnOverall : DefaultOn, Furniture?.GetCrystal()));
                 ret.Add((Weapons != null ? Weapons.OnOverall : DefaultOn, Weapons?.GetCrystal()));
+                ret.Add((Ammunitions != null ? Ammunitions.OnOverall : DefaultOn, Ammunitions?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2001,6 +2044,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Florae_Object = new Fallout4Group<Flora>(this);
             _Furniture_Object = new Fallout4Group<Furniture>(this);
             _Weapons_Object = new Fallout4Group<Weapon>(this);
+            _Ammunitions_Object = new Fallout4Group<Ammunition>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -2151,6 +2195,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Weapons.RecordCache.Set(rhsMod.Weapons.RecordCache.Items);
             }
+            if (mask?.Ammunitions ?? true)
+            {
+                this.Ammunitions.RecordCache.Set(rhsMod.Ammunitions.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -2197,6 +2245,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += Florae.RecordCache.Count > 0 ? 1 : default(uint);
             count += Furniture.RecordCache.Count > 0 ? 1 : default(uint);
             count += Weapons.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Ammunitions.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -2482,6 +2531,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<Flora> Florae { get; }
         new Fallout4Group<Furniture> Furniture { get; }
         new Fallout4Group<Weapon> Weapons { get; }
+        new Fallout4Group<Ammunition> Ammunitions { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -2537,6 +2587,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IFloraGetter> Florae { get; }
         IFallout4GroupGetter<IFurnitureGetter> Furniture { get; }
         IFallout4GroupGetter<IWeaponGetter> Weapons { get; }
+        IFallout4GroupGetter<IAmmunitionGetter> Ammunitions { get; }
 
     }
 
@@ -3136,6 +3187,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Florae = 34,
         Furniture = 35,
         Weapons = 36,
+        Ammunitions = 37,
     }
     #endregion
 
@@ -3153,9 +3205,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 37;
+        public const ushort AdditionalFieldCount = 38;
 
-        public const ushort FieldCount = 37;
+        public const ushort FieldCount = 38;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -3260,6 +3312,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Florae.Clear();
             item.Furniture.Clear();
             item.Weapons.Clear();
+            item.Ammunitions.Clear();
         }
         
         #region Mutagen
@@ -3297,6 +3350,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Florae.RemapLinks(mapping);
             obj.Furniture.RemapLinks(mapping);
             obj.Weapons.RemapLinks(mapping);
+            obj.Ammunitions.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -3367,6 +3421,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Florae.Remove(keys);
             obj.Furniture.Remove(keys);
             obj.Weapons.Remove(keys);
+            obj.Ammunitions.Remove(keys);
         }
         
         public void Remove(
@@ -3718,6 +3773,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         type: type,
                         keys: keys);
                     break;
+                case "Ammunition":
+                case "IAmmunitionGetter":
+                case "IAmmunition":
+                case "IAmmunitionInternal":
+                    obj.Ammunitions.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
@@ -3725,6 +3788,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IObjectId":
                 case "IObjectIdGetter":
                     Remove(obj, keys, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown);
@@ -3743,6 +3807,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IStaticObject":
                 case "IStaticObjectGetter":
                     Remove(obj, keys, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown);
@@ -3755,6 +3820,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     break;
                 case "IHarvestTarget":
                 case "IHarvestTargetGetter":
+                    Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown);
@@ -3923,6 +3989,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Florae = MaskItemExt.Factory(item.Florae.GetEqualsMask(rhs.Florae, include), include);
             ret.Furniture = MaskItemExt.Factory(item.Furniture.GetEqualsMask(rhs.Furniture, include), include);
             ret.Weapons = MaskItemExt.Factory(item.Weapons.GetEqualsMask(rhs.Weapons, include), include);
+            ret.Ammunitions = MaskItemExt.Factory(item.Ammunitions.GetEqualsMask(rhs.Ammunitions, include), include);
         }
         
         public string ToString(
@@ -4116,6 +4183,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (printMask?.Weapons?.Overall ?? true)
             {
                 item.Weapons?.ToString(fg, "Weapons");
+            }
+            if (printMask?.Ammunitions?.Overall ?? true)
+            {
+                item.Ammunitions?.ToString(fg, "Ammunitions");
             }
         }
         
@@ -4422,6 +4493,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 else if (!isWeaponsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Ammunitions) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Ammunitions, rhs.Ammunitions, out var lhsAmmunitions, out var rhsAmmunitions, out var isAmmunitionsEqual))
+                {
+                    if (!object.Equals(lhsAmmunitions, rhsAmmunitions)) return false;
+                }
+                else if (!isAmmunitionsEqual) return false;
+            }
             return true;
         }
         
@@ -4465,6 +4544,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.Florae);
             hash.Add(item.Furniture);
             hash.Add(item.Weapons);
+            hash.Add(item.Ammunitions);
             return hash.ToHashCode();
         }
         
@@ -4663,6 +4743,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IWeapon":
                 case "IWeaponInternal":
                     return obj.Weapons;
+                case "Ammunition":
+                case "IAmmunitionGetter":
+                case "IAmmunition":
+                case "IAmmunitionInternal":
+                    return obj.Ammunitions;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -4687,7 +4772,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[36];
+            Stream[] outputStreams = new Stream[37];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -4725,6 +4810,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             toDo.Add(() => WriteGroupParallel(item.Florae, 33, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Furniture, 34, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Weapons, 35, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Ammunitions, 36, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -4900,6 +4986,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
+            foreach (var item in obj.Ammunitions.ContainedFormLinks)
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -5046,6 +5136,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 yield return item;
             }
             foreach (var item in obj.Weapons.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Ammunitions.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -5408,6 +5502,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         yield return item;
                     }
                     yield break;
+                case "Ammunition":
+                case "IAmmunitionGetter":
+                case "IAmmunition":
+                case "IAmmunitionInternal":
+                    foreach (var item in obj.Ammunitions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout4, obj, type, out var linkInterfaces))
                     {
@@ -5753,6 +5856,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 modKey: obj.ModKey,
                 group: (m) => m.Weapons,
                 groupGetter: (m) => m.Weapons))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Ammunition, IAmmunitionGetter>(
+                srcGroup: obj.Ammunitions,
+                type: typeof(IAmmunitionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Ammunitions,
+                groupGetter: (m) => m.Ammunitions))
             {
                 yield return item;
             }
@@ -6287,6 +6399,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         modKey: obj.ModKey,
                         group: (m) => m.Weapons,
                         groupGetter: (m) => m.Weapons))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Ammunition":
+                case "IAmmunitionGetter":
+                case "IAmmunition":
+                case "IAmmunitionInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Ammunition, IAmmunitionGetter>(
+                        srcGroup: obj.Ammunitions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Ammunitions,
+                        groupGetter: (m) => m.Ammunitions))
                     {
                         yield return item;
                     }
@@ -7071,6 +7197,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Ammunitions) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Ammunitions);
+                try
+                {
+                    item.Ammunitions.DeepCopyIn(
+                        rhs: rhs.Ammunitions,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Ammunitions));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -7197,6 +7343,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Florae;
         public bool Furniture;
         public bool Weapons;
+        public bool Ammunitions;
         public GroupMask()
         {
         }
@@ -7238,6 +7385,7 @@ namespace Mutagen.Bethesda.Fallout4
             Florae = defaultValue;
             Furniture = defaultValue;
             Weapons = defaultValue;
+            Ammunitions = defaultValue;
         }
     }
 
@@ -7661,6 +7809,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)WeaponsItem).BinaryWriteTranslator).Write<IWeaponGetter>(
                         item: WeaponsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Ammunitions ?? true)
+            {
+                var AmmunitionsItem = item.Ammunitions;
+                if (AmmunitionsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)AmmunitionsItem).BinaryWriteTranslator).Write<IAmmunitionGetter>(
+                        item: AmmunitionsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -8235,6 +8394,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     }
                     return (int)Fallout4Mod_FieldIndex.Weapons;
                 }
+                case RecordTypeInts.AMMO:
+                {
+                    if (importMask?.Ammunitions ?? true)
+                    {
+                        item.Ammunitions.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Ammunitions;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -8576,6 +8749,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private IFallout4GroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocations != null ? Fallout4GroupBinaryOverlay<IWeaponGetter>.Fallout4GroupFactory(_data, _WeaponsLocations, _package) : default;
         public IFallout4GroupGetter<IWeaponGetter> Weapons => _Weapons ?? new Fallout4Group<Weapon>(this);
         #endregion
+        #region Ammunitions
+        private List<RangeInt64>? _AmmunitionsLocations;
+        private IFallout4GroupGetter<IAmmunitionGetter>? _Ammunitions => _AmmunitionsLocations != null ? Fallout4GroupBinaryOverlay<IAmmunitionGetter>.Fallout4GroupFactory(_data, _AmmunitionsLocations, _package) : default;
+        public IFallout4GroupGetter<IAmmunitionGetter> Ammunitions => _Ammunitions ?? new Fallout4Group<Ammunition>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -8879,6 +9057,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     _WeaponsLocations ??= new();
                     _WeaponsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Weapons;
+                }
+                case RecordTypeInts.AMMO:
+                {
+                    _AmmunitionsLocations ??= new();
+                    _AmmunitionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.Ammunitions;
                 }
                 default:
                     return default(int?);
