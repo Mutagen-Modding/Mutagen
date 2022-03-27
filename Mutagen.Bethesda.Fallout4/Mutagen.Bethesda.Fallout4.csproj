@@ -39,6 +39,7 @@
     <Compile Include="Enums\SoundLevel.cs" />
     <Compile Include="Enums\SpellDataFlag.cs" />
     <Compile Include="Enums\SpellType.cs" />
+    <Compile Include="Enums\Stagger.cs" />
     <Compile Include="Enums\TargetObjectType.cs" />
     <Compile Include="Interfaces\Aspect\IHarvestable.cs">
       <CodeLanguage>cs</CodeLanguage>
@@ -380,6 +381,9 @@
     </Compile>
     <Compile Include="Records\Major Records\VoiceType.cs">
       <DependentUpon>VoiceType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Weapon.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\ProtocolDefinition_Fallout4.cs" />
     <Compile Include="Records\Fallout4MajorRecord.cs">
@@ -1259,6 +1263,18 @@
     </Compile>
     <Compile Include="Records\Major Records\FurnitureMarkerEntryPoints_Generated.cs">
       <DependentUpon>Furniture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AimModel_Generated.cs">
+      <DependentUpon>AimModel.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Zoom_Generated.cs">
+      <DependentUpon>Zoom.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeaponDamageType_Generated.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeaponExtraData_Generated.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

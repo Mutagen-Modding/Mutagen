@@ -5,6 +5,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ## Interfaces to Concrete Classes
 ### IHasIcons
 - ArmorModel
+- Book
+- Ingestible
+- Ingredient
+- Key
+- Light
+- MiscItem
 - RegionData
 - RegionGrasses
 - RegionLand
@@ -12,6 +18,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - RegionObjects
 - RegionSounds
 - RegionWeather
+- Weapon
 ### IKeywordCommon
 - Keyword
 ### IKeyworded
@@ -35,6 +42,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - RuleName
 - Spell
 - TalkingActivator
+- Weapon
 ### IModeled
 - Activator
 - ArmorModel
@@ -62,6 +70,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - StaticCollection
 - TalkingActivator
 - Tree
+- Weapon
 ### INamed
 - ActionRecord
 - Activator
@@ -123,6 +132,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - TintGroup
 - TintTemplateOption
 - Tree
+- Weapon
 ### IObjectBounded
 - AcousticSpace
 - Activator
@@ -154,6 +164,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - TalkingActivator
 - TextureSet
 - Tree
+- Weapon
 ### IScripted
 - Activator
 - Armor
@@ -172,11 +183,13 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - StaticCollection
 - TalkingActivator
 - Tree
+- Weapon
 ### IWeightValue
 - Book
 - Ingestible
 - Key
 - Light
+- Weapon
 ## Concrete Classes to Interfaces
 ### AcousticSpace
 - IObjectBounded
@@ -206,6 +219,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Bone
 - INamed
 ### Book
+- IHasIcons
 - IKeyworded
 - IModeled
 - INamed
@@ -264,18 +278,21 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IModeled
 - IObjectBounded
 ### Ingestible
+- IHasIcons
 - IKeyworded
 - IModeled
 - INamed
 - IObjectBounded
 - IWeightValue
 ### Ingredient
+- IHasIcons
 - IKeyworded
 - IModeled
 - INamed
 - IObjectBounded
 - IScripted
 ### Key
+- IHasIcons
 - IKeyworded
 - IModeled
 - INamed
@@ -291,6 +308,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IModeled
 - IObjectBounded
 ### Light
+- IHasIcons
 - IKeyworded
 - IModeled
 - INamed
@@ -306,6 +324,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Message
 - INamed
 ### MiscItem
+- IHasIcons
 - IKeyworded
 - IModeled
 - INamed
@@ -422,3 +441,11 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 - IScripted
+### Weapon
+- IHasIcons
+- IKeyworded
+- IModeled
+- INamed
+- IObjectBounded
+- IScripted
+- IWeightValue

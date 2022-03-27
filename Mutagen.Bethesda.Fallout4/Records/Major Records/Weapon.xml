@@ -1,9 +1,130 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Weapon" recordType="WEAP" baseClass="Fallout4MajorRecord" objType="Record" GUID="ea1189a0-716d-4099-ad06-721ccd313caa" ID="286">
+  <Object name="Weapon" recordType="WEAP" baseClass="Fallout4MajorRecord" majorFlag="true" objType="Record" GUID="ea1189a0-716d-4099-ad06-721ccd313caa" ID="286">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+      <FormLink name="AnimationSound" refName="AnimationSoundTagSet" recordType="STCP" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Icons" refName="Icons" />
+      <FormLink name="ObjectEffect" recordType="EITM">
+        <Interface>IEffectRecord</Interface>
+      </FormLink>
+      <UInt16 name="EnchantmentAmount" recordType="EAMT" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="EquipmentType" recordType="ETYP" refName="EquipType" />
+      <FormLink name="BlockBashImpactDataSet" recordType="BIDS" refName="ImpactDataSet" />
+      <FormLink name="AlternateBlockMaterial" recordType="BAMT" refName="MaterialType" />
+      <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
+      <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <String name="Description" recordType="DESC" translated="Normal" />
+      <FormLink name="InstanceNaming" recordType="INRD" refName="InstanceNamingRule" />
+      <List name="AttachParentSlots" recordType="APPR">
+        <FormLink refName="Keyword" />
+      </List>
+      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false" endMarker="STOP">
+        <Ref>
+          <Direct refName="ObjectTemplate">
+            <GenericSpecification Definition="Weapon.Property" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+      <FormLink name="EmbeddedWeaponMod" refName="ObjectModification" recordType="NNAM" />
+      <RefDirect name="FirstPersonModel" refName="Model">
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="MOD4" />
+          <Mapping From="MODT" To="MO4T" />
+          <Mapping From="MODS" To="MO4S" />
+        </RecordTypeOverrides>
+      </RefDirect>
+      <Float name="FirstPersonColorRemappingIndex" recordType="MO4C" />
+      <Int32 name="MO4F" recordType="MO4F" />
+      <Data recordType="DNAM">
+        <Fields>
+          <FormLink name="Ammo" refName="Ammunition" />
+          <Float name="Speed" />
+          <Float name="ReloadSpeed" />
+          <Float name="Reach" />
+          <Float name="MinRange" />
+          <Float name="MaxRange" />
+          <Float name="AttackDelay" />
+          <Float name="Unknown" />
+          <Float name="DamageOutOfRangeMult" />
+          <Enum name="OnHit" enumName="Weapon.HitBehavior" byteLength="4" />
+          <FormLink name="Skill" refName="ActorValueInformation" />
+          <FormLink name="Resist" refName="ActorValueInformation" />
+          <Enum name="Flags" enumName="Weapon.Flag" byteLength="4" />
+          <UInt16 name="Capacity" />
+          <Enum name="AnimationType" enumName="Weapon.AnimationTypes" byteLength="1" />
+          <Float name="SecondaryDamage" />
+          <Float name="Weight" />
+          <UInt32 name="Value" />
+          <UInt16 name="BaseDamage" />
+          <Enum name="SoundLevel" enumName="SoundLevel" byteLength="4" />
+          <FormLink name="AttackSound" refName="SoundDescriptor" />
+          <FormLink name="Attack2dSound" refName="SoundDescriptor" />
+          <FormLink name="AttackLoopSound" refName="SoundDescriptor" />
+          <FormLink name="AttackFailSound" refName="SoundDescriptor" />
+          <FormLink name="IdleSound" refName="SoundDescriptor" />
+          <FormLink name="EquipSound" refName="SoundDescriptor" />
+          <FormLink name="UnequipSound" refName="SoundDescriptor" />
+          <FormLink name="FastEquipSound" refName="SoundDescriptor" />
+          <UInt8 name="AccuracyBonus" />
+          <Float name="AnimationAttackSeconds" />
+          <UInt16 name="Unknown2" />
+          <Float name="ActionPointCost" />
+          <Float name="FullPowerSeconds" />
+          <Float name="MinPowerPerShot" />
+          <Enum name="Stagger" enumName="Stagger" byteLength="4" />
+          <Int32 name="Unknown3" />
+        </Fields>
+      </Data>
+      <RefDirect name="ExtraData" refName="WeaponExtraData" />
+      <Data recordType="CRDT">
+        <Fields>
+          <Float name="CritDamageMult" />
+          <Float name="CritChargeBonus" />
+          <FormLink name="CritEffect" refName="Spell" />
+        </Fields>
+      </Data>
+      <FormLink name="ImpactDataSet" refName="ImpactDataSet" recordType="INAM" />
+      <FormLink name="NpcAddAmmoList" refName="LeveledItem" recordType="LNAM" />
+      <FormLink name="AimModel" refName="AimModel" recordType="WAMD" />
+      <FormLink name="Zoom" refName="Zoom" recordType="WZMD" />
+      <FormLink name="Template" refName="Weapon" recordType="CNAM" />
+      <RefDirect name="DamageType" refName="WeaponDamageType" />
+      <String name="Filter" recordType="FLTR" />
+      <Enum name="MeleeSpeed" recordType="MASE" enumName="Weapon.MeleeSpeeds" />
+    </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IStaticObject</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IFurnitureAssociation</LinkInterface>
+  </Object>
+  <Object name="WeaponDamageType" recordType="DAMA" objType="Subrecord" GUID="a188e5af-64a3-40af-8022-3898f4d59cdf" ID="337">
+    <Fields>
+      <FormLink name="DamageType" refName="DamageType" />
+      <UInt32 name="Amount" />
+    </Fields>
+  </Object>
+  <Object name="WeaponExtraData" recordType="FNAM" objType="Subrecord" GUID="b3385307-2448-44ed-a1c7-048de4a5e39d" ID="338">
+    <Fields>
+      <Float name="AnimationFireSeconds" />
+      <Float name="RumbleLeftMotorStrength" />
+      <Float name="RumbleRightMotorStrength" />
+      <Float name="RumbleDuration" />
+      <Float name="AnimationReloadSeconds" />
+      <Float name="BoltAnimSeconds" />
+      <Float name="SightedTransitionSeconds" />
+      <UInt8 name="NumProjectiles" />
+      <FormLink name="ProjectileOverride" refName="Projectile" />
+      <Enum name="Pattern" enumName="Weapon.PatternType" byteLength="4" />
+      <UInt32 name="RumblePeriodMs" />
+    </Fields>
   </Object>
 </Loqui>

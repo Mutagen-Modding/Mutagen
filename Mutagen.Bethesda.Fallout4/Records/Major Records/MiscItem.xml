@@ -7,8 +7,7 @@
 	  <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
-      <String name="InventoryImage" recordType="ICON" translated="DL" />
-      <String name="MessageIcon" recordType="MICO" translated="DL" />
+      <RefDirect name="Icons" refName="Icons" />
       <RefDirect name="Destructible" refName="Destructible" />
       <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />

@@ -204,15 +204,23 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #endregion
-        #region InventoryImage
-        public TranslatedString? InventoryImage { get; set; }
+        #region Icons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? ILightGetter.InventoryImage => this.InventoryImage;
+        private Icons? _Icons;
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
+        public Icons? Icons
+        {
+            get => _Icons;
+            set => _Icons = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? ILightGetter.Icons => this.Icons;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
         #endregion
-        #region MessageIcon
-        public TranslatedString? MessageIcon { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? ILightGetter.MessageIcon => this.MessageIcon;
         #endregion
         #region Time
         public Int32 Time { get; set; } = default;
@@ -376,8 +384,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.Name = initialValue;
-                this.InventoryImage = initialValue;
-                this.MessageIcon = initialValue;
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
                 this.Time = initialValue;
                 this.Radius = initialValue;
                 this.Color = initialValue;
@@ -417,8 +424,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Destructible,
                 TItem Properties,
                 TItem Name,
-                TItem InventoryImage,
-                TItem MessageIcon,
+                TItem Icons,
                 TItem Time,
                 TItem Radius,
                 TItem Color,
@@ -457,8 +463,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.Name = Name;
-                this.InventoryImage = InventoryImage;
-                this.MessageIcon = MessageIcon;
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
                 this.Time = Time;
                 this.Radius = Radius;
                 this.Color = Color;
@@ -500,8 +505,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties;
             public TItem Name;
-            public TItem InventoryImage;
-            public TItem MessageIcon;
+            public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
             public TItem Time;
             public TItem Radius;
             public TItem Color;
@@ -545,8 +549,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
                 if (!object.Equals(this.Properties, rhs.Properties)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.InventoryImage, rhs.InventoryImage)) return false;
-                if (!object.Equals(this.MessageIcon, rhs.MessageIcon)) return false;
+                if (!object.Equals(this.Icons, rhs.Icons)) return false;
                 if (!object.Equals(this.Time, rhs.Time)) return false;
                 if (!object.Equals(this.Radius, rhs.Radius)) return false;
                 if (!object.Equals(this.Color, rhs.Color)) return false;
@@ -582,8 +585,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Destructible);
                 hash.Add(this.Properties);
                 hash.Add(this.Name);
-                hash.Add(this.InventoryImage);
-                hash.Add(this.MessageIcon);
+                hash.Add(this.Icons);
                 hash.Add(this.Time);
                 hash.Add(this.Radius);
                 hash.Add(this.Color);
@@ -661,8 +663,11 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 if (!eval(this.Name)) return false;
-                if (!eval(this.InventoryImage)) return false;
-                if (!eval(this.MessageIcon)) return false;
+                if (Icons != null)
+                {
+                    if (!eval(this.Icons.Overall)) return false;
+                    if (this.Icons.Specific != null && !this.Icons.Specific.All(eval)) return false;
+                }
                 if (!eval(this.Time)) return false;
                 if (!eval(this.Radius)) return false;
                 if (!eval(this.Color)) return false;
@@ -738,8 +743,11 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 if (eval(this.Name)) return true;
-                if (eval(this.InventoryImage)) return true;
-                if (eval(this.MessageIcon)) return true;
+                if (Icons != null)
+                {
+                    if (eval(this.Icons.Overall)) return true;
+                    if (this.Icons.Specific != null && this.Icons.Specific.Any(eval)) return true;
+                }
                 if (eval(this.Time)) return true;
                 if (eval(this.Radius)) return true;
                 if (eval(this.Color)) return true;
@@ -812,8 +820,7 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 obj.Name = eval(this.Name);
-                obj.InventoryImage = eval(this.InventoryImage);
-                obj.MessageIcon = eval(this.MessageIcon);
+                obj.Icons = this.Icons == null ? null : new MaskItem<R, Icons.Mask<R>?>(eval(this.Icons.Overall), this.Icons.Specific?.Translate(eval));
                 obj.Time = eval(this.Time);
                 obj.Radius = eval(this.Radius);
                 obj.Color = eval(this.Color);
@@ -928,13 +935,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         fg.AppendItem(Name, "Name");
                     }
-                    if (printMask?.InventoryImage ?? true)
+                    if (printMask?.Icons?.Overall ?? true)
                     {
-                        fg.AppendItem(InventoryImage, "InventoryImage");
-                    }
-                    if (printMask?.MessageIcon ?? true)
-                    {
-                        fg.AppendItem(MessageIcon, "MessageIcon");
+                        Icons?.ToString(fg);
                     }
                     if (printMask?.Time ?? true)
                     {
@@ -1044,8 +1047,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties;
             public Exception? Name;
-            public Exception? InventoryImage;
-            public Exception? MessageIcon;
+            public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
             public Exception? Time;
             public Exception? Radius;
             public Exception? Color;
@@ -1092,10 +1094,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Properties;
                     case Light_FieldIndex.Name:
                         return Name;
-                    case Light_FieldIndex.InventoryImage:
-                        return InventoryImage;
-                    case Light_FieldIndex.MessageIcon:
-                        return MessageIcon;
+                    case Light_FieldIndex.Icons:
+                        return Icons;
                     case Light_FieldIndex.Time:
                         return Time;
                     case Light_FieldIndex.Radius:
@@ -1174,11 +1174,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Light_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case Light_FieldIndex.InventoryImage:
-                        this.InventoryImage = ex;
-                        break;
-                    case Light_FieldIndex.MessageIcon:
-                        this.MessageIcon = ex;
+                    case Light_FieldIndex.Icons:
+                        this.Icons = new MaskItem<Exception?, Icons.ErrorMask?>(ex, null);
                         break;
                     case Light_FieldIndex.Time:
                         this.Time = ex;
@@ -1281,11 +1278,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Light_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case Light_FieldIndex.InventoryImage:
-                        this.InventoryImage = (Exception?)obj;
-                        break;
-                    case Light_FieldIndex.MessageIcon:
-                        this.MessageIcon = (Exception?)obj;
+                    case Light_FieldIndex.Icons:
+                        this.Icons = (MaskItem<Exception?, Icons.ErrorMask?>?)obj;
                         break;
                     case Light_FieldIndex.Time:
                         this.Time = (Exception?)obj;
@@ -1370,8 +1364,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Destructible != null) return true;
                 if (Properties != null) return true;
                 if (Name != null) return true;
-                if (InventoryImage != null) return true;
-                if (MessageIcon != null) return true;
+                if (Icons != null) return true;
                 if (Time != null) return true;
                 if (Radius != null) return true;
                 if (Color != null) return true;
@@ -1479,8 +1472,7 @@ namespace Mutagen.Bethesda.Fallout4
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(Name, "Name");
-                fg.AppendItem(InventoryImage, "InventoryImage");
-                fg.AppendItem(MessageIcon, "MessageIcon");
+                Icons?.ToString(fg);
                 fg.AppendItem(Time, "Time");
                 fg.AppendItem(Radius, "Radius");
                 fg.AppendItem(Color, "Color");
@@ -1519,8 +1511,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.InventoryImage = this.InventoryImage.Combine(rhs.InventoryImage);
-                ret.MessageIcon = this.MessageIcon.Combine(rhs.MessageIcon);
+                ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
                 ret.Time = this.Time.Combine(rhs.Time);
                 ret.Radius = this.Radius.Combine(rhs.Radius);
                 ret.Color = this.Color.Combine(rhs.Color);
@@ -1573,8 +1564,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Destructible.TranslationMask? Destructible;
             public ObjectProperty.TranslationMask? Properties;
             public bool Name;
-            public bool InventoryImage;
-            public bool MessageIcon;
+            public Icons.TranslationMask? Icons;
             public bool Time;
             public bool Radius;
             public bool Color;
@@ -1608,8 +1598,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PreviewTransform = defaultOn;
                 this.Keywords = defaultOn;
                 this.Name = defaultOn;
-                this.InventoryImage = defaultOn;
-                this.MessageIcon = defaultOn;
                 this.Time = defaultOn;
                 this.Radius = defaultOn;
                 this.Color = defaultOn;
@@ -1647,8 +1635,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
                 ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
                 ret.Add((Name, null));
-                ret.Add((InventoryImage, null));
-                ret.Add((MessageIcon, null));
+                ret.Add((Icons != null ? Icons.OnOverall : DefaultOn, Icons?.GetCrystal()));
                 ret.Add((Time, null));
                 ret.Add((Radius, null));
                 ret.Add((Color, null));
@@ -1822,6 +1809,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IHarvestTarget,
+        IHasIcons,
         IItem,
         IKeyworded<IKeywordGetter>,
         ILightGetter,
@@ -1859,8 +1847,10 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new TranslatedString? InventoryImage { get; set; }
-        new TranslatedString? MessageIcon { get; set; }
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
+        new Icons? Icons { get; set; }
         new Int32 Time { get; set; }
         new UInt32 Radius { get; set; }
         new Color Color { get; set; }
@@ -1904,6 +1894,7 @@ namespace Mutagen.Bethesda.Fallout4
         IEmittanceGetter,
         IFormLinkContainerGetter,
         IHarvestTargetGetter,
+        IHasIconsGetter,
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ILightGetter>,
@@ -1952,8 +1943,12 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
-        ITranslatedStringGetter? InventoryImage { get; }
-        ITranslatedStringGetter? MessageIcon { get; }
+        #region Icons
+        /// <summary>
+        /// Aspects: IHasIconsGetter
+        /// </summary>
+        IIconsGetter? Icons { get; }
+        #endregion
         Int32 Time { get; }
         UInt32 Radius { get; }
         Color Color { get; }
@@ -2152,30 +2147,29 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Destructible = 11,
         Properties = 12,
         Name = 13,
-        InventoryImage = 14,
-        MessageIcon = 15,
-        Time = 16,
-        Radius = 17,
-        Color = 18,
-        Flags = 19,
-        FalloffExponent = 20,
-        FOV = 21,
-        NearClip = 22,
-        FlickerPeriod = 23,
-        FlickerIntensityAmplitude = 24,
-        FlickerMovementAmplitude = 25,
-        Constant = 26,
-        Scalar = 27,
-        Exponent = 28,
-        GodRaysNearClip = 29,
-        Value = 30,
-        Weight = 31,
-        FadeValue = 32,
-        Gobo = 33,
-        Lens = 34,
-        GodRays = 35,
-        Sound = 36,
-        DATADataTypeState = 37,
+        Icons = 14,
+        Time = 15,
+        Radius = 16,
+        Color = 17,
+        Flags = 18,
+        FalloffExponent = 19,
+        FOV = 20,
+        NearClip = 21,
+        FlickerPeriod = 22,
+        FlickerIntensityAmplitude = 23,
+        FlickerMovementAmplitude = 24,
+        Constant = 25,
+        Scalar = 26,
+        Exponent = 27,
+        GodRaysNearClip = 28,
+        Value = 29,
+        Weight = 30,
+        FadeValue = 31,
+        Gobo = 32,
+        Lens = 33,
+        GodRays = 34,
+        Sound = 35,
+        DATADataTypeState = 36,
     }
     #endregion
 
@@ -2193,9 +2187,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "e0a72b05-9730-493d-96df-7fc91bae436b";
 
-        public const ushort AdditionalFieldCount = 32;
+        public const ushort AdditionalFieldCount = 31;
 
-        public const ushort FieldCount = 38;
+        public const ushort FieldCount = 37;
 
         public static readonly Type MaskType = typeof(Light.Mask<>);
 
@@ -2272,8 +2266,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Destructible = null;
             item.Properties = null;
             item.Name = default;
-            item.InventoryImage = default;
-            item.MessageIcon = default;
+            item.Icons = null;
             item.Time = default;
             item.Radius = default;
             item.Color = default;
@@ -2416,8 +2409,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Name = object.Equals(item.Name, rhs.Name);
-            ret.InventoryImage = object.Equals(item.InventoryImage, rhs.InventoryImage);
-            ret.MessageIcon = object.Equals(item.MessageIcon, rhs.MessageIcon);
+            ret.Icons = EqualsMaskHelper.EqualsHelper(
+                item.Icons,
+                rhs.Icons,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Time = item.Time == rhs.Time;
             ret.Radius = item.Radius == rhs.Radius;
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
@@ -2557,15 +2553,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 fg.AppendItem(NameItem, "Name");
             }
-            if ((printMask?.InventoryImage ?? true)
-                && item.InventoryImage is {} InventoryImageItem)
+            if ((printMask?.Icons?.Overall ?? true)
+                && item.Icons is {} IconsItem)
             {
-                fg.AppendItem(InventoryImageItem, "InventoryImage");
-            }
-            if ((printMask?.MessageIcon ?? true)
-                && item.MessageIcon is {} MessageIconItem)
-            {
-                fg.AppendItem(MessageIconItem, "MessageIcon");
+                IconsItem?.ToString(fg, "Icons");
             }
             if (printMask?.Time ?? true)
             {
@@ -2752,13 +2743,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.InventoryImage) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Icons) ?? true))
             {
-                if (!object.Equals(lhs.InventoryImage, rhs.InventoryImage)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.MessageIcon) ?? true))
-            {
-                if (!object.Equals(lhs.MessageIcon, rhs.MessageIcon)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
+                {
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, crystal?.GetSubCrystal((int)Light_FieldIndex.Icons))) return false;
+                }
+                else if (!isIconsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Time) ?? true))
             {
@@ -2896,13 +2887,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 hash.Add(Nameitem);
             }
-            if (item.InventoryImage is {} InventoryImageitem)
+            if (item.Icons is {} Iconsitem)
             {
-                hash.Add(InventoryImageitem);
-            }
-            if (item.MessageIcon is {} MessageIconitem)
-            {
-                hash.Add(MessageIconitem);
+                hash.Add(Iconsitem);
             }
             hash.Add(item.Time);
             hash.Add(item.Radius);
@@ -3250,13 +3237,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 item.Name = rhs.Name?.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.InventoryImage) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Icons) ?? true))
             {
-                item.InventoryImage = rhs.InventoryImage?.DeepCopy();
-            }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.MessageIcon) ?? true))
-            {
-                item.MessageIcon = rhs.MessageIcon?.DeepCopy();
+                errorMask?.PushIndex((int)Light_FieldIndex.Icons);
+                try
+                {
+                    if(rhs.Icons is {} rhsIcons)
+                    {
+                        item.Icons = rhsIcons.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Light_FieldIndex.Icons));
+                    }
+                    else
+                    {
+                        item.Icons = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Time) ?? true))
             {
@@ -3572,18 +3577,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.InventoryImage,
-                header: translationParams.ConvertToCustom(RecordTypes.ICON),
-                binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.DL);
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.MessageIcon,
-                header: translationParams.ConvertToCustom(RecordTypes.MICO),
-                binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.DL);
+            if (item.Icons is {} IconsItem)
+            {
+                ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
+                    item: IconsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
             {
                 writer.Write(item.Time);
@@ -3815,22 +3815,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     return (int)Light_FieldIndex.Name;
                 }
                 case RecordTypeInts.ICON:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InventoryImage = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)Light_FieldIndex.InventoryImage;
-                }
                 case RecordTypeInts.MICO:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MessageIcon = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)Light_FieldIndex.MessageIcon;
+                    item.Icons = Mutagen.Bethesda.Fallout4.Icons.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams);
+                    return (int)Light_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -3989,14 +3979,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        #region InventoryImage
-        private int? _InventoryImageLocation;
-        public ITranslatedStringGetter? InventoryImage => _InventoryImageLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _InventoryImageLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
-        #endregion
-        #region MessageIcon
-        private int? _MessageIconLocation;
-        public ITranslatedStringGetter? MessageIcon => _MessageIconLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _MessageIconLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
-        #endregion
+        public IIconsGetter? Icons { get; private set; }
         private int? _DATALocation;
         public Light.DATADataType DATADataTypeState { get; private set; }
         #region Time
@@ -4231,14 +4214,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     return (int)Light_FieldIndex.Name;
                 }
                 case RecordTypeInts.ICON:
-                {
-                    _InventoryImageLocation = (stream.Position - offset);
-                    return (int)Light_FieldIndex.InventoryImage;
-                }
                 case RecordTypeInts.MICO:
                 {
-                    _MessageIconLocation = (stream.Position - offset);
-                    return (int)Light_FieldIndex.MessageIcon;
+                    this.Icons = IconsBinaryOverlay.IconsFactory(
+                        stream: stream,
+                        package: _package,
+                        parseParams: parseParams);
+                    return (int)Light_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DATA:
                 {

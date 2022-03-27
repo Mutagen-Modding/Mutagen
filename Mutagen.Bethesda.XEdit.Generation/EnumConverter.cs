@@ -3,43 +3,35 @@ using Noggog;
 
 namespace Mutagen.Bethesda.XEdit.Generation;
 
-/// <summary>
-/// Takes a hand-extracted xEdit snippet of the condition function enum and translates to a C# enum output
-/// </summary>
-public static class FunctionEnumGenerator
+public static class EnumConverter
 {
-    private const string IndexStr = "Index:";
-    private const string NameStr = "Name: '";
-    
-    /// <summary>
-    /// Expects files with lines like
-    /// (Index:   0; Name: 'GetWantBlocking'),    //   0
-    /// </summary>
     public static void Convert(FilePath source, FilePath output)
     {
         FileGeneration fg = new();
-        fg.AppendLine("public enum Function");
+        fg.AppendLine("public enum EnumName");
         using (new BraceWrapper(fg))
         {
             foreach (var line in File.ReadLines(source))
             {
                 var span = line.AsSpan();
-                span = SkipPast(span, IndexStr);
-            
-                var semiColonIndex = span.IndexOf(";");
-                if (semiColonIndex == -1)
+                span = SkipPast(span, "{");
+
+                var numberEndIndex = span.IndexOf("}");
+                if (numberEndIndex == -1)
                 {
                     throw new ArgumentException();
                 }
 
-                if (!int.TryParse(span.Slice(0, semiColonIndex), out var i))
+                if (!int.TryParse(span.Slice(0, numberEndIndex).TrimStart().TrimEnd(), out var i))
                 {
                     throw new ArgumentException();
                 }
 
-                span = SkipPast(span, NameStr);
+                span = SkipPast(span, "} '");
 
-                var name = span.Slice(0, span.IndexOf('\''));
+                var name = span.Slice(0, span.IndexOf('\'')).ToString();
+
+                if (name.Contains("Unknown")) continue;
 
                 fg.AppendLine($"{name} = {i},");
             }
@@ -62,7 +54,7 @@ public static class FunctionEnumGenerator
         {
             throw new ArgumentException();
         }
-        
+
         return str.Slice(index + target.Length);
     }
 }

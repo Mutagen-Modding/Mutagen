@@ -168,15 +168,23 @@ namespace Mutagen.Bethesda.Fallout4
         IModelGetter? IModeledGetter.Model => this.Model;
         #endregion
         #endregion
-        #region InventoryImage
-        public TranslatedString? InventoryImage { get; set; }
+        #region Icons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IIngredientGetter.InventoryImage => this.InventoryImage;
+        private Icons? _Icons;
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
+        public Icons? Icons
+        {
+            get => _Icons;
+            set => _Icons = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IIngredientGetter.Icons => this.Icons;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
         #endregion
-        #region MessageIcon
-        public TranslatedString? MessageIcon { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IIngredientGetter.MessageIcon => this.MessageIcon;
         #endregion
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -280,8 +288,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Name = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.InventoryImage = initialValue;
-                this.MessageIcon = initialValue;
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
                 this.EquipType = initialValue;
                 this.PickUpSound = initialValue;
@@ -307,8 +314,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Name,
                 TItem Keywords,
                 TItem Model,
-                TItem InventoryImage,
-                TItem MessageIcon,
+                TItem Icons,
                 TItem Destructible,
                 TItem EquipType,
                 TItem PickUpSound,
@@ -333,8 +339,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Name = Name;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.InventoryImage = InventoryImage;
-                this.MessageIcon = MessageIcon;
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
                 this.EquipType = EquipType;
                 this.PickUpSound = PickUpSound;
@@ -362,8 +367,7 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Name;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public TItem InventoryImage;
-            public TItem MessageIcon;
+            public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
             public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
             public TItem EquipType;
             public TItem PickUpSound;
@@ -393,8 +397,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.InventoryImage, rhs.InventoryImage)) return false;
-                if (!object.Equals(this.MessageIcon, rhs.MessageIcon)) return false;
+                if (!object.Equals(this.Icons, rhs.Icons)) return false;
                 if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
                 if (!object.Equals(this.EquipType, rhs.EquipType)) return false;
                 if (!object.Equals(this.PickUpSound, rhs.PickUpSound)) return false;
@@ -416,8 +419,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Name);
                 hash.Add(this.Keywords);
                 hash.Add(this.Model);
-                hash.Add(this.InventoryImage);
-                hash.Add(this.MessageIcon);
+                hash.Add(this.Icons);
                 hash.Add(this.Destructible);
                 hash.Add(this.EquipType);
                 hash.Add(this.PickUpSound);
@@ -466,8 +468,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (!eval(this.InventoryImage)) return false;
-                if (!eval(this.MessageIcon)) return false;
+                if (Icons != null)
+                {
+                    if (!eval(this.Icons.Overall)) return false;
+                    if (this.Icons.Specific != null && !this.Icons.Specific.All(eval)) return false;
+                }
                 if (Destructible != null)
                 {
                     if (!eval(this.Destructible.Overall)) return false;
@@ -529,8 +534,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (eval(this.InventoryImage)) return true;
-                if (eval(this.MessageIcon)) return true;
+                if (Icons != null)
+                {
+                    if (eval(this.Icons.Overall)) return true;
+                    if (this.Icons.Specific != null && this.Icons.Specific.Any(eval)) return true;
+                }
                 if (Destructible != null)
                 {
                     if (eval(this.Destructible.Overall)) return true;
@@ -590,8 +598,7 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.InventoryImage = eval(this.InventoryImage);
-                obj.MessageIcon = eval(this.MessageIcon);
+                obj.Icons = this.Icons == null ? null : new MaskItem<R, Icons.Mask<R>?>(eval(this.Icons.Overall), this.Icons.Specific?.Translate(eval));
                 obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
                 obj.EquipType = eval(this.EquipType);
                 obj.PickUpSound = eval(this.PickUpSound);
@@ -678,13 +685,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Model?.ToString(fg);
                     }
-                    if (printMask?.InventoryImage ?? true)
+                    if (printMask?.Icons?.Overall ?? true)
                     {
-                        fg.AppendItem(InventoryImage, "InventoryImage");
-                    }
-                    if (printMask?.MessageIcon ?? true)
-                    {
-                        fg.AppendItem(MessageIcon, "MessageIcon");
+                        Icons?.ToString(fg);
                     }
                     if (printMask?.Destructible?.Overall ?? true)
                     {
@@ -766,8 +769,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Name;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public Exception? InventoryImage;
-            public Exception? MessageIcon;
+            public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
             public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
             public Exception? EquipType;
             public Exception? PickUpSound;
@@ -797,10 +799,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Keywords;
                     case Ingredient_FieldIndex.Model:
                         return Model;
-                    case Ingredient_FieldIndex.InventoryImage:
-                        return InventoryImage;
-                    case Ingredient_FieldIndex.MessageIcon:
-                        return MessageIcon;
+                    case Ingredient_FieldIndex.Icons:
+                        return Icons;
                     case Ingredient_FieldIndex.Destructible:
                         return Destructible;
                     case Ingredient_FieldIndex.EquipType:
@@ -848,11 +848,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Ingredient_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
-                    case Ingredient_FieldIndex.InventoryImage:
-                        this.InventoryImage = ex;
-                        break;
-                    case Ingredient_FieldIndex.MessageIcon:
-                        this.MessageIcon = ex;
+                    case Ingredient_FieldIndex.Icons:
+                        this.Icons = new MaskItem<Exception?, Icons.ErrorMask?>(ex, null);
                         break;
                     case Ingredient_FieldIndex.Destructible:
                         this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
@@ -913,11 +910,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Ingredient_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case Ingredient_FieldIndex.InventoryImage:
-                        this.InventoryImage = (Exception?)obj;
-                        break;
-                    case Ingredient_FieldIndex.MessageIcon:
-                        this.MessageIcon = (Exception?)obj;
+                    case Ingredient_FieldIndex.Icons:
+                        this.Icons = (MaskItem<Exception?, Icons.ErrorMask?>?)obj;
                         break;
                     case Ingredient_FieldIndex.Destructible:
                         this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
@@ -966,8 +960,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Name != null) return true;
                 if (Keywords != null) return true;
                 if (Model != null) return true;
-                if (InventoryImage != null) return true;
-                if (MessageIcon != null) return true;
+                if (Icons != null) return true;
                 if (Destructible != null) return true;
                 if (EquipType != null) return true;
                 if (PickUpSound != null) return true;
@@ -1040,8 +1033,7 @@ namespace Mutagen.Bethesda.Fallout4
                     fg.AppendLine("]");
                 }
                 Model?.ToString(fg);
-                fg.AppendItem(InventoryImage, "InventoryImage");
-                fg.AppendItem(MessageIcon, "MessageIcon");
+                Icons?.ToString(fg);
                 Destructible?.ToString(fg);
                 fg.AppendItem(EquipType, "EquipType");
                 fg.AppendItem(PickUpSound, "PickUpSound");
@@ -1087,8 +1079,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.InventoryImage = this.InventoryImage.Combine(rhs.InventoryImage);
-                ret.MessageIcon = this.MessageIcon.Combine(rhs.MessageIcon);
+                ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.EquipType = this.EquipType.Combine(rhs.EquipType);
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
@@ -1127,8 +1118,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Name;
             public bool Keywords;
             public Model.TranslationMask? Model;
-            public bool InventoryImage;
-            public bool MessageIcon;
+            public Icons.TranslationMask? Icons;
             public Destructible.TranslationMask? Destructible;
             public bool EquipType;
             public bool PickUpSound;
@@ -1150,8 +1140,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Name = defaultOn;
                 this.Keywords = defaultOn;
-                this.InventoryImage = defaultOn;
-                this.MessageIcon = defaultOn;
                 this.EquipType = defaultOn;
                 this.PickUpSound = defaultOn;
                 this.PutDownSound = defaultOn;
@@ -1173,8 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Name, null));
                 ret.Add((Keywords, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
-                ret.Add((InventoryImage, null));
-                ret.Add((MessageIcon, null));
+                ret.Add((Icons != null ? Icons.OnOverall : DefaultOn, Icons?.GetCrystal()));
                 ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
                 ret.Add((EquipType, null));
                 ret.Add((PickUpSound, null));
@@ -1333,6 +1320,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IHarvestTarget,
+        IHasIcons,
         IIngredientGetter,
         IItem,
         IKeyworded<IKeywordGetter>,
@@ -1366,8 +1354,10 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new TranslatedString? InventoryImage { get; set; }
-        new TranslatedString? MessageIcon { get; set; }
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
+        new Icons? Icons { get; set; }
         new Destructible? Destructible { get; set; }
         new IFormLinkNullable<IEquipTypeGetter> EquipType { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
@@ -1395,6 +1385,7 @@ namespace Mutagen.Bethesda.Fallout4
         IConstructibleGetter,
         IFormLinkContainerGetter,
         IHarvestTargetGetter,
+        IHasIconsGetter,
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IIngredientGetter>,
@@ -1439,8 +1430,12 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
-        ITranslatedStringGetter? InventoryImage { get; }
-        ITranslatedStringGetter? MessageIcon { get; }
+        #region Icons
+        /// <summary>
+        /// Aspects: IHasIconsGetter
+        /// </summary>
+        IIconsGetter? Icons { get; }
+        #endregion
         IDestructibleGetter? Destructible { get; }
         IFormLinkNullableGetter<IEquipTypeGetter> EquipType { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }
@@ -1621,19 +1616,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Name = 8,
         Keywords = 9,
         Model = 10,
-        InventoryImage = 11,
-        MessageIcon = 12,
-        Destructible = 13,
-        EquipType = 14,
-        PickUpSound = 15,
-        PutDownSound = 16,
-        Value = 17,
-        Weight = 18,
-        IngredientValue = 19,
-        Flags = 20,
-        Effects = 21,
-        DATADataTypeState = 22,
-        ENITDataTypeState = 23,
+        Icons = 11,
+        Destructible = 12,
+        EquipType = 13,
+        PickUpSound = 14,
+        PutDownSound = 15,
+        Value = 16,
+        Weight = 17,
+        IngredientValue = 18,
+        Flags = 19,
+        Effects = 20,
+        DATADataTypeState = 21,
+        ENITDataTypeState = 22,
     }
     #endregion
 
@@ -1651,9 +1645,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "ff149c28-1233-4a7a-97cf-c9d2e7a1b490";
 
-        public const ushort AdditionalFieldCount = 18;
+        public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 24;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(Ingredient.Mask<>);
 
@@ -1727,8 +1721,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Name = default;
             item.Keywords = null;
             item.Model = null;
-            item.InventoryImage = default;
-            item.MessageIcon = default;
+            item.Icons = null;
             item.Destructible = null;
             item.EquipType.Clear();
             item.PickUpSound.Clear();
@@ -1849,8 +1842,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.InventoryImage = object.Equals(item.InventoryImage, rhs.InventoryImage);
-            ret.MessageIcon = object.Equals(item.MessageIcon, rhs.MessageIcon);
+            ret.Icons = EqualsMaskHelper.EqualsHelper(
+                item.Icons,
+                rhs.Icons,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Destructible = EqualsMaskHelper.EqualsHelper(
                 item.Destructible,
                 rhs.Destructible,
@@ -1958,15 +1954,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 ModelItem?.ToString(fg, "Model");
             }
-            if ((printMask?.InventoryImage ?? true)
-                && item.InventoryImage is {} InventoryImageItem)
+            if ((printMask?.Icons?.Overall ?? true)
+                && item.Icons is {} IconsItem)
             {
-                fg.AppendItem(InventoryImageItem, "InventoryImage");
-            }
-            if ((printMask?.MessageIcon ?? true)
-                && item.MessageIcon is {} MessageIconItem)
-            {
-                fg.AppendItem(MessageIconItem, "MessageIcon");
+                IconsItem?.ToString(fg, "Icons");
             }
             if ((printMask?.Destructible?.Overall ?? true)
                 && item.Destructible is {} DestructibleItem)
@@ -2107,13 +2098,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.InventoryImage) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.Icons) ?? true))
             {
-                if (!object.Equals(lhs.InventoryImage, rhs.InventoryImage)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.MessageIcon) ?? true))
-            {
-                if (!object.Equals(lhs.MessageIcon, rhs.MessageIcon)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
+                {
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, crystal?.GetSubCrystal((int)Ingredient_FieldIndex.Icons))) return false;
+                }
+                else if (!isIconsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.Destructible) ?? true))
             {
@@ -2205,13 +2196,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 hash.Add(Modelitem);
             }
-            if (item.InventoryImage is {} InventoryImageitem)
+            if (item.Icons is {} Iconsitem)
             {
-                hash.Add(InventoryImageitem);
-            }
-            if (item.MessageIcon is {} MessageIconitem)
-            {
-                hash.Add(MessageIconitem);
+                hash.Add(Iconsitem);
             }
             if (item.Destructible is {} Destructibleitem)
             {
@@ -2479,13 +2466,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.InventoryImage) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Icons) ?? true))
             {
-                item.InventoryImage = rhs.InventoryImage?.DeepCopy();
-            }
-            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.MessageIcon) ?? true))
-            {
-                item.MessageIcon = rhs.MessageIcon?.DeepCopy();
+                errorMask?.PushIndex((int)Ingredient_FieldIndex.Icons);
+                try
+                {
+                    if(rhs.Icons is {} rhsIcons)
+                    {
+                        item.Icons = rhsIcons.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Ingredient_FieldIndex.Icons));
+                    }
+                    else
+                    {
+                        item.Icons = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Destructible) ?? true))
             {
@@ -2776,18 +2781,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     writer: writer,
                     translationParams: translationParams);
             }
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.InventoryImage,
-                header: translationParams.ConvertToCustom(RecordTypes.ICON),
-                binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.DL);
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.MessageIcon,
-                header: translationParams.ConvertToCustom(RecordTypes.MICO),
-                binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.DL);
+            if (item.Icons is {} IconsItem)
+            {
+                ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
+                    item: IconsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             if (item.Destructible is {} DestructibleItem)
             {
                 ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
@@ -2964,22 +2964,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     return (int)Ingredient_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InventoryImage = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)Ingredient_FieldIndex.InventoryImage;
-                }
                 case RecordTypeInts.MICO:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MessageIcon = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)Ingredient_FieldIndex.MessageIcon;
+                    item.Icons = Mutagen.Bethesda.Fallout4.Icons.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams);
+                    return (int)Ingredient_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DAMC:
@@ -3124,14 +3114,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         public IModelGetter? Model { get; private set; }
-        #region InventoryImage
-        private int? _InventoryImageLocation;
-        public ITranslatedStringGetter? InventoryImage => _InventoryImageLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _InventoryImageLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
-        #endregion
-        #region MessageIcon
-        private int? _MessageIconLocation;
-        public ITranslatedStringGetter? MessageIcon => _MessageIconLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _MessageIconLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
-        #endregion
+        public IIconsGetter? Icons { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
         #region EquipType
         private int? _EquipTypeLocation;
@@ -3273,14 +3256,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     return (int)Ingredient_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
-                {
-                    _InventoryImageLocation = (stream.Position - offset);
-                    return (int)Ingredient_FieldIndex.InventoryImage;
-                }
                 case RecordTypeInts.MICO:
                 {
-                    _MessageIconLocation = (stream.Position - offset);
-                    return (int)Ingredient_FieldIndex.MessageIcon;
+                    this.Icons = IconsBinaryOverlay.IconsFactory(
+                        stream: stream,
+                        package: _package,
+                        parseParams: parseParams);
+                    return (int)Ingredient_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DAMC:

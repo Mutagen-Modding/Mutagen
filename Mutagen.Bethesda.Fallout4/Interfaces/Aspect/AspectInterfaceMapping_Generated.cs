@@ -23,6 +23,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             dict[typeof(IHasIcons)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 ArmorModel_Registration.Instance,
+                Book_Registration.Instance,
+                Ingestible_Registration.Instance,
+                Ingredient_Registration.Instance,
+                Key_Registration.Instance,
+                Light_Registration.Instance,
+                MiscItem_Registration.Instance,
                 RegionData_Registration.Instance,
                 RegionGrasses_Registration.Instance,
                 RegionLand_Registration.Instance,
@@ -30,6 +36,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RegionObjects_Registration.Instance,
                 RegionSounds_Registration.Instance,
                 RegionWeather_Registration.Instance,
+                Weapon_Registration.Instance,
             });
             dict[typeof(IHasIconsGetter)] = dict[typeof(IHasIcons)] with { Setter = false };
             dict[typeof(IKeywordCommon)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -59,6 +66,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RuleName_Registration.Instance,
                 Spell_Registration.Instance,
                 TalkingActivator_Registration.Instance,
+                Weapon_Registration.Instance,
             });
             dict[typeof(IKeywordedGetter<IKeywordGetter>)] = dict[typeof(IKeyworded<IKeywordGetter>)] with { Setter = false };
             dict[typeof(IModeled)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -89,6 +97,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 StaticCollection_Registration.Instance,
                 TalkingActivator_Registration.Instance,
                 Tree_Registration.Instance,
+                Weapon_Registration.Instance,
             });
             dict[typeof(IModeledGetter)] = dict[typeof(IModeled)] with { Setter = false };
             dict[typeof(INamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -130,6 +139,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 TintGroup_Registration.Instance,
                 TintTemplateOption_Registration.Instance,
                 Tree_Registration.Instance,
+                Weapon_Registration.Instance,
             });
             dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
             dict[typeof(INamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -194,6 +204,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 TintGroup_Registration.Instance,
                 TintTemplateOption_Registration.Instance,
                 Tree_Registration.Instance,
+                Weapon_Registration.Instance,
             });
             dict[typeof(INamedRequiredGetter)] = dict[typeof(INamedRequired)] with { Setter = false };
             dict[typeof(ITranslatedNamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -225,6 +236,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 TintGroup_Registration.Instance,
                 TintTemplateOption_Registration.Instance,
                 Tree_Registration.Instance,
+                Weapon_Registration.Instance,
             });
             dict[typeof(ITranslatedNamedGetter)] = dict[typeof(ITranslatedNamed)] with { Setter = false };
             dict[typeof(ITranslatedNamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -258,6 +270,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 TintGroup_Registration.Instance,
                 TintTemplateOption_Registration.Instance,
                 Tree_Registration.Instance,
+                Weapon_Registration.Instance,
             });
             dict[typeof(ITranslatedNamedRequiredGetter)] = dict[typeof(ITranslatedNamedRequired)] with { Setter = false };
             dict[typeof(IObjectBounded)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -292,6 +305,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 TalkingActivator_Registration.Instance,
                 TextureSet_Registration.Instance,
                 Tree_Registration.Instance,
+                Weapon_Registration.Instance,
             });
             dict[typeof(IObjectBoundedGetter)] = dict[typeof(IObjectBounded)] with { Setter = false };
             dict[typeof(IScripted)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -313,6 +327,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 StaticCollection_Registration.Instance,
                 TalkingActivator_Registration.Instance,
                 Tree_Registration.Instance,
+                Weapon_Registration.Instance,
             });
             dict[typeof(IScriptedGetter)] = dict[typeof(IScripted)] with { Setter = false };
             dict[typeof(IWeightValue)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -321,6 +336,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 Ingestible_Registration.Instance,
                 Key_Registration.Instance,
                 Light_Registration.Instance,
+                Weapon_Registration.Instance,
             });
             dict[typeof(IWeightValueGetter)] = dict[typeof(IWeightValue)] with { Setter = false };
             InterfaceToObjectTypes = dict;

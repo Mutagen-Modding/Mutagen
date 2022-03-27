@@ -9,8 +9,7 @@
         <FormLink refName="Keyword" />
       </List>
       <RefDirect name="Model" refName="Model" />
-      <String name="InventoryImage" recordType="ICON" translated="DL" />
-      <String name="MessageIcon" recordType="MICO" translated="DL" />
+      <RefDirect name="Icons" refName="Icons" />
       <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
       <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />

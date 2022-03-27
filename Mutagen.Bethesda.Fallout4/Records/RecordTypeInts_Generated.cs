@@ -15,6 +15,7 @@ public partial class RecordTypeInts
     public const int AHCM = 0x4D434841;
     public const int AIAD = 0x44414941;
     public const int ALCH = 0x48434C41;
+    public const int AMDL = 0x4C444D41;
     public const int AMMO = 0x4F4D4D41;
     public const int ANAM = 0x4D414E41;
     public const int AORU = 0x55524F41;
@@ -57,6 +58,7 @@ public partial class RecordTypeInts
     public const int COED = 0x44454F43;
     public const int COLL = 0x4C4C4F43;
     public const int CONT = 0x544E4F43;
+    public const int CRDT = 0x54445243;
     public const int CRGR = 0x52475243;
     public const int CRVA = 0x41565243;
     public const int CTDA = 0x41445443;
@@ -83,6 +85,7 @@ public partial class RecordTypeInts
     public const int DSTD = 0x44545344;
     public const int DSTF = 0x46545344;
     public const int DUAL = 0x4C415544;
+    public const int EAMT = 0x544D4145;
     public const int EFID = 0x44494645;
     public const int EFIT = 0x54494645;
     public const int EFSH = 0x48534645;
@@ -190,6 +193,7 @@ public partial class RecordTypeInts
     public const int LVLO = 0x4F4C564C;
     public const int LVSG = 0x4753564C;
     public const int LVSP = 0x5053564C;
+    public const int MASE = 0x4553414D;
     public const int MAST = 0x5453414D;
     public const int MATT = 0x5454414D;
     public const int MDOB = 0x424F444D;
@@ -204,6 +208,8 @@ public partial class RecordTypeInts
     public const int MO2T = 0x54324F4D;
     public const int MO3S = 0x53334F4D;
     public const int MO3T = 0x54334F4D;
+    public const int MO4C = 0x43344F4D;
+    public const int MO4F = 0x46344F4D;
     public const int MO4S = 0x53344F4D;
     public const int MO4T = 0x54344F4D;
     public const int MO5S = 0x53354F4D;
@@ -364,6 +370,7 @@ public partial class RecordTypeInts
     public const int VTCK = 0x4B435456;
     public const int VTYP = 0x50595456;
     public const int WAIT = 0x54494157;
+    public const int WAMD = 0x444D4157;
     public const int WATR = 0x52544157;
     public const int WBDT = 0x54444257;
     public const int WEAP = 0x50414557;
@@ -373,6 +380,7 @@ public partial class RecordTypeInts
     public const int WNAM = 0x4D414E57;
     public const int WRLD = 0x444C5257;
     public const int WTHR = 0x52485457;
+    public const int WZMD = 0x444D5A57;
     public const int XCNT = 0x544E4358;
     public const int XMRK = 0x4B524D58;
     public const int XNAM = 0x4D414E58;
@@ -380,4 +388,5 @@ public partial class RecordTypeInts
     public const int XXXX = 0x58585858;
     public const int YNAM = 0x4D414E59;
     public const int ZNAM = 0x4D414E5A;
+    public const int ZOOM = 0x4D4F4F5A;
 }

@@ -45,6 +45,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Core.UnitTests", "Mutagen.Bethesda.Core.UnitTests\Mutagen.Bethesda.Core.UnitTests.csproj", "{3F86B4F2-ECDD-4C7B-8D57-4AAC4C22176A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generation", "Generation", "{89AC8733-A707-495A-88B1-8F9570CDA329}"
+	ProjectSection(SolutionItems) = preProject
+		Mutagen.Bethesda.XEdit.Generation\Mutagen.Bethesda.XEdit.Generation.csproj = Mutagen.Bethesda.XEdit.Generation\Mutagen.Bethesda.XEdit.Generation.csproj
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Generation", "Mutagen.Bethesda.Generation\Mutagen.Bethesda.Generation.csproj", "{8BBD0C4D-7B3A-4720-B97B-F8D5CF13C9C6}"
 EndProject
@@ -54,11 +57,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Pex.Genera
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Oblivion.Generator", "Mutagen.Bethesda.Oblivion.Generator\Mutagen.Bethesda.Oblivion.Generator.csproj", "{98A0F179-22B5-45EC-958F-FDEBBB8B4D9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Skyrim.Generator", "Mutagen.Bethesda.Skyrim.Generator\Mutagen.Bethesda.Skyrim.Generator.csproj", "{0A932985-72CF-4052-837E-0B5920FF2136}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Skyrim.Generator", "Mutagen.Bethesda.Skyrim.Generator\Mutagen.Bethesda.Skyrim.Generator.csproj", "{0A932985-72CF-4052-837E-0B5920FF2136}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Fallout4.Generator", "Mutagen.Bethesda.Fallout4.Generator\Mutagen.Bethesda.Fallout4.Generator.csproj", "{E59AF68B-0F52-44EF-AC9A-9FFB0A765C90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Fallout4.Generator", "Mutagen.Bethesda.Fallout4.Generator\Mutagen.Bethesda.Fallout4.Generator.csproj", "{E59AF68B-0F52-44EF-AC9A-9FFB0A765C90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.XEdit.Generation", "Mutagen.Bethesda.XEdit.Generation\Mutagen.Bethesda.XEdit.Generation.csproj", "{ADFB72AE-9C7B-4F6D-B9C9-5214B20E02D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.XEdit.Generation", "Mutagen.Bethesda.XEdit.Generation\Mutagen.Bethesda.XEdit.Generation.csproj", "{ADFB72AE-9C7B-4F6D-B9C9-5214B20E02D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
