@@ -2401,17 +2401,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Parent.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Parent, out var ParentInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Parent);
+                yield return ParentInfo;
             }
-            if (obj.Climate.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Climate, out var ClimateInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Climate);
+                yield return ClimateInfo;
             }
-            if (obj.Water.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Water, out var WaterInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Water);
+                yield return WaterInfo;
             }
             if (obj.TopCell is {} TopCellItems)
             {

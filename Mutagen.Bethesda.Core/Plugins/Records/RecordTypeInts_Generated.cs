@@ -8,6 +8,7 @@ public partial class RecordTypeInts
     public const int ACTI = 0x49544341;
     public const int ADDN = 0x4E444441;
     public const int ALCH = 0x48434C41;
+    public const int AMDL = 0x4C444D41;
     public const int AMMO = 0x4F4D4D41;
     public const int ANIO = 0x4F494E41;
     public const int AORU = 0x55524F41;
@@ -178,4 +179,5 @@ public partial class RecordTypeInts
     public const int XPWR = 0x52575058;
     public const int XRNK = 0x4B4E5258;
     public const int XSCL = 0x4C435358;
+    public const int ZOOM = 0x4D4F4F5A;
 }

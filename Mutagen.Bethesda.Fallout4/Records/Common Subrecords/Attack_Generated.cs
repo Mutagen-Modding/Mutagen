@@ -1094,13 +1094,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return item;
                 }
             }
-            if (obj.WeaponSlot.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.WeaponSlot, out var WeaponSlotInfo))
             {
-                yield return FormLinkInformation.Factory(obj.WeaponSlot);
+                yield return WeaponSlotInfo;
             }
-            if (obj.RequiredSlot.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.RequiredSlot, out var RequiredSlotInfo))
             {
-                yield return FormLinkInformation.Factory(obj.RequiredSlot);
+                yield return RequiredSlotInfo;
             }
             yield break;
         }

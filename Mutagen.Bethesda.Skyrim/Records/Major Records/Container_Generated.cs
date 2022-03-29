@@ -1841,13 +1841,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.OpenSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.OpenSound, out var OpenSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.OpenSound);
+                yield return OpenSoundInfo;
             }
-            if (obj.CloseSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CloseSound, out var CloseSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CloseSound);
+                yield return CloseSoundInfo;
             }
             yield break;
         }

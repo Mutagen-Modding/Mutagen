@@ -3377,9 +3377,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return item;
                 }
             }
-            if (obj.PreviewTransform.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PreviewTransform, out var PreviewTransformInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PreviewTransform);
+                yield return PreviewTransformInfo;
             }
             if (obj.Model is {} ModelItems)
             {
@@ -3409,17 +3409,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.NativeTerminal.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.NativeTerminal, out var NativeTerminalInfo))
             {
-                yield return FormLinkInformation.Factory(obj.NativeTerminal);
+                yield return NativeTerminalInfo;
             }
-            if (obj.ForcedLocRefType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ForcedLocRefType, out var ForcedLocRefTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ForcedLocRefType);
+                yield return ForcedLocRefTypeInfo;
             }
-            if (obj.DrinkingWater.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.DrinkingWater, out var DrinkingWaterInfo))
             {
-                yield return FormLinkInformation.Factory(obj.DrinkingWater);
+                yield return DrinkingWaterInfo;
             }
             if (obj.Conditions is {} ConditionsItem)
             {
@@ -3437,9 +3437,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.AssociatedForm.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AssociatedForm, out var AssociatedFormInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AssociatedForm);
+                yield return AssociatedFormInfo;
             }
             if (obj.MarkerParameters is {} MarkerParametersItem)
             {

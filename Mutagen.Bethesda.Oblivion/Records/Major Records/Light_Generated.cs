@@ -1392,13 +1392,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Script.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Script, out var ScriptInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Script);
+                yield return ScriptInfo;
             }
-            if (obj.Sound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Sound, out var SoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Sound);
+                yield return SoundInfo;
             }
             yield break;
         }

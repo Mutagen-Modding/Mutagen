@@ -2006,9 +2006,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Quest.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Quest, out var QuestInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Quest);
+                yield return QuestInfo;
             }
             foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))

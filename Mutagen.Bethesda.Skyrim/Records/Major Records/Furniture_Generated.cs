@@ -2097,13 +2097,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.InteractionKeyword.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.InteractionKeyword, out var InteractionKeywordInfo))
             {
-                yield return FormLinkInformation.Factory(obj.InteractionKeyword);
+                yield return InteractionKeywordInfo;
             }
-            if (obj.AssociatedSpell.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AssociatedSpell, out var AssociatedSpellInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AssociatedSpell);
+                yield return AssociatedSpellInfo;
             }
             if (obj.Markers is {} MarkersItem)
             {

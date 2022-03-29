@@ -1765,9 +1765,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
-            if (obj.Worldspace.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Worldspace, out var WorldspaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Worldspace);
+                yield return WorldspaceInfo;
             }
             if (obj.Objects is {} ObjectsItems)
             {

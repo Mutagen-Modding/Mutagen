@@ -1336,9 +1336,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.MenuDisplayObject.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MenuDisplayObject, out var MenuDisplayObjectInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MenuDisplayObject);
+                yield return MenuDisplayObjectInfo;
             }
             foreach (var item in obj.WordsOfPower.SelectMany(f => f.ContainedFormLinks))
             {

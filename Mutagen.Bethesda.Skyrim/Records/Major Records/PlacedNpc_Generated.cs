@@ -2807,13 +2807,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Base.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Base, out var BaseInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Base);
+                yield return BaseInfo;
             }
-            if (obj.EncounterZone.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.EncounterZone, out var EncounterZoneInfo))
             {
-                yield return FormLinkInformation.Factory(obj.EncounterZone);
+                yield return EncounterZoneInfo;
             }
             if (obj.Patrol is {} PatrolItems)
             {
@@ -2822,9 +2822,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.MerchantContainer.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MerchantContainer, out var MerchantContainerInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MerchantContainer);
+                yield return MerchantContainerInfo;
             }
             foreach (var item in obj.LinkedReferences.SelectMany(f => f.ContainedFormLinks))
             {
@@ -2837,13 +2837,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.PersistentLocation.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PersistentLocation, out var PersistentLocationInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PersistentLocation);
+                yield return PersistentLocationInfo;
             }
-            if (obj.LocationReference.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.LocationReference, out var LocationReferenceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.LocationReference);
+                yield return LocationReferenceInfo;
             }
             if (obj.LocationRefTypes is {} LocationRefTypesItem)
             {
@@ -2852,9 +2852,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Horse.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Horse, out var HorseInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Horse);
+                yield return HorseInfo;
             }
             if (obj.EnableParent is {} EnableParentItems)
             {
@@ -2870,13 +2870,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Emittance.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Emittance, out var EmittanceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Emittance);
+                yield return EmittanceInfo;
             }
-            if (obj.MultiboundReference.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MultiboundReference, out var MultiboundReferenceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MultiboundReference);
+                yield return MultiboundReferenceInfo;
             }
             yield break;
         }

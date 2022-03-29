@@ -4326,21 +4326,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Material.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Material, out var MaterialInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Material);
+                yield return MaterialInfo;
             }
-            if (obj.OpenSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.OpenSound, out var OpenSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.OpenSound);
+                yield return OpenSoundInfo;
             }
-            if (obj.Spell.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Spell, out var SpellInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Spell);
+                yield return SpellInfo;
             }
-            if (obj.ImageSpace.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ImageSpace, out var ImageSpaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ImageSpace);
+                yield return ImageSpaceInfo;
             }
             yield break;
         }

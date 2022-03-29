@@ -906,9 +906,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IArmorAddonModelGetter obj)
         {
-            if (obj.AddonModel.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AddonModel, out var AddonModelInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AddonModel);
+                yield return AddonModelInfo;
             }
             yield break;
         }

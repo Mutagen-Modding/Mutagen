@@ -1558,9 +1558,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
-            if (obj.OwnerQuest.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.OwnerQuest, out var OwnerQuestInfo))
             {
-                yield return FormLinkInformation.Factory(obj.OwnerQuest);
+                yield return OwnerQuestInfo;
             }
             foreach (var item in obj.MenuButtons.WhereCastable<IMessageButtonGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))

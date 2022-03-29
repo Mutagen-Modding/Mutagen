@@ -1630,9 +1630,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Unknown.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Unknown, out var UnknownInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Unknown);
+                yield return UnknownInfo;
             }
             if (obj.Model is {} ModelItems)
             {

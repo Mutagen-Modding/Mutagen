@@ -1343,9 +1343,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
-            if (obj.AttractionRule.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AttractionRule, out var AttractionRuleInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AttractionRule);
+                yield return AttractionRuleInfo;
             }
             yield break;
         }

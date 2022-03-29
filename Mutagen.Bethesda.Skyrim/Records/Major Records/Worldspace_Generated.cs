@@ -3531,17 +3531,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.InteriorLighting.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.InteriorLighting, out var InteriorLightingInfo))
             {
-                yield return FormLinkInformation.Factory(obj.InteriorLighting);
+                yield return InteriorLightingInfo;
             }
-            if (obj.EncounterZone.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.EncounterZone, out var EncounterZoneInfo))
             {
-                yield return FormLinkInformation.Factory(obj.EncounterZone);
+                yield return EncounterZoneInfo;
             }
-            if (obj.Location.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Location, out var LocationInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Location);
+                yield return LocationInfo;
             }
             if (obj.Parent is {} ParentItems)
             {
@@ -3550,17 +3550,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Climate.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Climate, out var ClimateInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Climate);
+                yield return ClimateInfo;
             }
-            if (obj.Water.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Water, out var WaterInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Water);
+                yield return WaterInfo;
             }
-            if (obj.LodWater.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.LodWater, out var LodWaterInfo))
             {
-                yield return FormLinkInformation.Factory(obj.LodWater);
+                yield return LodWaterInfo;
             }
             if (obj.CloudModel is {} CloudModelItems)
             {
@@ -3569,9 +3569,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Music.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Music, out var MusicInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Music);
+                yield return MusicInfo;
             }
             if (obj.TopCell is {} TopCellItems)
             {

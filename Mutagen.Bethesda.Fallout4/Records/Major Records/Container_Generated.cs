@@ -2394,9 +2394,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return item;
                 }
             }
-            if (obj.PreviewTransform.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PreviewTransform, out var PreviewTransformInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PreviewTransform);
+                yield return PreviewTransformInfo;
             }
             if (obj.Model is {} ModelItems)
             {
@@ -2427,9 +2427,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.ForcedLocRefType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ForcedLocRefType, out var ForcedLocRefTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ForcedLocRefType);
+                yield return ForcedLocRefTypeInfo;
             }
             if (obj.Properties is {} PropertiesItem)
             {
@@ -2438,25 +2438,25 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.NativeTerminal.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.NativeTerminal, out var NativeTerminalInfo))
             {
-                yield return FormLinkInformation.Factory(obj.NativeTerminal);
+                yield return NativeTerminalInfo;
             }
-            if (obj.OpenSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.OpenSound, out var OpenSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.OpenSound);
+                yield return OpenSoundInfo;
             }
-            if (obj.CloseSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CloseSound, out var CloseSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CloseSound);
+                yield return CloseSoundInfo;
             }
-            if (obj.TakeAllSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.TakeAllSound, out var TakeAllSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.TakeAllSound);
+                yield return TakeAllSoundInfo;
             }
-            if (obj.FilterList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.FilterList, out var FilterListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.FilterList);
+                yield return FilterListInfo;
             }
             yield break;
         }

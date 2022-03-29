@@ -2817,17 +2817,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IQuestAliasGetter obj)
         {
-            if (obj.SpecificLocation.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SpecificLocation, out var SpecificLocationInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SpecificLocation);
+                yield return SpecificLocationInfo;
             }
-            if (obj.ForcedReference.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ForcedReference, out var ForcedReferenceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ForcedReference);
+                yield return ForcedReferenceInfo;
             }
-            if (obj.UniqueActor.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.UniqueActor, out var UniqueActorInfo))
             {
-                yield return FormLinkInformation.Factory(obj.UniqueActor);
+                yield return UniqueActorInfo;
             }
             if (obj.Location is {} LocationItems)
             {
@@ -2870,25 +2870,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.SpectatorOverridePackageList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SpectatorOverridePackageList, out var SpectatorOverridePackageListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SpectatorOverridePackageList);
+                yield return SpectatorOverridePackageListInfo;
             }
-            if (obj.ObserveDeadBodyOverridePackageList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ObserveDeadBodyOverridePackageList, out var ObserveDeadBodyOverridePackageListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ObserveDeadBodyOverridePackageList);
+                yield return ObserveDeadBodyOverridePackageListInfo;
             }
-            if (obj.GuardWarnOverridePackageList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.GuardWarnOverridePackageList, out var GuardWarnOverridePackageListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.GuardWarnOverridePackageList);
+                yield return GuardWarnOverridePackageListInfo;
             }
-            if (obj.CombatOverridePackageList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CombatOverridePackageList, out var CombatOverridePackageListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CombatOverridePackageList);
+                yield return CombatOverridePackageListInfo;
             }
-            if (obj.DisplayName.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.DisplayName, out var DisplayNameInfo))
             {
-                yield return FormLinkInformation.Factory(obj.DisplayName);
+                yield return DisplayNameInfo;
             }
             foreach (var item in obj.Spells)
             {
@@ -2902,9 +2902,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.VoiceTypes.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.VoiceTypes, out var VoiceTypesInfo))
             {
-                yield return FormLinkInformation.Factory(obj.VoiceTypes);
+                yield return VoiceTypesInfo;
             }
             yield break;
         }

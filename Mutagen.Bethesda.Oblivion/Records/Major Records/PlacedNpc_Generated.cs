@@ -1544,9 +1544,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Base.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Base, out var BaseInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Base);
+                yield return BaseInfo;
             }
             if (obj.EnableParent is {} EnableParentItems)
             {
@@ -1555,13 +1555,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            if (obj.MerchantContainer.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MerchantContainer, out var MerchantContainerInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MerchantContainer);
+                yield return MerchantContainerInfo;
             }
-            if (obj.Horse.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Horse, out var HorseInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Horse);
+                yield return HorseInfo;
             }
             yield break;
         }

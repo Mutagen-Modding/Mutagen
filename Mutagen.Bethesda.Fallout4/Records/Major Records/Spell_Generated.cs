@@ -2032,9 +2032,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.EquipmentType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.EquipmentType, out var EquipmentTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.EquipmentType);
+                yield return EquipmentTypeInfo;
             }
             yield return FormLinkInformation.Factory(obj.CastingPerk);
             foreach (var item in obj.Effects.SelectMany(f => f.ContainedFormLinks))

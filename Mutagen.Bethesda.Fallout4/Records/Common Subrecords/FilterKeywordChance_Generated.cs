@@ -898,9 +898,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFilterKeywordChanceGetter obj)
         {
-            if (obj.FilterKeyword.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.FilterKeyword, out var FilterKeywordInfo))
             {
-                yield return FormLinkInformation.Factory(obj.FilterKeyword);
+                yield return FilterKeywordInfo;
             }
             yield break;
         }

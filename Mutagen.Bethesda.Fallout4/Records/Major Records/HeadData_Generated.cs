@@ -2051,9 +2051,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.DefaultFaceTexture.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.DefaultFaceTexture, out var DefaultFaceTextureInfo))
             {
-                yield return FormLinkInformation.Factory(obj.DefaultFaceTexture);
+                yield return DefaultFaceTextureInfo;
             }
             foreach (var item in obj.TintLayers.WhereCastable<ITintGroupGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))

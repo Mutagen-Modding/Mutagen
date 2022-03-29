@@ -906,9 +906,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISoundItemGetter obj)
         {
-            if (obj.Sound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Sound, out var SoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Sound);
+                yield return SoundInfo;
             }
             yield break;
         }

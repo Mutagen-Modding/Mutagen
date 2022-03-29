@@ -1346,9 +1346,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Sound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Sound, out var SoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Sound);
+                yield return SoundInfo;
             }
             if (obj.RelatedWaters is {} RelatedWatersItems)
             {

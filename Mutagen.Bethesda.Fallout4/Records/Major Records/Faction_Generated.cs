@@ -2179,37 +2179,37 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.ExteriorJailMarker.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ExteriorJailMarker, out var ExteriorJailMarkerInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ExteriorJailMarker);
+                yield return ExteriorJailMarkerInfo;
             }
-            if (obj.FollowerWaitMarker.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.FollowerWaitMarker, out var FollowerWaitMarkerInfo))
             {
-                yield return FormLinkInformation.Factory(obj.FollowerWaitMarker);
+                yield return FollowerWaitMarkerInfo;
             }
-            if (obj.StolenGoodsContainer.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.StolenGoodsContainer, out var StolenGoodsContainerInfo))
             {
-                yield return FormLinkInformation.Factory(obj.StolenGoodsContainer);
+                yield return StolenGoodsContainerInfo;
             }
-            if (obj.PlayerInventoryContainer.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PlayerInventoryContainer, out var PlayerInventoryContainerInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PlayerInventoryContainer);
+                yield return PlayerInventoryContainerInfo;
             }
-            if (obj.SharedCrimeFactionList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SharedCrimeFactionList, out var SharedCrimeFactionListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SharedCrimeFactionList);
+                yield return SharedCrimeFactionListInfo;
             }
-            if (obj.JailOutfit.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.JailOutfit, out var JailOutfitInfo))
             {
-                yield return FormLinkInformation.Factory(obj.JailOutfit);
+                yield return JailOutfitInfo;
             }
-            if (obj.VendorBuySellList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.VendorBuySellList, out var VendorBuySellListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.VendorBuySellList);
+                yield return VendorBuySellListInfo;
             }
-            if (obj.MerchantContainer.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MerchantContainer, out var MerchantContainerInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MerchantContainer);
+                yield return MerchantContainerInfo;
             }
             if (obj.VendorLocation is IFormLinkContainerGetter VendorLocationlinkCont)
             {

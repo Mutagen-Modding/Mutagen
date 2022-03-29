@@ -1005,9 +1005,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IStaticPartGetter obj)
         {
-            if (obj.Static.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Static, out var StaticInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Static);
+                yield return StaticInfo;
             }
             yield break;
         }

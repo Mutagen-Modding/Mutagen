@@ -855,9 +855,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.InheritsSoundsFrom.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.InheritsSoundsFrom, out var InheritsSoundsFromInfo))
             {
-                yield return FormLinkInformation.Factory(obj.InheritsSoundsFrom);
+                yield return InheritsSoundsFromInfo;
             }
             yield break;
         }

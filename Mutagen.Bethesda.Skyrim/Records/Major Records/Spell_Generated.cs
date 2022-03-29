@@ -2090,13 +2090,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.MenuDisplayObject.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MenuDisplayObject, out var MenuDisplayObjectInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MenuDisplayObject);
+                yield return MenuDisplayObjectInfo;
             }
-            if (obj.EquipmentType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.EquipmentType, out var EquipmentTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.EquipmentType);
+                yield return EquipmentTypeInfo;
             }
             yield return FormLinkInformation.Factory(obj.HalfCostPerk);
             foreach (var item in obj.Effects.SelectMany(f => f.ContainedFormLinks))

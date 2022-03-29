@@ -4681,9 +4681,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Precipitation.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Precipitation, out var PrecipitationInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Precipitation);
+                yield return PrecipitationInfo;
             }
             yield return FormLinkInformation.Factory(obj.VisualEffect);
             foreach (var item in obj.Sounds.SelectMany(f => f.ContainedFormLinks))
@@ -4715,9 +4715,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.SunGlareLensFlare.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SunGlareLensFlare, out var SunGlareLensFlareInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SunGlareLensFlare);
+                yield return SunGlareLensFlareInfo;
             }
             yield break;
         }

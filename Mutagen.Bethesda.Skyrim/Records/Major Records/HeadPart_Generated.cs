@@ -1730,17 +1730,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.TextureSet.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.TextureSet, out var TextureSetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.TextureSet);
+                yield return TextureSetInfo;
             }
-            if (obj.Color.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Color, out var ColorInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Color);
+                yield return ColorInfo;
             }
-            if (obj.ValidRaces.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ValidRaces, out var ValidRacesInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ValidRaces);
+                yield return ValidRacesInfo;
             }
             yield break;
         }

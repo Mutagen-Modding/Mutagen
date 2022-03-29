@@ -1209,17 +1209,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.AmbientSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AmbientSound, out var AmbientSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AmbientSound);
+                yield return AmbientSoundInfo;
             }
-            if (obj.UseSoundFromRegion.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.UseSoundFromRegion, out var UseSoundFromRegionInfo))
             {
-                yield return FormLinkInformation.Factory(obj.UseSoundFromRegion);
+                yield return UseSoundFromRegionInfo;
             }
-            if (obj.EnvironmentType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.EnvironmentType, out var EnvironmentTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.EnvironmentType);
+                yield return EnvironmentTypeInfo;
             }
             yield break;
         }

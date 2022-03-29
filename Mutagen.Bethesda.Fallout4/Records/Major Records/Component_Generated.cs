@@ -1329,17 +1329,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
-            if (obj.CraftingSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CraftingSound, out var CraftingSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CraftingSound);
+                yield return CraftingSoundInfo;
             }
-            if (obj.ScrapItem.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ScrapItem, out var ScrapItemInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ScrapItem);
+                yield return ScrapItemInfo;
             }
-            if (obj.ModScrapScalar.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ModScrapScalar, out var ModScrapScalarInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ModScrapScalar);
+                yield return ModScrapScalarInfo;
             }
             yield break;
         }

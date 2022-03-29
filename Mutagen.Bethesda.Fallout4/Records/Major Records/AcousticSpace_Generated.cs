@@ -1304,17 +1304,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
-            if (obj.LoopingSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.LoopingSound, out var LoopingSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.LoopingSound);
+                yield return LoopingSoundInfo;
             }
-            if (obj.UseSoundFromRegion.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.UseSoundFromRegion, out var UseSoundFromRegionInfo))
             {
-                yield return FormLinkInformation.Factory(obj.UseSoundFromRegion);
+                yield return UseSoundFromRegionInfo;
             }
-            if (obj.EnvironmentType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.EnvironmentType, out var EnvironmentTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.EnvironmentType);
+                yield return EnvironmentTypeInfo;
             }
             yield break;
         }

@@ -1920,13 +1920,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Quest.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Quest, out var QuestInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Quest);
+                yield return QuestInfo;
             }
-            if (obj.PreviousTopic.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PreviousTopic, out var PreviousTopicInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PreviousTopic);
+                yield return PreviousTopicInfo;
             }
             foreach (var item in obj.Topics)
             {

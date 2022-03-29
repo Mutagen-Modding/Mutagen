@@ -1117,9 +1117,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMorphPresetGetter obj)
         {
-            if (obj.Texture.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Texture, out var TextureInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Texture);
+                yield return TextureInfo;
             }
             yield break;
         }

@@ -1435,13 +1435,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.CreatedObject.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CreatedObject, out var CreatedObjectInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CreatedObject);
+                yield return CreatedObjectInfo;
             }
-            if (obj.WorkbenchKeyword.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.WorkbenchKeyword, out var WorkbenchKeywordInfo))
             {
-                yield return FormLinkInformation.Factory(obj.WorkbenchKeyword);
+                yield return WorkbenchKeywordInfo;
             }
             yield break;
         }

@@ -22,6 +22,18 @@ namespace Mutagen.Bethesda.Plugins.Internals
             return new FormLinkInformation(link.FormKey, typeof(TMajorGetter));
         }
 
+        public static bool TryFactory<TMajorGetter>(IFormLinkNullableGetter<TMajorGetter> link, [MaybeNullWhen(false)] out FormLinkInformation info)
+            where TMajorGetter : class, IMajorRecordGetter
+        {
+            if (link.FormKeyNullable == null)
+            {
+                info = null;
+                return false;
+            }
+            info = new FormLinkInformation(link.FormKey, typeof(TMajorGetter));
+            return true;
+        }
+
         public static FormLinkInformation Factory<TMajorGetter>(IFormLinkNullableGetter<TMajorGetter> link)
             where TMajorGetter : class, IMajorRecordGetter
         {

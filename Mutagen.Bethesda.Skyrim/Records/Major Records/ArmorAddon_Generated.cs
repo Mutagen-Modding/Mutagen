@@ -1973,9 +1973,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Race.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Race, out var RaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Race);
+                yield return RaceInfo;
             }
             if (obj.WorldModel is {} WorldModelItem)
             {
@@ -2009,13 +2009,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.FootstepSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.FootstepSound, out var FootstepSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.FootstepSound);
+                yield return FootstepSoundInfo;
             }
-            if (obj.ArtObject.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ArtObject, out var ArtObjectInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ArtObject);
+                yield return ArtObjectInfo;
             }
             yield break;
         }

@@ -2872,21 +2872,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.DeathItem.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.DeathItem, out var DeathItemInfo))
             {
-                yield return FormLinkInformation.Factory(obj.DeathItem);
+                yield return DeathItemInfo;
             }
-            if (obj.Race.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Race, out var RaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Race);
+                yield return RaceInfo;
             }
             foreach (var item in obj.Spells)
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Script.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Script, out var ScriptInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Script);
+                yield return ScriptInfo;
             }
             foreach (var item in obj.Items.SelectMany(f => f.ContainedFormLinks))
             {
@@ -2896,13 +2896,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Class.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Class, out var ClassInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Class);
+                yield return ClassInfo;
             }
-            if (obj.Hair.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Hair, out var HairInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Hair);
+                yield return HairInfo;
             }
             if (obj.Eyes is {} EyesItem)
             {
@@ -2911,9 +2911,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.CombatStyle.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CombatStyle, out var CombatStyleInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CombatStyle);
+                yield return CombatStyleInfo;
             }
             yield break;
         }

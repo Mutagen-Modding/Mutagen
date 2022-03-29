@@ -3049,9 +3049,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.ObjectEffect.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ObjectEffect, out var ObjectEffectInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ObjectEffect);
+                yield return ObjectEffectInfo;
             }
             if (obj.Destructible is {} DestructibleItems)
             {
@@ -3060,25 +3060,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.EquipmentType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.EquipmentType, out var EquipmentTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.EquipmentType);
+                yield return EquipmentTypeInfo;
             }
-            if (obj.BlockBashImpact.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BlockBashImpact, out var BlockBashImpactInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BlockBashImpact);
+                yield return BlockBashImpactInfo;
             }
-            if (obj.AlternateBlockMaterial.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AlternateBlockMaterial, out var AlternateBlockMaterialInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AlternateBlockMaterial);
+                yield return AlternateBlockMaterialInfo;
             }
-            if (obj.PickUpSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PickUpSound, out var PickUpSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PickUpSound);
+                yield return PickUpSoundInfo;
             }
-            if (obj.PutDownSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PutDownSound, out var PutDownSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PutDownSound);
+                yield return PutDownSoundInfo;
             }
             if (obj.Keywords is {} KeywordsItem)
             {
@@ -3094,41 +3094,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.ImpactDataSet.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ImpactDataSet, out var ImpactDataSetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ImpactDataSet);
+                yield return ImpactDataSetInfo;
             }
-            if (obj.FirstPersonModel.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.FirstPersonModel, out var FirstPersonModelInfo))
             {
-                yield return FormLinkInformation.Factory(obj.FirstPersonModel);
+                yield return FirstPersonModelInfo;
             }
-            if (obj.AttackSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AttackSound, out var AttackSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AttackSound);
+                yield return AttackSoundInfo;
             }
-            if (obj.AttackSound2D.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AttackSound2D, out var AttackSound2DInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AttackSound2D);
+                yield return AttackSound2DInfo;
             }
-            if (obj.AttackLoopSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AttackLoopSound, out var AttackLoopSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AttackLoopSound);
+                yield return AttackLoopSoundInfo;
             }
-            if (obj.AttackFailSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AttackFailSound, out var AttackFailSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AttackFailSound);
+                yield return AttackFailSoundInfo;
             }
-            if (obj.IdleSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.IdleSound, out var IdleSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.IdleSound);
+                yield return IdleSoundInfo;
             }
-            if (obj.EquipSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.EquipSound, out var EquipSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.EquipSound);
+                yield return EquipSoundInfo;
             }
-            if (obj.UnequipSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.UnequipSound, out var UnequipSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.UnequipSound);
+                yield return UnequipSoundInfo;
             }
             if (obj.Critical is {} CriticalItems)
             {
@@ -3137,9 +3137,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Template.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Template, out var TemplateInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Template);
+                yield return TemplateInfo;
             }
             yield break;
         }

@@ -1163,9 +1163,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ITintAssetsGetter obj)
         {
-            if (obj.PresetDefault.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PresetDefault, out var PresetDefaultInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PresetDefault);
+                yield return PresetDefaultInfo;
             }
             foreach (var item in obj.Presets.SelectMany(f => f.ContainedFormLinks))
             {

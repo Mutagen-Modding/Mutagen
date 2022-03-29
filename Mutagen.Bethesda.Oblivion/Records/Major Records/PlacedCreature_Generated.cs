@@ -1409,17 +1409,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Base.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Base, out var BaseInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Base);
+                yield return BaseInfo;
             }
-            if (obj.Owner.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Owner, out var OwnerInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Owner);
+                yield return OwnerInfo;
             }
-            if (obj.GlobalVariable.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.GlobalVariable, out var GlobalVariableInfo))
             {
-                yield return FormLinkInformation.Factory(obj.GlobalVariable);
+                yield return GlobalVariableInfo;
             }
             if (obj.EnableParent is {} EnableParentItems)
             {

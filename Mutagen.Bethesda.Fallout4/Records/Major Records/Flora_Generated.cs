@@ -2098,9 +2098,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return item;
                 }
             }
-            if (obj.PreviewTransform.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PreviewTransform, out var PreviewTransformInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PreviewTransform);
+                yield return PreviewTransformInfo;
             }
             if (obj.Model is {} ModelItems)
             {
@@ -2130,13 +2130,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Ingredient.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Ingredient, out var IngredientInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Ingredient);
+                yield return IngredientInfo;
             }
-            if (obj.HarvestSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.HarvestSound, out var HarvestSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.HarvestSound);
+                yield return HarvestSoundInfo;
             }
             yield break;
         }

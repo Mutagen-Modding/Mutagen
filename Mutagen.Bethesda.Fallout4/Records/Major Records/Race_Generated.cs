@@ -6764,9 +6764,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
-            if (obj.AnimationSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AnimationSound, out var AnimationSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AnimationSound);
+                yield return AnimationSoundInfo;
             }
             if (obj.ActorEffect is {} ActorEffectItem)
             {
@@ -6775,9 +6775,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Skin.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Skin, out var SkinInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Skin);
+                yield return SkinInfo;
             }
             if (obj.Keywords is {} KeywordsItem)
             {
@@ -6828,9 +6828,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.AttackRace.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AttackRace, out var AttackRaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AttackRace);
+                yield return AttackRaceInfo;
             }
             foreach (var item in obj.Attacks.SelectMany(f => f.ContainedFormLinks))
             {
@@ -6840,41 +6840,41 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.BodyPartData.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BodyPartData, out var BodyPartDataInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BodyPartData);
+                yield return BodyPartDataInfo;
             }
             foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.ImpactMaterialType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ImpactMaterialType, out var ImpactMaterialTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ImpactMaterialType);
+                yield return ImpactMaterialTypeInfo;
             }
-            if (obj.ImpactDataSet.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ImpactDataSet, out var ImpactDataSetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ImpactDataSet);
+                yield return ImpactDataSetInfo;
             }
-            if (obj.DispemberBloodArt.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.DispemberBloodArt, out var DispemberBloodArtInfo))
             {
-                yield return FormLinkInformation.Factory(obj.DispemberBloodArt);
+                yield return DispemberBloodArtInfo;
             }
-            if (obj.MeatCapTextureSet.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MeatCapTextureSet, out var MeatCapTextureSetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MeatCapTextureSet);
+                yield return MeatCapTextureSetInfo;
             }
-            if (obj.CollarTextureSet.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CollarTextureSet, out var CollarTextureSetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CollarTextureSet);
+                yield return CollarTextureSetInfo;
             }
-            if (obj.SoundOpenCorpse.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SoundOpenCorpse, out var SoundOpenCorpseInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SoundOpenCorpse);
+                yield return SoundOpenCorpseInfo;
             }
-            if (obj.SoundCloseCorpse.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SoundCloseCorpse, out var SoundCloseCorpseInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SoundCloseCorpse);
+                yield return SoundCloseCorpseInfo;
             }
             foreach (var item in obj.MovementDataOverrides.SelectMany(f => f.ContainedFormLinks))
             {
@@ -6884,25 +6884,25 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.UnarmedWeapon.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.UnarmedWeapon, out var UnarmedWeaponInfo))
             {
-                yield return FormLinkInformation.Factory(obj.UnarmedWeapon);
+                yield return UnarmedWeaponInfo;
             }
-            if (obj.BaseMovementDefault.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BaseMovementDefault, out var BaseMovementDefaultInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BaseMovementDefault);
+                yield return BaseMovementDefaultInfo;
             }
-            if (obj.BaseMovementDefaultSwim.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BaseMovementDefaultSwim, out var BaseMovementDefaultSwimInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BaseMovementDefaultSwim);
+                yield return BaseMovementDefaultSwimInfo;
             }
-            if (obj.BaseMovementDefaultFly.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BaseMovementDefaultFly, out var BaseMovementDefaultFlyInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BaseMovementDefaultFly);
+                yield return BaseMovementDefaultFlyInfo;
             }
-            if (obj.BaseMovementDefaultSneak.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BaseMovementDefaultSneak, out var BaseMovementDefaultSneakInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BaseMovementDefaultSneak);
+                yield return BaseMovementDefaultSneakInfo;
             }
             if (obj.HeadData is {} HeadDataItem)
             {
@@ -6911,29 +6911,29 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.MorphRace.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MorphRace, out var MorphRaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MorphRace);
+                yield return MorphRaceInfo;
             }
-            if (obj.ArmorRace.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ArmorRace, out var ArmorRaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ArmorRace);
+                yield return ArmorRaceInfo;
             }
-            if (obj.SubgraphTemplateRace.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SubgraphTemplateRace, out var SubgraphTemplateRaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SubgraphTemplateRace);
+                yield return SubgraphTemplateRaceInfo;
             }
-            if (obj.SubgraphAdditiveRace.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SubgraphAdditiveRace, out var SubgraphAdditiveRaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SubgraphAdditiveRace);
+                yield return SubgraphAdditiveRaceInfo;
             }
             foreach (var item in obj.Subgraphs.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.DialogueQuest.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.DialogueQuest, out var DialogueQuestInfo))
             {
-                yield return FormLinkInformation.Factory(obj.DialogueQuest);
+                yield return DialogueQuestInfo;
             }
             yield break;
         }

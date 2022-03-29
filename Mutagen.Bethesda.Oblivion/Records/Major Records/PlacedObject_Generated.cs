@@ -2323,9 +2323,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Base.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Base, out var BaseInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Base);
+                yield return BaseInfo;
             }
             if (obj.TeleportDestination is {} TeleportDestinationItems)
             {
@@ -2341,13 +2341,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            if (obj.Owner.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Owner, out var OwnerInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Owner);
+                yield return OwnerInfo;
             }
-            if (obj.GlobalVariable.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.GlobalVariable, out var GlobalVariableInfo))
             {
-                yield return FormLinkInformation.Factory(obj.GlobalVariable);
+                yield return GlobalVariableInfo;
             }
             if (obj.EnableParent is {} EnableParentItems)
             {
@@ -2356,17 +2356,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            if (obj.Target.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Target, out var TargetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Target);
+                yield return TargetInfo;
             }
-            if (obj.XRTM.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.XRTM, out var XRTMInfo))
             {
-                yield return FormLinkInformation.Factory(obj.XRTM);
+                yield return XRTMInfo;
             }
-            if (obj.ContainedSoul.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ContainedSoul, out var ContainedSoulInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ContainedSoul);
+                yield return ContainedSoulInfo;
             }
             yield break;
         }

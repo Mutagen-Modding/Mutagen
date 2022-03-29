@@ -10,6 +10,7 @@ public partial class RecordTypes
     public static readonly RecordType ACTI = new(0x49544341);
     public static readonly RecordType ADDN = new(0x4E444441);
     public static readonly RecordType ALCH = new(0x48434C41);
+    public static readonly RecordType AMDL = new(0x4C444D41);
     public static readonly RecordType AMMO = new(0x4F4D4D41);
     public static readonly RecordType ANIO = new(0x4F494E41);
     public static readonly RecordType AORU = new(0x55524F41);
@@ -180,4 +181,5 @@ public partial class RecordTypes
     public static readonly RecordType XPWR = new(0x52575058);
     public static readonly RecordType XRNK = new(0x4B4E5258);
     public static readonly RecordType XSCL = new(0x4C435358);
+    public static readonly RecordType ZOOM = new(0x4D4F4F5A);
 }

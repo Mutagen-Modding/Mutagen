@@ -1474,13 +1474,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDialogResponseGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Sound);
-            if (obj.SpeakerIdleAnimation.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SpeakerIdleAnimation, out var SpeakerIdleAnimationInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SpeakerIdleAnimation);
+                yield return SpeakerIdleAnimationInfo;
             }
-            if (obj.ListenerIdleAnimation.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ListenerIdleAnimation, out var ListenerIdleAnimationInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ListenerIdleAnimation);
+                yield return ListenerIdleAnimationInfo;
             }
             yield break;
         }

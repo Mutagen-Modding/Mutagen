@@ -3699,13 +3699,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Location.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Location, out var LocationInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Location);
+                yield return LocationInfo;
             }
-            if (obj.Water.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Water, out var WaterInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Water);
+                yield return WaterInfo;
             }
             if (obj.Ownership is {} OwnershipItems)
             {
@@ -3714,29 +3714,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.LockList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.LockList, out var LockListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.LockList);
+                yield return LockListInfo;
             }
-            if (obj.SkyAndWeatherFromRegion.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SkyAndWeatherFromRegion, out var SkyAndWeatherFromRegionInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SkyAndWeatherFromRegion);
+                yield return SkyAndWeatherFromRegionInfo;
             }
-            if (obj.AcousticSpace.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AcousticSpace, out var AcousticSpaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AcousticSpace);
+                yield return AcousticSpaceInfo;
             }
-            if (obj.EncounterZone.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.EncounterZone, out var EncounterZoneInfo))
             {
-                yield return FormLinkInformation.Factory(obj.EncounterZone);
+                yield return EncounterZoneInfo;
             }
-            if (obj.Music.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Music, out var MusicInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Music);
+                yield return MusicInfo;
             }
-            if (obj.ImageSpace.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ImageSpace, out var ImageSpaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ImageSpace);
+                yield return ImageSpaceInfo;
             }
             if (obj.Landscape is {} LandscapeItems)
             {

@@ -1051,9 +1051,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Spell.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Spell, out var SpellInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Spell);
+                yield return SpellInfo;
             }
             yield break;
         }

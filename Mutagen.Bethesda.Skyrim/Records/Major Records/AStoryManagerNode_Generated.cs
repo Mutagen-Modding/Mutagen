@@ -1204,13 +1204,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Parent.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Parent, out var ParentInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Parent);
+                yield return ParentInfo;
             }
-            if (obj.PreviousSibling.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PreviousSibling, out var PreviousSiblingInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PreviousSibling);
+                yield return PreviousSiblingInfo;
             }
             foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))

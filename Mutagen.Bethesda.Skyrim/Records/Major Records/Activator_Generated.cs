@@ -1976,21 +1976,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.LoopingSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.LoopingSound, out var LoopingSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.LoopingSound);
+                yield return LoopingSoundInfo;
             }
-            if (obj.ActivationSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ActivationSound, out var ActivationSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ActivationSound);
+                yield return ActivationSoundInfo;
             }
-            if (obj.WaterType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.WaterType, out var WaterTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.WaterType);
+                yield return WaterTypeInfo;
             }
-            if (obj.InteractionKeyword.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.InteractionKeyword, out var InteractionKeywordInfo))
             {
-                yield return FormLinkInformation.Factory(obj.InteractionKeyword);
+                yield return InteractionKeywordInfo;
             }
             yield break;
         }

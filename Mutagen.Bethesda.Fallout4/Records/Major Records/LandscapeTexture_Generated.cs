@@ -1398,9 +1398,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
-            if (obj.TextureSet.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.TextureSet, out var TextureSetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.TextureSet);
+                yield return TextureSetInfo;
             }
             yield return FormLinkInformation.Factory(obj.MaterialType);
             foreach (var item in obj.Grasses)

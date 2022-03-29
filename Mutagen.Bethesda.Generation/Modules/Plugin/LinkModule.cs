@@ -140,10 +140,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         {
                             if (field.Nullable)
                             {
-                                fg.AppendLine($"if (obj.{field.Name}.{formLink.FormIDTypeString}.HasValue)");
+                                fg.AppendLine($"if ({nameof(FormLinkInformation)}.{nameof(FormLinkInformation.TryFactory)}(obj.{field.Name}, out var {field.Name}Info))");
                                 using (new BraceWrapper(fg))
                                 {
-                                    fg.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(obj.{field.Name});");
+                                    fg.AppendLine($"yield return {field.Name}Info;");
                                 }
                             }
                             else if (formLink.FormIDType == FormLinkType.FormIDTypeEnum.Normal)

@@ -1996,9 +1996,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return item;
                 }
             }
-            if (obj.PreviewTransform.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PreviewTransform, out var PreviewTransformInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PreviewTransform);
+                yield return PreviewTransformInfo;
             }
             if (obj.Model is {} ModelItems)
             {
@@ -2021,21 +2021,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.NativeTerminal.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.NativeTerminal, out var NativeTerminalInfo))
             {
-                yield return FormLinkInformation.Factory(obj.NativeTerminal);
+                yield return NativeTerminalInfo;
             }
-            if (obj.OpenSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.OpenSound, out var OpenSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.OpenSound);
+                yield return OpenSoundInfo;
             }
-            if (obj.CloseSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CloseSound, out var CloseSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CloseSound);
+                yield return CloseSoundInfo;
             }
-            if (obj.LoopSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.LoopSound, out var LoopSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.LoopSound);
+                yield return LoopSoundInfo;
             }
             yield break;
         }

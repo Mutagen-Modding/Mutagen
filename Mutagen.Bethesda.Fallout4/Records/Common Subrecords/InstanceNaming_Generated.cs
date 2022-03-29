@@ -847,9 +847,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IInstanceNamingGetter obj)
         {
-            if (obj.InstanceNamingRules.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.InstanceNamingRules, out var InstanceNamingRulesInfo))
             {
-                yield return FormLinkInformation.Factory(obj.InstanceNamingRules);
+                yield return InstanceNamingRulesInfo;
             }
             yield break;
         }

@@ -1087,9 +1087,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.IdleAnimation.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.IdleAnimation, out var IdleAnimationInfo))
             {
-                yield return FormLinkInformation.Factory(obj.IdleAnimation);
+                yield return IdleAnimationInfo;
             }
             yield break;
         }

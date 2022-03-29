@@ -3259,13 +3259,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return item;
                 }
             }
-            if (obj.PreviewTransform.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PreviewTransform, out var PreviewTransformInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PreviewTransform);
+                yield return PreviewTransformInfo;
             }
-            if (obj.ObjectEffect.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ObjectEffect, out var ObjectEffectInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ObjectEffect);
+                yield return ObjectEffectInfo;
             }
             if (obj.WorldModel is {} WorldModelItem)
             {
@@ -3281,29 +3281,29 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return item;
                 }
             }
-            if (obj.PickUpSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PickUpSound, out var PickUpSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PickUpSound);
+                yield return PickUpSoundInfo;
             }
-            if (obj.PutDownSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PutDownSound, out var PutDownSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PutDownSound);
+                yield return PutDownSoundInfo;
             }
-            if (obj.EquipmentType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.EquipmentType, out var EquipmentTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.EquipmentType);
+                yield return EquipmentTypeInfo;
             }
-            if (obj.BlockBashImpactDataSet.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BlockBashImpactDataSet, out var BlockBashImpactDataSetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BlockBashImpactDataSet);
+                yield return BlockBashImpactDataSetInfo;
             }
-            if (obj.AlternateBlockMaterial.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AlternateBlockMaterial, out var AlternateBlockMaterialInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AlternateBlockMaterial);
+                yield return AlternateBlockMaterialInfo;
             }
-            if (obj.Race.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Race, out var RaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Race);
+                yield return RaceInfo;
             }
             if (obj.Keywords is {} KeywordsItem)
             {
@@ -3312,9 +3312,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.InstanceNaming.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.InstanceNaming, out var InstanceNamingInfo))
             {
-                yield return FormLinkInformation.Factory(obj.InstanceNaming);
+                yield return InstanceNamingInfo;
             }
             foreach (var item in obj.Armatures.SelectMany(f => f.ContainedFormLinks))
             {
@@ -3327,9 +3327,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.TemplateArmor.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.TemplateArmor, out var TemplateArmorInfo))
             {
-                yield return FormLinkInformation.Factory(obj.TemplateArmor);
+                yield return TemplateArmorInfo;
             }
             if (obj.AttachParentSlots is {} AttachParentSlotsItem)
             {

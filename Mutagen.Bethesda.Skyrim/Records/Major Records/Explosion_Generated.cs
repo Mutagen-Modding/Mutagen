@@ -2167,13 +2167,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.ObjectEffect.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ObjectEffect, out var ObjectEffectInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ObjectEffect);
+                yield return ObjectEffectInfo;
             }
-            if (obj.ImageSpaceModifier.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ImageSpaceModifier, out var ImageSpaceModifierInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ImageSpaceModifier);
+                yield return ImageSpaceModifierInfo;
             }
             yield return FormLinkInformation.Factory(obj.Light);
             yield return FormLinkInformation.Factory(obj.Sound1);

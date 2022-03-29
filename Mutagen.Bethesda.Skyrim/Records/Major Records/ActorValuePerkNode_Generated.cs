@@ -1362,9 +1362,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IActorValuePerkNodeGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Perk);
-            if (obj.AssociatedSkill.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AssociatedSkill, out var AssociatedSkillInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AssociatedSkill);
+                yield return AssociatedSkillInfo;
             }
             yield break;
         }

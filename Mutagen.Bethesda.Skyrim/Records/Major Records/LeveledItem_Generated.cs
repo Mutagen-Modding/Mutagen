@@ -1349,9 +1349,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Global.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Global, out var GlobalInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Global);
+                yield return GlobalInfo;
             }
             if (obj.Entries is {} EntriesItem)
             {

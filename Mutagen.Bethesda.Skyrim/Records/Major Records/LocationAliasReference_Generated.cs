@@ -960,13 +960,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILocationAliasReferenceGetter obj)
         {
-            if (obj.Keyword.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Keyword, out var KeywordInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Keyword);
+                yield return KeywordInfo;
             }
-            if (obj.RefType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.RefType, out var RefTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.RefType);
+                yield return RefTypeInfo;
             }
             yield break;
         }

@@ -1924,9 +1924,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.NextPerk.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.NextPerk, out var NextPerkInfo))
             {
-                yield return FormLinkInformation.Factory(obj.NextPerk);
+                yield return NextPerkInfo;
             }
             foreach (var item in obj.Effects.WhereCastable<IAPerkEffectGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))

@@ -2008,13 +2008,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Branch.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Branch, out var BranchInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Branch);
+                yield return BranchInfo;
             }
-            if (obj.Quest.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Quest, out var QuestInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Quest);
+                yield return QuestInfo;
             }
             foreach (var item in obj.Responses.SelectMany(f => f.ContainedFormLinks))
             {

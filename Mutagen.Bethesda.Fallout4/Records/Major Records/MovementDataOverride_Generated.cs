@@ -928,9 +928,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMovementDataOverrideGetter obj)
         {
-            if (obj.MovementType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MovementType, out var MovementTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MovementType);
+                yield return MovementTypeInfo;
             }
             yield break;
         }

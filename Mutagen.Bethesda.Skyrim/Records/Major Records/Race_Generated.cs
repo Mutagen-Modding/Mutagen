@@ -5953,9 +5953,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Skin.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Skin, out var SkinInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Skin);
+                yield return SkinInfo;
             }
             if (obj.Keywords is {} KeywordsItem)
             {
@@ -5990,9 +5990,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.AttackRace.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AttackRace, out var AttackRaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AttackRace);
+                yield return AttackRaceInfo;
             }
             foreach (var item in obj.Attacks.SelectMany(f => f.ContainedFormLinks))
             {
@@ -6016,33 +6016,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.BodyPartData.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BodyPartData, out var BodyPartDataInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BodyPartData);
+                yield return BodyPartDataInfo;
             }
             foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.MaterialType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MaterialType, out var MaterialTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MaterialType);
+                yield return MaterialTypeInfo;
             }
-            if (obj.ImpactDataSet.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ImpactDataSet, out var ImpactDataSetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ImpactDataSet);
+                yield return ImpactDataSetInfo;
             }
-            if (obj.DecapitationFX.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.DecapitationFX, out var DecapitationFXInfo))
             {
-                yield return FormLinkInformation.Factory(obj.DecapitationFX);
+                yield return DecapitationFXInfo;
             }
-            if (obj.OpenLootSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.OpenLootSound, out var OpenLootSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.OpenLootSound);
+                yield return OpenLootSoundInfo;
             }
-            if (obj.CloseLootSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CloseLootSound, out var CloseLootSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CloseLootSound);
+                yield return CloseLootSoundInfo;
             }
             foreach (var item in obj.MovementTypes.SelectMany(f => f.ContainedFormLinks))
             {
@@ -6052,33 +6052,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.UnarmedEquipSlot.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.UnarmedEquipSlot, out var UnarmedEquipSlotInfo))
             {
-                yield return FormLinkInformation.Factory(obj.UnarmedEquipSlot);
+                yield return UnarmedEquipSlotInfo;
             }
-            if (obj.BaseMovementDefaultWalk.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BaseMovementDefaultWalk, out var BaseMovementDefaultWalkInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BaseMovementDefaultWalk);
+                yield return BaseMovementDefaultWalkInfo;
             }
-            if (obj.BaseMovementDefaultRun.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BaseMovementDefaultRun, out var BaseMovementDefaultRunInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BaseMovementDefaultRun);
+                yield return BaseMovementDefaultRunInfo;
             }
-            if (obj.BaseMovementDefaultSwim.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BaseMovementDefaultSwim, out var BaseMovementDefaultSwimInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BaseMovementDefaultSwim);
+                yield return BaseMovementDefaultSwimInfo;
             }
-            if (obj.BaseMovementDefaultFly.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BaseMovementDefaultFly, out var BaseMovementDefaultFlyInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BaseMovementDefaultFly);
+                yield return BaseMovementDefaultFlyInfo;
             }
-            if (obj.BaseMovementDefaultSneak.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BaseMovementDefaultSneak, out var BaseMovementDefaultSneakInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BaseMovementDefaultSneak);
+                yield return BaseMovementDefaultSneakInfo;
             }
-            if (obj.BaseMovementDefaultSprint.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BaseMovementDefaultSprint, out var BaseMovementDefaultSprintInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BaseMovementDefaultSprint);
+                yield return BaseMovementDefaultSprintInfo;
             }
             if (obj.HeadData is {} HeadDataItem)
             {
@@ -6087,13 +6087,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.MorphRace.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MorphRace, out var MorphRaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MorphRace);
+                yield return MorphRaceInfo;
             }
-            if (obj.ArmorRace.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ArmorRace, out var ArmorRaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ArmorRace);
+                yield return ArmorRaceInfo;
             }
             yield break;
         }

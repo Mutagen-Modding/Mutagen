@@ -1307,13 +1307,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Script.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Script, out var ScriptInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Script);
+                yield return ScriptInfo;
             }
-            if (obj.Template.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Template, out var TemplateInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Template);
+                yield return TemplateInfo;
             }
             yield break;
         }

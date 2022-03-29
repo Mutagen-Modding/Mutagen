@@ -2069,13 +2069,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return item;
                 }
             }
-            if (obj.PreviewTransform.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PreviewTransform, out var PreviewTransformInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PreviewTransform);
+                yield return PreviewTransformInfo;
             }
-            if (obj.ForcedLocRefType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ForcedLocRefType, out var ForcedLocRefTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ForcedLocRefType);
+                yield return ForcedLocRefTypeInfo;
             }
             if (obj.Model is {} ModelItems)
             {

@@ -1175,9 +1175,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             yield return FormLinkInformation.Factory(obj.Quest);
-            if (obj.StartingTopic.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.StartingTopic, out var StartingTopicInfo))
             {
-                yield return FormLinkInformation.Factory(obj.StartingTopic);
+                yield return StartingTopicInfo;
             }
             yield break;
         }

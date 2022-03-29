@@ -1303,13 +1303,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Parent.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Parent, out var ParentInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Parent);
+                yield return ParentInfo;
             }
-            if (obj.HavokImpactDataSet.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.HavokImpactDataSet, out var HavokImpactDataSetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.HavokImpactDataSet);
+                yield return HavokImpactDataSetInfo;
             }
             yield break;
         }

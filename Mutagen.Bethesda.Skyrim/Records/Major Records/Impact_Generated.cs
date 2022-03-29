@@ -1810,25 +1810,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.TextureSet.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.TextureSet, out var TextureSetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.TextureSet);
+                yield return TextureSetInfo;
             }
-            if (obj.SecondaryTextureSet.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SecondaryTextureSet, out var SecondaryTextureSetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SecondaryTextureSet);
+                yield return SecondaryTextureSetInfo;
             }
-            if (obj.Sound1.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Sound1, out var Sound1Info))
             {
-                yield return FormLinkInformation.Factory(obj.Sound1);
+                yield return Sound1Info;
             }
-            if (obj.Sound2.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Sound2, out var Sound2Info))
             {
-                yield return FormLinkInformation.Factory(obj.Sound2);
+                yield return Sound2Info;
             }
-            if (obj.Hazard.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Hazard, out var HazardInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Hazard);
+                yield return HazardInfo;
             }
             yield break;
         }

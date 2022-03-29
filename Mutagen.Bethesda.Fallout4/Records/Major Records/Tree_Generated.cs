@@ -2120,13 +2120,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return item;
                 }
             }
-            if (obj.Ingredient.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Ingredient, out var IngredientInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Ingredient);
+                yield return IngredientInfo;
             }
-            if (obj.HarvestSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.HarvestSound, out var HarvestSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.HarvestSound);
+                yield return HarvestSoundInfo;
             }
             yield break;
         }

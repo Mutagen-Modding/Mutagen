@@ -2278,17 +2278,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.EquipType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.EquipType, out var EquipTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.EquipType);
+                yield return EquipTypeInfo;
             }
-            if (obj.PickUpSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PickUpSound, out var PickUpSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PickUpSound);
+                yield return PickUpSoundInfo;
             }
-            if (obj.PutDownSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PutDownSound, out var PutDownSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PutDownSound);
+                yield return PutDownSoundInfo;
             }
             foreach (var item in obj.Effects.SelectMany(f => f.ContainedFormLinks))
             {

@@ -1876,17 +1876,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Category.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Category, out var CategoryInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Category);
+                yield return CategoryInfo;
             }
-            if (obj.AlternateSoundFor.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AlternateSoundFor, out var AlternateSoundForInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AlternateSoundFor);
+                yield return AlternateSoundForInfo;
             }
-            if (obj.OutputModel.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.OutputModel, out var OutputModelInfo))
             {
-                yield return FormLinkInformation.Factory(obj.OutputModel);
+                yield return OutputModelInfo;
             }
             foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))

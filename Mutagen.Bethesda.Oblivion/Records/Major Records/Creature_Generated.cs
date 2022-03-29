@@ -2952,25 +2952,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.DeathItem.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.DeathItem, out var DeathItemInfo))
             {
-                yield return FormLinkInformation.Factory(obj.DeathItem);
+                yield return DeathItemInfo;
             }
-            if (obj.Script.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Script, out var ScriptInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Script);
+                yield return ScriptInfo;
             }
             foreach (var item in obj.AIPackages)
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.CombatStyle.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CombatStyle, out var CombatStyleInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CombatStyle);
+                yield return CombatStyleInfo;
             }
-            if (obj.InheritsSoundFrom.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.InheritsSoundFrom, out var InheritsSoundFromInfo))
             {
-                yield return FormLinkInformation.Factory(obj.InheritsSoundFrom);
+                yield return InheritsSoundFromInfo;
             }
             foreach (var item in obj.Sounds.SelectMany(f => f.ContainedFormLinks))
             {

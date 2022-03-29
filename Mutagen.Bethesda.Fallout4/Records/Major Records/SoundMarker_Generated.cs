@@ -1168,9 +1168,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
-            if (obj.SoundDescriptor.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SoundDescriptor, out var SoundDescriptorInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SoundDescriptor);
+                yield return SoundDescriptorInfo;
             }
             yield break;
         }

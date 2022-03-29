@@ -2872,13 +2872,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.CombatStyle.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CombatStyle, out var CombatStyleInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CombatStyle);
+                yield return CombatStyleInfo;
             }
-            if (obj.OwnerQuest.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.OwnerQuest, out var OwnerQuestInfo))
             {
-                yield return FormLinkInformation.Factory(obj.OwnerQuest);
+                yield return OwnerQuestInfo;
             }
             yield return FormLinkInformation.Factory(obj.PackageTemplate);
             foreach (var item in obj.ProcedureTree.WhereCastable<IPackageBranchGetter, IFormLinkContainerGetter>()

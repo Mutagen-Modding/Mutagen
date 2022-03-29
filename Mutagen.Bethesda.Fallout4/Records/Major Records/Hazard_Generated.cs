@@ -1962,9 +1962,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return item;
                 }
             }
-            if (obj.ImageSpaceModifier.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ImageSpaceModifier, out var ImageSpaceModifierInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ImageSpaceModifier);
+                yield return ImageSpaceModifierInfo;
             }
             yield return FormLinkInformation.Factory(obj.Effect);
             yield return FormLinkInformation.Factory(obj.Light);

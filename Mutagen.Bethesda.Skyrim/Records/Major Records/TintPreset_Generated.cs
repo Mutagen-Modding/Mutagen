@@ -958,9 +958,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ITintPresetGetter obj)
         {
-            if (obj.Color.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Color, out var ColorInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Color);
+                yield return ColorInfo;
             }
             yield break;
         }

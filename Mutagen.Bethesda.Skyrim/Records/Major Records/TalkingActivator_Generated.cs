@@ -1816,13 +1816,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.LoopingSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.LoopingSound, out var LoopingSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.LoopingSound);
+                yield return LoopingSoundInfo;
             }
-            if (obj.VoiceType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.VoiceType, out var VoiceTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.VoiceType);
+                yield return VoiceTypeInfo;
             }
             yield break;
         }

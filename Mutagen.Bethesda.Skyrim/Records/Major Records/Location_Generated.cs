@@ -4098,25 +4098,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.ParentLocation.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ParentLocation, out var ParentLocationInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ParentLocation);
+                yield return ParentLocationInfo;
             }
-            if (obj.Music.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Music, out var MusicInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Music);
+                yield return MusicInfo;
             }
-            if (obj.UnreportedCrimeFaction.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.UnreportedCrimeFaction, out var UnreportedCrimeFactionInfo))
             {
-                yield return FormLinkInformation.Factory(obj.UnreportedCrimeFaction);
+                yield return UnreportedCrimeFactionInfo;
             }
-            if (obj.WorldLocationMarkerRef.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.WorldLocationMarkerRef, out var WorldLocationMarkerRefInfo))
             {
-                yield return FormLinkInformation.Factory(obj.WorldLocationMarkerRef);
+                yield return WorldLocationMarkerRefInfo;
             }
-            if (obj.HorseMarkerRef.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.HorseMarkerRef, out var HorseMarkerRefInfo))
             {
-                yield return FormLinkInformation.Factory(obj.HorseMarkerRef);
+                yield return HorseMarkerRefInfo;
             }
             yield break;
         }

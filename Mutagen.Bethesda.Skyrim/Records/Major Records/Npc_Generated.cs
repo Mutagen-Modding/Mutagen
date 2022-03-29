@@ -4446,17 +4446,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.DeathItem.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.DeathItem, out var DeathItemInfo))
             {
-                yield return FormLinkInformation.Factory(obj.DeathItem);
+                yield return DeathItemInfo;
             }
-            if (obj.Voice.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Voice, out var VoiceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Voice);
+                yield return VoiceInfo;
             }
-            if (obj.Template.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Template, out var TemplateInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Template);
+                yield return TemplateInfo;
             }
             yield return FormLinkInformation.Factory(obj.Race);
             if (obj.ActorEffect is {} ActorEffectItem)
@@ -4473,37 +4473,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.WornArmor.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.WornArmor, out var WornArmorInfo))
             {
-                yield return FormLinkInformation.Factory(obj.WornArmor);
+                yield return WornArmorInfo;
             }
-            if (obj.FarAwayModel.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.FarAwayModel, out var FarAwayModelInfo))
             {
-                yield return FormLinkInformation.Factory(obj.FarAwayModel);
+                yield return FarAwayModelInfo;
             }
-            if (obj.AttackRace.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AttackRace, out var AttackRaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AttackRace);
+                yield return AttackRaceInfo;
             }
             foreach (var item in obj.Attacks.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.SpectatorOverridePackageList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SpectatorOverridePackageList, out var SpectatorOverridePackageListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SpectatorOverridePackageList);
+                yield return SpectatorOverridePackageListInfo;
             }
-            if (obj.ObserveDeadBodyOverridePackageList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ObserveDeadBodyOverridePackageList, out var ObserveDeadBodyOverridePackageListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ObserveDeadBodyOverridePackageList);
+                yield return ObserveDeadBodyOverridePackageListInfo;
             }
-            if (obj.GuardWarnOverridePackageList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.GuardWarnOverridePackageList, out var GuardWarnOverridePackageListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.GuardWarnOverridePackageList);
+                yield return GuardWarnOverridePackageListInfo;
             }
-            if (obj.CombatOverridePackageList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CombatOverridePackageList, out var CombatOverridePackageListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CombatOverridePackageList);
+                yield return CombatOverridePackageListInfo;
             }
             if (obj.Perks is {} PerksItem)
             {
@@ -4536,17 +4536,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.HairColor.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.HairColor, out var HairColorInfo))
             {
-                yield return FormLinkInformation.Factory(obj.HairColor);
+                yield return HairColorInfo;
             }
-            if (obj.CombatStyle.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CombatStyle, out var CombatStyleInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CombatStyle);
+                yield return CombatStyleInfo;
             }
-            if (obj.GiftFilter.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.GiftFilter, out var GiftFilterInfo))
             {
-                yield return FormLinkInformation.Factory(obj.GiftFilter);
+                yield return GiftFilterInfo;
             }
             if (obj.Sound is IFormLinkContainerGetter SoundlinkCont)
             {
@@ -4555,25 +4555,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.DefaultOutfit.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.DefaultOutfit, out var DefaultOutfitInfo))
             {
-                yield return FormLinkInformation.Factory(obj.DefaultOutfit);
+                yield return DefaultOutfitInfo;
             }
-            if (obj.SleepingOutfit.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SleepingOutfit, out var SleepingOutfitInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SleepingOutfit);
+                yield return SleepingOutfitInfo;
             }
-            if (obj.DefaultPackageList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.DefaultPackageList, out var DefaultPackageListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.DefaultPackageList);
+                yield return DefaultPackageListInfo;
             }
-            if (obj.CrimeFaction.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CrimeFaction, out var CrimeFactionInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CrimeFaction);
+                yield return CrimeFactionInfo;
             }
-            if (obj.HeadTexture.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.HeadTexture, out var HeadTextureInfo))
             {
-                yield return FormLinkInformation.Factory(obj.HeadTexture);
+                yield return HeadTextureInfo;
             }
             yield break;
         }

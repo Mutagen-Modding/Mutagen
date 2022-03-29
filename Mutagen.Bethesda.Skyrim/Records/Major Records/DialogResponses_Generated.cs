@@ -2205,21 +2205,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Topic.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Topic, out var TopicInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Topic);
+                yield return TopicInfo;
             }
-            if (obj.PreviousDialog.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PreviousDialog, out var PreviousDialogInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PreviousDialog);
+                yield return PreviousDialogInfo;
             }
             foreach (var item in obj.LinkTo)
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.ResponseData.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ResponseData, out var ResponseDataInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ResponseData);
+                yield return ResponseDataInfo;
             }
             foreach (var item in obj.Responses.SelectMany(f => f.ContainedFormLinks))
             {
@@ -2234,17 +2234,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Speaker.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Speaker, out var SpeakerInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Speaker);
+                yield return SpeakerInfo;
             }
-            if (obj.WalkAwayTopic.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.WalkAwayTopic, out var WalkAwayTopicInfo))
             {
-                yield return FormLinkInformation.Factory(obj.WalkAwayTopic);
+                yield return WalkAwayTopicInfo;
             }
-            if (obj.AudioOutputOverride.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AudioOutputOverride, out var AudioOutputOverrideInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AudioOutputOverride);
+                yield return AudioOutputOverrideInfo;
             }
             yield break;
         }

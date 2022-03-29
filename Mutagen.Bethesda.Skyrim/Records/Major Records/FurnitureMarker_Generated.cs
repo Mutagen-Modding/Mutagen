@@ -1037,9 +1037,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFurnitureMarkerGetter obj)
         {
-            if (obj.MarkerKeyword.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MarkerKeyword, out var MarkerKeywordInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MarkerKeyword);
+                yield return MarkerKeywordInfo;
             }
             yield break;
         }

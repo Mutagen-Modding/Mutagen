@@ -2581,9 +2581,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.ObjectEffect.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ObjectEffect, out var ObjectEffectInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ObjectEffect);
+                yield return ObjectEffectInfo;
             }
             if (obj.WorldModel is {} WorldModelItem)
             {
@@ -2599,29 +2599,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.PickUpSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PickUpSound, out var PickUpSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PickUpSound);
+                yield return PickUpSoundInfo;
             }
-            if (obj.PutDownSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PutDownSound, out var PutDownSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PutDownSound);
+                yield return PutDownSoundInfo;
             }
-            if (obj.EquipmentType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.EquipmentType, out var EquipmentTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.EquipmentType);
+                yield return EquipmentTypeInfo;
             }
-            if (obj.BashImpactDataSet.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BashImpactDataSet, out var BashImpactDataSetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BashImpactDataSet);
+                yield return BashImpactDataSetInfo;
             }
-            if (obj.AlternateBlockMaterial.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AlternateBlockMaterial, out var AlternateBlockMaterialInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AlternateBlockMaterial);
+                yield return AlternateBlockMaterialInfo;
             }
-            if (obj.Race.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Race, out var RaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Race);
+                yield return RaceInfo;
             }
             if (obj.Keywords is {} KeywordsItem)
             {
@@ -2634,9 +2634,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.TemplateArmor.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.TemplateArmor, out var TemplateArmorInfo))
             {
-                yield return FormLinkInformation.Factory(obj.TemplateArmor);
+                yield return TemplateArmorInfo;
             }
             yield break;
         }

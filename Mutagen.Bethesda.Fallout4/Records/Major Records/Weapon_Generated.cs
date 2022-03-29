@@ -5256,13 +5256,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return item;
                 }
             }
-            if (obj.PreviewTransform.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PreviewTransform, out var PreviewTransformInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PreviewTransform);
+                yield return PreviewTransformInfo;
             }
-            if (obj.AnimationSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AnimationSound, out var AnimationSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AnimationSound);
+                yield return AnimationSoundInfo;
             }
             if (obj.Model is {} ModelItems)
             {
@@ -5271,9 +5271,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return item;
                 }
             }
-            if (obj.ObjectEffect.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ObjectEffect, out var ObjectEffectInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ObjectEffect);
+                yield return ObjectEffectInfo;
             }
             if (obj.Destructible is {} DestructibleItems)
             {
@@ -5282,25 +5282,25 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return item;
                 }
             }
-            if (obj.EquipmentType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.EquipmentType, out var EquipmentTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.EquipmentType);
+                yield return EquipmentTypeInfo;
             }
-            if (obj.BlockBashImpactDataSet.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BlockBashImpactDataSet, out var BlockBashImpactDataSetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BlockBashImpactDataSet);
+                yield return BlockBashImpactDataSetInfo;
             }
-            if (obj.AlternateBlockMaterial.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AlternateBlockMaterial, out var AlternateBlockMaterialInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AlternateBlockMaterial);
+                yield return AlternateBlockMaterialInfo;
             }
-            if (obj.PickUpSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PickUpSound, out var PickUpSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PickUpSound);
+                yield return PickUpSoundInfo;
             }
-            if (obj.PutDownSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PutDownSound, out var PutDownSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PutDownSound);
+                yield return PutDownSoundInfo;
             }
             if (obj.Keywords is {} KeywordsItem)
             {
@@ -5309,9 +5309,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.InstanceNaming.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.InstanceNaming, out var InstanceNamingInfo))
             {
-                yield return FormLinkInformation.Factory(obj.InstanceNaming);
+                yield return InstanceNamingInfo;
             }
             if (obj.AttachParentSlots is {} AttachParentSlotsItem)
             {
@@ -5327,9 +5327,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.EmbeddedWeaponMod.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.EmbeddedWeaponMod, out var EmbeddedWeaponModInfo))
             {
-                yield return FormLinkInformation.Factory(obj.EmbeddedWeaponMod);
+                yield return EmbeddedWeaponModInfo;
             }
             if (obj.FirstPersonModel is {} FirstPersonModelItems)
             {
@@ -5357,25 +5357,25 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
             }
             yield return FormLinkInformation.Factory(obj.CritEffect);
-            if (obj.ImpactDataSet.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ImpactDataSet, out var ImpactDataSetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ImpactDataSet);
+                yield return ImpactDataSetInfo;
             }
-            if (obj.NpcAddAmmoList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.NpcAddAmmoList, out var NpcAddAmmoListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.NpcAddAmmoList);
+                yield return NpcAddAmmoListInfo;
             }
-            if (obj.AimModel.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AimModel, out var AimModelInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AimModel);
+                yield return AimModelInfo;
             }
-            if (obj.Zoom.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Zoom, out var ZoomInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Zoom);
+                yield return ZoomInfo;
             }
-            if (obj.Template.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Template, out var TemplateInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Template);
+                yield return TemplateInfo;
             }
             if (obj.DamageType is {} DamageTypeItems)
             {

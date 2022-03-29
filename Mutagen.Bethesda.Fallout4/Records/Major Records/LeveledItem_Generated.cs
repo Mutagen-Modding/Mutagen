@@ -1641,9 +1641,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
-            if (obj.Global.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Global, out var GlobalInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Global);
+                yield return GlobalInfo;
             }
             if (obj.Entries is {} EntriesItem)
             {
@@ -1657,9 +1657,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.EpicLootChance.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.EpicLootChance, out var EpicLootChanceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.EpicLootChance);
+                yield return EpicLootChanceInfo;
             }
             yield break;
         }
