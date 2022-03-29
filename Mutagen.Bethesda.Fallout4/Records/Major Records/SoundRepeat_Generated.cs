@@ -1237,7 +1237,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public SoundRepeat.VersioningBreaks Versioning { get; private set; }
         public Single MinTime => _data.Slice(0x0, 0x4).Float();
         public Single MaxTime => _data.Slice(0x4, 0x4).Float();
-        public Boolean Stackable => _data.Length <= 0x8 ? default : _data.Slice(0x8, 0x1)[0] == 1;
+        public Boolean Stackable => _data.Length <= 0x8 ? default : _data.Slice(0x8, 0x1)[0] >= 1;
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

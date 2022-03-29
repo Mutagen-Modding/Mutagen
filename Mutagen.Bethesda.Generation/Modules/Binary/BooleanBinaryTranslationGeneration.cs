@@ -45,7 +45,17 @@ public class BooleanBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
         BoolType b = typeGen as BoolType;
         if (b.BoolAsMarker == null)
         {
-            return $"{dataAccessor}[0] == 1";
+            switch (b.ImportantByteLength ?? b.ByteLength) 
+            { 
+                case 1: 
+                    return $"{dataAccessor}[0] >= 1"; 
+                case 2: 
+                    return $"BinaryPrimitives.ReadUInt16LittleEndian({dataAccessor}) >= 1"; 
+                case 4: 
+                    return $"BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor}) >= 1"; 
+                default: 
+                    throw new NotImplementedException(); 
+            }
         }
         else
         {

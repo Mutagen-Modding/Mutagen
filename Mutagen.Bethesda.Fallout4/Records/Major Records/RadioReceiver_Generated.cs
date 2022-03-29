@@ -1357,8 +1357,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public IFormLinkGetter<ISoundOutputModelGetter> SoundModel => new FormLink<ISoundOutputModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Single Frequency => _data.Slice(0x4, 0x4).Float();
         public Single Volume => _data.Slice(0x8, 0x4).Float();
-        public Boolean StartsActive => _data.Slice(0xC, 0x1)[0] == 1;
-        public Boolean NoSignalStatic => _data.Length <= 0xD ? default : _data.Slice(0xD, 0x1)[0] == 1;
+        public Boolean StartsActive => _data.Slice(0xC, 0x1)[0] >= 1;
+        public Boolean NoSignalStatic => _data.Length <= 0xD ? default : _data.Slice(0xD, 0x1)[0] >= 1;
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -2334,7 +2334,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region HasSnow
         private int _HasSnowLocation => _DATALocation!.Value + 0x30;
         private bool _HasSnow_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break2);
-        public Boolean HasSnow => _HasSnow_IsSet ? _data.Slice(_HasSnowLocation, 4)[0] == 1 : default;
+        public Boolean HasSnow => _HasSnow_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_HasSnowLocation, 4)) >= 1 : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

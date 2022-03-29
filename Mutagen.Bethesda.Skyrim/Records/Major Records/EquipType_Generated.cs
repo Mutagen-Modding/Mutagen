@@ -1619,7 +1619,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? SlotParents { get; private set; }
         #region UseAllParents
         private int? _UseAllParentsLocation;
-        public Boolean? UseAllParents => _UseAllParentsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UseAllParentsLocation.Value, _package.MetaData.Constants)[0] == 1 : default(Boolean?);
+        public Boolean? UseAllParents => _UseAllParentsLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UseAllParentsLocation.Value, _package.MetaData.Constants)) >= 1 : default(Boolean?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

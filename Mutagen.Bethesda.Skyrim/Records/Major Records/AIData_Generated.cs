@@ -1606,7 +1606,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Responsibility Responsibility => (Responsibility)_data.Span.Slice(0x3, 0x1)[0];
         public Mood Mood => (Mood)_data.Span.Slice(0x4, 0x1)[0];
         public Assistance Assistance => (Assistance)_data.Span.Slice(0x5, 0x1)[0];
-        public Boolean AggroRadiusBehavior => _data.Slice(0x6, 0x1)[0] == 1;
+        public Boolean AggroRadiusBehavior => _data.Slice(0x6, 0x1)[0] >= 1;
         public Byte Unused => _data.Span[0x7];
         public UInt32 Warn => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
         public UInt32 WarnOrAttack => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0xC, 0x4));

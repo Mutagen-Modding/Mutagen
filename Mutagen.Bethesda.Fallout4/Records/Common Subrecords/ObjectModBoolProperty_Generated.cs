@@ -906,8 +906,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 translationParams: translationParams);
         }
 
-        public Boolean Value => _data.Slice(0x5, 0x1)[0] == 1;
-        public Boolean Value2 => _data.Slice(0x6, 0x1)[0] == 1;
+        public Boolean Value => _data.Slice(0x5, 0x1)[0] >= 1;
+        public Boolean Value2 => _data.Slice(0x6, 0x1)[0] >= 1;
         public ObjectModProperty.BoolFunctionType FunctionType => (ObjectModProperty.BoolFunctionType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x7, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

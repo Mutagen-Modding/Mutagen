@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 translationParams: translationParams);
         }
 
-        public Boolean Data => _data.Slice(0x0, 0x1)[0] == 1;
+        public Boolean Data => _data.Slice(0x0, 0x1)[0] >= 1;
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

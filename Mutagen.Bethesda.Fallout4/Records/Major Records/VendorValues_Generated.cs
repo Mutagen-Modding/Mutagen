@@ -1426,9 +1426,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public UInt16 EndHour => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
         public UInt16 Radius => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
         public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
-        public Boolean BuysStolenItems => _data.Slice(0x8, 0x1)[0] == 1;
-        public Boolean BuySellEverythingNotInList => _data.Slice(0x9, 0x1)[0] == 1;
-        public Boolean BuysNonStolenItems => _data.Slice(0xA, 0x1)[0] == 1;
+        public Boolean BuysStolenItems => _data.Slice(0x8, 0x1)[0] >= 1;
+        public Boolean BuySellEverythingNotInList => _data.Slice(0x9, 0x1)[0] >= 1;
+        public Boolean BuysNonStolenItems => _data.Slice(0xA, 0x1)[0] >= 1;
         public Byte Unknown2 => _data.Span[0xB];
         partial void CustomFactoryEnd(
             OverlayStream stream,

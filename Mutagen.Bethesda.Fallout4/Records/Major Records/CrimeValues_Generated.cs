@@ -1600,8 +1600,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
 
         public CrimeValues.VersioningBreaks Versioning { get; private set; }
-        public Boolean Arrest => _data.Slice(0x0, 0x1)[0] == 1;
-        public Boolean AttackOnSight => _data.Slice(0x1, 0x1)[0] == 1;
+        public Boolean Arrest => _data.Slice(0x0, 0x1)[0] >= 1;
+        public Boolean AttackOnSight => _data.Slice(0x1, 0x1)[0] >= 1;
         public UInt16 Murder => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
         public UInt16 Assault => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
         public UInt16 Trespass => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));

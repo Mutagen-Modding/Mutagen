@@ -1224,8 +1224,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public IFormLinkGetter<IObjectModificationGetter> Mod => new FormLink<IObjectModificationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Byte AttachPointIndex => _data.Span[0x4];
-        public Boolean Optional => _data.Slice(0x5, 0x1)[0] == 1;
-        public Boolean DontUseAll => _data.Slice(0x6, 0x1)[0] == 1;
+        public Boolean Optional => _data.Slice(0x5, 0x1)[0] >= 1;
+        public Boolean DontUseAll => _data.Slice(0x6, 0x1)[0] >= 1;
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

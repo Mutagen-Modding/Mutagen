@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Int32 Health => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
         public Byte DESTCount => _data.Span[0x4];
-        public Boolean VATSTargetable => _data.Slice(0x5, 0x1)[0] == 1;
+        public Boolean VATSTargetable => _data.Slice(0x5, 0x1)[0] >= 1;
         public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x6, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,

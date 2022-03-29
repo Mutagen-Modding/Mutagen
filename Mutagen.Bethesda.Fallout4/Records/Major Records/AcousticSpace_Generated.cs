@@ -1822,7 +1822,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region IsInterior
         private int? _IsInteriorLocation;
-        public Boolean? IsInterior => _IsInteriorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _IsInteriorLocation.Value, _package.MetaData.Constants)[0] == 1 : default(Boolean?);
+        public Boolean? IsInterior => _IsInteriorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _IsInteriorLocation.Value, _package.MetaData.Constants)[0] >= 1 : default(Boolean?);
         #endregion
         #region WeatherAttenuationDb
         private int? _WeatherAttenuationDbLocation;

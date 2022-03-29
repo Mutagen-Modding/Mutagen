@@ -1375,8 +1375,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt16 EndHour => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
         public UInt16 Radius => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
         public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
-        public Boolean OnlyBuysStolenItems => _data.Slice(0x8, 0x1)[0] == 1;
-        public Boolean NotSellBuy => _data.Slice(0x9, 0x1)[0] == 1;
+        public Boolean OnlyBuysStolenItems => _data.Slice(0x8, 0x1)[0] >= 1;
+        public Boolean NotSellBuy => _data.Slice(0x9, 0x1)[0] >= 1;
         public UInt16 Unknown2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xA, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,

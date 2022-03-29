@@ -2659,7 +2659,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         #region OnLocalMap
         private int? _OnLocalMapLocation;
-        public Boolean OnLocalMap => _OnLocalMapLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _OnLocalMapLocation.Value, _package.MetaData.Constants)[0] == 1 : default;
+        public Boolean OnLocalMap => _OnLocalMapLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _OnLocalMapLocation.Value, _package.MetaData.Constants)[0] >= 1 : default;
         #endregion
         #region LoopingSound
         private int? _LoopingSoundLocation;

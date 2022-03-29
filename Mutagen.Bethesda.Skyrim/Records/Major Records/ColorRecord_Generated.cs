@@ -1599,7 +1599,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Playable
         private int? _PlayableLocation;
-        public Boolean Playable => _PlayableLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PlayableLocation.Value, _package.MetaData.Constants)[0] == 1 : default;
+        public Boolean Playable => _PlayableLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PlayableLocation.Value, _package.MetaData.Constants)) >= 1 : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

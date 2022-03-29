@@ -103,6 +103,12 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
         {
             switch (length)
             {
+                case 1:
+                    this.Writer.Write((byte)(b ? 1 : 0));
+                    break;
+                case 2:
+                    this.Writer.Write((short)(b ? 1 : 0));
+                    break;
                 case 4:
                     this.Writer.Write((int)(b ? 1 : 0));
                     break;

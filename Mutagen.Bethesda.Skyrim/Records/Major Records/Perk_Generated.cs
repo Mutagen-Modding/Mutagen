@@ -2626,7 +2626,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Trait
         private int _TraitLocation => _DATALocation!.Value;
         private bool _Trait_IsSet => _DATALocation.HasValue;
-        public Boolean Trait => _Trait_IsSet ? _data.Slice(_TraitLocation, 1)[0] == 1 : default;
+        public Boolean Trait => _Trait_IsSet ? _data.Slice(_TraitLocation, 1)[0] >= 1 : default;
         #endregion
         #region Level
         private int _LevelLocation => _DATALocation!.Value + 0x1;
@@ -2641,12 +2641,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Playable
         private int _PlayableLocation => _DATALocation!.Value + 0x3;
         private bool _Playable_IsSet => _DATALocation.HasValue;
-        public Boolean Playable => _Playable_IsSet ? _data.Slice(_PlayableLocation, 1)[0] == 1 : default;
+        public Boolean Playable => _Playable_IsSet ? _data.Slice(_PlayableLocation, 1)[0] >= 1 : default;
         #endregion
         #region Hidden
         private int _HiddenLocation => _DATALocation!.Value + 0x4;
         private bool _Hidden_IsSet => _DATALocation.HasValue;
-        public Boolean Hidden => _Hidden_IsSet ? _data.Slice(_HiddenLocation, 1)[0] == 1 : default;
+        public Boolean Hidden => _Hidden_IsSet ? _data.Slice(_HiddenLocation, 1)[0] >= 1 : default;
         #endregion
         #region NextPerk
         private int? _NextPerkLocation;
