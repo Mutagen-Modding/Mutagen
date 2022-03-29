@@ -282,6 +282,13 @@
       <xs:complexContent>
         <xs:extension base="Bool">
           <xs:attribute name="boolAsMarker" type="xs:string" />
+          <xs:attribute name="importantByteLength" type="xs:int" >
+            <xs:annotation>
+              <xs:documentation>
+                How much of the byte length to consider when checking if bool is true or false
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
