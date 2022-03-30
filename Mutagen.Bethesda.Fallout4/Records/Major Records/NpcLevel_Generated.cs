@@ -7,6 +7,8 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -16,8 +18,6 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
-using Mutagen.Bethesda.Skyrim;
-using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
@@ -33,25 +33,25 @@ using System.Text;
 #endregion
 
 #nullable enable
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class PcLevelMult :
+    public partial class NpcLevel :
         ANpcLevel,
-        IEquatable<IPcLevelMultGetter>,
-        ILoquiObjectSetter<PcLevelMult>,
-        IPcLevelMult
+        IEquatable<INpcLevelGetter>,
+        ILoquiObjectSetter<NpcLevel>,
+        INpcLevel
     {
         #region Ctor
-        public PcLevelMult()
+        public NpcLevel()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region LevelMult
-        public Single LevelMult { get; set; } = default;
+        #region Level
+        public Int16 Level { get; set; } = default;
         #endregion
 
         #region To String
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            PcLevelMultMixIn.ToString(
+            NpcLevelMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -70,16 +70,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IPcLevelMultGetter rhs) return false;
-            return ((PcLevelMultCommon)((IPcLevelMultGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not INpcLevelGetter rhs) return false;
+            return ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IPcLevelMultGetter? obj)
+        public bool Equals(INpcLevelGetter? obj)
         {
-            return ((PcLevelMultCommon)((IPcLevelMultGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((PcLevelMultCommon)((IPcLevelMultGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -90,10 +90,10 @@ namespace Mutagen.Bethesda.Skyrim
             IMask<TItem>
         {
             #region Ctors
-            public Mask(TItem LevelMult)
+            public Mask(TItem Level)
             : base()
             {
-                this.LevelMult = LevelMult;
+                this.Level = Level;
             }
 
             #pragma warning disable CS8618
@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem LevelMult;
+            public TItem Level;
             #endregion
 
             #region Equals
@@ -119,13 +119,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.LevelMult, rhs.LevelMult)) return false;
+                if (!object.Equals(this.Level, rhs.Level)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.LevelMult);
+                hash.Add(this.Level);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.LevelMult)) return false;
+                if (!eval(this.Level)) return false;
                 return true;
             }
             #endregion
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.LevelMult)) return true;
+                if (eval(this.Level)) return true;
                 return false;
             }
             #endregion
@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new PcLevelMult.Mask<R>();
+                var ret = new NpcLevel.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.LevelMult = eval(this.LevelMult);
+                obj.Level = eval(this.Level);
             }
             #endregion
 
@@ -171,22 +171,22 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(PcLevelMult.Mask<bool>? printMask = null)
+            public string ToString(NpcLevel.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, PcLevelMult.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, NpcLevel.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(PcLevelMult.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(NpcLevel.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.LevelMult ?? true)
+                    if (printMask?.Level ?? true)
                     {
-                        fg.AppendItem(LevelMult, "LevelMult");
+                        fg.AppendItem(Level, "Level");
                     }
                 }
                 fg.AppendLine("]");
@@ -200,17 +200,17 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? LevelMult;
+            public Exception? Level;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                PcLevelMult_FieldIndex enu = (PcLevelMult_FieldIndex)index;
+                NpcLevel_FieldIndex enu = (NpcLevel_FieldIndex)index;
                 switch (enu)
                 {
-                    case PcLevelMult_FieldIndex.LevelMult:
-                        return LevelMult;
+                    case NpcLevel_FieldIndex.Level:
+                        return Level;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -218,11 +218,11 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                PcLevelMult_FieldIndex enu = (PcLevelMult_FieldIndex)index;
+                NpcLevel_FieldIndex enu = (NpcLevel_FieldIndex)index;
                 switch (enu)
                 {
-                    case PcLevelMult_FieldIndex.LevelMult:
-                        this.LevelMult = ex;
+                    case NpcLevel_FieldIndex.Level:
+                        this.Level = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -232,11 +232,11 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                PcLevelMult_FieldIndex enu = (PcLevelMult_FieldIndex)index;
+                NpcLevel_FieldIndex enu = (NpcLevel_FieldIndex)index;
                 switch (enu)
                 {
-                    case PcLevelMult_FieldIndex.LevelMult:
-                        this.LevelMult = (Exception?)obj;
+                    case NpcLevel_FieldIndex.Level:
+                        this.Level = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (LevelMult != null) return true;
+                if (Level != null) return true;
                 return false;
             }
             #endregion
@@ -283,7 +283,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendItem(LevelMult, "LevelMult");
+                fg.AppendItem(Level, "Level");
             }
             #endregion
 
@@ -292,7 +292,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.LevelMult = this.LevelMult.Combine(rhs.LevelMult);
+                ret.Level = this.Level.Combine(rhs.Level);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -315,7 +315,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public bool LevelMult;
+            public bool Level;
             #endregion
 
             #region Ctors
@@ -324,7 +324,7 @@ namespace Mutagen.Bethesda.Skyrim
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.LevelMult = defaultOn;
+                this.Level = defaultOn;
             }
 
             #endregion
@@ -332,7 +332,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((LevelMult, null));
+                ret.Add((Level, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -345,23 +345,23 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => PcLevelMultBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => NpcLevelBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((PcLevelMultBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((NpcLevelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static PcLevelMult CreateFromBinary(
+        public new static NpcLevel CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new PcLevelMult();
-            ((PcLevelMultSetterCommon)((IPcLevelMultGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new NpcLevel();
+            ((NpcLevelSetterCommon)((INpcLevelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out PcLevelMult item,
+            out NpcLevel item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -387,75 +387,75 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((PcLevelMultSetterCommon)((IPcLevelMultGetter)this).CommonSetterInstance()!).Clear(this);
+            ((NpcLevelSetterCommon)((INpcLevelGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new PcLevelMult GetNew()
+        internal static new NpcLevel GetNew()
         {
-            return new PcLevelMult();
+            return new NpcLevel();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IPcLevelMult :
+    public partial interface INpcLevel :
         IANpcLevel,
-        ILoquiObjectSetter<IPcLevelMult>,
-        IPcLevelMultGetter
+        ILoquiObjectSetter<INpcLevel>,
+        INpcLevelGetter
     {
-        new Single LevelMult { get; set; }
+        new Int16 Level { get; set; }
     }
 
-    public partial interface IPcLevelMultGetter :
+    public partial interface INpcLevelGetter :
         IANpcLevelGetter,
         IBinaryItem,
-        ILoquiObject<IPcLevelMultGetter>
+        ILoquiObject<INpcLevelGetter>
     {
-        static new ILoquiRegistration StaticRegistration => PcLevelMult_Registration.Instance;
-        Single LevelMult { get; }
+        static new ILoquiRegistration StaticRegistration => NpcLevel_Registration.Instance;
+        Int16 Level { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class PcLevelMultMixIn
+    public static partial class NpcLevelMixIn
     {
-        public static void Clear(this IPcLevelMult item)
+        public static void Clear(this INpcLevel item)
         {
-            ((PcLevelMultSetterCommon)((IPcLevelMultGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((NpcLevelSetterCommon)((INpcLevelGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static PcLevelMult.Mask<bool> GetEqualsMask(
-            this IPcLevelMultGetter item,
-            IPcLevelMultGetter rhs,
+        public static NpcLevel.Mask<bool> GetEqualsMask(
+            this INpcLevelGetter item,
+            INpcLevelGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((NpcLevelCommon)((INpcLevelGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IPcLevelMultGetter item,
+            this INpcLevelGetter item,
             string? name = null,
-            PcLevelMult.Mask<bool>? printMask = null)
+            NpcLevel.Mask<bool>? printMask = null)
         {
-            return ((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).ToString(
+            return ((NpcLevelCommon)((INpcLevelGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IPcLevelMultGetter item,
+            this INpcLevelGetter item,
             FileGeneration fg,
             string? name = null,
-            PcLevelMult.Mask<bool>? printMask = null)
+            NpcLevel.Mask<bool>? printMask = null)
         {
-            ((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).ToString(
+            ((NpcLevelCommon)((INpcLevelGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -463,39 +463,39 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool Equals(
-            this IPcLevelMultGetter item,
-            IPcLevelMultGetter rhs,
-            PcLevelMult.TranslationMask? equalsMask = null)
+            this INpcLevelGetter item,
+            INpcLevelGetter rhs,
+            NpcLevel.TranslationMask? equalsMask = null)
         {
-            return ((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).Equals(
+            return ((NpcLevelCommon)((INpcLevelGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IPcLevelMult lhs,
-            IPcLevelMultGetter rhs,
-            out PcLevelMult.ErrorMask errorMask,
-            PcLevelMult.TranslationMask? copyMask = null)
+            this INpcLevel lhs,
+            INpcLevelGetter rhs,
+            out NpcLevel.ErrorMask errorMask,
+            NpcLevel.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((PcLevelMultSetterTranslationCommon)((IPcLevelMultGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NpcLevelSetterTranslationCommon)((INpcLevelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = PcLevelMult.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NpcLevel.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IPcLevelMult lhs,
-            IPcLevelMultGetter rhs,
+            this INpcLevel lhs,
+            INpcLevelGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((PcLevelMultSetterTranslationCommon)((IPcLevelMultGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NpcLevelSetterTranslationCommon)((INpcLevelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -503,32 +503,32 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: false);
         }
 
-        public static PcLevelMult DeepCopy(
-            this IPcLevelMultGetter item,
-            PcLevelMult.TranslationMask? copyMask = null)
+        public static NpcLevel DeepCopy(
+            this INpcLevelGetter item,
+            NpcLevel.TranslationMask? copyMask = null)
         {
-            return ((PcLevelMultSetterTranslationCommon)((IPcLevelMultGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NpcLevelSetterTranslationCommon)((INpcLevelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static PcLevelMult DeepCopy(
-            this IPcLevelMultGetter item,
-            out PcLevelMult.ErrorMask errorMask,
-            PcLevelMult.TranslationMask? copyMask = null)
+        public static NpcLevel DeepCopy(
+            this INpcLevelGetter item,
+            out NpcLevel.ErrorMask errorMask,
+            NpcLevel.TranslationMask? copyMask = null)
         {
-            return ((PcLevelMultSetterTranslationCommon)((IPcLevelMultGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NpcLevelSetterTranslationCommon)((INpcLevelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static PcLevelMult DeepCopy(
-            this IPcLevelMultGetter item,
+        public static NpcLevel DeepCopy(
+            this INpcLevelGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((PcLevelMultSetterTranslationCommon)((IPcLevelMultGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NpcLevelSetterTranslationCommon)((INpcLevelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -536,11 +536,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IPcLevelMult item,
+            this INpcLevel item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((PcLevelMultSetterCommon)((IPcLevelMultGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((NpcLevelSetterCommon)((INpcLevelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -553,58 +553,58 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Fallout4.Internals
 {
     #region Field Index
-    public enum PcLevelMult_FieldIndex
+    public enum NpcLevel_FieldIndex
     {
-        LevelMult = 0,
+        Level = 0,
     }
     #endregion
 
     #region Registration
-    public partial class PcLevelMult_Registration : ILoquiRegistration
+    public partial class NpcLevel_Registration : ILoquiRegistration
     {
-        public static readonly PcLevelMult_Registration Instance = new PcLevelMult_Registration();
+        public static readonly NpcLevel_Registration Instance = new NpcLevel_Registration();
 
-        public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
+        public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 204,
+            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
+            msgID: 340,
             version: 0);
 
-        public const string GUID = "dc10b70e-654d-4b0d-ae7f-6f548dfad269";
+        public const string GUID = "eda640f6-a4d6-49c5-b53d-7fd33e8d8a6d";
 
         public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 1;
 
-        public static readonly Type MaskType = typeof(PcLevelMult.Mask<>);
+        public static readonly Type MaskType = typeof(NpcLevel.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(PcLevelMult.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(NpcLevel.ErrorMask);
 
-        public static readonly Type ClassType = typeof(PcLevelMult);
+        public static readonly Type ClassType = typeof(NpcLevel);
 
-        public static readonly Type GetterType = typeof(IPcLevelMultGetter);
+        public static readonly Type GetterType = typeof(INpcLevelGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IPcLevelMult);
+        public static readonly Type SetterType = typeof(INpcLevel);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.PcLevelMult";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.NpcLevel";
 
-        public const string Name = "PcLevelMult";
+        public const string Name = "NpcLevel";
 
-        public const string Namespace = "Mutagen.Bethesda.Skyrim";
+        public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
         public const byte GenericCount = 0;
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(PcLevelMultBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(NpcLevelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -637,26 +637,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PcLevelMultSetterCommon : ANpcLevelSetterCommon
+    public partial class NpcLevelSetterCommon : ANpcLevelSetterCommon
     {
-        public new static readonly PcLevelMultSetterCommon Instance = new PcLevelMultSetterCommon();
+        public new static readonly NpcLevelSetterCommon Instance = new NpcLevelSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IPcLevelMult item)
+        public void Clear(INpcLevel item)
         {
             ClearPartial();
-            item.LevelMult = default;
+            item.Level = default;
             base.Clear(item);
         }
         
         public override void Clear(IANpcLevel item)
         {
-            Clear(item: (IPcLevelMult)item);
+            Clear(item: (INpcLevel)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IPcLevelMult obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(INpcLevel obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -664,7 +664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IPcLevelMult item,
+            INpcLevel item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -672,7 +672,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: PcLevelMultBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: NpcLevelBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (PcLevelMult)item,
+                item: (NpcLevel)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -689,17 +689,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PcLevelMultCommon : ANpcLevelCommon
+    public partial class NpcLevelCommon : ANpcLevelCommon
     {
-        public new static readonly PcLevelMultCommon Instance = new PcLevelMultCommon();
+        public new static readonly NpcLevelCommon Instance = new NpcLevelCommon();
 
-        public PcLevelMult.Mask<bool> GetEqualsMask(
-            IPcLevelMultGetter item,
-            IPcLevelMultGetter rhs,
+        public NpcLevel.Mask<bool> GetEqualsMask(
+            INpcLevelGetter item,
+            INpcLevelGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new PcLevelMult.Mask<bool>(false);
-            ((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new NpcLevel.Mask<bool>(false);
+            ((NpcLevelCommon)((INpcLevelGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -708,20 +708,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IPcLevelMultGetter item,
-            IPcLevelMultGetter rhs,
-            PcLevelMult.Mask<bool> ret,
+            INpcLevelGetter item,
+            INpcLevelGetter rhs,
+            NpcLevel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.LevelMult = item.LevelMult.EqualsWithin(rhs.LevelMult);
+            ret.Level = item.Level == rhs.Level;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string ToString(
-            IPcLevelMultGetter item,
+            INpcLevelGetter item,
             string? name = null,
-            PcLevelMult.Mask<bool>? printMask = null)
+            NpcLevel.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -733,18 +733,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IPcLevelMultGetter item,
+            INpcLevelGetter item,
             FileGeneration fg,
             string? name = null,
-            PcLevelMult.Mask<bool>? printMask = null)
+            NpcLevel.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PcLevelMult =>");
+                fg.AppendLine($"NpcLevel =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PcLevelMult) =>");
+                fg.AppendLine($"{name} (NpcLevel) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -758,21 +758,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IPcLevelMultGetter item,
+            INpcLevelGetter item,
             FileGeneration fg,
-            PcLevelMult.Mask<bool>? printMask = null)
+            NpcLevel.Mask<bool>? printMask = null)
         {
             ANpcLevelCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.LevelMult ?? true)
+            if (printMask?.Level ?? true)
             {
-                fg.AppendItem(item.LevelMult, "LevelMult");
+                fg.AppendItem(item.Level, "Level");
             }
         }
         
-        public static PcLevelMult_FieldIndex ConvertFieldIndex(ANpcLevel_FieldIndex index)
+        public static NpcLevel_FieldIndex ConvertFieldIndex(ANpcLevel_FieldIndex index)
         {
             switch (index)
             {
@@ -783,15 +783,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IPcLevelMultGetter? lhs,
-            IPcLevelMultGetter? rhs,
+            INpcLevelGetter? lhs,
+            INpcLevelGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IANpcLevelGetter)lhs, (IANpcLevelGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)PcLevelMult_FieldIndex.LevelMult) ?? true))
+            if ((crystal?.GetShouldTranslate((int)NpcLevel_FieldIndex.Level) ?? true))
             {
-                if (!lhs.LevelMult.EqualsWithin(rhs.LevelMult)) return false;
+                if (lhs.Level != rhs.Level) return false;
             }
             return true;
         }
@@ -802,22 +802,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IPcLevelMultGetter?)lhs,
-                rhs: rhs as IPcLevelMultGetter,
+                lhs: (INpcLevelGetter?)lhs,
+                rhs: rhs as INpcLevelGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(IPcLevelMultGetter item)
+        public virtual int GetHashCode(INpcLevelGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.LevelMult);
+            hash.Add(item.Level);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
         public override int GetHashCode(IANpcLevelGetter item)
         {
-            return GetHashCode(item: (IPcLevelMultGetter)item);
+            return GetHashCode(item: (INpcLevelGetter)item);
         }
         
         #endregion
@@ -825,11 +825,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return PcLevelMult.GetNew();
+            return NpcLevel.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPcLevelMultGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INpcLevelGetter obj)
         {
             yield break;
         }
@@ -837,14 +837,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PcLevelMultSetterTranslationCommon : ANpcLevelSetterTranslationCommon
+    public partial class NpcLevelSetterTranslationCommon : ANpcLevelSetterTranslationCommon
     {
-        public new static readonly PcLevelMultSetterTranslationCommon Instance = new PcLevelMultSetterTranslationCommon();
+        public new static readonly NpcLevelSetterTranslationCommon Instance = new NpcLevelSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IPcLevelMult item,
-            IPcLevelMultGetter rhs,
+            INpcLevel item,
+            INpcLevelGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -855,9 +855,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)PcLevelMult_FieldIndex.LevelMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NpcLevel_FieldIndex.Level) ?? true))
             {
-                item.LevelMult = rhs.LevelMult;
+                item.Level = rhs.Level;
             }
         }
         
@@ -870,8 +870,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IPcLevelMult)item,
-                rhs: (IPcLevelMultGetter)rhs,
+                item: (INpcLevel)item,
+                rhs: (INpcLevelGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -879,12 +879,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public PcLevelMult DeepCopy(
-            IPcLevelMultGetter item,
-            PcLevelMult.TranslationMask? copyMask = null)
+        public NpcLevel DeepCopy(
+            INpcLevelGetter item,
+            NpcLevel.TranslationMask? copyMask = null)
         {
-            PcLevelMult ret = (PcLevelMult)((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).GetNew();
-            ((PcLevelMultSetterTranslationCommon)((IPcLevelMultGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            NpcLevel ret = (NpcLevel)((NpcLevelCommon)((INpcLevelGetter)item).CommonInstance()!).GetNew();
+            ((NpcLevelSetterTranslationCommon)((INpcLevelGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -893,30 +893,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public PcLevelMult DeepCopy(
-            IPcLevelMultGetter item,
-            out PcLevelMult.ErrorMask errorMask,
-            PcLevelMult.TranslationMask? copyMask = null)
+        public NpcLevel DeepCopy(
+            INpcLevelGetter item,
+            out NpcLevel.ErrorMask errorMask,
+            NpcLevel.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            PcLevelMult ret = (PcLevelMult)((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).GetNew();
-            ((PcLevelMultSetterTranslationCommon)((IPcLevelMultGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            NpcLevel ret = (NpcLevel)((NpcLevelCommon)((INpcLevelGetter)item).CommonInstance()!).GetNew();
+            ((NpcLevelSetterTranslationCommon)((INpcLevelGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = PcLevelMult.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NpcLevel.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public PcLevelMult DeepCopy(
-            IPcLevelMultGetter item,
+        public NpcLevel DeepCopy(
+            INpcLevelGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            PcLevelMult ret = (PcLevelMult)((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).GetNew();
-            ((PcLevelMultSetterTranslationCommon)((IPcLevelMultGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            NpcLevel ret = (NpcLevel)((NpcLevelCommon)((INpcLevelGetter)item).CommonInstance()!).GetNew();
+            ((NpcLevelSetterTranslationCommon)((INpcLevelGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -930,23 +930,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 }
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class PcLevelMult
+    public partial class NpcLevel
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PcLevelMult_Registration.Instance;
-        public new static PcLevelMult_Registration StaticRegistration => PcLevelMult_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => NpcLevel_Registration.Instance;
+        public new static NpcLevel_Registration StaticRegistration => NpcLevel_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => PcLevelMultCommon.Instance;
+        protected override object CommonInstance() => NpcLevelCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return PcLevelMultSetterCommon.Instance;
+            return NpcLevelSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => PcLevelMultSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => NpcLevelSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -955,23 +955,24 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class PcLevelMultBinaryWriteTranslation :
+    public partial class NpcLevelBinaryWriteTranslation :
         ANpcLevelBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PcLevelMultBinaryWriteTranslation Instance = new PcLevelMultBinaryWriteTranslation();
+        public new readonly static NpcLevelBinaryWriteTranslation Instance = new NpcLevelBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IPcLevelMultGetter item,
+            INpcLevelGetter item,
             MutagenWriter writer)
         {
+            writer.Write(item.Level);
         }
 
         public void Write(
             MutagenWriter writer,
-            IPcLevelMultGetter item,
+            INpcLevelGetter item,
             TypedWriteParams? translationParams = null)
         {
             WriteEmbedded(
@@ -985,7 +986,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IPcLevelMultGetter)item,
+                item: (INpcLevelGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -996,74 +997,76 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IPcLevelMultGetter)item,
+                item: (INpcLevelGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    public partial class PcLevelMultBinaryCreateTranslation : ANpcLevelBinaryCreateTranslation
+    public partial class NpcLevelBinaryCreateTranslation : ANpcLevelBinaryCreateTranslation
     {
-        public new readonly static PcLevelMultBinaryCreateTranslation Instance = new PcLevelMultBinaryCreateTranslation();
+        public new readonly static NpcLevelBinaryCreateTranslation Instance = new NpcLevelBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IPcLevelMult item,
+            INpcLevel item,
             MutagenFrame frame)
         {
+            item.Level = frame.ReadInt16();
         }
 
     }
 
 }
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class PcLevelMultBinaryTranslationMixIn
+    public static class NpcLevelBinaryTranslationMixIn
     {
     }
     #endregion
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class PcLevelMultBinaryOverlay :
+    public partial class NpcLevelBinaryOverlay :
         ANpcLevelBinaryOverlay,
-        IPcLevelMultGetter
+        INpcLevelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PcLevelMult_Registration.Instance;
-        public new static PcLevelMult_Registration StaticRegistration => PcLevelMult_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => NpcLevel_Registration.Instance;
+        public new static NpcLevel_Registration StaticRegistration => NpcLevel_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => PcLevelMultCommon.Instance;
+        protected override object CommonInstance() => NpcLevelCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => PcLevelMultSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => NpcLevelSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => PcLevelMultBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => NpcLevelBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((PcLevelMultBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((NpcLevelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
+        public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected PcLevelMultBinaryOverlay(
+        protected NpcLevelBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1073,15 +1076,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
-        public static PcLevelMultBinaryOverlay PcLevelMultFactory(
+        public static NpcLevelBinaryOverlay NpcLevelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new PcLevelMultBinaryOverlay(
-                bytes: stream.RemainingMemory,
+            var ret = new NpcLevelBinaryOverlay(
+                bytes: stream.RemainingMemory.Slice(0, 0x2),
                 package: package);
             int offset = stream.Position;
+            stream.Position += 0x2;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1089,12 +1093,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static PcLevelMultBinaryOverlay PcLevelMultFactory(
+        public static NpcLevelBinaryOverlay NpcLevelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return PcLevelMultFactory(
+            return NpcLevelFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1106,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            PcLevelMultMixIn.ToString(
+            NpcLevelMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1116,16 +1120,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IPcLevelMultGetter rhs) return false;
-            return ((PcLevelMultCommon)((IPcLevelMultGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not INpcLevelGetter rhs) return false;
+            return ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IPcLevelMultGetter? obj)
+        public bool Equals(INpcLevelGetter? obj)
         {
-            return ((PcLevelMultCommon)((IPcLevelMultGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((PcLevelMultCommon)((IPcLevelMultGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

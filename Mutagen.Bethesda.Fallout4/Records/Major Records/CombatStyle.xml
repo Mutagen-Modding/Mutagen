@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CombatStyle" recordType="CSTY" objType="Record" baseClass="Fallout4MajorRecord" GUID="f0309e97-d6cd-4bf1-8365-bd51a94e5c36" ID="343">
+  </Object>
+</Loqui>

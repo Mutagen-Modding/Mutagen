@@ -11,15 +11,18 @@ using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
@@ -28,6 +31,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -52,6 +56,788 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? INpcGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter INpcGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region PreviewTransform
+        private readonly IFormLinkNullable<ITransformGetter> _PreviewTransform = new FormLinkNullable<ITransformGetter>();
+        public IFormLinkNullable<ITransformGetter> PreviewTransform
+        {
+            get => _PreviewTransform;
+            set => _PreviewTransform.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ITransformGetter> INpcGetter.PreviewTransform => this.PreviewTransform;
+        #endregion
+        #region AnimationSound
+        private readonly IFormLinkNullable<IAnimationSoundTagSetGetter> _AnimationSound = new FormLinkNullable<IAnimationSoundTagSetGetter>();
+        public IFormLinkNullable<IAnimationSoundTagSetGetter> AnimationSound
+        {
+            get => _AnimationSound;
+            set => _AnimationSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IAnimationSoundTagSetGetter> INpcGetter.AnimationSound => this.AnimationSound;
+        #endregion
+        #region Flags
+        public Npc.Flag Flags { get; set; } = default;
+        #endregion
+        #region XpValueOffset
+        public Int16 XpValueOffset { get; set; } = default;
+        #endregion
+        #region CalcMinLevel
+        public Int16 CalcMinLevel { get; set; } = default;
+        #endregion
+        #region CalcMaxLevel
+        public Int16 CalcMaxLevel { get; set; } = default;
+        #endregion
+        #region DispositionBase
+        public Int16 DispositionBase { get; set; } = default;
+        #endregion
+        #region UseTemplateActors
+        public Npc.TemplateActorType UseTemplateActors { get; set; } = default;
+        #endregion
+        #region BleedoutOverride
+        public Int16 BleedoutOverride { get; set; } = default;
+        #endregion
+        #region Unknown
+        public Int16 Unknown { get; set; } = default;
+        #endregion
+        #region Factions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<RankPlacement> _Factions = new ExtendedList<RankPlacement>();
+        public ExtendedList<RankPlacement> Factions
+        {
+            get => this._Factions;
+            init => this._Factions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IRankPlacementGetter> INpcGetter.Factions => _Factions;
+        #endregion
+
+        #endregion
+        #region DeathItem
+        private readonly IFormLinkNullable<ILeveledItemGetter> _DeathItem = new FormLinkNullable<ILeveledItemGetter>();
+        public IFormLinkNullable<ILeveledItemGetter> DeathItem
+        {
+            get => _DeathItem;
+            set => _DeathItem.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILeveledItemGetter> INpcGetter.DeathItem => this.DeathItem;
+        #endregion
+        #region Voice
+        private readonly IFormLinkNullable<IVoiceTypeGetter> _Voice = new FormLinkNullable<IVoiceTypeGetter>();
+        public IFormLinkNullable<IVoiceTypeGetter> Voice
+        {
+            get => _Voice;
+            set => _Voice.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IVoiceTypeGetter> INpcGetter.Voice => this.Voice;
+        #endregion
+        #region DefaultTemplate
+        private readonly IFormLinkNullable<INpcSpawnGetter> _DefaultTemplate = new FormLinkNullable<INpcSpawnGetter>();
+        public IFormLinkNullable<INpcSpawnGetter> DefaultTemplate
+        {
+            get => _DefaultTemplate;
+            set => _DefaultTemplate.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<INpcSpawnGetter> INpcGetter.DefaultTemplate => this.DefaultTemplate;
+        #endregion
+        #region LegendaryTemplate
+        private readonly IFormLinkNullable<INpcSpawnGetter> _LegendaryTemplate = new FormLinkNullable<INpcSpawnGetter>();
+        public IFormLinkNullable<INpcSpawnGetter> LegendaryTemplate
+        {
+            get => _LegendaryTemplate;
+            set => _LegendaryTemplate.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<INpcSpawnGetter> INpcGetter.LegendaryTemplate => this.LegendaryTemplate;
+        #endregion
+        #region LegendaryChance
+        private readonly IFormLinkNullable<IGlobalGetter> _LegendaryChance = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> LegendaryChance
+        {
+            get => _LegendaryChance;
+            set => _LegendaryChance.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IGlobalGetter> INpcGetter.LegendaryChance => this.LegendaryChance;
+        #endregion
+        #region TemplateActors
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private TemplateActors? _TemplateActors;
+        public TemplateActors? TemplateActors
+        {
+            get => _TemplateActors;
+            set => _TemplateActors = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITemplateActorsGetter? INpcGetter.TemplateActors => this.TemplateActors;
+        #endregion
+        #region Race
+        private readonly IFormLink<IRaceGetter> _Race = new FormLink<IRaceGetter>();
+        public IFormLink<IRaceGetter> Race
+        {
+            get => _Race;
+            set => _Race.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IRaceGetter> INpcGetter.Race => this.Race;
+        #endregion
+        #region ActorEffect
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<ISpellRecordGetter>>? _ActorEffect;
+        public ExtendedList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect
+        {
+            get => this._ActorEffect;
+            set => this._ActorEffect = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? INpcGetter.ActorEffect => _ActorEffect;
+        #endregion
+
+        #endregion
+        #region Destructible
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Destructible? _Destructible;
+        public Destructible? Destructible
+        {
+            get => _Destructible;
+            set => _Destructible = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? INpcGetter.Destructible => this.Destructible;
+        #endregion
+        #region Skin
+        private readonly IFormLinkNullable<IArmorGetter> _Skin = new FormLinkNullable<IArmorGetter>();
+        public IFormLinkNullable<IArmorGetter> Skin
+        {
+            get => _Skin;
+            set => _Skin.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IArmorGetter> INpcGetter.Skin => this.Skin;
+        #endregion
+        #region FarAwayModel
+        private readonly IFormLinkNullable<IArmorGetter> _FarAwayModel = new FormLinkNullable<IArmorGetter>();
+        public IFormLinkNullable<IArmorGetter> FarAwayModel
+        {
+            get => _FarAwayModel;
+            set => _FarAwayModel.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IArmorGetter> INpcGetter.FarAwayModel => this.FarAwayModel;
+        #endregion
+        #region AttackRace
+        private readonly IFormLinkNullable<IRaceGetter> _AttackRace = new FormLinkNullable<IRaceGetter>();
+        public IFormLinkNullable<IRaceGetter> AttackRace
+        {
+            get => _AttackRace;
+            set => _AttackRace.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IRaceGetter> INpcGetter.AttackRace => this.AttackRace;
+        #endregion
+        #region Attacks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Attack> _Attacks = new ExtendedList<Attack>();
+        public ExtendedList<Attack> Attacks
+        {
+            get => this._Attacks;
+            init => this._Attacks = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAttackGetter> INpcGetter.Attacks => _Attacks;
+        #endregion
+
+        #endregion
+        #region SpectatorOverridePackageList
+        private readonly IFormLinkNullable<IFormListGetter> _SpectatorOverridePackageList = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList
+        {
+            get => _SpectatorOverridePackageList;
+            set => _SpectatorOverridePackageList.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFormListGetter> INpcGetter.SpectatorOverridePackageList => this.SpectatorOverridePackageList;
+        #endregion
+        #region ObserveDeadBodyOverridePackageList
+        private readonly IFormLinkNullable<IFormListGetter> _ObserveDeadBodyOverridePackageList = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList
+        {
+            get => _ObserveDeadBodyOverridePackageList;
+            set => _ObserveDeadBodyOverridePackageList.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFormListGetter> INpcGetter.ObserveDeadBodyOverridePackageList => this.ObserveDeadBodyOverridePackageList;
+        #endregion
+        #region GuardWarnOverridePackageList
+        private readonly IFormLinkNullable<IFormListGetter> _GuardWarnOverridePackageList = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList
+        {
+            get => _GuardWarnOverridePackageList;
+            set => _GuardWarnOverridePackageList.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFormListGetter> INpcGetter.GuardWarnOverridePackageList => this.GuardWarnOverridePackageList;
+        #endregion
+        #region CombatOverridePackageList
+        private readonly IFormLinkNullable<IFormListGetter> _CombatOverridePackageList = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> CombatOverridePackageList
+        {
+            get => _CombatOverridePackageList;
+            set => _CombatOverridePackageList.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFormListGetter> INpcGetter.CombatOverridePackageList => this.CombatOverridePackageList;
+        #endregion
+        #region FollowerCommandPackageList
+        private readonly IFormLinkNullable<IFormListGetter> _FollowerCommandPackageList = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> FollowerCommandPackageList
+        {
+            get => _FollowerCommandPackageList;
+            set => _FollowerCommandPackageList.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFormListGetter> INpcGetter.FollowerCommandPackageList => this.FollowerCommandPackageList;
+        #endregion
+        #region FollowerElevatorPackageList
+        private readonly IFormLinkNullable<IFormListGetter> _FollowerElevatorPackageList = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> FollowerElevatorPackageList
+        {
+            get => _FollowerElevatorPackageList;
+            set => _FollowerElevatorPackageList.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFormListGetter> INpcGetter.FollowerElevatorPackageList => this.FollowerElevatorPackageList;
+        #endregion
+        #region Perks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<PerkPlacement>? _Perks;
+        public ExtendedList<PerkPlacement>? Perks
+        {
+            get => this._Perks;
+            set => this._Perks = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IPerkPlacementGetter>? INpcGetter.Perks => _Perks;
+        #endregion
+
+        #endregion
+        #region Properties
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ObjectProperty>? _Properties;
+        public ExtendedList<ObjectProperty>? Properties
+        {
+            get => this._Properties;
+            set => this._Properties = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IObjectPropertyGetter>? INpcGetter.Properties => _Properties;
+        #endregion
+
+        #endregion
+        #region ForcedLocRefType
+        private readonly IFormLinkNullable<ILocationReferenceTypeGetter> _ForcedLocRefType = new FormLinkNullable<ILocationReferenceTypeGetter>();
+        public IFormLinkNullable<ILocationReferenceTypeGetter> ForcedLocRefType
+        {
+            get => _ForcedLocRefType;
+            set => _ForcedLocRefType.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILocationReferenceTypeGetter> INpcGetter.ForcedLocRefType => this.ForcedLocRefType;
+        #endregion
+        #region NativeTerminal
+        private readonly IFormLinkNullable<ITerminalGetter> _NativeTerminal = new FormLinkNullable<ITerminalGetter>();
+        public IFormLinkNullable<ITerminalGetter> NativeTerminal
+        {
+            get => _NativeTerminal;
+            set => _NativeTerminal.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ITerminalGetter> INpcGetter.NativeTerminal => this.NativeTerminal;
+        #endregion
+        #region Items
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ContainerEntry>? _Items;
+        public ExtendedList<ContainerEntry>? Items
+        {
+            get => this._Items;
+            set => this._Items = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IContainerEntryGetter>? INpcGetter.Items => _Items;
+        #endregion
+
+        #endregion
+        #region Agression
+        public Npc.AggressionType Agression { get; set; } = default;
+        #endregion
+        #region Confidence
+        public Npc.ConfidenceType Confidence { get; set; } = default;
+        #endregion
+        #region EnergyLevel
+        public Byte EnergyLevel { get; set; } = default;
+        #endregion
+        #region Responsibility
+        public Npc.ResponsibilityType Responsibility { get; set; } = default;
+        #endregion
+        #region Mood
+        public Npc.MoodType Mood { get; set; } = default;
+        #endregion
+        #region Assistence
+        public Npc.AssistenceType Assistence { get; set; } = default;
+        #endregion
+        #region AggroRadiusBehaviorEnabled
+        public Boolean AggroRadiusBehaviorEnabled { get; set; } = default;
+        #endregion
+        #region AggroRadiusWarn
+        public UInt32 AggroRadiusWarn { get; set; } = default;
+        #endregion
+        #region AggroRadiusWarnOrAttack
+        public UInt32 AggroRadiusWarnOrAttack { get; set; } = default;
+        #endregion
+        #region AggroRadiusAttack
+        public UInt32 AggroRadiusAttack { get; set; } = default;
+        #endregion
+        #region NoSlowApproach
+        public Boolean NoSlowApproach { get; set; } = default;
+        #endregion
+        #region Packages
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IPackageGetter>> _Packages = new ExtendedList<IFormLinkGetter<IPackageGetter>>();
+        public ExtendedList<IFormLinkGetter<IPackageGetter>> Packages
+        {
+            get => this._Packages;
+            init => this._Packages = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IPackageGetter>> INpcGetter.Packages => _Packages;
+        #endregion
+
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? INpcGetter.Keywords => _Keywords;
+        #endregion
+
+        #region Aspects
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #endregion
+        #region AttachParentSlots
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _AttachParentSlots;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots
+        {
+            get => this._AttachParentSlots;
+            set => this._AttachParentSlots = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? INpcGetter.AttachParentSlots => _AttachParentSlots;
+        #endregion
+
+        #endregion
+        #region ObjectTemplates
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ObjectTemplate<Npc.Property>>? _ObjectTemplates;
+        public ExtendedList<ObjectTemplate<Npc.Property>>? ObjectTemplates
+        {
+            get => this._ObjectTemplates;
+            set => this._ObjectTemplates = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IObjectTemplateGetter<Npc.Property>>? INpcGetter.ObjectTemplates => _ObjectTemplates;
+        #endregion
+
+        #endregion
+        #region Class
+        private readonly IFormLinkNullable<IClassGetter> _Class = new FormLinkNullable<IClassGetter>();
+        public IFormLinkNullable<IClassGetter> Class
+        {
+            get => _Class;
+            set => _Class.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IClassGetter> INpcGetter.Class => this.Class;
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? INpcGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region ShortName
+        public String? ShortName { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? INpcGetter.ShortName => this.ShortName;
+        #endregion
+        #region BaseHealth
+        public UInt16 BaseHealth { get; set; } = default;
+        #endregion
+        #region BaseActionPoints
+        public UInt16 BaseActionPoints { get; set; } = default;
+        #endregion
+        #region FarAwayModelDistance
+        public UInt16 FarAwayModelDistance { get; set; } = default;
+        #endregion
+        #region GearedUpWeapons
+        public Byte GearedUpWeapons { get; set; } = default;
+        #endregion
+        #region Unused
+        public Byte Unused { get; set; } = default;
+        #endregion
+        #region HeadParts
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IHeadPartGetter>> _HeadParts = new ExtendedList<IFormLinkGetter<IHeadPartGetter>>();
+        public ExtendedList<IFormLinkGetter<IHeadPartGetter>> HeadParts
+        {
+            get => this._HeadParts;
+            init => this._HeadParts = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> INpcGetter.HeadParts => _HeadParts;
+        #endregion
+
+        #endregion
+        #region HairColor
+        private readonly IFormLinkNullable<IColorRecordGetter> _HairColor = new FormLinkNullable<IColorRecordGetter>();
+        public IFormLinkNullable<IColorRecordGetter> HairColor
+        {
+            get => _HairColor;
+            set => _HairColor.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IColorRecordGetter> INpcGetter.HairColor => this.HairColor;
+        #endregion
+        #region FacialHairColor
+        private readonly IFormLinkNullable<IColorRecordGetter> _FacialHairColor = new FormLinkNullable<IColorRecordGetter>();
+        public IFormLinkNullable<IColorRecordGetter> FacialHairColor
+        {
+            get => _FacialHairColor;
+            set => _FacialHairColor.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IColorRecordGetter> INpcGetter.FacialHairColor => this.FacialHairColor;
+        #endregion
+        #region CombatStyle
+        private readonly IFormLinkNullable<ICombatStyleGetter> _CombatStyle = new FormLinkNullable<ICombatStyleGetter>();
+        public IFormLinkNullable<ICombatStyleGetter> CombatStyle
+        {
+            get => _CombatStyle;
+            set => _CombatStyle.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ICombatStyleGetter> INpcGetter.CombatStyle => this.CombatStyle;
+        #endregion
+        #region GiftFilter
+        private readonly IFormLinkNullable<IFormListGetter> _GiftFilter = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> GiftFilter
+        {
+            get => _GiftFilter;
+            set => _GiftFilter.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFormListGetter> INpcGetter.GiftFilter => this.GiftFilter;
+        #endregion
+        #region NAM5
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _NAM5;
+        public MemorySlice<Byte>? NAM5
+        {
+            get => this._NAM5;
+            set => this._NAM5 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? INpcGetter.NAM5 => this.NAM5;
+        #endregion
+        #region HeightMin
+        public Single HeightMin { get; set; } = default;
+        #endregion
+        #region NAM7
+        public Single? NAM7 { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? INpcGetter.NAM7 => this.NAM7;
+        #endregion
+        #region HeightMax
+        public Single HeightMax { get; set; } = default;
+        #endregion
+        #region Weight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private NpcWeight? _Weight;
+        public NpcWeight? Weight
+        {
+            get => _Weight;
+            set => _Weight = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INpcWeightGetter? INpcGetter.Weight => this.Weight;
+        #endregion
+        #region SoundLevel
+        public SoundLevel SoundLevel { get; set; } = default;
+        #endregion
+        #region Sounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<NpcSound>? _Sounds;
+        public ExtendedList<NpcSound>? Sounds
+        {
+            get => this._Sounds;
+            set => this._Sounds = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<INpcSoundGetter>? INpcGetter.Sounds => _Sounds;
+        #endregion
+
+        #endregion
+        #region SoundsFinalize
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _SoundsFinalize;
+        public MemorySlice<Byte>? SoundsFinalize
+        {
+            get => this._SoundsFinalize;
+            set => this._SoundsFinalize = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? INpcGetter.SoundsFinalize => this.SoundsFinalize;
+        #endregion
+        #region InheritsSoundsFrom
+        private readonly IFormLinkNullable<INpcGetter> _InheritsSoundsFrom = new FormLinkNullable<INpcGetter>();
+        public IFormLinkNullable<INpcGetter> InheritsSoundsFrom
+        {
+            get => _InheritsSoundsFrom;
+            set => _InheritsSoundsFrom.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<INpcGetter> INpcGetter.InheritsSoundsFrom => this.InheritsSoundsFrom;
+        #endregion
+        #region PowerArmorStand
+        private readonly IFormLinkNullable<IFurnitureGetter> _PowerArmorStand = new FormLinkNullable<IFurnitureGetter>();
+        public IFormLinkNullable<IFurnitureGetter> PowerArmorStand
+        {
+            get => _PowerArmorStand;
+            set => _PowerArmorStand.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFurnitureGetter> INpcGetter.PowerArmorStand => this.PowerArmorStand;
+        #endregion
+        #region DefaultOutfit
+        private readonly IFormLinkNullable<IOutfitGetter> _DefaultOutfit = new FormLinkNullable<IOutfitGetter>();
+        public IFormLinkNullable<IOutfitGetter> DefaultOutfit
+        {
+            get => _DefaultOutfit;
+            set => _DefaultOutfit.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IOutfitGetter> INpcGetter.DefaultOutfit => this.DefaultOutfit;
+        #endregion
+        #region SleepingOutfit
+        private readonly IFormLinkNullable<IOutfitGetter> _SleepingOutfit = new FormLinkNullable<IOutfitGetter>();
+        public IFormLinkNullable<IOutfitGetter> SleepingOutfit
+        {
+            get => _SleepingOutfit;
+            set => _SleepingOutfit.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IOutfitGetter> INpcGetter.SleepingOutfit => this.SleepingOutfit;
+        #endregion
+        #region DefaultPackageList
+        private readonly IFormLinkNullable<IFormListGetter> _DefaultPackageList = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> DefaultPackageList
+        {
+            get => _DefaultPackageList;
+            set => _DefaultPackageList.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFormListGetter> INpcGetter.DefaultPackageList => this.DefaultPackageList;
+        #endregion
+        #region CrimeFaction
+        private readonly IFormLinkNullable<IFactionGetter> _CrimeFaction = new FormLinkNullable<IFactionGetter>();
+        public IFormLinkNullable<IFactionGetter> CrimeFaction
+        {
+            get => _CrimeFaction;
+            set => _CrimeFaction.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFactionGetter> INpcGetter.CrimeFaction => this.CrimeFaction;
+        #endregion
+        #region HeadTexture
+        private readonly IFormLinkNullable<ITextureSetGetter> _HeadTexture = new FormLinkNullable<ITextureSetGetter>();
+        public IFormLinkNullable<ITextureSetGetter> HeadTexture
+        {
+            get => _HeadTexture;
+            set => _HeadTexture.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ITextureSetGetter> INpcGetter.HeadTexture => this.HeadTexture;
+        #endregion
+        #region TextureLighting
+        public Color? TextureLighting { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Color? INpcGetter.TextureLighting => this.TextureLighting;
+        #endregion
+        #region Morphs
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<NpcMorph> _Morphs = new ExtendedList<NpcMorph>();
+        public ExtendedList<NpcMorph> Morphs
+        {
+            get => this._Morphs;
+            init => this._Morphs = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<INpcMorphGetter> INpcGetter.Morphs => _Morphs;
+        #endregion
+
+        #endregion
+        #region FaceTintingLayers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<NpcFaceTintingLayer> _FaceTintingLayers = new ExtendedList<NpcFaceTintingLayer>();
+        public ExtendedList<NpcFaceTintingLayer> FaceTintingLayers
+        {
+            get => this._FaceTintingLayers;
+            init => this._FaceTintingLayers = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<INpcFaceTintingLayerGetter> INpcGetter.FaceTintingLayers => _FaceTintingLayers;
+        #endregion
+
+        #endregion
+        #region BodyMorphRegionValues
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private NpcBodyMorphRegionValues? _BodyMorphRegionValues;
+        public NpcBodyMorphRegionValues? BodyMorphRegionValues
+        {
+            get => _BodyMorphRegionValues;
+            set => _BodyMorphRegionValues = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INpcBodyMorphRegionValuesGetter? INpcGetter.BodyMorphRegionValues => this.BodyMorphRegionValues;
+        #endregion
+        #region FaceMorphs
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<NpcFaceMorph> _FaceMorphs = new ExtendedList<NpcFaceMorph>();
+        public ExtendedList<NpcFaceMorph> FaceMorphs
+        {
+            get => this._FaceMorphs;
+            init => this._FaceMorphs = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<INpcFaceMorphGetter> INpcGetter.FaceMorphs => _FaceMorphs;
+        #endregion
+
+        #endregion
+        #region FacialMorphIntensity
+        public Single? FacialMorphIntensity { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? INpcGetter.FacialMorphIntensity => this.FacialMorphIntensity;
+        #endregion
+        #region ActivateTextOverride
+        public TranslatedString? ActivateTextOverride { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? INpcGetter.ActivateTextOverride => this.ActivateTextOverride;
+        #endregion
+        #region ACBSDataTypeState
+        public Npc.ACBSDataType ACBSDataTypeState { get; set; } = default;
+        #endregion
+        #region AIDTDataTypeState
+        public Npc.AIDTDataType AIDTDataTypeState { get; set; } = default;
+        #endregion
+        #region DNAMDataTypeState
+        public Npc.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -76,6 +862,97 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.PreviewTransform = initialValue;
+                this.AnimationSound = initialValue;
+                this.Flags = initialValue;
+                this.XpValueOffset = initialValue;
+                this.Level = new MaskItem<TItem, ANpcLevel.Mask<TItem>?>(initialValue, new ANpcLevel.Mask<TItem>(initialValue));
+                this.CalcMinLevel = initialValue;
+                this.CalcMaxLevel = initialValue;
+                this.DispositionBase = initialValue;
+                this.UseTemplateActors = initialValue;
+                this.BleedoutOverride = initialValue;
+                this.Unknown = initialValue;
+                this.Factions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>());
+                this.DeathItem = initialValue;
+                this.Voice = initialValue;
+                this.DefaultTemplate = initialValue;
+                this.LegendaryTemplate = initialValue;
+                this.LegendaryChance = initialValue;
+                this.TemplateActors = new MaskItem<TItem, TemplateActors.Mask<TItem>?>(initialValue, new TemplateActors.Mask<TItem>(initialValue));
+                this.Race = initialValue;
+                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
+                this.Skin = initialValue;
+                this.FarAwayModel = initialValue;
+                this.AttackRace = initialValue;
+                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>());
+                this.SpectatorOverridePackageList = initialValue;
+                this.ObserveDeadBodyOverridePackageList = initialValue;
+                this.GuardWarnOverridePackageList = initialValue;
+                this.CombatOverridePackageList = initialValue;
+                this.FollowerCommandPackageList = initialValue;
+                this.FollowerElevatorPackageList = initialValue;
+                this.Perks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkPlacement.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PerkPlacement.Mask<TItem>?>>());
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.ForcedLocRefType = initialValue;
+                this.NativeTerminal = initialValue;
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>());
+                this.Agression = initialValue;
+                this.Confidence = initialValue;
+                this.EnergyLevel = initialValue;
+                this.Responsibility = initialValue;
+                this.Mood = initialValue;
+                this.Assistence = initialValue;
+                this.AggroRadiusBehaviorEnabled = initialValue;
+                this.AggroRadiusWarn = initialValue;
+                this.AggroRadiusWarnOrAttack = initialValue;
+                this.AggroRadiusAttack = initialValue;
+                this.NoSlowApproach = initialValue;
+                this.Packages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
+                this.Class = initialValue;
+                this.Name = initialValue;
+                this.ShortName = initialValue;
+                this.BaseHealth = initialValue;
+                this.BaseActionPoints = initialValue;
+                this.FarAwayModelDistance = initialValue;
+                this.GearedUpWeapons = initialValue;
+                this.Unused = initialValue;
+                this.HeadParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.HairColor = initialValue;
+                this.FacialHairColor = initialValue;
+                this.CombatStyle = initialValue;
+                this.GiftFilter = initialValue;
+                this.NAM5 = initialValue;
+                this.HeightMin = initialValue;
+                this.NAM7 = initialValue;
+                this.HeightMax = initialValue;
+                this.Weight = new MaskItem<TItem, NpcWeight.Mask<TItem>?>(initialValue, new NpcWeight.Mask<TItem>(initialValue));
+                this.SoundLevel = initialValue;
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcSound.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NpcSound.Mask<TItem>?>>());
+                this.SoundsFinalize = initialValue;
+                this.InheritsSoundsFrom = initialValue;
+                this.PowerArmorStand = initialValue;
+                this.DefaultOutfit = initialValue;
+                this.SleepingOutfit = initialValue;
+                this.DefaultPackageList = initialValue;
+                this.CrimeFaction = initialValue;
+                this.HeadTexture = initialValue;
+                this.TextureLighting = initialValue;
+                this.Morphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcMorph.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NpcMorph.Mask<TItem>?>>());
+                this.FaceTintingLayers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcFaceTintingLayer.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NpcFaceTintingLayer.Mask<TItem>?>>());
+                this.BodyMorphRegionValues = new MaskItem<TItem, NpcBodyMorphRegionValues.Mask<TItem>?>(initialValue, new NpcBodyMorphRegionValues.Mask<TItem>(initialValue));
+                this.FaceMorphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcFaceMorph.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NpcFaceMorph.Mask<TItem>?>>());
+                this.FacialMorphIntensity = initialValue;
+                this.ActivateTextOverride = initialValue;
+                this.ACBSDataTypeState = initialValue;
+                this.AIDTDataTypeState = initialValue;
+                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -84,7 +961,98 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem VirtualMachineAdapter,
+                TItem ObjectBounds,
+                TItem PreviewTransform,
+                TItem AnimationSound,
+                TItem Flags,
+                TItem XpValueOffset,
+                TItem Level,
+                TItem CalcMinLevel,
+                TItem CalcMaxLevel,
+                TItem DispositionBase,
+                TItem UseTemplateActors,
+                TItem BleedoutOverride,
+                TItem Unknown,
+                TItem Factions,
+                TItem DeathItem,
+                TItem Voice,
+                TItem DefaultTemplate,
+                TItem LegendaryTemplate,
+                TItem LegendaryChance,
+                TItem TemplateActors,
+                TItem Race,
+                TItem ActorEffect,
+                TItem Destructible,
+                TItem Skin,
+                TItem FarAwayModel,
+                TItem AttackRace,
+                TItem Attacks,
+                TItem SpectatorOverridePackageList,
+                TItem ObserveDeadBodyOverridePackageList,
+                TItem GuardWarnOverridePackageList,
+                TItem CombatOverridePackageList,
+                TItem FollowerCommandPackageList,
+                TItem FollowerElevatorPackageList,
+                TItem Perks,
+                TItem Properties,
+                TItem ForcedLocRefType,
+                TItem NativeTerminal,
+                TItem Items,
+                TItem Agression,
+                TItem Confidence,
+                TItem EnergyLevel,
+                TItem Responsibility,
+                TItem Mood,
+                TItem Assistence,
+                TItem AggroRadiusBehaviorEnabled,
+                TItem AggroRadiusWarn,
+                TItem AggroRadiusWarnOrAttack,
+                TItem AggroRadiusAttack,
+                TItem NoSlowApproach,
+                TItem Packages,
+                TItem Keywords,
+                TItem AttachParentSlots,
+                TItem ObjectTemplates,
+                TItem Class,
+                TItem Name,
+                TItem ShortName,
+                TItem BaseHealth,
+                TItem BaseActionPoints,
+                TItem FarAwayModelDistance,
+                TItem GearedUpWeapons,
+                TItem Unused,
+                TItem HeadParts,
+                TItem HairColor,
+                TItem FacialHairColor,
+                TItem CombatStyle,
+                TItem GiftFilter,
+                TItem NAM5,
+                TItem HeightMin,
+                TItem NAM7,
+                TItem HeightMax,
+                TItem Weight,
+                TItem SoundLevel,
+                TItem Sounds,
+                TItem SoundsFinalize,
+                TItem InheritsSoundsFrom,
+                TItem PowerArmorStand,
+                TItem DefaultOutfit,
+                TItem SleepingOutfit,
+                TItem DefaultPackageList,
+                TItem CrimeFaction,
+                TItem HeadTexture,
+                TItem TextureLighting,
+                TItem Morphs,
+                TItem FaceTintingLayers,
+                TItem BodyMorphRegionValues,
+                TItem FaceMorphs,
+                TItem FacialMorphIntensity,
+                TItem ActivateTextOverride,
+                TItem ACBSDataTypeState,
+                TItem AIDTDataTypeState,
+                TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -93,6 +1061,97 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.PreviewTransform = PreviewTransform;
+                this.AnimationSound = AnimationSound;
+                this.Flags = Flags;
+                this.XpValueOffset = XpValueOffset;
+                this.Level = new MaskItem<TItem, ANpcLevel.Mask<TItem>?>(Level, new ANpcLevel.Mask<TItem>(Level));
+                this.CalcMinLevel = CalcMinLevel;
+                this.CalcMaxLevel = CalcMaxLevel;
+                this.DispositionBase = DispositionBase;
+                this.UseTemplateActors = UseTemplateActors;
+                this.BleedoutOverride = BleedoutOverride;
+                this.Unknown = Unknown;
+                this.Factions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>?>(Factions, Enumerable.Empty<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>());
+                this.DeathItem = DeathItem;
+                this.Voice = Voice;
+                this.DefaultTemplate = DefaultTemplate;
+                this.LegendaryTemplate = LegendaryTemplate;
+                this.LegendaryChance = LegendaryChance;
+                this.TemplateActors = new MaskItem<TItem, TemplateActors.Mask<TItem>?>(TemplateActors, new TemplateActors.Mask<TItem>(TemplateActors));
+                this.Race = Race;
+                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ActorEffect, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
+                this.Skin = Skin;
+                this.FarAwayModel = FarAwayModel;
+                this.AttackRace = AttackRace;
+                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(Attacks, Enumerable.Empty<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>());
+                this.SpectatorOverridePackageList = SpectatorOverridePackageList;
+                this.ObserveDeadBodyOverridePackageList = ObserveDeadBodyOverridePackageList;
+                this.GuardWarnOverridePackageList = GuardWarnOverridePackageList;
+                this.CombatOverridePackageList = CombatOverridePackageList;
+                this.FollowerCommandPackageList = FollowerCommandPackageList;
+                this.FollowerElevatorPackageList = FollowerElevatorPackageList;
+                this.Perks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkPlacement.Mask<TItem>?>>?>(Perks, Enumerable.Empty<MaskItemIndexed<TItem, PerkPlacement.Mask<TItem>?>>());
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.ForcedLocRefType = ForcedLocRefType;
+                this.NativeTerminal = NativeTerminal;
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>());
+                this.Agression = Agression;
+                this.Confidence = Confidence;
+                this.EnergyLevel = EnergyLevel;
+                this.Responsibility = Responsibility;
+                this.Mood = Mood;
+                this.Assistence = Assistence;
+                this.AggroRadiusBehaviorEnabled = AggroRadiusBehaviorEnabled;
+                this.AggroRadiusWarn = AggroRadiusWarn;
+                this.AggroRadiusWarnOrAttack = AggroRadiusWarnOrAttack;
+                this.AggroRadiusAttack = AggroRadiusAttack;
+                this.NoSlowApproach = NoSlowApproach;
+                this.Packages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Packages, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(ObjectTemplates, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
+                this.Class = Class;
+                this.Name = Name;
+                this.ShortName = ShortName;
+                this.BaseHealth = BaseHealth;
+                this.BaseActionPoints = BaseActionPoints;
+                this.FarAwayModelDistance = FarAwayModelDistance;
+                this.GearedUpWeapons = GearedUpWeapons;
+                this.Unused = Unused;
+                this.HeadParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(HeadParts, Enumerable.Empty<(int Index, TItem Value)>());
+                this.HairColor = HairColor;
+                this.FacialHairColor = FacialHairColor;
+                this.CombatStyle = CombatStyle;
+                this.GiftFilter = GiftFilter;
+                this.NAM5 = NAM5;
+                this.HeightMin = HeightMin;
+                this.NAM7 = NAM7;
+                this.HeightMax = HeightMax;
+                this.Weight = new MaskItem<TItem, NpcWeight.Mask<TItem>?>(Weight, new NpcWeight.Mask<TItem>(Weight));
+                this.SoundLevel = SoundLevel;
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, NpcSound.Mask<TItem>?>>());
+                this.SoundsFinalize = SoundsFinalize;
+                this.InheritsSoundsFrom = InheritsSoundsFrom;
+                this.PowerArmorStand = PowerArmorStand;
+                this.DefaultOutfit = DefaultOutfit;
+                this.SleepingOutfit = SleepingOutfit;
+                this.DefaultPackageList = DefaultPackageList;
+                this.CrimeFaction = CrimeFaction;
+                this.HeadTexture = HeadTexture;
+                this.TextureLighting = TextureLighting;
+                this.Morphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcMorph.Mask<TItem>?>>?>(Morphs, Enumerable.Empty<MaskItemIndexed<TItem, NpcMorph.Mask<TItem>?>>());
+                this.FaceTintingLayers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcFaceTintingLayer.Mask<TItem>?>>?>(FaceTintingLayers, Enumerable.Empty<MaskItemIndexed<TItem, NpcFaceTintingLayer.Mask<TItem>?>>());
+                this.BodyMorphRegionValues = new MaskItem<TItem, NpcBodyMorphRegionValues.Mask<TItem>?>(BodyMorphRegionValues, new NpcBodyMorphRegionValues.Mask<TItem>(BodyMorphRegionValues));
+                this.FaceMorphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcFaceMorph.Mask<TItem>?>>?>(FaceMorphs, Enumerable.Empty<MaskItemIndexed<TItem, NpcFaceMorph.Mask<TItem>?>>());
+                this.FacialMorphIntensity = FacialMorphIntensity;
+                this.ActivateTextOverride = ActivateTextOverride;
+                this.ACBSDataTypeState = ACBSDataTypeState;
+                this.AIDTDataTypeState = AIDTDataTypeState;
+                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -101,6 +1160,100 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem PreviewTransform;
+            public TItem AnimationSound;
+            public TItem Flags;
+            public TItem XpValueOffset;
+            public MaskItem<TItem, ANpcLevel.Mask<TItem>?>? Level { get; set; }
+            public TItem CalcMinLevel;
+            public TItem CalcMaxLevel;
+            public TItem DispositionBase;
+            public TItem UseTemplateActors;
+            public TItem BleedoutOverride;
+            public TItem Unknown;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>?>? Factions;
+            public TItem DeathItem;
+            public TItem Voice;
+            public TItem DefaultTemplate;
+            public TItem LegendaryTemplate;
+            public TItem LegendaryChance;
+            public MaskItem<TItem, TemplateActors.Mask<TItem>?>? TemplateActors { get; set; }
+            public TItem Race;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ActorEffect;
+            public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
+            public TItem Skin;
+            public TItem FarAwayModel;
+            public TItem AttackRace;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>? Attacks;
+            public TItem SpectatorOverridePackageList;
+            public TItem ObserveDeadBodyOverridePackageList;
+            public TItem GuardWarnOverridePackageList;
+            public TItem CombatOverridePackageList;
+            public TItem FollowerCommandPackageList;
+            public TItem FollowerElevatorPackageList;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkPlacement.Mask<TItem>?>>?>? Perks;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties;
+            public TItem ForcedLocRefType;
+            public TItem NativeTerminal;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>? Items;
+            public TItem Agression;
+            public TItem Confidence;
+            public TItem EnergyLevel;
+            public TItem Responsibility;
+            public TItem Mood;
+            public TItem Assistence;
+            public TItem AggroRadiusBehaviorEnabled;
+            public TItem AggroRadiusWarn;
+            public TItem AggroRadiusWarnOrAttack;
+            public TItem AggroRadiusAttack;
+            public TItem NoSlowApproach;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Packages;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AttachParentSlots;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>? ObjectTemplates;
+            public TItem Class;
+            public TItem Name;
+            public TItem ShortName;
+            public TItem BaseHealth;
+            public TItem BaseActionPoints;
+            public TItem FarAwayModelDistance;
+            public TItem GearedUpWeapons;
+            public TItem Unused;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? HeadParts;
+            public TItem HairColor;
+            public TItem FacialHairColor;
+            public TItem CombatStyle;
+            public TItem GiftFilter;
+            public TItem NAM5;
+            public TItem HeightMin;
+            public TItem NAM7;
+            public TItem HeightMax;
+            public MaskItem<TItem, NpcWeight.Mask<TItem>?>? Weight { get; set; }
+            public TItem SoundLevel;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcSound.Mask<TItem>?>>?>? Sounds;
+            public TItem SoundsFinalize;
+            public TItem InheritsSoundsFrom;
+            public TItem PowerArmorStand;
+            public TItem DefaultOutfit;
+            public TItem SleepingOutfit;
+            public TItem DefaultPackageList;
+            public TItem CrimeFaction;
+            public TItem HeadTexture;
+            public TItem TextureLighting;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcMorph.Mask<TItem>?>>?>? Morphs;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcFaceTintingLayer.Mask<TItem>?>>?>? FaceTintingLayers;
+            public MaskItem<TItem, NpcBodyMorphRegionValues.Mask<TItem>?>? BodyMorphRegionValues { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcFaceMorph.Mask<TItem>?>>?>? FaceMorphs;
+            public TItem FacialMorphIntensity;
+            public TItem ActivateTextOverride;
+            public TItem ACBSDataTypeState;
+            public TItem AIDTDataTypeState;
+            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -114,11 +1267,193 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.PreviewTransform, rhs.PreviewTransform)) return false;
+                if (!object.Equals(this.AnimationSound, rhs.AnimationSound)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.XpValueOffset, rhs.XpValueOffset)) return false;
+                if (!object.Equals(this.Level, rhs.Level)) return false;
+                if (!object.Equals(this.CalcMinLevel, rhs.CalcMinLevel)) return false;
+                if (!object.Equals(this.CalcMaxLevel, rhs.CalcMaxLevel)) return false;
+                if (!object.Equals(this.DispositionBase, rhs.DispositionBase)) return false;
+                if (!object.Equals(this.UseTemplateActors, rhs.UseTemplateActors)) return false;
+                if (!object.Equals(this.BleedoutOverride, rhs.BleedoutOverride)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Factions, rhs.Factions)) return false;
+                if (!object.Equals(this.DeathItem, rhs.DeathItem)) return false;
+                if (!object.Equals(this.Voice, rhs.Voice)) return false;
+                if (!object.Equals(this.DefaultTemplate, rhs.DefaultTemplate)) return false;
+                if (!object.Equals(this.LegendaryTemplate, rhs.LegendaryTemplate)) return false;
+                if (!object.Equals(this.LegendaryChance, rhs.LegendaryChance)) return false;
+                if (!object.Equals(this.TemplateActors, rhs.TemplateActors)) return false;
+                if (!object.Equals(this.Race, rhs.Race)) return false;
+                if (!object.Equals(this.ActorEffect, rhs.ActorEffect)) return false;
+                if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
+                if (!object.Equals(this.Skin, rhs.Skin)) return false;
+                if (!object.Equals(this.FarAwayModel, rhs.FarAwayModel)) return false;
+                if (!object.Equals(this.AttackRace, rhs.AttackRace)) return false;
+                if (!object.Equals(this.Attacks, rhs.Attacks)) return false;
+                if (!object.Equals(this.SpectatorOverridePackageList, rhs.SpectatorOverridePackageList)) return false;
+                if (!object.Equals(this.ObserveDeadBodyOverridePackageList, rhs.ObserveDeadBodyOverridePackageList)) return false;
+                if (!object.Equals(this.GuardWarnOverridePackageList, rhs.GuardWarnOverridePackageList)) return false;
+                if (!object.Equals(this.CombatOverridePackageList, rhs.CombatOverridePackageList)) return false;
+                if (!object.Equals(this.FollowerCommandPackageList, rhs.FollowerCommandPackageList)) return false;
+                if (!object.Equals(this.FollowerElevatorPackageList, rhs.FollowerElevatorPackageList)) return false;
+                if (!object.Equals(this.Perks, rhs.Perks)) return false;
+                if (!object.Equals(this.Properties, rhs.Properties)) return false;
+                if (!object.Equals(this.ForcedLocRefType, rhs.ForcedLocRefType)) return false;
+                if (!object.Equals(this.NativeTerminal, rhs.NativeTerminal)) return false;
+                if (!object.Equals(this.Items, rhs.Items)) return false;
+                if (!object.Equals(this.Agression, rhs.Agression)) return false;
+                if (!object.Equals(this.Confidence, rhs.Confidence)) return false;
+                if (!object.Equals(this.EnergyLevel, rhs.EnergyLevel)) return false;
+                if (!object.Equals(this.Responsibility, rhs.Responsibility)) return false;
+                if (!object.Equals(this.Mood, rhs.Mood)) return false;
+                if (!object.Equals(this.Assistence, rhs.Assistence)) return false;
+                if (!object.Equals(this.AggroRadiusBehaviorEnabled, rhs.AggroRadiusBehaviorEnabled)) return false;
+                if (!object.Equals(this.AggroRadiusWarn, rhs.AggroRadiusWarn)) return false;
+                if (!object.Equals(this.AggroRadiusWarnOrAttack, rhs.AggroRadiusWarnOrAttack)) return false;
+                if (!object.Equals(this.AggroRadiusAttack, rhs.AggroRadiusAttack)) return false;
+                if (!object.Equals(this.NoSlowApproach, rhs.NoSlowApproach)) return false;
+                if (!object.Equals(this.Packages, rhs.Packages)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.AttachParentSlots, rhs.AttachParentSlots)) return false;
+                if (!object.Equals(this.ObjectTemplates, rhs.ObjectTemplates)) return false;
+                if (!object.Equals(this.Class, rhs.Class)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.ShortName, rhs.ShortName)) return false;
+                if (!object.Equals(this.BaseHealth, rhs.BaseHealth)) return false;
+                if (!object.Equals(this.BaseActionPoints, rhs.BaseActionPoints)) return false;
+                if (!object.Equals(this.FarAwayModelDistance, rhs.FarAwayModelDistance)) return false;
+                if (!object.Equals(this.GearedUpWeapons, rhs.GearedUpWeapons)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
+                if (!object.Equals(this.HeadParts, rhs.HeadParts)) return false;
+                if (!object.Equals(this.HairColor, rhs.HairColor)) return false;
+                if (!object.Equals(this.FacialHairColor, rhs.FacialHairColor)) return false;
+                if (!object.Equals(this.CombatStyle, rhs.CombatStyle)) return false;
+                if (!object.Equals(this.GiftFilter, rhs.GiftFilter)) return false;
+                if (!object.Equals(this.NAM5, rhs.NAM5)) return false;
+                if (!object.Equals(this.HeightMin, rhs.HeightMin)) return false;
+                if (!object.Equals(this.NAM7, rhs.NAM7)) return false;
+                if (!object.Equals(this.HeightMax, rhs.HeightMax)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
+                if (!object.Equals(this.SoundLevel, rhs.SoundLevel)) return false;
+                if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
+                if (!object.Equals(this.SoundsFinalize, rhs.SoundsFinalize)) return false;
+                if (!object.Equals(this.InheritsSoundsFrom, rhs.InheritsSoundsFrom)) return false;
+                if (!object.Equals(this.PowerArmorStand, rhs.PowerArmorStand)) return false;
+                if (!object.Equals(this.DefaultOutfit, rhs.DefaultOutfit)) return false;
+                if (!object.Equals(this.SleepingOutfit, rhs.SleepingOutfit)) return false;
+                if (!object.Equals(this.DefaultPackageList, rhs.DefaultPackageList)) return false;
+                if (!object.Equals(this.CrimeFaction, rhs.CrimeFaction)) return false;
+                if (!object.Equals(this.HeadTexture, rhs.HeadTexture)) return false;
+                if (!object.Equals(this.TextureLighting, rhs.TextureLighting)) return false;
+                if (!object.Equals(this.Morphs, rhs.Morphs)) return false;
+                if (!object.Equals(this.FaceTintingLayers, rhs.FaceTintingLayers)) return false;
+                if (!object.Equals(this.BodyMorphRegionValues, rhs.BodyMorphRegionValues)) return false;
+                if (!object.Equals(this.FaceMorphs, rhs.FaceMorphs)) return false;
+                if (!object.Equals(this.FacialMorphIntensity, rhs.FacialMorphIntensity)) return false;
+                if (!object.Equals(this.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
+                if (!object.Equals(this.ACBSDataTypeState, rhs.ACBSDataTypeState)) return false;
+                if (!object.Equals(this.AIDTDataTypeState, rhs.AIDTDataTypeState)) return false;
+                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.PreviewTransform);
+                hash.Add(this.AnimationSound);
+                hash.Add(this.Flags);
+                hash.Add(this.XpValueOffset);
+                hash.Add(this.Level);
+                hash.Add(this.CalcMinLevel);
+                hash.Add(this.CalcMaxLevel);
+                hash.Add(this.DispositionBase);
+                hash.Add(this.UseTemplateActors);
+                hash.Add(this.BleedoutOverride);
+                hash.Add(this.Unknown);
+                hash.Add(this.Factions);
+                hash.Add(this.DeathItem);
+                hash.Add(this.Voice);
+                hash.Add(this.DefaultTemplate);
+                hash.Add(this.LegendaryTemplate);
+                hash.Add(this.LegendaryChance);
+                hash.Add(this.TemplateActors);
+                hash.Add(this.Race);
+                hash.Add(this.ActorEffect);
+                hash.Add(this.Destructible);
+                hash.Add(this.Skin);
+                hash.Add(this.FarAwayModel);
+                hash.Add(this.AttackRace);
+                hash.Add(this.Attacks);
+                hash.Add(this.SpectatorOverridePackageList);
+                hash.Add(this.ObserveDeadBodyOverridePackageList);
+                hash.Add(this.GuardWarnOverridePackageList);
+                hash.Add(this.CombatOverridePackageList);
+                hash.Add(this.FollowerCommandPackageList);
+                hash.Add(this.FollowerElevatorPackageList);
+                hash.Add(this.Perks);
+                hash.Add(this.Properties);
+                hash.Add(this.ForcedLocRefType);
+                hash.Add(this.NativeTerminal);
+                hash.Add(this.Items);
+                hash.Add(this.Agression);
+                hash.Add(this.Confidence);
+                hash.Add(this.EnergyLevel);
+                hash.Add(this.Responsibility);
+                hash.Add(this.Mood);
+                hash.Add(this.Assistence);
+                hash.Add(this.AggroRadiusBehaviorEnabled);
+                hash.Add(this.AggroRadiusWarn);
+                hash.Add(this.AggroRadiusWarnOrAttack);
+                hash.Add(this.AggroRadiusAttack);
+                hash.Add(this.NoSlowApproach);
+                hash.Add(this.Packages);
+                hash.Add(this.Keywords);
+                hash.Add(this.AttachParentSlots);
+                hash.Add(this.ObjectTemplates);
+                hash.Add(this.Class);
+                hash.Add(this.Name);
+                hash.Add(this.ShortName);
+                hash.Add(this.BaseHealth);
+                hash.Add(this.BaseActionPoints);
+                hash.Add(this.FarAwayModelDistance);
+                hash.Add(this.GearedUpWeapons);
+                hash.Add(this.Unused);
+                hash.Add(this.HeadParts);
+                hash.Add(this.HairColor);
+                hash.Add(this.FacialHairColor);
+                hash.Add(this.CombatStyle);
+                hash.Add(this.GiftFilter);
+                hash.Add(this.NAM5);
+                hash.Add(this.HeightMin);
+                hash.Add(this.NAM7);
+                hash.Add(this.HeightMax);
+                hash.Add(this.Weight);
+                hash.Add(this.SoundLevel);
+                hash.Add(this.Sounds);
+                hash.Add(this.SoundsFinalize);
+                hash.Add(this.InheritsSoundsFrom);
+                hash.Add(this.PowerArmorStand);
+                hash.Add(this.DefaultOutfit);
+                hash.Add(this.SleepingOutfit);
+                hash.Add(this.DefaultPackageList);
+                hash.Add(this.CrimeFaction);
+                hash.Add(this.HeadTexture);
+                hash.Add(this.TextureLighting);
+                hash.Add(this.Morphs);
+                hash.Add(this.FaceTintingLayers);
+                hash.Add(this.BodyMorphRegionValues);
+                hash.Add(this.FaceMorphs);
+                hash.Add(this.FacialMorphIntensity);
+                hash.Add(this.ActivateTextOverride);
+                hash.Add(this.ACBSDataTypeState);
+                hash.Add(this.AIDTDataTypeState);
+                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -129,6 +1464,285 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.PreviewTransform)) return false;
+                if (!eval(this.AnimationSound)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.XpValueOffset)) return false;
+                if (Level != null)
+                {
+                    if (!eval(this.Level.Overall)) return false;
+                    if (this.Level.Specific != null && !this.Level.Specific.All(eval)) return false;
+                }
+                if (!eval(this.CalcMinLevel)) return false;
+                if (!eval(this.CalcMaxLevel)) return false;
+                if (!eval(this.DispositionBase)) return false;
+                if (!eval(this.UseTemplateActors)) return false;
+                if (!eval(this.BleedoutOverride)) return false;
+                if (!eval(this.Unknown)) return false;
+                if (this.Factions != null)
+                {
+                    if (!eval(this.Factions.Overall)) return false;
+                    if (this.Factions.Specific != null)
+                    {
+                        foreach (var item in this.Factions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.DeathItem)) return false;
+                if (!eval(this.Voice)) return false;
+                if (!eval(this.DefaultTemplate)) return false;
+                if (!eval(this.LegendaryTemplate)) return false;
+                if (!eval(this.LegendaryChance)) return false;
+                if (TemplateActors != null)
+                {
+                    if (!eval(this.TemplateActors.Overall)) return false;
+                    if (this.TemplateActors.Specific != null && !this.TemplateActors.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Race)) return false;
+                if (this.ActorEffect != null)
+                {
+                    if (!eval(this.ActorEffect.Overall)) return false;
+                    if (this.ActorEffect.Specific != null)
+                    {
+                        foreach (var item in this.ActorEffect.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (Destructible != null)
+                {
+                    if (!eval(this.Destructible.Overall)) return false;
+                    if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Skin)) return false;
+                if (!eval(this.FarAwayModel)) return false;
+                if (!eval(this.AttackRace)) return false;
+                if (this.Attacks != null)
+                {
+                    if (!eval(this.Attacks.Overall)) return false;
+                    if (this.Attacks.Specific != null)
+                    {
+                        foreach (var item in this.Attacks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.SpectatorOverridePackageList)) return false;
+                if (!eval(this.ObserveDeadBodyOverridePackageList)) return false;
+                if (!eval(this.GuardWarnOverridePackageList)) return false;
+                if (!eval(this.CombatOverridePackageList)) return false;
+                if (!eval(this.FollowerCommandPackageList)) return false;
+                if (!eval(this.FollowerElevatorPackageList)) return false;
+                if (this.Perks != null)
+                {
+                    if (!eval(this.Perks.Overall)) return false;
+                    if (this.Perks.Specific != null)
+                    {
+                        foreach (var item in this.Perks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Properties != null)
+                {
+                    if (!eval(this.Properties.Overall)) return false;
+                    if (this.Properties.Specific != null)
+                    {
+                        foreach (var item in this.Properties.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.ForcedLocRefType)) return false;
+                if (!eval(this.NativeTerminal)) return false;
+                if (this.Items != null)
+                {
+                    if (!eval(this.Items.Overall)) return false;
+                    if (this.Items.Specific != null)
+                    {
+                        foreach (var item in this.Items.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Agression)) return false;
+                if (!eval(this.Confidence)) return false;
+                if (!eval(this.EnergyLevel)) return false;
+                if (!eval(this.Responsibility)) return false;
+                if (!eval(this.Mood)) return false;
+                if (!eval(this.Assistence)) return false;
+                if (!eval(this.AggroRadiusBehaviorEnabled)) return false;
+                if (!eval(this.AggroRadiusWarn)) return false;
+                if (!eval(this.AggroRadiusWarnOrAttack)) return false;
+                if (!eval(this.AggroRadiusAttack)) return false;
+                if (!eval(this.NoSlowApproach)) return false;
+                if (this.Packages != null)
+                {
+                    if (!eval(this.Packages.Overall)) return false;
+                    if (this.Packages.Specific != null)
+                    {
+                        foreach (var item in this.Packages.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.AttachParentSlots != null)
+                {
+                    if (!eval(this.AttachParentSlots.Overall)) return false;
+                    if (this.AttachParentSlots.Specific != null)
+                    {
+                        foreach (var item in this.AttachParentSlots.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ObjectTemplates != null)
+                {
+                    if (!eval(this.ObjectTemplates.Overall)) return false;
+                    if (this.ObjectTemplates.Specific != null)
+                    {
+                        foreach (var item in this.ObjectTemplates.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Class)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.ShortName)) return false;
+                if (!eval(this.BaseHealth)) return false;
+                if (!eval(this.BaseActionPoints)) return false;
+                if (!eval(this.FarAwayModelDistance)) return false;
+                if (!eval(this.GearedUpWeapons)) return false;
+                if (!eval(this.Unused)) return false;
+                if (this.HeadParts != null)
+                {
+                    if (!eval(this.HeadParts.Overall)) return false;
+                    if (this.HeadParts.Specific != null)
+                    {
+                        foreach (var item in this.HeadParts.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.HairColor)) return false;
+                if (!eval(this.FacialHairColor)) return false;
+                if (!eval(this.CombatStyle)) return false;
+                if (!eval(this.GiftFilter)) return false;
+                if (!eval(this.NAM5)) return false;
+                if (!eval(this.HeightMin)) return false;
+                if (!eval(this.NAM7)) return false;
+                if (!eval(this.HeightMax)) return false;
+                if (Weight != null)
+                {
+                    if (!eval(this.Weight.Overall)) return false;
+                    if (this.Weight.Specific != null && !this.Weight.Specific.All(eval)) return false;
+                }
+                if (!eval(this.SoundLevel)) return false;
+                if (this.Sounds != null)
+                {
+                    if (!eval(this.Sounds.Overall)) return false;
+                    if (this.Sounds.Specific != null)
+                    {
+                        foreach (var item in this.Sounds.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.SoundsFinalize)) return false;
+                if (!eval(this.InheritsSoundsFrom)) return false;
+                if (!eval(this.PowerArmorStand)) return false;
+                if (!eval(this.DefaultOutfit)) return false;
+                if (!eval(this.SleepingOutfit)) return false;
+                if (!eval(this.DefaultPackageList)) return false;
+                if (!eval(this.CrimeFaction)) return false;
+                if (!eval(this.HeadTexture)) return false;
+                if (!eval(this.TextureLighting)) return false;
+                if (this.Morphs != null)
+                {
+                    if (!eval(this.Morphs.Overall)) return false;
+                    if (this.Morphs.Specific != null)
+                    {
+                        foreach (var item in this.Morphs.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.FaceTintingLayers != null)
+                {
+                    if (!eval(this.FaceTintingLayers.Overall)) return false;
+                    if (this.FaceTintingLayers.Specific != null)
+                    {
+                        foreach (var item in this.FaceTintingLayers.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (BodyMorphRegionValues != null)
+                {
+                    if (!eval(this.BodyMorphRegionValues.Overall)) return false;
+                    if (this.BodyMorphRegionValues.Specific != null && !this.BodyMorphRegionValues.Specific.All(eval)) return false;
+                }
+                if (this.FaceMorphs != null)
+                {
+                    if (!eval(this.FaceMorphs.Overall)) return false;
+                    if (this.FaceMorphs.Specific != null)
+                    {
+                        foreach (var item in this.FaceMorphs.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.FacialMorphIntensity)) return false;
+                if (!eval(this.ActivateTextOverride)) return false;
+                if (!eval(this.ACBSDataTypeState)) return false;
+                if (!eval(this.AIDTDataTypeState)) return false;
+                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -137,6 +1751,285 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.PreviewTransform)) return true;
+                if (eval(this.AnimationSound)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.XpValueOffset)) return true;
+                if (Level != null)
+                {
+                    if (eval(this.Level.Overall)) return true;
+                    if (this.Level.Specific != null && this.Level.Specific.Any(eval)) return true;
+                }
+                if (eval(this.CalcMinLevel)) return true;
+                if (eval(this.CalcMaxLevel)) return true;
+                if (eval(this.DispositionBase)) return true;
+                if (eval(this.UseTemplateActors)) return true;
+                if (eval(this.BleedoutOverride)) return true;
+                if (eval(this.Unknown)) return true;
+                if (this.Factions != null)
+                {
+                    if (eval(this.Factions.Overall)) return true;
+                    if (this.Factions.Specific != null)
+                    {
+                        foreach (var item in this.Factions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.DeathItem)) return true;
+                if (eval(this.Voice)) return true;
+                if (eval(this.DefaultTemplate)) return true;
+                if (eval(this.LegendaryTemplate)) return true;
+                if (eval(this.LegendaryChance)) return true;
+                if (TemplateActors != null)
+                {
+                    if (eval(this.TemplateActors.Overall)) return true;
+                    if (this.TemplateActors.Specific != null && this.TemplateActors.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Race)) return true;
+                if (this.ActorEffect != null)
+                {
+                    if (eval(this.ActorEffect.Overall)) return true;
+                    if (this.ActorEffect.Specific != null)
+                    {
+                        foreach (var item in this.ActorEffect.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (Destructible != null)
+                {
+                    if (eval(this.Destructible.Overall)) return true;
+                    if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Skin)) return true;
+                if (eval(this.FarAwayModel)) return true;
+                if (eval(this.AttackRace)) return true;
+                if (this.Attacks != null)
+                {
+                    if (eval(this.Attacks.Overall)) return true;
+                    if (this.Attacks.Specific != null)
+                    {
+                        foreach (var item in this.Attacks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.SpectatorOverridePackageList)) return true;
+                if (eval(this.ObserveDeadBodyOverridePackageList)) return true;
+                if (eval(this.GuardWarnOverridePackageList)) return true;
+                if (eval(this.CombatOverridePackageList)) return true;
+                if (eval(this.FollowerCommandPackageList)) return true;
+                if (eval(this.FollowerElevatorPackageList)) return true;
+                if (this.Perks != null)
+                {
+                    if (eval(this.Perks.Overall)) return true;
+                    if (this.Perks.Specific != null)
+                    {
+                        foreach (var item in this.Perks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Properties != null)
+                {
+                    if (eval(this.Properties.Overall)) return true;
+                    if (this.Properties.Specific != null)
+                    {
+                        foreach (var item in this.Properties.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.ForcedLocRefType)) return true;
+                if (eval(this.NativeTerminal)) return true;
+                if (this.Items != null)
+                {
+                    if (eval(this.Items.Overall)) return true;
+                    if (this.Items.Specific != null)
+                    {
+                        foreach (var item in this.Items.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Agression)) return true;
+                if (eval(this.Confidence)) return true;
+                if (eval(this.EnergyLevel)) return true;
+                if (eval(this.Responsibility)) return true;
+                if (eval(this.Mood)) return true;
+                if (eval(this.Assistence)) return true;
+                if (eval(this.AggroRadiusBehaviorEnabled)) return true;
+                if (eval(this.AggroRadiusWarn)) return true;
+                if (eval(this.AggroRadiusWarnOrAttack)) return true;
+                if (eval(this.AggroRadiusAttack)) return true;
+                if (eval(this.NoSlowApproach)) return true;
+                if (this.Packages != null)
+                {
+                    if (eval(this.Packages.Overall)) return true;
+                    if (this.Packages.Specific != null)
+                    {
+                        foreach (var item in this.Packages.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.AttachParentSlots != null)
+                {
+                    if (eval(this.AttachParentSlots.Overall)) return true;
+                    if (this.AttachParentSlots.Specific != null)
+                    {
+                        foreach (var item in this.AttachParentSlots.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ObjectTemplates != null)
+                {
+                    if (eval(this.ObjectTemplates.Overall)) return true;
+                    if (this.ObjectTemplates.Specific != null)
+                    {
+                        foreach (var item in this.ObjectTemplates.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Class)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.ShortName)) return true;
+                if (eval(this.BaseHealth)) return true;
+                if (eval(this.BaseActionPoints)) return true;
+                if (eval(this.FarAwayModelDistance)) return true;
+                if (eval(this.GearedUpWeapons)) return true;
+                if (eval(this.Unused)) return true;
+                if (this.HeadParts != null)
+                {
+                    if (eval(this.HeadParts.Overall)) return true;
+                    if (this.HeadParts.Specific != null)
+                    {
+                        foreach (var item in this.HeadParts.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.HairColor)) return true;
+                if (eval(this.FacialHairColor)) return true;
+                if (eval(this.CombatStyle)) return true;
+                if (eval(this.GiftFilter)) return true;
+                if (eval(this.NAM5)) return true;
+                if (eval(this.HeightMin)) return true;
+                if (eval(this.NAM7)) return true;
+                if (eval(this.HeightMax)) return true;
+                if (Weight != null)
+                {
+                    if (eval(this.Weight.Overall)) return true;
+                    if (this.Weight.Specific != null && this.Weight.Specific.Any(eval)) return true;
+                }
+                if (eval(this.SoundLevel)) return true;
+                if (this.Sounds != null)
+                {
+                    if (eval(this.Sounds.Overall)) return true;
+                    if (this.Sounds.Specific != null)
+                    {
+                        foreach (var item in this.Sounds.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.SoundsFinalize)) return true;
+                if (eval(this.InheritsSoundsFrom)) return true;
+                if (eval(this.PowerArmorStand)) return true;
+                if (eval(this.DefaultOutfit)) return true;
+                if (eval(this.SleepingOutfit)) return true;
+                if (eval(this.DefaultPackageList)) return true;
+                if (eval(this.CrimeFaction)) return true;
+                if (eval(this.HeadTexture)) return true;
+                if (eval(this.TextureLighting)) return true;
+                if (this.Morphs != null)
+                {
+                    if (eval(this.Morphs.Overall)) return true;
+                    if (this.Morphs.Specific != null)
+                    {
+                        foreach (var item in this.Morphs.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.FaceTintingLayers != null)
+                {
+                    if (eval(this.FaceTintingLayers.Overall)) return true;
+                    if (this.FaceTintingLayers.Specific != null)
+                    {
+                        foreach (var item in this.FaceTintingLayers.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (BodyMorphRegionValues != null)
+                {
+                    if (eval(this.BodyMorphRegionValues.Overall)) return true;
+                    if (this.BodyMorphRegionValues.Specific != null && this.BodyMorphRegionValues.Specific.Any(eval)) return true;
+                }
+                if (this.FaceMorphs != null)
+                {
+                    if (eval(this.FaceMorphs.Overall)) return true;
+                    if (this.FaceMorphs.Specific != null)
+                    {
+                        foreach (var item in this.FaceMorphs.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.FacialMorphIntensity)) return true;
+                if (eval(this.ActivateTextOverride)) return true;
+                if (eval(this.ACBSDataTypeState)) return true;
+                if (eval(this.AIDTDataTypeState)) return true;
+                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -152,6 +2045,302 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.PreviewTransform = eval(this.PreviewTransform);
+                obj.AnimationSound = eval(this.AnimationSound);
+                obj.Flags = eval(this.Flags);
+                obj.XpValueOffset = eval(this.XpValueOffset);
+                obj.Level = this.Level == null ? null : new MaskItem<R, ANpcLevel.Mask<R>?>(eval(this.Level.Overall), this.Level.Specific?.Translate(eval));
+                obj.CalcMinLevel = eval(this.CalcMinLevel);
+                obj.CalcMaxLevel = eval(this.CalcMaxLevel);
+                obj.DispositionBase = eval(this.DispositionBase);
+                obj.UseTemplateActors = eval(this.UseTemplateActors);
+                obj.BleedoutOverride = eval(this.BleedoutOverride);
+                obj.Unknown = eval(this.Unknown);
+                if (Factions != null)
+                {
+                    obj.Factions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RankPlacement.Mask<R>?>>?>(eval(this.Factions.Overall), Enumerable.Empty<MaskItemIndexed<R, RankPlacement.Mask<R>?>>());
+                    if (Factions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, RankPlacement.Mask<R>?>>();
+                        obj.Factions.Specific = l;
+                        foreach (var item in Factions.Specific)
+                        {
+                            MaskItemIndexed<R, RankPlacement.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, RankPlacement.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.DeathItem = eval(this.DeathItem);
+                obj.Voice = eval(this.Voice);
+                obj.DefaultTemplate = eval(this.DefaultTemplate);
+                obj.LegendaryTemplate = eval(this.LegendaryTemplate);
+                obj.LegendaryChance = eval(this.LegendaryChance);
+                obj.TemplateActors = this.TemplateActors == null ? null : new MaskItem<R, TemplateActors.Mask<R>?>(eval(this.TemplateActors.Overall), this.TemplateActors.Specific?.Translate(eval));
+                obj.Race = eval(this.Race);
+                if (ActorEffect != null)
+                {
+                    obj.ActorEffect = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ActorEffect.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (ActorEffect.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.ActorEffect.Specific = l;
+                        foreach (var item in ActorEffect.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
+                obj.Skin = eval(this.Skin);
+                obj.FarAwayModel = eval(this.FarAwayModel);
+                obj.AttackRace = eval(this.AttackRace);
+                if (Attacks != null)
+                {
+                    obj.Attacks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Attack.Mask<R>?>>?>(eval(this.Attacks.Overall), Enumerable.Empty<MaskItemIndexed<R, Attack.Mask<R>?>>());
+                    if (Attacks.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Attack.Mask<R>?>>();
+                        obj.Attacks.Specific = l;
+                        foreach (var item in Attacks.Specific)
+                        {
+                            MaskItemIndexed<R, Attack.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Attack.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.SpectatorOverridePackageList = eval(this.SpectatorOverridePackageList);
+                obj.ObserveDeadBodyOverridePackageList = eval(this.ObserveDeadBodyOverridePackageList);
+                obj.GuardWarnOverridePackageList = eval(this.GuardWarnOverridePackageList);
+                obj.CombatOverridePackageList = eval(this.CombatOverridePackageList);
+                obj.FollowerCommandPackageList = eval(this.FollowerCommandPackageList);
+                obj.FollowerElevatorPackageList = eval(this.FollowerElevatorPackageList);
+                if (Perks != null)
+                {
+                    obj.Perks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PerkPlacement.Mask<R>?>>?>(eval(this.Perks.Overall), Enumerable.Empty<MaskItemIndexed<R, PerkPlacement.Mask<R>?>>());
+                    if (Perks.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, PerkPlacement.Mask<R>?>>();
+                        obj.Perks.Specific = l;
+                        foreach (var item in Perks.Specific)
+                        {
+                            MaskItemIndexed<R, PerkPlacement.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PerkPlacement.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Properties != null)
+                {
+                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>());
+                    if (Properties.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>();
+                        obj.Properties.Specific = l;
+                        foreach (var item in Properties.Specific)
+                        {
+                            MaskItemIndexed<R, ObjectProperty.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ObjectProperty.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.ForcedLocRefType = eval(this.ForcedLocRefType);
+                obj.NativeTerminal = eval(this.NativeTerminal);
+                if (Items != null)
+                {
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>());
+                    if (Items.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>();
+                        obj.Items.Specific = l;
+                        foreach (var item in Items.Specific)
+                        {
+                            MaskItemIndexed<R, ContainerEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ContainerEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Agression = eval(this.Agression);
+                obj.Confidence = eval(this.Confidence);
+                obj.EnergyLevel = eval(this.EnergyLevel);
+                obj.Responsibility = eval(this.Responsibility);
+                obj.Mood = eval(this.Mood);
+                obj.Assistence = eval(this.Assistence);
+                obj.AggroRadiusBehaviorEnabled = eval(this.AggroRadiusBehaviorEnabled);
+                obj.AggroRadiusWarn = eval(this.AggroRadiusWarn);
+                obj.AggroRadiusWarnOrAttack = eval(this.AggroRadiusWarnOrAttack);
+                obj.AggroRadiusAttack = eval(this.AggroRadiusAttack);
+                obj.NoSlowApproach = eval(this.NoSlowApproach);
+                if (Packages != null)
+                {
+                    obj.Packages = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Packages.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Packages.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Packages.Specific = l;
+                        foreach (var item in Packages.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (AttachParentSlots != null)
+                {
+                    obj.AttachParentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttachParentSlots.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (AttachParentSlots.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.AttachParentSlots.Specific = l;
+                        foreach (var item in AttachParentSlots.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (ObjectTemplates != null)
+                {
+                    obj.ObjectTemplates = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>?>(eval(this.ObjectTemplates.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>());
+                    if (ObjectTemplates.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>();
+                        obj.ObjectTemplates.Specific = l;
+                        foreach (var item in ObjectTemplates.Specific)
+                        {
+                            MaskItemIndexed<R, ObjectTemplate.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ObjectTemplate.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Class = eval(this.Class);
+                obj.Name = eval(this.Name);
+                obj.ShortName = eval(this.ShortName);
+                obj.BaseHealth = eval(this.BaseHealth);
+                obj.BaseActionPoints = eval(this.BaseActionPoints);
+                obj.FarAwayModelDistance = eval(this.FarAwayModelDistance);
+                obj.GearedUpWeapons = eval(this.GearedUpWeapons);
+                obj.Unused = eval(this.Unused);
+                if (HeadParts != null)
+                {
+                    obj.HeadParts = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.HeadParts.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (HeadParts.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.HeadParts.Specific = l;
+                        foreach (var item in HeadParts.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.HairColor = eval(this.HairColor);
+                obj.FacialHairColor = eval(this.FacialHairColor);
+                obj.CombatStyle = eval(this.CombatStyle);
+                obj.GiftFilter = eval(this.GiftFilter);
+                obj.NAM5 = eval(this.NAM5);
+                obj.HeightMin = eval(this.HeightMin);
+                obj.NAM7 = eval(this.NAM7);
+                obj.HeightMax = eval(this.HeightMax);
+                obj.Weight = this.Weight == null ? null : new MaskItem<R, NpcWeight.Mask<R>?>(eval(this.Weight.Overall), this.Weight.Specific?.Translate(eval));
+                obj.SoundLevel = eval(this.SoundLevel);
+                if (Sounds != null)
+                {
+                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NpcSound.Mask<R>?>>?>(eval(this.Sounds.Overall), Enumerable.Empty<MaskItemIndexed<R, NpcSound.Mask<R>?>>());
+                    if (Sounds.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, NpcSound.Mask<R>?>>();
+                        obj.Sounds.Specific = l;
+                        foreach (var item in Sounds.Specific)
+                        {
+                            MaskItemIndexed<R, NpcSound.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NpcSound.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.SoundsFinalize = eval(this.SoundsFinalize);
+                obj.InheritsSoundsFrom = eval(this.InheritsSoundsFrom);
+                obj.PowerArmorStand = eval(this.PowerArmorStand);
+                obj.DefaultOutfit = eval(this.DefaultOutfit);
+                obj.SleepingOutfit = eval(this.SleepingOutfit);
+                obj.DefaultPackageList = eval(this.DefaultPackageList);
+                obj.CrimeFaction = eval(this.CrimeFaction);
+                obj.HeadTexture = eval(this.HeadTexture);
+                obj.TextureLighting = eval(this.TextureLighting);
+                if (Morphs != null)
+                {
+                    obj.Morphs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NpcMorph.Mask<R>?>>?>(eval(this.Morphs.Overall), Enumerable.Empty<MaskItemIndexed<R, NpcMorph.Mask<R>?>>());
+                    if (Morphs.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, NpcMorph.Mask<R>?>>();
+                        obj.Morphs.Specific = l;
+                        foreach (var item in Morphs.Specific)
+                        {
+                            MaskItemIndexed<R, NpcMorph.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NpcMorph.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (FaceTintingLayers != null)
+                {
+                    obj.FaceTintingLayers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NpcFaceTintingLayer.Mask<R>?>>?>(eval(this.FaceTintingLayers.Overall), Enumerable.Empty<MaskItemIndexed<R, NpcFaceTintingLayer.Mask<R>?>>());
+                    if (FaceTintingLayers.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, NpcFaceTintingLayer.Mask<R>?>>();
+                        obj.FaceTintingLayers.Specific = l;
+                        foreach (var item in FaceTintingLayers.Specific)
+                        {
+                            MaskItemIndexed<R, NpcFaceTintingLayer.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NpcFaceTintingLayer.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.BodyMorphRegionValues = this.BodyMorphRegionValues == null ? null : new MaskItem<R, NpcBodyMorphRegionValues.Mask<R>?>(eval(this.BodyMorphRegionValues.Overall), this.BodyMorphRegionValues.Specific?.Translate(eval));
+                if (FaceMorphs != null)
+                {
+                    obj.FaceMorphs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NpcFaceMorph.Mask<R>?>>?>(eval(this.FaceMorphs.Overall), Enumerable.Empty<MaskItemIndexed<R, NpcFaceMorph.Mask<R>?>>());
+                    if (FaceMorphs.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, NpcFaceMorph.Mask<R>?>>();
+                        obj.FaceMorphs.Specific = l;
+                        foreach (var item in FaceMorphs.Specific)
+                        {
+                            MaskItemIndexed<R, NpcFaceMorph.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NpcFaceMorph.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.FacialMorphIntensity = eval(this.FacialMorphIntensity);
+                obj.ActivateTextOverride = eval(this.ActivateTextOverride);
+                obj.ACBSDataTypeState = eval(this.ACBSDataTypeState);
+                obj.AIDTDataTypeState = eval(this.AIDTDataTypeState);
+                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -174,6 +2363,655 @@ namespace Mutagen.Bethesda.Fallout4
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.ToString(fg);
+                    }
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.ToString(fg);
+                    }
+                    if (printMask?.PreviewTransform ?? true)
+                    {
+                        fg.AppendItem(PreviewTransform, "PreviewTransform");
+                    }
+                    if (printMask?.AnimationSound ?? true)
+                    {
+                        fg.AppendItem(AnimationSound, "AnimationSound");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.XpValueOffset ?? true)
+                    {
+                        fg.AppendItem(XpValueOffset, "XpValueOffset");
+                    }
+                    if (printMask?.Level?.Overall ?? true)
+                    {
+                        Level?.ToString(fg);
+                    }
+                    if (printMask?.CalcMinLevel ?? true)
+                    {
+                        fg.AppendItem(CalcMinLevel, "CalcMinLevel");
+                    }
+                    if (printMask?.CalcMaxLevel ?? true)
+                    {
+                        fg.AppendItem(CalcMaxLevel, "CalcMaxLevel");
+                    }
+                    if (printMask?.DispositionBase ?? true)
+                    {
+                        fg.AppendItem(DispositionBase, "DispositionBase");
+                    }
+                    if (printMask?.UseTemplateActors ?? true)
+                    {
+                        fg.AppendItem(UseTemplateActors, "UseTemplateActors");
+                    }
+                    if (printMask?.BleedoutOverride ?? true)
+                    {
+                        fg.AppendItem(BleedoutOverride, "BleedoutOverride");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        fg.AppendItem(Unknown, "Unknown");
+                    }
+                    if ((printMask?.Factions?.Overall ?? true)
+                        && Factions is {} FactionsItem)
+                    {
+                        fg.AppendLine("Factions =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(FactionsItem.Overall);
+                            if (FactionsItem.Specific != null)
+                            {
+                                foreach (var subItem in FactionsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.DeathItem ?? true)
+                    {
+                        fg.AppendItem(DeathItem, "DeathItem");
+                    }
+                    if (printMask?.Voice ?? true)
+                    {
+                        fg.AppendItem(Voice, "Voice");
+                    }
+                    if (printMask?.DefaultTemplate ?? true)
+                    {
+                        fg.AppendItem(DefaultTemplate, "DefaultTemplate");
+                    }
+                    if (printMask?.LegendaryTemplate ?? true)
+                    {
+                        fg.AppendItem(LegendaryTemplate, "LegendaryTemplate");
+                    }
+                    if (printMask?.LegendaryChance ?? true)
+                    {
+                        fg.AppendItem(LegendaryChance, "LegendaryChance");
+                    }
+                    if (printMask?.TemplateActors?.Overall ?? true)
+                    {
+                        TemplateActors?.ToString(fg);
+                    }
+                    if (printMask?.Race ?? true)
+                    {
+                        fg.AppendItem(Race, "Race");
+                    }
+                    if ((printMask?.ActorEffect?.Overall ?? true)
+                        && ActorEffect is {} ActorEffectItem)
+                    {
+                        fg.AppendLine("ActorEffect =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ActorEffectItem.Overall);
+                            if (ActorEffectItem.Specific != null)
+                            {
+                                foreach (var subItem in ActorEffectItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Destructible?.Overall ?? true)
+                    {
+                        Destructible?.ToString(fg);
+                    }
+                    if (printMask?.Skin ?? true)
+                    {
+                        fg.AppendItem(Skin, "Skin");
+                    }
+                    if (printMask?.FarAwayModel ?? true)
+                    {
+                        fg.AppendItem(FarAwayModel, "FarAwayModel");
+                    }
+                    if (printMask?.AttackRace ?? true)
+                    {
+                        fg.AppendItem(AttackRace, "AttackRace");
+                    }
+                    if ((printMask?.Attacks?.Overall ?? true)
+                        && Attacks is {} AttacksItem)
+                    {
+                        fg.AppendLine("Attacks =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(AttacksItem.Overall);
+                            if (AttacksItem.Specific != null)
+                            {
+                                foreach (var subItem in AttacksItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.SpectatorOverridePackageList ?? true)
+                    {
+                        fg.AppendItem(SpectatorOverridePackageList, "SpectatorOverridePackageList");
+                    }
+                    if (printMask?.ObserveDeadBodyOverridePackageList ?? true)
+                    {
+                        fg.AppendItem(ObserveDeadBodyOverridePackageList, "ObserveDeadBodyOverridePackageList");
+                    }
+                    if (printMask?.GuardWarnOverridePackageList ?? true)
+                    {
+                        fg.AppendItem(GuardWarnOverridePackageList, "GuardWarnOverridePackageList");
+                    }
+                    if (printMask?.CombatOverridePackageList ?? true)
+                    {
+                        fg.AppendItem(CombatOverridePackageList, "CombatOverridePackageList");
+                    }
+                    if (printMask?.FollowerCommandPackageList ?? true)
+                    {
+                        fg.AppendItem(FollowerCommandPackageList, "FollowerCommandPackageList");
+                    }
+                    if (printMask?.FollowerElevatorPackageList ?? true)
+                    {
+                        fg.AppendItem(FollowerElevatorPackageList, "FollowerElevatorPackageList");
+                    }
+                    if ((printMask?.Perks?.Overall ?? true)
+                        && Perks is {} PerksItem)
+                    {
+                        fg.AppendLine("Perks =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(PerksItem.Overall);
+                            if (PerksItem.Specific != null)
+                            {
+                                foreach (var subItem in PerksItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Properties?.Overall ?? true)
+                        && Properties is {} PropertiesItem)
+                    {
+                        fg.AppendLine("Properties =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(PropertiesItem.Overall);
+                            if (PropertiesItem.Specific != null)
+                            {
+                                foreach (var subItem in PropertiesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.ForcedLocRefType ?? true)
+                    {
+                        fg.AppendItem(ForcedLocRefType, "ForcedLocRefType");
+                    }
+                    if (printMask?.NativeTerminal ?? true)
+                    {
+                        fg.AppendItem(NativeTerminal, "NativeTerminal");
+                    }
+                    if ((printMask?.Items?.Overall ?? true)
+                        && Items is {} ItemsItem)
+                    {
+                        fg.AppendLine("Items =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ItemsItem.Overall);
+                            if (ItemsItem.Specific != null)
+                            {
+                                foreach (var subItem in ItemsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Agression ?? true)
+                    {
+                        fg.AppendItem(Agression, "Agression");
+                    }
+                    if (printMask?.Confidence ?? true)
+                    {
+                        fg.AppendItem(Confidence, "Confidence");
+                    }
+                    if (printMask?.EnergyLevel ?? true)
+                    {
+                        fg.AppendItem(EnergyLevel, "EnergyLevel");
+                    }
+                    if (printMask?.Responsibility ?? true)
+                    {
+                        fg.AppendItem(Responsibility, "Responsibility");
+                    }
+                    if (printMask?.Mood ?? true)
+                    {
+                        fg.AppendItem(Mood, "Mood");
+                    }
+                    if (printMask?.Assistence ?? true)
+                    {
+                        fg.AppendItem(Assistence, "Assistence");
+                    }
+                    if (printMask?.AggroRadiusBehaviorEnabled ?? true)
+                    {
+                        fg.AppendItem(AggroRadiusBehaviorEnabled, "AggroRadiusBehaviorEnabled");
+                    }
+                    if (printMask?.AggroRadiusWarn ?? true)
+                    {
+                        fg.AppendItem(AggroRadiusWarn, "AggroRadiusWarn");
+                    }
+                    if (printMask?.AggroRadiusWarnOrAttack ?? true)
+                    {
+                        fg.AppendItem(AggroRadiusWarnOrAttack, "AggroRadiusWarnOrAttack");
+                    }
+                    if (printMask?.AggroRadiusAttack ?? true)
+                    {
+                        fg.AppendItem(AggroRadiusAttack, "AggroRadiusAttack");
+                    }
+                    if (printMask?.NoSlowApproach ?? true)
+                    {
+                        fg.AppendItem(NoSlowApproach, "NoSlowApproach");
+                    }
+                    if ((printMask?.Packages?.Overall ?? true)
+                        && Packages is {} PackagesItem)
+                    {
+                        fg.AppendLine("Packages =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(PackagesItem.Overall);
+                            if (PackagesItem.Specific != null)
+                            {
+                                foreach (var subItem in PackagesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
+                    {
+                        fg.AppendLine("Keywords =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.AttachParentSlots?.Overall ?? true)
+                        && AttachParentSlots is {} AttachParentSlotsItem)
+                    {
+                        fg.AppendLine("AttachParentSlots =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(AttachParentSlotsItem.Overall);
+                            if (AttachParentSlotsItem.Specific != null)
+                            {
+                                foreach (var subItem in AttachParentSlotsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.ObjectTemplates?.Overall ?? true)
+                        && ObjectTemplates is {} ObjectTemplatesItem)
+                    {
+                        fg.AppendLine("ObjectTemplates =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ObjectTemplatesItem.Overall);
+                            if (ObjectTemplatesItem.Specific != null)
+                            {
+                                foreach (var subItem in ObjectTemplatesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Class ?? true)
+                    {
+                        fg.AppendItem(Class, "Class");
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.ShortName ?? true)
+                    {
+                        fg.AppendItem(ShortName, "ShortName");
+                    }
+                    if (printMask?.BaseHealth ?? true)
+                    {
+                        fg.AppendItem(BaseHealth, "BaseHealth");
+                    }
+                    if (printMask?.BaseActionPoints ?? true)
+                    {
+                        fg.AppendItem(BaseActionPoints, "BaseActionPoints");
+                    }
+                    if (printMask?.FarAwayModelDistance ?? true)
+                    {
+                        fg.AppendItem(FarAwayModelDistance, "FarAwayModelDistance");
+                    }
+                    if (printMask?.GearedUpWeapons ?? true)
+                    {
+                        fg.AppendItem(GearedUpWeapons, "GearedUpWeapons");
+                    }
+                    if (printMask?.Unused ?? true)
+                    {
+                        fg.AppendItem(Unused, "Unused");
+                    }
+                    if ((printMask?.HeadParts?.Overall ?? true)
+                        && HeadParts is {} HeadPartsItem)
+                    {
+                        fg.AppendLine("HeadParts =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(HeadPartsItem.Overall);
+                            if (HeadPartsItem.Specific != null)
+                            {
+                                foreach (var subItem in HeadPartsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.HairColor ?? true)
+                    {
+                        fg.AppendItem(HairColor, "HairColor");
+                    }
+                    if (printMask?.FacialHairColor ?? true)
+                    {
+                        fg.AppendItem(FacialHairColor, "FacialHairColor");
+                    }
+                    if (printMask?.CombatStyle ?? true)
+                    {
+                        fg.AppendItem(CombatStyle, "CombatStyle");
+                    }
+                    if (printMask?.GiftFilter ?? true)
+                    {
+                        fg.AppendItem(GiftFilter, "GiftFilter");
+                    }
+                    if (printMask?.NAM5 ?? true)
+                    {
+                        fg.AppendItem(NAM5, "NAM5");
+                    }
+                    if (printMask?.HeightMin ?? true)
+                    {
+                        fg.AppendItem(HeightMin, "HeightMin");
+                    }
+                    if (printMask?.NAM7 ?? true)
+                    {
+                        fg.AppendItem(NAM7, "NAM7");
+                    }
+                    if (printMask?.HeightMax ?? true)
+                    {
+                        fg.AppendItem(HeightMax, "HeightMax");
+                    }
+                    if (printMask?.Weight?.Overall ?? true)
+                    {
+                        Weight?.ToString(fg);
+                    }
+                    if (printMask?.SoundLevel ?? true)
+                    {
+                        fg.AppendItem(SoundLevel, "SoundLevel");
+                    }
+                    if ((printMask?.Sounds?.Overall ?? true)
+                        && Sounds is {} SoundsItem)
+                    {
+                        fg.AppendLine("Sounds =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(SoundsItem.Overall);
+                            if (SoundsItem.Specific != null)
+                            {
+                                foreach (var subItem in SoundsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.SoundsFinalize ?? true)
+                    {
+                        fg.AppendItem(SoundsFinalize, "SoundsFinalize");
+                    }
+                    if (printMask?.InheritsSoundsFrom ?? true)
+                    {
+                        fg.AppendItem(InheritsSoundsFrom, "InheritsSoundsFrom");
+                    }
+                    if (printMask?.PowerArmorStand ?? true)
+                    {
+                        fg.AppendItem(PowerArmorStand, "PowerArmorStand");
+                    }
+                    if (printMask?.DefaultOutfit ?? true)
+                    {
+                        fg.AppendItem(DefaultOutfit, "DefaultOutfit");
+                    }
+                    if (printMask?.SleepingOutfit ?? true)
+                    {
+                        fg.AppendItem(SleepingOutfit, "SleepingOutfit");
+                    }
+                    if (printMask?.DefaultPackageList ?? true)
+                    {
+                        fg.AppendItem(DefaultPackageList, "DefaultPackageList");
+                    }
+                    if (printMask?.CrimeFaction ?? true)
+                    {
+                        fg.AppendItem(CrimeFaction, "CrimeFaction");
+                    }
+                    if (printMask?.HeadTexture ?? true)
+                    {
+                        fg.AppendItem(HeadTexture, "HeadTexture");
+                    }
+                    if (printMask?.TextureLighting ?? true)
+                    {
+                        fg.AppendItem(TextureLighting, "TextureLighting");
+                    }
+                    if ((printMask?.Morphs?.Overall ?? true)
+                        && Morphs is {} MorphsItem)
+                    {
+                        fg.AppendLine("Morphs =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(MorphsItem.Overall);
+                            if (MorphsItem.Specific != null)
+                            {
+                                foreach (var subItem in MorphsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.FaceTintingLayers?.Overall ?? true)
+                        && FaceTintingLayers is {} FaceTintingLayersItem)
+                    {
+                        fg.AppendLine("FaceTintingLayers =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(FaceTintingLayersItem.Overall);
+                            if (FaceTintingLayersItem.Specific != null)
+                            {
+                                foreach (var subItem in FaceTintingLayersItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.BodyMorphRegionValues?.Overall ?? true)
+                    {
+                        BodyMorphRegionValues?.ToString(fg);
+                    }
+                    if ((printMask?.FaceMorphs?.Overall ?? true)
+                        && FaceMorphs is {} FaceMorphsItem)
+                    {
+                        fg.AppendLine("FaceMorphs =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(FaceMorphsItem.Overall);
+                            if (FaceMorphsItem.Specific != null)
+                            {
+                                foreach (var subItem in FaceMorphsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.FacialMorphIntensity ?? true)
+                    {
+                        fg.AppendItem(FacialMorphIntensity, "FacialMorphIntensity");
+                    }
+                    if (printMask?.ActivateTextOverride ?? true)
+                    {
+                        fg.AppendItem(ActivateTextOverride, "ActivateTextOverride");
+                    }
+                    if (printMask?.ACBSDataTypeState ?? true)
+                    {
+                        fg.AppendItem(ACBSDataTypeState, "ACBSDataTypeState");
+                    }
+                    if (printMask?.AIDTDataTypeState ?? true)
+                    {
+                        fg.AppendItem(AIDTDataTypeState, "AIDTDataTypeState");
+                    }
+                    if (printMask?.DNAMDataTypeState ?? true)
+                    {
+                        fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -185,12 +3023,288 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? PreviewTransform;
+            public Exception? AnimationSound;
+            public Exception? Flags;
+            public Exception? XpValueOffset;
+            public MaskItem<Exception?, ANpcLevel.ErrorMask?>? Level;
+            public Exception? CalcMinLevel;
+            public Exception? CalcMaxLevel;
+            public Exception? DispositionBase;
+            public Exception? UseTemplateActors;
+            public Exception? BleedoutOverride;
+            public Exception? Unknown;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>? Factions;
+            public Exception? DeathItem;
+            public Exception? Voice;
+            public Exception? DefaultTemplate;
+            public Exception? LegendaryTemplate;
+            public Exception? LegendaryChance;
+            public MaskItem<Exception?, TemplateActors.ErrorMask?>? TemplateActors;
+            public Exception? Race;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ActorEffect;
+            public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
+            public Exception? Skin;
+            public Exception? FarAwayModel;
+            public Exception? AttackRace;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>? Attacks;
+            public Exception? SpectatorOverridePackageList;
+            public Exception? ObserveDeadBodyOverridePackageList;
+            public Exception? GuardWarnOverridePackageList;
+            public Exception? CombatOverridePackageList;
+            public Exception? FollowerCommandPackageList;
+            public Exception? FollowerElevatorPackageList;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkPlacement.ErrorMask?>>?>? Perks;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties;
+            public Exception? ForcedLocRefType;
+            public Exception? NativeTerminal;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>? Items;
+            public Exception? Agression;
+            public Exception? Confidence;
+            public Exception? EnergyLevel;
+            public Exception? Responsibility;
+            public Exception? Mood;
+            public Exception? Assistence;
+            public Exception? AggroRadiusBehaviorEnabled;
+            public Exception? AggroRadiusWarn;
+            public Exception? AggroRadiusWarnOrAttack;
+            public Exception? AggroRadiusAttack;
+            public Exception? NoSlowApproach;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Packages;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AttachParentSlots;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>? ObjectTemplates;
+            public Exception? Class;
+            public Exception? Name;
+            public Exception? ShortName;
+            public Exception? BaseHealth;
+            public Exception? BaseActionPoints;
+            public Exception? FarAwayModelDistance;
+            public Exception? GearedUpWeapons;
+            public Exception? Unused;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? HeadParts;
+            public Exception? HairColor;
+            public Exception? FacialHairColor;
+            public Exception? CombatStyle;
+            public Exception? GiftFilter;
+            public Exception? NAM5;
+            public Exception? HeightMin;
+            public Exception? NAM7;
+            public Exception? HeightMax;
+            public MaskItem<Exception?, NpcWeight.ErrorMask?>? Weight;
+            public Exception? SoundLevel;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcSound.ErrorMask?>>?>? Sounds;
+            public Exception? SoundsFinalize;
+            public Exception? InheritsSoundsFrom;
+            public Exception? PowerArmorStand;
+            public Exception? DefaultOutfit;
+            public Exception? SleepingOutfit;
+            public Exception? DefaultPackageList;
+            public Exception? CrimeFaction;
+            public Exception? HeadTexture;
+            public Exception? TextureLighting;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcMorph.ErrorMask?>>?>? Morphs;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcFaceTintingLayer.ErrorMask?>>?>? FaceTintingLayers;
+            public MaskItem<Exception?, NpcBodyMorphRegionValues.ErrorMask?>? BodyMorphRegionValues;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcFaceMorph.ErrorMask?>>?>? FaceMorphs;
+            public Exception? FacialMorphIntensity;
+            public Exception? ActivateTextOverride;
+            public Exception? ACBSDataTypeState;
+            public Exception? AIDTDataTypeState;
+            public Exception? DNAMDataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Npc_FieldIndex enu = (Npc_FieldIndex)index;
                 switch (enu)
                 {
+                    case Npc_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case Npc_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case Npc_FieldIndex.PreviewTransform:
+                        return PreviewTransform;
+                    case Npc_FieldIndex.AnimationSound:
+                        return AnimationSound;
+                    case Npc_FieldIndex.Flags:
+                        return Flags;
+                    case Npc_FieldIndex.XpValueOffset:
+                        return XpValueOffset;
+                    case Npc_FieldIndex.Level:
+                        return Level;
+                    case Npc_FieldIndex.CalcMinLevel:
+                        return CalcMinLevel;
+                    case Npc_FieldIndex.CalcMaxLevel:
+                        return CalcMaxLevel;
+                    case Npc_FieldIndex.DispositionBase:
+                        return DispositionBase;
+                    case Npc_FieldIndex.UseTemplateActors:
+                        return UseTemplateActors;
+                    case Npc_FieldIndex.BleedoutOverride:
+                        return BleedoutOverride;
+                    case Npc_FieldIndex.Unknown:
+                        return Unknown;
+                    case Npc_FieldIndex.Factions:
+                        return Factions;
+                    case Npc_FieldIndex.DeathItem:
+                        return DeathItem;
+                    case Npc_FieldIndex.Voice:
+                        return Voice;
+                    case Npc_FieldIndex.DefaultTemplate:
+                        return DefaultTemplate;
+                    case Npc_FieldIndex.LegendaryTemplate:
+                        return LegendaryTemplate;
+                    case Npc_FieldIndex.LegendaryChance:
+                        return LegendaryChance;
+                    case Npc_FieldIndex.TemplateActors:
+                        return TemplateActors;
+                    case Npc_FieldIndex.Race:
+                        return Race;
+                    case Npc_FieldIndex.ActorEffect:
+                        return ActorEffect;
+                    case Npc_FieldIndex.Destructible:
+                        return Destructible;
+                    case Npc_FieldIndex.Skin:
+                        return Skin;
+                    case Npc_FieldIndex.FarAwayModel:
+                        return FarAwayModel;
+                    case Npc_FieldIndex.AttackRace:
+                        return AttackRace;
+                    case Npc_FieldIndex.Attacks:
+                        return Attacks;
+                    case Npc_FieldIndex.SpectatorOverridePackageList:
+                        return SpectatorOverridePackageList;
+                    case Npc_FieldIndex.ObserveDeadBodyOverridePackageList:
+                        return ObserveDeadBodyOverridePackageList;
+                    case Npc_FieldIndex.GuardWarnOverridePackageList:
+                        return GuardWarnOverridePackageList;
+                    case Npc_FieldIndex.CombatOverridePackageList:
+                        return CombatOverridePackageList;
+                    case Npc_FieldIndex.FollowerCommandPackageList:
+                        return FollowerCommandPackageList;
+                    case Npc_FieldIndex.FollowerElevatorPackageList:
+                        return FollowerElevatorPackageList;
+                    case Npc_FieldIndex.Perks:
+                        return Perks;
+                    case Npc_FieldIndex.Properties:
+                        return Properties;
+                    case Npc_FieldIndex.ForcedLocRefType:
+                        return ForcedLocRefType;
+                    case Npc_FieldIndex.NativeTerminal:
+                        return NativeTerminal;
+                    case Npc_FieldIndex.Items:
+                        return Items;
+                    case Npc_FieldIndex.Agression:
+                        return Agression;
+                    case Npc_FieldIndex.Confidence:
+                        return Confidence;
+                    case Npc_FieldIndex.EnergyLevel:
+                        return EnergyLevel;
+                    case Npc_FieldIndex.Responsibility:
+                        return Responsibility;
+                    case Npc_FieldIndex.Mood:
+                        return Mood;
+                    case Npc_FieldIndex.Assistence:
+                        return Assistence;
+                    case Npc_FieldIndex.AggroRadiusBehaviorEnabled:
+                        return AggroRadiusBehaviorEnabled;
+                    case Npc_FieldIndex.AggroRadiusWarn:
+                        return AggroRadiusWarn;
+                    case Npc_FieldIndex.AggroRadiusWarnOrAttack:
+                        return AggroRadiusWarnOrAttack;
+                    case Npc_FieldIndex.AggroRadiusAttack:
+                        return AggroRadiusAttack;
+                    case Npc_FieldIndex.NoSlowApproach:
+                        return NoSlowApproach;
+                    case Npc_FieldIndex.Packages:
+                        return Packages;
+                    case Npc_FieldIndex.Keywords:
+                        return Keywords;
+                    case Npc_FieldIndex.AttachParentSlots:
+                        return AttachParentSlots;
+                    case Npc_FieldIndex.ObjectTemplates:
+                        return ObjectTemplates;
+                    case Npc_FieldIndex.Class:
+                        return Class;
+                    case Npc_FieldIndex.Name:
+                        return Name;
+                    case Npc_FieldIndex.ShortName:
+                        return ShortName;
+                    case Npc_FieldIndex.BaseHealth:
+                        return BaseHealth;
+                    case Npc_FieldIndex.BaseActionPoints:
+                        return BaseActionPoints;
+                    case Npc_FieldIndex.FarAwayModelDistance:
+                        return FarAwayModelDistance;
+                    case Npc_FieldIndex.GearedUpWeapons:
+                        return GearedUpWeapons;
+                    case Npc_FieldIndex.Unused:
+                        return Unused;
+                    case Npc_FieldIndex.HeadParts:
+                        return HeadParts;
+                    case Npc_FieldIndex.HairColor:
+                        return HairColor;
+                    case Npc_FieldIndex.FacialHairColor:
+                        return FacialHairColor;
+                    case Npc_FieldIndex.CombatStyle:
+                        return CombatStyle;
+                    case Npc_FieldIndex.GiftFilter:
+                        return GiftFilter;
+                    case Npc_FieldIndex.NAM5:
+                        return NAM5;
+                    case Npc_FieldIndex.HeightMin:
+                        return HeightMin;
+                    case Npc_FieldIndex.NAM7:
+                        return NAM7;
+                    case Npc_FieldIndex.HeightMax:
+                        return HeightMax;
+                    case Npc_FieldIndex.Weight:
+                        return Weight;
+                    case Npc_FieldIndex.SoundLevel:
+                        return SoundLevel;
+                    case Npc_FieldIndex.Sounds:
+                        return Sounds;
+                    case Npc_FieldIndex.SoundsFinalize:
+                        return SoundsFinalize;
+                    case Npc_FieldIndex.InheritsSoundsFrom:
+                        return InheritsSoundsFrom;
+                    case Npc_FieldIndex.PowerArmorStand:
+                        return PowerArmorStand;
+                    case Npc_FieldIndex.DefaultOutfit:
+                        return DefaultOutfit;
+                    case Npc_FieldIndex.SleepingOutfit:
+                        return SleepingOutfit;
+                    case Npc_FieldIndex.DefaultPackageList:
+                        return DefaultPackageList;
+                    case Npc_FieldIndex.CrimeFaction:
+                        return CrimeFaction;
+                    case Npc_FieldIndex.HeadTexture:
+                        return HeadTexture;
+                    case Npc_FieldIndex.TextureLighting:
+                        return TextureLighting;
+                    case Npc_FieldIndex.Morphs:
+                        return Morphs;
+                    case Npc_FieldIndex.FaceTintingLayers:
+                        return FaceTintingLayers;
+                    case Npc_FieldIndex.BodyMorphRegionValues:
+                        return BodyMorphRegionValues;
+                    case Npc_FieldIndex.FaceMorphs:
+                        return FaceMorphs;
+                    case Npc_FieldIndex.FacialMorphIntensity:
+                        return FacialMorphIntensity;
+                    case Npc_FieldIndex.ActivateTextOverride:
+                        return ActivateTextOverride;
+                    case Npc_FieldIndex.ACBSDataTypeState:
+                        return ACBSDataTypeState;
+                    case Npc_FieldIndex.AIDTDataTypeState:
+                        return AIDTDataTypeState;
+                    case Npc_FieldIndex.DNAMDataTypeState:
+                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +3315,279 @@ namespace Mutagen.Bethesda.Fallout4
                 Npc_FieldIndex enu = (Npc_FieldIndex)index;
                 switch (enu)
                 {
+                    case Npc_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.PreviewTransform:
+                        this.PreviewTransform = ex;
+                        break;
+                    case Npc_FieldIndex.AnimationSound:
+                        this.AnimationSound = ex;
+                        break;
+                    case Npc_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Npc_FieldIndex.XpValueOffset:
+                        this.XpValueOffset = ex;
+                        break;
+                    case Npc_FieldIndex.Level:
+                        this.Level = new MaskItem<Exception?, ANpcLevel.ErrorMask?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.CalcMinLevel:
+                        this.CalcMinLevel = ex;
+                        break;
+                    case Npc_FieldIndex.CalcMaxLevel:
+                        this.CalcMaxLevel = ex;
+                        break;
+                    case Npc_FieldIndex.DispositionBase:
+                        this.DispositionBase = ex;
+                        break;
+                    case Npc_FieldIndex.UseTemplateActors:
+                        this.UseTemplateActors = ex;
+                        break;
+                    case Npc_FieldIndex.BleedoutOverride:
+                        this.BleedoutOverride = ex;
+                        break;
+                    case Npc_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case Npc_FieldIndex.Factions:
+                        this.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.DeathItem:
+                        this.DeathItem = ex;
+                        break;
+                    case Npc_FieldIndex.Voice:
+                        this.Voice = ex;
+                        break;
+                    case Npc_FieldIndex.DefaultTemplate:
+                        this.DefaultTemplate = ex;
+                        break;
+                    case Npc_FieldIndex.LegendaryTemplate:
+                        this.LegendaryTemplate = ex;
+                        break;
+                    case Npc_FieldIndex.LegendaryChance:
+                        this.LegendaryChance = ex;
+                        break;
+                    case Npc_FieldIndex.TemplateActors:
+                        this.TemplateActors = new MaskItem<Exception?, TemplateActors.ErrorMask?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.Race:
+                        this.Race = ex;
+                        break;
+                    case Npc_FieldIndex.ActorEffect:
+                        this.ActorEffect = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.Destructible:
+                        this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.Skin:
+                        this.Skin = ex;
+                        break;
+                    case Npc_FieldIndex.FarAwayModel:
+                        this.FarAwayModel = ex;
+                        break;
+                    case Npc_FieldIndex.AttackRace:
+                        this.AttackRace = ex;
+                        break;
+                    case Npc_FieldIndex.Attacks:
+                        this.Attacks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.SpectatorOverridePackageList:
+                        this.SpectatorOverridePackageList = ex;
+                        break;
+                    case Npc_FieldIndex.ObserveDeadBodyOverridePackageList:
+                        this.ObserveDeadBodyOverridePackageList = ex;
+                        break;
+                    case Npc_FieldIndex.GuardWarnOverridePackageList:
+                        this.GuardWarnOverridePackageList = ex;
+                        break;
+                    case Npc_FieldIndex.CombatOverridePackageList:
+                        this.CombatOverridePackageList = ex;
+                        break;
+                    case Npc_FieldIndex.FollowerCommandPackageList:
+                        this.FollowerCommandPackageList = ex;
+                        break;
+                    case Npc_FieldIndex.FollowerElevatorPackageList:
+                        this.FollowerElevatorPackageList = ex;
+                        break;
+                    case Npc_FieldIndex.Perks:
+                        this.Perks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkPlacement.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.Properties:
+                        this.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.ForcedLocRefType:
+                        this.ForcedLocRefType = ex;
+                        break;
+                    case Npc_FieldIndex.NativeTerminal:
+                        this.NativeTerminal = ex;
+                        break;
+                    case Npc_FieldIndex.Items:
+                        this.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.Agression:
+                        this.Agression = ex;
+                        break;
+                    case Npc_FieldIndex.Confidence:
+                        this.Confidence = ex;
+                        break;
+                    case Npc_FieldIndex.EnergyLevel:
+                        this.EnergyLevel = ex;
+                        break;
+                    case Npc_FieldIndex.Responsibility:
+                        this.Responsibility = ex;
+                        break;
+                    case Npc_FieldIndex.Mood:
+                        this.Mood = ex;
+                        break;
+                    case Npc_FieldIndex.Assistence:
+                        this.Assistence = ex;
+                        break;
+                    case Npc_FieldIndex.AggroRadiusBehaviorEnabled:
+                        this.AggroRadiusBehaviorEnabled = ex;
+                        break;
+                    case Npc_FieldIndex.AggroRadiusWarn:
+                        this.AggroRadiusWarn = ex;
+                        break;
+                    case Npc_FieldIndex.AggroRadiusWarnOrAttack:
+                        this.AggroRadiusWarnOrAttack = ex;
+                        break;
+                    case Npc_FieldIndex.AggroRadiusAttack:
+                        this.AggroRadiusAttack = ex;
+                        break;
+                    case Npc_FieldIndex.NoSlowApproach:
+                        this.NoSlowApproach = ex;
+                        break;
+                    case Npc_FieldIndex.Packages:
+                        this.Packages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.AttachParentSlots:
+                        this.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.ObjectTemplates:
+                        this.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.Class:
+                        this.Class = ex;
+                        break;
+                    case Npc_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Npc_FieldIndex.ShortName:
+                        this.ShortName = ex;
+                        break;
+                    case Npc_FieldIndex.BaseHealth:
+                        this.BaseHealth = ex;
+                        break;
+                    case Npc_FieldIndex.BaseActionPoints:
+                        this.BaseActionPoints = ex;
+                        break;
+                    case Npc_FieldIndex.FarAwayModelDistance:
+                        this.FarAwayModelDistance = ex;
+                        break;
+                    case Npc_FieldIndex.GearedUpWeapons:
+                        this.GearedUpWeapons = ex;
+                        break;
+                    case Npc_FieldIndex.Unused:
+                        this.Unused = ex;
+                        break;
+                    case Npc_FieldIndex.HeadParts:
+                        this.HeadParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.HairColor:
+                        this.HairColor = ex;
+                        break;
+                    case Npc_FieldIndex.FacialHairColor:
+                        this.FacialHairColor = ex;
+                        break;
+                    case Npc_FieldIndex.CombatStyle:
+                        this.CombatStyle = ex;
+                        break;
+                    case Npc_FieldIndex.GiftFilter:
+                        this.GiftFilter = ex;
+                        break;
+                    case Npc_FieldIndex.NAM5:
+                        this.NAM5 = ex;
+                        break;
+                    case Npc_FieldIndex.HeightMin:
+                        this.HeightMin = ex;
+                        break;
+                    case Npc_FieldIndex.NAM7:
+                        this.NAM7 = ex;
+                        break;
+                    case Npc_FieldIndex.HeightMax:
+                        this.HeightMax = ex;
+                        break;
+                    case Npc_FieldIndex.Weight:
+                        this.Weight = new MaskItem<Exception?, NpcWeight.ErrorMask?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.SoundLevel:
+                        this.SoundLevel = ex;
+                        break;
+                    case Npc_FieldIndex.Sounds:
+                        this.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcSound.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.SoundsFinalize:
+                        this.SoundsFinalize = ex;
+                        break;
+                    case Npc_FieldIndex.InheritsSoundsFrom:
+                        this.InheritsSoundsFrom = ex;
+                        break;
+                    case Npc_FieldIndex.PowerArmorStand:
+                        this.PowerArmorStand = ex;
+                        break;
+                    case Npc_FieldIndex.DefaultOutfit:
+                        this.DefaultOutfit = ex;
+                        break;
+                    case Npc_FieldIndex.SleepingOutfit:
+                        this.SleepingOutfit = ex;
+                        break;
+                    case Npc_FieldIndex.DefaultPackageList:
+                        this.DefaultPackageList = ex;
+                        break;
+                    case Npc_FieldIndex.CrimeFaction:
+                        this.CrimeFaction = ex;
+                        break;
+                    case Npc_FieldIndex.HeadTexture:
+                        this.HeadTexture = ex;
+                        break;
+                    case Npc_FieldIndex.TextureLighting:
+                        this.TextureLighting = ex;
+                        break;
+                    case Npc_FieldIndex.Morphs:
+                        this.Morphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcMorph.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.FaceTintingLayers:
+                        this.FaceTintingLayers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcFaceTintingLayer.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.BodyMorphRegionValues:
+                        this.BodyMorphRegionValues = new MaskItem<Exception?, NpcBodyMorphRegionValues.ErrorMask?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.FaceMorphs:
+                        this.FaceMorphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcFaceMorph.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Npc_FieldIndex.FacialMorphIntensity:
+                        this.FacialMorphIntensity = ex;
+                        break;
+                    case Npc_FieldIndex.ActivateTextOverride:
+                        this.ActivateTextOverride = ex;
+                        break;
+                    case Npc_FieldIndex.ACBSDataTypeState:
+                        this.ACBSDataTypeState = ex;
+                        break;
+                    case Npc_FieldIndex.AIDTDataTypeState:
+                        this.AIDTDataTypeState = ex;
+                        break;
+                    case Npc_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +3599,279 @@ namespace Mutagen.Bethesda.Fallout4
                 Npc_FieldIndex enu = (Npc_FieldIndex)index;
                 switch (enu)
                 {
+                    case Npc_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
+                    case Npc_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case Npc_FieldIndex.PreviewTransform:
+                        this.PreviewTransform = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.AnimationSound:
+                        this.AnimationSound = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.XpValueOffset:
+                        this.XpValueOffset = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.Level:
+                        this.Level = (MaskItem<Exception?, ANpcLevel.ErrorMask?>?)obj;
+                        break;
+                    case Npc_FieldIndex.CalcMinLevel:
+                        this.CalcMinLevel = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.CalcMaxLevel:
+                        this.CalcMaxLevel = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.DispositionBase:
+                        this.DispositionBase = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.UseTemplateActors:
+                        this.UseTemplateActors = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.BleedoutOverride:
+                        this.BleedoutOverride = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.Factions:
+                        this.Factions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>)obj;
+                        break;
+                    case Npc_FieldIndex.DeathItem:
+                        this.DeathItem = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.Voice:
+                        this.Voice = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.DefaultTemplate:
+                        this.DefaultTemplate = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.LegendaryTemplate:
+                        this.LegendaryTemplate = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.LegendaryChance:
+                        this.LegendaryChance = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.TemplateActors:
+                        this.TemplateActors = (MaskItem<Exception?, TemplateActors.ErrorMask?>?)obj;
+                        break;
+                    case Npc_FieldIndex.Race:
+                        this.Race = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.ActorEffect:
+                        this.ActorEffect = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Npc_FieldIndex.Destructible:
+                        this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
+                        break;
+                    case Npc_FieldIndex.Skin:
+                        this.Skin = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.FarAwayModel:
+                        this.FarAwayModel = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.AttackRace:
+                        this.AttackRace = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.Attacks:
+                        this.Attacks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>)obj;
+                        break;
+                    case Npc_FieldIndex.SpectatorOverridePackageList:
+                        this.SpectatorOverridePackageList = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.ObserveDeadBodyOverridePackageList:
+                        this.ObserveDeadBodyOverridePackageList = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.GuardWarnOverridePackageList:
+                        this.GuardWarnOverridePackageList = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.CombatOverridePackageList:
+                        this.CombatOverridePackageList = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.FollowerCommandPackageList:
+                        this.FollowerCommandPackageList = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.FollowerElevatorPackageList:
+                        this.FollowerElevatorPackageList = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.Perks:
+                        this.Perks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkPlacement.ErrorMask?>>?>)obj;
+                        break;
+                    case Npc_FieldIndex.Properties:
+                        this.Properties = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>)obj;
+                        break;
+                    case Npc_FieldIndex.ForcedLocRefType:
+                        this.ForcedLocRefType = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.NativeTerminal:
+                        this.NativeTerminal = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.Items:
+                        this.Items = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>)obj;
+                        break;
+                    case Npc_FieldIndex.Agression:
+                        this.Agression = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.Confidence:
+                        this.Confidence = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.EnergyLevel:
+                        this.EnergyLevel = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.Responsibility:
+                        this.Responsibility = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.Mood:
+                        this.Mood = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.Assistence:
+                        this.Assistence = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.AggroRadiusBehaviorEnabled:
+                        this.AggroRadiusBehaviorEnabled = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.AggroRadiusWarn:
+                        this.AggroRadiusWarn = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.AggroRadiusWarnOrAttack:
+                        this.AggroRadiusWarnOrAttack = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.AggroRadiusAttack:
+                        this.AggroRadiusAttack = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.NoSlowApproach:
+                        this.NoSlowApproach = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.Packages:
+                        this.Packages = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Npc_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Npc_FieldIndex.AttachParentSlots:
+                        this.AttachParentSlots = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Npc_FieldIndex.ObjectTemplates:
+                        this.ObjectTemplates = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>)obj;
+                        break;
+                    case Npc_FieldIndex.Class:
+                        this.Class = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.ShortName:
+                        this.ShortName = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.BaseHealth:
+                        this.BaseHealth = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.BaseActionPoints:
+                        this.BaseActionPoints = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.FarAwayModelDistance:
+                        this.FarAwayModelDistance = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.GearedUpWeapons:
+                        this.GearedUpWeapons = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.HeadParts:
+                        this.HeadParts = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Npc_FieldIndex.HairColor:
+                        this.HairColor = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.FacialHairColor:
+                        this.FacialHairColor = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.CombatStyle:
+                        this.CombatStyle = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.GiftFilter:
+                        this.GiftFilter = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.NAM5:
+                        this.NAM5 = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.HeightMin:
+                        this.HeightMin = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.NAM7:
+                        this.NAM7 = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.HeightMax:
+                        this.HeightMax = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.Weight:
+                        this.Weight = (MaskItem<Exception?, NpcWeight.ErrorMask?>?)obj;
+                        break;
+                    case Npc_FieldIndex.SoundLevel:
+                        this.SoundLevel = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.Sounds:
+                        this.Sounds = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcSound.ErrorMask?>>?>)obj;
+                        break;
+                    case Npc_FieldIndex.SoundsFinalize:
+                        this.SoundsFinalize = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.InheritsSoundsFrom:
+                        this.InheritsSoundsFrom = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.PowerArmorStand:
+                        this.PowerArmorStand = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.DefaultOutfit:
+                        this.DefaultOutfit = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.SleepingOutfit:
+                        this.SleepingOutfit = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.DefaultPackageList:
+                        this.DefaultPackageList = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.CrimeFaction:
+                        this.CrimeFaction = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.HeadTexture:
+                        this.HeadTexture = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.TextureLighting:
+                        this.TextureLighting = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.Morphs:
+                        this.Morphs = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcMorph.ErrorMask?>>?>)obj;
+                        break;
+                    case Npc_FieldIndex.FaceTintingLayers:
+                        this.FaceTintingLayers = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcFaceTintingLayer.ErrorMask?>>?>)obj;
+                        break;
+                    case Npc_FieldIndex.BodyMorphRegionValues:
+                        this.BodyMorphRegionValues = (MaskItem<Exception?, NpcBodyMorphRegionValues.ErrorMask?>?)obj;
+                        break;
+                    case Npc_FieldIndex.FaceMorphs:
+                        this.FaceMorphs = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcFaceMorph.ErrorMask?>>?>)obj;
+                        break;
+                    case Npc_FieldIndex.FacialMorphIntensity:
+                        this.FacialMorphIntensity = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.ActivateTextOverride:
+                        this.ActivateTextOverride = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.ACBSDataTypeState:
+                        this.ACBSDataTypeState = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.AIDTDataTypeState:
+                        this.AIDTDataTypeState = (Exception?)obj;
+                        break;
+                    case Npc_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +3881,97 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (ObjectBounds != null) return true;
+                if (PreviewTransform != null) return true;
+                if (AnimationSound != null) return true;
+                if (Flags != null) return true;
+                if (XpValueOffset != null) return true;
+                if (Level != null) return true;
+                if (CalcMinLevel != null) return true;
+                if (CalcMaxLevel != null) return true;
+                if (DispositionBase != null) return true;
+                if (UseTemplateActors != null) return true;
+                if (BleedoutOverride != null) return true;
+                if (Unknown != null) return true;
+                if (Factions != null) return true;
+                if (DeathItem != null) return true;
+                if (Voice != null) return true;
+                if (DefaultTemplate != null) return true;
+                if (LegendaryTemplate != null) return true;
+                if (LegendaryChance != null) return true;
+                if (TemplateActors != null) return true;
+                if (Race != null) return true;
+                if (ActorEffect != null) return true;
+                if (Destructible != null) return true;
+                if (Skin != null) return true;
+                if (FarAwayModel != null) return true;
+                if (AttackRace != null) return true;
+                if (Attacks != null) return true;
+                if (SpectatorOverridePackageList != null) return true;
+                if (ObserveDeadBodyOverridePackageList != null) return true;
+                if (GuardWarnOverridePackageList != null) return true;
+                if (CombatOverridePackageList != null) return true;
+                if (FollowerCommandPackageList != null) return true;
+                if (FollowerElevatorPackageList != null) return true;
+                if (Perks != null) return true;
+                if (Properties != null) return true;
+                if (ForcedLocRefType != null) return true;
+                if (NativeTerminal != null) return true;
+                if (Items != null) return true;
+                if (Agression != null) return true;
+                if (Confidence != null) return true;
+                if (EnergyLevel != null) return true;
+                if (Responsibility != null) return true;
+                if (Mood != null) return true;
+                if (Assistence != null) return true;
+                if (AggroRadiusBehaviorEnabled != null) return true;
+                if (AggroRadiusWarn != null) return true;
+                if (AggroRadiusWarnOrAttack != null) return true;
+                if (AggroRadiusAttack != null) return true;
+                if (NoSlowApproach != null) return true;
+                if (Packages != null) return true;
+                if (Keywords != null) return true;
+                if (AttachParentSlots != null) return true;
+                if (ObjectTemplates != null) return true;
+                if (Class != null) return true;
+                if (Name != null) return true;
+                if (ShortName != null) return true;
+                if (BaseHealth != null) return true;
+                if (BaseActionPoints != null) return true;
+                if (FarAwayModelDistance != null) return true;
+                if (GearedUpWeapons != null) return true;
+                if (Unused != null) return true;
+                if (HeadParts != null) return true;
+                if (HairColor != null) return true;
+                if (FacialHairColor != null) return true;
+                if (CombatStyle != null) return true;
+                if (GiftFilter != null) return true;
+                if (NAM5 != null) return true;
+                if (HeightMin != null) return true;
+                if (NAM7 != null) return true;
+                if (HeightMax != null) return true;
+                if (Weight != null) return true;
+                if (SoundLevel != null) return true;
+                if (Sounds != null) return true;
+                if (SoundsFinalize != null) return true;
+                if (InheritsSoundsFrom != null) return true;
+                if (PowerArmorStand != null) return true;
+                if (DefaultOutfit != null) return true;
+                if (SleepingOutfit != null) return true;
+                if (DefaultPackageList != null) return true;
+                if (CrimeFaction != null) return true;
+                if (HeadTexture != null) return true;
+                if (TextureLighting != null) return true;
+                if (Morphs != null) return true;
+                if (FaceTintingLayers != null) return true;
+                if (BodyMorphRegionValues != null) return true;
+                if (FaceMorphs != null) return true;
+                if (FacialMorphIntensity != null) return true;
+                if (ActivateTextOverride != null) return true;
+                if (ACBSDataTypeState != null) return true;
+                if (AIDTDataTypeState != null) return true;
+                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -256,6 +4007,412 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                VirtualMachineAdapter?.ToString(fg);
+                ObjectBounds?.ToString(fg);
+                fg.AppendItem(PreviewTransform, "PreviewTransform");
+                fg.AppendItem(AnimationSound, "AnimationSound");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(XpValueOffset, "XpValueOffset");
+                Level?.ToString(fg);
+                fg.AppendItem(CalcMinLevel, "CalcMinLevel");
+                fg.AppendItem(CalcMaxLevel, "CalcMaxLevel");
+                fg.AppendItem(DispositionBase, "DispositionBase");
+                fg.AppendItem(UseTemplateActors, "UseTemplateActors");
+                fg.AppendItem(BleedoutOverride, "BleedoutOverride");
+                fg.AppendItem(Unknown, "Unknown");
+                if (Factions is {} FactionsItem)
+                {
+                    fg.AppendLine("Factions =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(FactionsItem.Overall);
+                        if (FactionsItem.Specific != null)
+                        {
+                            foreach (var subItem in FactionsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(DeathItem, "DeathItem");
+                fg.AppendItem(Voice, "Voice");
+                fg.AppendItem(DefaultTemplate, "DefaultTemplate");
+                fg.AppendItem(LegendaryTemplate, "LegendaryTemplate");
+                fg.AppendItem(LegendaryChance, "LegendaryChance");
+                TemplateActors?.ToString(fg);
+                fg.AppendItem(Race, "Race");
+                if (ActorEffect is {} ActorEffectItem)
+                {
+                    fg.AppendLine("ActorEffect =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ActorEffectItem.Overall);
+                        if (ActorEffectItem.Specific != null)
+                        {
+                            foreach (var subItem in ActorEffectItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                Destructible?.ToString(fg);
+                fg.AppendItem(Skin, "Skin");
+                fg.AppendItem(FarAwayModel, "FarAwayModel");
+                fg.AppendItem(AttackRace, "AttackRace");
+                if (Attacks is {} AttacksItem)
+                {
+                    fg.AppendLine("Attacks =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(AttacksItem.Overall);
+                        if (AttacksItem.Specific != null)
+                        {
+                            foreach (var subItem in AttacksItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(SpectatorOverridePackageList, "SpectatorOverridePackageList");
+                fg.AppendItem(ObserveDeadBodyOverridePackageList, "ObserveDeadBodyOverridePackageList");
+                fg.AppendItem(GuardWarnOverridePackageList, "GuardWarnOverridePackageList");
+                fg.AppendItem(CombatOverridePackageList, "CombatOverridePackageList");
+                fg.AppendItem(FollowerCommandPackageList, "FollowerCommandPackageList");
+                fg.AppendItem(FollowerElevatorPackageList, "FollowerElevatorPackageList");
+                if (Perks is {} PerksItem)
+                {
+                    fg.AppendLine("Perks =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(PerksItem.Overall);
+                        if (PerksItem.Specific != null)
+                        {
+                            foreach (var subItem in PerksItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Properties is {} PropertiesItem)
+                {
+                    fg.AppendLine("Properties =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(PropertiesItem.Overall);
+                        if (PropertiesItem.Specific != null)
+                        {
+                            foreach (var subItem in PropertiesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(ForcedLocRefType, "ForcedLocRefType");
+                fg.AppendItem(NativeTerminal, "NativeTerminal");
+                if (Items is {} ItemsItem)
+                {
+                    fg.AppendLine("Items =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ItemsItem.Overall);
+                        if (ItemsItem.Specific != null)
+                        {
+                            foreach (var subItem in ItemsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(Agression, "Agression");
+                fg.AppendItem(Confidence, "Confidence");
+                fg.AppendItem(EnergyLevel, "EnergyLevel");
+                fg.AppendItem(Responsibility, "Responsibility");
+                fg.AppendItem(Mood, "Mood");
+                fg.AppendItem(Assistence, "Assistence");
+                fg.AppendItem(AggroRadiusBehaviorEnabled, "AggroRadiusBehaviorEnabled");
+                fg.AppendItem(AggroRadiusWarn, "AggroRadiusWarn");
+                fg.AppendItem(AggroRadiusWarnOrAttack, "AggroRadiusWarnOrAttack");
+                fg.AppendItem(AggroRadiusAttack, "AggroRadiusAttack");
+                fg.AppendItem(NoSlowApproach, "NoSlowApproach");
+                if (Packages is {} PackagesItem)
+                {
+                    fg.AppendLine("Packages =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(PackagesItem.Overall);
+                        if (PackagesItem.Specific != null)
+                        {
+                            foreach (var subItem in PackagesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Keywords is {} KeywordsItem)
+                {
+                    fg.AppendLine("Keywords =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (AttachParentSlots is {} AttachParentSlotsItem)
+                {
+                    fg.AppendLine("AttachParentSlots =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(AttachParentSlotsItem.Overall);
+                        if (AttachParentSlotsItem.Specific != null)
+                        {
+                            foreach (var subItem in AttachParentSlotsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (ObjectTemplates is {} ObjectTemplatesItem)
+                {
+                    fg.AppendLine("ObjectTemplates =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ObjectTemplatesItem.Overall);
+                        if (ObjectTemplatesItem.Specific != null)
+                        {
+                            foreach (var subItem in ObjectTemplatesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(Class, "Class");
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(ShortName, "ShortName");
+                fg.AppendItem(BaseHealth, "BaseHealth");
+                fg.AppendItem(BaseActionPoints, "BaseActionPoints");
+                fg.AppendItem(FarAwayModelDistance, "FarAwayModelDistance");
+                fg.AppendItem(GearedUpWeapons, "GearedUpWeapons");
+                fg.AppendItem(Unused, "Unused");
+                if (HeadParts is {} HeadPartsItem)
+                {
+                    fg.AppendLine("HeadParts =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(HeadPartsItem.Overall);
+                        if (HeadPartsItem.Specific != null)
+                        {
+                            foreach (var subItem in HeadPartsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(HairColor, "HairColor");
+                fg.AppendItem(FacialHairColor, "FacialHairColor");
+                fg.AppendItem(CombatStyle, "CombatStyle");
+                fg.AppendItem(GiftFilter, "GiftFilter");
+                fg.AppendItem(NAM5, "NAM5");
+                fg.AppendItem(HeightMin, "HeightMin");
+                fg.AppendItem(NAM7, "NAM7");
+                fg.AppendItem(HeightMax, "HeightMax");
+                Weight?.ToString(fg);
+                fg.AppendItem(SoundLevel, "SoundLevel");
+                if (Sounds is {} SoundsItem)
+                {
+                    fg.AppendLine("Sounds =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(SoundsItem.Overall);
+                        if (SoundsItem.Specific != null)
+                        {
+                            foreach (var subItem in SoundsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(SoundsFinalize, "SoundsFinalize");
+                fg.AppendItem(InheritsSoundsFrom, "InheritsSoundsFrom");
+                fg.AppendItem(PowerArmorStand, "PowerArmorStand");
+                fg.AppendItem(DefaultOutfit, "DefaultOutfit");
+                fg.AppendItem(SleepingOutfit, "SleepingOutfit");
+                fg.AppendItem(DefaultPackageList, "DefaultPackageList");
+                fg.AppendItem(CrimeFaction, "CrimeFaction");
+                fg.AppendItem(HeadTexture, "HeadTexture");
+                fg.AppendItem(TextureLighting, "TextureLighting");
+                if (Morphs is {} MorphsItem)
+                {
+                    fg.AppendLine("Morphs =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(MorphsItem.Overall);
+                        if (MorphsItem.Specific != null)
+                        {
+                            foreach (var subItem in MorphsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (FaceTintingLayers is {} FaceTintingLayersItem)
+                {
+                    fg.AppendLine("FaceTintingLayers =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(FaceTintingLayersItem.Overall);
+                        if (FaceTintingLayersItem.Specific != null)
+                        {
+                            foreach (var subItem in FaceTintingLayersItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                BodyMorphRegionValues?.ToString(fg);
+                if (FaceMorphs is {} FaceMorphsItem)
+                {
+                    fg.AppendLine("FaceMorphs =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(FaceMorphsItem.Overall);
+                        if (FaceMorphsItem.Specific != null)
+                        {
+                            foreach (var subItem in FaceMorphsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(FacialMorphIntensity, "FacialMorphIntensity");
+                fg.AppendItem(ActivateTextOverride, "ActivateTextOverride");
+                fg.AppendItem(ACBSDataTypeState, "ACBSDataTypeState");
+                fg.AppendItem(AIDTDataTypeState, "AIDTDataTypeState");
+                fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
             }
             #endregion
 
@@ -264,6 +4421,97 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.PreviewTransform = this.PreviewTransform.Combine(rhs.PreviewTransform);
+                ret.AnimationSound = this.AnimationSound.Combine(rhs.AnimationSound);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.XpValueOffset = this.XpValueOffset.Combine(rhs.XpValueOffset);
+                ret.Level = this.Level.Combine(rhs.Level, (l, r) => l.Combine(r));
+                ret.CalcMinLevel = this.CalcMinLevel.Combine(rhs.CalcMinLevel);
+                ret.CalcMaxLevel = this.CalcMaxLevel.Combine(rhs.CalcMaxLevel);
+                ret.DispositionBase = this.DispositionBase.Combine(rhs.DispositionBase);
+                ret.UseTemplateActors = this.UseTemplateActors.Combine(rhs.UseTemplateActors);
+                ret.BleedoutOverride = this.BleedoutOverride.Combine(rhs.BleedoutOverride);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
+                ret.DeathItem = this.DeathItem.Combine(rhs.DeathItem);
+                ret.Voice = this.Voice.Combine(rhs.Voice);
+                ret.DefaultTemplate = this.DefaultTemplate.Combine(rhs.DefaultTemplate);
+                ret.LegendaryTemplate = this.LegendaryTemplate.Combine(rhs.LegendaryTemplate);
+                ret.LegendaryChance = this.LegendaryChance.Combine(rhs.LegendaryChance);
+                ret.TemplateActors = this.TemplateActors.Combine(rhs.TemplateActors, (l, r) => l.Combine(r));
+                ret.Race = this.Race.Combine(rhs.Race);
+                ret.ActorEffect = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ActorEffect?.Overall, rhs.ActorEffect?.Overall), ExceptionExt.Combine(this.ActorEffect?.Specific, rhs.ActorEffect?.Specific));
+                ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
+                ret.Skin = this.Skin.Combine(rhs.Skin);
+                ret.FarAwayModel = this.FarAwayModel.Combine(rhs.FarAwayModel);
+                ret.AttackRace = this.AttackRace.Combine(rhs.AttackRace);
+                ret.Attacks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>(ExceptionExt.Combine(this.Attacks?.Overall, rhs.Attacks?.Overall), ExceptionExt.Combine(this.Attacks?.Specific, rhs.Attacks?.Specific));
+                ret.SpectatorOverridePackageList = this.SpectatorOverridePackageList.Combine(rhs.SpectatorOverridePackageList);
+                ret.ObserveDeadBodyOverridePackageList = this.ObserveDeadBodyOverridePackageList.Combine(rhs.ObserveDeadBodyOverridePackageList);
+                ret.GuardWarnOverridePackageList = this.GuardWarnOverridePackageList.Combine(rhs.GuardWarnOverridePackageList);
+                ret.CombatOverridePackageList = this.CombatOverridePackageList.Combine(rhs.CombatOverridePackageList);
+                ret.FollowerCommandPackageList = this.FollowerCommandPackageList.Combine(rhs.FollowerCommandPackageList);
+                ret.FollowerElevatorPackageList = this.FollowerElevatorPackageList.Combine(rhs.FollowerElevatorPackageList);
+                ret.Perks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkPlacement.ErrorMask?>>?>(ExceptionExt.Combine(this.Perks?.Overall, rhs.Perks?.Overall), ExceptionExt.Combine(this.Perks?.Specific, rhs.Perks?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.ForcedLocRefType = this.ForcedLocRefType.Combine(rhs.ForcedLocRefType);
+                ret.NativeTerminal = this.NativeTerminal.Combine(rhs.NativeTerminal);
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Agression = this.Agression.Combine(rhs.Agression);
+                ret.Confidence = this.Confidence.Combine(rhs.Confidence);
+                ret.EnergyLevel = this.EnergyLevel.Combine(rhs.EnergyLevel);
+                ret.Responsibility = this.Responsibility.Combine(rhs.Responsibility);
+                ret.Mood = this.Mood.Combine(rhs.Mood);
+                ret.Assistence = this.Assistence.Combine(rhs.Assistence);
+                ret.AggroRadiusBehaviorEnabled = this.AggroRadiusBehaviorEnabled.Combine(rhs.AggroRadiusBehaviorEnabled);
+                ret.AggroRadiusWarn = this.AggroRadiusWarn.Combine(rhs.AggroRadiusWarn);
+                ret.AggroRadiusWarnOrAttack = this.AggroRadiusWarnOrAttack.Combine(rhs.AggroRadiusWarnOrAttack);
+                ret.AggroRadiusAttack = this.AggroRadiusAttack.Combine(rhs.AggroRadiusAttack);
+                ret.NoSlowApproach = this.NoSlowApproach.Combine(rhs.NoSlowApproach);
+                ret.Packages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Packages?.Overall, rhs.Packages?.Overall), ExceptionExt.Combine(this.Packages?.Specific, rhs.Packages?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
+                ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
+                ret.Class = this.Class.Combine(rhs.Class);
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.ShortName = this.ShortName.Combine(rhs.ShortName);
+                ret.BaseHealth = this.BaseHealth.Combine(rhs.BaseHealth);
+                ret.BaseActionPoints = this.BaseActionPoints.Combine(rhs.BaseActionPoints);
+                ret.FarAwayModelDistance = this.FarAwayModelDistance.Combine(rhs.FarAwayModelDistance);
+                ret.GearedUpWeapons = this.GearedUpWeapons.Combine(rhs.GearedUpWeapons);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
+                ret.HeadParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.HeadParts?.Overall, rhs.HeadParts?.Overall), ExceptionExt.Combine(this.HeadParts?.Specific, rhs.HeadParts?.Specific));
+                ret.HairColor = this.HairColor.Combine(rhs.HairColor);
+                ret.FacialHairColor = this.FacialHairColor.Combine(rhs.FacialHairColor);
+                ret.CombatStyle = this.CombatStyle.Combine(rhs.CombatStyle);
+                ret.GiftFilter = this.GiftFilter.Combine(rhs.GiftFilter);
+                ret.NAM5 = this.NAM5.Combine(rhs.NAM5);
+                ret.HeightMin = this.HeightMin.Combine(rhs.HeightMin);
+                ret.NAM7 = this.NAM7.Combine(rhs.NAM7);
+                ret.HeightMax = this.HeightMax.Combine(rhs.HeightMax);
+                ret.Weight = this.Weight.Combine(rhs.Weight, (l, r) => l.Combine(r));
+                ret.SoundLevel = this.SoundLevel.Combine(rhs.SoundLevel);
+                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
+                ret.SoundsFinalize = this.SoundsFinalize.Combine(rhs.SoundsFinalize);
+                ret.InheritsSoundsFrom = this.InheritsSoundsFrom.Combine(rhs.InheritsSoundsFrom);
+                ret.PowerArmorStand = this.PowerArmorStand.Combine(rhs.PowerArmorStand);
+                ret.DefaultOutfit = this.DefaultOutfit.Combine(rhs.DefaultOutfit);
+                ret.SleepingOutfit = this.SleepingOutfit.Combine(rhs.SleepingOutfit);
+                ret.DefaultPackageList = this.DefaultPackageList.Combine(rhs.DefaultPackageList);
+                ret.CrimeFaction = this.CrimeFaction.Combine(rhs.CrimeFaction);
+                ret.HeadTexture = this.HeadTexture.Combine(rhs.HeadTexture);
+                ret.TextureLighting = this.TextureLighting.Combine(rhs.TextureLighting);
+                ret.Morphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcMorph.ErrorMask?>>?>(ExceptionExt.Combine(this.Morphs?.Overall, rhs.Morphs?.Overall), ExceptionExt.Combine(this.Morphs?.Specific, rhs.Morphs?.Specific));
+                ret.FaceTintingLayers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcFaceTintingLayer.ErrorMask?>>?>(ExceptionExt.Combine(this.FaceTintingLayers?.Overall, rhs.FaceTintingLayers?.Overall), ExceptionExt.Combine(this.FaceTintingLayers?.Specific, rhs.FaceTintingLayers?.Specific));
+                ret.BodyMorphRegionValues = this.BodyMorphRegionValues.Combine(rhs.BodyMorphRegionValues, (l, r) => l.Combine(r));
+                ret.FaceMorphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcFaceMorph.ErrorMask?>>?>(ExceptionExt.Combine(this.FaceMorphs?.Overall, rhs.FaceMorphs?.Overall), ExceptionExt.Combine(this.FaceMorphs?.Specific, rhs.FaceMorphs?.Specific));
+                ret.FacialMorphIntensity = this.FacialMorphIntensity.Combine(rhs.FacialMorphIntensity);
+                ret.ActivateTextOverride = this.ActivateTextOverride.Combine(rhs.ActivateTextOverride);
+                ret.ACBSDataTypeState = this.ACBSDataTypeState.Combine(rhs.ACBSDataTypeState);
+                ret.AIDTDataTypeState = this.AIDTDataTypeState.Combine(rhs.AIDTDataTypeState);
+                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -285,15 +4533,279 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool PreviewTransform;
+            public bool AnimationSound;
+            public bool Flags;
+            public bool XpValueOffset;
+            public ANpcLevel.TranslationMask? Level;
+            public bool CalcMinLevel;
+            public bool CalcMaxLevel;
+            public bool DispositionBase;
+            public bool UseTemplateActors;
+            public bool BleedoutOverride;
+            public bool Unknown;
+            public RankPlacement.TranslationMask? Factions;
+            public bool DeathItem;
+            public bool Voice;
+            public bool DefaultTemplate;
+            public bool LegendaryTemplate;
+            public bool LegendaryChance;
+            public TemplateActors.TranslationMask? TemplateActors;
+            public bool Race;
+            public bool ActorEffect;
+            public Destructible.TranslationMask? Destructible;
+            public bool Skin;
+            public bool FarAwayModel;
+            public bool AttackRace;
+            public Attack.TranslationMask? Attacks;
+            public bool SpectatorOverridePackageList;
+            public bool ObserveDeadBodyOverridePackageList;
+            public bool GuardWarnOverridePackageList;
+            public bool CombatOverridePackageList;
+            public bool FollowerCommandPackageList;
+            public bool FollowerElevatorPackageList;
+            public PerkPlacement.TranslationMask? Perks;
+            public ObjectProperty.TranslationMask? Properties;
+            public bool ForcedLocRefType;
+            public bool NativeTerminal;
+            public ContainerEntry.TranslationMask? Items;
+            public bool Agression;
+            public bool Confidence;
+            public bool EnergyLevel;
+            public bool Responsibility;
+            public bool Mood;
+            public bool Assistence;
+            public bool AggroRadiusBehaviorEnabled;
+            public bool AggroRadiusWarn;
+            public bool AggroRadiusWarnOrAttack;
+            public bool AggroRadiusAttack;
+            public bool NoSlowApproach;
+            public bool Packages;
+            public bool Keywords;
+            public bool AttachParentSlots;
+            public ObjectTemplate.TranslationMask? ObjectTemplates;
+            public bool Class;
+            public bool Name;
+            public bool ShortName;
+            public bool BaseHealth;
+            public bool BaseActionPoints;
+            public bool FarAwayModelDistance;
+            public bool GearedUpWeapons;
+            public bool Unused;
+            public bool HeadParts;
+            public bool HairColor;
+            public bool FacialHairColor;
+            public bool CombatStyle;
+            public bool GiftFilter;
+            public bool NAM5;
+            public bool HeightMin;
+            public bool NAM7;
+            public bool HeightMax;
+            public NpcWeight.TranslationMask? Weight;
+            public bool SoundLevel;
+            public NpcSound.TranslationMask? Sounds;
+            public bool SoundsFinalize;
+            public bool InheritsSoundsFrom;
+            public bool PowerArmorStand;
+            public bool DefaultOutfit;
+            public bool SleepingOutfit;
+            public bool DefaultPackageList;
+            public bool CrimeFaction;
+            public bool HeadTexture;
+            public bool TextureLighting;
+            public NpcMorph.TranslationMask? Morphs;
+            public NpcFaceTintingLayer.TranslationMask? FaceTintingLayers;
+            public NpcBodyMorphRegionValues.TranslationMask? BodyMorphRegionValues;
+            public NpcFaceMorph.TranslationMask? FaceMorphs;
+            public bool FacialMorphIntensity;
+            public bool ActivateTextOverride;
+            public bool ACBSDataTypeState;
+            public bool AIDTDataTypeState;
+            public bool DNAMDataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.PreviewTransform = defaultOn;
+                this.AnimationSound = defaultOn;
+                this.Flags = defaultOn;
+                this.XpValueOffset = defaultOn;
+                this.CalcMinLevel = defaultOn;
+                this.CalcMaxLevel = defaultOn;
+                this.DispositionBase = defaultOn;
+                this.UseTemplateActors = defaultOn;
+                this.BleedoutOverride = defaultOn;
+                this.Unknown = defaultOn;
+                this.DeathItem = defaultOn;
+                this.Voice = defaultOn;
+                this.DefaultTemplate = defaultOn;
+                this.LegendaryTemplate = defaultOn;
+                this.LegendaryChance = defaultOn;
+                this.Race = defaultOn;
+                this.ActorEffect = defaultOn;
+                this.Skin = defaultOn;
+                this.FarAwayModel = defaultOn;
+                this.AttackRace = defaultOn;
+                this.SpectatorOverridePackageList = defaultOn;
+                this.ObserveDeadBodyOverridePackageList = defaultOn;
+                this.GuardWarnOverridePackageList = defaultOn;
+                this.CombatOverridePackageList = defaultOn;
+                this.FollowerCommandPackageList = defaultOn;
+                this.FollowerElevatorPackageList = defaultOn;
+                this.ForcedLocRefType = defaultOn;
+                this.NativeTerminal = defaultOn;
+                this.Agression = defaultOn;
+                this.Confidence = defaultOn;
+                this.EnergyLevel = defaultOn;
+                this.Responsibility = defaultOn;
+                this.Mood = defaultOn;
+                this.Assistence = defaultOn;
+                this.AggroRadiusBehaviorEnabled = defaultOn;
+                this.AggroRadiusWarn = defaultOn;
+                this.AggroRadiusWarnOrAttack = defaultOn;
+                this.AggroRadiusAttack = defaultOn;
+                this.NoSlowApproach = defaultOn;
+                this.Packages = defaultOn;
+                this.Keywords = defaultOn;
+                this.AttachParentSlots = defaultOn;
+                this.Class = defaultOn;
+                this.Name = defaultOn;
+                this.ShortName = defaultOn;
+                this.BaseHealth = defaultOn;
+                this.BaseActionPoints = defaultOn;
+                this.FarAwayModelDistance = defaultOn;
+                this.GearedUpWeapons = defaultOn;
+                this.Unused = defaultOn;
+                this.HeadParts = defaultOn;
+                this.HairColor = defaultOn;
+                this.FacialHairColor = defaultOn;
+                this.CombatStyle = defaultOn;
+                this.GiftFilter = defaultOn;
+                this.NAM5 = defaultOn;
+                this.HeightMin = defaultOn;
+                this.NAM7 = defaultOn;
+                this.HeightMax = defaultOn;
+                this.SoundLevel = defaultOn;
+                this.SoundsFinalize = defaultOn;
+                this.InheritsSoundsFrom = defaultOn;
+                this.PowerArmorStand = defaultOn;
+                this.DefaultOutfit = defaultOn;
+                this.SleepingOutfit = defaultOn;
+                this.DefaultPackageList = defaultOn;
+                this.CrimeFaction = defaultOn;
+                this.HeadTexture = defaultOn;
+                this.TextureLighting = defaultOn;
+                this.FacialMorphIntensity = defaultOn;
+                this.ActivateTextOverride = defaultOn;
+                this.ACBSDataTypeState = defaultOn;
+                this.AIDTDataTypeState = defaultOn;
+                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((PreviewTransform, null));
+                ret.Add((AnimationSound, null));
+                ret.Add((Flags, null));
+                ret.Add((XpValueOffset, null));
+                ret.Add((Level != null ? Level.OnOverall : DefaultOn, Level?.GetCrystal()));
+                ret.Add((CalcMinLevel, null));
+                ret.Add((CalcMaxLevel, null));
+                ret.Add((DispositionBase, null));
+                ret.Add((UseTemplateActors, null));
+                ret.Add((BleedoutOverride, null));
+                ret.Add((Unknown, null));
+                ret.Add((Factions == null ? DefaultOn : !Factions.GetCrystal().CopyNothing, Factions?.GetCrystal()));
+                ret.Add((DeathItem, null));
+                ret.Add((Voice, null));
+                ret.Add((DefaultTemplate, null));
+                ret.Add((LegendaryTemplate, null));
+                ret.Add((LegendaryChance, null));
+                ret.Add((TemplateActors != null ? TemplateActors.OnOverall : DefaultOn, TemplateActors?.GetCrystal()));
+                ret.Add((Race, null));
+                ret.Add((ActorEffect, null));
+                ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
+                ret.Add((Skin, null));
+                ret.Add((FarAwayModel, null));
+                ret.Add((AttackRace, null));
+                ret.Add((Attacks == null ? DefaultOn : !Attacks.GetCrystal().CopyNothing, Attacks?.GetCrystal()));
+                ret.Add((SpectatorOverridePackageList, null));
+                ret.Add((ObserveDeadBodyOverridePackageList, null));
+                ret.Add((GuardWarnOverridePackageList, null));
+                ret.Add((CombatOverridePackageList, null));
+                ret.Add((FollowerCommandPackageList, null));
+                ret.Add((FollowerElevatorPackageList, null));
+                ret.Add((Perks == null ? DefaultOn : !Perks.GetCrystal().CopyNothing, Perks?.GetCrystal()));
+                ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
+                ret.Add((ForcedLocRefType, null));
+                ret.Add((NativeTerminal, null));
+                ret.Add((Items == null ? DefaultOn : !Items.GetCrystal().CopyNothing, Items?.GetCrystal()));
+                ret.Add((Agression, null));
+                ret.Add((Confidence, null));
+                ret.Add((EnergyLevel, null));
+                ret.Add((Responsibility, null));
+                ret.Add((Mood, null));
+                ret.Add((Assistence, null));
+                ret.Add((AggroRadiusBehaviorEnabled, null));
+                ret.Add((AggroRadiusWarn, null));
+                ret.Add((AggroRadiusWarnOrAttack, null));
+                ret.Add((AggroRadiusAttack, null));
+                ret.Add((NoSlowApproach, null));
+                ret.Add((Packages, null));
+                ret.Add((Keywords, null));
+                ret.Add((AttachParentSlots, null));
+                ret.Add((ObjectTemplates == null ? DefaultOn : !ObjectTemplates.GetCrystal().CopyNothing, ObjectTemplates?.GetCrystal()));
+                ret.Add((Class, null));
+                ret.Add((Name, null));
+                ret.Add((ShortName, null));
+                ret.Add((BaseHealth, null));
+                ret.Add((BaseActionPoints, null));
+                ret.Add((FarAwayModelDistance, null));
+                ret.Add((GearedUpWeapons, null));
+                ret.Add((Unused, null));
+                ret.Add((HeadParts, null));
+                ret.Add((HairColor, null));
+                ret.Add((FacialHairColor, null));
+                ret.Add((CombatStyle, null));
+                ret.Add((GiftFilter, null));
+                ret.Add((NAM5, null));
+                ret.Add((HeightMin, null));
+                ret.Add((NAM7, null));
+                ret.Add((HeightMax, null));
+                ret.Add((Weight != null ? Weight.OnOverall : DefaultOn, Weight?.GetCrystal()));
+                ret.Add((SoundLevel, null));
+                ret.Add((Sounds == null ? DefaultOn : !Sounds.GetCrystal().CopyNothing, Sounds?.GetCrystal()));
+                ret.Add((SoundsFinalize, null));
+                ret.Add((InheritsSoundsFrom, null));
+                ret.Add((PowerArmorStand, null));
+                ret.Add((DefaultOutfit, null));
+                ret.Add((SleepingOutfit, null));
+                ret.Add((DefaultPackageList, null));
+                ret.Add((CrimeFaction, null));
+                ret.Add((HeadTexture, null));
+                ret.Add((TextureLighting, null));
+                ret.Add((Morphs == null ? DefaultOn : !Morphs.GetCrystal().CopyNothing, Morphs?.GetCrystal()));
+                ret.Add((FaceTintingLayers == null ? DefaultOn : !FaceTintingLayers.GetCrystal().CopyNothing, FaceTintingLayers?.GetCrystal()));
+                ret.Add((BodyMorphRegionValues != null ? BodyMorphRegionValues.OnOverall : DefaultOn, BodyMorphRegionValues?.GetCrystal()));
+                ret.Add((FaceMorphs == null ? DefaultOn : !FaceMorphs.GetCrystal().CopyNothing, FaceMorphs?.GetCrystal()));
+                ret.Add((FacialMorphIntensity, null));
+                ret.Add((ActivateTextOverride, null));
+                ret.Add((ACBSDataTypeState, null));
+                ret.Add((AIDTDataTypeState, null));
+                ret.Add((DNAMDataTypeState, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -305,6 +4817,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Npc_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => NpcCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSetterCommon.Instance.RemapLinks(this, mapping);
         public Npc(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -347,6 +4861,23 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(INpc);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        [Flags]
+        public enum ACBSDataType
+        {
+        }
+        [Flags]
+        public enum AIDTDataType
+        {
+        }
+        [Flags]
+        public enum DNAMDataType
+        {
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -427,10 +4958,125 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface INpc :
         IFallout4MajorRecordInternal,
+        IFormLinkContainer,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<INpcInternal>,
+        INamed,
+        INamedRequired,
         INpcGetter,
-        IObjectId
+        IObjectBounded,
+        IObjectId,
+        IScripted,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        new IFormLinkNullable<ITransformGetter> PreviewTransform { get; set; }
+        new IFormLinkNullable<IAnimationSoundTagSetGetter> AnimationSound { get; set; }
+        new Npc.Flag Flags { get; set; }
+        new Int16 XpValueOffset { get; set; }
+        new ANpcLevel Level { get; set; }
+        new Int16 CalcMinLevel { get; set; }
+        new Int16 CalcMaxLevel { get; set; }
+        new Int16 DispositionBase { get; set; }
+        new Npc.TemplateActorType UseTemplateActors { get; set; }
+        new Int16 BleedoutOverride { get; set; }
+        new Int16 Unknown { get; set; }
+        new ExtendedList<RankPlacement> Factions { get; }
+        new IFormLinkNullable<ILeveledItemGetter> DeathItem { get; set; }
+        new IFormLinkNullable<IVoiceTypeGetter> Voice { get; set; }
+        new IFormLinkNullable<INpcSpawnGetter> DefaultTemplate { get; set; }
+        new IFormLinkNullable<INpcSpawnGetter> LegendaryTemplate { get; set; }
+        new IFormLinkNullable<IGlobalGetter> LegendaryChance { get; set; }
+        new TemplateActors? TemplateActors { get; set; }
+        new IFormLink<IRaceGetter> Race { get; set; }
+        new ExtendedList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; set; }
+        new Destructible? Destructible { get; set; }
+        new IFormLinkNullable<IArmorGetter> Skin { get; set; }
+        new IFormLinkNullable<IArmorGetter> FarAwayModel { get; set; }
+        new IFormLinkNullable<IRaceGetter> AttackRace { get; set; }
+        new ExtendedList<Attack> Attacks { get; }
+        new IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList { get; set; }
+        new IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList { get; set; }
+        new IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList { get; set; }
+        new IFormLinkNullable<IFormListGetter> CombatOverridePackageList { get; set; }
+        new IFormLinkNullable<IFormListGetter> FollowerCommandPackageList { get; set; }
+        new IFormLinkNullable<IFormListGetter> FollowerElevatorPackageList { get; set; }
+        new ExtendedList<PerkPlacement>? Perks { get; set; }
+        new ExtendedList<ObjectProperty>? Properties { get; set; }
+        new IFormLinkNullable<ILocationReferenceTypeGetter> ForcedLocRefType { get; set; }
+        new IFormLinkNullable<ITerminalGetter> NativeTerminal { get; set; }
+        new ExtendedList<ContainerEntry>? Items { get; set; }
+        new Npc.AggressionType Agression { get; set; }
+        new Npc.ConfidenceType Confidence { get; set; }
+        new Byte EnergyLevel { get; set; }
+        new Npc.ResponsibilityType Responsibility { get; set; }
+        new Npc.MoodType Mood { get; set; }
+        new Npc.AssistenceType Assistence { get; set; }
+        new Boolean AggroRadiusBehaviorEnabled { get; set; }
+        new UInt32 AggroRadiusWarn { get; set; }
+        new UInt32 AggroRadiusWarnOrAttack { get; set; }
+        new UInt32 AggroRadiusAttack { get; set; }
+        new Boolean NoSlowApproach { get; set; }
+        new ExtendedList<IFormLinkGetter<IPackageGetter>> Packages { get; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; set; }
+        new ExtendedList<ObjectTemplate<Npc.Property>>? ObjectTemplates { get; set; }
+        new IFormLinkNullable<IClassGetter> Class { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new String? ShortName { get; set; }
+        new UInt16 BaseHealth { get; set; }
+        new UInt16 BaseActionPoints { get; set; }
+        new UInt16 FarAwayModelDistance { get; set; }
+        new Byte GearedUpWeapons { get; set; }
+        new Byte Unused { get; set; }
+        new ExtendedList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; }
+        new IFormLinkNullable<IColorRecordGetter> HairColor { get; set; }
+        new IFormLinkNullable<IColorRecordGetter> FacialHairColor { get; set; }
+        new IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; }
+        new IFormLinkNullable<IFormListGetter> GiftFilter { get; set; }
+        new MemorySlice<Byte>? NAM5 { get; set; }
+        new Single HeightMin { get; set; }
+        new Single? NAM7 { get; set; }
+        new Single HeightMax { get; set; }
+        new NpcWeight? Weight { get; set; }
+        new SoundLevel SoundLevel { get; set; }
+        new ExtendedList<NpcSound>? Sounds { get; set; }
+        new MemorySlice<Byte>? SoundsFinalize { get; set; }
+        new IFormLinkNullable<INpcGetter> InheritsSoundsFrom { get; set; }
+        new IFormLinkNullable<IFurnitureGetter> PowerArmorStand { get; set; }
+        new IFormLinkNullable<IOutfitGetter> DefaultOutfit { get; set; }
+        new IFormLinkNullable<IOutfitGetter> SleepingOutfit { get; set; }
+        new IFormLinkNullable<IFormListGetter> DefaultPackageList { get; set; }
+        new IFormLinkNullable<IFactionGetter> CrimeFaction { get; set; }
+        new IFormLinkNullable<ITextureSetGetter> HeadTexture { get; set; }
+        new Color? TextureLighting { get; set; }
+        new ExtendedList<NpcMorph> Morphs { get; }
+        new ExtendedList<NpcFaceTintingLayer> FaceTintingLayers { get; }
+        new NpcBodyMorphRegionValues? BodyMorphRegionValues { get; set; }
+        new ExtendedList<NpcFaceMorph> FaceMorphs { get; }
+        new Single? FacialMorphIntensity { get; set; }
+        new TranslatedString? ActivateTextOverride { get; set; }
+        new Npc.ACBSDataType ACBSDataTypeState { get; set; }
+        new Npc.AIDTDataType AIDTDataTypeState { get; set; }
+        new Npc.DNAMDataType DNAMDataTypeState { get; set; }
+        #region Mutagen
+        new Npc.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface INpcInternal :
@@ -444,11 +5090,134 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface INpcGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<INpcGetter>,
         IMapsToGetter<INpcGetter>,
-        IObjectIdGetter
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectIdGetter,
+        IScriptedGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Npc_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        IFormLinkNullableGetter<ITransformGetter> PreviewTransform { get; }
+        IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound { get; }
+        Npc.Flag Flags { get; }
+        Int16 XpValueOffset { get; }
+        IANpcLevelGetter Level { get; }
+        Int16 CalcMinLevel { get; }
+        Int16 CalcMaxLevel { get; }
+        Int16 DispositionBase { get; }
+        Npc.TemplateActorType UseTemplateActors { get; }
+        Int16 BleedoutOverride { get; }
+        Int16 Unknown { get; }
+        IReadOnlyList<IRankPlacementGetter> Factions { get; }
+        IFormLinkNullableGetter<ILeveledItemGetter> DeathItem { get; }
+        IFormLinkNullableGetter<IVoiceTypeGetter> Voice { get; }
+        IFormLinkNullableGetter<INpcSpawnGetter> DefaultTemplate { get; }
+        IFormLinkNullableGetter<INpcSpawnGetter> LegendaryTemplate { get; }
+        IFormLinkNullableGetter<IGlobalGetter> LegendaryChance { get; }
+        ITemplateActorsGetter? TemplateActors { get; }
+        IFormLinkGetter<IRaceGetter> Race { get; }
+        IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; }
+        IDestructibleGetter? Destructible { get; }
+        IFormLinkNullableGetter<IArmorGetter> Skin { get; }
+        IFormLinkNullableGetter<IArmorGetter> FarAwayModel { get; }
+        IFormLinkNullableGetter<IRaceGetter> AttackRace { get; }
+        IReadOnlyList<IAttackGetter> Attacks { get; }
+        IFormLinkNullableGetter<IFormListGetter> SpectatorOverridePackageList { get; }
+        IFormLinkNullableGetter<IFormListGetter> ObserveDeadBodyOverridePackageList { get; }
+        IFormLinkNullableGetter<IFormListGetter> GuardWarnOverridePackageList { get; }
+        IFormLinkNullableGetter<IFormListGetter> CombatOverridePackageList { get; }
+        IFormLinkNullableGetter<IFormListGetter> FollowerCommandPackageList { get; }
+        IFormLinkNullableGetter<IFormListGetter> FollowerElevatorPackageList { get; }
+        IReadOnlyList<IPerkPlacementGetter>? Perks { get; }
+        IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
+        IFormLinkNullableGetter<ILocationReferenceTypeGetter> ForcedLocRefType { get; }
+        IFormLinkNullableGetter<ITerminalGetter> NativeTerminal { get; }
+        IReadOnlyList<IContainerEntryGetter>? Items { get; }
+        Npc.AggressionType Agression { get; }
+        Npc.ConfidenceType Confidence { get; }
+        Byte EnergyLevel { get; }
+        Npc.ResponsibilityType Responsibility { get; }
+        Npc.MoodType Mood { get; }
+        Npc.AssistenceType Assistence { get; }
+        Boolean AggroRadiusBehaviorEnabled { get; }
+        UInt32 AggroRadiusWarn { get; }
+        UInt32 AggroRadiusWarnOrAttack { get; }
+        UInt32 AggroRadiusAttack { get; }
+        Boolean NoSlowApproach { get; }
+        IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; }
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; }
+        IReadOnlyList<IObjectTemplateGetter<Npc.Property>>? ObjectTemplates { get; }
+        IFormLinkNullableGetter<IClassGetter> Class { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        String? ShortName { get; }
+        UInt16 BaseHealth { get; }
+        UInt16 BaseActionPoints { get; }
+        UInt16 FarAwayModelDistance { get; }
+        Byte GearedUpWeapons { get; }
+        Byte Unused { get; }
+        IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; }
+        IFormLinkNullableGetter<IColorRecordGetter> HairColor { get; }
+        IFormLinkNullableGetter<IColorRecordGetter> FacialHairColor { get; }
+        IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle { get; }
+        IFormLinkNullableGetter<IFormListGetter> GiftFilter { get; }
+        ReadOnlyMemorySlice<Byte>? NAM5 { get; }
+        Single HeightMin { get; }
+        Single? NAM7 { get; }
+        Single HeightMax { get; }
+        INpcWeightGetter? Weight { get; }
+        SoundLevel SoundLevel { get; }
+        IReadOnlyList<INpcSoundGetter>? Sounds { get; }
+        ReadOnlyMemorySlice<Byte>? SoundsFinalize { get; }
+        IFormLinkNullableGetter<INpcGetter> InheritsSoundsFrom { get; }
+        IFormLinkNullableGetter<IFurnitureGetter> PowerArmorStand { get; }
+        IFormLinkNullableGetter<IOutfitGetter> DefaultOutfit { get; }
+        IFormLinkNullableGetter<IOutfitGetter> SleepingOutfit { get; }
+        IFormLinkNullableGetter<IFormListGetter> DefaultPackageList { get; }
+        IFormLinkNullableGetter<IFactionGetter> CrimeFaction { get; }
+        IFormLinkNullableGetter<ITextureSetGetter> HeadTexture { get; }
+        Color? TextureLighting { get; }
+        IReadOnlyList<INpcMorphGetter> Morphs { get; }
+        IReadOnlyList<INpcFaceTintingLayerGetter> FaceTintingLayers { get; }
+        INpcBodyMorphRegionValuesGetter? BodyMorphRegionValues { get; }
+        IReadOnlyList<INpcFaceMorphGetter> FaceMorphs { get; }
+        Single? FacialMorphIntensity { get; }
+        ITranslatedStringGetter? ActivateTextOverride { get; }
+        Npc.ACBSDataType ACBSDataTypeState { get; }
+        Npc.AIDTDataType AIDTDataTypeState { get; }
+        Npc.DNAMDataType DNAMDataTypeState { get; }
+
+        #region Mutagen
+        Npc.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -613,6 +5382,97 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        VirtualMachineAdapter = 6,
+        ObjectBounds = 7,
+        PreviewTransform = 8,
+        AnimationSound = 9,
+        Flags = 10,
+        XpValueOffset = 11,
+        Level = 12,
+        CalcMinLevel = 13,
+        CalcMaxLevel = 14,
+        DispositionBase = 15,
+        UseTemplateActors = 16,
+        BleedoutOverride = 17,
+        Unknown = 18,
+        Factions = 19,
+        DeathItem = 20,
+        Voice = 21,
+        DefaultTemplate = 22,
+        LegendaryTemplate = 23,
+        LegendaryChance = 24,
+        TemplateActors = 25,
+        Race = 26,
+        ActorEffect = 27,
+        Destructible = 28,
+        Skin = 29,
+        FarAwayModel = 30,
+        AttackRace = 31,
+        Attacks = 32,
+        SpectatorOverridePackageList = 33,
+        ObserveDeadBodyOverridePackageList = 34,
+        GuardWarnOverridePackageList = 35,
+        CombatOverridePackageList = 36,
+        FollowerCommandPackageList = 37,
+        FollowerElevatorPackageList = 38,
+        Perks = 39,
+        Properties = 40,
+        ForcedLocRefType = 41,
+        NativeTerminal = 42,
+        Items = 43,
+        Agression = 44,
+        Confidence = 45,
+        EnergyLevel = 46,
+        Responsibility = 47,
+        Mood = 48,
+        Assistence = 49,
+        AggroRadiusBehaviorEnabled = 50,
+        AggroRadiusWarn = 51,
+        AggroRadiusWarnOrAttack = 52,
+        AggroRadiusAttack = 53,
+        NoSlowApproach = 54,
+        Packages = 55,
+        Keywords = 56,
+        AttachParentSlots = 57,
+        ObjectTemplates = 58,
+        Class = 59,
+        Name = 60,
+        ShortName = 61,
+        BaseHealth = 62,
+        BaseActionPoints = 63,
+        FarAwayModelDistance = 64,
+        GearedUpWeapons = 65,
+        Unused = 66,
+        HeadParts = 67,
+        HairColor = 68,
+        FacialHairColor = 69,
+        CombatStyle = 70,
+        GiftFilter = 71,
+        NAM5 = 72,
+        HeightMin = 73,
+        NAM7 = 74,
+        HeightMax = 75,
+        Weight = 76,
+        SoundLevel = 77,
+        Sounds = 78,
+        SoundsFinalize = 79,
+        InheritsSoundsFrom = 80,
+        PowerArmorStand = 81,
+        DefaultOutfit = 82,
+        SleepingOutfit = 83,
+        DefaultPackageList = 84,
+        CrimeFaction = 85,
+        HeadTexture = 86,
+        TextureLighting = 87,
+        Morphs = 88,
+        FaceTintingLayers = 89,
+        BodyMorphRegionValues = 90,
+        FaceMorphs = 91,
+        FacialMorphIntensity = 92,
+        ActivateTextOverride = 93,
+        ACBSDataTypeState = 94,
+        AIDTDataTypeState = 95,
+        DNAMDataTypeState = 96,
     }
     #endregion
 
@@ -630,9 +5490,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "8074d783-8164-453f-bdd2-f39627cf7a6b";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 91;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 97;
 
         public static readonly Type MaskType = typeof(Npc.Mask<>);
 
@@ -659,7 +5519,99 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.NPC_;
-        public static RecordType AllRecordTypes => TriggeringRecordType;
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.NPC_,
+                RecordTypes.VMAD,
+                RecordTypes.OBND,
+                RecordTypes.PTRN,
+                RecordTypes.STCP,
+                RecordTypes.ACBS,
+                RecordTypes.SNAM,
+                RecordTypes.INAM,
+                RecordTypes.VTCK,
+                RecordTypes.TPLT,
+                RecordTypes.LTPT,
+                RecordTypes.LTPC,
+                RecordTypes.TPTA,
+                RecordTypes.RNAM,
+                RecordTypes.SPLO,
+                RecordTypes.SPCT,
+                RecordTypes.DEST,
+                RecordTypes.DAMC,
+                RecordTypes.DSTD,
+                RecordTypes.DSTA,
+                RecordTypes.DMDL,
+                RecordTypes.WNAM,
+                RecordTypes.ANAM,
+                RecordTypes.ATKR,
+                RecordTypes.ATKD,
+                RecordTypes.ATKE,
+                RecordTypes.ATKW,
+                RecordTypes.ATKS,
+                RecordTypes.ATKT,
+                RecordTypes.SPOR,
+                RecordTypes.OCOR,
+                RecordTypes.GWOR,
+                RecordTypes.ECOR,
+                RecordTypes.FCPL,
+                RecordTypes.RCLR,
+                RecordTypes.PRKR,
+                RecordTypes.PRKZ,
+                RecordTypes.PRPS,
+                RecordTypes.FTYP,
+                RecordTypes.NTRM,
+                RecordTypes.CNTO,
+                RecordTypes.COCT,
+                RecordTypes.AIDT,
+                RecordTypes.PKID,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.APPR,
+                RecordTypes.OBTE,
+                RecordTypes.OBTF,
+                RecordTypes.FULL,
+                RecordTypes.OBTS,
+                RecordTypes.STOP,
+                RecordTypes.CNAM,
+                RecordTypes.SHRT,
+                RecordTypes.DATA,
+                RecordTypes.DNAM,
+                RecordTypes.PNAM,
+                RecordTypes.HCLF,
+                RecordTypes.BCLF,
+                RecordTypes.ZNAM,
+                RecordTypes.GNAM,
+                RecordTypes.NAM5,
+                RecordTypes.NAM6,
+                RecordTypes.NAM7,
+                RecordTypes.NAM4,
+                RecordTypes.MWGT,
+                RecordTypes.NAM8,
+                RecordTypes.CS2K,
+                RecordTypes.CS2D,
+                RecordTypes.CS2H,
+                RecordTypes.CS2E,
+                RecordTypes.CS2F,
+                RecordTypes.CSCR,
+                RecordTypes.PFRN,
+                RecordTypes.DOFT,
+                RecordTypes.SOFT,
+                RecordTypes.DPLT,
+                RecordTypes.CRIF,
+                RecordTypes.FTST,
+                RecordTypes.QNAM,
+                RecordTypes.MSDK,
+                RecordTypes.MSDV,
+                RecordTypes.TETI,
+                RecordTypes.MRSV,
+                RecordTypes.FMRI,
+                RecordTypes.FMRS,
+                RecordTypes.FMIN,
+                RecordTypes.ATTX);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(NpcBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -702,6 +5654,97 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Clear(INpcInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.ObjectBounds.Clear();
+            item.PreviewTransform.Clear();
+            item.AnimationSound.Clear();
+            item.Flags = default;
+            item.XpValueOffset = default;
+            item.Level.Clear();
+            item.CalcMinLevel = default;
+            item.CalcMaxLevel = default;
+            item.DispositionBase = default;
+            item.UseTemplateActors = default;
+            item.BleedoutOverride = default;
+            item.Unknown = default;
+            item.Factions.Clear();
+            item.DeathItem.Clear();
+            item.Voice.Clear();
+            item.DefaultTemplate.Clear();
+            item.LegendaryTemplate.Clear();
+            item.LegendaryChance.Clear();
+            item.TemplateActors = null;
+            item.Race.Clear();
+            item.ActorEffect = null;
+            item.Destructible = null;
+            item.Skin.Clear();
+            item.FarAwayModel.Clear();
+            item.AttackRace.Clear();
+            item.Attacks.Clear();
+            item.SpectatorOverridePackageList.Clear();
+            item.ObserveDeadBodyOverridePackageList.Clear();
+            item.GuardWarnOverridePackageList.Clear();
+            item.CombatOverridePackageList.Clear();
+            item.FollowerCommandPackageList.Clear();
+            item.FollowerElevatorPackageList.Clear();
+            item.Perks = null;
+            item.Properties = null;
+            item.ForcedLocRefType.Clear();
+            item.NativeTerminal.Clear();
+            item.Items = null;
+            item.Agression = default;
+            item.Confidence = default;
+            item.EnergyLevel = default;
+            item.Responsibility = default;
+            item.Mood = default;
+            item.Assistence = default;
+            item.AggroRadiusBehaviorEnabled = default;
+            item.AggroRadiusWarn = default;
+            item.AggroRadiusWarnOrAttack = default;
+            item.AggroRadiusAttack = default;
+            item.NoSlowApproach = default;
+            item.Packages.Clear();
+            item.Keywords = null;
+            item.AttachParentSlots = null;
+            item.ObjectTemplates = null;
+            item.Class.Clear();
+            item.Name = default;
+            item.ShortName = default;
+            item.BaseHealth = default;
+            item.BaseActionPoints = default;
+            item.FarAwayModelDistance = default;
+            item.GearedUpWeapons = default;
+            item.Unused = default;
+            item.HeadParts.Clear();
+            item.HairColor.Clear();
+            item.FacialHairColor.Clear();
+            item.CombatStyle.Clear();
+            item.GiftFilter.Clear();
+            item.NAM5 = default;
+            item.HeightMin = default;
+            item.NAM7 = default;
+            item.HeightMax = default;
+            item.Weight = null;
+            item.SoundLevel = default;
+            item.Sounds = null;
+            item.SoundsFinalize = default;
+            item.InheritsSoundsFrom.Clear();
+            item.PowerArmorStand.Clear();
+            item.DefaultOutfit.Clear();
+            item.SleepingOutfit.Clear();
+            item.DefaultPackageList.Clear();
+            item.CrimeFaction.Clear();
+            item.HeadTexture.Clear();
+            item.TextureLighting = default;
+            item.Morphs.Clear();
+            item.FaceTintingLayers.Clear();
+            item.BodyMorphRegionValues = null;
+            item.FaceMorphs.Clear();
+            item.FacialMorphIntensity = default;
+            item.ActivateTextOverride = default;
+            item.ACBSDataTypeState = default;
+            item.AIDTDataTypeState = default;
+            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -719,6 +5762,52 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(INpc obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.PreviewTransform.Relink(mapping);
+            obj.AnimationSound.Relink(mapping);
+            obj.Factions.RemapLinks(mapping);
+            obj.DeathItem.Relink(mapping);
+            obj.Voice.Relink(mapping);
+            obj.DefaultTemplate.Relink(mapping);
+            obj.LegendaryTemplate.Relink(mapping);
+            obj.LegendaryChance.Relink(mapping);
+            obj.TemplateActors?.RemapLinks(mapping);
+            obj.Race.Relink(mapping);
+            obj.ActorEffect?.RemapLinks(mapping);
+            obj.Destructible?.RemapLinks(mapping);
+            obj.Skin.Relink(mapping);
+            obj.FarAwayModel.Relink(mapping);
+            obj.AttackRace.Relink(mapping);
+            obj.Attacks.RemapLinks(mapping);
+            obj.SpectatorOverridePackageList.Relink(mapping);
+            obj.ObserveDeadBodyOverridePackageList.Relink(mapping);
+            obj.GuardWarnOverridePackageList.Relink(mapping);
+            obj.CombatOverridePackageList.Relink(mapping);
+            obj.FollowerCommandPackageList.Relink(mapping);
+            obj.FollowerElevatorPackageList.Relink(mapping);
+            obj.Perks?.RemapLinks(mapping);
+            obj.Properties?.RemapLinks(mapping);
+            obj.ForcedLocRefType.Relink(mapping);
+            obj.NativeTerminal.Relink(mapping);
+            obj.Items?.RemapLinks(mapping);
+            obj.Packages.RemapLinks(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.AttachParentSlots?.RemapLinks(mapping);
+            obj.ObjectTemplates?.RemapLinks(mapping);
+            obj.Class.Relink(mapping);
+            obj.HeadParts.RemapLinks(mapping);
+            obj.HairColor.Relink(mapping);
+            obj.FacialHairColor.Relink(mapping);
+            obj.CombatStyle.Relink(mapping);
+            obj.GiftFilter.Relink(mapping);
+            obj.Sounds?.RemapLinks(mapping);
+            obj.InheritsSoundsFrom.Relink(mapping);
+            obj.PowerArmorStand.Relink(mapping);
+            obj.DefaultOutfit.Relink(mapping);
+            obj.SleepingOutfit.Relink(mapping);
+            obj.DefaultPackageList.Relink(mapping);
+            obj.CrimeFaction.Relink(mapping);
+            obj.HeadTexture.Relink(mapping);
         }
         
         #endregion
@@ -787,6 +5876,162 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.PreviewTransform = item.PreviewTransform.Equals(rhs.PreviewTransform);
+            ret.AnimationSound = item.AnimationSound.Equals(rhs.AnimationSound);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.XpValueOffset = item.XpValueOffset == rhs.XpValueOffset;
+            ret.Level = MaskItemExt.Factory(item.Level.GetEqualsMask(rhs.Level, include), include);
+            ret.CalcMinLevel = item.CalcMinLevel == rhs.CalcMinLevel;
+            ret.CalcMaxLevel = item.CalcMaxLevel == rhs.CalcMaxLevel;
+            ret.DispositionBase = item.DispositionBase == rhs.DispositionBase;
+            ret.UseTemplateActors = item.UseTemplateActors == rhs.UseTemplateActors;
+            ret.BleedoutOverride = item.BleedoutOverride == rhs.BleedoutOverride;
+            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.Factions = item.Factions.CollectionEqualsHelper(
+                rhs.Factions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.DeathItem = item.DeathItem.Equals(rhs.DeathItem);
+            ret.Voice = item.Voice.Equals(rhs.Voice);
+            ret.DefaultTemplate = item.DefaultTemplate.Equals(rhs.DefaultTemplate);
+            ret.LegendaryTemplate = item.LegendaryTemplate.Equals(rhs.LegendaryTemplate);
+            ret.LegendaryChance = item.LegendaryChance.Equals(rhs.LegendaryChance);
+            ret.TemplateActors = EqualsMaskHelper.EqualsHelper(
+                item.TemplateActors,
+                rhs.TemplateActors,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Race = item.Race.Equals(rhs.Race);
+            ret.ActorEffect = item.ActorEffect.CollectionEqualsHelper(
+                rhs.ActorEffect,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Destructible = EqualsMaskHelper.EqualsHelper(
+                item.Destructible,
+                rhs.Destructible,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Skin = item.Skin.Equals(rhs.Skin);
+            ret.FarAwayModel = item.FarAwayModel.Equals(rhs.FarAwayModel);
+            ret.AttackRace = item.AttackRace.Equals(rhs.AttackRace);
+            ret.Attacks = item.Attacks.CollectionEqualsHelper(
+                rhs.Attacks,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.SpectatorOverridePackageList = item.SpectatorOverridePackageList.Equals(rhs.SpectatorOverridePackageList);
+            ret.ObserveDeadBodyOverridePackageList = item.ObserveDeadBodyOverridePackageList.Equals(rhs.ObserveDeadBodyOverridePackageList);
+            ret.GuardWarnOverridePackageList = item.GuardWarnOverridePackageList.Equals(rhs.GuardWarnOverridePackageList);
+            ret.CombatOverridePackageList = item.CombatOverridePackageList.Equals(rhs.CombatOverridePackageList);
+            ret.FollowerCommandPackageList = item.FollowerCommandPackageList.Equals(rhs.FollowerCommandPackageList);
+            ret.FollowerElevatorPackageList = item.FollowerElevatorPackageList.Equals(rhs.FollowerElevatorPackageList);
+            ret.Perks = item.Perks.CollectionEqualsHelper(
+                rhs.Perks,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Properties = item.Properties.CollectionEqualsHelper(
+                rhs.Properties,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.ForcedLocRefType = item.ForcedLocRefType.Equals(rhs.ForcedLocRefType);
+            ret.NativeTerminal = item.NativeTerminal.Equals(rhs.NativeTerminal);
+            ret.Items = item.Items.CollectionEqualsHelper(
+                rhs.Items,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Agression = item.Agression == rhs.Agression;
+            ret.Confidence = item.Confidence == rhs.Confidence;
+            ret.EnergyLevel = item.EnergyLevel == rhs.EnergyLevel;
+            ret.Responsibility = item.Responsibility == rhs.Responsibility;
+            ret.Mood = item.Mood == rhs.Mood;
+            ret.Assistence = item.Assistence == rhs.Assistence;
+            ret.AggroRadiusBehaviorEnabled = item.AggroRadiusBehaviorEnabled == rhs.AggroRadiusBehaviorEnabled;
+            ret.AggroRadiusWarn = item.AggroRadiusWarn == rhs.AggroRadiusWarn;
+            ret.AggroRadiusWarnOrAttack = item.AggroRadiusWarnOrAttack == rhs.AggroRadiusWarnOrAttack;
+            ret.AggroRadiusAttack = item.AggroRadiusAttack == rhs.AggroRadiusAttack;
+            ret.NoSlowApproach = item.NoSlowApproach == rhs.NoSlowApproach;
+            ret.Packages = item.Packages.CollectionEqualsHelper(
+                rhs.Packages,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.AttachParentSlots = item.AttachParentSlots.CollectionEqualsHelper(
+                rhs.AttachParentSlots,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.ObjectTemplates = item.ObjectTemplates.CollectionEqualsHelper(
+                rhs.ObjectTemplates,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Class = item.Class.Equals(rhs.Class);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.ShortName = string.Equals(item.ShortName, rhs.ShortName);
+            ret.BaseHealth = item.BaseHealth == rhs.BaseHealth;
+            ret.BaseActionPoints = item.BaseActionPoints == rhs.BaseActionPoints;
+            ret.FarAwayModelDistance = item.FarAwayModelDistance == rhs.FarAwayModelDistance;
+            ret.GearedUpWeapons = item.GearedUpWeapons == rhs.GearedUpWeapons;
+            ret.Unused = item.Unused == rhs.Unused;
+            ret.HeadParts = item.HeadParts.CollectionEqualsHelper(
+                rhs.HeadParts,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.HairColor = item.HairColor.Equals(rhs.HairColor);
+            ret.FacialHairColor = item.FacialHairColor.Equals(rhs.FacialHairColor);
+            ret.CombatStyle = item.CombatStyle.Equals(rhs.CombatStyle);
+            ret.GiftFilter = item.GiftFilter.Equals(rhs.GiftFilter);
+            ret.NAM5 = MemorySliceExt.Equal(item.NAM5, rhs.NAM5);
+            ret.HeightMin = item.HeightMin.EqualsWithin(rhs.HeightMin);
+            ret.NAM7 = item.NAM7.EqualsWithin(rhs.NAM7);
+            ret.HeightMax = item.HeightMax.EqualsWithin(rhs.HeightMax);
+            ret.Weight = EqualsMaskHelper.EqualsHelper(
+                item.Weight,
+                rhs.Weight,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.SoundLevel = item.SoundLevel == rhs.SoundLevel;
+            ret.Sounds = item.Sounds.CollectionEqualsHelper(
+                rhs.Sounds,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.SoundsFinalize = MemorySliceExt.Equal(item.SoundsFinalize, rhs.SoundsFinalize);
+            ret.InheritsSoundsFrom = item.InheritsSoundsFrom.Equals(rhs.InheritsSoundsFrom);
+            ret.PowerArmorStand = item.PowerArmorStand.Equals(rhs.PowerArmorStand);
+            ret.DefaultOutfit = item.DefaultOutfit.Equals(rhs.DefaultOutfit);
+            ret.SleepingOutfit = item.SleepingOutfit.Equals(rhs.SleepingOutfit);
+            ret.DefaultPackageList = item.DefaultPackageList.Equals(rhs.DefaultPackageList);
+            ret.CrimeFaction = item.CrimeFaction.Equals(rhs.CrimeFaction);
+            ret.HeadTexture = item.HeadTexture.Equals(rhs.HeadTexture);
+            ret.TextureLighting = item.TextureLighting.ColorOnlyEquals(rhs.TextureLighting);
+            ret.Morphs = item.Morphs.CollectionEqualsHelper(
+                rhs.Morphs,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.FaceTintingLayers = item.FaceTintingLayers.CollectionEqualsHelper(
+                rhs.FaceTintingLayers,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.BodyMorphRegionValues = EqualsMaskHelper.EqualsHelper(
+                item.BodyMorphRegionValues,
+                rhs.BodyMorphRegionValues,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.FaceMorphs = item.FaceMorphs.CollectionEqualsHelper(
+                rhs.FaceMorphs,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.FacialMorphIntensity = item.FacialMorphIntensity.EqualsWithin(rhs.FacialMorphIntensity);
+            ret.ActivateTextOverride = object.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
+            ret.ACBSDataTypeState = item.ACBSDataTypeState == rhs.ACBSDataTypeState;
+            ret.AIDTDataTypeState = item.AIDTDataTypeState == rhs.AIDTDataTypeState;
+            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -838,6 +6083,601 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+            }
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+            }
+            if (printMask?.PreviewTransform ?? true)
+            {
+                fg.AppendItem(item.PreviewTransform.FormKeyNullable, "PreviewTransform");
+            }
+            if (printMask?.AnimationSound ?? true)
+            {
+                fg.AppendItem(item.AnimationSound.FormKeyNullable, "AnimationSound");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.XpValueOffset ?? true)
+            {
+                fg.AppendItem(item.XpValueOffset, "XpValueOffset");
+            }
+            if (printMask?.Level?.Overall ?? true)
+            {
+                item.Level?.ToString(fg, "Level");
+            }
+            if (printMask?.CalcMinLevel ?? true)
+            {
+                fg.AppendItem(item.CalcMinLevel, "CalcMinLevel");
+            }
+            if (printMask?.CalcMaxLevel ?? true)
+            {
+                fg.AppendItem(item.CalcMaxLevel, "CalcMaxLevel");
+            }
+            if (printMask?.DispositionBase ?? true)
+            {
+                fg.AppendItem(item.DispositionBase, "DispositionBase");
+            }
+            if (printMask?.UseTemplateActors ?? true)
+            {
+                fg.AppendItem(item.UseTemplateActors, "UseTemplateActors");
+            }
+            if (printMask?.BleedoutOverride ?? true)
+            {
+                fg.AppendItem(item.BleedoutOverride, "BleedoutOverride");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                fg.AppendItem(item.Unknown, "Unknown");
+            }
+            if (printMask?.Factions?.Overall ?? true)
+            {
+                fg.AppendLine("Factions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Factions)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.DeathItem ?? true)
+            {
+                fg.AppendItem(item.DeathItem.FormKeyNullable, "DeathItem");
+            }
+            if (printMask?.Voice ?? true)
+            {
+                fg.AppendItem(item.Voice.FormKeyNullable, "Voice");
+            }
+            if (printMask?.DefaultTemplate ?? true)
+            {
+                fg.AppendItem(item.DefaultTemplate.FormKeyNullable, "DefaultTemplate");
+            }
+            if (printMask?.LegendaryTemplate ?? true)
+            {
+                fg.AppendItem(item.LegendaryTemplate.FormKeyNullable, "LegendaryTemplate");
+            }
+            if (printMask?.LegendaryChance ?? true)
+            {
+                fg.AppendItem(item.LegendaryChance.FormKeyNullable, "LegendaryChance");
+            }
+            if ((printMask?.TemplateActors?.Overall ?? true)
+                && item.TemplateActors is {} TemplateActorsItem)
+            {
+                TemplateActorsItem?.ToString(fg, "TemplateActors");
+            }
+            if (printMask?.Race ?? true)
+            {
+                fg.AppendItem(item.Race.FormKey, "Race");
+            }
+            if ((printMask?.ActorEffect?.Overall ?? true)
+                && item.ActorEffect is {} ActorEffectItem)
+            {
+                fg.AppendLine("ActorEffect =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in ActorEffectItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem.FormKey);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Destructible?.Overall ?? true)
+                && item.Destructible is {} DestructibleItem)
+            {
+                DestructibleItem?.ToString(fg, "Destructible");
+            }
+            if (printMask?.Skin ?? true)
+            {
+                fg.AppendItem(item.Skin.FormKeyNullable, "Skin");
+            }
+            if (printMask?.FarAwayModel ?? true)
+            {
+                fg.AppendItem(item.FarAwayModel.FormKeyNullable, "FarAwayModel");
+            }
+            if (printMask?.AttackRace ?? true)
+            {
+                fg.AppendItem(item.AttackRace.FormKeyNullable, "AttackRace");
+            }
+            if (printMask?.Attacks?.Overall ?? true)
+            {
+                fg.AppendLine("Attacks =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Attacks)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.SpectatorOverridePackageList ?? true)
+            {
+                fg.AppendItem(item.SpectatorOverridePackageList.FormKeyNullable, "SpectatorOverridePackageList");
+            }
+            if (printMask?.ObserveDeadBodyOverridePackageList ?? true)
+            {
+                fg.AppendItem(item.ObserveDeadBodyOverridePackageList.FormKeyNullable, "ObserveDeadBodyOverridePackageList");
+            }
+            if (printMask?.GuardWarnOverridePackageList ?? true)
+            {
+                fg.AppendItem(item.GuardWarnOverridePackageList.FormKeyNullable, "GuardWarnOverridePackageList");
+            }
+            if (printMask?.CombatOverridePackageList ?? true)
+            {
+                fg.AppendItem(item.CombatOverridePackageList.FormKeyNullable, "CombatOverridePackageList");
+            }
+            if (printMask?.FollowerCommandPackageList ?? true)
+            {
+                fg.AppendItem(item.FollowerCommandPackageList.FormKeyNullable, "FollowerCommandPackageList");
+            }
+            if (printMask?.FollowerElevatorPackageList ?? true)
+            {
+                fg.AppendItem(item.FollowerElevatorPackageList.FormKeyNullable, "FollowerElevatorPackageList");
+            }
+            if ((printMask?.Perks?.Overall ?? true)
+                && item.Perks is {} PerksItem)
+            {
+                fg.AppendLine("Perks =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in PerksItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Properties?.Overall ?? true)
+                && item.Properties is {} PropertiesItem)
+            {
+                fg.AppendLine("Properties =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in PropertiesItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.ForcedLocRefType ?? true)
+            {
+                fg.AppendItem(item.ForcedLocRefType.FormKeyNullable, "ForcedLocRefType");
+            }
+            if (printMask?.NativeTerminal ?? true)
+            {
+                fg.AppendItem(item.NativeTerminal.FormKeyNullable, "NativeTerminal");
+            }
+            if ((printMask?.Items?.Overall ?? true)
+                && item.Items is {} ItemsItem)
+            {
+                fg.AppendLine("Items =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in ItemsItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Agression ?? true)
+            {
+                fg.AppendItem(item.Agression, "Agression");
+            }
+            if (printMask?.Confidence ?? true)
+            {
+                fg.AppendItem(item.Confidence, "Confidence");
+            }
+            if (printMask?.EnergyLevel ?? true)
+            {
+                fg.AppendItem(item.EnergyLevel, "EnergyLevel");
+            }
+            if (printMask?.Responsibility ?? true)
+            {
+                fg.AppendItem(item.Responsibility, "Responsibility");
+            }
+            if (printMask?.Mood ?? true)
+            {
+                fg.AppendItem(item.Mood, "Mood");
+            }
+            if (printMask?.Assistence ?? true)
+            {
+                fg.AppendItem(item.Assistence, "Assistence");
+            }
+            if (printMask?.AggroRadiusBehaviorEnabled ?? true)
+            {
+                fg.AppendItem(item.AggroRadiusBehaviorEnabled, "AggroRadiusBehaviorEnabled");
+            }
+            if (printMask?.AggroRadiusWarn ?? true)
+            {
+                fg.AppendItem(item.AggroRadiusWarn, "AggroRadiusWarn");
+            }
+            if (printMask?.AggroRadiusWarnOrAttack ?? true)
+            {
+                fg.AppendItem(item.AggroRadiusWarnOrAttack, "AggroRadiusWarnOrAttack");
+            }
+            if (printMask?.AggroRadiusAttack ?? true)
+            {
+                fg.AppendItem(item.AggroRadiusAttack, "AggroRadiusAttack");
+            }
+            if (printMask?.NoSlowApproach ?? true)
+            {
+                fg.AppendItem(item.NoSlowApproach, "NoSlowApproach");
+            }
+            if (printMask?.Packages?.Overall ?? true)
+            {
+                fg.AppendLine("Packages =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Packages)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem.FormKey);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords is {} KeywordsItem)
+            {
+                fg.AppendLine("Keywords =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem.FormKey);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.AttachParentSlots?.Overall ?? true)
+                && item.AttachParentSlots is {} AttachParentSlotsItem)
+            {
+                fg.AppendLine("AttachParentSlots =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in AttachParentSlotsItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem.FormKey);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.ObjectTemplates?.Overall ?? true)
+                && item.ObjectTemplates is {} ObjectTemplatesItem)
+            {
+                fg.AppendLine("ObjectTemplates =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in ObjectTemplatesItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Class ?? true)
+            {
+                fg.AppendItem(item.Class.FormKeyNullable, "Class");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.ShortName ?? true)
+                && item.ShortName is {} ShortNameItem)
+            {
+                fg.AppendItem(ShortNameItem, "ShortName");
+            }
+            if (printMask?.BaseHealth ?? true)
+            {
+                fg.AppendItem(item.BaseHealth, "BaseHealth");
+            }
+            if (printMask?.BaseActionPoints ?? true)
+            {
+                fg.AppendItem(item.BaseActionPoints, "BaseActionPoints");
+            }
+            if (printMask?.FarAwayModelDistance ?? true)
+            {
+                fg.AppendItem(item.FarAwayModelDistance, "FarAwayModelDistance");
+            }
+            if (printMask?.GearedUpWeapons ?? true)
+            {
+                fg.AppendItem(item.GearedUpWeapons, "GearedUpWeapons");
+            }
+            if (printMask?.Unused ?? true)
+            {
+                fg.AppendItem(item.Unused, "Unused");
+            }
+            if (printMask?.HeadParts?.Overall ?? true)
+            {
+                fg.AppendLine("HeadParts =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.HeadParts)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem.FormKey);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.HairColor ?? true)
+            {
+                fg.AppendItem(item.HairColor.FormKeyNullable, "HairColor");
+            }
+            if (printMask?.FacialHairColor ?? true)
+            {
+                fg.AppendItem(item.FacialHairColor.FormKeyNullable, "FacialHairColor");
+            }
+            if (printMask?.CombatStyle ?? true)
+            {
+                fg.AppendItem(item.CombatStyle.FormKeyNullable, "CombatStyle");
+            }
+            if (printMask?.GiftFilter ?? true)
+            {
+                fg.AppendItem(item.GiftFilter.FormKeyNullable, "GiftFilter");
+            }
+            if ((printMask?.NAM5 ?? true)
+                && item.NAM5 is {} NAM5Item)
+            {
+                fg.AppendLine($"NAM5 => {SpanExt.ToHexString(NAM5Item)}");
+            }
+            if (printMask?.HeightMin ?? true)
+            {
+                fg.AppendItem(item.HeightMin, "HeightMin");
+            }
+            if ((printMask?.NAM7 ?? true)
+                && item.NAM7 is {} NAM7Item)
+            {
+                fg.AppendItem(NAM7Item, "NAM7");
+            }
+            if (printMask?.HeightMax ?? true)
+            {
+                fg.AppendItem(item.HeightMax, "HeightMax");
+            }
+            if ((printMask?.Weight?.Overall ?? true)
+                && item.Weight is {} WeightItem)
+            {
+                WeightItem?.ToString(fg, "Weight");
+            }
+            if (printMask?.SoundLevel ?? true)
+            {
+                fg.AppendItem(item.SoundLevel, "SoundLevel");
+            }
+            if ((printMask?.Sounds?.Overall ?? true)
+                && item.Sounds is {} SoundsItem)
+            {
+                fg.AppendLine("Sounds =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in SoundsItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.SoundsFinalize ?? true)
+                && item.SoundsFinalize is {} SoundsFinalizeItem)
+            {
+                fg.AppendLine($"SoundsFinalize => {SpanExt.ToHexString(SoundsFinalizeItem)}");
+            }
+            if (printMask?.InheritsSoundsFrom ?? true)
+            {
+                fg.AppendItem(item.InheritsSoundsFrom.FormKeyNullable, "InheritsSoundsFrom");
+            }
+            if (printMask?.PowerArmorStand ?? true)
+            {
+                fg.AppendItem(item.PowerArmorStand.FormKeyNullable, "PowerArmorStand");
+            }
+            if (printMask?.DefaultOutfit ?? true)
+            {
+                fg.AppendItem(item.DefaultOutfit.FormKeyNullable, "DefaultOutfit");
+            }
+            if (printMask?.SleepingOutfit ?? true)
+            {
+                fg.AppendItem(item.SleepingOutfit.FormKeyNullable, "SleepingOutfit");
+            }
+            if (printMask?.DefaultPackageList ?? true)
+            {
+                fg.AppendItem(item.DefaultPackageList.FormKeyNullable, "DefaultPackageList");
+            }
+            if (printMask?.CrimeFaction ?? true)
+            {
+                fg.AppendItem(item.CrimeFaction.FormKeyNullable, "CrimeFaction");
+            }
+            if (printMask?.HeadTexture ?? true)
+            {
+                fg.AppendItem(item.HeadTexture.FormKeyNullable, "HeadTexture");
+            }
+            if ((printMask?.TextureLighting ?? true)
+                && item.TextureLighting is {} TextureLightingItem)
+            {
+                fg.AppendItem(TextureLightingItem, "TextureLighting");
+            }
+            if (printMask?.Morphs?.Overall ?? true)
+            {
+                fg.AppendLine("Morphs =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Morphs)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.FaceTintingLayers?.Overall ?? true)
+            {
+                fg.AppendLine("FaceTintingLayers =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.FaceTintingLayers)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.BodyMorphRegionValues?.Overall ?? true)
+                && item.BodyMorphRegionValues is {} BodyMorphRegionValuesItem)
+            {
+                BodyMorphRegionValuesItem?.ToString(fg, "BodyMorphRegionValues");
+            }
+            if (printMask?.FaceMorphs?.Overall ?? true)
+            {
+                fg.AppendLine("FaceMorphs =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.FaceMorphs)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.FacialMorphIntensity ?? true)
+                && item.FacialMorphIntensity is {} FacialMorphIntensityItem)
+            {
+                fg.AppendItem(FacialMorphIntensityItem, "FacialMorphIntensity");
+            }
+            if ((printMask?.ActivateTextOverride ?? true)
+                && item.ActivateTextOverride is {} ActivateTextOverrideItem)
+            {
+                fg.AppendItem(ActivateTextOverrideItem, "ActivateTextOverride");
+            }
+            if (printMask?.ACBSDataTypeState ?? true)
+            {
+                fg.AppendItem(item.ACBSDataTypeState, "ACBSDataTypeState");
+            }
+            if (printMask?.AIDTDataTypeState ?? true)
+            {
+                fg.AppendItem(item.AIDTDataTypeState, "AIDTDataTypeState");
+            }
+            if (printMask?.DNAMDataTypeState ?? true)
+            {
+                fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+            }
         }
         
         public static Npc_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -886,6 +6726,398 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Npc_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Npc_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.PreviewTransform) ?? true))
+            {
+                if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AnimationSound) ?? true))
+            {
+                if (!lhs.AnimationSound.Equals(rhs.AnimationSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.XpValueOffset) ?? true))
+            {
+                if (lhs.XpValueOffset != rhs.XpValueOffset) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Level) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Level, rhs.Level, out var lhsLevel, out var rhsLevel, out var isLevelEqual))
+                {
+                    if (!((ANpcLevelCommon)((IANpcLevelGetter)lhsLevel).CommonInstance()!).Equals(lhsLevel, rhsLevel, crystal?.GetSubCrystal((int)Npc_FieldIndex.Level))) return false;
+                }
+                else if (!isLevelEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.CalcMinLevel) ?? true))
+            {
+                if (lhs.CalcMinLevel != rhs.CalcMinLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.CalcMaxLevel) ?? true))
+            {
+                if (lhs.CalcMaxLevel != rhs.CalcMaxLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DispositionBase) ?? true))
+            {
+                if (lhs.DispositionBase != rhs.DispositionBase) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.UseTemplateActors) ?? true))
+            {
+                if (lhs.UseTemplateActors != rhs.UseTemplateActors) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.BleedoutOverride) ?? true))
+            {
+                if (lhs.BleedoutOverride != rhs.BleedoutOverride) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Factions) ?? true))
+            {
+                if (!lhs.Factions.SequenceEqualNullable(rhs.Factions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DeathItem) ?? true))
+            {
+                if (!lhs.DeathItem.Equals(rhs.DeathItem)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Voice) ?? true))
+            {
+                if (!lhs.Voice.Equals(rhs.Voice)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DefaultTemplate) ?? true))
+            {
+                if (!lhs.DefaultTemplate.Equals(rhs.DefaultTemplate)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.LegendaryTemplate) ?? true))
+            {
+                if (!lhs.LegendaryTemplate.Equals(rhs.LegendaryTemplate)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.LegendaryChance) ?? true))
+            {
+                if (!lhs.LegendaryChance.Equals(rhs.LegendaryChance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.TemplateActors) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.TemplateActors, rhs.TemplateActors, out var lhsTemplateActors, out var rhsTemplateActors, out var isTemplateActorsEqual))
+                {
+                    if (!((TemplateActorsCommon)((ITemplateActorsGetter)lhsTemplateActors).CommonInstance()!).Equals(lhsTemplateActors, rhsTemplateActors, crystal?.GetSubCrystal((int)Npc_FieldIndex.TemplateActors))) return false;
+                }
+                else if (!isTemplateActorsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
+            {
+                if (!lhs.Race.Equals(rhs.Race)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ActorEffect) ?? true))
+            {
+                if (!lhs.ActorEffect.SequenceEqualNullable(rhs.ActorEffect)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Destructible) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
+                {
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Npc_FieldIndex.Destructible))) return false;
+                }
+                else if (!isDestructibleEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Skin) ?? true))
+            {
+                if (!lhs.Skin.Equals(rhs.Skin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FarAwayModel) ?? true))
+            {
+                if (!lhs.FarAwayModel.Equals(rhs.FarAwayModel)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AttackRace) ?? true))
+            {
+                if (!lhs.AttackRace.Equals(rhs.AttackRace)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Attacks) ?? true))
+            {
+                if (!lhs.Attacks.SequenceEqualNullable(rhs.Attacks)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.SpectatorOverridePackageList) ?? true))
+            {
+                if (!lhs.SpectatorOverridePackageList.Equals(rhs.SpectatorOverridePackageList)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList) ?? true))
+            {
+                if (!lhs.ObserveDeadBodyOverridePackageList.Equals(rhs.ObserveDeadBodyOverridePackageList)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.GuardWarnOverridePackageList) ?? true))
+            {
+                if (!lhs.GuardWarnOverridePackageList.Equals(rhs.GuardWarnOverridePackageList)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.CombatOverridePackageList) ?? true))
+            {
+                if (!lhs.CombatOverridePackageList.Equals(rhs.CombatOverridePackageList)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FollowerCommandPackageList) ?? true))
+            {
+                if (!lhs.FollowerCommandPackageList.Equals(rhs.FollowerCommandPackageList)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FollowerElevatorPackageList) ?? true))
+            {
+                if (!lhs.FollowerElevatorPackageList.Equals(rhs.FollowerElevatorPackageList)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Perks) ?? true))
+            {
+                if (!lhs.Perks.SequenceEqualNullable(rhs.Perks)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Properties) ?? true))
+            {
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ForcedLocRefType) ?? true))
+            {
+                if (!lhs.ForcedLocRefType.Equals(rhs.ForcedLocRefType)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.NativeTerminal) ?? true))
+            {
+                if (!lhs.NativeTerminal.Equals(rhs.NativeTerminal)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Items) ?? true))
+            {
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Agression) ?? true))
+            {
+                if (lhs.Agression != rhs.Agression) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Confidence) ?? true))
+            {
+                if (lhs.Confidence != rhs.Confidence) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.EnergyLevel) ?? true))
+            {
+                if (lhs.EnergyLevel != rhs.EnergyLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Responsibility) ?? true))
+            {
+                if (lhs.Responsibility != rhs.Responsibility) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Mood) ?? true))
+            {
+                if (lhs.Mood != rhs.Mood) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Assistence) ?? true))
+            {
+                if (lhs.Assistence != rhs.Assistence) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AggroRadiusBehaviorEnabled) ?? true))
+            {
+                if (lhs.AggroRadiusBehaviorEnabled != rhs.AggroRadiusBehaviorEnabled) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AggroRadiusWarn) ?? true))
+            {
+                if (lhs.AggroRadiusWarn != rhs.AggroRadiusWarn) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AggroRadiusWarnOrAttack) ?? true))
+            {
+                if (lhs.AggroRadiusWarnOrAttack != rhs.AggroRadiusWarnOrAttack) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AggroRadiusAttack) ?? true))
+            {
+                if (lhs.AggroRadiusAttack != rhs.AggroRadiusAttack) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.NoSlowApproach) ?? true))
+            {
+                if (lhs.NoSlowApproach != rhs.NoSlowApproach) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Packages) ?? true))
+            {
+                if (!lhs.Packages.SequenceEqualNullable(rhs.Packages)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AttachParentSlots) ?? true))
+            {
+                if (!lhs.AttachParentSlots.SequenceEqualNullable(rhs.AttachParentSlots)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ObjectTemplates) ?? true))
+            {
+                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Class) ?? true))
+            {
+                if (!lhs.Class.Equals(rhs.Class)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ShortName) ?? true))
+            {
+                if (!string.Equals(lhs.ShortName, rhs.ShortName)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.BaseHealth) ?? true))
+            {
+                if (lhs.BaseHealth != rhs.BaseHealth) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.BaseActionPoints) ?? true))
+            {
+                if (lhs.BaseActionPoints != rhs.BaseActionPoints) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FarAwayModelDistance) ?? true))
+            {
+                if (lhs.FarAwayModelDistance != rhs.FarAwayModelDistance) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.GearedUpWeapons) ?? true))
+            {
+                if (lhs.GearedUpWeapons != rhs.GearedUpWeapons) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Unused) ?? true))
+            {
+                if (lhs.Unused != rhs.Unused) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.HeadParts) ?? true))
+            {
+                if (!lhs.HeadParts.SequenceEqualNullable(rhs.HeadParts)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.HairColor) ?? true))
+            {
+                if (!lhs.HairColor.Equals(rhs.HairColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FacialHairColor) ?? true))
+            {
+                if (!lhs.FacialHairColor.Equals(rhs.FacialHairColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.CombatStyle) ?? true))
+            {
+                if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.GiftFilter) ?? true))
+            {
+                if (!lhs.GiftFilter.Equals(rhs.GiftFilter)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.NAM5) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.NAM5, rhs.NAM5)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.HeightMin) ?? true))
+            {
+                if (!lhs.HeightMin.EqualsWithin(rhs.HeightMin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.NAM7) ?? true))
+            {
+                if (!lhs.NAM7.EqualsWithin(rhs.NAM7)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.HeightMax) ?? true))
+            {
+                if (!lhs.HeightMax.EqualsWithin(rhs.HeightMax)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Weight) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Weight, rhs.Weight, out var lhsWeight, out var rhsWeight, out var isWeightEqual))
+                {
+                    if (!((NpcWeightCommon)((INpcWeightGetter)lhsWeight).CommonInstance()!).Equals(lhsWeight, rhsWeight, crystal?.GetSubCrystal((int)Npc_FieldIndex.Weight))) return false;
+                }
+                else if (!isWeightEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.SoundLevel) ?? true))
+            {
+                if (lhs.SoundLevel != rhs.SoundLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Sounds) ?? true))
+            {
+                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.SoundsFinalize) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.SoundsFinalize, rhs.SoundsFinalize)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.InheritsSoundsFrom) ?? true))
+            {
+                if (!lhs.InheritsSoundsFrom.Equals(rhs.InheritsSoundsFrom)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.PowerArmorStand) ?? true))
+            {
+                if (!lhs.PowerArmorStand.Equals(rhs.PowerArmorStand)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DefaultOutfit) ?? true))
+            {
+                if (!lhs.DefaultOutfit.Equals(rhs.DefaultOutfit)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.SleepingOutfit) ?? true))
+            {
+                if (!lhs.SleepingOutfit.Equals(rhs.SleepingOutfit)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DefaultPackageList) ?? true))
+            {
+                if (!lhs.DefaultPackageList.Equals(rhs.DefaultPackageList)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.CrimeFaction) ?? true))
+            {
+                if (!lhs.CrimeFaction.Equals(rhs.CrimeFaction)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.HeadTexture) ?? true))
+            {
+                if (!lhs.HeadTexture.Equals(rhs.HeadTexture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.TextureLighting) ?? true))
+            {
+                if (!lhs.TextureLighting.ColorOnlyEquals(rhs.TextureLighting)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Morphs) ?? true))
+            {
+                if (!lhs.Morphs.SequenceEqualNullable(rhs.Morphs)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FaceTintingLayers) ?? true))
+            {
+                if (!lhs.FaceTintingLayers.SequenceEqualNullable(rhs.FaceTintingLayers)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.BodyMorphRegionValues) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.BodyMorphRegionValues, rhs.BodyMorphRegionValues, out var lhsBodyMorphRegionValues, out var rhsBodyMorphRegionValues, out var isBodyMorphRegionValuesEqual))
+                {
+                    if (!((NpcBodyMorphRegionValuesCommon)((INpcBodyMorphRegionValuesGetter)lhsBodyMorphRegionValues).CommonInstance()!).Equals(lhsBodyMorphRegionValues, rhsBodyMorphRegionValues, crystal?.GetSubCrystal((int)Npc_FieldIndex.BodyMorphRegionValues))) return false;
+                }
+                else if (!isBodyMorphRegionValuesEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FaceMorphs) ?? true))
+            {
+                if (!lhs.FaceMorphs.SequenceEqualNullable(rhs.FaceMorphs)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FacialMorphIntensity) ?? true))
+            {
+                if (!lhs.FacialMorphIntensity.EqualsWithin(rhs.FacialMorphIntensity)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ActivateTextOverride) ?? true))
+            {
+                if (!object.Equals(lhs.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ACBSDataTypeState) ?? true))
+            {
+                if (lhs.ACBSDataTypeState != rhs.ACBSDataTypeState) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AIDTDataTypeState) ?? true))
+            {
+                if (lhs.AIDTDataTypeState != rhs.AIDTDataTypeState) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
+            }
             return true;
         }
         
@@ -914,6 +7146,136 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(INpcGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            hash.Add(item.ObjectBounds);
+            hash.Add(item.PreviewTransform);
+            hash.Add(item.AnimationSound);
+            hash.Add(item.Flags);
+            hash.Add(item.XpValueOffset);
+            hash.Add(item.Level);
+            hash.Add(item.CalcMinLevel);
+            hash.Add(item.CalcMaxLevel);
+            hash.Add(item.DispositionBase);
+            hash.Add(item.UseTemplateActors);
+            hash.Add(item.BleedoutOverride);
+            hash.Add(item.Unknown);
+            hash.Add(item.Factions);
+            hash.Add(item.DeathItem);
+            hash.Add(item.Voice);
+            hash.Add(item.DefaultTemplate);
+            hash.Add(item.LegendaryTemplate);
+            hash.Add(item.LegendaryChance);
+            if (item.TemplateActors is {} TemplateActorsitem)
+            {
+                hash.Add(TemplateActorsitem);
+            }
+            hash.Add(item.Race);
+            hash.Add(item.ActorEffect);
+            if (item.Destructible is {} Destructibleitem)
+            {
+                hash.Add(Destructibleitem);
+            }
+            hash.Add(item.Skin);
+            hash.Add(item.FarAwayModel);
+            hash.Add(item.AttackRace);
+            hash.Add(item.Attacks);
+            hash.Add(item.SpectatorOverridePackageList);
+            hash.Add(item.ObserveDeadBodyOverridePackageList);
+            hash.Add(item.GuardWarnOverridePackageList);
+            hash.Add(item.CombatOverridePackageList);
+            hash.Add(item.FollowerCommandPackageList);
+            hash.Add(item.FollowerElevatorPackageList);
+            hash.Add(item.Perks);
+            hash.Add(item.Properties);
+            hash.Add(item.ForcedLocRefType);
+            hash.Add(item.NativeTerminal);
+            hash.Add(item.Items);
+            hash.Add(item.Agression);
+            hash.Add(item.Confidence);
+            hash.Add(item.EnergyLevel);
+            hash.Add(item.Responsibility);
+            hash.Add(item.Mood);
+            hash.Add(item.Assistence);
+            hash.Add(item.AggroRadiusBehaviorEnabled);
+            hash.Add(item.AggroRadiusWarn);
+            hash.Add(item.AggroRadiusWarnOrAttack);
+            hash.Add(item.AggroRadiusAttack);
+            hash.Add(item.NoSlowApproach);
+            hash.Add(item.Packages);
+            hash.Add(item.Keywords);
+            hash.Add(item.AttachParentSlots);
+            hash.Add(item.ObjectTemplates);
+            hash.Add(item.Class);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.ShortName is {} ShortNameitem)
+            {
+                hash.Add(ShortNameitem);
+            }
+            hash.Add(item.BaseHealth);
+            hash.Add(item.BaseActionPoints);
+            hash.Add(item.FarAwayModelDistance);
+            hash.Add(item.GearedUpWeapons);
+            hash.Add(item.Unused);
+            hash.Add(item.HeadParts);
+            hash.Add(item.HairColor);
+            hash.Add(item.FacialHairColor);
+            hash.Add(item.CombatStyle);
+            hash.Add(item.GiftFilter);
+            if (item.NAM5 is {} NAM5Item)
+            {
+                hash.Add(NAM5Item);
+            }
+            hash.Add(item.HeightMin);
+            if (item.NAM7 is {} NAM7item)
+            {
+                hash.Add(NAM7item);
+            }
+            hash.Add(item.HeightMax);
+            if (item.Weight is {} Weightitem)
+            {
+                hash.Add(Weightitem);
+            }
+            hash.Add(item.SoundLevel);
+            hash.Add(item.Sounds);
+            if (item.SoundsFinalize is {} SoundsFinalizeItem)
+            {
+                hash.Add(SoundsFinalizeItem);
+            }
+            hash.Add(item.InheritsSoundsFrom);
+            hash.Add(item.PowerArmorStand);
+            hash.Add(item.DefaultOutfit);
+            hash.Add(item.SleepingOutfit);
+            hash.Add(item.DefaultPackageList);
+            hash.Add(item.CrimeFaction);
+            hash.Add(item.HeadTexture);
+            if (item.TextureLighting is {} TextureLightingitem)
+            {
+                hash.Add(TextureLightingitem);
+            }
+            hash.Add(item.Morphs);
+            hash.Add(item.FaceTintingLayers);
+            if (item.BodyMorphRegionValues is {} BodyMorphRegionValuesitem)
+            {
+                hash.Add(BodyMorphRegionValuesitem);
+            }
+            hash.Add(item.FaceMorphs);
+            if (item.FacialMorphIntensity is {} FacialMorphIntensityitem)
+            {
+                hash.Add(FacialMorphIntensityitem);
+            }
+            if (item.ActivateTextOverride is {} ActivateTextOverrideitem)
+            {
+                hash.Add(ActivateTextOverrideitem);
+            }
+            hash.Add(item.ACBSDataTypeState);
+            hash.Add(item.AIDTDataTypeState);
+            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -942,6 +7304,221 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.PreviewTransform, out var PreviewTransformInfo))
+            {
+                yield return PreviewTransformInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.AnimationSound, out var AnimationSoundInfo))
+            {
+                yield return AnimationSoundInfo;
+            }
+            foreach (var item in obj.Factions.SelectMany(f => f.ContainedFormLinks))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.DeathItem, out var DeathItemInfo))
+            {
+                yield return DeathItemInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Voice, out var VoiceInfo))
+            {
+                yield return VoiceInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.DefaultTemplate, out var DefaultTemplateInfo))
+            {
+                yield return DefaultTemplateInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.LegendaryTemplate, out var LegendaryTemplateInfo))
+            {
+                yield return LegendaryTemplateInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.LegendaryChance, out var LegendaryChanceInfo))
+            {
+                yield return LegendaryChanceInfo;
+            }
+            if (obj.TemplateActors is {} TemplateActorsItems)
+            {
+                foreach (var item in TemplateActorsItems.ContainedFormLinks)
+                {
+                    yield return item;
+                }
+            }
+            yield return FormLinkInformation.Factory(obj.Race);
+            if (obj.ActorEffect is {} ActorEffectItem)
+            {
+                foreach (var item in ActorEffectItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.ContainedFormLinks)
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.Skin, out var SkinInfo))
+            {
+                yield return SkinInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.FarAwayModel, out var FarAwayModelInfo))
+            {
+                yield return FarAwayModelInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.AttackRace, out var AttackRaceInfo))
+            {
+                yield return AttackRaceInfo;
+            }
+            foreach (var item in obj.Attacks.SelectMany(f => f.ContainedFormLinks))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.SpectatorOverridePackageList, out var SpectatorOverridePackageListInfo))
+            {
+                yield return SpectatorOverridePackageListInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.ObserveDeadBodyOverridePackageList, out var ObserveDeadBodyOverridePackageListInfo))
+            {
+                yield return ObserveDeadBodyOverridePackageListInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.GuardWarnOverridePackageList, out var GuardWarnOverridePackageListInfo))
+            {
+                yield return GuardWarnOverridePackageListInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.CombatOverridePackageList, out var CombatOverridePackageListInfo))
+            {
+                yield return CombatOverridePackageListInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.FollowerCommandPackageList, out var FollowerCommandPackageListInfo))
+            {
+                yield return FollowerCommandPackageListInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.FollowerElevatorPackageList, out var FollowerElevatorPackageListInfo))
+            {
+                yield return FollowerElevatorPackageListInfo;
+            }
+            if (obj.Perks is {} PerksItem)
+            {
+                foreach (var item in PerksItem.SelectMany(f => f.ContainedFormLinks))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.Properties is {} PropertiesItem)
+            {
+                foreach (var item in PropertiesItem.SelectMany(f => f.ContainedFormLinks))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.ForcedLocRefType, out var ForcedLocRefTypeInfo))
+            {
+                yield return ForcedLocRefTypeInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.NativeTerminal, out var NativeTerminalInfo))
+            {
+                yield return NativeTerminalInfo;
+            }
+            if (obj.Items is {} ItemsItem)
+            {
+                foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, IFormLinkContainerGetter>()
+                    .SelectMany((f) => f.ContainedFormLinks))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            foreach (var item in obj.Packages)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.Keywords is {} KeywordsItem)
+            {
+                foreach (var item in KeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.AttachParentSlots is {} AttachParentSlotsItem)
+            {
+                foreach (var item in AttachParentSlotsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.ObjectTemplates is {} ObjectTemplatesItem)
+            {
+                foreach (var item in ObjectTemplatesItem.SelectMany(f => f.ContainedFormLinks))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.Class, out var ClassInfo))
+            {
+                yield return ClassInfo;
+            }
+            foreach (var item in obj.HeadParts)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.HairColor, out var HairColorInfo))
+            {
+                yield return HairColorInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.FacialHairColor, out var FacialHairColorInfo))
+            {
+                yield return FacialHairColorInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.CombatStyle, out var CombatStyleInfo))
+            {
+                yield return CombatStyleInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.GiftFilter, out var GiftFilterInfo))
+            {
+                yield return GiftFilterInfo;
+            }
+            if (obj.Sounds is {} SoundsItem)
+            {
+                foreach (var item in SoundsItem.SelectMany(f => f.ContainedFormLinks))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.InheritsSoundsFrom, out var InheritsSoundsFromInfo))
+            {
+                yield return InheritsSoundsFromInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.PowerArmorStand, out var PowerArmorStandInfo))
+            {
+                yield return PowerArmorStandInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.DefaultOutfit, out var DefaultOutfitInfo))
+            {
+                yield return DefaultOutfitInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.SleepingOutfit, out var SleepingOutfitInfo))
+            {
+                yield return SleepingOutfitInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.DefaultPackageList, out var DefaultPackageListInfo))
+            {
+                yield return DefaultPackageListInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.CrimeFaction, out var CrimeFactionInfo))
+            {
+                yield return CrimeFactionInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.HeadTexture, out var HeadTextureInfo))
+            {
+                yield return HeadTextureInfo;
             }
             yield break;
         }
@@ -1017,6 +7594,869 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Npc_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Npc_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.PreviewTransform) ?? true))
+            {
+                item.PreviewTransform.SetTo(rhs.PreviewTransform.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.AnimationSound) ?? true))
+            {
+                item.AnimationSound.SetTo(rhs.AnimationSound.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.XpValueOffset) ?? true))
+            {
+                item.XpValueOffset = rhs.XpValueOffset;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Level) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.Level);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Level) ?? true))
+                    {
+                        item.Level = rhs.Level.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Npc_FieldIndex.Level),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.CalcMinLevel) ?? true))
+            {
+                item.CalcMinLevel = rhs.CalcMinLevel;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.CalcMaxLevel) ?? true))
+            {
+                item.CalcMaxLevel = rhs.CalcMaxLevel;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.DispositionBase) ?? true))
+            {
+                item.DispositionBase = rhs.DispositionBase;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.UseTemplateActors) ?? true))
+            {
+                item.UseTemplateActors = rhs.UseTemplateActors;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.BleedoutOverride) ?? true))
+            {
+                item.BleedoutOverride = rhs.BleedoutOverride;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Factions) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.Factions);
+                try
+                {
+                    item.Factions.SetTo(
+                        rhs.Factions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.DeathItem) ?? true))
+            {
+                item.DeathItem.SetTo(rhs.DeathItem.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Voice) ?? true))
+            {
+                item.Voice.SetTo(rhs.Voice.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.DefaultTemplate) ?? true))
+            {
+                item.DefaultTemplate.SetTo(rhs.DefaultTemplate.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.LegendaryTemplate) ?? true))
+            {
+                item.LegendaryTemplate.SetTo(rhs.LegendaryTemplate.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.LegendaryChance) ?? true))
+            {
+                item.LegendaryChance.SetTo(rhs.LegendaryChance.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.TemplateActors) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.TemplateActors);
+                try
+                {
+                    if(rhs.TemplateActors is {} rhsTemplateActors)
+                    {
+                        item.TemplateActors = rhsTemplateActors.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Npc_FieldIndex.TemplateActors));
+                    }
+                    else
+                    {
+                        item.TemplateActors = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
+            {
+                item.Race.SetTo(rhs.Race.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ActorEffect) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.ActorEffect);
+                try
+                {
+                    if ((rhs.ActorEffect != null))
+                    {
+                        item.ActorEffect = 
+                            rhs.ActorEffect
+                            .Select(r => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ISpellRecordGetter>>();
+                    }
+                    else
+                    {
+                        item.ActorEffect = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Destructible) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.Destructible);
+                try
+                {
+                    if(rhs.Destructible is {} rhsDestructible)
+                    {
+                        item.Destructible = rhsDestructible.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Npc_FieldIndex.Destructible));
+                    }
+                    else
+                    {
+                        item.Destructible = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Skin) ?? true))
+            {
+                item.Skin.SetTo(rhs.Skin.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.FarAwayModel) ?? true))
+            {
+                item.FarAwayModel.SetTo(rhs.FarAwayModel.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.AttackRace) ?? true))
+            {
+                item.AttackRace.SetTo(rhs.AttackRace.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Attacks) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.Attacks);
+                try
+                {
+                    item.Attacks.SetTo(
+                        rhs.Attacks
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.SpectatorOverridePackageList) ?? true))
+            {
+                item.SpectatorOverridePackageList.SetTo(rhs.SpectatorOverridePackageList.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList) ?? true))
+            {
+                item.ObserveDeadBodyOverridePackageList.SetTo(rhs.ObserveDeadBodyOverridePackageList.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.GuardWarnOverridePackageList) ?? true))
+            {
+                item.GuardWarnOverridePackageList.SetTo(rhs.GuardWarnOverridePackageList.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.CombatOverridePackageList) ?? true))
+            {
+                item.CombatOverridePackageList.SetTo(rhs.CombatOverridePackageList.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.FollowerCommandPackageList) ?? true))
+            {
+                item.FollowerCommandPackageList.SetTo(rhs.FollowerCommandPackageList.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.FollowerElevatorPackageList) ?? true))
+            {
+                item.FollowerElevatorPackageList.SetTo(rhs.FollowerElevatorPackageList.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Perks) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.Perks);
+                try
+                {
+                    if ((rhs.Perks != null))
+                    {
+                        item.Perks = 
+                            rhs.Perks
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<PerkPlacement>();
+                    }
+                    else
+                    {
+                        item.Perks = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Properties) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.Properties);
+                try
+                {
+                    if ((rhs.Properties != null))
+                    {
+                        item.Properties = 
+                            rhs.Properties
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ObjectProperty>();
+                    }
+                    else
+                    {
+                        item.Properties = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ForcedLocRefType) ?? true))
+            {
+                item.ForcedLocRefType.SetTo(rhs.ForcedLocRefType.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.NativeTerminal) ?? true))
+            {
+                item.NativeTerminal.SetTo(rhs.NativeTerminal.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Items) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.Items);
+                try
+                {
+                    if ((rhs.Items != null))
+                    {
+                        item.Items = 
+                            rhs.Items
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ContainerEntry>();
+                    }
+                    else
+                    {
+                        item.Items = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Agression) ?? true))
+            {
+                item.Agression = rhs.Agression;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Confidence) ?? true))
+            {
+                item.Confidence = rhs.Confidence;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.EnergyLevel) ?? true))
+            {
+                item.EnergyLevel = rhs.EnergyLevel;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Responsibility) ?? true))
+            {
+                item.Responsibility = rhs.Responsibility;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Mood) ?? true))
+            {
+                item.Mood = rhs.Mood;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Assistence) ?? true))
+            {
+                item.Assistence = rhs.Assistence;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.AggroRadiusBehaviorEnabled) ?? true))
+            {
+                item.AggroRadiusBehaviorEnabled = rhs.AggroRadiusBehaviorEnabled;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.AggroRadiusWarn) ?? true))
+            {
+                item.AggroRadiusWarn = rhs.AggroRadiusWarn;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.AggroRadiusWarnOrAttack) ?? true))
+            {
+                item.AggroRadiusWarnOrAttack = rhs.AggroRadiusWarnOrAttack;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.AggroRadiusAttack) ?? true))
+            {
+                item.AggroRadiusAttack = rhs.AggroRadiusAttack;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.NoSlowApproach) ?? true))
+            {
+                item.NoSlowApproach = rhs.NoSlowApproach;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Packages) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.Packages);
+                try
+                {
+                    item.Packages.SetTo(
+                        rhs.Packages
+                        .Select(r => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.AttachParentSlots) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.AttachParentSlots);
+                try
+                {
+                    if ((rhs.AttachParentSlots != null))
+                    {
+                        item.AttachParentSlots = 
+                            rhs.AttachParentSlots
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.AttachParentSlots = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ObjectTemplates) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.ObjectTemplates);
+                try
+                {
+                    if ((rhs.ObjectTemplates != null))
+                    {
+                        item.ObjectTemplates = 
+                            rhs.ObjectTemplates
+                            .Select(r =>
+                            {
+                                return r.DeepCopy<Npc.Property>(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ObjectTemplate<Npc.Property>>();
+                    }
+                    else
+                    {
+                        item.ObjectTemplates = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Class) ?? true))
+            {
+                item.Class.SetTo(rhs.Class.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ShortName) ?? true))
+            {
+                item.ShortName = rhs.ShortName;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.BaseHealth) ?? true))
+            {
+                item.BaseHealth = rhs.BaseHealth;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.BaseActionPoints) ?? true))
+            {
+                item.BaseActionPoints = rhs.BaseActionPoints;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.FarAwayModelDistance) ?? true))
+            {
+                item.FarAwayModelDistance = rhs.FarAwayModelDistance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.GearedUpWeapons) ?? true))
+            {
+                item.GearedUpWeapons = rhs.GearedUpWeapons;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Unused) ?? true))
+            {
+                item.Unused = rhs.Unused;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.HeadParts) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.HeadParts);
+                try
+                {
+                    item.HeadParts.SetTo(
+                        rhs.HeadParts
+                        .Select(r => (IFormLinkGetter<IHeadPartGetter>)new FormLink<IHeadPartGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.HairColor) ?? true))
+            {
+                item.HairColor.SetTo(rhs.HairColor.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.FacialHairColor) ?? true))
+            {
+                item.FacialHairColor.SetTo(rhs.FacialHairColor.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.CombatStyle) ?? true))
+            {
+                item.CombatStyle.SetTo(rhs.CombatStyle.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.GiftFilter) ?? true))
+            {
+                item.GiftFilter.SetTo(rhs.GiftFilter.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.NAM5) ?? true))
+            {
+                if(rhs.NAM5 is {} NAM5rhs)
+                {
+                    item.NAM5 = NAM5rhs.ToArray();
+                }
+                else
+                {
+                    item.NAM5 = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.HeightMin) ?? true))
+            {
+                item.HeightMin = rhs.HeightMin;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.NAM7) ?? true))
+            {
+                item.NAM7 = rhs.NAM7;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.HeightMax) ?? true))
+            {
+                item.HeightMax = rhs.HeightMax;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Weight) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.Weight);
+                try
+                {
+                    if(rhs.Weight is {} rhsWeight)
+                    {
+                        item.Weight = rhsWeight.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Npc_FieldIndex.Weight));
+                    }
+                    else
+                    {
+                        item.Weight = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.SoundLevel) ?? true))
+            {
+                item.SoundLevel = rhs.SoundLevel;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Sounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.Sounds);
+                try
+                {
+                    if ((rhs.Sounds != null))
+                    {
+                        item.Sounds = 
+                            rhs.Sounds
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<NpcSound>();
+                    }
+                    else
+                    {
+                        item.Sounds = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.SoundsFinalize) ?? true))
+            {
+                if(rhs.SoundsFinalize is {} SoundsFinalizerhs)
+                {
+                    item.SoundsFinalize = SoundsFinalizerhs.ToArray();
+                }
+                else
+                {
+                    item.SoundsFinalize = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.InheritsSoundsFrom) ?? true))
+            {
+                item.InheritsSoundsFrom.SetTo(rhs.InheritsSoundsFrom.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.PowerArmorStand) ?? true))
+            {
+                item.PowerArmorStand.SetTo(rhs.PowerArmorStand.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.DefaultOutfit) ?? true))
+            {
+                item.DefaultOutfit.SetTo(rhs.DefaultOutfit.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.SleepingOutfit) ?? true))
+            {
+                item.SleepingOutfit.SetTo(rhs.SleepingOutfit.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.DefaultPackageList) ?? true))
+            {
+                item.DefaultPackageList.SetTo(rhs.DefaultPackageList.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.CrimeFaction) ?? true))
+            {
+                item.CrimeFaction.SetTo(rhs.CrimeFaction.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.HeadTexture) ?? true))
+            {
+                item.HeadTexture.SetTo(rhs.HeadTexture.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.TextureLighting) ?? true))
+            {
+                item.TextureLighting = rhs.TextureLighting;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Morphs) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.Morphs);
+                try
+                {
+                    item.Morphs.SetTo(
+                        rhs.Morphs
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.FaceTintingLayers) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.FaceTintingLayers);
+                try
+                {
+                    item.FaceTintingLayers.SetTo(
+                        rhs.FaceTintingLayers
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.BodyMorphRegionValues) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.BodyMorphRegionValues);
+                try
+                {
+                    if(rhs.BodyMorphRegionValues is {} rhsBodyMorphRegionValues)
+                    {
+                        item.BodyMorphRegionValues = rhsBodyMorphRegionValues.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Npc_FieldIndex.BodyMorphRegionValues));
+                    }
+                    else
+                    {
+                        item.BodyMorphRegionValues = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.FaceMorphs) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.FaceMorphs);
+                try
+                {
+                    item.FaceMorphs.SetTo(
+                        rhs.FaceMorphs
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.FacialMorphIntensity) ?? true))
+            {
+                item.FacialMorphIntensity = rhs.FacialMorphIntensity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ActivateTextOverride) ?? true))
+            {
+                item.ActivateTextOverride = rhs.ActivateTextOverride?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ACBSDataTypeState) ?? true))
+            {
+                item.ACBSDataTypeState = rhs.ACBSDataTypeState;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.AIDTDataTypeState) ?? true))
+            {
+                item.AIDTDataTypeState = rhs.AIDTDataTypeState;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1165,6 +8605,508 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public new readonly static NpcBinaryWriteTranslation Instance = new NpcBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            INpcGetter item,
+            MutagenWriter writer)
+        {
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            INpcGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PreviewTransform,
+                header: translationParams.ConvertToCustom(RecordTypes.PTRN));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AnimationSound,
+                header: translationParams.ConvertToCustom(RecordTypes.STCP));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.ACBS)))
+            {
+                NpcBinaryWriteTranslation.WriteBinaryFlags(
+                    writer: writer,
+                    item: item);
+                writer.Write(item.XpValueOffset);
+                NpcBinaryWriteTranslation.WriteBinaryLevel(
+                    writer: writer,
+                    item: item);
+                writer.Write(item.CalcMinLevel);
+                writer.Write(item.CalcMaxLevel);
+                writer.Write(item.DispositionBase);
+                EnumBinaryTranslation<Npc.TemplateActorType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.UseTemplateActors,
+                    length: 2);
+                writer.Write(item.BleedoutOverride);
+                writer.Write(item.Unknown);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRankPlacementGetter>.Instance.Write(
+                writer: writer,
+                items: item.Factions,
+                transl: (MutagenWriter subWriter, IRankPlacementGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((RankPlacementBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DeathItem,
+                header: translationParams.ConvertToCustom(RecordTypes.INAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Voice,
+                header: translationParams.ConvertToCustom(RecordTypes.VTCK));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DefaultTemplate,
+                header: translationParams.ConvertToCustom(RecordTypes.TPLT));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.LegendaryTemplate,
+                header: translationParams.ConvertToCustom(RecordTypes.LTPT));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.LegendaryChance,
+                header: translationParams.ConvertToCustom(RecordTypes.LTPC));
+            if (item.TemplateActors is {} TemplateActorsItem)
+            {
+                ((TemplateActorsBinaryWriteTranslation)((IBinaryItem)TemplateActorsItem).BinaryWriteTranslator).Write(
+                    item: TemplateActorsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Race,
+                header: translationParams.ConvertToCustom(RecordTypes.RNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.ActorEffect,
+                counterType: RecordTypes.SPCT,
+                counterLength: 4,
+                recordType: translationParams.ConvertToCustom(RecordTypes.SPLO),
+                subRecordPerItem: true,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, TypedWriteParams? conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            if (item.Destructible is {} DestructibleItem)
+            {
+                ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
+                    item: DestructibleItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Skin,
+                header: translationParams.ConvertToCustom(RecordTypes.WNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.FarAwayModel,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AttackRace,
+                header: translationParams.ConvertToCustom(RecordTypes.ATKR));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAttackGetter>.Instance.Write(
+                writer: writer,
+                items: item.Attacks,
+                transl: (MutagenWriter subWriter, IAttackGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((AttackBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SpectatorOverridePackageList,
+                header: translationParams.ConvertToCustom(RecordTypes.SPOR));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ObserveDeadBodyOverridePackageList,
+                header: translationParams.ConvertToCustom(RecordTypes.OCOR));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.GuardWarnOverridePackageList,
+                header: translationParams.ConvertToCustom(RecordTypes.GWOR));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.CombatOverridePackageList,
+                header: translationParams.ConvertToCustom(RecordTypes.ECOR));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.FollowerCommandPackageList,
+                header: translationParams.ConvertToCustom(RecordTypes.FCPL));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.FollowerElevatorPackageList,
+                header: translationParams.ConvertToCustom(RecordTypes.RCLR));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPerkPlacementGetter>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Perks,
+                counterType: RecordTypes.PRKZ,
+                counterLength: 4,
+                transl: (MutagenWriter subWriter, IPerkPlacementGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((PerkPlacementBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IObjectPropertyGetter>.Instance.Write(
+                writer: writer,
+                items: item.Properties,
+                recordType: translationParams.ConvertToCustom(RecordTypes.PRPS),
+                transl: (MutagenWriter subWriter, IObjectPropertyGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((ObjectPropertyBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ForcedLocRefType,
+                header: translationParams.ConvertToCustom(RecordTypes.FTYP));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.NativeTerminal,
+                header: translationParams.ConvertToCustom(RecordTypes.NTRM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IContainerEntryGetter>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Items,
+                counterType: RecordTypes.COCT,
+                counterLength: 4,
+                transl: (MutagenWriter subWriter, IContainerEntryGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((ContainerEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.AIDT)))
+            {
+                EnumBinaryTranslation<Npc.AggressionType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Agression,
+                    length: 1);
+                EnumBinaryTranslation<Npc.ConfidenceType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Confidence,
+                    length: 1);
+                writer.Write(item.EnergyLevel);
+                EnumBinaryTranslation<Npc.ResponsibilityType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Responsibility,
+                    length: 1);
+                EnumBinaryTranslation<Npc.MoodType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Mood,
+                    length: 1);
+                EnumBinaryTranslation<Npc.AssistenceType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Assistence,
+                    length: 1);
+                writer.Write(item.AggroRadiusBehaviorEnabled, length: 2);
+                writer.Write(item.AggroRadiusWarn);
+                writer.Write(item.AggroRadiusWarnOrAttack);
+                writer.Write(item.AggroRadiusAttack);
+                writer.Write(item.NoSlowApproach, length: 4);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Write(
+                writer: writer,
+                items: item.Packages,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPackageGetter> subItem, TypedWriteParams? conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.PKID));
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: RecordTypes.KSIZ,
+                counterLength: 4,
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
+                writer: writer,
+                items: item.AttachParentSlots,
+                recordType: translationParams.ConvertToCustom(RecordTypes.APPR),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IObjectTemplateGetter<Npc.Property>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.ObjectTemplates,
+                counterType: RecordTypes.OBTE,
+                counterLength: 4,
+                endMarker: RecordTypes.STOP,
+                transl: (MutagenWriter subWriter, IObjectTemplateGetter<Npc.Property> subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((ObjectTemplateBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<Npc.Property>(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Class,
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ShortName,
+                header: translationParams.ConvertToCustom(RecordTypes.SHRT),
+                binaryType: StringBinaryType.NullTerminate);
+            using (HeaderExport.Subrecord(writer, RecordTypes.DATA)) { }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
+            {
+                writer.Write(item.BaseHealth);
+                writer.Write(item.BaseActionPoints);
+                writer.Write(item.FarAwayModelDistance);
+                writer.Write(item.GearedUpWeapons);
+                writer.Write(item.Unused);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IHeadPartGetter>>.Instance.Write(
+                writer: writer,
+                items: item.HeadParts,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IHeadPartGetter> subItem, TypedWriteParams? conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.PNAM));
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.HairColor,
+                header: translationParams.ConvertToCustom(RecordTypes.HCLF));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.FacialHairColor,
+                header: translationParams.ConvertToCustom(RecordTypes.BCLF));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.CombatStyle,
+                header: translationParams.ConvertToCustom(RecordTypes.ZNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.GiftFilter,
+                header: translationParams.ConvertToCustom(RecordTypes.GNAM));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.NAM5,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM5));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.HeightMin,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM6));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.NAM7,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM7));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.HeightMax,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM4));
+            if (item.Weight is {} WeightItem)
+            {
+                ((NpcWeightBinaryWriteTranslation)((IBinaryItem)WeightItem).BinaryWriteTranslator).Write(
+                    item: WeightItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.SoundLevel,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM8));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INpcSoundGetter>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Sounds,
+                counterType: RecordTypes.CS2H,
+                counterLength: 4,
+                endMarker: RecordTypes.CS2E,
+                transl: (MutagenWriter subWriter, INpcSoundGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((NpcSoundBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.SoundsFinalize,
+                header: translationParams.ConvertToCustom(RecordTypes.CS2F));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.InheritsSoundsFrom,
+                header: translationParams.ConvertToCustom(RecordTypes.CSCR));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PowerArmorStand,
+                header: translationParams.ConvertToCustom(RecordTypes.PFRN));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DefaultOutfit,
+                header: translationParams.ConvertToCustom(RecordTypes.DOFT));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SleepingOutfit,
+                header: translationParams.ConvertToCustom(RecordTypes.SOFT));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DefaultPackageList,
+                header: translationParams.ConvertToCustom(RecordTypes.DPLT));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.CrimeFaction,
+                header: translationParams.ConvertToCustom(RecordTypes.CRIF));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.HeadTexture,
+                header: translationParams.ConvertToCustom(RecordTypes.FTST));
+            ColorBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.TextureLighting,
+                header: translationParams.ConvertToCustom(RecordTypes.QNAM),
+                binaryType: ColorBinaryType.AlphaFloat);
+            NpcBinaryWriteTranslation.WriteBinaryMorphParsing(
+                writer: writer,
+                item: item);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INpcFaceTintingLayerGetter>.Instance.Write(
+                writer: writer,
+                items: item.FaceTintingLayers,
+                transl: (MutagenWriter subWriter, INpcFaceTintingLayerGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((NpcFaceTintingLayerBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.BodyMorphRegionValues is {} BodyMorphRegionValuesItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.MRSV))
+                {
+                    ((NpcBodyMorphRegionValuesBinaryWriteTranslation)((IBinaryItem)BodyMorphRegionValuesItem).BinaryWriteTranslator).Write(
+                        item: BodyMorphRegionValuesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INpcFaceMorphGetter>.Instance.Write(
+                writer: writer,
+                items: item.FaceMorphs,
+                transl: (MutagenWriter subWriter, INpcFaceMorphGetter subItem, TypedWriteParams? conv) =>
+                {
+                    var Item = subItem;
+                    ((NpcFaceMorphBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FacialMorphIntensity,
+                header: translationParams.ConvertToCustom(RecordTypes.FMIN));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ActivateTextOverride,
+                header: translationParams.ConvertToCustom(RecordTypes.ATTX),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+        }
+
+        public static partial void WriteBinaryFlagsCustom(
+            MutagenWriter writer,
+            INpcGetter item);
+
+        public static void WriteBinaryFlags(
+            MutagenWriter writer,
+            INpcGetter item)
+        {
+            WriteBinaryFlagsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryLevelCustom(
+            MutagenWriter writer,
+            INpcGetter item);
+
+        public static void WriteBinaryLevel(
+            MutagenWriter writer,
+            INpcGetter item)
+        {
+            WriteBinaryLevelCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryMorphParsingCustom(
+            MutagenWriter writer,
+            INpcGetter item);
+
+        public static void WriteBinaryMorphParsing(
+            MutagenWriter writer,
+            INpcGetter item)
+        {
+            WriteBinaryMorphParsingCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             INpcGetter item,
@@ -1176,13 +9118,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1240,6 +9184,582 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            INpcInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Fallout4.VirtualMachineAdapter.CreateFromBinary(frame: frame);
+                    return (int)Npc_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Fallout4.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)Npc_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.PTRN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.PreviewTransform;
+                }
+                case RecordTypeInts.STCP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AnimationSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.AnimationSound;
+                }
+                case RecordTypeInts.ACBS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    NpcBinaryCreateTranslation.FillBinaryFlagsCustom(
+                        frame: dataFrame,
+                        item: item);
+                    item.XpValueOffset = dataFrame.ReadInt16();
+                    NpcBinaryCreateTranslation.FillBinaryLevelCustom(
+                        frame: dataFrame,
+                        item: item);
+                    item.CalcMinLevel = dataFrame.ReadInt16();
+                    item.CalcMaxLevel = dataFrame.ReadInt16();
+                    item.DispositionBase = dataFrame.ReadInt16();
+                    item.UseTemplateActors = EnumBinaryTranslation<Npc.TemplateActorType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 2);
+                    item.BleedoutOverride = dataFrame.ReadInt16();
+                    item.Unknown = dataFrame.ReadInt16();
+                    return (int)Npc_FieldIndex.Unknown;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    item.Factions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RankPlacement>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: RecordTypes.SNAM,
+                            translationParams: translationParams,
+                            transl: RankPlacement.TryCreateFromBinary));
+                    return (int)Npc_FieldIndex.Factions;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DeathItem.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.DeathItem;
+                }
+                case RecordTypeInts.VTCK:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Voice.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.Voice;
+                }
+                case RecordTypeInts.TPLT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DefaultTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.DefaultTemplate;
+                }
+                case RecordTypeInts.LTPT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LegendaryTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.LegendaryTemplate;
+                }
+                case RecordTypeInts.LTPC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LegendaryChance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.LegendaryChance;
+                }
+                case RecordTypeInts.TPTA:
+                {
+                    item.TemplateActors = Mutagen.Bethesda.Fallout4.TemplateActors.CreateFromBinary(frame: frame);
+                    return (int)Npc_FieldIndex.TemplateActors;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Race.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.Race;
+                }
+                case RecordTypeInts.SPLO:
+                case RecordTypeInts.SPCT:
+                {
+                    item.ActorEffect = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.ParsePerItem(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.SPCT),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.SPLO),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<ISpellRecordGetter>>();
+                    return (int)Npc_FieldIndex.ActorEffect;
+                }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DAMC:
+                case RecordTypeInts.DSTD:
+                case RecordTypeInts.DSTA:
+                case RecordTypeInts.DMDL:
+                {
+                    item.Destructible = Mutagen.Bethesda.Fallout4.Destructible.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams);
+                    return (int)Npc_FieldIndex.Destructible;
+                }
+                case RecordTypeInts.WNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Skin.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.Skin;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FarAwayModel.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.FarAwayModel;
+                }
+                case RecordTypeInts.ATKR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AttackRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.AttackRace;
+                }
+                case RecordTypeInts.ATKD:
+                case RecordTypeInts.ATKE:
+                case RecordTypeInts.ATKW:
+                case RecordTypeInts.ATKS:
+                case RecordTypeInts.ATKT:
+                {
+                    item.Attacks.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Attack>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Attack_Registration.TriggeringRecordTypes,
+                            translationParams: translationParams,
+                            transl: Attack.TryCreateFromBinary));
+                    return (int)Npc_FieldIndex.Attacks;
+                }
+                case RecordTypeInts.SPOR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SpectatorOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.SpectatorOverridePackageList;
+                }
+                case RecordTypeInts.OCOR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ObserveDeadBodyOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList;
+                }
+                case RecordTypeInts.GWOR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.GuardWarnOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.GuardWarnOverridePackageList;
+                }
+                case RecordTypeInts.ECOR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CombatOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.CombatOverridePackageList;
+                }
+                case RecordTypeInts.FCPL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FollowerCommandPackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.FollowerCommandPackageList;
+                }
+                case RecordTypeInts.RCLR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FollowerElevatorPackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.FollowerElevatorPackageList;
+                }
+                case RecordTypeInts.PRKR:
+                case RecordTypeInts.PRKZ:
+                {
+                    item.Perks = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PerkPlacement>.Instance.ParsePerItem(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.PRKZ,
+                            triggeringRecord: RecordTypes.PRKR,
+                            translationParams: translationParams,
+                            transl: PerkPlacement.TryCreateFromBinary)
+                        .CastExtendedList<PerkPlacement>();
+                    return (int)Npc_FieldIndex.Perks;
+                }
+                case RecordTypeInts.PRPS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Properties = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ObjectProperty>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: ObjectProperty.TryCreateFromBinary)
+                        .CastExtendedList<ObjectProperty>();
+                    return (int)Npc_FieldIndex.Properties;
+                }
+                case RecordTypeInts.FTYP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ForcedLocRefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.ForcedLocRefType;
+                }
+                case RecordTypeInts.NTRM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NativeTerminal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.NativeTerminal;
+                }
+                case RecordTypeInts.CNTO:
+                case RecordTypeInts.COCT:
+                {
+                    item.Items = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ContainerEntry>.Instance.ParsePerItem(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.COCT,
+                            triggeringRecord: RecordTypes.CNTO,
+                            translationParams: translationParams,
+                            transl: ContainerEntry.TryCreateFromBinary)
+                        .CastExtendedList<ContainerEntry>();
+                    return (int)Npc_FieldIndex.Items;
+                }
+                case RecordTypeInts.AIDT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Agression = EnumBinaryTranslation<Npc.AggressionType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    item.Confidence = EnumBinaryTranslation<Npc.ConfidenceType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    item.EnergyLevel = dataFrame.ReadUInt8();
+                    item.Responsibility = EnumBinaryTranslation<Npc.ResponsibilityType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    item.Mood = EnumBinaryTranslation<Npc.MoodType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    item.Assistence = EnumBinaryTranslation<Npc.AssistenceType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    item.AggroRadiusBehaviorEnabled = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        byteLength: 2,
+                        importantByteLength: 1);
+                    item.AggroRadiusWarn = dataFrame.ReadUInt32();
+                    item.AggroRadiusWarnOrAttack = dataFrame.ReadUInt32();
+                    item.AggroRadiusAttack = dataFrame.ReadUInt32();
+                    item.NoSlowApproach = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        byteLength: 4,
+                        importantByteLength: 1);
+                    return (int)Npc_FieldIndex.NoSlowApproach;
+                }
+                case RecordTypeInts.PKID:
+                {
+                    item.Packages.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.PKID),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)Npc_FieldIndex.Packages;
+                }
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
+                {
+                    item.Keywords = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)Npc_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.APPR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AttachParentSlots = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)Npc_FieldIndex.AttachParentSlots;
+                }
+                case RecordTypeInts.OBTE:
+                {
+                    item.ObjectTemplates = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ObjectTemplate<Npc.Property>>.Instance.ParsePerItem(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.OBTE,
+                            triggeringRecord: ObjectTemplate_Registration.TriggeringRecordTypes,
+                            translationParams: translationParams,
+                            transl: ObjectTemplate<Npc.Property>.TryCreateFromBinary)
+                        .CastExtendedList<ObjectTemplate<Npc.Property>>();
+                    return (int)Npc_FieldIndex.ObjectTemplates;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Class.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.Class;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Npc_FieldIndex.Name;
+                }
+                case RecordTypeInts.SHRT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ShortName = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Npc_FieldIndex.ShortName;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.ReadSubrecordFrame();
+                    return default(int?);
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.BaseHealth = dataFrame.ReadUInt16();
+                    item.BaseActionPoints = dataFrame.ReadUInt16();
+                    item.FarAwayModelDistance = dataFrame.ReadUInt16();
+                    item.GearedUpWeapons = dataFrame.ReadUInt8();
+                    item.Unused = dataFrame.ReadUInt8();
+                    return (int)Npc_FieldIndex.Unused;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    item.HeadParts.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IHeadPartGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.PNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)Npc_FieldIndex.HeadParts;
+                }
+                case RecordTypeInts.HCLF:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HairColor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.HairColor;
+                }
+                case RecordTypeInts.BCLF:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FacialHairColor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.FacialHairColor;
+                }
+                case RecordTypeInts.ZNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CombatStyle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.CombatStyle;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.GiftFilter.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.GiftFilter;
+                }
+                case RecordTypeInts.NAM5:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NAM5 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Npc_FieldIndex.NAM5;
+                }
+                case RecordTypeInts.NAM6:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HeightMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Npc_FieldIndex.HeightMin;
+                }
+                case RecordTypeInts.NAM7:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NAM7 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Npc_FieldIndex.NAM7;
+                }
+                case RecordTypeInts.NAM4:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HeightMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Npc_FieldIndex.HeightMax;
+                }
+                case RecordTypeInts.MWGT:
+                {
+                    item.Weight = Mutagen.Bethesda.Fallout4.NpcWeight.CreateFromBinary(frame: frame);
+                    return (int)Npc_FieldIndex.Weight;
+                }
+                case RecordTypeInts.NAM8:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SoundLevel = EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Npc_FieldIndex.SoundLevel;
+                }
+                case RecordTypeInts.CS2K:
+                case RecordTypeInts.CS2D:
+                case RecordTypeInts.CS2H:
+                {
+                    item.Sounds = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NpcSound>.Instance.ParsePerItem(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.CS2H,
+                            triggeringRecord: NpcSound_Registration.TriggeringRecordTypes,
+                            translationParams: translationParams,
+                            transl: NpcSound.TryCreateFromBinary)
+                        .CastExtendedList<NpcSound>();
+                    return (int)Npc_FieldIndex.Sounds;
+                }
+                case RecordTypeInts.CS2F:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SoundsFinalize = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Npc_FieldIndex.SoundsFinalize;
+                }
+                case RecordTypeInts.CSCR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.InheritsSoundsFrom.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.InheritsSoundsFrom;
+                }
+                case RecordTypeInts.PFRN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PowerArmorStand.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.PowerArmorStand;
+                }
+                case RecordTypeInts.DOFT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DefaultOutfit.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.DefaultOutfit;
+                }
+                case RecordTypeInts.SOFT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SleepingOutfit.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.SleepingOutfit;
+                }
+                case RecordTypeInts.DPLT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DefaultPackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.DefaultPackageList;
+                }
+                case RecordTypeInts.CRIF:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CrimeFaction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.CrimeFaction;
+                }
+                case RecordTypeInts.FTST:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HeadTexture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.HeadTexture;
+                }
+                case RecordTypeInts.QNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TextureLighting = frame.ReadColor(ColorBinaryType.AlphaFloat);
+                    return (int)Npc_FieldIndex.TextureLighting;
+                }
+                case RecordTypeInts.MSDK:
+                case RecordTypeInts.MSDV:
+                {
+                    return NpcBinaryCreateTranslation.FillBinaryMorphParsingCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                }
+                case RecordTypeInts.TETI:
+                {
+                    item.FaceTintingLayers.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NpcFaceTintingLayer>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: RecordTypes.TETI,
+                            translationParams: translationParams,
+                            transl: NpcFaceTintingLayer.TryCreateFromBinary));
+                    return (int)Npc_FieldIndex.FaceTintingLayers;
+                }
+                case RecordTypeInts.MRSV:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.BodyMorphRegionValues = Mutagen.Bethesda.Fallout4.NpcBodyMorphRegionValues.CreateFromBinary(frame: frame);
+                    return (int)Npc_FieldIndex.BodyMorphRegionValues;
+                }
+                case RecordTypeInts.FMRI:
+                case RecordTypeInts.FMRS:
+                {
+                    item.FaceMorphs.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NpcFaceMorph>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: NpcFaceMorph_Registration.TriggeringRecordTypes,
+                            translationParams: translationParams,
+                            transl: NpcFaceMorph.TryCreateFromBinary));
+                    return (int)Npc_FieldIndex.FaceMorphs;
+                }
+                case RecordTypeInts.FMIN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FacialMorphIntensity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Npc_FieldIndex.FacialMorphIntensity;
+                }
+                case RecordTypeInts.ATTX:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ActivateTextOverride = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Npc_FieldIndex.ActivateTextOverride;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
+        public static partial void FillBinaryFlagsCustom(
+            MutagenFrame frame,
+            INpcInternal item);
+
+        public static partial void FillBinaryLevelCustom(
+            MutagenFrame frame,
+            INpcInternal item);
+
+        public static partial ParseResult FillBinaryMorphParsingCustom(
+            MutagenFrame frame,
+            INpcInternal item);
+
     }
 
 }
@@ -1272,6 +9792,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => NpcCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1285,7 +9806,356 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         protected override Type LinkType => typeof(INpc);
 
+        public Npc.MajorFlag MajorFlags => (Npc.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region VirtualMachineAdapter
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        #endregion
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region PreviewTransform
+        private int? _PreviewTransformLocation;
+        public IFormLinkNullableGetter<ITransformGetter> PreviewTransform => _PreviewTransformLocation.HasValue ? new FormLinkNullable<ITransformGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PreviewTransformLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITransformGetter>.Null;
+        #endregion
+        #region AnimationSound
+        private int? _AnimationSoundLocation;
+        public IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound => _AnimationSoundLocation.HasValue ? new FormLinkNullable<IAnimationSoundTagSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AnimationSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAnimationSoundTagSetGetter>.Null;
+        #endregion
+        private int? _ACBSLocation;
+        public Npc.ACBSDataType ACBSDataTypeState { get; private set; }
+        #region Flags
+        private int _FlagsLocation => _ACBSLocation!.Value;
+        public partial Npc.Flag GetFlagsCustom();
+        public Npc.Flag Flags => GetFlagsCustom();
+        #endregion
+        #region XpValueOffset
+        private int _XpValueOffsetLocation => _ACBSLocation!.Value + 0x4;
+        private bool _XpValueOffset_IsSet => _ACBSLocation.HasValue;
+        public Int16 XpValueOffset => _XpValueOffset_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_XpValueOffsetLocation, 2)) : default;
+        #endregion
+        #region Level
+        private int _LevelLocation => _ACBSLocation!.Value + 0x6;
+        public partial IANpcLevelGetter GetLevelCustom();
+        public IANpcLevelGetter Level => GetLevelCustom();
+        #endregion
+        #region CalcMinLevel
+        private int _CalcMinLevelLocation => _ACBSLocation!.Value + 0x8;
+        private bool _CalcMinLevel_IsSet => _ACBSLocation.HasValue;
+        public Int16 CalcMinLevel => _CalcMinLevel_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_CalcMinLevelLocation, 2)) : default;
+        #endregion
+        #region CalcMaxLevel
+        private int _CalcMaxLevelLocation => _ACBSLocation!.Value + 0xA;
+        private bool _CalcMaxLevel_IsSet => _ACBSLocation.HasValue;
+        public Int16 CalcMaxLevel => _CalcMaxLevel_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_CalcMaxLevelLocation, 2)) : default;
+        #endregion
+        #region DispositionBase
+        private int _DispositionBaseLocation => _ACBSLocation!.Value + 0xC;
+        private bool _DispositionBase_IsSet => _ACBSLocation.HasValue;
+        public Int16 DispositionBase => _DispositionBase_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_DispositionBaseLocation, 2)) : default;
+        #endregion
+        #region UseTemplateActors
+        private int _UseTemplateActorsLocation => _ACBSLocation!.Value + 0xE;
+        private bool _UseTemplateActors_IsSet => _ACBSLocation.HasValue;
+        public Npc.TemplateActorType UseTemplateActors => _UseTemplateActors_IsSet ? (Npc.TemplateActorType)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_UseTemplateActorsLocation, 0x2)) : default;
+        #endregion
+        #region BleedoutOverride
+        private int _BleedoutOverrideLocation => _ACBSLocation!.Value + 0x10;
+        private bool _BleedoutOverride_IsSet => _ACBSLocation.HasValue;
+        public Int16 BleedoutOverride => _BleedoutOverride_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_BleedoutOverrideLocation, 2)) : default;
+        #endregion
+        #region Unknown
+        private int _UnknownLocation => _ACBSLocation!.Value + 0x12;
+        private bool _Unknown_IsSet => _ACBSLocation.HasValue;
+        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
+        #endregion
+        public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = ListExt.Empty<RankPlacementBinaryOverlay>();
+        #region DeathItem
+        private int? _DeathItemLocation;
+        public IFormLinkNullableGetter<ILeveledItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
+        #endregion
+        #region Voice
+        private int? _VoiceLocation;
+        public IFormLinkNullableGetter<IVoiceTypeGetter> Voice => _VoiceLocation.HasValue ? new FormLinkNullable<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VoiceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IVoiceTypeGetter>.Null;
+        #endregion
+        #region DefaultTemplate
+        private int? _DefaultTemplateLocation;
+        public IFormLinkNullableGetter<INpcSpawnGetter> DefaultTemplate => _DefaultTemplateLocation.HasValue ? new FormLinkNullable<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultTemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcSpawnGetter>.Null;
+        #endregion
+        #region LegendaryTemplate
+        private int? _LegendaryTemplateLocation;
+        public IFormLinkNullableGetter<INpcSpawnGetter> LegendaryTemplate => _LegendaryTemplateLocation.HasValue ? new FormLinkNullable<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LegendaryTemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcSpawnGetter>.Null;
+        #endregion
+        #region LegendaryChance
+        private int? _LegendaryChanceLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> LegendaryChance => _LegendaryChanceLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LegendaryChanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        #endregion
+        #region TemplateActors
+        private RangeInt32? _TemplateActorsLocation;
+        public ITemplateActorsGetter? TemplateActors => _TemplateActorsLocation.HasValue ? TemplateActorsBinaryOverlay.TemplateActorsFactory(new OverlayStream(_data.Slice(_TemplateActorsLocation!.Value.Min), _package), _package) : default;
+        #endregion
+        #region Race
+        private int? _RaceLocation;
+        public IFormLinkGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLink<IRaceGetter>.Null;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; private set; }
+        public IDestructibleGetter? Destructible { get; private set; }
+        #region Skin
+        private int? _SkinLocation;
+        public IFormLinkNullableGetter<IArmorGetter> Skin => _SkinLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SkinLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
+        #endregion
+        #region FarAwayModel
+        private int? _FarAwayModelLocation;
+        public IFormLinkNullableGetter<IArmorGetter> FarAwayModel => _FarAwayModelLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FarAwayModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
+        #endregion
+        #region AttackRace
+        private int? _AttackRaceLocation;
+        public IFormLinkNullableGetter<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        #endregion
+        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = ListExt.Empty<AttackBinaryOverlay>();
+        #region SpectatorOverridePackageList
+        private int? _SpectatorOverridePackageListLocation;
+        public IFormLinkNullableGetter<IFormListGetter> SpectatorOverridePackageList => _SpectatorOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpectatorOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        #endregion
+        #region ObserveDeadBodyOverridePackageList
+        private int? _ObserveDeadBodyOverridePackageListLocation;
+        public IFormLinkNullableGetter<IFormListGetter> ObserveDeadBodyOverridePackageList => _ObserveDeadBodyOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObserveDeadBodyOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        #endregion
+        #region GuardWarnOverridePackageList
+        private int? _GuardWarnOverridePackageListLocation;
+        public IFormLinkNullableGetter<IFormListGetter> GuardWarnOverridePackageList => _GuardWarnOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GuardWarnOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        #endregion
+        #region CombatOverridePackageList
+        private int? _CombatOverridePackageListLocation;
+        public IFormLinkNullableGetter<IFormListGetter> CombatOverridePackageList => _CombatOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        #endregion
+        #region FollowerCommandPackageList
+        private int? _FollowerCommandPackageListLocation;
+        public IFormLinkNullableGetter<IFormListGetter> FollowerCommandPackageList => _FollowerCommandPackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FollowerCommandPackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        #endregion
+        #region FollowerElevatorPackageList
+        private int? _FollowerElevatorPackageListLocation;
+        public IFormLinkNullableGetter<IFormListGetter> FollowerElevatorPackageList => _FollowerElevatorPackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FollowerElevatorPackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        #endregion
+        public IReadOnlyList<IPerkPlacementGetter>? Perks { get; private set; }
+        public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
+        #region ForcedLocRefType
+        private int? _ForcedLocRefTypeLocation;
+        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> ForcedLocRefType => _ForcedLocRefTypeLocation.HasValue ? new FormLinkNullable<ILocationReferenceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ForcedLocRefTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationReferenceTypeGetter>.Null;
+        #endregion
+        #region NativeTerminal
+        private int? _NativeTerminalLocation;
+        public IFormLinkNullableGetter<ITerminalGetter> NativeTerminal => _NativeTerminalLocation.HasValue ? new FormLinkNullable<ITerminalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NativeTerminalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITerminalGetter>.Null;
+        #endregion
+        public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
+        private int? _AIDTLocation;
+        public Npc.AIDTDataType AIDTDataTypeState { get; private set; }
+        #region Agression
+        private int _AgressionLocation => _AIDTLocation!.Value;
+        private bool _Agression_IsSet => _AIDTLocation.HasValue;
+        public Npc.AggressionType Agression => _Agression_IsSet ? (Npc.AggressionType)_data.Span.Slice(_AgressionLocation, 0x1)[0] : default;
+        #endregion
+        #region Confidence
+        private int _ConfidenceLocation => _AIDTLocation!.Value + 0x1;
+        private bool _Confidence_IsSet => _AIDTLocation.HasValue;
+        public Npc.ConfidenceType Confidence => _Confidence_IsSet ? (Npc.ConfidenceType)_data.Span.Slice(_ConfidenceLocation, 0x1)[0] : default;
+        #endregion
+        #region EnergyLevel
+        private int _EnergyLevelLocation => _AIDTLocation!.Value + 0x2;
+        private bool _EnergyLevel_IsSet => _AIDTLocation.HasValue;
+        public Byte EnergyLevel => _EnergyLevel_IsSet ? _data.Span[_EnergyLevelLocation] : default;
+        #endregion
+        #region Responsibility
+        private int _ResponsibilityLocation => _AIDTLocation!.Value + 0x3;
+        private bool _Responsibility_IsSet => _AIDTLocation.HasValue;
+        public Npc.ResponsibilityType Responsibility => _Responsibility_IsSet ? (Npc.ResponsibilityType)_data.Span.Slice(_ResponsibilityLocation, 0x1)[0] : default;
+        #endregion
+        #region Mood
+        private int _MoodLocation => _AIDTLocation!.Value + 0x4;
+        private bool _Mood_IsSet => _AIDTLocation.HasValue;
+        public Npc.MoodType Mood => _Mood_IsSet ? (Npc.MoodType)_data.Span.Slice(_MoodLocation, 0x1)[0] : default;
+        #endregion
+        #region Assistence
+        private int _AssistenceLocation => _AIDTLocation!.Value + 0x5;
+        private bool _Assistence_IsSet => _AIDTLocation.HasValue;
+        public Npc.AssistenceType Assistence => _Assistence_IsSet ? (Npc.AssistenceType)_data.Span.Slice(_AssistenceLocation, 0x1)[0] : default;
+        #endregion
+        #region AggroRadiusBehaviorEnabled
+        private int _AggroRadiusBehaviorEnabledLocation => _AIDTLocation!.Value + 0x6;
+        private bool _AggroRadiusBehaviorEnabled_IsSet => _AIDTLocation.HasValue;
+        public Boolean AggroRadiusBehaviorEnabled => _AggroRadiusBehaviorEnabled_IsSet ? _data.Slice(_AggroRadiusBehaviorEnabledLocation, 2)[0] >= 1 : default;
+        #endregion
+        #region AggroRadiusWarn
+        private int _AggroRadiusWarnLocation => _AIDTLocation!.Value + 0x8;
+        private bool _AggroRadiusWarn_IsSet => _AIDTLocation.HasValue;
+        public UInt32 AggroRadiusWarn => _AggroRadiusWarn_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_AggroRadiusWarnLocation, 4)) : default;
+        #endregion
+        #region AggroRadiusWarnOrAttack
+        private int _AggroRadiusWarnOrAttackLocation => _AIDTLocation!.Value + 0xC;
+        private bool _AggroRadiusWarnOrAttack_IsSet => _AIDTLocation.HasValue;
+        public UInt32 AggroRadiusWarnOrAttack => _AggroRadiusWarnOrAttack_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_AggroRadiusWarnOrAttackLocation, 4)) : default;
+        #endregion
+        #region AggroRadiusAttack
+        private int _AggroRadiusAttackLocation => _AIDTLocation!.Value + 0x10;
+        private bool _AggroRadiusAttack_IsSet => _AIDTLocation.HasValue;
+        public UInt32 AggroRadiusAttack => _AggroRadiusAttack_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_AggroRadiusAttackLocation, 4)) : default;
+        #endregion
+        #region NoSlowApproach
+        private int _NoSlowApproachLocation => _AIDTLocation!.Value + 0x14;
+        private bool _NoSlowApproach_IsSet => _AIDTLocation.HasValue;
+        public Boolean NoSlowApproach => _NoSlowApproach_IsSet ? _data.Slice(_NoSlowApproachLocation, 4)[0] >= 1 : default;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = ListExt.Empty<IFormLinkGetter<IPackageGetter>>();
+        #region Keywords
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; private set; }
+        public IReadOnlyList<IObjectTemplateGetter<Npc.Property>>? ObjectTemplates { get; private set; }
+        #region Class
+        private int? _ClassLocation;
+        public IFormLinkNullableGetter<IClassGetter> Class => _ClassLocation.HasValue ? new FormLinkNullable<IClassGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ClassLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IClassGetter>.Null;
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        #region ShortName
+        private int? _ShortNameLocation;
+        public String? ShortName => _ShortNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ShortNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        private int? _DNAMLocation;
+        public Npc.DNAMDataType DNAMDataTypeState { get; private set; }
+        #region BaseHealth
+        private int _BaseHealthLocation => _DNAMLocation!.Value;
+        private bool _BaseHealth_IsSet => _DNAMLocation.HasValue;
+        public UInt16 BaseHealth => _BaseHealth_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_BaseHealthLocation, 2)) : default;
+        #endregion
+        #region BaseActionPoints
+        private int _BaseActionPointsLocation => _DNAMLocation!.Value + 0x2;
+        private bool _BaseActionPoints_IsSet => _DNAMLocation.HasValue;
+        public UInt16 BaseActionPoints => _BaseActionPoints_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_BaseActionPointsLocation, 2)) : default;
+        #endregion
+        #region FarAwayModelDistance
+        private int _FarAwayModelDistanceLocation => _DNAMLocation!.Value + 0x4;
+        private bool _FarAwayModelDistance_IsSet => _DNAMLocation.HasValue;
+        public UInt16 FarAwayModelDistance => _FarAwayModelDistance_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_FarAwayModelDistanceLocation, 2)) : default;
+        #endregion
+        #region GearedUpWeapons
+        private int _GearedUpWeaponsLocation => _DNAMLocation!.Value + 0x6;
+        private bool _GearedUpWeapons_IsSet => _DNAMLocation.HasValue;
+        public Byte GearedUpWeapons => _GearedUpWeapons_IsSet ? _data.Span[_GearedUpWeaponsLocation] : default;
+        #endregion
+        #region Unused
+        private int _UnusedLocation => _DNAMLocation!.Value + 0x7;
+        private bool _Unused_IsSet => _DNAMLocation.HasValue;
+        public Byte Unused => _Unused_IsSet ? _data.Span[_UnusedLocation] : default;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; private set; } = ListExt.Empty<IFormLinkGetter<IHeadPartGetter>>();
+        #region HairColor
+        private int? _HairColorLocation;
+        public IFormLinkNullableGetter<IColorRecordGetter> HairColor => _HairColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HairColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        #endregion
+        #region FacialHairColor
+        private int? _FacialHairColorLocation;
+        public IFormLinkNullableGetter<IColorRecordGetter> FacialHairColor => _FacialHairColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FacialHairColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        #endregion
+        #region CombatStyle
+        private int? _CombatStyleLocation;
+        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
+        #endregion
+        #region GiftFilter
+        private int? _GiftFilterLocation;
+        public IFormLinkNullableGetter<IFormListGetter> GiftFilter => _GiftFilterLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GiftFilterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        #endregion
+        #region NAM5
+        private int? _NAM5Location;
+        public ReadOnlyMemorySlice<Byte>? NAM5 => _NAM5Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NAM5Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region HeightMin
+        private int? _HeightMinLocation;
+        public Single HeightMin => _HeightMinLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HeightMinLocation.Value, _package.MetaData.Constants).Float() : default;
+        #endregion
+        #region NAM7
+        private int? _NAM7Location;
+        public Single? NAM7 => _NAM7Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NAM7Location.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region HeightMax
+        private int? _HeightMaxLocation;
+        public Single HeightMax => _HeightMaxLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HeightMaxLocation.Value, _package.MetaData.Constants).Float() : default;
+        #endregion
+        #region Weight
+        private RangeInt32? _WeightLocation;
+        public INpcWeightGetter? Weight => _WeightLocation.HasValue ? NpcWeightBinaryOverlay.NpcWeightFactory(new OverlayStream(_data.Slice(_WeightLocation!.Value.Min), _package), _package) : default;
+        #endregion
+        #region SoundLevel
+        private int? _SoundLevelLocation;
+        public SoundLevel SoundLevel => _SoundLevelLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLevelLocation!.Value, _package.MetaData.Constants)) : default(SoundLevel);
+        #endregion
+        public IReadOnlyList<INpcSoundGetter>? Sounds { get; private set; }
+        #region SoundsFinalize
+        private int? _SoundsFinalizeLocation;
+        public ReadOnlyMemorySlice<Byte>? SoundsFinalize => _SoundsFinalizeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SoundsFinalizeLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region InheritsSoundsFrom
+        private int? _InheritsSoundsFromLocation;
+        public IFormLinkNullableGetter<INpcGetter> InheritsSoundsFrom => _InheritsSoundsFromLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InheritsSoundsFromLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
+        #endregion
+        #region PowerArmorStand
+        private int? _PowerArmorStandLocation;
+        public IFormLinkNullableGetter<IFurnitureGetter> PowerArmorStand => _PowerArmorStandLocation.HasValue ? new FormLinkNullable<IFurnitureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PowerArmorStandLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFurnitureGetter>.Null;
+        #endregion
+        #region DefaultOutfit
+        private int? _DefaultOutfitLocation;
+        public IFormLinkNullableGetter<IOutfitGetter> DefaultOutfit => _DefaultOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
+        #endregion
+        #region SleepingOutfit
+        private int? _SleepingOutfitLocation;
+        public IFormLinkNullableGetter<IOutfitGetter> SleepingOutfit => _SleepingOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SleepingOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
+        #endregion
+        #region DefaultPackageList
+        private int? _DefaultPackageListLocation;
+        public IFormLinkNullableGetter<IFormListGetter> DefaultPackageList => _DefaultPackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultPackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        #endregion
+        #region CrimeFaction
+        private int? _CrimeFactionLocation;
+        public IFormLinkNullableGetter<IFactionGetter> CrimeFaction => _CrimeFactionLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CrimeFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
+        #endregion
+        #region HeadTexture
+        private int? _HeadTextureLocation;
+        public IFormLinkNullableGetter<ITextureSetGetter> HeadTexture => _HeadTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HeadTextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        #endregion
+        #region TextureLighting
+        private int? _TextureLightingLocation;
+        public Color? TextureLighting => _TextureLightingLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TextureLightingLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.AlphaFloat) : default(Color?);
+        #endregion
+        #region MorphParsing
+        public partial ParseResult MorphParsingCustomParse(
+            OverlayStream stream,
+            int offset);
+        #endregion
+        public IReadOnlyList<INpcFaceTintingLayerGetter> FaceTintingLayers { get; private set; } = ListExt.Empty<NpcFaceTintingLayerBinaryOverlay>();
+        public INpcBodyMorphRegionValuesGetter? BodyMorphRegionValues { get; private set; }
+        public IReadOnlyList<INpcFaceMorphGetter> FaceMorphs { get; private set; } = ListExt.Empty<NpcFaceMorphBinaryOverlay>();
+        #region FacialMorphIntensity
+        private int? _FacialMorphIntensityLocation;
+        public Single? FacialMorphIntensity => _FacialMorphIntensityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FacialMorphIntensityLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region ActivateTextOverride
+        private int? _ActivateTextOverrideLocation;
+        public ITranslatedStringGetter? ActivateTextOverride => _ActivateTextOverrideLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ActivateTextOverrideLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +10210,486 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Npc_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Npc_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.PTRN:
+                {
+                    _PreviewTransformLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.PreviewTransform;
+                }
+                case RecordTypeInts.STCP:
+                {
+                    _AnimationSoundLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.AnimationSound;
+                }
+                case RecordTypeInts.ACBS:
+                {
+                    _ACBSLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    return (int)Npc_FieldIndex.Unknown;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    this.Factions = BinaryOverlayList.FactoryByArray<RankPlacementBinaryOverlay>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => RankPlacementBinaryOverlay.RankPlacementFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: type,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)Npc_FieldIndex.Factions;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    _DeathItemLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.DeathItem;
+                }
+                case RecordTypeInts.VTCK:
+                {
+                    _VoiceLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.Voice;
+                }
+                case RecordTypeInts.TPLT:
+                {
+                    _DefaultTemplateLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.DefaultTemplate;
+                }
+                case RecordTypeInts.LTPT:
+                {
+                    _LegendaryTemplateLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.LegendaryTemplate;
+                }
+                case RecordTypeInts.LTPC:
+                {
+                    _LegendaryChanceLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.LegendaryChance;
+                }
+                case RecordTypeInts.TPTA:
+                {
+                    _TemplateActorsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Npc_FieldIndex.TemplateActors;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    _RaceLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.Race;
+                }
+                case RecordTypeInts.SPLO:
+                case RecordTypeInts.SPCT:
+                {
+                    this.ActorEffect = BinaryOverlayList.FactoryByCountPerItem<IFormLinkGetter<ISpellRecordGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.SPCT,
+                        subrecordType: RecordTypes.SPLO,
+                        getter: (s, p) => new FormLink<ISpellRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)Npc_FieldIndex.ActorEffect;
+                }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DAMC:
+                case RecordTypeInts.DSTD:
+                case RecordTypeInts.DSTA:
+                case RecordTypeInts.DMDL:
+                {
+                    this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
+                        stream: stream,
+                        package: _package,
+                        parseParams: parseParams);
+                    return (int)Npc_FieldIndex.Destructible;
+                }
+                case RecordTypeInts.WNAM:
+                {
+                    _SkinLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.Skin;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _FarAwayModelLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.FarAwayModel;
+                }
+                case RecordTypeInts.ATKR:
+                {
+                    _AttackRaceLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.AttackRace;
+                }
+                case RecordTypeInts.ATKD:
+                case RecordTypeInts.ATKE:
+                case RecordTypeInts.ATKW:
+                case RecordTypeInts.ATKS:
+                case RecordTypeInts.ATKT:
+                {
+                    this.Attacks = this.ParseRepeatedTypelessSubrecord<AttackBinaryOverlay>(
+                        stream: stream,
+                        parseParams: parseParams,
+                        trigger: Attack_Registration.TriggeringRecordTypes,
+                        factory: AttackBinaryOverlay.AttackFactory);
+                    return (int)Npc_FieldIndex.Attacks;
+                }
+                case RecordTypeInts.SPOR:
+                {
+                    _SpectatorOverridePackageListLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.SpectatorOverridePackageList;
+                }
+                case RecordTypeInts.OCOR:
+                {
+                    _ObserveDeadBodyOverridePackageListLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList;
+                }
+                case RecordTypeInts.GWOR:
+                {
+                    _GuardWarnOverridePackageListLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.GuardWarnOverridePackageList;
+                }
+                case RecordTypeInts.ECOR:
+                {
+                    _CombatOverridePackageListLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.CombatOverridePackageList;
+                }
+                case RecordTypeInts.FCPL:
+                {
+                    _FollowerCommandPackageListLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.FollowerCommandPackageList;
+                }
+                case RecordTypeInts.RCLR:
+                {
+                    _FollowerElevatorPackageListLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.FollowerElevatorPackageList;
+                }
+                case RecordTypeInts.PRKR:
+                case RecordTypeInts.PRKZ:
+                {
+                    this.Perks = BinaryOverlayList.FactoryByCountPerItem<PerkPlacementBinaryOverlay>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x5,
+                        countLength: 4,
+                        countType: RecordTypes.PRKZ,
+                        subrecordType: PerkPlacement_Registration.AllRecordTypes,
+                        getter: (s, p) => PerkPlacementBinaryOverlay.PerkPlacementFactory(s, p),
+                        skipHeader: false);
+                    return (int)Npc_FieldIndex.Perks;
+                }
+                case RecordTypeInts.PRPS:
+                {
+                    var subMeta = stream.ReadSubrecord();
+                    var subLen = subMeta.ContentLength;
+                    this.Properties = BinaryOverlayList.FactoryByStartIndex<ObjectPropertyBinaryOverlay>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)Npc_FieldIndex.Properties;
+                }
+                case RecordTypeInts.FTYP:
+                {
+                    _ForcedLocRefTypeLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.ForcedLocRefType;
+                }
+                case RecordTypeInts.NTRM:
+                {
+                    _NativeTerminalLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.NativeTerminal;
+                }
+                case RecordTypeInts.CNTO:
+                case RecordTypeInts.COCT:
+                {
+                    this.Items = BinaryOverlayList.FactoryByCountPerItem<ContainerEntryBinaryOverlay>(
+                        stream: stream,
+                        package: _package,
+                        countLength: 4,
+                        subrecordType: RecordTypes.CNTO,
+                        countType: RecordTypes.COCT,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
+                    return (int)Npc_FieldIndex.Items;
+                }
+                case RecordTypeInts.AIDT:
+                {
+                    _AIDTLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    return (int)Npc_FieldIndex.NoSlowApproach;
+                }
+                case RecordTypeInts.PKID:
+                {
+                    this.Packages = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPackageGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormLink<IPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: type,
+                            skipHeader: true,
+                            parseParams: parseParams));
+                    return (int)Npc_FieldIndex.Packages;
+                }
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
+                {
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.KSIZ,
+                        subrecordType: RecordTypes.KWDA,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)Npc_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.APPR:
+                {
+                    var subMeta = stream.ReadSubrecord();
+                    var subLen = subMeta.ContentLength;
+                    this.AttachParentSlots = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)Npc_FieldIndex.AttachParentSlots;
+                }
+                case RecordTypeInts.OBTE:
+                {
+                    this.ObjectTemplates = BinaryOverlayList.FactoryByCountPerItem<ObjectTemplateBinaryOverlay<Npc.Property>>(
+                        stream: stream,
+                        package: _package,
+                        countLength: 4,
+                        subrecordType: ObjectTemplate_Registration.TriggeringRecordTypes,
+                        countType: RecordTypes.OBTE,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => ObjectTemplateBinaryOverlay<Npc.Property>.ObjectTemplateFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
+                    return (int)Npc_FieldIndex.ObjectTemplates;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _ClassLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.Class;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.Name;
+                }
+                case RecordTypeInts.SHRT:
+                {
+                    _ShortNameLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.ShortName;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    stream.ReadSubrecordFrame();
+                    return default(int?);
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    return (int)Npc_FieldIndex.Unused;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    this.HeadParts = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IHeadPartGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormLink<IHeadPartGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: type,
+                            skipHeader: true,
+                            parseParams: parseParams));
+                    return (int)Npc_FieldIndex.HeadParts;
+                }
+                case RecordTypeInts.HCLF:
+                {
+                    _HairColorLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.HairColor;
+                }
+                case RecordTypeInts.BCLF:
+                {
+                    _FacialHairColorLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.FacialHairColor;
+                }
+                case RecordTypeInts.ZNAM:
+                {
+                    _CombatStyleLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.CombatStyle;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    _GiftFilterLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.GiftFilter;
+                }
+                case RecordTypeInts.NAM5:
+                {
+                    _NAM5Location = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.NAM5;
+                }
+                case RecordTypeInts.NAM6:
+                {
+                    _HeightMinLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.HeightMin;
+                }
+                case RecordTypeInts.NAM7:
+                {
+                    _NAM7Location = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.NAM7;
+                }
+                case RecordTypeInts.NAM4:
+                {
+                    _HeightMaxLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.HeightMax;
+                }
+                case RecordTypeInts.MWGT:
+                {
+                    _WeightLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Npc_FieldIndex.Weight;
+                }
+                case RecordTypeInts.NAM8:
+                {
+                    _SoundLevelLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.SoundLevel;
+                }
+                case RecordTypeInts.CS2K:
+                case RecordTypeInts.CS2D:
+                case RecordTypeInts.CS2H:
+                {
+                    this.Sounds = BinaryOverlayList.FactoryByCountPerItem<NpcSoundBinaryOverlay>(
+                        stream: stream,
+                        package: _package,
+                        countLength: 4,
+                        subrecordType: NpcSound_Registration.TriggeringRecordTypes,
+                        countType: RecordTypes.CS2H,
+                        parseParams: parseParams,
+                        getter: (s, p, recConv) => NpcSoundBinaryOverlay.NpcSoundFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
+                    return (int)Npc_FieldIndex.Sounds;
+                }
+                case RecordTypeInts.CS2F:
+                {
+                    _SoundsFinalizeLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.SoundsFinalize;
+                }
+                case RecordTypeInts.CSCR:
+                {
+                    _InheritsSoundsFromLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.InheritsSoundsFrom;
+                }
+                case RecordTypeInts.PFRN:
+                {
+                    _PowerArmorStandLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.PowerArmorStand;
+                }
+                case RecordTypeInts.DOFT:
+                {
+                    _DefaultOutfitLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.DefaultOutfit;
+                }
+                case RecordTypeInts.SOFT:
+                {
+                    _SleepingOutfitLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.SleepingOutfit;
+                }
+                case RecordTypeInts.DPLT:
+                {
+                    _DefaultPackageListLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.DefaultPackageList;
+                }
+                case RecordTypeInts.CRIF:
+                {
+                    _CrimeFactionLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.CrimeFaction;
+                }
+                case RecordTypeInts.FTST:
+                {
+                    _HeadTextureLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.HeadTexture;
+                }
+                case RecordTypeInts.QNAM:
+                {
+                    _TextureLightingLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.TextureLighting;
+                }
+                case RecordTypeInts.MSDK:
+                case RecordTypeInts.MSDV:
+                {
+                    return MorphParsingCustomParse(
+                        stream,
+                        offset);
+                }
+                case RecordTypeInts.TETI:
+                {
+                    this.FaceTintingLayers = this.ParseRepeatedTypelessSubrecord<NpcFaceTintingLayerBinaryOverlay>(
+                        stream: stream,
+                        parseParams: parseParams,
+                        trigger: RecordTypes.TETI,
+                        factory: NpcFaceTintingLayerBinaryOverlay.NpcFaceTintingLayerFactory);
+                    return (int)Npc_FieldIndex.FaceTintingLayers;
+                }
+                case RecordTypeInts.MRSV:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.BodyMorphRegionValues = NpcBodyMorphRegionValuesBinaryOverlay.NpcBodyMorphRegionValuesFactory(
+                        stream: stream,
+                        package: _package,
+                        parseParams: parseParams);
+                    return (int)Npc_FieldIndex.BodyMorphRegionValues;
+                }
+                case RecordTypeInts.FMRI:
+                case RecordTypeInts.FMRS:
+                {
+                    this.FaceMorphs = this.ParseRepeatedTypelessSubrecord<NpcFaceMorphBinaryOverlay>(
+                        stream: stream,
+                        parseParams: parseParams,
+                        trigger: NpcFaceMorph_Registration.TriggeringRecordTypes,
+                        factory: NpcFaceMorphBinaryOverlay.NpcFaceMorphFactory);
+                    return (int)Npc_FieldIndex.FaceMorphs;
+                }
+                case RecordTypeInts.FMIN:
+                {
+                    _FacialMorphIntensityLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.FacialMorphIntensity;
+                }
+                case RecordTypeInts.ATTX:
+                {
+                    _ActivateTextOverrideLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.ActivateTextOverride;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void ToString(

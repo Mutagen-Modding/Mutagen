@@ -1,5 +1,6 @@
 using Loqui;
 using Noggog;
+using System.Globalization;
 
 namespace Mutagen.Bethesda.XEdit.Generation;
 
@@ -22,7 +23,20 @@ public static class EnumConverter
                     throw new ArgumentException();
                 }
 
-                if (!int.TryParse(span.Slice(0, numberEndIndex).TrimStart().TrimEnd(), out var i))
+                int i;
+
+                var numberSpan = span.Slice(0, numberEndIndex).TrimStart().TrimEnd();
+                bool hex = false;
+                if (numberSpan.StartsWith("0x"))
+                {
+                    hex = true;
+                    numberSpan = numberSpan.Slice(2);
+                    if (!int.TryParse(numberSpan, NumberStyles.HexNumber, null, out i))
+                    {
+                        throw new ArgumentException();
+                    }
+                }
+                else if (!int.TryParse(numberSpan, out i))
                 {
                     throw new ArgumentException();
                 }
@@ -33,7 +47,7 @@ public static class EnumConverter
 
                 if (name.Contains("Unknown")) continue;
 
-                fg.AppendLine($"{name} = {i},");
+                fg.AppendLine($"{name} = {(hex ? $"0x{i:x}" : i)},");
             }
         }
         fg.AppendLine();

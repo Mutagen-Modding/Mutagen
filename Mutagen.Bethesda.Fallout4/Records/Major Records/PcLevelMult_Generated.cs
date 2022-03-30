@@ -7,6 +7,8 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -16,8 +18,6 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
-using Mutagen.Bethesda.Skyrim;
-using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
@@ -33,7 +33,7 @@ using System.Text;
 #endregion
 
 #nullable enable
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     public partial class PcLevelMult :
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Fallout4.Internals
 {
     #region Field Index
     public enum PcLevelMult_FieldIndex
@@ -567,14 +567,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly PcLevelMult_Registration Instance = new PcLevelMult_Registration();
 
-        public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
+        public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 204,
+            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
+            msgID: 341,
             version: 0);
 
-        public const string GUID = "dc10b70e-654d-4b0d-ae7f-6f548dfad269";
+        public const string GUID = "fa0eed1a-db50-4ede-bf8e-5fde7ff44f59";
 
         public const ushort AdditionalFieldCount = 1;
 
@@ -594,11 +594,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.PcLevelMult";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.PcLevelMult";
 
         public const string Name = "PcLevelMult";
 
-        public const string Namespace = "Mutagen.Bethesda.Skyrim";
+        public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
         public const byte GenericCount = 0;
 
@@ -930,7 +930,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 }
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PcLevelMult
     {
@@ -955,7 +955,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class PcLevelMultBinaryWriteTranslation :
         ANpcLevelBinaryWriteTranslation,
@@ -1016,7 +1016,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
 
 }
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
     public static class PcLevelMultBinaryTranslationMixIn
@@ -1026,7 +1026,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class PcLevelMultBinaryOverlay :
         ANpcLevelBinaryOverlay,

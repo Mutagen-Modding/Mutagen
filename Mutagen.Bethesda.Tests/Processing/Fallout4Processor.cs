@@ -28,6 +28,7 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.SCOL, ProcessStaticCollections);
         AddDynamicProcessing(RecordTypes.FURN, ProcessFurniture);
         AddDynamicProcessing(RecordTypes.WEAP, ProcessWeapons);
+        AddDynamicProcessing(RecordTypes.NPC_, ProcessNpcs);
     }
 
     private void ProcessGameSettings(
@@ -123,6 +124,41 @@ public class Fallout4Processor : Processor
         }
     }
 
+    private void ProcessNpcs(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.QNAM, out var frame))
+        {
+            int offset = 0;
+            ProcessColorFloat(frame, fileOffset, ref offset, alpha: true);
+        }
+        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.AIDT, out frame))
+        {
+            int offset = 6;
+            ProcessBool(frame, fileOffset, ref offset, 2);
+            offset = 20;
+            ProcessBool(frame, fileOffset, ref offset, 4);
+        }
+        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.TPLT, out frame))
+        {
+            ProcessFormIDOverflow(frame, fileOffset);
+        }
+        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.TPTA, out frame))
+        {
+            ProcessFormIDOverflows(frame, fileOffset);
+        }
+        if (majorFrame.FormID.ID == 0x3D62A
+            && majorFrame.TryLocateSubrecordPinFrame(RecordTypes.COCT, out frame))
+        {
+            var bytes = new byte[4];
+            BinaryPrimitives.WriteInt32LittleEndian(bytes, 1);
+            _instructions.SetSubstitution(
+                fileOffset + frame.Location + frame.HeaderLength,
+                bytes);
+        }
+    }
+
     public void GameSettingStringHandler(
         IMutagenReadStream stream,
         MajorRecordHeader major,
@@ -168,6 +204,7 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "FURN", "FULL", "ATTX" },
                     new RecordType[] { "WEAP", "FULL" },
                     new RecordType[] { "AMMO", "FULL" },
+                    new RecordType[] { "NPC_", "FULL", "ATTX" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]

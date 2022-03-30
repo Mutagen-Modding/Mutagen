@@ -274,6 +274,17 @@ public abstract class Processor
         return true;
     }
 
+    public bool ProcessFormIDOverflows(SubrecordPinFrame pin, long offsetLoc, ref int loc)
+    {
+        return ProcessFormIDOverflows(pin, offsetLoc, ref loc, amount: pin.ContentLength / 4);
+    }
+
+    public bool ProcessFormIDOverflows(SubrecordPinFrame pin, long offsetLoc)
+    {
+        int loc = 0;
+        return ProcessFormIDOverflows(pin, offsetLoc, ref loc, amount: pin.ContentLength / 4);
+    }
+
     public void ProcessStringTermination(
         SubrecordFrame subFrame,
         long refLoc,
@@ -452,14 +463,16 @@ public abstract class Processor
         return true;
     }
 
-    public void ProcessColorFloat(ReadOnlySpan<byte> span, ref long offsetLoc)
+    public void ProcessColorFloat(ReadOnlySpan<byte> span, ref long offsetLoc, bool alpha)
     {
-        span = span.Slice(0, 12);
-        var color = IBinaryStreamExt.ReadColor(span, ColorBinaryType.NoAlphaFloat);
-        var outBytes = new byte[12];
+        var len = alpha ? 16 : 12;
+        var type = alpha ? ColorBinaryType.AlphaFloat : ColorBinaryType.NoAlphaFloat;
+        span = span.Slice(0, len);
+        var color = IBinaryStreamExt.ReadColor(span, type);
+        var outBytes = new byte[len];
         using (var writer = new MutagenWriter(new BinaryWriter(new MemoryStream(outBytes)), null!))
         {
-            writer.Write(color, ColorBinaryType.NoAlphaFloat);
+            writer.Write(color, type);
         }
         if (span.SequenceEqual(outBytes)) return;
         _instructions.SetSubstitution(
@@ -467,12 +480,42 @@ public abstract class Processor
             outBytes);
     }
 
-    public bool ProcessColorFloat(SubrecordPinFrame pin, long offsetLoc, ref int loc)
+    public bool ProcessColorFloat(SubrecordPinFrame pin, long offsetLoc, ref int loc, bool alpha)
     {
         if (loc >= pin.ContentLength) return false;
         long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
-        ProcessColorFloat(pin.Content.Slice(loc), ref longLoc);
+        ProcessColorFloat(pin.Content.Slice(loc), ref longLoc, alpha: alpha);
         loc += 12;
+        return true;
+    }
+
+    public void ProcessBool(ReadOnlySpan<byte> span, ref long offsetLoc)
+    {
+        if (span[0] > 1)
+        {
+            _instructions.SetSubstitution(
+                offsetLoc,
+                1);
+        }
+        for (int i = 1; i < span.Length; i++)
+        {
+            if (span[i] != 0)
+            {
+                var outBytes = new byte[span.Length - 1];
+                _instructions.SetSubstitution(
+                    offsetLoc + 1,
+                    outBytes);
+                break;
+            }
+        }
+    }
+
+    public bool ProcessBool(SubrecordPinFrame pin, long offsetLoc, ref int loc, byte length)
+    {
+        if (loc >= pin.ContentLength) return false;
+        long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
+        ProcessBool(pin.Content.Slice(loc, length), ref longLoc);
+        loc += length;
         return true;
     }
 

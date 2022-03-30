@@ -38,14 +38,14 @@ using System.Text;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class Ammunition :
+    public partial class CombatStyle :
         Fallout4MajorRecord,
-        IAmmunitionInternal,
-        IEquatable<IAmmunitionGetter>,
-        ILoquiObjectSetter<Ammunition>
+        ICombatStyleInternal,
+        IEquatable<ICombatStyleGetter>,
+        ILoquiObjectSetter<CombatStyle>
     {
         #region Ctor
-        protected Ammunition()
+        protected CombatStyle()
         {
             CustomCtor();
         }
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Fallout4
             FileGeneration fg,
             string? name = null)
         {
-            AmmunitionMixIn.ToString(
+            CombatStyleMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Ammunition.Mask<R>();
+                var ret = new CombatStyle.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -161,16 +161,16 @@ namespace Mutagen.Bethesda.Fallout4
                 return ToString(printMask: null);
             }
 
-            public string ToString(Ammunition.Mask<bool>? printMask = null)
+            public string ToString(CombatStyle.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, Ammunition.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, CombatStyle.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Ammunition.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(CombatStyle.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
+                CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthException(int index, Exception ex)
             {
-                Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
+                CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthMask(int index, object obj)
             {
-                Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
+                CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -304,14 +304,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Ammunition_Registration.TriggeringRecordType;
-        public Ammunition(FormKey formKey)
+        public static readonly RecordType GrupRecordType = CombatStyle_Registration.TriggeringRecordType;
+        public CombatStyle(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        private Ammunition(
+        private CombatStyle(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -320,7 +320,7 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        internal Ammunition(
+        internal CombatStyle(
             FormKey formKey,
             ushort formVersion)
         {
@@ -329,12 +329,12 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        public Ammunition(IFallout4Mod mod)
+        public CombatStyle(IFallout4Mod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Ammunition(IFallout4Mod mod, string editorID)
+        public CombatStyle(IFallout4Mod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -342,10 +342,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Ammunition>.ToString(this);
+            return MajorRecordPrinter<CombatStyle>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IAmmunition);
+        protected override Type LinkType => typeof(ICombatStyle);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -354,16 +354,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IAmmunitionGetter rhs) return false;
-            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not ICombatStyleGetter rhs) return false;
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IAmmunitionGetter? obj)
+        public bool Equals(ICombatStyleGetter? obj)
         {
-            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -371,23 +371,23 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => AmmunitionBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => CombatStyleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((AmmunitionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((CombatStyleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static Ammunition CreateFromBinary(
+        public new static CombatStyle CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new Ammunition();
-            ((AmmunitionSetterCommon)((IAmmunitionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new CombatStyle();
+            ((CombatStyleSetterCommon)((ICombatStyleGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Ammunition item,
+            out CombatStyle item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -413,86 +413,82 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((AmmunitionSetterCommon)((IAmmunitionGetter)this).CommonSetterInstance()!).Clear(this);
+            ((CombatStyleSetterCommon)((ICombatStyleGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Ammunition GetNew()
+        internal static new CombatStyle GetNew()
         {
-            return new Ammunition();
+            return new CombatStyle();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IAmmunition :
-        IAmmunitionGetter,
+    public partial interface ICombatStyle :
+        ICombatStyleGetter,
         IFallout4MajorRecordInternal,
-        ILoquiObjectSetter<IAmmunitionInternal>,
-        IObjectId,
-        IStaticObject
+        ILoquiObjectSetter<ICombatStyleInternal>
     {
     }
 
-    public partial interface IAmmunitionInternal :
+    public partial interface ICombatStyleInternal :
         IFallout4MajorRecordInternal,
-        IAmmunition,
-        IAmmunitionGetter
+        ICombatStyle,
+        ICombatStyleGetter
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.AMMO)]
-    public partial interface IAmmunitionGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.CSTY)]
+    public partial interface ICombatStyleGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IAmmunitionGetter>,
-        IMapsToGetter<IAmmunitionGetter>,
-        IObjectIdGetter,
-        IStaticObjectGetter
+        ILoquiObject<ICombatStyleGetter>,
+        IMapsToGetter<ICombatStyleGetter>
     {
-        static new ILoquiRegistration StaticRegistration => Ammunition_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => CombatStyle_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class AmmunitionMixIn
+    public static partial class CombatStyleMixIn
     {
-        public static void Clear(this IAmmunitionInternal item)
+        public static void Clear(this ICombatStyleInternal item)
         {
-            ((AmmunitionSetterCommon)((IAmmunitionGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((CombatStyleSetterCommon)((ICombatStyleGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Ammunition.Mask<bool> GetEqualsMask(
-            this IAmmunitionGetter item,
-            IAmmunitionGetter rhs,
+        public static CombatStyle.Mask<bool> GetEqualsMask(
+            this ICombatStyleGetter item,
+            ICombatStyleGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IAmmunitionGetter item,
+            this ICombatStyleGetter item,
             string? name = null,
-            Ammunition.Mask<bool>? printMask = null)
+            CombatStyle.Mask<bool>? printMask = null)
         {
-            return ((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).ToString(
+            return ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IAmmunitionGetter item,
+            this ICombatStyleGetter item,
             FileGeneration fg,
             string? name = null,
-            Ammunition.Mask<bool>? printMask = null)
+            CombatStyle.Mask<bool>? printMask = null)
         {
-            ((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).ToString(
+            ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -500,39 +496,39 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IAmmunitionGetter item,
-            IAmmunitionGetter rhs,
-            Ammunition.TranslationMask? equalsMask = null)
+            this ICombatStyleGetter item,
+            ICombatStyleGetter rhs,
+            CombatStyle.TranslationMask? equalsMask = null)
         {
-            return ((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).Equals(
+            return ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IAmmunitionInternal lhs,
-            IAmmunitionGetter rhs,
-            out Ammunition.ErrorMask errorMask,
-            Ammunition.TranslationMask? copyMask = null)
+            this ICombatStyleInternal lhs,
+            ICombatStyleGetter rhs,
+            out CombatStyle.ErrorMask errorMask,
+            CombatStyle.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((AmmunitionSetterTranslationCommon)((IAmmunitionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Ammunition.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CombatStyle.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IAmmunitionInternal lhs,
-            IAmmunitionGetter rhs,
+            this ICombatStyleInternal lhs,
+            ICombatStyleGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((AmmunitionSetterTranslationCommon)((IAmmunitionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -540,44 +536,44 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static Ammunition DeepCopy(
-            this IAmmunitionGetter item,
-            Ammunition.TranslationMask? copyMask = null)
+        public static CombatStyle DeepCopy(
+            this ICombatStyleGetter item,
+            CombatStyle.TranslationMask? copyMask = null)
         {
-            return ((AmmunitionSetterTranslationCommon)((IAmmunitionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Ammunition DeepCopy(
-            this IAmmunitionGetter item,
-            out Ammunition.ErrorMask errorMask,
-            Ammunition.TranslationMask? copyMask = null)
+        public static CombatStyle DeepCopy(
+            this ICombatStyleGetter item,
+            out CombatStyle.ErrorMask errorMask,
+            CombatStyle.TranslationMask? copyMask = null)
         {
-            return ((AmmunitionSetterTranslationCommon)((IAmmunitionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Ammunition DeepCopy(
-            this IAmmunitionGetter item,
+        public static CombatStyle DeepCopy(
+            this ICombatStyleGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((AmmunitionSetterTranslationCommon)((IAmmunitionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static Ammunition Duplicate(
-            this IAmmunitionGetter item,
+        public static CombatStyle Duplicate(
+            this ICombatStyleGetter item,
             FormKey formKey,
-            Ammunition.TranslationMask? copyMask = null)
+            CombatStyle.TranslationMask? copyMask = null)
         {
-            return ((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).Duplicate(
+            return ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
@@ -587,11 +583,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IAmmunitionInternal item,
+            this ICombatStyleInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((AmmunitionSetterCommon)((IAmmunitionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((CombatStyleSetterCommon)((ICombatStyleGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -607,7 +603,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     #region Field Index
-    public enum Ammunition_FieldIndex
+    public enum CombatStyle_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -619,40 +615,40 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Ammunition_Registration : ILoquiRegistration
+    public partial class CombatStyle_Registration : ILoquiRegistration
     {
-        public static readonly Ammunition_Registration Instance = new Ammunition_Registration();
+        public static readonly CombatStyle_Registration Instance = new CombatStyle_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 230,
+            msgID: 343,
             version: 0);
 
-        public const string GUID = "e57765cc-e2e1-43c7-a220-8db84c93b1f1";
+        public const string GUID = "f0309e97-d6cd-4bf1-8365-bd51a94e5c36";
 
         public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(Ammunition.Mask<>);
+        public static readonly Type MaskType = typeof(CombatStyle.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Ammunition.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(CombatStyle.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Ammunition);
+        public static readonly Type ClassType = typeof(CombatStyle);
 
-        public static readonly Type GetterType = typeof(IAmmunitionGetter);
+        public static readonly Type GetterType = typeof(ICombatStyleGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IAmmunition);
+        public static readonly Type SetterType = typeof(ICombatStyle);
 
-        public static readonly Type? InternalSetterType = typeof(IAmmunitionInternal);
+        public static readonly Type? InternalSetterType = typeof(ICombatStyleInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.Ammunition";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.CombatStyle";
 
-        public const string Name = "Ammunition";
+        public const string Name = "CombatStyle";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -660,8 +656,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.AMMO;
-        public static readonly Type BinaryWriteTranslation = typeof(AmmunitionBinaryWriteTranslation);
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CSTY;
+        public static RecordType AllRecordTypes => TriggeringRecordType;
+        public static readonly Type BinaryWriteTranslation = typeof(CombatStyleBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -694,13 +691,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class AmmunitionSetterCommon : Fallout4MajorRecordSetterCommon
+    public partial class CombatStyleSetterCommon : Fallout4MajorRecordSetterCommon
     {
-        public new static readonly AmmunitionSetterCommon Instance = new AmmunitionSetterCommon();
+        public new static readonly CombatStyleSetterCommon Instance = new CombatStyleSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IAmmunitionInternal item)
+        public void Clear(ICombatStyleInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -708,16 +705,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public override void Clear(IFallout4MajorRecordInternal item)
         {
-            Clear(item: (IAmmunitionInternal)item);
+            Clear(item: (ICombatStyleInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IAmmunitionInternal)item);
+            Clear(item: (ICombatStyleInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IAmmunition obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ICombatStyle obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -726,16 +723,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IAmmunitionInternal item,
+            ICombatStyleInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            PluginUtilityTranslation.MajorRecordParse<IAmmunitionInternal>(
+            PluginUtilityTranslation.MajorRecordParse<ICombatStyleInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: AmmunitionBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: AmmunitionBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: CombatStyleBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: CombatStyleBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -744,7 +741,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (Ammunition)item,
+                item: (CombatStyle)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -755,7 +752,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (Ammunition)item,
+                item: (CombatStyle)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -763,17 +760,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class AmmunitionCommon : Fallout4MajorRecordCommon
+    public partial class CombatStyleCommon : Fallout4MajorRecordCommon
     {
-        public new static readonly AmmunitionCommon Instance = new AmmunitionCommon();
+        public new static readonly CombatStyleCommon Instance = new CombatStyleCommon();
 
-        public Ammunition.Mask<bool> GetEqualsMask(
-            IAmmunitionGetter item,
-            IAmmunitionGetter rhs,
+        public CombatStyle.Mask<bool> GetEqualsMask(
+            ICombatStyleGetter item,
+            ICombatStyleGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Ammunition.Mask<bool>(false);
-            ((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new CombatStyle.Mask<bool>(false);
+            ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -782,9 +779,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void FillEqualsMask(
-            IAmmunitionGetter item,
-            IAmmunitionGetter rhs,
-            Ammunition.Mask<bool> ret,
+            ICombatStyleGetter item,
+            ICombatStyleGetter rhs,
+            CombatStyle.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -792,9 +789,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public string ToString(
-            IAmmunitionGetter item,
+            ICombatStyleGetter item,
             string? name = null,
-            Ammunition.Mask<bool>? printMask = null)
+            CombatStyle.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -806,18 +803,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void ToString(
-            IAmmunitionGetter item,
+            ICombatStyleGetter item,
             FileGeneration fg,
             string? name = null,
-            Ammunition.Mask<bool>? printMask = null)
+            CombatStyle.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Ammunition =>");
+                fg.AppendLine($"CombatStyle =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Ammunition) =>");
+                fg.AppendLine($"{name} (CombatStyle) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -831,9 +828,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         protected static void ToStringFields(
-            IAmmunitionGetter item,
+            ICombatStyleGetter item,
             FileGeneration fg,
-            Ammunition.Mask<bool>? printMask = null)
+            CombatStyle.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
@@ -841,39 +838,39 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 printMask: printMask);
         }
         
-        public static Ammunition_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
+        public static CombatStyle_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout4MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Ammunition_FieldIndex)((int)index);
+                    return (CombatStyle_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormKey:
-                    return (Ammunition_FieldIndex)((int)index);
+                    return (CombatStyle_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.VersionControl:
-                    return (Ammunition_FieldIndex)((int)index);
+                    return (CombatStyle_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.EditorID:
-                    return (Ammunition_FieldIndex)((int)index);
+                    return (CombatStyle_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
-                    return (Ammunition_FieldIndex)((int)index);
+                    return (CombatStyle_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
-                    return (Ammunition_FieldIndex)((int)index);
+                    return (CombatStyle_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new Ammunition_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new CombatStyle_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Ammunition_FieldIndex)((int)index);
+                    return (CombatStyle_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Ammunition_FieldIndex)((int)index);
+                    return (CombatStyle_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (Ammunition_FieldIndex)((int)index);
+                    return (CombatStyle_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Ammunition_FieldIndex)((int)index);
+                    return (CombatStyle_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -881,8 +878,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IAmmunitionGetter? lhs,
-            IAmmunitionGetter? rhs,
+            ICombatStyleGetter? lhs,
+            ICombatStyleGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -896,8 +893,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IAmmunitionGetter?)lhs,
-                rhs: rhs as IAmmunitionGetter,
+                lhs: (ICombatStyleGetter?)lhs,
+                rhs: rhs as ICombatStyleGetter,
                 crystal: crystal);
         }
         
@@ -907,12 +904,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IAmmunitionGetter?)lhs,
-                rhs: rhs as IAmmunitionGetter,
+                lhs: (ICombatStyleGetter?)lhs,
+                rhs: rhs as ICombatStyleGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(IAmmunitionGetter item)
+        public virtual int GetHashCode(ICombatStyleGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -921,12 +918,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public override int GetHashCode(IFallout4MajorRecordGetter item)
         {
-            return GetHashCode(item: (IAmmunitionGetter)item);
+            return GetHashCode(item: (ICombatStyleGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IAmmunitionGetter)item);
+            return GetHashCode(item: (ICombatStyleGetter)item);
         }
         
         #endregion
@@ -934,11 +931,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public override object GetNew()
         {
-            return Ammunition.GetNew();
+            return CombatStyle.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAmmunitionGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICombatStyleGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -948,12 +945,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Duplicate
-        public Ammunition Duplicate(
-            IAmmunitionGetter item,
+        public CombatStyle Duplicate(
+            ICombatStyleGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Ammunition(formKey);
+            var newRec = new CombatStyle(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -964,7 +961,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IAmmunitionGetter)item,
+                item: (ICombatStyleGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -975,7 +972,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IAmmunitionGetter)item,
+                item: (ICombatStyleGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -985,14 +982,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class AmmunitionSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    public partial class CombatStyleSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
-        public new static readonly AmmunitionSetterTranslationCommon Instance = new AmmunitionSetterTranslationCommon();
+        public new static readonly CombatStyleSetterTranslationCommon Instance = new CombatStyleSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IAmmunitionInternal item,
-            IAmmunitionGetter rhs,
+            ICombatStyleInternal item,
+            ICombatStyleGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1006,8 +1003,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void DeepCopyIn(
-            IAmmunition item,
-            IAmmunitionGetter rhs,
+            ICombatStyle item,
+            ICombatStyleGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1028,8 +1025,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IAmmunitionInternal)item,
-                rhs: (IAmmunitionGetter)rhs,
+                item: (ICombatStyleInternal)item,
+                rhs: (ICombatStyleGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1043,8 +1040,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IAmmunition)item,
-                rhs: (IAmmunitionGetter)rhs,
+                item: (ICombatStyle)item,
+                rhs: (ICombatStyleGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1058,8 +1055,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IAmmunitionInternal)item,
-                rhs: (IAmmunitionGetter)rhs,
+                item: (ICombatStyleInternal)item,
+                rhs: (ICombatStyleGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1073,8 +1070,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IAmmunition)item,
-                rhs: (IAmmunitionGetter)rhs,
+                item: (ICombatStyle)item,
+                rhs: (ICombatStyleGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1082,12 +1079,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #endregion
         
-        public Ammunition DeepCopy(
-            IAmmunitionGetter item,
-            Ammunition.TranslationMask? copyMask = null)
+        public CombatStyle DeepCopy(
+            ICombatStyleGetter item,
+            CombatStyle.TranslationMask? copyMask = null)
         {
-            Ammunition ret = (Ammunition)((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).GetNew();
-            ((AmmunitionSetterTranslationCommon)((IAmmunitionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            CombatStyle ret = (CombatStyle)((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).GetNew();
+            ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1096,30 +1093,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
         
-        public Ammunition DeepCopy(
-            IAmmunitionGetter item,
-            out Ammunition.ErrorMask errorMask,
-            Ammunition.TranslationMask? copyMask = null)
+        public CombatStyle DeepCopy(
+            ICombatStyleGetter item,
+            out CombatStyle.ErrorMask errorMask,
+            CombatStyle.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Ammunition ret = (Ammunition)((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).GetNew();
-            ((AmmunitionSetterTranslationCommon)((IAmmunitionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            CombatStyle ret = (CombatStyle)((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).GetNew();
+            ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Ammunition.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CombatStyle.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Ammunition DeepCopy(
-            IAmmunitionGetter item,
+        public CombatStyle DeepCopy(
+            ICombatStyleGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Ammunition ret = (Ammunition)((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).GetNew();
-            ((AmmunitionSetterTranslationCommon)((IAmmunitionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            CombatStyle ret = (CombatStyle)((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).GetNew();
+            ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1135,21 +1132,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class Ammunition
+    public partial class CombatStyle
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Ammunition_Registration.Instance;
-        public new static Ammunition_Registration StaticRegistration => Ammunition_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => CombatStyle_Registration.Instance;
+        public new static CombatStyle_Registration StaticRegistration => CombatStyle_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => AmmunitionCommon.Instance;
+        protected override object CommonInstance() => CombatStyleCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return AmmunitionSetterCommon.Instance;
+            return CombatStyleSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => AmmunitionSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => CombatStyleSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1160,20 +1157,20 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class AmmunitionBinaryWriteTranslation :
+    public partial class CombatStyleBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static AmmunitionBinaryWriteTranslation Instance = new AmmunitionBinaryWriteTranslation();
+        public new readonly static CombatStyleBinaryWriteTranslation Instance = new CombatStyleBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
-            IAmmunitionGetter item,
+            ICombatStyleGetter item,
             TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.AMMO)))
+                record: translationParams.ConvertToCustom(RecordTypes.CSTY)))
             {
                 try
                 {
@@ -1198,7 +1195,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IAmmunitionGetter)item,
+                item: (ICombatStyleGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1209,7 +1206,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IAmmunitionGetter)item,
+                item: (ICombatStyleGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1220,20 +1217,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IAmmunitionGetter)item,
+                item: (ICombatStyleGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    public partial class AmmunitionBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    public partial class CombatStyleBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static AmmunitionBinaryCreateTranslation Instance = new AmmunitionBinaryCreateTranslation();
+        public new readonly static CombatStyleBinaryCreateTranslation Instance = new CombatStyleBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.AMMO;
+        public override RecordType RecordType => RecordTypes.CSTY;
         public static void FillBinaryStructs(
-            IAmmunitionInternal item,
+            ICombatStyleInternal item,
             MutagenFrame frame)
         {
             Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
@@ -1247,7 +1244,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class AmmunitionBinaryTranslationMixIn
+    public static class CombatStyleBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1256,35 +1253,35 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class AmmunitionBinaryOverlay :
+    public partial class CombatStyleBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
-        IAmmunitionGetter
+        ICombatStyleGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Ammunition_Registration.Instance;
-        public new static Ammunition_Registration StaticRegistration => Ammunition_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => CombatStyle_Registration.Instance;
+        public new static CombatStyle_Registration StaticRegistration => CombatStyle_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => AmmunitionCommon.Instance;
+        protected override object CommonInstance() => CombatStyleCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => AmmunitionSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => CombatStyleSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => AmmunitionBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => CombatStyleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((AmmunitionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((CombatStyleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAmmunition);
+        protected override Type LinkType => typeof(ICombatStyle);
 
 
         partial void CustomFactoryEnd(
@@ -1293,7 +1290,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             int offset);
 
         partial void CustomCtor();
-        protected AmmunitionBinaryOverlay(
+        protected CombatStyleBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1303,13 +1300,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             this.CustomCtor();
         }
 
-        public static AmmunitionBinaryOverlay AmmunitionFactory(
+        public static CombatStyleBinaryOverlay CombatStyleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
             stream = PluginUtilityTranslation.DecompressStream(stream);
-            var ret = new AmmunitionBinaryOverlay(
+            var ret = new CombatStyleBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
@@ -1330,12 +1327,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
 
-        public static AmmunitionBinaryOverlay AmmunitionFactory(
+        public static CombatStyleBinaryOverlay CombatStyleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return AmmunitionFactory(
+            return CombatStyleFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1347,7 +1344,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FileGeneration fg,
             string? name = null)
         {
-            AmmunitionMixIn.ToString(
+            CombatStyleMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1356,7 +1353,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Ammunition>.ToString(this);
+            return MajorRecordPrinter<CombatStyle>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1366,16 +1363,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IAmmunitionGetter rhs) return false;
-            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not ICombatStyleGetter rhs) return false;
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IAmmunitionGetter? obj)
+        public bool Equals(ICombatStyleGetter? obj)
         {
-            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

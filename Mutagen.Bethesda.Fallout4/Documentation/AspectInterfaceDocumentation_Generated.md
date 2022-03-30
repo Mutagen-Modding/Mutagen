@@ -38,6 +38,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MagicEffect
 - MiscItem
 - MovableStatic
+- Npc
 - ObjectTemplate
 - Race
 - RuleName
@@ -104,6 +105,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MorphGroup
 - MorphPreset
 - MovableStatic
+- Npc
 - ObjectEffect
 - ObjectTemplate
 - Phoneme
@@ -159,6 +161,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Light
 - MiscItem
 - MovableStatic
+- Npc
 - ObjectEffect
 - Projectile
 - SoundMarker
@@ -183,6 +186,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MagicEffect
 - MiscItem
 - MovableStatic
+- Npc
 - Static
 - StaticCollection
 - TalkingActivator
@@ -348,6 +352,11 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### MovableStatic
 - IKeyworded
 - IModeled
+- INamed
+- IObjectBounded
+- IScripted
+### Npc
+- IKeyworded
 - INamed
 - IObjectBounded
 - IScripted

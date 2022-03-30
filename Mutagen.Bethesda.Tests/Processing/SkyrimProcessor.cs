@@ -493,7 +493,7 @@ public class SkyrimProcessor : Processor
         {
             int offset = 0;
             ProcessZeroFloats(xprmRec, fileOffset, ref offset, 3);
-            ProcessColorFloat(xprmRec, fileOffset, ref offset);
+            ProcessColorFloat(xprmRec, fileOffset, ref offset, alpha: false);
             ProcessZeroFloat(xprmRec, fileOffset, ref offset);
         }
 

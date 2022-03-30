@@ -1,6 +1,261 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Npc" recordType="NPC_" objType="Record" baseClass="Fallout4MajorRecord" GUID="8074d783-8164-453f-bdd2-f39627cf7a6b" ID="166">
+  <Object name="Npc" recordType="NPC_" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true" GUID="8074d783-8164-453f-bdd2-f39627cf7a6b" ID="166">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+      <FormLink name="AnimationSound" refName="AnimationSoundTagSet" recordType="STCP" />
+      <Data recordType="ACBS">
+        <Fields>
+          <Enum name="Flags" enumName="Npc.Flag" byteLength="4" binary="Custom" />
+          <Int16 name="XpValueOffset" />
+          <RefDirect name="Level" refName="ANpcLevel" binary="Custom" generateClassMembers="false" byteLength="2" />
+          <Int16 name="CalcMinLevel" />
+          <Int16 name="CalcMaxLevel" />
+          <Int16 name="DispositionBase" />
+          <Enum name="UseTemplateActors" enumName="Npc.TemplateActorType" byteLength="2" />
+          <Int16 name="BleedoutOverride" />
+          <Int16 name="Unknown" />
+        </Fields>
+      </Data>
+      <RefList name="Factions" refName="RankPlacement" />
+      <FormLink name="DeathItem" refName="LeveledItem" recordType="INAM" />
+      <FormLink name="Voice" refName="VoiceType" recordType="VTCK" />
+      <FormLink name="DefaultTemplate" recordType="TPLT">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+      <FormLink name="LegendaryTemplate" recordType="LTPT">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+      <FormLink name="LegendaryChance" refName="Global" recordType="LTPC" />
+      <RefDirect name="TemplateActors" refName="TemplateActors" />
+      <FormLink name="Race" refName="Race" recordType="RNAM" nullable="False" />
+      <List name="ActorEffect" counterRecType="SPCT">
+        <FormLink recordType="SPLO">
+          <Interface>ISpellRecord</Interface>
+        </FormLink>
+      </List>
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="Skin" refName="Armor" recordType="WNAM" />
+      <FormLink name="FarAwayModel" refName="Armor" recordType="ANAM" />
+      <FormLink name="AttackRace" refName="Race" recordType="ATKR" />
+      <RefList name="Attacks" refName="Attack" />
+      <FormLink name="SpectatorOverridePackageList" refName="FormList" recordType="SPOR" />
+      <FormLink name="ObserveDeadBodyOverridePackageList" refName="FormList" recordType="OCOR" />
+      <FormLink name="GuardWarnOverridePackageList" refName="FormList" recordType="GWOR" />
+      <FormLink name="CombatOverridePackageList" refName="FormList" recordType="ECOR" />
+      <FormLink name="FollowerCommandPackageList" refName="FormList" recordType="FCPL" />
+      <FormLink name="FollowerElevatorPackageList" refName="FormList" recordType="RCLR" />
+      <RefList name="Perks" counterRecType="PRKZ" refName="PerkPlacement" />
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <FormLink name="ForcedLocRefType" refName="LocationReferenceType" recordType="FTYP" />
+      <FormLink name="NativeTerminal" refName="Terminal" recordType="NTRM" />
+      <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
+      <Data recordType="AIDT">
+        <Fields>
+          <Enum name="Agression" enumName="Npc.AggressionType" byteLength="1" />
+          <Enum name="Confidence" enumName="Npc.ConfidenceType" byteLength="1" />
+          <UInt8 name="EnergyLevel" />
+          <Enum name="Responsibility" enumName="Npc.ResponsibilityType" byteLength="1" />
+          <Enum name="Mood" enumName="Npc.MoodType" byteLength="1" />
+          <Enum name="Assistence" enumName="Npc.AssistenceType" byteLength="1" />
+          <Bool name="AggroRadiusBehaviorEnabled" byteLength="2" importantByteLength="1" />
+          <UInt32 name="AggroRadiusWarn" />
+          <UInt32 name="AggroRadiusWarnOrAttack" />
+          <UInt32 name="AggroRadiusAttack" />
+          <Bool name="NoSlowApproach" byteLength="4" importantByteLength="1" />
+        </Fields>
+      </Data>
+      <List name="Packages">
+        <FormLink refName="Package" recordType="PKID" />
+      </List>
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <List name="AttachParentSlots" recordType="APPR">
+        <FormLink refName="Keyword" />
+      </List>
+      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false" endMarker="STOP">
+        <Ref>
+          <Direct refName="ObjectTemplate">
+            <GenericSpecification Definition="Npc.Property" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+      <FormLink name="Class" refName="Class" recordType="CNAM" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <String name="ShortName" recordType="SHRT" />
+      <Marker name="Marker" recordType="DATA" />
+      <Data recordType="DNAM">
+        <Fields>
+          <UInt16 name="BaseHealth" />
+          <UInt16 name="BaseActionPoints" />
+          <UInt16 name="FarAwayModelDistance" />
+          <UInt8 name="GearedUpWeapons" />
+          <UInt8 name="Unused" />
+        </Fields>
+      </Data>
+      <List name="HeadParts">
+        <FormLink refName="HeadPart" recordType="PNAM" />
+      </List>
+      <FormLink name="HairColor" refName="ColorRecord" recordType="HCLF" />
+      <FormLink name="FacialHairColor" refName="ColorRecord" recordType="BCLF" />
+      <FormLink name="CombatStyle" refName="CombatStyle" recordType="ZNAM" />
+      <FormLink name="GiftFilter" refName="FormList" recordType="GNAM" />
+      <ByteArray name="NAM5" recordType="NAM5" />
+      <Float name="HeightMin" recordType="NAM6" nullable="False" />
+      <Float name="NAM7" recordType="NAM7" />
+      <Float name="HeightMax" recordType="NAM4" nullable="False" />
+      <RefDirect name="Weight" refName="NpcWeight" />
+      <Enum name="SoundLevel" recordType="NAM8" nullable="False" enumName="SoundLevel" />
+      <RefList name="Sounds" counterRecType="CS2H" counterLength="4" endMarker="CS2E" refName="NpcSound" />
+      <ByteArray name="SoundsFinalize" recordType="CS2F" />
+      <FormLink name="InheritsSoundsFrom" recordType="CSCR" refName="Npc" />
+      <FormLink name="PowerArmorStand" recordType="PFRN" refName="Furniture" />
+      <FormLink name="DefaultOutfit" recordType="DOFT" refName="Outfit" />
+      <FormLink name="SleepingOutfit" recordType="SOFT" refName="Outfit" />
+      <FormLink name="DefaultPackageList" recordType="DPLT" refName="FormList" />
+      <FormLink name="CrimeFaction" recordType="CRIF" refName="Faction" />
+      <FormLink name="HeadTexture" recordType="FTST" refName="TextureSet" />
+      <Color name="TextureLighting" binaryType="AlphaFloat" recordType="QNAM" />
+      <CustomLogic name="MorphParsing">
+        <RecordType>MSDK</RecordType>
+        <RecordType>MSDV</RecordType>
+      </CustomLogic>
+      <RefList name="Morphs" refName="NpcMorph" binary="NoGeneration" />
+      <RefList name="FaceTintingLayers" refName="NpcFaceTintingLayer" />
+      <RefDirect name="BodyMorphRegionValues" refName="NpcBodyMorphRegionValues" recordType="MRSV" />
+      <RefList name="FaceMorphs" refName="NpcFaceMorph" />
+      <Float name="FacialMorphIntensity" recordType="FMIN" />
+      <String name="ActivateTextOverride" recordType="ATTX" translated="Normal" />
+    </Fields>
     <LinkInterface>IObjectId</LinkInterface>
+  </Object>
+  <Object name="RankPlacement" objType="Subrecord" recordType="SNAM" GUID="e65aa7ba-d430-4857-97e8-59d0930b622a" ID="205">
+    <Fields>
+      <FormLink name="Faction" refName="Faction" />
+      <UInt8 name="Rank" />
+    </Fields>
+  </Object>
+  <Object name="ANpcLevel" abstract="true" objType="Subrecord" GUID="45f0ebc2-ec5c-4469-b475-68f3fe1a5cff" ID="339" />
+  <Object name="NpcLevel" baseClass="ANpcLevel" objType="Subrecord" GUID="eda640f6-a4d6-49c5-b53d-7fd33e8d8a6d" ID="340">
+    <Fields>
+      <Int16 name="Level" />
+    </Fields>
+  </Object>
+  <Object name="PcLevelMult" baseClass="ANpcLevel" objType="Subrecord" GUID="fa0eed1a-db50-4ede-bf8e-5fde7ff44f59" ID="341">
+    <Fields>
+      <Float name="LevelMult" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PerkPlacement" objType="Subrecord" recordType="PRKR" GUID="9907a1f4-86a0-44cb-97a5-f85a7488eb86" ID="342">
+    <Fields>
+      <FormLink name="Perk" refName="Perk" />
+      <UInt8 name="Rank" />
+    </Fields>
+  </Object>
+  <Object name="NpcWeight" objType="Subrecord" recordType="MWGT" GUID="9915557a-7679-45b7-a3fe-b519bda7c376" ID="344">
+    <Fields>
+      <Float name="Thin" />
+      <Float name="Muscular" />
+      <Float name="Fat" />
+    </Fields>
+  </Object>
+  <Object name="NpcSound" objType="Subrecord" GUID="05905ca6-21d3-4763-96f8-edffe2de8b24" ID="345">
+    <Fields>
+      <FormLink name="Keyword" refName="Keyword" recordType="CS2K" />
+      <FormLink name="Sound" refName="SoundDescriptor" recordType="CS2D" />
+    </Fields>
+  </Object>
+  <Object name="NpcMorph" objType="Subrecord" GUID="75eda107-e397-4e6f-b5e3-053fec1b45bf" ID="346">
+    <Fields>
+      <UInt32 name="Key" />
+      <Float name="Value" />
+    </Fields>
+  </Object>
+  <Object name="NpcFaceTintingLayer" objType="Subrecord" GUID="e0af3cb4-0181-4e98-b6e0-f18875696958" ID="348">
+    <Fields>
+      <Data recordType="TETI">
+        <Fields>
+          <Enum name="DataType" byteLength="2" enumName="NpcFaceTintingLayer.Type" />
+          <UInt16 name="Index" />
+        </Fields>
+      </Data>
+      <Data recordType="TEND">
+        <Fields>
+          <Float name="Value" divisor="100" integerType="Byte" />
+          <Break />
+          <Color name="Color" binaryType="Alpha" />
+          <Int16 name="TemplateColorIndex" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="NpcBodyMorphRegionValues" objType="Subrecord" GUID="9f990ef4-305a-4954-9483-987eb2c1fed3" ID="349">
+    <Fields>
+      <Float name="Head" />
+      <Float name="UpperTorso" />
+      <Float name="Arms" />
+      <Float name="LowerTorso" />
+      <Float name="Legs" />
+    </Fields>
+  </Object>
+  <Object name="NpcFaceMorph" objType="Subrecord" GUID="0b6b61e7-5220-4cd0-8c94-3aa0a874e44e" ID="350">
+    <Fields>
+      <UInt32 name="Index" recordType="FMRI" />
+      <Data recordType="FMRS">
+        <Fields>
+          <P3Float name="Position" />
+          <P3Float name="Rotation" />
+          <Float name="Scale" />
+          <Float name="Unknown1" />
+          <Float name="Unknown2" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="TemplateActors" objType="Subrecord" recordType="TPTA" GUID="d9bc7f2b-5e89-4c88-a204-c1a59e39c219" ID="351">
+    <Fields>
+      <FormLink name="TraitTemplate">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+      <FormLink name="StatsTemplate">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+      <FormLink name="FactionsTemplate">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+      <FormLink name="SpellListTemplate">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+      <FormLink name="AiDataTemplate">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+      <FormLink name="AiPackagesTemplate">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+      <FormLink name="ModelOrAnimationTemplate">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+      <FormLink name="BaseDataTemplate">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+      <FormLink name="InventoryTemplate">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+      <FormLink name="ScriptTemplate">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+      <FormLink name="DefPackListTemplate">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+      <FormLink name="AttackDataTemplate">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+      <FormLink name="KeywordsTemplate">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+    </Fields>
   </Object>
 </Loqui>

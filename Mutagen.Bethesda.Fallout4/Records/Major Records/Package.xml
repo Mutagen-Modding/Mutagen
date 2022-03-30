@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Package" recordType="PACK" objType="Record" baseClass="Fallout4MajorRecord" GUID="04e6122f-851d-4177-afc4-9f645560c389" ID="347">
+  </Object>
+</Loqui>
