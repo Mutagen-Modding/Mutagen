@@ -48,7 +48,9 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
             if (reader.Position == startingPos)
             {
                 reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
-                throw new ArgumentException($"Parsed item on the list consumed no data: {subItem}");
+                throw SubrecordException.Enrich(
+                    new MalformedDataException("Parsed item on the list consumed no data."),
+                    triggeringRecord);
             }
         }
         return ret;
@@ -82,7 +84,9 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
             if (reader.Position == startingPos)
             {
                 reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
-                throw new ArgumentException($"Parsed item on the list consumed no data: {subItem}");
+                throw SubrecordException.Enrich(
+                    new MalformedDataException("Parsed item on the list consumed no data."),
+                    triggeringRecord);
             }
         }
         return ret;
@@ -109,7 +113,9 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
             }
             if (reader.Position == startingPos)
             {
-                throw new ArgumentException($"Parsed item on the list consumed no data: {subIitem}");
+                throw SubrecordException.Enrich(
+                    new MalformedDataException("Parsed item on the list consumed no data."),
+                    nextRecord);
             }
         }
         return ret;
@@ -138,7 +144,9 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
             }
             if (reader.Position == startingPos)
             {
-                throw new ArgumentException($"Parsed item on the list consumed no data: {subIitem}");
+                throw SubrecordException.Enrich(
+                    new MalformedDataException("Parsed item on the list consumed no data."),
+                    nextRecord);
             }
         }
         return ret;
@@ -171,7 +179,9 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
             if (reader.Position == startingPos)
             {
                 reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
-                throw new ArgumentException($"Parsed item on the list consumed no data: {subItem}");
+                throw SubrecordException.Enrich(
+                    new MalformedDataException("Parsed item on the list consumed no data."),
+                    triggeringRecord);
             }
         }
         return ret;
@@ -261,7 +271,9 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
             }
             if (reader.Position == startingPos)
             {
-                throw new ArgumentException($"Parsed item on the list consumed no data: {subIitem}");
+                throw SubrecordException.Enrich(
+                    new MalformedDataException("Parsed item on the list consumed no data."),
+                    nextRecord);
             }
         }
         return ret;
@@ -290,7 +302,9 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
             }
             if (reader.Position == startingPos)
             {
-                throw new ArgumentException($"Parsed item on the list consumed no data: {subIitem}");
+                throw SubrecordException.Enrich(
+                    new MalformedDataException("Parsed item on the list consumed no data."),
+                    nextRecord);
             }
         }
         return ret;
@@ -345,7 +359,9 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
         var subHeader = reader.GetSubrecord();
         if (subHeader.RecordType != triggeringRecord)
         {
-            throw new ArgumentException($"Unexpected record encountered.");
+            throw SubrecordException.Enrich(
+                new MalformedDataException($"Unexpected record encountered: {subHeader.RecordType}"),
+                triggeringRecord);
         }
         if (!IsLoqui)
         {
@@ -362,7 +378,9 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
         }
         if (reader.Position == startingPos)
         {
-            throw new ArgumentException($"Parsed item on the list consumed no data.");
+            throw SubrecordException.Enrich(
+                new MalformedDataException("Parsed item on the list consumed no data."),
+                triggeringRecord);
         }
         return ret;
     }
@@ -415,10 +433,13 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
 
         // Don't return early if count is zero, as we're expecting one content record still that is empty
         // But still okay if it doesn't exist
-        if (!reader.Reader.TryGetSubrecord(triggeringRecord, out var _))
+        var subHeader = reader.GetSubrecord();
+        if (subHeader.RecordType != triggeringRecord)
         {
             if (amount == 0) return Enumerable.Empty<T>();
-            throw new ArgumentException($"List with a non zero counter did not follow up with expected type: {triggeringRecord}");
+            throw SubrecordException.Enrich(
+                new MalformedDataException($"List with a non zero counter did not follow up with expected type: {subHeader.RecordType}"),
+                triggeringRecord);
         }
         if (!IsLoqui)
         {
@@ -435,7 +456,9 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
         }
         if (amount != 0 && reader.Position == startingPos)
         {
-            throw new ArgumentException($"Parsed item on the list consumed no data.");
+            throw SubrecordException.Enrich(
+                new MalformedDataException($"Parsed item on the list consumed no data."),
+                triggeringRecord);
         }
         return ret;
     }
@@ -506,7 +529,9 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
         }
         if (reader.Position == startingPos)
         {
-            throw new ArgumentException($"Parsed item on the list consumed no data.");
+            throw SubrecordException.Enrich(
+                new MalformedDataException($"Parsed item on the list consumed no data."),
+                triggeringRecord);
         }
         return ret;
     }
@@ -562,7 +587,9 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
             var subHeader = reader.GetSubrecord();
             if (subHeader.RecordType != triggeringRecord)
             {
-                throw new ArgumentException($"Unexpected record encountered.");
+                throw SubrecordException.Enrich(
+                    new MalformedDataException($"Unexpected record encountered: {subHeader.RecordType}"),
+                    triggeringRecord);
             }
             if (!IsLoqui)
             {
@@ -575,7 +602,9 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
         }
         if (reader.Position == startingPos)
         {
-            throw new ArgumentException($"Parsed item on the list consumed no data.");
+            throw SubrecordException.Enrich(
+                new MalformedDataException($"Parsed item on the list consumed no data."),
+                triggeringRecord);
         }
         return ret;
     }
@@ -676,10 +705,16 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
             {
                 ret.Add(subIitem);
             }
+            if (reader.Position == startingPos)
+            {
+                throw SubrecordException.Enrich(
+                    new MalformedDataException($"Parsed item on the list consumed no data."),
+                    nextRecord);
+            }
         }
         if (reader.Position == startingPos)
         {
-            throw new ArgumentException($"Parsed item on the list consumed no data.");
+            throw new MalformedDataException($"Parsed list of {amount} items consumed no data.");
         }
         return ret;
     }
@@ -1139,7 +1174,9 @@ public class PluginListAsyncBinaryTranslation<T>
             if (reader.Position == startingPos)
             {
                 reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
-                throw new ArgumentException($"Parsed item on the list consumed no data: {item.Value}");
+                throw SubrecordException.Enrich(
+                    new MalformedDataException("Parsed item on the list consumed no data."),
+                    triggeringRecord);
             }
         }
         return ret;
@@ -1169,7 +1206,9 @@ public class PluginListAsyncBinaryTranslation<T>
             if (reader.Position == startingPos)
             {
                 reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
-                throw new ArgumentException($"Parsed item on the list consumed no data: {item.Value}");
+                throw SubrecordException.Enrich(
+                    new MalformedDataException("Parsed item on the list consumed no data."),
+                    triggeringRecord);
             }
         }
         return ret;
