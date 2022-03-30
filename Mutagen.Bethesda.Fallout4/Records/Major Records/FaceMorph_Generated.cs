@@ -724,6 +724,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.FMRI,
                 RecordTypes.FMRN);
         });
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.FMRI,
+                RecordTypes.FMRN);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(FaceMorphBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

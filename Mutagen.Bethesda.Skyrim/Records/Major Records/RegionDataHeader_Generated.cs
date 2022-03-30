@@ -738,6 +738,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.RDAT;
+        public static RecordType AllRecordTypes => TriggeringRecordType;
         public static readonly Type BinaryWriteTranslation = typeof(RegionDataHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

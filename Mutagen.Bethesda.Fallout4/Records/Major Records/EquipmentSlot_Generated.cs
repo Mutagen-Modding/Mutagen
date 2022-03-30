@@ -711,6 +711,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.QNAM,
                 RecordTypes.ZNAM);
         });
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.QNAM,
+                RecordTypes.ZNAM);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(EquipmentSlotBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -880,6 +880,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 RecordTypes.SCHD,
                 RecordTypes.SCHR);
         });
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.QSDT,
+                RecordTypes.CTDA,
+                RecordTypes.CTDT,
+                RecordTypes.CNAM,
+                RecordTypes.SCHD,
+                RecordTypes.SCHR);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(LogEntryBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

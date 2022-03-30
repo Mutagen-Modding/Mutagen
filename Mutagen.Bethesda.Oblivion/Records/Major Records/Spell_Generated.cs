@@ -712,6 +712,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 RecordTypes.LVSP,
                 RecordTypes.SPEL);
         });
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.FULL,
+                RecordTypes.LVSP,
+                RecordTypes.SPEL);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(SpellBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

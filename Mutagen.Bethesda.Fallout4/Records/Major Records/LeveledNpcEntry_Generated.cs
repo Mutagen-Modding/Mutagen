@@ -733,6 +733,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.LVLO,
                 RecordTypes.COED);
         });
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.LVLO,
+                RecordTypes.COED);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(LeveledNpcEntryBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

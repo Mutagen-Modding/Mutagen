@@ -985,6 +985,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.KSIZ,
                 RecordTypes.XNAM);
         });
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.WNAM,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.XNAM,
+                RecordTypes.YNAM);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(RuleNameBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

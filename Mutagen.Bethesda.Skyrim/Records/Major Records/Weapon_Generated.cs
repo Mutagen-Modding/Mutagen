@@ -2241,6 +2241,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.WEAP;
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.WEAP,
+                RecordTypes.VMAD,
+                RecordTypes.OBND,
+                RecordTypes.FULL,
+                RecordTypes.MODL,
+                RecordTypes.ICON,
+                RecordTypes.EITM,
+                RecordTypes.EAMT,
+                RecordTypes.DEST,
+                RecordTypes.DSTD,
+                RecordTypes.DMDL,
+                RecordTypes.ETYP,
+                RecordTypes.BIDS,
+                RecordTypes.BAMT,
+                RecordTypes.YNAM,
+                RecordTypes.ZNAM,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.DESC,
+                RecordTypes.MOD3,
+                RecordTypes.MO3T,
+                RecordTypes.MO3S,
+                RecordTypes.NNAM,
+                RecordTypes.INAM,
+                RecordTypes.WNAM,
+                RecordTypes.SNAM,
+                RecordTypes.XNAM,
+                RecordTypes.NAM7,
+                RecordTypes.TNAM,
+                RecordTypes.UNAM,
+                RecordTypes.NAM9,
+                RecordTypes.NAM8,
+                RecordTypes.DATA,
+                RecordTypes.DNAM,
+                RecordTypes.CRDT,
+                RecordTypes.VNAM,
+                RecordTypes.CNAM);
+        });
         public static RecordTypeConverter ScopeModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODL,

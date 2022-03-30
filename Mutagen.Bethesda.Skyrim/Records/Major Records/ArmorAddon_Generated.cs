@@ -1399,6 +1399,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.ARMA;
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.ARMA,
+                RecordTypes.BODT,
+                RecordTypes.BOD2,
+                RecordTypes.RNAM,
+                RecordTypes.DNAM,
+                RecordTypes.MOD2,
+                RecordTypes.MOD3,
+                RecordTypes.MO2T,
+                RecordTypes.MO2S,
+                RecordTypes.MO3T,
+                RecordTypes.MO3S,
+                RecordTypes.MOD4,
+                RecordTypes.MOD5,
+                RecordTypes.MO4T,
+                RecordTypes.MO4S,
+                RecordTypes.MO5T,
+                RecordTypes.MO5S,
+                RecordTypes.NAM0,
+                RecordTypes.NAM1,
+                RecordTypes.NAM2,
+                RecordTypes.NAM3,
+                RecordTypes.MODL,
+                RecordTypes.SNDD,
+                RecordTypes.ONAM);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ArmorAddonBinaryWriteTranslation);
         public static RecordTypeConverter WorldModelFemaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(

@@ -613,6 +613,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.CSDI,
                 RecordTypes.CSDC);
         });
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.CSCR,
+                RecordTypes.CSDT,
+                RecordTypes.CSDI,
+                RecordTypes.CSDC);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ANpcSoundDefinitionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

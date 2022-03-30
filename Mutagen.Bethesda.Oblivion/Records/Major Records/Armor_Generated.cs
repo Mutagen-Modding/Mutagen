@@ -1211,6 +1211,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.ARMO;
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.ARMO,
+                RecordTypes.FULL,
+                RecordTypes.SCRI,
+                RecordTypes.ENAM,
+                RecordTypes.ANAM,
+                RecordTypes.BMDT,
+                RecordTypes.MODL,
+                RecordTypes.MOD2,
+                RecordTypes.MO2B,
+                RecordTypes.MO2T,
+                RecordTypes.ICON,
+                RecordTypes.MOD3,
+                RecordTypes.MO3B,
+                RecordTypes.MO3T,
+                RecordTypes.MOD4,
+                RecordTypes.MO4B,
+                RecordTypes.MO4T,
+                RecordTypes.ICO2,
+                RecordTypes.DATA);
+        });
         public static RecordTypeConverter MaleWorldModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODL,

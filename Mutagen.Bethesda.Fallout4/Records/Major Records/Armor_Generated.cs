@@ -2439,6 +2439,54 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.ARMO;
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.ARMO,
+                RecordTypes.VMAD,
+                RecordTypes.OBND,
+                RecordTypes.PTRN,
+                RecordTypes.FULL,
+                RecordTypes.EITM,
+                RecordTypes.MOD2,
+                RecordTypes.MOD4,
+                RecordTypes.ICO2,
+                RecordTypes.ICON,
+                RecordTypes.MIC2,
+                RecordTypes.MICO,
+                RecordTypes.MO2T,
+                RecordTypes.MO2S,
+                RecordTypes.MO4T,
+                RecordTypes.MO4S,
+                RecordTypes.BOD2,
+                RecordTypes.DEST,
+                RecordTypes.DAMC,
+                RecordTypes.DSTD,
+                RecordTypes.DSTA,
+                RecordTypes.DMDL,
+                RecordTypes.YNAM,
+                RecordTypes.ZNAM,
+                RecordTypes.ETYP,
+                RecordTypes.BIDS,
+                RecordTypes.BAMT,
+                RecordTypes.RNAM,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.DESC,
+                RecordTypes.INRD,
+                RecordTypes.INDX,
+                RecordTypes.MODL,
+                RecordTypes.DATA,
+                RecordTypes.FNAM,
+                RecordTypes.DAMA,
+                RecordTypes.TNAM,
+                RecordTypes.APPR,
+                RecordTypes.OBTE,
+                RecordTypes.OBTF,
+                RecordTypes.OBTS,
+                RecordTypes.STOP);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ArmorBinaryWriteTranslation);
         public static RecordTypeConverter WorldModelFemaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(

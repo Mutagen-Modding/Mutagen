@@ -726,6 +726,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = typeof(SkyrimGroup_Registration<>);
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.GRUP;
+        public static RecordType AllRecordTypes => TriggeringRecordType;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimGroupBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

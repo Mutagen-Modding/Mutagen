@@ -3481,6 +3481,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.WTHR;
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.WTHR,
+                RecordTypes.DNAM,
+                RecordTypes.CNAM,
+                RecordTypes.ANAM,
+                RecordTypes.BNAM,
+                RecordTypes.LNAM,
+                RecordTypes.MNAM,
+                RecordTypes.NNAM,
+                RecordTypes.ONAM,
+                RecordTypes.RNAM,
+                RecordTypes.QNAM,
+                RecordTypes.PNAM,
+                RecordTypes.JNAM,
+                RecordTypes.NAM0,
+                RecordTypes.FNAM,
+                RecordTypes.DATA,
+                RecordTypes.NAM1,
+                RecordTypes.SNAM,
+                RecordTypes.TNAM,
+                RecordTypes.IMSP,
+                RecordTypes.HNAM,
+                RecordTypes.DALC,
+                RecordTypes.NAM2,
+                RecordTypes.NAM3,
+                RecordTypes.MODL,
+                RecordTypes.GNAM);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(WeatherBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -839,6 +839,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.QNAM,
                 RecordTypes.SCRO);
         });
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.SCHR,
+                RecordTypes.SCDA,
+                RecordTypes.SCTX,
+                RecordTypes.QNAM,
+                RecordTypes.SCRO);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ScenePhaseUnusedDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

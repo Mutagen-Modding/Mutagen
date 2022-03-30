@@ -2180,6 +2180,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.ALST,
                 RecordTypes.ALLS);
         });
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.ALST,
+                RecordTypes.ALLS,
+                RecordTypes.ALID,
+                RecordTypes.FNAM,
+                RecordTypes.ALFI,
+                RecordTypes.ALFL,
+                RecordTypes.ALFR,
+                RecordTypes.ALUA,
+                RecordTypes.ALFA,
+                RecordTypes.KNAM,
+                RecordTypes.ALRT,
+                RecordTypes.ALEQ,
+                RecordTypes.ALEA,
+                RecordTypes.ALCO,
+                RecordTypes.ALNA,
+                RecordTypes.ALNT,
+                RecordTypes.ALFE,
+                RecordTypes.ALFD,
+                RecordTypes.CTDA,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.CNTO,
+                RecordTypes.COCT,
+                RecordTypes.SPOR,
+                RecordTypes.OCOR,
+                RecordTypes.GWOR,
+                RecordTypes.ECOR,
+                RecordTypes.ALDN,
+                RecordTypes.ALSP,
+                RecordTypes.ALFC,
+                RecordTypes.ALPC,
+                RecordTypes.VTCK,
+                RecordTypes.ALED);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(QuestAliasBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

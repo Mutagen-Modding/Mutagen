@@ -909,6 +909,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.XPRD;
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.XPRD,
+                RecordTypes.XPPA,
+                RecordTypes.INAM,
+                RecordTypes.SCHR,
+                RecordTypes.SCTX,
+                RecordTypes.PDTO);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(PatrolBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

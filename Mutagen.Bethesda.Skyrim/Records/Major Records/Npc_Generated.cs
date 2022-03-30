@@ -3373,6 +3373,71 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.NPC_;
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.NPC_,
+                RecordTypes.VMAD,
+                RecordTypes.OBND,
+                RecordTypes.ACBS,
+                RecordTypes.SNAM,
+                RecordTypes.INAM,
+                RecordTypes.VTCK,
+                RecordTypes.TPLT,
+                RecordTypes.RNAM,
+                RecordTypes.SPLO,
+                RecordTypes.SPCT,
+                RecordTypes.DEST,
+                RecordTypes.DSTD,
+                RecordTypes.DMDL,
+                RecordTypes.WNAM,
+                RecordTypes.ANAM,
+                RecordTypes.ATKR,
+                RecordTypes.ATKD,
+                RecordTypes.ATKE,
+                RecordTypes.SPOR,
+                RecordTypes.OCOR,
+                RecordTypes.GWOR,
+                RecordTypes.ECOR,
+                RecordTypes.PRKR,
+                RecordTypes.PRKZ,
+                RecordTypes.CNTO,
+                RecordTypes.COCT,
+                RecordTypes.AIDT,
+                RecordTypes.PKID,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.CNAM,
+                RecordTypes.FULL,
+                RecordTypes.SHRT,
+                RecordTypes.DATA,
+                RecordTypes.DNAM,
+                RecordTypes.PNAM,
+                RecordTypes.HCLF,
+                RecordTypes.ZNAM,
+                RecordTypes.GNAM,
+                RecordTypes.NAM5,
+                RecordTypes.NAM6,
+                RecordTypes.NAM7,
+                RecordTypes.NAM8,
+                RecordTypes.CSCR,
+                RecordTypes.CSDT,
+                RecordTypes.CSDI,
+                RecordTypes.CSDC,
+                RecordTypes.DOFT,
+                RecordTypes.SOFT,
+                RecordTypes.DPLT,
+                RecordTypes.CRIF,
+                RecordTypes.FTST,
+                RecordTypes.QNAM,
+                RecordTypes.NAM9,
+                RecordTypes.NAMA,
+                RecordTypes.TINI,
+                RecordTypes.TINC,
+                RecordTypes.TINV,
+                RecordTypes.TIAS);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(NpcBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -6509,7 +6574,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 0x8,
                         countLength: 4,
                         countType: RecordTypes.PRKZ,
-                        subrecordType: RecordTypes.PRKR,
+                        subrecordType: PerkPlacement_Registration.AllRecordTypes,
                         getter: (s, p) => PerkPlacementBinaryOverlay.PerkPlacementFactory(s, p),
                         skipHeader: false);
                     return (int)Npc_FieldIndex.Perks;

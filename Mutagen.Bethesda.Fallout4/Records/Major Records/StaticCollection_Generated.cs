@@ -1171,6 +1171,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.SCOL;
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.SCOL,
+                RecordTypes.VMAD,
+                RecordTypes.OBND,
+                RecordTypes.PTRN,
+                RecordTypes.MODL,
+                RecordTypes.FULL,
+                RecordTypes.FLTR,
+                RecordTypes.ONAM,
+                RecordTypes.DATA);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(StaticCollectionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

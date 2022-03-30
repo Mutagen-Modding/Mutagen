@@ -1615,6 +1615,33 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.FMRN,
                 RecordTypes.WMAP);
         });
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.NNAM,
+                RecordTypes.INDX,
+                RecordTypes.HEAD,
+                RecordTypes.RPRM,
+                RecordTypes.AHCM,
+                RecordTypes.FTSM,
+                RecordTypes.DFTM,
+                RecordTypes.TTGP,
+                RecordTypes.TETI,
+                RecordTypes.TTGE,
+                RecordTypes.MPGN,
+                RecordTypes.MPPI,
+                RecordTypes.MPPN,
+                RecordTypes.MPPM,
+                RecordTypes.MPPT,
+                RecordTypes.MPPF,
+                RecordTypes.MPPC,
+                RecordTypes.MPPK,
+                RecordTypes.MPGS,
+                RecordTypes.FMRI,
+                RecordTypes.FMRN,
+                RecordTypes.WMAP);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(HeadDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

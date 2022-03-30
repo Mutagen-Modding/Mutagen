@@ -762,6 +762,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.BODT,
                 RecordTypes.BOD2);
         });
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.BODT,
+                RecordTypes.BOD2);
+        });
         public static RecordTypeConverter Version44Converter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.BODT,

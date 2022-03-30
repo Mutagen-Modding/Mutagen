@@ -877,6 +877,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.MPPT,
                 RecordTypes.MPPF);
         });
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.MPPI,
+                RecordTypes.MPPN,
+                RecordTypes.MPPM,
+                RecordTypes.MPPT,
+                RecordTypes.MPPF);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(MorphPresetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

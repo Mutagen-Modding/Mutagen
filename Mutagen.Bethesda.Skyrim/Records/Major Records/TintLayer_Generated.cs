@@ -773,6 +773,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.TINV,
                 RecordTypes.TIAS);
         });
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.TINI,
+                RecordTypes.TINC,
+                RecordTypes.TINV,
+                RecordTypes.TIAS);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(TintLayerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

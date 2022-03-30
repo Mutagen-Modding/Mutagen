@@ -1242,6 +1242,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.LAND;
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.LAND,
+                RecordTypes.DATA,
+                RecordTypes.VNML,
+                RecordTypes.VHGT,
+                RecordTypes.VCLR,
+                RecordTypes.BTXT,
+                RecordTypes.ATXT,
+                RecordTypes.VTEX);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(LandscapeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

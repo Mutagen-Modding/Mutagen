@@ -751,6 +751,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.DSTD,
                 RecordTypes.DMDL);
         });
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.DSTD,
+                RecordTypes.DMDL,
+                RecordTypes.DSTF,
+                RecordTypes.DMDT,
+                RecordTypes.DMDS);
+        });
         public static RecordTypeConverter ModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODL,

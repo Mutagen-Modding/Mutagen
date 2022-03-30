@@ -1768,6 +1768,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.PHZD,
                 RecordTypes.PMIS);
         });
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.VMAD,
+                RecordTypes.NAME,
+                RecordTypes.XEZN,
+                RecordTypes.XOWN,
+                RecordTypes.XRNK,
+                RecordTypes.XHTW,
+                RecordTypes.XFVC,
+                RecordTypes.XPWR,
+                RecordTypes.XLKR,
+                RecordTypes.XAPD,
+                RecordTypes.XESP,
+                RecordTypes.XEMI,
+                RecordTypes.XMBR,
+                RecordTypes.XIS2,
+                RecordTypes.XLRT,
+                RecordTypes.XLRL,
+                RecordTypes.XLOD,
+                RecordTypes.XSCL,
+                RecordTypes.DATA,
+                RecordTypes.PARW,
+                RecordTypes.PBEA,
+                RecordTypes.PFLA,
+                RecordTypes.PCON,
+                RecordTypes.PBAR,
+                RecordTypes.PGRE,
+                RecordTypes.PHZD,
+                RecordTypes.PMIS);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(APlacedTrapBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

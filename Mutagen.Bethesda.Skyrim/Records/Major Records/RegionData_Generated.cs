@@ -734,6 +734,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.RDAT,
                 RecordTypes.ICON);
         });
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.RDAT,
+                RecordTypes.ICON);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(RegionDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

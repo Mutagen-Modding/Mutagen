@@ -4182,6 +4182,68 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.TES4;
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.TES4,
+                RecordTypes.GMST,
+                RecordTypes.GLOB,
+                RecordTypes.CLAS,
+                RecordTypes.FACT,
+                RecordTypes.HAIR,
+                RecordTypes.EYES,
+                RecordTypes.RACE,
+                RecordTypes.SOUN,
+                RecordTypes.SKIL,
+                RecordTypes.MGEF,
+                RecordTypes.SCPT,
+                RecordTypes.LTEX,
+                RecordTypes.ENCH,
+                RecordTypes.SPEL,
+                RecordTypes.BSGN,
+                RecordTypes.ACTI,
+                RecordTypes.APPA,
+                RecordTypes.ARMO,
+                RecordTypes.BOOK,
+                RecordTypes.CLOT,
+                RecordTypes.CONT,
+                RecordTypes.DOOR,
+                RecordTypes.INGR,
+                RecordTypes.LIGH,
+                RecordTypes.MISC,
+                RecordTypes.STAT,
+                RecordTypes.GRAS,
+                RecordTypes.TREE,
+                RecordTypes.FLOR,
+                RecordTypes.FURN,
+                RecordTypes.WEAP,
+                RecordTypes.AMMO,
+                RecordTypes.NPC_,
+                RecordTypes.CREA,
+                RecordTypes.LVLC,
+                RecordTypes.SLGM,
+                RecordTypes.KEYM,
+                RecordTypes.ALCH,
+                RecordTypes.SBSP,
+                RecordTypes.SGST,
+                RecordTypes.LVLI,
+                RecordTypes.WTHR,
+                RecordTypes.CLMT,
+                RecordTypes.REGN,
+                RecordTypes.CELL,
+                RecordTypes.WRLD,
+                RecordTypes.DIAL,
+                RecordTypes.QUST,
+                RecordTypes.IDLE,
+                RecordTypes.PACK,
+                RecordTypes.CSTY,
+                RecordTypes.LSCR,
+                RecordTypes.LVSP,
+                RecordTypes.ANIO,
+                RecordTypes.WATR,
+                RecordTypes.EFSH);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(OblivionModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

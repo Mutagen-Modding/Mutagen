@@ -2690,6 +2690,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.CELL;
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.CELL,
+                RecordTypes.FULL,
+                RecordTypes.DATA,
+                RecordTypes.XCLC,
+                RecordTypes.XCLL,
+                RecordTypes.TVDT,
+                RecordTypes.MHDT,
+                RecordTypes.LTMP,
+                RecordTypes.LNAM,
+                RecordTypes.XCLW,
+                RecordTypes.XNAM,
+                RecordTypes.XCLR,
+                RecordTypes.XLCN,
+                RecordTypes.XWCN,
+                RecordTypes.XWCS,
+                RecordTypes.XWCU,
+                RecordTypes.XCWT,
+                RecordTypes.XOWN,
+                RecordTypes.XRNK,
+                RecordTypes.XILL,
+                RecordTypes.XWEM,
+                RecordTypes.XCCM,
+                RecordTypes.XCAS,
+                RecordTypes.XEZN,
+                RecordTypes.XCMO,
+                RecordTypes.XCIM,
+                RecordTypes.LAND,
+                RecordTypes.NAVM,
+                RecordTypes.ACHR,
+                RecordTypes.REFR,
+                RecordTypes.VMAD,
+                RecordTypes.NAME,
+                RecordTypes.XHTW,
+                RecordTypes.XFVC,
+                RecordTypes.XPWR,
+                RecordTypes.XLKR,
+                RecordTypes.XAPD,
+                RecordTypes.XESP,
+                RecordTypes.XEMI,
+                RecordTypes.XMBR,
+                RecordTypes.XIS2,
+                RecordTypes.XLRT,
+                RecordTypes.XLRL,
+                RecordTypes.XLOD,
+                RecordTypes.XSCL);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(CellBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

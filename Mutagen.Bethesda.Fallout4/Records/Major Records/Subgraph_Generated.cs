@@ -1095,6 +1095,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.SAPT,
                 RecordTypes.SRAF);
         });
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.SGNM,
+                RecordTypes.SAKD,
+                RecordTypes.STKD,
+                RecordTypes.SAPT,
+                RecordTypes.SRAF);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(SubgraphBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

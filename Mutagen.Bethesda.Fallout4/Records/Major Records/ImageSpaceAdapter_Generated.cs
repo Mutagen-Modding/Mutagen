@@ -7479,6 +7479,68 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.IMAD;
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.IMAD,
+                RecordTypes.DNAM,
+                RecordTypes.BNAM,
+                RecordTypes.VNAM,
+                RecordTypes.TNAM,
+                RecordTypes.NAM3,
+                RecordTypes.RNAM,
+                RecordTypes.SNAM,
+                RecordTypes.UNAM,
+                RecordTypes.NAM1,
+                RecordTypes.NAM2,
+                RecordTypes.WNAM,
+                RecordTypes.XNAM,
+                RecordTypes.YNAM,
+                RecordTypes.NAM4,
+                RecordTypes._0_IAD,
+                RecordTypes.@IAD,
+                RecordTypes._1_IAD,
+                RecordTypes.AIAD,
+                RecordTypes._2_IAD,
+                RecordTypes.BIAD,
+                RecordTypes._3_IAD,
+                RecordTypes.CIAD,
+                RecordTypes._4_IAD,
+                RecordTypes.DIAD,
+                RecordTypes._5_IAD,
+                RecordTypes.EIAD,
+                RecordTypes._6_IAD,
+                RecordTypes.FIAD,
+                RecordTypes._7_IAD,
+                RecordTypes.GIAD,
+                RecordTypes._8_IAD,
+                RecordTypes.HIAD,
+                RecordTypes._9_IAD,
+                RecordTypes.IIAD,
+                RecordTypes._A_IAD,
+                RecordTypes.JIAD,
+                RecordTypes._B_IAD,
+                RecordTypes.KIAD,
+                RecordTypes._C_IAD,
+                RecordTypes.LIAD,
+                RecordTypes._D_IAD,
+                RecordTypes.MIAD,
+                RecordTypes._E_IAD,
+                RecordTypes.NIAD,
+                RecordTypes._F_IAD,
+                RecordTypes.OIAD,
+                RecordTypes._10_IAD,
+                RecordTypes.PIAD,
+                RecordTypes._11_IAD,
+                RecordTypes.QIAD,
+                RecordTypes._12_IAD,
+                RecordTypes.RIAD,
+                RecordTypes._13_IAD,
+                RecordTypes.SIAD,
+                RecordTypes._14_IAD,
+                RecordTypes.TIAD);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ImageSpaceAdapterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

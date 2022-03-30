@@ -815,6 +815,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 RecordTypes.INDX,
                 RecordTypes.ICON);
         });
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.MODL,
+                RecordTypes.INDX,
+                RecordTypes.ICON);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(BodyDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

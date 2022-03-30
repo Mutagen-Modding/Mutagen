@@ -1619,6 +1619,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.WRLD;
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.WRLD,
+                RecordTypes.FULL,
+                RecordTypes.WNAM,
+                RecordTypes.CNAM,
+                RecordTypes.NAM2,
+                RecordTypes.ICON,
+                RecordTypes.MNAM,
+                RecordTypes.DATA,
+                RecordTypes.NAM0,
+                RecordTypes.NAM9,
+                RecordTypes.SNAM,
+                RecordTypes.OFST,
+                RecordTypes.XXXX,
+                RecordTypes.ROAD,
+                RecordTypes.CELL,
+                RecordTypes.GRUP);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

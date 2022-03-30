@@ -3936,6 +3936,58 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.WEAP;
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.WEAP,
+                RecordTypes.VMAD,
+                RecordTypes.OBND,
+                RecordTypes.PTRN,
+                RecordTypes.STCP,
+                RecordTypes.FULL,
+                RecordTypes.MODL,
+                RecordTypes.ICON,
+                RecordTypes.MICO,
+                RecordTypes.EITM,
+                RecordTypes.EAMT,
+                RecordTypes.DEST,
+                RecordTypes.DAMC,
+                RecordTypes.DSTD,
+                RecordTypes.DSTA,
+                RecordTypes.DMDL,
+                RecordTypes.ETYP,
+                RecordTypes.BIDS,
+                RecordTypes.BAMT,
+                RecordTypes.YNAM,
+                RecordTypes.ZNAM,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.DESC,
+                RecordTypes.INRD,
+                RecordTypes.APPR,
+                RecordTypes.OBTE,
+                RecordTypes.OBTF,
+                RecordTypes.OBTS,
+                RecordTypes.STOP,
+                RecordTypes.NNAM,
+                RecordTypes.MOD4,
+                RecordTypes.MO4T,
+                RecordTypes.MO4S,
+                RecordTypes.MO4C,
+                RecordTypes.MO4F,
+                RecordTypes.DNAM,
+                RecordTypes.FNAM,
+                RecordTypes.CRDT,
+                RecordTypes.INAM,
+                RecordTypes.LNAM,
+                RecordTypes.WAMD,
+                RecordTypes.WZMD,
+                RecordTypes.CNAM,
+                RecordTypes.DAMA,
+                RecordTypes.FLTR,
+                RecordTypes.MASE);
+        });
         public static RecordTypeConverter FirstPersonModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODL,

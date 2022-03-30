@@ -3234,6 +3234,49 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.TES4;
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.TES4,
+                RecordTypes.GMST,
+                RecordTypes.KYWD,
+                RecordTypes.LCRT,
+                RecordTypes.AACT,
+                RecordTypes.TRNS,
+                RecordTypes.CMPO,
+                RecordTypes.TXST,
+                RecordTypes.GLOB,
+                RecordTypes.DMGT,
+                RecordTypes.CLAS,
+                RecordTypes.FACT,
+                RecordTypes.HDPT,
+                RecordTypes.RACE,
+                RecordTypes.SOUN,
+                RecordTypes.ASPC,
+                RecordTypes.MGEF,
+                RecordTypes.LTEX,
+                RecordTypes.ENCH,
+                RecordTypes.SPEL,
+                RecordTypes.ACTI,
+                RecordTypes.TACT,
+                RecordTypes.ARMO,
+                RecordTypes.BOOK,
+                RecordTypes.CONT,
+                RecordTypes.DOOR,
+                RecordTypes.INGR,
+                RecordTypes.LIGH,
+                RecordTypes.MISC,
+                RecordTypes.STAT,
+                RecordTypes.SCOL,
+                RecordTypes.MSTT,
+                RecordTypes.GRAS,
+                RecordTypes.TREE,
+                RecordTypes.FLOR,
+                RecordTypes.FURN,
+                RecordTypes.WEAP,
+                RecordTypes.AMMO);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(Fallout4ModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

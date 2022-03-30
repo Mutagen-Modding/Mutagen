@@ -14,6 +14,7 @@ using System.Xml.Linq;
 using Mutagen.Bethesda.Generation.Fields;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
 using BoolType = Mutagen.Bethesda.Generation.Fields.BoolType;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
@@ -271,6 +272,33 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     }
                 }
             }
+
+            var all = await GetAllRecordTypes(obj).ToArrayAsync();
+            if (count > 1 && trigRecordTypes.ToHashSet().Equals(all.ToHashSet()))
+            {
+                fg.AppendLine($"public static TriggeringRecordCollection AllRecordTypes => _TriggeringRecordTypes.Value;");
+            }
+            else if (all.Length == 1)
+            {
+                fg.AppendLine($"public static RecordType AllRecordTypes => {Plugins.Internals.Constants.TriggeringRecordTypeMember};");
+            }
+            else if (count > 0)
+            {
+                fg.AppendLine($"public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;");
+                fg.AppendLine($"private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>");
+                using (new BraceWrapper(fg) { AppendSemicolon = true, AppendParenthesis = true })
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        "return new TriggeringRecordCollection"))
+                    {
+                        foreach (var trigger in all)
+                        {
+                            args.Add($"{obj.RecordTypeHeaderName(trigger)}");
+                        }
+                    }
+                }
+            }
+
             await base.GenerateInRegistration(obj, fg);
         }
 
@@ -663,6 +691,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
         private void SetTriggeringRecordAccessors(ObjectGeneration obj, TypeGeneration field, MutagenFieldData data)
         {
+            var loqui = field as LoquiType;
             if (!data.HasTrigger)
             {
                 if (data.MarkerType.HasValue)
@@ -709,7 +738,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             {
                 data.TriggeringRecordSetAccessor = obj.RecordTypeHeaderName(data.TriggeringRecordTypes.First());
             }
-            else if (field is LoquiType loqui)
+            else if (loqui != null)
             {
                 if (loqui.TargetObjectGeneration != null)
                 {
@@ -719,6 +748,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     data.TriggeringRecordSetAccessor = data.TriggeringRecordAccessors.First();
                 }
+            }
+            if (loqui?.TargetObjectGeneration != null)
+            {
+                data.AllRecordSetAccessor = $"{loqui.TargetObjectGeneration.RegistrationName}.AllRecordTypes";
             }
         }
 

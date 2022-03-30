@@ -939,7 +939,14 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                         args.Add($"countType: {objGen.RecordTypeHeaderName(new RecordType((string)typeGen.CustomData[CounterRecordType]))}");
                         if (subData.HasTrigger)
                         {
-                            args.Add($"subrecordType: {subData.TriggeringRecordSetAccessor}");
+                            if (list.SubTypeGeneration is not LoquiType)
+                            {
+                                args.Add($"subrecordType: {subData.TriggeringRecordSetAccessor}");
+                            }
+                            else
+                            {
+                                args.Add($"subrecordType: {subData.AllRecordSetAccessor}");
+                            }
                         }
                         else
                         {

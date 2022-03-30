@@ -3093,6 +3093,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.LCTN;
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.LCTN,
+                RecordTypes.ACPR,
+                RecordTypes.LCPR,
+                RecordTypes.RCPR,
+                RecordTypes.ACUN,
+                RecordTypes.LCUN,
+                RecordTypes.RCUN,
+                RecordTypes.ACSR,
+                RecordTypes.LCSR,
+                RecordTypes.RCSR,
+                RecordTypes.ACEC,
+                RecordTypes.LCEC,
+                RecordTypes.RCEC,
+                RecordTypes.ACID,
+                RecordTypes.LCID,
+                RecordTypes.ACEP,
+                RecordTypes.LCEP,
+                RecordTypes.FULL,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.PNAM,
+                RecordTypes.NAM1,
+                RecordTypes.FNAM,
+                RecordTypes.MNAM,
+                RecordTypes.RNAM,
+                RecordTypes.NAM0,
+                RecordTypes.CNAM);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(LocationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

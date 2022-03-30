@@ -1473,6 +1473,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DOOR;
+        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        {
+            return new TriggeringRecordCollection(
+                RecordTypes.DOOR,
+                RecordTypes.VMAD,
+                RecordTypes.OBND,
+                RecordTypes.PTRN,
+                RecordTypes.FULL,
+                RecordTypes.MODL,
+                RecordTypes.DEST,
+                RecordTypes.DAMC,
+                RecordTypes.DSTD,
+                RecordTypes.DSTA,
+                RecordTypes.DMDL,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.NTRM,
+                RecordTypes.SNAM,
+                RecordTypes.ANAM,
+                RecordTypes.BNAM,
+                RecordTypes.FNAM,
+                RecordTypes.ONAM,
+                RecordTypes.CNAM);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(DoorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
