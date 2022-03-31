@@ -1,20 +1,17 @@
 ﻿using FluentAssertions;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
-using Xunit;
 
-namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Skyrim
+namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Skyrim;
+
+public class SkyrimPerkTests : ASpecificCaseTest<Perk, IPerkGetter>
 {
-    public class SkyrimPerk_Test
+    public override ModPath Path => TestDataPathing.SkyrimPerkFunctionParametersTypeNone;
+    public override GameRelease Release => GameRelease.SkyrimSE;
+        
+    public override void TestItem(IPerkGetter item)
     {
-        [Fact]
-        public void FunctionParametersTypeNone()
-        {
-            var perk = Perk.CreateFromBinary(
-                TestDataPathing.GetReadFrame(
-                    TestDataPathing.SkyrimPerkFunctionParametersTypeNone,
-                    GameRelease.SkyrimSE));
-            perk.Effects.Should().HaveCount(2);
-        }
+        item.Effects.Should().HaveCount(2);
     }
 }

@@ -2,17 +2,15 @@
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing;
-using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Fallout4;
 
-public class SubgraphOutOfOrderTests
+public class SubgraphOutOfOrderTests : ASpecificCaseTest<Subgraph, ISubgraphGetter>
 {
-    [Fact]
-    public void Test()
-    {
-        using var frame = TestDataPathing.GetReadFrame(TestDataPathing.SubgraphOutOfOrder, GameRelease.Fallout4, ModKey.FromFileName("Fallout4.esm"));
-        var subgraph = Subgraph.CreateFromBinary(frame);
+    public override ModPath Path => new(ModKey.FromFileName("Fallout4.esm"), TestDataPathing.SubgraphOutOfOrder);
+    public override GameRelease Release => GameRelease.Fallout4;
+    public override void TestItem(ISubgraphGetter subgraph)
+    {       
         subgraph.ActorKeywords.Should().Equal(
             new FormLink<IKeywordGetter>(FormKey.Factory("030B00:Fallout4.esm")),
             new FormLink<IKeywordGetter>(FormKey.Factory("030B01:Fallout4.esm")));

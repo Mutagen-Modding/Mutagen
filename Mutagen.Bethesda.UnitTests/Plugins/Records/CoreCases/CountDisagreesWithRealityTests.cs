@@ -1,14 +1,16 @@
 using FluentAssertions;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing;
-using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records.CoreCases;
 
-public class CountDisagreesWithRealityTests
+public class CountDisagreesWithRealityTests : ASpecificCaseTest<Npc, INpcGetter>
 {
-    [Fact]
-    public void Test()
+    public override ModPath Path => TestDataPathing.CountDisagreesWithReality;
+    public override GameRelease Release => GameRelease.Fallout4;
+    
+    public override void TestItem(INpcGetter item)
     {
         item.Items.Should().HaveCount(1);
         item.Class.FormKey.Should().Be(FormKey.Factory("123456:CountDisagreesWithReality.esp"));
