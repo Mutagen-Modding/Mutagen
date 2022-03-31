@@ -95,6 +95,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Weapons_Object = new Fallout4Group<Weapon>(this);
             _Ammunitions_Object = new Fallout4Group<Ammunition>(this);
             _Npcs_Object = new Fallout4Group<Npc>(this);
+            _LeveledNpcs_Object = new Fallout4Group<LeveledNpc>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -373,6 +374,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<INpcGetter> IFallout4ModGetter.Npcs => _Npcs_Object;
         #endregion
+        #region LeveledNpcs
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<LeveledNpc> _LeveledNpcs_Object;
+        public Fallout4Group<LeveledNpc> LeveledNpcs => _LeveledNpcs_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<ILeveledNpcGetter> IFallout4ModGetter.LeveledNpcs => _LeveledNpcs_Object;
+        #endregion
 
         #region To String
 
@@ -450,6 +458,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Weapons = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Ammunitions = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Npcs = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.LeveledNpcs = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -491,7 +500,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Furniture,
                 TItem Weapons,
                 TItem Ammunitions,
-                TItem Npcs)
+                TItem Npcs,
+                TItem LeveledNpcs)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -532,6 +542,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Weapons = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Weapons, new Fallout4Group.Mask<TItem>(Weapons));
                 this.Ammunitions = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Ammunitions, new Fallout4Group.Mask<TItem>(Ammunitions));
                 this.Npcs = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Npcs, new Fallout4Group.Mask<TItem>(Npcs));
+                this.LeveledNpcs = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(LeveledNpcs, new Fallout4Group.Mask<TItem>(LeveledNpcs));
             }
 
             #pragma warning disable CS8618
@@ -582,6 +593,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Weapons { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Ammunitions { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Npcs { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? LeveledNpcs { get; set; }
             #endregion
 
             #region Equals
@@ -633,6 +645,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
                 if (!object.Equals(this.Ammunitions, rhs.Ammunitions)) return false;
                 if (!object.Equals(this.Npcs, rhs.Npcs)) return false;
+                if (!object.Equals(this.LeveledNpcs, rhs.LeveledNpcs)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -677,6 +690,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Weapons);
                 hash.Add(this.Ammunitions);
                 hash.Add(this.Npcs);
+                hash.Add(this.LeveledNpcs);
                 return hash.ToHashCode();
             }
 
@@ -880,6 +894,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Npcs.Overall)) return false;
                     if (this.Npcs.Specific != null && !this.Npcs.Specific.All(eval)) return false;
                 }
+                if (LeveledNpcs != null)
+                {
+                    if (!eval(this.LeveledNpcs.Overall)) return false;
+                    if (this.LeveledNpcs.Specific != null && !this.LeveledNpcs.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1082,6 +1101,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Npcs.Overall)) return true;
                     if (this.Npcs.Specific != null && this.Npcs.Specific.Any(eval)) return true;
                 }
+                if (LeveledNpcs != null)
+                {
+                    if (eval(this.LeveledNpcs.Overall)) return true;
+                    if (this.LeveledNpcs.Specific != null && this.LeveledNpcs.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1135,6 +1159,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Weapons = this.Weapons == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
                 obj.Ammunitions = this.Ammunitions == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Ammunitions.Overall), this.Ammunitions.Specific?.Translate(eval));
                 obj.Npcs = this.Npcs == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Npcs.Overall), this.Npcs.Specific?.Translate(eval));
+                obj.LeveledNpcs = this.LeveledNpcs == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.LeveledNpcs.Overall), this.LeveledNpcs.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1313,6 +1338,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Npcs?.ToString(fg);
                     }
+                    if (printMask?.LeveledNpcs?.Overall ?? true)
+                    {
+                        LeveledNpcs?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1377,6 +1406,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Weapon.ErrorMask>?>? Weapons;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Ammunition.ErrorMask>?>? Ammunitions;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Npc.ErrorMask>?>? Npcs;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<LeveledNpc.ErrorMask>?>? LeveledNpcs;
             #endregion
 
             #region IErrorMask
@@ -1463,6 +1493,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Ammunitions;
                     case Fallout4Mod_FieldIndex.Npcs:
                         return Npcs;
+                    case Fallout4Mod_FieldIndex.LeveledNpcs:
+                        return LeveledNpcs;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1589,6 +1621,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.Npcs:
                         this.Npcs = new MaskItem<Exception?, Fallout4Group.ErrorMask<Npc.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.LeveledNpcs:
+                        this.LeveledNpcs = new MaskItem<Exception?, Fallout4Group.ErrorMask<LeveledNpc.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1717,6 +1752,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.Npcs:
                         this.Npcs = (MaskItem<Exception?, Fallout4Group.ErrorMask<Npc.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.LeveledNpcs:
+                        this.LeveledNpcs = (MaskItem<Exception?, Fallout4Group.ErrorMask<LeveledNpc.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1764,6 +1802,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Weapons != null) return true;
                 if (Ammunitions != null) return true;
                 if (Npcs != null) return true;
+                if (LeveledNpcs != null) return true;
                 return false;
             }
             #endregion
@@ -1837,6 +1876,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Weapons?.ToString(fg);
                 Ammunitions?.ToString(fg);
                 Npcs?.ToString(fg);
+                LeveledNpcs?.ToString(fg);
             }
             #endregion
 
@@ -1884,6 +1924,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Weapons = this.Weapons.Combine(rhs.Weapons, (l, r) => l.Combine(r));
                 ret.Ammunitions = this.Ammunitions.Combine(rhs.Ammunitions, (l, r) => l.Combine(r));
                 ret.Npcs = this.Npcs.Combine(rhs.Npcs, (l, r) => l.Combine(r));
+                ret.LeveledNpcs = this.LeveledNpcs.Combine(rhs.LeveledNpcs, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1946,6 +1987,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<Weapon.TranslationMask>? Weapons;
             public Fallout4Group.TranslationMask<Ammunition.TranslationMask>? Ammunitions;
             public Fallout4Group.TranslationMask<Npc.TranslationMask>? Npcs;
+            public Fallout4Group.TranslationMask<LeveledNpc.TranslationMask>? LeveledNpcs;
             #endregion
 
             #region Ctors
@@ -2009,6 +2051,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Weapons != null ? Weapons.OnOverall : DefaultOn, Weapons?.GetCrystal()));
                 ret.Add((Ammunitions != null ? Ammunitions.OnOverall : DefaultOn, Ammunitions?.GetCrystal()));
                 ret.Add((Npcs != null ? Npcs.OnOverall : DefaultOn, Npcs?.GetCrystal()));
+                ret.Add((LeveledNpcs != null ? LeveledNpcs.OnOverall : DefaultOn, LeveledNpcs?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2089,6 +2132,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Weapons_Object = new Fallout4Group<Weapon>(this);
             _Ammunitions_Object = new Fallout4Group<Ammunition>(this);
             _Npcs_Object = new Fallout4Group<Npc>(this);
+            _LeveledNpcs_Object = new Fallout4Group<LeveledNpc>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -2247,6 +2291,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Npcs.RecordCache.Set(rhsMod.Npcs.RecordCache.Items);
             }
+            if (mask?.LeveledNpcs ?? true)
+            {
+                this.LeveledNpcs.RecordCache.Set(rhsMod.LeveledNpcs.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -2295,6 +2343,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += Weapons.RecordCache.Count > 0 ? 1 : default(uint);
             count += Ammunitions.RecordCache.Count > 0 ? 1 : default(uint);
             count += Npcs.RecordCache.Count > 0 ? 1 : default(uint);
+            count += LeveledNpcs.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -2582,6 +2631,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<Weapon> Weapons { get; }
         new Fallout4Group<Ammunition> Ammunitions { get; }
         new Fallout4Group<Npc> Npcs { get; }
+        new Fallout4Group<LeveledNpc> LeveledNpcs { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -2639,6 +2689,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IWeaponGetter> Weapons { get; }
         IFallout4GroupGetter<IAmmunitionGetter> Ammunitions { get; }
         IFallout4GroupGetter<INpcGetter> Npcs { get; }
+        IFallout4GroupGetter<ILeveledNpcGetter> LeveledNpcs { get; }
 
     }
 
@@ -3240,6 +3291,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Weapons = 36,
         Ammunitions = 37,
         Npcs = 38,
+        LeveledNpcs = 39,
     }
     #endregion
 
@@ -3257,9 +3309,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 39;
+        public const ushort AdditionalFieldCount = 40;
 
-        public const ushort FieldCount = 39;
+        public const ushort FieldCount = 40;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -3328,7 +3380,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.FURN,
                 RecordTypes.WEAP,
                 RecordTypes.AMMO,
-                RecordTypes.NPC_);
+                RecordTypes.NPC_,
+                RecordTypes.LVLN);
         });
         public static readonly Type BinaryWriteTranslation = typeof(Fallout4ModBinaryWriteTranslation);
         #region Interface
@@ -3410,6 +3463,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Weapons.Clear();
             item.Ammunitions.Clear();
             item.Npcs.Clear();
+            item.LeveledNpcs.Clear();
         }
         
         #region Mutagen
@@ -3449,6 +3503,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Weapons.RemapLinks(mapping);
             obj.Ammunitions.RemapLinks(mapping);
             obj.Npcs.RemapLinks(mapping);
+            obj.LeveledNpcs.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -3521,6 +3576,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Weapons.Remove(keys);
             obj.Ammunitions.Remove(keys);
             obj.Npcs.Remove(keys);
+            obj.LeveledNpcs.Remove(keys);
         }
         
         public void Remove(
@@ -3888,6 +3944,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         type: type,
                         keys: keys);
                     break;
+                case "LeveledNpc":
+                case "ILeveledNpcGetter":
+                case "ILeveledNpc":
+                case "ILeveledNpcInternal":
+                    obj.LeveledNpcs.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
@@ -3986,6 +4050,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
                     Remove(obj, keys, typeof(IKeywordGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "INpcSpawn":
+                case "INpcSpawnGetter":
+                    Remove(obj, keys, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "ISpellRecord":
                 case "ISpellRecordGetter":
@@ -4099,6 +4167,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Weapons = MaskItemExt.Factory(item.Weapons.GetEqualsMask(rhs.Weapons, include), include);
             ret.Ammunitions = MaskItemExt.Factory(item.Ammunitions.GetEqualsMask(rhs.Ammunitions, include), include);
             ret.Npcs = MaskItemExt.Factory(item.Npcs.GetEqualsMask(rhs.Npcs, include), include);
+            ret.LeveledNpcs = MaskItemExt.Factory(item.LeveledNpcs.GetEqualsMask(rhs.LeveledNpcs, include), include);
         }
         
         public string ToString(
@@ -4300,6 +4369,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (printMask?.Npcs?.Overall ?? true)
             {
                 item.Npcs?.ToString(fg, "Npcs");
+            }
+            if (printMask?.LeveledNpcs?.Overall ?? true)
+            {
+                item.LeveledNpcs?.ToString(fg, "LeveledNpcs");
             }
         }
         
@@ -4622,6 +4695,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 else if (!isNpcsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LeveledNpcs) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.LeveledNpcs, rhs.LeveledNpcs, out var lhsLeveledNpcs, out var rhsLeveledNpcs, out var isLeveledNpcsEqual))
+                {
+                    if (!object.Equals(lhsLeveledNpcs, rhsLeveledNpcs)) return false;
+                }
+                else if (!isLeveledNpcsEqual) return false;
+            }
             return true;
         }
         
@@ -4667,6 +4748,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.Weapons);
             hash.Add(item.Ammunitions);
             hash.Add(item.Npcs);
+            hash.Add(item.LeveledNpcs);
             return hash.ToHashCode();
         }
         
@@ -4875,6 +4957,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "INpc":
                 case "INpcInternal":
                     return obj.Npcs;
+                case "LeveledNpc":
+                case "ILeveledNpcGetter":
+                case "ILeveledNpc":
+                case "ILeveledNpcInternal":
+                    return obj.LeveledNpcs;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -4899,7 +4986,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[38];
+            Stream[] outputStreams = new Stream[39];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -4939,6 +5026,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             toDo.Add(() => WriteGroupParallel(item.Weapons, 35, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Ammunitions, 36, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Npcs, 37, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LeveledNpcs, 38, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -5122,6 +5210,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
+            foreach (var item in obj.LeveledNpcs.ContainedFormLinks)
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -5276,6 +5368,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 yield return item;
             }
             foreach (var item in obj.Npcs.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LeveledNpcs.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -5656,6 +5752,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         yield return item;
                     }
                     yield break;
+                case "LeveledNpc":
+                case "ILeveledNpcGetter":
+                case "ILeveledNpc":
+                case "ILeveledNpcInternal":
+                    foreach (var item in obj.LeveledNpcs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout4, obj, type, out var linkInterfaces))
                     {
@@ -6019,6 +6124,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 modKey: obj.ModKey,
                 group: (m) => m.Npcs,
                 groupGetter: (m) => m.Npcs))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, LeveledNpc, ILeveledNpcGetter>(
+                srcGroup: obj.LeveledNpcs,
+                type: typeof(ILeveledNpcGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LeveledNpcs,
+                groupGetter: (m) => m.LeveledNpcs))
             {
                 yield return item;
             }
@@ -6581,6 +6695,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         modKey: obj.ModKey,
                         group: (m) => m.Npcs,
                         groupGetter: (m) => m.Npcs))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LeveledNpc":
+                case "ILeveledNpcGetter":
+                case "ILeveledNpc":
+                case "ILeveledNpcInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, LeveledNpc, ILeveledNpcGetter>(
+                        srcGroup: obj.LeveledNpcs,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LeveledNpcs,
+                        groupGetter: (m) => m.LeveledNpcs))
                     {
                         yield return item;
                     }
@@ -7405,6 +7533,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LeveledNpcs) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.LeveledNpcs);
+                try
+                {
+                    item.LeveledNpcs.DeepCopyIn(
+                        rhs: rhs.LeveledNpcs,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.LeveledNpcs));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -7533,6 +7681,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Weapons;
         public bool Ammunitions;
         public bool Npcs;
+        public bool LeveledNpcs;
         public GroupMask()
         {
         }
@@ -7576,6 +7725,7 @@ namespace Mutagen.Bethesda.Fallout4
             Weapons = defaultValue;
             Ammunitions = defaultValue;
             Npcs = defaultValue;
+            LeveledNpcs = defaultValue;
         }
     }
 
@@ -8021,6 +8171,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)NpcsItem).BinaryWriteTranslator).Write<INpcGetter>(
                         item: NpcsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.LeveledNpcs ?? true)
+            {
+                var LeveledNpcsItem = item.LeveledNpcs;
+                if (LeveledNpcsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)LeveledNpcsItem).BinaryWriteTranslator).Write<ILeveledNpcGetter>(
+                        item: LeveledNpcsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -8623,6 +8784,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     }
                     return (int)Fallout4Mod_FieldIndex.Npcs;
                 }
+                case RecordTypeInts.LVLN:
+                {
+                    if (importMask?.LeveledNpcs ?? true)
+                    {
+                        item.LeveledNpcs.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.LeveledNpcs;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -8974,6 +9149,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private IFallout4GroupGetter<INpcGetter>? _Npcs => _NpcsLocations != null ? Fallout4GroupBinaryOverlay<INpcGetter>.Fallout4GroupFactory(_data, _NpcsLocations, _package) : default;
         public IFallout4GroupGetter<INpcGetter> Npcs => _Npcs ?? new Fallout4Group<Npc>(this);
         #endregion
+        #region LeveledNpcs
+        private List<RangeInt64>? _LeveledNpcsLocations;
+        private IFallout4GroupGetter<ILeveledNpcGetter>? _LeveledNpcs => _LeveledNpcsLocations != null ? Fallout4GroupBinaryOverlay<ILeveledNpcGetter>.Fallout4GroupFactory(_data, _LeveledNpcsLocations, _package) : default;
+        public IFallout4GroupGetter<ILeveledNpcGetter> LeveledNpcs => _LeveledNpcs ?? new Fallout4Group<LeveledNpc>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -9289,6 +9469,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     _NpcsLocations ??= new();
                     _NpcsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Npcs;
+                }
+                case RecordTypeInts.LVLN:
+                {
+                    _LeveledNpcsLocations ??= new();
+                    _LeveledNpcsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.LeveledNpcs;
                 }
                 default:
                     return default(int?);

@@ -110,15 +110,15 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region FilterKeywordChances
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<FilterKeywordChance> _FilterKeywordChances = new ExtendedList<FilterKeywordChance>();
-        public ExtendedList<FilterKeywordChance> FilterKeywordChances
+        private ExtendedList<FilterKeywordChance>? _FilterKeywordChances;
+        public ExtendedList<FilterKeywordChance>? FilterKeywordChances
         {
             get => this._FilterKeywordChances;
-            init => this._FilterKeywordChances = value;
+            set => this._FilterKeywordChances = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFilterKeywordChanceGetter> ILeveledItemGetter.FilterKeywordChances => _FilterKeywordChances;
+        IReadOnlyList<IFilterKeywordChanceGetter>? ILeveledItemGetter.FilterKeywordChances => _FilterKeywordChances;
         #endregion
 
         #endregion
@@ -954,7 +954,7 @@ namespace Mutagen.Bethesda.Fallout4
         new LeveledItem.Flag Flags { get; set; }
         new IFormLinkNullable<IGlobalGetter> Global { get; set; }
         new ExtendedList<LeveledItemEntry>? Entries { get; set; }
-        new ExtendedList<FilterKeywordChance> FilterKeywordChances { get; }
+        new ExtendedList<FilterKeywordChance>? FilterKeywordChances { get; set; }
         new IFormLinkNullable<IGlobalGetter> EpicLootChance { get; set; }
         new TranslatedString? OverrideName { get; set; }
     }
@@ -990,7 +990,7 @@ namespace Mutagen.Bethesda.Fallout4
         LeveledItem.Flag Flags { get; }
         IFormLinkNullableGetter<IGlobalGetter> Global { get; }
         IReadOnlyList<ILeveledItemEntryGetter>? Entries { get; }
-        IReadOnlyList<IFilterKeywordChanceGetter> FilterKeywordChances { get; }
+        IReadOnlyList<IFilterKeywordChanceGetter>? FilterKeywordChances { get; }
         IFormLinkNullableGetter<IGlobalGetter> EpicLootChance { get; }
         ITranslatedStringGetter? OverrideName { get; }
 
@@ -1277,7 +1277,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Flags = default;
             item.Global.Clear();
             item.Entries = null;
-            item.FilterKeywordChances.Clear();
+            item.FilterKeywordChances = null;
             item.EpicLootChance.Clear();
             item.OverrideName = default;
             base.Clear(item);
@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             base.RemapLinks(obj, mapping);
             obj.Global.Relink(mapping);
             obj.Entries?.RemapLinks(mapping);
-            obj.FilterKeywordChances.RemapLinks(mapping);
+            obj.FilterKeywordChances?.RemapLinks(mapping);
             obj.EpicLootChance.Relink(mapping);
         }
         
@@ -1474,13 +1474,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.FilterKeywordChances?.Overall ?? true)
+            if ((printMask?.FilterKeywordChances?.Overall ?? true)
+                && item.FilterKeywordChances is {} FilterKeywordChancesItem)
             {
                 fg.AppendLine("FilterKeywordChances =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.FilterKeywordChances)
+                    foreach (var subItem in FilterKeywordChancesItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1670,9 +1671,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            foreach (var item in obj.FilterKeywordChances.SelectMany(f => f.ContainedFormLinks))
+            if (obj.FilterKeywordChances is {} FilterKeywordChancesItem)
             {
-                yield return FormLinkInformation.Factory(item);
+                foreach (var item in FilterKeywordChancesItem.SelectMany(f => f.ContainedFormLinks))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             if (FormLinkInformation.TryFactory(obj.EpicLootChance, out var EpicLootChanceInfo))
             {
@@ -1827,14 +1831,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask?.PushIndex((int)LeveledItem_FieldIndex.FilterKeywordChances);
                 try
                 {
-                    item.FilterKeywordChances.SetTo(
-                        rhs.FilterKeywordChances
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
+                    if ((rhs.FilterKeywordChances != null))
+                    {
+                        item.FilterKeywordChances = 
+                            rhs.FilterKeywordChances
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<FilterKeywordChance>();
+                    }
+                    else
+                    {
+                        item.FilterKeywordChances = null;
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2049,6 +2061,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFilterKeywordChanceGetter>.Instance.Write(
                 writer: writer,
                 items: item.FilterKeywordChances,
+                recordType: translationParams.ConvertToCustom(RecordTypes.LLKC),
                 transl: (MutagenWriter subWriter, IFilterKeywordChanceGetter subItem, TypedWriteParams? conv) =>
                 {
                     var Item = subItem;
@@ -2206,12 +2219,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.LLKC:
                 {
-                    item.FilterKeywordChances.SetTo(
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FilterKeywordChances = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<FilterKeywordChance>.Instance.Parse(
-                            reader: frame,
-                            triggeringRecord: RecordTypes.LLKC,
-                            translationParams: translationParams,
-                            transl: FilterKeywordChance.TryCreateFromBinary));
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FilterKeywordChance.TryCreateFromBinary)
+                        .CastExtendedList<FilterKeywordChance>();
                     return (int)LeveledItem_FieldIndex.FilterKeywordChances;
                 }
                 case RecordTypeInts.LVSG:
@@ -2309,7 +2322,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public IFormLinkNullableGetter<IGlobalGetter> Global => _GlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
         #endregion
         public IReadOnlyList<ILeveledItemEntryGetter>? Entries { get; private set; }
-        public IReadOnlyList<IFilterKeywordChanceGetter> FilterKeywordChances { get; private set; } = ListExt.Empty<FilterKeywordChanceBinaryOverlay>();
+        public IReadOnlyList<IFilterKeywordChanceGetter>? FilterKeywordChances { get; private set; }
         #region EpicLootChance
         private int? _EpicLootChanceLocation;
         public IFormLinkNullableGetter<IGlobalGetter> EpicLootChance => _EpicLootChanceLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EpicLootChanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
@@ -2426,16 +2439,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.LLKC:
                 {
-                    this.FilterKeywordChances = BinaryOverlayList.FactoryByArray<FilterKeywordChanceBinaryOverlay>(
-                        mem: stream.RemainingMemory,
+                    var subMeta = stream.ReadSubrecord();
+                    var subLen = subMeta.ContentLength;
+                    this.FilterKeywordChances = BinaryOverlayList.FactoryByLazyParse<FilterKeywordChanceBinaryOverlay>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
-                        parseParams: parseParams,
-                        getter: (s, p, recConv) => FilterKeywordChanceBinaryOverlay.FilterKeywordChanceFactory(new OverlayStream(s, p), p, recConv),
-                        locs: ParseRecordLocations(
-                            stream: stream,
-                            trigger: type,
-                            constants: _package.MetaData.Constants.SubConstants,
-                            skipHeader: false));
+                        getter: (s, p) => FilterKeywordChanceBinaryOverlay.FilterKeywordChanceFactory(s, p));
+                    stream.Position += subLen;
                     return (int)LeveledItem_FieldIndex.FilterKeywordChances;
                 }
                 case RecordTypeInts.LVSG:

@@ -8,7 +8,7 @@
       <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledItem.Flag" byteLength="1" />
       <FormLink name="Global" recordType="LVLG" refName="Global" />
       <RefList name="Entries" counterRecType="LLCT" refName="LeveledItemEntry" counterLength="1" />
-      <RefList name="FilterKeywordChances" refName="FilterKeywordChance" />
+      <RefList name="FilterKeywordChances" refName="FilterKeywordChance" recordType="LLKC" />
       <FormLink name="EpicLootChance" recordType="LVSG" refName="Global" />
       <String name="OverrideName" recordType="ONAM" translated="DL" />
     </Fields>
