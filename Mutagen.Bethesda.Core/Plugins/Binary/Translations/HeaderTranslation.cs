@@ -113,7 +113,8 @@ public class HeaderTranslation
         return reader.Position + contentLength + reader.MetaData.Constants.MajorConstants.LengthAfterLength;
     }
 
-    public static long ParseRecord(IMutagenReadStream reader)
+    public static long ParseRecord<TReader>(TReader reader)
+        where TReader : IMutagenReadStream
     {
         reader.Position += 4;
         var len = checked((int)reader.ReadUInt32());

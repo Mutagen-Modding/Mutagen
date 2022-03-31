@@ -491,7 +491,9 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
             var subHeader = reader.GetSubrecord();
             if (subHeader.RecordType != triggeringRecord)
             {
-                throw new ArgumentException($"Unexpected record encountered.");
+                // Unexpected, but shouldn't throw if we can help it
+                // Analyzers should be the ones complaining about count not being accurate
+                break;
             }
             if (!IsLoqui)
             {

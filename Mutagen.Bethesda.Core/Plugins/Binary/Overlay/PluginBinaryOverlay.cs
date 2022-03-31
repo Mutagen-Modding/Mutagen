@@ -454,6 +454,11 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                 {
                     stream.Position += (int)varMeta.TotalLength;
                 }
+
+                if (stream.Complete)
+                {
+                    break;
+                }
             }
             return ret.ToArray();
         }
@@ -505,7 +510,9 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                 }
                 else
                 {
-                    throw new ArgumentException($"Unexpected record encountered: {recType}. Was expecting: {string.Join(", ", trigger)}");
+                    // Unexpected count
+                    // Analyzer should warn about this, rather than Mutagen breaking
+                    break;
                 }
             }
             return ret.ToArray();
