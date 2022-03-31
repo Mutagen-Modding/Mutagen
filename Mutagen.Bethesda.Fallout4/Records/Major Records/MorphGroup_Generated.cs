@@ -1622,7 +1622,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        subrecordType: MorphPreset_Registration.TriggeringRecordTypes,
+                        subrecordType: MorphPreset_Registration.AllRecordTypes,
                         countType: RecordTypes.MPPC,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => MorphPresetBinaryOverlay.MorphPresetFactory(new OverlayStream(s, p), p, recConv),

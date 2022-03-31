@@ -1985,7 +1985,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        subrecordType: StoryManagerQuest_Registration.TriggeringRecordTypes,
+                        subrecordType: StoryManagerQuest_Registration.AllRecordTypes,
                         countType: RecordTypes.QNAM,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => StoryManagerQuestBinaryOverlay.StoryManagerQuestFactory(new OverlayStream(s, p), p, recConv),

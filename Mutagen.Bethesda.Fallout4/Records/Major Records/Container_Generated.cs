@@ -3514,7 +3514,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        subrecordType: RecordTypes.CNTO,
+                        subrecordType: ContainerEntry_Registration.AllRecordTypes,
                         countType: RecordTypes.COCT,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),

@@ -2400,7 +2400,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         stream: stream,
                         package: _package,
                         countLength: 1,
-                        subrecordType: LeveledNpcEntry_Registration.TriggeringRecordTypes,
+                        subrecordType: LeveledNpcEntry_Registration.AllRecordTypes,
                         countType: RecordTypes.LLCT,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => LeveledNpcEntryBinaryOverlay.LeveledNpcEntryFactory(new OverlayStream(s, p), p, recConv),

@@ -1924,7 +1924,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         countLength: 1,
-                        subrecordType: LeveledSpellEntry_Registration.TriggeringRecordTypes,
+                        subrecordType: LeveledSpellEntry_Registration.AllRecordTypes,
                         countType: RecordTypes.LLCT,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => LeveledSpellEntryBinaryOverlay.LeveledSpellEntryFactory(new OverlayStream(s, p), p, recConv),

@@ -4836,7 +4836,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        subrecordType: ObjectTemplate_Registration.TriggeringRecordTypes,
+                        subrecordType: ObjectTemplate_Registration.AllRecordTypes,
                         countType: RecordTypes.OBTE,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => ObjectTemplateBinaryOverlay<Armor.Property>.ObjectTemplateFactory(new OverlayStream(s, p), p, recConv),
