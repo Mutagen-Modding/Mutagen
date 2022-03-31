@@ -264,18 +264,18 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         }
                         else if (field is DictType dict)
                         {
-                            if (dict.Mode == DictMode.KeyedValue
-                                && dict.ValueTypeGen is LoquiType dictLoqui
+                            if (dict.ValueTypeGen is LoquiType dictLoqui
                                 && await HasLinks(dictLoqui, includeBaseClass: true) != Case.No)
                             {
+                                var valuesAccessor = dict.Mode == DictMode.KeyedValue ? "Items" : "Values";
                                 var linktype = await HasLinks(dictLoqui, includeBaseClass: true);
                                 switch (linktype)
                                 {
                                     case Case.Yes:
-                                        fg.AppendLine($"foreach (var item in obj.{field.Name}.Items.SelectMany(f => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
+                                        fg.AppendLine($"foreach (var item in obj.{field.Name}.{valuesAccessor}.SelectMany(f => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
                                         break;
                                     case Case.Maybe:
-                                        fg.AppendLine($"foreach (var item in obj.{field.Name}.Items.WhereCastable<{dictLoqui.TypeName(getter: true)}, {nameof(IFormLinkContainerGetter)}>()");
+                                        fg.AppendLine($"foreach (var item in obj.{field.Name}.{valuesAccessor}.WhereCastable<{dictLoqui.TypeName(getter: true)}, {nameof(IFormLinkContainerGetter)}>()");
                                         using (new DepthWrapper(fg))
                                         {
                                             fg.AppendLine($".SelectMany((f) => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");

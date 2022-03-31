@@ -2881,6 +2881,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return FormLinkInformation.Factory(obj.OwnerQuest);
             }
             yield return FormLinkInformation.Factory(obj.PackageTemplate);
+            foreach (var item in obj.Data.Values.WhereCastable<IAPackageDataGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.ContainedFormLinks))
+            {
+                yield return item;
+            }
             foreach (var item in obj.ProcedureTree.WhereCastable<IPackageBranchGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
