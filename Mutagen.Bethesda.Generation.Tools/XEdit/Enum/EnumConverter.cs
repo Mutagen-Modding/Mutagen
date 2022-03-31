@@ -1,8 +1,8 @@
+using System.Globalization;
 using Loqui;
 using Noggog;
-using System.Globalization;
 
-namespace Mutagen.Bethesda.XEdit.Generation;
+namespace Mutagen.Bethesda.Generation.Tools.XEdit.Enum;
 
 public static class EnumConverter
 {

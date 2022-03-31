@@ -1,7 +1,7 @@
 using Loqui;
 using Noggog;
 
-namespace Mutagen.Bethesda.XEdit.Generation;
+namespace Mutagen.Bethesda.Generation.Tools.XEdit.Enum;
 
 /// <summary>
 /// Takes a hand-extracted xEdit snippet of the condition function enum and translates to a C# enum output
