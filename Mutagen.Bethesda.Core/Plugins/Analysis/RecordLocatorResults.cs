@@ -47,6 +47,18 @@ namespace Mutagen.Bethesda.Plugins.Analysis
             return false;
         }
 
+        public bool TryGetRecord(FormKey formKey, [MaybeNullWhen(false)] out RecordLocationMarker marker)
+        {
+            if (!_fromFormKeys.TryGetValue(formKey, out var item))
+            {
+                marker = default;
+                return false;
+            }
+
+            marker = new RecordLocationMarker(formKey, item.Range, item.Record);
+            return true;
+        }
+
         public bool TryGetRecord(long loc, [MaybeNullWhen(false)] out RecordLocationMarker record)
         {
             if (!_fromStart.TryGetInDirection(

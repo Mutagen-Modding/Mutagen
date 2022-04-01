@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using Mutagen.Bethesda.Generation.Tools.FormLinks;
 using Mutagen.Bethesda.Generation.Tools.XEdit.Enum;
 
 try
@@ -6,11 +7,17 @@ try
     var parser = new Parser();
     return await parser.ParseArguments(
             args,
-            typeof(RunXEditEnumConverter))
+            typeof(RunXEditEnumConverter),
+            typeof(FormLinkTypeFisher))
         .MapResult(
             async (RunXEditEnumConverter xEditEnum) =>
             {
                 await xEditEnum.Execute();
+                return 0;
+            },
+            async (FormLinkTypeFisher fisher) =>
+            {
+                fisher.Execute();
                 return 0;
             },
             async _ =>

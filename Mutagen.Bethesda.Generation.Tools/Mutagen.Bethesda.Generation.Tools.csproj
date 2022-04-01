@@ -32,4 +32,8 @@
 	  </Compile>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
+	</ItemGroup>
+
 </Project>
