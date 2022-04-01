@@ -13,6 +13,7 @@
       <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
       <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />
+      <FormLink name="CraftingSound" refName="SoundDescriptor" recordType="CUSD" />
       <RefDirect name="Destructible" refName="Destructible" />
       <String name="Description" recordType="DESC" translated="DL" />
       <Float name="Weight" recordType="DATA" nullable="False" />
@@ -20,7 +21,7 @@
         <Fields>
           <UInt32 name="Value" />
           <Enum name="Flags" enumName="Ingestible.Flag" byteLength="4" />
-          <FormLink name="Addiction" refName="Fallout4MajorRecord" />
+          <FormLink name="Addiction" refName="Spell" />
           <Float name="AddictionChance" />
           <FormLink name="ConsumeSound" refName="SoundDescriptor" />
         </Fields>

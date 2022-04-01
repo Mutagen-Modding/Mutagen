@@ -208,6 +208,16 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEquipTypeGetter> IIngestibleGetter.EquipmentType => this.EquipmentType;
         #endregion
+        #region CraftingSound
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _CraftingSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> CraftingSound
+        {
+            get => _CraftingSound;
+            set => _CraftingSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IIngestibleGetter.CraftingSound => this.CraftingSound;
+        #endregion
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Destructible? _Destructible;
@@ -234,14 +244,14 @@ namespace Mutagen.Bethesda.Fallout4
         public Ingestible.Flag Flags { get; set; } = default;
         #endregion
         #region Addiction
-        private readonly IFormLink<IFallout4MajorRecordGetter> _Addiction = new FormLink<IFallout4MajorRecordGetter>();
-        public IFormLink<IFallout4MajorRecordGetter> Addiction
+        private readonly IFormLink<ISpellGetter> _Addiction = new FormLink<ISpellGetter>();
+        public IFormLink<ISpellGetter> Addiction
         {
             get => _Addiction;
             set => _Addiction.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFallout4MajorRecordGetter> IIngestibleGetter.Addiction => this.Addiction;
+        IFormLinkGetter<ISpellGetter> IIngestibleGetter.Addiction => this.Addiction;
         #endregion
         #region AddictionChance
         public Single AddictionChance { get; set; } = default;
@@ -311,6 +321,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PickUpSound = initialValue;
                 this.PutDownSound = initialValue;
                 this.EquipmentType = initialValue;
+                this.CraftingSound = initialValue;
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
                 this.Description = initialValue;
                 this.Weight = initialValue;
@@ -340,6 +351,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem PickUpSound,
                 TItem PutDownSound,
                 TItem EquipmentType,
+                TItem CraftingSound,
                 TItem Destructible,
                 TItem Description,
                 TItem Weight,
@@ -368,6 +380,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PickUpSound = PickUpSound;
                 this.PutDownSound = PutDownSound;
                 this.EquipmentType = EquipmentType;
+                this.CraftingSound = CraftingSound;
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
                 this.Description = Description;
                 this.Weight = Weight;
@@ -399,6 +412,7 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem PickUpSound;
             public TItem PutDownSound;
             public TItem EquipmentType;
+            public TItem CraftingSound;
             public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
             public TItem Description;
             public TItem Weight;
@@ -432,6 +446,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.PickUpSound, rhs.PickUpSound)) return false;
                 if (!object.Equals(this.PutDownSound, rhs.PutDownSound)) return false;
                 if (!object.Equals(this.EquipmentType, rhs.EquipmentType)) return false;
+                if (!object.Equals(this.CraftingSound, rhs.CraftingSound)) return false;
                 if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Weight, rhs.Weight)) return false;
@@ -457,6 +472,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.PickUpSound);
                 hash.Add(this.PutDownSound);
                 hash.Add(this.EquipmentType);
+                hash.Add(this.CraftingSound);
                 hash.Add(this.Destructible);
                 hash.Add(this.Description);
                 hash.Add(this.Weight);
@@ -509,6 +525,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.PickUpSound)) return false;
                 if (!eval(this.PutDownSound)) return false;
                 if (!eval(this.EquipmentType)) return false;
+                if (!eval(this.CraftingSound)) return false;
                 if (Destructible != null)
                 {
                     if (!eval(this.Destructible.Overall)) return false;
@@ -574,6 +591,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.PickUpSound)) return true;
                 if (eval(this.PutDownSound)) return true;
                 if (eval(this.EquipmentType)) return true;
+                if (eval(this.CraftingSound)) return true;
                 if (Destructible != null)
                 {
                     if (eval(this.Destructible.Overall)) return true;
@@ -637,6 +655,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.PickUpSound = eval(this.PickUpSound);
                 obj.PutDownSound = eval(this.PutDownSound);
                 obj.EquipmentType = eval(this.EquipmentType);
+                obj.CraftingSound = eval(this.CraftingSound);
                 obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
                 obj.Description = eval(this.Description);
                 obj.Weight = eval(this.Weight);
@@ -739,6 +758,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         fg.AppendItem(EquipmentType, "EquipmentType");
                     }
+                    if (printMask?.CraftingSound ?? true)
+                    {
+                        fg.AppendItem(CraftingSound, "CraftingSound");
+                    }
                     if (printMask?.Destructible?.Overall ?? true)
                     {
                         Destructible?.ToString(fg);
@@ -823,6 +846,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? PickUpSound;
             public Exception? PutDownSound;
             public Exception? EquipmentType;
+            public Exception? CraftingSound;
             public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
             public Exception? Description;
             public Exception? Weight;
@@ -860,6 +884,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return PutDownSound;
                     case Ingestible_FieldIndex.EquipmentType:
                         return EquipmentType;
+                    case Ingestible_FieldIndex.CraftingSound:
+                        return CraftingSound;
                     case Ingestible_FieldIndex.Destructible:
                         return Destructible;
                     case Ingestible_FieldIndex.Description:
@@ -918,6 +944,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Ingestible_FieldIndex.EquipmentType:
                         this.EquipmentType = ex;
+                        break;
+                    case Ingestible_FieldIndex.CraftingSound:
+                        this.CraftingSound = ex;
                         break;
                     case Ingestible_FieldIndex.Destructible:
                         this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
@@ -990,6 +1019,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Ingestible_FieldIndex.EquipmentType:
                         this.EquipmentType = (Exception?)obj;
                         break;
+                    case Ingestible_FieldIndex.CraftingSound:
+                        this.CraftingSound = (Exception?)obj;
+                        break;
                     case Ingestible_FieldIndex.Destructible:
                         this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
                         break;
@@ -1041,6 +1073,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (PickUpSound != null) return true;
                 if (PutDownSound != null) return true;
                 if (EquipmentType != null) return true;
+                if (CraftingSound != null) return true;
                 if (Destructible != null) return true;
                 if (Description != null) return true;
                 if (Weight != null) return true;
@@ -1117,6 +1150,7 @@ namespace Mutagen.Bethesda.Fallout4
                 fg.AppendItem(PickUpSound, "PickUpSound");
                 fg.AppendItem(PutDownSound, "PutDownSound");
                 fg.AppendItem(EquipmentType, "EquipmentType");
+                fg.AppendItem(CraftingSound, "CraftingSound");
                 Destructible?.ToString(fg);
                 fg.AppendItem(Description, "Description");
                 fg.AppendItem(Weight, "Weight");
@@ -1166,6 +1200,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
                 ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
                 ret.EquipmentType = this.EquipmentType.Combine(rhs.EquipmentType);
+                ret.CraftingSound = this.CraftingSound.Combine(rhs.CraftingSound);
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
@@ -1208,6 +1243,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool PickUpSound;
             public bool PutDownSound;
             public bool EquipmentType;
+            public bool CraftingSound;
             public Destructible.TranslationMask? Destructible;
             public bool Description;
             public bool Weight;
@@ -1233,6 +1269,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PickUpSound = defaultOn;
                 this.PutDownSound = defaultOn;
                 this.EquipmentType = defaultOn;
+                this.CraftingSound = defaultOn;
                 this.Description = defaultOn;
                 this.Weight = defaultOn;
                 this.Value = defaultOn;
@@ -1258,6 +1295,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((PickUpSound, null));
                 ret.Add((PutDownSound, null));
                 ret.Add((EquipmentType, null));
+                ret.Add((CraftingSound, null));
                 ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
                 ret.Add((Description, null));
                 ret.Add((Weight, null));
@@ -1456,12 +1494,13 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
         new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> CraftingSound { get; set; }
         new Destructible? Destructible { get; set; }
         new TranslatedString? Description { get; set; }
         new Single Weight { get; set; }
         new UInt32 Value { get; set; }
         new Ingestible.Flag Flags { get; set; }
-        new IFormLink<IFallout4MajorRecordGetter> Addiction { get; set; }
+        new IFormLink<ISpellGetter> Addiction { get; set; }
         new Single AddictionChance { get; set; }
         new IFormLink<ISoundDescriptorGetter> ConsumeSound { get; set; }
         new TranslatedString? AddictionName { get; set; }
@@ -1537,12 +1576,13 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
         IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> CraftingSound { get; }
         IDestructibleGetter? Destructible { get; }
         ITranslatedStringGetter? Description { get; }
         Single Weight { get; }
         UInt32 Value { get; }
         Ingestible.Flag Flags { get; }
-        IFormLinkGetter<IFallout4MajorRecordGetter> Addiction { get; }
+        IFormLinkGetter<ISpellGetter> Addiction { get; }
         Single AddictionChance { get; }
         IFormLinkGetter<ISoundDescriptorGetter> ConsumeSound { get; }
         ITranslatedStringGetter? AddictionName { get; }
@@ -1725,17 +1765,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         PickUpSound = 12,
         PutDownSound = 13,
         EquipmentType = 14,
-        Destructible = 15,
-        Description = 16,
-        Weight = 17,
-        Value = 18,
-        Flags = 19,
-        Addiction = 20,
-        AddictionChance = 21,
-        ConsumeSound = 22,
-        AddictionName = 23,
-        Effects = 24,
-        ENITDataTypeState = 25,
+        CraftingSound = 15,
+        Destructible = 16,
+        Description = 17,
+        Weight = 18,
+        Value = 19,
+        Flags = 20,
+        Addiction = 21,
+        AddictionChance = 22,
+        ConsumeSound = 23,
+        AddictionName = 24,
+        Effects = 25,
+        ENITDataTypeState = 26,
     }
     #endregion
 
@@ -1753,9 +1794,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "12503adc-e228-4b45-a88a-bee5aac320fd";
 
-        public const ushort AdditionalFieldCount = 20;
+        public const ushort AdditionalFieldCount = 21;
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(Ingestible.Mask<>);
 
@@ -1798,6 +1839,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.YNAM,
                 RecordTypes.ZNAM,
                 RecordTypes.ETYP,
+                RecordTypes.CUSD,
                 RecordTypes.DEST,
                 RecordTypes.DAMC,
                 RecordTypes.DSTD,
@@ -1862,6 +1904,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.PickUpSound.Clear();
             item.PutDownSound.Clear();
             item.EquipmentType.Clear();
+            item.CraftingSound.Clear();
             item.Destructible = null;
             item.Description = default;
             item.Weight = default;
@@ -1896,6 +1939,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.PickUpSound.Relink(mapping);
             obj.PutDownSound.Relink(mapping);
             obj.EquipmentType.Relink(mapping);
+            obj.CraftingSound.Relink(mapping);
             obj.Destructible?.RemapLinks(mapping);
             obj.Addiction.Relink(mapping);
             obj.ConsumeSound.Relink(mapping);
@@ -1988,6 +2032,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.PickUpSound = item.PickUpSound.Equals(rhs.PickUpSound);
             ret.PutDownSound = item.PutDownSound.Equals(rhs.PutDownSound);
             ret.EquipmentType = item.EquipmentType.Equals(rhs.EquipmentType);
+            ret.CraftingSound = item.CraftingSound.Equals(rhs.CraftingSound);
             ret.Destructible = EqualsMaskHelper.EqualsHelper(
                 item.Destructible,
                 rhs.Destructible,
@@ -2110,6 +2155,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (printMask?.EquipmentType ?? true)
             {
                 fg.AppendItem(item.EquipmentType.FormKeyNullable, "EquipmentType");
+            }
+            if (printMask?.CraftingSound ?? true)
+            {
+                fg.AppendItem(item.CraftingSound.FormKeyNullable, "CraftingSound");
             }
             if ((printMask?.Destructible?.Overall ?? true)
                 && item.Destructible is {} DestructibleItem)
@@ -2268,6 +2317,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.CraftingSound) ?? true))
+            {
+                if (!lhs.CraftingSound.Equals(rhs.CraftingSound)) return false;
+            }
             if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
@@ -2362,6 +2415,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.PickUpSound);
             hash.Add(item.PutDownSound);
             hash.Add(item.EquipmentType);
+            hash.Add(item.CraftingSound);
             if (item.Destructible is {} Destructibleitem)
             {
                 hash.Add(Destructibleitem);
@@ -2440,6 +2494,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (FormLinkInformation.TryFactory(obj.EquipmentType, out var EquipmentTypeInfo))
             {
                 yield return EquipmentTypeInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.CraftingSound, out var CraftingSoundInfo))
+            {
+                yield return CraftingSoundInfo;
             }
             if (obj.Destructible is {} DestructibleItems)
             {
@@ -2648,6 +2706,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.EquipmentType) ?? true))
             {
                 item.EquipmentType.SetTo(rhs.EquipmentType.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.CraftingSound) ?? true))
+            {
+                item.CraftingSound.SetTo(rhs.CraftingSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Destructible) ?? true))
             {
@@ -2954,6 +3016,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 item: item.EquipmentType,
                 header: translationParams.ConvertToCustom(RecordTypes.ETYP));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.CraftingSound,
+                header: translationParams.ConvertToCustom(RecordTypes.CUSD));
             if (item.Destructible is {} DestructibleItem)
             {
                 ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
@@ -3162,6 +3228,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Ingestible_FieldIndex.EquipmentType;
                 }
+                case RecordTypeInts.CUSD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CraftingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Ingestible_FieldIndex.CraftingSound;
+                }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DAMC:
                 case RecordTypeInts.DSTD:
@@ -3320,6 +3392,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private int? _EquipmentTypeLocation;
         public IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
         #endregion
+        #region CraftingSound
+        private int? _CraftingSoundLocation;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> CraftingSound => _CraftingSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CraftingSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        #endregion
         public IDestructibleGetter? Destructible { get; private set; }
         #region Description
         private int? _DescriptionLocation;
@@ -3344,7 +3420,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Addiction
         private int _AddictionLocation => _ENITLocation!.Value + 0x8;
         private bool _Addiction_IsSet => _ENITLocation.HasValue;
-        public IFormLinkGetter<IFallout4MajorRecordGetter> Addiction => _Addiction_IsSet ? new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AddictionLocation, 0x4)))) : FormLink<IFallout4MajorRecordGetter>.Null;
+        public IFormLinkGetter<ISpellGetter> Addiction => _Addiction_IsSet ? new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AddictionLocation, 0x4)))) : FormLink<ISpellGetter>.Null;
         #endregion
         #region AddictionChance
         private int _AddictionChanceLocation => _ENITLocation!.Value + 0xC;
@@ -3486,6 +3562,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     _EquipmentTypeLocation = (stream.Position - offset);
                     return (int)Ingestible_FieldIndex.EquipmentType;
+                }
+                case RecordTypeInts.CUSD:
+                {
+                    _CraftingSoundLocation = (stream.Position - offset);
+                    return (int)Ingestible_FieldIndex.CraftingSound;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DAMC:
