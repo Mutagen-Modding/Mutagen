@@ -44,6 +44,8 @@
       <Group name="LeveledNpcs" refName="LeveledNpc" />
       <Group name="Keys" refName="Key" />
       <Group name="Ingestibles" refName="Ingestible" />
+      <Group name="IdleMarkers" refName="IdleMarker" />
+      <Group name="Holotapes" refName="Holotape" />
       <!--			<Group name="VoiceTypes" refName="VoiceType" />-->
       <!--			<Group name="Quests" refName="Quest" />-->
       <!--			<Group name="MaterialTypes" refName="MaterialType" />-->

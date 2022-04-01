@@ -98,6 +98,8 @@ namespace Mutagen.Bethesda.Fallout4
             _LeveledNpcs_Object = new Fallout4Group<LeveledNpc>(this);
             _Keys_Object = new Fallout4Group<Key>(this);
             _Ingestibles_Object = new Fallout4Group<Ingestible>(this);
+            _IdleMarkers_Object = new Fallout4Group<IdleMarker>(this);
+            _Holotapes_Object = new Fallout4Group<Holotape>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -397,6 +399,20 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IIngestibleGetter> IFallout4ModGetter.Ingestibles => _Ingestibles_Object;
         #endregion
+        #region IdleMarkers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<IdleMarker> _IdleMarkers_Object;
+        public Fallout4Group<IdleMarker> IdleMarkers => _IdleMarkers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IIdleMarkerGetter> IFallout4ModGetter.IdleMarkers => _IdleMarkers_Object;
+        #endregion
+        #region Holotapes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<Holotape> _Holotapes_Object;
+        public Fallout4Group<Holotape> Holotapes => _Holotapes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IHolotapeGetter> IFallout4ModGetter.Holotapes => _Holotapes_Object;
+        #endregion
 
         #region To String
 
@@ -477,6 +493,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.LeveledNpcs = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Keys = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Ingestibles = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.IdleMarkers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Holotapes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -521,7 +539,9 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Npcs,
                 TItem LeveledNpcs,
                 TItem Keys,
-                TItem Ingestibles)
+                TItem Ingestibles,
+                TItem IdleMarkers,
+                TItem Holotapes)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -565,6 +585,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.LeveledNpcs = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(LeveledNpcs, new Fallout4Group.Mask<TItem>(LeveledNpcs));
                 this.Keys = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Keys, new Fallout4Group.Mask<TItem>(Keys));
                 this.Ingestibles = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Ingestibles, new Fallout4Group.Mask<TItem>(Ingestibles));
+                this.IdleMarkers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(IdleMarkers, new Fallout4Group.Mask<TItem>(IdleMarkers));
+                this.Holotapes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Holotapes, new Fallout4Group.Mask<TItem>(Holotapes));
             }
 
             #pragma warning disable CS8618
@@ -618,6 +640,8 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? LeveledNpcs { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Keys { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Ingestibles { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? IdleMarkers { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Holotapes { get; set; }
             #endregion
 
             #region Equals
@@ -672,6 +696,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.LeveledNpcs, rhs.LeveledNpcs)) return false;
                 if (!object.Equals(this.Keys, rhs.Keys)) return false;
                 if (!object.Equals(this.Ingestibles, rhs.Ingestibles)) return false;
+                if (!object.Equals(this.IdleMarkers, rhs.IdleMarkers)) return false;
+                if (!object.Equals(this.Holotapes, rhs.Holotapes)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -719,6 +745,8 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.LeveledNpcs);
                 hash.Add(this.Keys);
                 hash.Add(this.Ingestibles);
+                hash.Add(this.IdleMarkers);
+                hash.Add(this.Holotapes);
                 return hash.ToHashCode();
             }
 
@@ -937,6 +965,16 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Ingestibles.Overall)) return false;
                     if (this.Ingestibles.Specific != null && !this.Ingestibles.Specific.All(eval)) return false;
                 }
+                if (IdleMarkers != null)
+                {
+                    if (!eval(this.IdleMarkers.Overall)) return false;
+                    if (this.IdleMarkers.Specific != null && !this.IdleMarkers.Specific.All(eval)) return false;
+                }
+                if (Holotapes != null)
+                {
+                    if (!eval(this.Holotapes.Overall)) return false;
+                    if (this.Holotapes.Specific != null && !this.Holotapes.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1154,6 +1192,16 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Ingestibles.Overall)) return true;
                     if (this.Ingestibles.Specific != null && this.Ingestibles.Specific.Any(eval)) return true;
                 }
+                if (IdleMarkers != null)
+                {
+                    if (eval(this.IdleMarkers.Overall)) return true;
+                    if (this.IdleMarkers.Specific != null && this.IdleMarkers.Specific.Any(eval)) return true;
+                }
+                if (Holotapes != null)
+                {
+                    if (eval(this.Holotapes.Overall)) return true;
+                    if (this.Holotapes.Specific != null && this.Holotapes.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1210,6 +1258,8 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.LeveledNpcs = this.LeveledNpcs == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.LeveledNpcs.Overall), this.LeveledNpcs.Specific?.Translate(eval));
                 obj.Keys = this.Keys == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Keys.Overall), this.Keys.Specific?.Translate(eval));
                 obj.Ingestibles = this.Ingestibles == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Ingestibles.Overall), this.Ingestibles.Specific?.Translate(eval));
+                obj.IdleMarkers = this.IdleMarkers == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.IdleMarkers.Overall), this.IdleMarkers.Specific?.Translate(eval));
+                obj.Holotapes = this.Holotapes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Holotapes.Overall), this.Holotapes.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1400,6 +1450,14 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Ingestibles?.ToString(fg);
                     }
+                    if (printMask?.IdleMarkers?.Overall ?? true)
+                    {
+                        IdleMarkers?.ToString(fg);
+                    }
+                    if (printMask?.Holotapes?.Overall ?? true)
+                    {
+                        Holotapes?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1467,6 +1525,8 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<LeveledNpc.ErrorMask>?>? LeveledNpcs;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Key.ErrorMask>?>? Keys;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Ingestible.ErrorMask>?>? Ingestibles;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<IdleMarker.ErrorMask>?>? IdleMarkers;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Holotape.ErrorMask>?>? Holotapes;
             #endregion
 
             #region IErrorMask
@@ -1559,6 +1619,10 @@ namespace Mutagen.Bethesda.Fallout4
                         return Keys;
                     case Fallout4Mod_FieldIndex.Ingestibles:
                         return Ingestibles;
+                    case Fallout4Mod_FieldIndex.IdleMarkers:
+                        return IdleMarkers;
+                    case Fallout4Mod_FieldIndex.Holotapes:
+                        return Holotapes;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1694,6 +1758,12 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.Ingestibles:
                         this.Ingestibles = new MaskItem<Exception?, Fallout4Group.ErrorMask<Ingestible.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.IdleMarkers:
+                        this.IdleMarkers = new MaskItem<Exception?, Fallout4Group.ErrorMask<IdleMarker.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Holotapes:
+                        this.Holotapes = new MaskItem<Exception?, Fallout4Group.ErrorMask<Holotape.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1831,6 +1901,12 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.Ingestibles:
                         this.Ingestibles = (MaskItem<Exception?, Fallout4Group.ErrorMask<Ingestible.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.IdleMarkers:
+                        this.IdleMarkers = (MaskItem<Exception?, Fallout4Group.ErrorMask<IdleMarker.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.Holotapes:
+                        this.Holotapes = (MaskItem<Exception?, Fallout4Group.ErrorMask<Holotape.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1881,6 +1957,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (LeveledNpcs != null) return true;
                 if (Keys != null) return true;
                 if (Ingestibles != null) return true;
+                if (IdleMarkers != null) return true;
+                if (Holotapes != null) return true;
                 return false;
             }
             #endregion
@@ -1957,6 +2035,8 @@ namespace Mutagen.Bethesda.Fallout4
                 LeveledNpcs?.ToString(fg);
                 Keys?.ToString(fg);
                 Ingestibles?.ToString(fg);
+                IdleMarkers?.ToString(fg);
+                Holotapes?.ToString(fg);
             }
             #endregion
 
@@ -2007,6 +2087,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.LeveledNpcs = this.LeveledNpcs.Combine(rhs.LeveledNpcs, (l, r) => l.Combine(r));
                 ret.Keys = this.Keys.Combine(rhs.Keys, (l, r) => l.Combine(r));
                 ret.Ingestibles = this.Ingestibles.Combine(rhs.Ingestibles, (l, r) => l.Combine(r));
+                ret.IdleMarkers = this.IdleMarkers.Combine(rhs.IdleMarkers, (l, r) => l.Combine(r));
+                ret.Holotapes = this.Holotapes.Combine(rhs.Holotapes, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2072,6 +2154,8 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<LeveledNpc.TranslationMask>? LeveledNpcs;
             public Fallout4Group.TranslationMask<Key.TranslationMask>? Keys;
             public Fallout4Group.TranslationMask<Ingestible.TranslationMask>? Ingestibles;
+            public Fallout4Group.TranslationMask<IdleMarker.TranslationMask>? IdleMarkers;
+            public Fallout4Group.TranslationMask<Holotape.TranslationMask>? Holotapes;
             #endregion
 
             #region Ctors
@@ -2138,6 +2222,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((LeveledNpcs != null ? LeveledNpcs.OnOverall : DefaultOn, LeveledNpcs?.GetCrystal()));
                 ret.Add((Keys != null ? Keys.OnOverall : DefaultOn, Keys?.GetCrystal()));
                 ret.Add((Ingestibles != null ? Ingestibles.OnOverall : DefaultOn, Ingestibles?.GetCrystal()));
+                ret.Add((IdleMarkers != null ? IdleMarkers.OnOverall : DefaultOn, IdleMarkers?.GetCrystal()));
+                ret.Add((Holotapes != null ? Holotapes.OnOverall : DefaultOn, Holotapes?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2221,6 +2307,8 @@ namespace Mutagen.Bethesda.Fallout4
             _LeveledNpcs_Object = new Fallout4Group<LeveledNpc>(this);
             _Keys_Object = new Fallout4Group<Key>(this);
             _Ingestibles_Object = new Fallout4Group<Ingestible>(this);
+            _IdleMarkers_Object = new Fallout4Group<IdleMarker>(this);
+            _Holotapes_Object = new Fallout4Group<Holotape>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -2391,6 +2479,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Ingestibles.RecordCache.Set(rhsMod.Ingestibles.RecordCache.Items);
             }
+            if (mask?.IdleMarkers ?? true)
+            {
+                this.IdleMarkers.RecordCache.Set(rhsMod.IdleMarkers.RecordCache.Items);
+            }
+            if (mask?.Holotapes ?? true)
+            {
+                this.Holotapes.RecordCache.Set(rhsMod.Holotapes.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -2442,6 +2538,8 @@ namespace Mutagen.Bethesda.Fallout4
             count += LeveledNpcs.RecordCache.Count > 0 ? 1 : default(uint);
             count += Keys.RecordCache.Count > 0 ? 1 : default(uint);
             count += Ingestibles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += IdleMarkers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Holotapes.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -2732,6 +2830,8 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<LeveledNpc> LeveledNpcs { get; }
         new Fallout4Group<Key> Keys { get; }
         new Fallout4Group<Ingestible> Ingestibles { get; }
+        new Fallout4Group<IdleMarker> IdleMarkers { get; }
+        new Fallout4Group<Holotape> Holotapes { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -2792,6 +2892,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<ILeveledNpcGetter> LeveledNpcs { get; }
         IFallout4GroupGetter<IKeyGetter> Keys { get; }
         IFallout4GroupGetter<IIngestibleGetter> Ingestibles { get; }
+        IFallout4GroupGetter<IIdleMarkerGetter> IdleMarkers { get; }
+        IFallout4GroupGetter<IHolotapeGetter> Holotapes { get; }
 
     }
 
@@ -3396,6 +3498,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         LeveledNpcs = 39,
         Keys = 40,
         Ingestibles = 41,
+        IdleMarkers = 42,
+        Holotapes = 43,
     }
     #endregion
 
@@ -3413,9 +3517,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 42;
+        public const ushort AdditionalFieldCount = 44;
 
-        public const ushort FieldCount = 42;
+        public const ushort FieldCount = 44;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -3487,7 +3591,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.NPC_,
                 RecordTypes.LVLN,
                 RecordTypes.KEYM,
-                RecordTypes.ALCH);
+                RecordTypes.ALCH,
+                RecordTypes.IDLM,
+                RecordTypes.NOTE);
         });
         public static readonly Type BinaryWriteTranslation = typeof(Fallout4ModBinaryWriteTranslation);
         #region Interface
@@ -3572,6 +3678,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.LeveledNpcs.Clear();
             item.Keys.Clear();
             item.Ingestibles.Clear();
+            item.IdleMarkers.Clear();
+            item.Holotapes.Clear();
         }
         
         #region Mutagen
@@ -3614,6 +3722,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.LeveledNpcs.RemapLinks(mapping);
             obj.Keys.RemapLinks(mapping);
             obj.Ingestibles.RemapLinks(mapping);
+            obj.IdleMarkers.RemapLinks(mapping);
+            obj.Holotapes.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -3689,6 +3799,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.LeveledNpcs.Remove(keys);
             obj.Keys.Remove(keys);
             obj.Ingestibles.Remove(keys);
+            obj.IdleMarkers.Remove(keys);
+            obj.Holotapes.Remove(keys);
         }
         
         public void Remove(
@@ -4080,6 +4192,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         type: type,
                         keys: keys);
                     break;
+                case "IdleMarker":
+                case "IIdleMarkerGetter":
+                case "IIdleMarker":
+                case "IIdleMarkerInternal":
+                    obj.IdleMarkers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Holotape":
+                case "IHolotapeGetter":
+                case "IHolotape":
+                case "IHolotapeInternal":
+                    obj.Holotapes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
@@ -4094,6 +4222,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Remove(obj, keys, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IHolotapeGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IIdleMarkerGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
@@ -4126,6 +4256,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IHolotapeGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
@@ -4307,6 +4438,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.LeveledNpcs = MaskItemExt.Factory(item.LeveledNpcs.GetEqualsMask(rhs.LeveledNpcs, include), include);
             ret.Keys = MaskItemExt.Factory(item.Keys.GetEqualsMask(rhs.Keys, include), include);
             ret.Ingestibles = MaskItemExt.Factory(item.Ingestibles.GetEqualsMask(rhs.Ingestibles, include), include);
+            ret.IdleMarkers = MaskItemExt.Factory(item.IdleMarkers.GetEqualsMask(rhs.IdleMarkers, include), include);
+            ret.Holotapes = MaskItemExt.Factory(item.Holotapes.GetEqualsMask(rhs.Holotapes, include), include);
         }
         
         public string ToString(
@@ -4520,6 +4653,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (printMask?.Ingestibles?.Overall ?? true)
             {
                 item.Ingestibles?.ToString(fg, "Ingestibles");
+            }
+            if (printMask?.IdleMarkers?.Overall ?? true)
+            {
+                item.IdleMarkers?.ToString(fg, "IdleMarkers");
+            }
+            if (printMask?.Holotapes?.Overall ?? true)
+            {
+                item.Holotapes?.ToString(fg, "Holotapes");
             }
         }
         
@@ -4866,6 +5007,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 else if (!isIngestiblesEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.IdleMarkers) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.IdleMarkers, rhs.IdleMarkers, out var lhsIdleMarkers, out var rhsIdleMarkers, out var isIdleMarkersEqual))
+                {
+                    if (!object.Equals(lhsIdleMarkers, rhsIdleMarkers)) return false;
+                }
+                else if (!isIdleMarkersEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Holotapes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Holotapes, rhs.Holotapes, out var lhsHolotapes, out var rhsHolotapes, out var isHolotapesEqual))
+                {
+                    if (!object.Equals(lhsHolotapes, rhsHolotapes)) return false;
+                }
+                else if (!isHolotapesEqual) return false;
+            }
             return true;
         }
         
@@ -4914,6 +5071,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.LeveledNpcs);
             hash.Add(item.Keys);
             hash.Add(item.Ingestibles);
+            hash.Add(item.IdleMarkers);
+            hash.Add(item.Holotapes);
             return hash.ToHashCode();
         }
         
@@ -5137,6 +5296,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IIngestible":
                 case "IIngestibleInternal":
                     return obj.Ingestibles;
+                case "IdleMarker":
+                case "IIdleMarkerGetter":
+                case "IIdleMarker":
+                case "IIdleMarkerInternal":
+                    return obj.IdleMarkers;
+                case "Holotape":
+                case "IHolotapeGetter":
+                case "IHolotape":
+                case "IHolotapeInternal":
+                    return obj.Holotapes;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -5161,7 +5330,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[41];
+            Stream[] outputStreams = new Stream[43];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -5204,6 +5373,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             toDo.Add(() => WriteGroupParallel(item.LeveledNpcs, 38, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keys, 39, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Ingestibles, 40, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.IdleMarkers, 41, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Holotapes, 42, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -5399,6 +5570,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
+            foreach (var item in obj.IdleMarkers.ContainedFormLinks)
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Holotapes.ContainedFormLinks)
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -5565,6 +5744,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 yield return item;
             }
             foreach (var item in obj.Ingestibles.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.IdleMarkers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Holotapes.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -5972,6 +6159,24 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         yield return item;
                     }
                     yield break;
+                case "IdleMarker":
+                case "IIdleMarkerGetter":
+                case "IIdleMarker":
+                case "IIdleMarkerInternal":
+                    foreach (var item in obj.IdleMarkers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Holotape":
+                case "IHolotapeGetter":
+                case "IHolotape":
+                case "IHolotapeInternal":
+                    foreach (var item in obj.Holotapes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout4, obj, type, out var linkInterfaces))
                     {
@@ -6362,6 +6567,24 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 modKey: obj.ModKey,
                 group: (m) => m.Ingestibles,
                 groupGetter: (m) => m.Ingestibles))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, IdleMarker, IIdleMarkerGetter>(
+                srcGroup: obj.IdleMarkers,
+                type: typeof(IIdleMarkerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.IdleMarkers,
+                groupGetter: (m) => m.IdleMarkers))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Holotape, IHolotapeGetter>(
+                srcGroup: obj.Holotapes,
+                type: typeof(IHolotapeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Holotapes,
+                groupGetter: (m) => m.Holotapes))
             {
                 yield return item;
             }
@@ -6966,6 +7189,34 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         modKey: obj.ModKey,
                         group: (m) => m.Ingestibles,
                         groupGetter: (m) => m.Ingestibles))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IdleMarker":
+                case "IIdleMarkerGetter":
+                case "IIdleMarker":
+                case "IIdleMarkerInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, IdleMarker, IIdleMarkerGetter>(
+                        srcGroup: obj.IdleMarkers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.IdleMarkers,
+                        groupGetter: (m) => m.IdleMarkers))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Holotape":
+                case "IHolotapeGetter":
+                case "IHolotape":
+                case "IHolotapeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Holotape, IHolotapeGetter>(
+                        srcGroup: obj.Holotapes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Holotapes,
+                        groupGetter: (m) => m.Holotapes))
                     {
                         yield return item;
                     }
@@ -7850,6 +8101,46 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.IdleMarkers) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.IdleMarkers);
+                try
+                {
+                    item.IdleMarkers.DeepCopyIn(
+                        rhs: rhs.IdleMarkers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.IdleMarkers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Holotapes) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Holotapes);
+                try
+                {
+                    item.Holotapes.DeepCopyIn(
+                        rhs: rhs.Holotapes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Holotapes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -7981,6 +8272,8 @@ namespace Mutagen.Bethesda.Fallout4
         public bool LeveledNpcs;
         public bool Keys;
         public bool Ingestibles;
+        public bool IdleMarkers;
+        public bool Holotapes;
         public GroupMask()
         {
         }
@@ -8027,6 +8320,8 @@ namespace Mutagen.Bethesda.Fallout4
             LeveledNpcs = defaultValue;
             Keys = defaultValue;
             Ingestibles = defaultValue;
+            IdleMarkers = defaultValue;
+            Holotapes = defaultValue;
         }
     }
 
@@ -8505,6 +8800,28 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)IngestiblesItem).BinaryWriteTranslator).Write<IIngestibleGetter>(
                         item: IngestiblesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.IdleMarkers ?? true)
+            {
+                var IdleMarkersItem = item.IdleMarkers;
+                if (IdleMarkersItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)IdleMarkersItem).BinaryWriteTranslator).Write<IIdleMarkerGetter>(
+                        item: IdleMarkersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Holotapes ?? true)
+            {
+                var HolotapesItem = item.Holotapes;
+                if (HolotapesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)HolotapesItem).BinaryWriteTranslator).Write<IHolotapeGetter>(
+                        item: HolotapesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -9149,6 +9466,34 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     }
                     return (int)Fallout4Mod_FieldIndex.Ingestibles;
                 }
+                case RecordTypeInts.IDLM:
+                {
+                    if (importMask?.IdleMarkers ?? true)
+                    {
+                        item.IdleMarkers.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.IdleMarkers;
+                }
+                case RecordTypeInts.NOTE:
+                {
+                    if (importMask?.Holotapes ?? true)
+                    {
+                        item.Holotapes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Holotapes;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -9515,6 +9860,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private IFallout4GroupGetter<IIngestibleGetter>? _Ingestibles => _IngestiblesLocations != null ? Fallout4GroupBinaryOverlay<IIngestibleGetter>.Fallout4GroupFactory(_data, _IngestiblesLocations, _package) : default;
         public IFallout4GroupGetter<IIngestibleGetter> Ingestibles => _Ingestibles ?? new Fallout4Group<Ingestible>(this);
         #endregion
+        #region IdleMarkers
+        private List<RangeInt64>? _IdleMarkersLocations;
+        private IFallout4GroupGetter<IIdleMarkerGetter>? _IdleMarkers => _IdleMarkersLocations != null ? Fallout4GroupBinaryOverlay<IIdleMarkerGetter>.Fallout4GroupFactory(_data, _IdleMarkersLocations, _package) : default;
+        public IFallout4GroupGetter<IIdleMarkerGetter> IdleMarkers => _IdleMarkers ?? new Fallout4Group<IdleMarker>(this);
+        #endregion
+        #region Holotapes
+        private List<RangeInt64>? _HolotapesLocations;
+        private IFallout4GroupGetter<IHolotapeGetter>? _Holotapes => _HolotapesLocations != null ? Fallout4GroupBinaryOverlay<IHolotapeGetter>.Fallout4GroupFactory(_data, _HolotapesLocations, _package) : default;
+        public IFallout4GroupGetter<IHolotapeGetter> Holotapes => _Holotapes ?? new Fallout4Group<Holotape>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -9848,6 +10203,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     _IngestiblesLocations ??= new();
                     _IngestiblesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Ingestibles;
+                }
+                case RecordTypeInts.IDLM:
+                {
+                    _IdleMarkersLocations ??= new();
+                    _IdleMarkersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.IdleMarkers;
+                }
+                case RecordTypeInts.NOTE:
+                {
+                    _HolotapesLocations ??= new();
+                    _HolotapesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.Holotapes;
                 }
                 default:
                     return default(int?);

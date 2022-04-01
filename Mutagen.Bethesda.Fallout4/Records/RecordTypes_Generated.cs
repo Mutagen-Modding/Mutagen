@@ -344,6 +344,7 @@ public partial class RecordTypes
     public static readonly RecordType SADD = new(0x44444153);
     public static readonly RecordType SAKD = new(0x444B4153);
     public static readonly RecordType SAPT = new(0x54504153);
+    public static readonly RecordType SCEN = new(0x4E454353);
     public static readonly RecordType SCOL = new(0x4C4F4353);
     public static readonly RecordType SCRN = new(0x4E524353);
     public static readonly RecordType SDSC = new(0x43534453);

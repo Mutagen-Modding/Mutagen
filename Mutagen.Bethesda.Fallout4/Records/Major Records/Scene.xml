@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Scene" objType="Record" recordType="SCEN" baseClass="Fallout4MajorRecord" GUID="4ede0e86-8f66-4dc0-819f-9e63a94fd469" ID="357">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

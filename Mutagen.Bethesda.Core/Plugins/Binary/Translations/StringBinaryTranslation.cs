@@ -133,6 +133,21 @@ public class StringBinaryTranslation
         }
     }
 
+    public string Parse(
+        ReadOnlyMemorySlice<byte> data,
+        IMutagenEncoding encoding,
+        bool parseWhole = true)
+    {
+        if (parseWhole)
+        {
+            return BinaryStringUtility.ProcessWholeToZString(data, encoding);
+        }
+        else
+        {
+            return BinaryStringUtility.ParseUnknownLengthString(data, encoding);
+        }
+    }
+
     public void Write(
         MutagenWriter writer,
         string item)

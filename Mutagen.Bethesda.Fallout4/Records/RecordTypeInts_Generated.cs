@@ -342,6 +342,7 @@ public partial class RecordTypeInts
     public const int SADD = 0x44444153;
     public const int SAKD = 0x444B4153;
     public const int SAPT = 0x54504153;
+    public const int SCEN = 0x4E454353;
     public const int SCOL = 0x4C4F4353;
     public const int SCRN = 0x4E524353;
     public const int SDSC = 0x43534453;

@@ -24,6 +24,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 ArmorModel_Registration.Instance,
                 Book_Registration.Instance,
+                Holotape_Registration.Instance,
                 Ingestible_Registration.Instance,
                 Ingredient_Registration.Instance,
                 Key_Registration.Instance,
@@ -87,6 +88,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 Grass_Registration.Instance,
                 Hazard_Registration.Instance,
                 HeadPart_Registration.Instance,
+                Holotape_Registration.Instance,
                 IdleMarker_Registration.Instance,
                 Ingestible_Registration.Instance,
                 Ingredient_Registration.Instance,
@@ -120,6 +122,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 Furniture_Registration.Instance,
                 Hazard_Registration.Instance,
                 HeadPart_Registration.Instance,
+                Holotape_Registration.Instance,
                 Ingestible_Registration.Instance,
                 Ingredient_Registration.Instance,
                 Keyword_Registration.Instance,
@@ -167,6 +170,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 Furniture_Registration.Instance,
                 Hazard_Registration.Instance,
                 HeadPart_Registration.Instance,
+                Holotape_Registration.Instance,
                 Ingestible_Registration.Instance,
                 Ingredient_Registration.Instance,
                 Key_Registration.Instance,
@@ -224,6 +228,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 Door_Registration.Instance,
                 Furniture_Registration.Instance,
                 Hazard_Registration.Instance,
+                Holotape_Registration.Instance,
                 Ingestible_Registration.Instance,
                 Ingredient_Registration.Instance,
                 Keyword_Registration.Instance,
@@ -259,6 +264,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 Flora_Registration.Instance,
                 Furniture_Registration.Instance,
                 Hazard_Registration.Instance,
+                Holotape_Registration.Instance,
                 Ingestible_Registration.Instance,
                 Ingredient_Registration.Instance,
                 Key_Registration.Instance,
@@ -321,6 +327,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 Weapon_Registration.Instance,
             });
             dict[typeof(IObjectBoundedGetter)] = dict[typeof(IObjectBounded)] with { Setter = false };
+            dict[typeof(IObjectBoundedOptional)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Holotape_Registration.Instance,
+            });
+            dict[typeof(IObjectBoundedOptionalGetter)] = dict[typeof(IObjectBoundedOptional)] with { Setter = false };
             dict[typeof(IScripted)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,
@@ -330,6 +341,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 Door_Registration.Instance,
                 Flora_Registration.Instance,
                 Furniture_Registration.Instance,
+                Holotape_Registration.Instance,
                 Ingredient_Registration.Instance,
                 Key_Registration.Instance,
                 Light_Registration.Instance,
@@ -348,6 +360,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 Ammunition_Registration.Instance,
                 Book_Registration.Instance,
+                Holotape_Registration.Instance,
                 Ingestible_Registration.Instance,
                 Key_Registration.Instance,
                 Light_Registration.Instance,

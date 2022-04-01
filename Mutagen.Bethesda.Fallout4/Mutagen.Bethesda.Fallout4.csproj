@@ -238,6 +238,9 @@
     <Compile Include="Records\Major Records\HeadPart.cs">
       <DependentUpon>HeadPart.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Holotape.cs">
+      <DependentUpon>Holotape.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\IdleAnimation.cs">
       <DependentUpon>IdleAnimation.xml</DependentUpon>
     </Compile>
@@ -1326,6 +1329,24 @@
     </Compile>
     <Compile Include="Records\Major Records\Ingestible_Generated.cs">
       <DependentUpon>Ingestible.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AHolotapeData_Generated.cs">
+      <DependentUpon>Holotape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\HolotapeSound_Generated.cs">
+      <DependentUpon>Holotape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\HolotapeVoice_Generated.cs">
+      <DependentUpon>Holotape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\HolotapeProgram_Generated.cs">
+      <DependentUpon>Holotape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\HolotapeTerminal_Generated.cs">
+      <DependentUpon>Holotape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Scene_Generated.cs">
+      <DependentUpon>Scene.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

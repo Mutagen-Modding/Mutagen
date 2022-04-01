@@ -6,6 +6,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IHasIcons
 - ArmorModel
 - Book
+- Holotape
 - Ingestible
 - Ingredient
 - Key
@@ -60,6 +61,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Grass
 - Hazard
 - HeadPart
+- Holotape
 - IdleMarker
 - Ingestible
 - Ingredient
@@ -93,6 +95,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Furniture
 - Hazard
 - HeadPart
+- Holotape
 - Ingestible
 - Ingredient
 - Key
@@ -152,6 +155,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Furniture
 - Grass
 - Hazard
+- Holotape
 - IdleMarker
 - Ingestible
 - Ingredient
@@ -180,6 +184,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Door
 - Flora
 - Furniture
+- Holotape
 - Ingredient
 - Key
 - Light
@@ -195,6 +200,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IWeightValue
 - Ammunition
 - Book
+- Holotape
 - Ingestible
 - Key
 - Light
@@ -288,6 +294,13 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### HeadPart
 - IModeled
 - INamed
+### Holotape
+- IHasIcons
+- IModeled
+- INamed
+- IObjectBounded
+- IScripted
+- IWeightValue
 ### IdleMarker
 - IKeyworded
 - IModeled
