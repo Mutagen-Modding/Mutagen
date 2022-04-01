@@ -1019,9 +1019,6 @@
     <Compile Include="Records\Major Records\IdleMarker_Generated.cs">
       <DependentUpon>IdleMarker.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Ingestible_Generated.cs">
-      <DependentUpon>Ingestible.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Key_Generated.cs">
       <DependentUpon>Key.xml</DependentUpon>
     </Compile>
@@ -1075,9 +1072,6 @@
     </Compile>
     <Compile Include="Records\Major Records\Key_Generated.cs">
       <DependentUpon>Key.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Ingestible_Generated.cs">
-      <DependentUpon>Ingestible.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\RadioReceiver_Generated.cs">
       <DependentUpon>Activator.xml</DependentUpon>
@@ -1329,6 +1323,9 @@
     </Compile>
     <Compile Include="Records\Major Records\TemplateActors_Generated.cs">
       <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Ingestible_Generated.cs">
+      <DependentUpon>Ingestible.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

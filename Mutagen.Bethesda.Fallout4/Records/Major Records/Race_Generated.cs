@@ -6955,6 +6955,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return SoundCloseCorpseInfo;
             }
+            foreach (var item in obj.BipedObjects.Values.SelectMany(f => f.ContainedFormLinks))
+            {
+                yield return item;
+            }
             foreach (var item in obj.MovementDataOverrides.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
