@@ -6,7 +6,5 @@ public partial class RecordTypes
 {
     public static readonly RecordType RBPC = new("RBPC");
     public static readonly RecordType MLSI = new("MLSI");
-    public static readonly RecordType CIS1 = new("CIS1");
-    public static readonly RecordType CIS2 = new("CIS2");
     public static readonly RecordType EDID = new("EDID");
 }

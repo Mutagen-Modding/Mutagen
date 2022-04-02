@@ -51,6 +51,8 @@ public partial class RecordTypeInts
     public const int CDIX = 0x58494443;
     public const int CELL = 0x4C4C4543;
     public const int CIAD = 0x44414943;
+    public const int CIS1 = 0x31534943;
+    public const int CIS2 = 0x32534943;
     public const int CITC = 0x43544943;
     public const int CLAS = 0x53414C43;
     public const int CLFM = 0x4D464C43;

@@ -80,6 +80,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 obj.GetObjectData().CustomRecordTypeTriggers.Add(new RecordType(elem.Value));
             }
 
+            foreach (var elem in obj.Node.Elements(XName.Get("AdditionalContainedRecordType", LoquiGenerator.Namespace)))
+            {
+                obj.GetObjectData().AdditionalContainedRecordTypes.Add(new RecordType(elem.Value));
+            }
+
             if (obj.Node.TryGetAttribute("markerType", out var markerType))
             {
                 var markerTypeRec = new RecordType(markerType.Value);
@@ -138,6 +143,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             {
                 recordTypes.Add(data.EndMarkerType.Value);
             }
+            recordTypes.Add(data.AdditionalContainedRecordTypes);
             foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
             {
                 var fieldData = field.GetFieldData();

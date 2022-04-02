@@ -53,6 +53,8 @@ public partial class RecordTypes
     public static readonly RecordType CDIX = new(0x58494443);
     public static readonly RecordType CELL = new(0x4C4C4543);
     public static readonly RecordType CIAD = new(0x44414943);
+    public static readonly RecordType CIS1 = new(0x31534943);
+    public static readonly RecordType CIS2 = new(0x32534943);
     public static readonly RecordType CITC = new(0x43544943);
     public static readonly RecordType CLAS = new(0x53414C43);
     public static readonly RecordType CLFM = new(0x4D464C43);

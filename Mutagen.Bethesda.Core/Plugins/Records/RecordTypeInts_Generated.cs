@@ -19,6 +19,7 @@ public partial class RecordTypeInts
     public const int ASPC = 0x43505341;
     public const int ASTP = 0x50545341;
     public const int AVIF = 0x46495641;
+    public const int BNDS = 0x53444E42;
     public const int BOOK = 0x4B4F4F42;
     public const int BPTD = 0x44545042;
     public const int BSGN = 0x4E475342;

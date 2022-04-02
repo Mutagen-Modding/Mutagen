@@ -22,6 +22,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
         public RecordType? MarkerType;
         public HashSet<RecordType> TriggeringRecordTypes = new();
         public HashSet<RecordType> CustomRecordTypeTriggers = new();
+        public HashSet<RecordType> AdditionalContainedRecordTypes = new();
         public string TriggeringSource;
         public bool CustomBinary;
         public BinaryGenerationType BinaryOverlay = BinaryGenerationType.Normal;

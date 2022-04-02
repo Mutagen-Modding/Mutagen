@@ -21,6 +21,7 @@ public partial class RecordTypes
     public static readonly RecordType ASPC = new(0x43505341);
     public static readonly RecordType ASTP = new(0x50545341);
     public static readonly RecordType AVIF = new(0x46495641);
+    public static readonly RecordType BNDS = new(0x53444E42);
     public static readonly RecordType BOOK = new(0x4B4F4F42);
     public static readonly RecordType BPTD = new(0x44545042);
     public static readonly RecordType BSGN = new(0x4E475342);

@@ -10,7 +10,8 @@
         <xs:extension base="ObjectType">
           <xs:choice>
             <xs:element name="BaseRecordTypeOverrides" type="RecordTypeMappingsType" minOccurs="0" />
-            <xs:element name="CustomRecordTypeTrigger" type="xs:string" minOccurs="0" />
+            <xs:element name="CustomRecordTypeTrigger" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="AdditionalContainedRecordType" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
             <xs:element name="LinkInterface" type="InterfaceType" minOccurs="0" maxOccurs="unbounded" />
             <xs:element name="GameReleaseOptions" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
             <xs:element name="GameModeOverride" type="GameModeRecordTypeOverrides" minOccurs="0" maxOccurs="unbounded" />
