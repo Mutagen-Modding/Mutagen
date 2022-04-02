@@ -331,7 +331,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class CellBinaryOverlay
         {
-            static readonly TriggeringRecordCollection TypicalPlacedTypes = new TriggeringRecordCollection(
+            static readonly ITriggeringRecordCollection TypicalPlacedTypes = TriggeringRecordCollection.Factory(
                 RecordTypes.ACHR,
                 RecordTypes.REFR,
                 RecordTypes.PARW,

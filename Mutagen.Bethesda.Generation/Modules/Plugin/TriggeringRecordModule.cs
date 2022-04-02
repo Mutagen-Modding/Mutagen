@@ -264,12 +264,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
             else if (count > 1)
             {
-                fg.AppendLine($"public static TriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;");
-                fg.AppendLine($"private static readonly Lazy<TriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<TriggeringRecordCollection>(() =>");
+                fg.AppendLine($"public static ITriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;");
+                fg.AppendLine($"private static readonly Lazy<ITriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<ITriggeringRecordCollection>(() =>");
                 using (new BraceWrapper(fg) { AppendSemicolon = true, AppendParenthesis = true })
                 {
                     using (var args = new ArgsWrapper(fg,
-                        "return new TriggeringRecordCollection"))
+                        "return TriggeringRecordCollection.Factory"))
                     {
                         foreach (var trigger in trigRecordTypes)
                         {
@@ -282,7 +282,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             var all = await GetAllRecordTypes(obj).ToArrayAsync();
             if (count > 1 && trigRecordTypes.ToHashSet().Equals(all.ToHashSet()))
             {
-                fg.AppendLine($"public static TriggeringRecordCollection AllRecordTypes => _TriggeringRecordTypes.Value;");
+                fg.AppendLine($"public static ITriggeringRecordCollection AllRecordTypes => _TriggeringRecordTypes.Value;");
             }
             else if (all.Length == 1)
             {
@@ -290,12 +290,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
             else if (count > 0)
             {
-                fg.AppendLine($"public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;");
-                fg.AppendLine($"private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>");
+                fg.AppendLine($"public static ITriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;");
+                fg.AppendLine($"private static readonly Lazy<ITriggeringRecordCollection> _AllRecordTypes = new Lazy<ITriggeringRecordCollection>(() =>");
                 using (new BraceWrapper(fg) { AppendSemicolon = true, AppendParenthesis = true })
                 {
                     using (var args = new ArgsWrapper(fg,
-                        "return new TriggeringRecordCollection"))
+                        "return TriggeringRecordCollection.Factory"))
                     {
                         foreach (var trigger in all)
                         {

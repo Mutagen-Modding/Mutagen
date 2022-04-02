@@ -943,12 +943,10 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public partial class Condition_Registration
         {
-            public static readonly RecordType CIS1 = new RecordType("CIS1");
-            public static readonly RecordType CIS2 = new RecordType("CIS2");
-            public static TriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-            private static readonly Lazy<TriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+            public static ITriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+            private static readonly Lazy<ITriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<ITriggeringRecordCollection>(() =>
             {
-                return new TriggeringRecordCollection(RecordTypes.CTDA);
+                return TriggeringRecordCollection.Factory(RecordTypes.CTDA);
             });
         }
 
@@ -1000,10 +998,10 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     switch (subMeta.RecordType.TypeInt)
                     {
-                        case 0x31534943: // CIS1
+                        case RecordTypeInts.CIS1:
                             funcData.ParameterOneString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
                             break;
-                        case 0x32534943: // CIS2
+                        case RecordTypeInts.CIS2:
                             funcData.ParameterTwoString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
                             break;
                         default:
@@ -1041,14 +1039,14 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!(obj is IFunctionConditionDataGetter funcData)) return;
                 if (funcData.ParameterOneString is { } param1)
                 {
-                    using (HeaderExport.Subrecord(writer, Condition_Registration.CIS1))
+                    using (HeaderExport.Subrecord(writer, RecordTypes.CIS1))
                     {
                         StringBinaryTranslation.Instance.Write(writer, param1, StringBinaryType.NullTerminate);
                     }
                 }
                 if (funcData.ParameterTwoString is { } param2)
                 {
-                    using (HeaderExport.Subrecord(writer, Condition_Registration.CIS2))
+                    using (HeaderExport.Subrecord(writer, RecordTypes.CIS2))
                     {
                         StringBinaryTranslation.Instance.Write(writer, param2, StringBinaryType.NullTerminate);
                     }
@@ -1062,7 +1060,7 @@ namespace Mutagen.Bethesda.Fallout4
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             IConditionDataGetter IConditionGetter.Data => this.Data;
 
-            private static TriggeringRecordCollection IncludeTriggers = new TriggeringRecordCollection(
+            private static ITriggeringRecordCollection IncludeTriggers = TriggeringRecordCollection.Factory(
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
 

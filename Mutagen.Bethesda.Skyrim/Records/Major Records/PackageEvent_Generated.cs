@@ -999,10 +999,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static TriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<TriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        public static ITriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ITriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<ITriggeringRecordCollection>(() =>
         {
-            return new TriggeringRecordCollection(
+            return TriggeringRecordCollection.Factory(
                 RecordTypes.INAM,
                 RecordTypes.SCHR,
                 RecordTypes.SCDA,
@@ -1011,10 +1011,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.TNAM,
                 RecordTypes.PDTO);
         });
-        public static TriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<TriggeringRecordCollection> _AllRecordTypes = new Lazy<TriggeringRecordCollection>(() =>
+        public static ITriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<ITriggeringRecordCollection> _AllRecordTypes = new Lazy<ITriggeringRecordCollection>(() =>
         {
-            return new TriggeringRecordCollection(
+            return TriggeringRecordCollection.Factory(
                 RecordTypes.INAM,
                 RecordTypes.SCHR,
                 RecordTypes.SCDA,
