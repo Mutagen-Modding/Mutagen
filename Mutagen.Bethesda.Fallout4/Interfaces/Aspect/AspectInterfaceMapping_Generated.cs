@@ -329,6 +329,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             dict[typeof(IObjectBoundedGetter)] = dict[typeof(IObjectBounded)] with { Setter = false };
             dict[typeof(IObjectBoundedOptional)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                BendableSpline_Registration.Instance,
                 Holotape_Registration.Instance,
             });
             dict[typeof(IObjectBoundedOptionalGetter)] = dict[typeof(IObjectBoundedOptional)] with { Setter = false };

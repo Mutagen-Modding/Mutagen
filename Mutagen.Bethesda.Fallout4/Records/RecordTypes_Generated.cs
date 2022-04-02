@@ -42,6 +42,7 @@ public partial class RecordTypes
     public static readonly RecordType BIDS = new(0x53444942);
     public static readonly RecordType BMMP = new(0x504D4D42);
     public static readonly RecordType BNAM = new(0x4D414E42);
+    public static readonly RecordType BNDS = new(0x53444E42);
     public static readonly RecordType BOD2 = new(0x32444F42);
     public static readonly RecordType BODT = new(0x54444F42);
     public static readonly RecordType BOOK = new(0x4B4F4F42);

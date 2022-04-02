@@ -147,6 +147,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Ammunition
 - Armor
 - ArtObject
+- BendableSpline
 - Book
 - Component
 - Container
@@ -232,6 +233,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IModeled
 ### ArtObject
 - IModeled
+- IObjectBounded
+### BendableSpline
 - IObjectBounded
 ### BipedObjectData
 - INamed

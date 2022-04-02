@@ -29,6 +29,7 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.FURN, ProcessFurniture);
         AddDynamicProcessing(RecordTypes.WEAP, ProcessWeapons);
         AddDynamicProcessing(RecordTypes.NPC_, ProcessNpcs);
+        AddDynamicProcessing(RecordTypes.BNDS, ProcessBendableSplines);
     }
 
     private void ProcessGameSettings(
@@ -159,6 +160,17 @@ public class Fallout4Processor : Processor
         }
     }
 
+    private void ProcessBendableSplines(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DNAM, out var frame))
+        {
+            int offset = 8;
+            ProcessColorFloat(frame, fileOffset, ref offset, alpha: true);
+        }
+    }
+
     public void GameSettingStringHandler(
         IMutagenReadStream stream,
         MajorRecordHeader major,
@@ -208,6 +220,8 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "KEYM", "FULL" },
                     new RecordType[] { "ALCH", "FULL" },
                     new RecordType[] { "NOTE", "FULL" },
+                    new RecordType[] { "PROJ", "FULL" },
+                    new RecordType[] { "HAZD", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]

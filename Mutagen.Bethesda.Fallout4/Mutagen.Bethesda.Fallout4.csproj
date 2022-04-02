@@ -1348,6 +1348,9 @@
     <Compile Include="Records\Major Records\Scene_Generated.cs">
       <DependentUpon>Scene.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\BendableSpline_Generated.cs">
+      <DependentUpon>BendableSpline.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

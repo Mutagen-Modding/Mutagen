@@ -40,6 +40,7 @@ public partial class RecordTypeInts
     public const int BIDS = 0x53444942;
     public const int BMMP = 0x504D4D42;
     public const int BNAM = 0x4D414E42;
+    public const int BNDS = 0x53444E42;
     public const int BOD2 = 0x32444F42;
     public const int BODT = 0x54444F42;
     public const int BOOK = 0x4B4F4F42;

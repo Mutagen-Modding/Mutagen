@@ -20,8 +20,7 @@
           <FormLink name="Light" refName="Light" />
           <FormLink name="ImpactDataSet" refName="ImpactDataSet" />
           <FormLink name="Sound" refName="SoundDescriptor" />
-		  <!--TaperEffectiveness TODO Ugly :D-->
-		  <Float name="FullEffectRadius" />
+		  <Float name="TaperFullEffectRadius" />
 		  <Float name="TaperWeight" />
 		  <Float name="TaperCurse" />
         </Fields>

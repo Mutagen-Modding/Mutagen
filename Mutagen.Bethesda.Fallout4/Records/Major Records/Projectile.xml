@@ -30,7 +30,6 @@
           <Float name="CollisionRadius" />
           <Float name="Lifetime" />
           <Float name="RelaunchInterval" />
-          <!--<Break />-->
           <FormLink name="DecalData" refName="TextureSet" />
           <FormLink name="CollisionLayer" refName="CollisionLayer" />
           <UInt8 name="TracerFrequency" />

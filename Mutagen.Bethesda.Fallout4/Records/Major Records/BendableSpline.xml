@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="BendableSpline" objType="Record" recordType="BNDS" baseClass="Fallout4MajorRecord" GUID="c227e451-8bde-4557-99ba-dce962318e50" ID="358">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <Data recordType="DNAM">
+        <Fields>
+          <Float name="DefaultNumberOfTiles" />
+          <UInt16 name="DefaultNumberOfSlices" />
+          <Bool name="DefaultNumberOfTilesIsRelativeToLength" byteLength="2" />
+          <Color name="DefaultColor" binaryType="AlphaFloat" />
+          <Float name="WindSensibility" />
+          <Break />
+          <Float name="WindFlexibility" />
+        </Fields>
+      </Data>
+      <FormLink name="Texture" refName="TextureSet" recordType="TNAM" />
+    </Fields>
+  </Object>
+</Loqui>

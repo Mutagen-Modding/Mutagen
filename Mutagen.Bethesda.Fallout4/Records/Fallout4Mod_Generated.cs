@@ -100,6 +100,9 @@ namespace Mutagen.Bethesda.Fallout4
             _Ingestibles_Object = new Fallout4Group<Ingestible>(this);
             _IdleMarkers_Object = new Fallout4Group<IdleMarker>(this);
             _Holotapes_Object = new Fallout4Group<Holotape>(this);
+            _Projectiles_Object = new Fallout4Group<Projectile>(this);
+            _Hazards_Object = new Fallout4Group<Hazard>(this);
+            _BendableSplines_Object = new Fallout4Group<BendableSpline>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -413,6 +416,27 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IHolotapeGetter> IFallout4ModGetter.Holotapes => _Holotapes_Object;
         #endregion
+        #region Projectiles
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<Projectile> _Projectiles_Object;
+        public Fallout4Group<Projectile> Projectiles => _Projectiles_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IProjectileGetter> IFallout4ModGetter.Projectiles => _Projectiles_Object;
+        #endregion
+        #region Hazards
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<Hazard> _Hazards_Object;
+        public Fallout4Group<Hazard> Hazards => _Hazards_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IHazardGetter> IFallout4ModGetter.Hazards => _Hazards_Object;
+        #endregion
+        #region BendableSplines
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<BendableSpline> _BendableSplines_Object;
+        public Fallout4Group<BendableSpline> BendableSplines => _BendableSplines_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IBendableSplineGetter> IFallout4ModGetter.BendableSplines => _BendableSplines_Object;
+        #endregion
 
         #region To String
 
@@ -495,6 +519,9 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Ingestibles = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.IdleMarkers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Holotapes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Projectiles = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Hazards = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.BendableSplines = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -541,7 +568,10 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Keys,
                 TItem Ingestibles,
                 TItem IdleMarkers,
-                TItem Holotapes)
+                TItem Holotapes,
+                TItem Projectiles,
+                TItem Hazards,
+                TItem BendableSplines)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -587,6 +617,9 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Ingestibles = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Ingestibles, new Fallout4Group.Mask<TItem>(Ingestibles));
                 this.IdleMarkers = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(IdleMarkers, new Fallout4Group.Mask<TItem>(IdleMarkers));
                 this.Holotapes = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Holotapes, new Fallout4Group.Mask<TItem>(Holotapes));
+                this.Projectiles = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Projectiles, new Fallout4Group.Mask<TItem>(Projectiles));
+                this.Hazards = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Hazards, new Fallout4Group.Mask<TItem>(Hazards));
+                this.BendableSplines = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(BendableSplines, new Fallout4Group.Mask<TItem>(BendableSplines));
             }
 
             #pragma warning disable CS8618
@@ -642,6 +675,9 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Ingestibles { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? IdleMarkers { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Holotapes { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Projectiles { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Hazards { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? BendableSplines { get; set; }
             #endregion
 
             #region Equals
@@ -698,6 +734,9 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Ingestibles, rhs.Ingestibles)) return false;
                 if (!object.Equals(this.IdleMarkers, rhs.IdleMarkers)) return false;
                 if (!object.Equals(this.Holotapes, rhs.Holotapes)) return false;
+                if (!object.Equals(this.Projectiles, rhs.Projectiles)) return false;
+                if (!object.Equals(this.Hazards, rhs.Hazards)) return false;
+                if (!object.Equals(this.BendableSplines, rhs.BendableSplines)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -747,6 +786,9 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Ingestibles);
                 hash.Add(this.IdleMarkers);
                 hash.Add(this.Holotapes);
+                hash.Add(this.Projectiles);
+                hash.Add(this.Hazards);
+                hash.Add(this.BendableSplines);
                 return hash.ToHashCode();
             }
 
@@ -975,6 +1017,21 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Holotapes.Overall)) return false;
                     if (this.Holotapes.Specific != null && !this.Holotapes.Specific.All(eval)) return false;
                 }
+                if (Projectiles != null)
+                {
+                    if (!eval(this.Projectiles.Overall)) return false;
+                    if (this.Projectiles.Specific != null && !this.Projectiles.Specific.All(eval)) return false;
+                }
+                if (Hazards != null)
+                {
+                    if (!eval(this.Hazards.Overall)) return false;
+                    if (this.Hazards.Specific != null && !this.Hazards.Specific.All(eval)) return false;
+                }
+                if (BendableSplines != null)
+                {
+                    if (!eval(this.BendableSplines.Overall)) return false;
+                    if (this.BendableSplines.Specific != null && !this.BendableSplines.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1202,6 +1259,21 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Holotapes.Overall)) return true;
                     if (this.Holotapes.Specific != null && this.Holotapes.Specific.Any(eval)) return true;
                 }
+                if (Projectiles != null)
+                {
+                    if (eval(this.Projectiles.Overall)) return true;
+                    if (this.Projectiles.Specific != null && this.Projectiles.Specific.Any(eval)) return true;
+                }
+                if (Hazards != null)
+                {
+                    if (eval(this.Hazards.Overall)) return true;
+                    if (this.Hazards.Specific != null && this.Hazards.Specific.Any(eval)) return true;
+                }
+                if (BendableSplines != null)
+                {
+                    if (eval(this.BendableSplines.Overall)) return true;
+                    if (this.BendableSplines.Specific != null && this.BendableSplines.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1260,6 +1332,9 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Ingestibles = this.Ingestibles == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Ingestibles.Overall), this.Ingestibles.Specific?.Translate(eval));
                 obj.IdleMarkers = this.IdleMarkers == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.IdleMarkers.Overall), this.IdleMarkers.Specific?.Translate(eval));
                 obj.Holotapes = this.Holotapes == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Holotapes.Overall), this.Holotapes.Specific?.Translate(eval));
+                obj.Projectiles = this.Projectiles == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Projectiles.Overall), this.Projectiles.Specific?.Translate(eval));
+                obj.Hazards = this.Hazards == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Hazards.Overall), this.Hazards.Specific?.Translate(eval));
+                obj.BendableSplines = this.BendableSplines == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.BendableSplines.Overall), this.BendableSplines.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1458,6 +1533,18 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Holotapes?.ToString(fg);
                     }
+                    if (printMask?.Projectiles?.Overall ?? true)
+                    {
+                        Projectiles?.ToString(fg);
+                    }
+                    if (printMask?.Hazards?.Overall ?? true)
+                    {
+                        Hazards?.ToString(fg);
+                    }
+                    if (printMask?.BendableSplines?.Overall ?? true)
+                    {
+                        BendableSplines?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1527,6 +1614,9 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Ingestible.ErrorMask>?>? Ingestibles;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<IdleMarker.ErrorMask>?>? IdleMarkers;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Holotape.ErrorMask>?>? Holotapes;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Projectile.ErrorMask>?>? Projectiles;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Hazard.ErrorMask>?>? Hazards;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<BendableSpline.ErrorMask>?>? BendableSplines;
             #endregion
 
             #region IErrorMask
@@ -1623,6 +1713,12 @@ namespace Mutagen.Bethesda.Fallout4
                         return IdleMarkers;
                     case Fallout4Mod_FieldIndex.Holotapes:
                         return Holotapes;
+                    case Fallout4Mod_FieldIndex.Projectiles:
+                        return Projectiles;
+                    case Fallout4Mod_FieldIndex.Hazards:
+                        return Hazards;
+                    case Fallout4Mod_FieldIndex.BendableSplines:
+                        return BendableSplines;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1764,6 +1860,15 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.Holotapes:
                         this.Holotapes = new MaskItem<Exception?, Fallout4Group.ErrorMask<Holotape.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Projectiles:
+                        this.Projectiles = new MaskItem<Exception?, Fallout4Group.ErrorMask<Projectile.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Hazards:
+                        this.Hazards = new MaskItem<Exception?, Fallout4Group.ErrorMask<Hazard.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.BendableSplines:
+                        this.BendableSplines = new MaskItem<Exception?, Fallout4Group.ErrorMask<BendableSpline.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1907,6 +2012,15 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.Holotapes:
                         this.Holotapes = (MaskItem<Exception?, Fallout4Group.ErrorMask<Holotape.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.Projectiles:
+                        this.Projectiles = (MaskItem<Exception?, Fallout4Group.ErrorMask<Projectile.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.Hazards:
+                        this.Hazards = (MaskItem<Exception?, Fallout4Group.ErrorMask<Hazard.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout4Mod_FieldIndex.BendableSplines:
+                        this.BendableSplines = (MaskItem<Exception?, Fallout4Group.ErrorMask<BendableSpline.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1959,6 +2073,9 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Ingestibles != null) return true;
                 if (IdleMarkers != null) return true;
                 if (Holotapes != null) return true;
+                if (Projectiles != null) return true;
+                if (Hazards != null) return true;
+                if (BendableSplines != null) return true;
                 return false;
             }
             #endregion
@@ -2037,6 +2154,9 @@ namespace Mutagen.Bethesda.Fallout4
                 Ingestibles?.ToString(fg);
                 IdleMarkers?.ToString(fg);
                 Holotapes?.ToString(fg);
+                Projectiles?.ToString(fg);
+                Hazards?.ToString(fg);
+                BendableSplines?.ToString(fg);
             }
             #endregion
 
@@ -2089,6 +2209,9 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Ingestibles = this.Ingestibles.Combine(rhs.Ingestibles, (l, r) => l.Combine(r));
                 ret.IdleMarkers = this.IdleMarkers.Combine(rhs.IdleMarkers, (l, r) => l.Combine(r));
                 ret.Holotapes = this.Holotapes.Combine(rhs.Holotapes, (l, r) => l.Combine(r));
+                ret.Projectiles = this.Projectiles.Combine(rhs.Projectiles, (l, r) => l.Combine(r));
+                ret.Hazards = this.Hazards.Combine(rhs.Hazards, (l, r) => l.Combine(r));
+                ret.BendableSplines = this.BendableSplines.Combine(rhs.BendableSplines, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2156,6 +2279,9 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<Ingestible.TranslationMask>? Ingestibles;
             public Fallout4Group.TranslationMask<IdleMarker.TranslationMask>? IdleMarkers;
             public Fallout4Group.TranslationMask<Holotape.TranslationMask>? Holotapes;
+            public Fallout4Group.TranslationMask<Projectile.TranslationMask>? Projectiles;
+            public Fallout4Group.TranslationMask<Hazard.TranslationMask>? Hazards;
+            public Fallout4Group.TranslationMask<BendableSpline.TranslationMask>? BendableSplines;
             #endregion
 
             #region Ctors
@@ -2224,6 +2350,9 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Ingestibles != null ? Ingestibles.OnOverall : DefaultOn, Ingestibles?.GetCrystal()));
                 ret.Add((IdleMarkers != null ? IdleMarkers.OnOverall : DefaultOn, IdleMarkers?.GetCrystal()));
                 ret.Add((Holotapes != null ? Holotapes.OnOverall : DefaultOn, Holotapes?.GetCrystal()));
+                ret.Add((Projectiles != null ? Projectiles.OnOverall : DefaultOn, Projectiles?.GetCrystal()));
+                ret.Add((Hazards != null ? Hazards.OnOverall : DefaultOn, Hazards?.GetCrystal()));
+                ret.Add((BendableSplines != null ? BendableSplines.OnOverall : DefaultOn, BendableSplines?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2309,6 +2438,9 @@ namespace Mutagen.Bethesda.Fallout4
             _Ingestibles_Object = new Fallout4Group<Ingestible>(this);
             _IdleMarkers_Object = new Fallout4Group<IdleMarker>(this);
             _Holotapes_Object = new Fallout4Group<Holotape>(this);
+            _Projectiles_Object = new Fallout4Group<Projectile>(this);
+            _Hazards_Object = new Fallout4Group<Hazard>(this);
+            _BendableSplines_Object = new Fallout4Group<BendableSpline>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -2487,6 +2619,18 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Holotapes.RecordCache.Set(rhsMod.Holotapes.RecordCache.Items);
             }
+            if (mask?.Projectiles ?? true)
+            {
+                this.Projectiles.RecordCache.Set(rhsMod.Projectiles.RecordCache.Items);
+            }
+            if (mask?.Hazards ?? true)
+            {
+                this.Hazards.RecordCache.Set(rhsMod.Hazards.RecordCache.Items);
+            }
+            if (mask?.BendableSplines ?? true)
+            {
+                this.BendableSplines.RecordCache.Set(rhsMod.BendableSplines.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -2540,6 +2684,9 @@ namespace Mutagen.Bethesda.Fallout4
             count += Ingestibles.RecordCache.Count > 0 ? 1 : default(uint);
             count += IdleMarkers.RecordCache.Count > 0 ? 1 : default(uint);
             count += Holotapes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Projectiles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Hazards.RecordCache.Count > 0 ? 1 : default(uint);
+            count += BendableSplines.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -2832,6 +2979,9 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<Ingestible> Ingestibles { get; }
         new Fallout4Group<IdleMarker> IdleMarkers { get; }
         new Fallout4Group<Holotape> Holotapes { get; }
+        new Fallout4Group<Projectile> Projectiles { get; }
+        new Fallout4Group<Hazard> Hazards { get; }
+        new Fallout4Group<BendableSpline> BendableSplines { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -2894,6 +3044,9 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IIngestibleGetter> Ingestibles { get; }
         IFallout4GroupGetter<IIdleMarkerGetter> IdleMarkers { get; }
         IFallout4GroupGetter<IHolotapeGetter> Holotapes { get; }
+        IFallout4GroupGetter<IProjectileGetter> Projectiles { get; }
+        IFallout4GroupGetter<IHazardGetter> Hazards { get; }
+        IFallout4GroupGetter<IBendableSplineGetter> BendableSplines { get; }
 
     }
 
@@ -3500,6 +3653,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Ingestibles = 41,
         IdleMarkers = 42,
         Holotapes = 43,
+        Projectiles = 44,
+        Hazards = 45,
+        BendableSplines = 46,
     }
     #endregion
 
@@ -3517,9 +3673,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 44;
+        public const ushort AdditionalFieldCount = 47;
 
-        public const ushort FieldCount = 44;
+        public const ushort FieldCount = 47;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -3593,7 +3749,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.KEYM,
                 RecordTypes.ALCH,
                 RecordTypes.IDLM,
-                RecordTypes.NOTE);
+                RecordTypes.NOTE,
+                RecordTypes.PROJ,
+                RecordTypes.HAZD,
+                RecordTypes.BNDS);
         });
         public static readonly Type BinaryWriteTranslation = typeof(Fallout4ModBinaryWriteTranslation);
         #region Interface
@@ -3680,6 +3839,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Ingestibles.Clear();
             item.IdleMarkers.Clear();
             item.Holotapes.Clear();
+            item.Projectiles.Clear();
+            item.Hazards.Clear();
+            item.BendableSplines.Clear();
         }
         
         #region Mutagen
@@ -3724,6 +3886,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Ingestibles.RemapLinks(mapping);
             obj.IdleMarkers.RemapLinks(mapping);
             obj.Holotapes.RemapLinks(mapping);
+            obj.Projectiles.RemapLinks(mapping);
+            obj.Hazards.RemapLinks(mapping);
+            obj.BendableSplines.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -3801,6 +3966,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Ingestibles.Remove(keys);
             obj.IdleMarkers.Remove(keys);
             obj.Holotapes.Remove(keys);
+            obj.Projectiles.Remove(keys);
+            obj.Hazards.Remove(keys);
+            obj.BendableSplines.Remove(keys);
         }
         
         public void Remove(
@@ -4208,6 +4376,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         type: type,
                         keys: keys);
                     break;
+                case "Projectile":
+                case "IProjectileGetter":
+                case "IProjectile":
+                case "IProjectileInternal":
+                    obj.Projectiles.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Hazard":
+                case "IHazardGetter":
+                case "IHazard":
+                case "IHazardInternal":
+                    obj.Hazards.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "BendableSpline":
+                case "IBendableSplineGetter":
+                case "IBendableSpline":
+                case "IBendableSplineInternal":
+                    obj.BendableSplines.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
@@ -4231,6 +4423,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMovableStaticGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IProjectileGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown);
@@ -4296,6 +4489,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IFurnitureAssociation":
                 case "IFurnitureAssociationGetter":
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IHazardGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
                     break;
@@ -4314,6 +4508,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Remove(obj, keys, typeof(ILandscapeTextureGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMovableStaticGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ITreeGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IPlacedTrapTarget":
+                case "IPlacedTrapTargetGetter":
+                    Remove(obj, keys, typeof(IHazardGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IProjectileGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
@@ -4440,6 +4639,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Ingestibles = MaskItemExt.Factory(item.Ingestibles.GetEqualsMask(rhs.Ingestibles, include), include);
             ret.IdleMarkers = MaskItemExt.Factory(item.IdleMarkers.GetEqualsMask(rhs.IdleMarkers, include), include);
             ret.Holotapes = MaskItemExt.Factory(item.Holotapes.GetEqualsMask(rhs.Holotapes, include), include);
+            ret.Projectiles = MaskItemExt.Factory(item.Projectiles.GetEqualsMask(rhs.Projectiles, include), include);
+            ret.Hazards = MaskItemExt.Factory(item.Hazards.GetEqualsMask(rhs.Hazards, include), include);
+            ret.BendableSplines = MaskItemExt.Factory(item.BendableSplines.GetEqualsMask(rhs.BendableSplines, include), include);
         }
         
         public string ToString(
@@ -4661,6 +4863,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (printMask?.Holotapes?.Overall ?? true)
             {
                 item.Holotapes?.ToString(fg, "Holotapes");
+            }
+            if (printMask?.Projectiles?.Overall ?? true)
+            {
+                item.Projectiles?.ToString(fg, "Projectiles");
+            }
+            if (printMask?.Hazards?.Overall ?? true)
+            {
+                item.Hazards?.ToString(fg, "Hazards");
+            }
+            if (printMask?.BendableSplines?.Overall ?? true)
+            {
+                item.BendableSplines?.ToString(fg, "BendableSplines");
             }
         }
         
@@ -5023,6 +5237,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 else if (!isHolotapesEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Projectiles) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Projectiles, rhs.Projectiles, out var lhsProjectiles, out var rhsProjectiles, out var isProjectilesEqual))
+                {
+                    if (!object.Equals(lhsProjectiles, rhsProjectiles)) return false;
+                }
+                else if (!isProjectilesEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Hazards) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Hazards, rhs.Hazards, out var lhsHazards, out var rhsHazards, out var isHazardsEqual))
+                {
+                    if (!object.Equals(lhsHazards, rhsHazards)) return false;
+                }
+                else if (!isHazardsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.BendableSplines) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.BendableSplines, rhs.BendableSplines, out var lhsBendableSplines, out var rhsBendableSplines, out var isBendableSplinesEqual))
+                {
+                    if (!object.Equals(lhsBendableSplines, rhsBendableSplines)) return false;
+                }
+                else if (!isBendableSplinesEqual) return false;
+            }
             return true;
         }
         
@@ -5073,6 +5311,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.Ingestibles);
             hash.Add(item.IdleMarkers);
             hash.Add(item.Holotapes);
+            hash.Add(item.Projectiles);
+            hash.Add(item.Hazards);
+            hash.Add(item.BendableSplines);
             return hash.ToHashCode();
         }
         
@@ -5306,6 +5547,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IHolotape":
                 case "IHolotapeInternal":
                     return obj.Holotapes;
+                case "Projectile":
+                case "IProjectileGetter":
+                case "IProjectile":
+                case "IProjectileInternal":
+                    return obj.Projectiles;
+                case "Hazard":
+                case "IHazardGetter":
+                case "IHazard":
+                case "IHazardInternal":
+                    return obj.Hazards;
+                case "BendableSpline":
+                case "IBendableSplineGetter":
+                case "IBendableSpline":
+                case "IBendableSplineInternal":
+                    return obj.BendableSplines;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -5330,7 +5586,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[43];
+            Stream[] outputStreams = new Stream[46];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -5375,6 +5631,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             toDo.Add(() => WriteGroupParallel(item.Ingestibles, 40, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.IdleMarkers, 41, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Holotapes, 42, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Projectiles, 43, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Hazards, 44, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BendableSplines, 45, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -5578,6 +5837,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
+            foreach (var item in obj.Projectiles.ContainedFormLinks)
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Hazards.ContainedFormLinks)
+            {
+                yield return item;
+            }
+            foreach (var item in obj.BendableSplines.ContainedFormLinks)
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -5752,6 +6023,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 yield return item;
             }
             foreach (var item in obj.Holotapes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Projectiles.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Hazards.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.BendableSplines.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -6177,6 +6460,33 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         yield return item;
                     }
                     yield break;
+                case "Projectile":
+                case "IProjectileGetter":
+                case "IProjectile":
+                case "IProjectileInternal":
+                    foreach (var item in obj.Projectiles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Hazard":
+                case "IHazardGetter":
+                case "IHazard":
+                case "IHazardInternal":
+                    foreach (var item in obj.Hazards.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "BendableSpline":
+                case "IBendableSplineGetter":
+                case "IBendableSpline":
+                case "IBendableSplineInternal":
+                    foreach (var item in obj.BendableSplines.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout4, obj, type, out var linkInterfaces))
                     {
@@ -6585,6 +6895,33 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 modKey: obj.ModKey,
                 group: (m) => m.Holotapes,
                 groupGetter: (m) => m.Holotapes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Projectile, IProjectileGetter>(
+                srcGroup: obj.Projectiles,
+                type: typeof(IProjectileGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Projectiles,
+                groupGetter: (m) => m.Projectiles))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Hazard, IHazardGetter>(
+                srcGroup: obj.Hazards,
+                type: typeof(IHazardGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Hazards,
+                groupGetter: (m) => m.Hazards))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, BendableSpline, IBendableSplineGetter>(
+                srcGroup: obj.BendableSplines,
+                type: typeof(IBendableSplineGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.BendableSplines,
+                groupGetter: (m) => m.BendableSplines))
             {
                 yield return item;
             }
@@ -7217,6 +7554,48 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         modKey: obj.ModKey,
                         group: (m) => m.Holotapes,
                         groupGetter: (m) => m.Holotapes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Projectile":
+                case "IProjectileGetter":
+                case "IProjectile":
+                case "IProjectileInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Projectile, IProjectileGetter>(
+                        srcGroup: obj.Projectiles,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Projectiles,
+                        groupGetter: (m) => m.Projectiles))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Hazard":
+                case "IHazardGetter":
+                case "IHazard":
+                case "IHazardInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Hazard, IHazardGetter>(
+                        srcGroup: obj.Hazards,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Hazards,
+                        groupGetter: (m) => m.Hazards))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "BendableSpline":
+                case "IBendableSplineGetter":
+                case "IBendableSpline":
+                case "IBendableSplineInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, BendableSpline, IBendableSplineGetter>(
+                        srcGroup: obj.BendableSplines,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.BendableSplines,
+                        groupGetter: (m) => m.BendableSplines))
                     {
                         yield return item;
                     }
@@ -8141,6 +8520,66 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Projectiles) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Projectiles);
+                try
+                {
+                    item.Projectiles.DeepCopyIn(
+                        rhs: rhs.Projectiles,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Projectiles));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Hazards) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Hazards);
+                try
+                {
+                    item.Hazards.DeepCopyIn(
+                        rhs: rhs.Hazards,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Hazards));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.BendableSplines) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.BendableSplines);
+                try
+                {
+                    item.BendableSplines.DeepCopyIn(
+                        rhs: rhs.BendableSplines,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.BendableSplines));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -8274,6 +8713,9 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Ingestibles;
         public bool IdleMarkers;
         public bool Holotapes;
+        public bool Projectiles;
+        public bool Hazards;
+        public bool BendableSplines;
         public GroupMask()
         {
         }
@@ -8322,6 +8764,9 @@ namespace Mutagen.Bethesda.Fallout4
             Ingestibles = defaultValue;
             IdleMarkers = defaultValue;
             Holotapes = defaultValue;
+            Projectiles = defaultValue;
+            Hazards = defaultValue;
+            BendableSplines = defaultValue;
         }
     }
 
@@ -8822,6 +9267,39 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)HolotapesItem).BinaryWriteTranslator).Write<IHolotapeGetter>(
                         item: HolotapesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Projectiles ?? true)
+            {
+                var ProjectilesItem = item.Projectiles;
+                if (ProjectilesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ProjectilesItem).BinaryWriteTranslator).Write<IProjectileGetter>(
+                        item: ProjectilesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Hazards ?? true)
+            {
+                var HazardsItem = item.Hazards;
+                if (HazardsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)HazardsItem).BinaryWriteTranslator).Write<IHazardGetter>(
+                        item: HazardsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.BendableSplines ?? true)
+            {
+                var BendableSplinesItem = item.BendableSplines;
+                if (BendableSplinesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)BendableSplinesItem).BinaryWriteTranslator).Write<IBendableSplineGetter>(
+                        item: BendableSplinesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -9494,6 +9972,48 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     }
                     return (int)Fallout4Mod_FieldIndex.Holotapes;
                 }
+                case RecordTypeInts.PROJ:
+                {
+                    if (importMask?.Projectiles ?? true)
+                    {
+                        item.Projectiles.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Projectiles;
+                }
+                case RecordTypeInts.HAZD:
+                {
+                    if (importMask?.Hazards ?? true)
+                    {
+                        item.Hazards.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Hazards;
+                }
+                case RecordTypeInts.BNDS:
+                {
+                    if (importMask?.BendableSplines ?? true)
+                    {
+                        item.BendableSplines.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.BendableSplines;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -9870,6 +10390,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private IFallout4GroupGetter<IHolotapeGetter>? _Holotapes => _HolotapesLocations != null ? Fallout4GroupBinaryOverlay<IHolotapeGetter>.Fallout4GroupFactory(_data, _HolotapesLocations, _package) : default;
         public IFallout4GroupGetter<IHolotapeGetter> Holotapes => _Holotapes ?? new Fallout4Group<Holotape>(this);
         #endregion
+        #region Projectiles
+        private List<RangeInt64>? _ProjectilesLocations;
+        private IFallout4GroupGetter<IProjectileGetter>? _Projectiles => _ProjectilesLocations != null ? Fallout4GroupBinaryOverlay<IProjectileGetter>.Fallout4GroupFactory(_data, _ProjectilesLocations, _package) : default;
+        public IFallout4GroupGetter<IProjectileGetter> Projectiles => _Projectiles ?? new Fallout4Group<Projectile>(this);
+        #endregion
+        #region Hazards
+        private List<RangeInt64>? _HazardsLocations;
+        private IFallout4GroupGetter<IHazardGetter>? _Hazards => _HazardsLocations != null ? Fallout4GroupBinaryOverlay<IHazardGetter>.Fallout4GroupFactory(_data, _HazardsLocations, _package) : default;
+        public IFallout4GroupGetter<IHazardGetter> Hazards => _Hazards ?? new Fallout4Group<Hazard>(this);
+        #endregion
+        #region BendableSplines
+        private List<RangeInt64>? _BendableSplinesLocations;
+        private IFallout4GroupGetter<IBendableSplineGetter>? _BendableSplines => _BendableSplinesLocations != null ? Fallout4GroupBinaryOverlay<IBendableSplineGetter>.Fallout4GroupFactory(_data, _BendableSplinesLocations, _package) : default;
+        public IFallout4GroupGetter<IBendableSplineGetter> BendableSplines => _BendableSplines ?? new Fallout4Group<BendableSpline>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -10215,6 +10750,24 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     _HolotapesLocations ??= new();
                     _HolotapesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Holotapes;
+                }
+                case RecordTypeInts.PROJ:
+                {
+                    _ProjectilesLocations ??= new();
+                    _ProjectilesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.Projectiles;
+                }
+                case RecordTypeInts.HAZD:
+                {
+                    _HazardsLocations ??= new();
+                    _HazardsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.Hazards;
+                }
+                case RecordTypeInts.BNDS:
+                {
+                    _BendableSplinesLocations ??= new();
+                    _BendableSplinesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.BendableSplines;
                 }
                 default:
                     return default(int?);

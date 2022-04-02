@@ -46,6 +46,9 @@
       <Group name="Ingestibles" refName="Ingestible" />
       <Group name="IdleMarkers" refName="IdleMarker" />
       <Group name="Holotapes" refName="Holotape" />
+      <Group name="Projectiles" refName="Projectile" />
+      <Group name="Hazards" refName="Hazard" />
+      <Group name="BendableSplines" refName="BendableSpline" />
       <!--			<Group name="VoiceTypes" refName="VoiceType" />-->
       <!--			<Group name="Quests" refName="Quest" />-->
       <!--			<Group name="MaterialTypes" refName="MaterialType" />-->
