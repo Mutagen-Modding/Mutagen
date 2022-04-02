@@ -1638,7 +1638,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 RecordTypes.XXXX,
                 RecordTypes.ROAD,
                 RecordTypes.CELL,
-                RecordTypes.GRUP);
+                RecordTypes.GRUP,
+                RecordTypes.XCLC,
+                RecordTypes.XCLL,
+                RecordTypes.XCLR,
+                RecordTypes.XCMT,
+                RecordTypes.XCLW,
+                RecordTypes.XCCM,
+                RecordTypes.XCWT,
+                RecordTypes.XOWN,
+                RecordTypes.XRNK,
+                RecordTypes.XGLB,
+                RecordTypes.PGRD,
+                RecordTypes.LAND,
+                RecordTypes.ACRE,
+                RecordTypes.ACHR,
+                RecordTypes.REFR);
         });
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceBinaryWriteTranslation);
         #region Interface

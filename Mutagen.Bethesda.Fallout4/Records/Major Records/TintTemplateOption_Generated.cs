@@ -1295,6 +1295,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.TTGP,
                 RecordTypes.TTEF,
                 RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
                 RecordTypes.TTET,
                 RecordTypes.TTEB,
                 RecordTypes.TTEC,

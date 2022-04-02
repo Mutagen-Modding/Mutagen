@@ -935,7 +935,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.DAMC,
                 RecordTypes.DSTD,
                 RecordTypes.DSTA,
-                RecordTypes.DMDL);
+                RecordTypes.DMDL,
+                RecordTypes.DSTF,
+                RecordTypes.DMDT,
+                RecordTypes.DMDS);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DestructibleBinaryWriteTranslation);
         #region Interface

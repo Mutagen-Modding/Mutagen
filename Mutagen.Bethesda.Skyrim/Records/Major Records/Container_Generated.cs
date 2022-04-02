@@ -1351,6 +1351,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.MODL,
                 RecordTypes.CNTO,
                 RecordTypes.COCT,
+                RecordTypes.COED,
                 RecordTypes.DEST,
                 RecordTypes.DSTD,
                 RecordTypes.DMDL,

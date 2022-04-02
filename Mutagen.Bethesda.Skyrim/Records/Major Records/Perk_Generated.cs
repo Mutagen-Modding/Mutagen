@@ -1430,9 +1430,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.DESC,
                 RecordTypes.ICON,
                 RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
                 RecordTypes.DATA,
                 RecordTypes.NNAM,
-                RecordTypes.PRKE);
+                RecordTypes.PRKE,
+                RecordTypes.PRKF,
+                RecordTypes.PRKC);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PerkBinaryWriteTranslation);
         #region Interface

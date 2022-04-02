@@ -1807,6 +1807,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.MODL,
                 RecordTypes.CNTO,
                 RecordTypes.COCT,
+                RecordTypes.COED,
                 RecordTypes.DEST,
                 RecordTypes.DAMC,
                 RecordTypes.DSTD,

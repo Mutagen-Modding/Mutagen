@@ -1968,6 +1968,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.RADR,
                 RecordTypes.CTDA,
                 RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
                 RecordTypes.NVNM);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ActivatorBinaryWriteTranslation);

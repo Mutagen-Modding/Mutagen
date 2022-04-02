@@ -1383,7 +1383,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.TNAM,
                 RecordTypes.CNAM,
                 RecordTypes.RNAM,
-                RecordTypes.CTDA);
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
         });
         public static readonly Type BinaryWriteTranslation = typeof(HeadPartBinaryWriteTranslation);
         #region Interface

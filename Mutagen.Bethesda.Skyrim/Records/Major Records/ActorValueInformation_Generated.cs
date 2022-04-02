@@ -1061,7 +1061,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.ANAM,
                 RecordTypes.CNAM,
                 RecordTypes.AVSK,
-                RecordTypes.PNAM);
+                RecordTypes.PNAM,
+                RecordTypes.FNAM,
+                RecordTypes.XNAM,
+                RecordTypes.YNAM,
+                RecordTypes.HNAM,
+                RecordTypes.VNAM,
+                RecordTypes.SNAM,
+                RecordTypes.INAM);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ActorValueInformationBinaryWriteTranslation);
         #region Interface

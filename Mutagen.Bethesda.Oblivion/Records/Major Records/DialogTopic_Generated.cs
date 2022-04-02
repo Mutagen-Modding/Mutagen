@@ -1289,7 +1289,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 RecordTypes.QSTI,
                 RecordTypes.FULL,
                 RecordTypes.DATA,
-                RecordTypes.INFO);
+                RecordTypes.INFO,
+                RecordTypes.PNAM,
+                RecordTypes.NAME,
+                RecordTypes.TRDT,
+                RecordTypes.NAM1,
+                RecordTypes.NAM2,
+                RecordTypes.CTDA,
+                RecordTypes.CTDT,
+                RecordTypes.TCLT,
+                RecordTypes.TCLF,
+                RecordTypes.SCHD,
+                RecordTypes.SCHR);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DialogTopicBinaryWriteTranslation);
         #region Interface

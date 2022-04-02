@@ -1280,6 +1280,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.FNAM,
                 RecordTypes.CTDA,
                 RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
                 RecordTypes.SNAM);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MusicTrackBinaryWriteTranslation);

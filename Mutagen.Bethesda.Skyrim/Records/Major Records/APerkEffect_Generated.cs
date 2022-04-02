@@ -845,7 +845,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return TriggeringRecordCollection.Factory(
                 RecordTypes.PRKE,
                 RecordTypes.PRKF,
-                RecordTypes.PRKC);
+                RecordTypes.PRKC,
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
         });
         public static readonly Type BinaryWriteTranslation = typeof(APerkEffectBinaryWriteTranslation);
         #region Interface

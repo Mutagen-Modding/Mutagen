@@ -902,7 +902,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 RecordTypes.FULL,
                 RecordTypes.ENIT,
                 RecordTypes.EFID,
-                RecordTypes.EFIT);
+                RecordTypes.EFIT,
+                RecordTypes.SCIT);
         });
         public static readonly Type BinaryWriteTranslation = typeof(EnchantmentBinaryWriteTranslation);
         #region Interface

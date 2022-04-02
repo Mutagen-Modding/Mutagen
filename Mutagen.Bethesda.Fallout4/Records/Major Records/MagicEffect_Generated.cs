@@ -2842,7 +2842,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.ESCE,
                 RecordTypes.SNDD,
                 RecordTypes.DNAM,
-                RecordTypes.CTDA);
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MagicEffectBinaryWriteTranslation);
         #region Interface

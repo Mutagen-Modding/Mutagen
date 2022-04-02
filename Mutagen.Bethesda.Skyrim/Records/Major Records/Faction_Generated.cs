@@ -1667,7 +1667,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.VENV,
                 RecordTypes.PLVD,
                 RecordTypes.CTDA,
-                RecordTypes.CITC);
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FactionBinaryWriteTranslation);
         #region Interface

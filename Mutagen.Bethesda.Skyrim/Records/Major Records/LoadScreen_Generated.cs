@@ -1161,6 +1161,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.ICON,
                 RecordTypes.DESC,
                 RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
                 RecordTypes.NNAM,
                 RecordTypes.SNAM,
                 RecordTypes.RNAM,

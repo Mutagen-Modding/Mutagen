@@ -1209,6 +1209,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return TriggeringRecordCollection.Factory(
                 RecordTypes.IDLE,
                 RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
                 RecordTypes.DNAM,
                 RecordTypes.ENAM,
                 RecordTypes.ANAM,

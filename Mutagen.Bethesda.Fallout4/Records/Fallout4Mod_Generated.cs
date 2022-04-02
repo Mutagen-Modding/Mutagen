@@ -3702,58 +3702,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.TES4;
-        public static ITriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<ITriggeringRecordCollection> _AllRecordTypes = new Lazy<ITriggeringRecordCollection>(() =>
-        {
-            return TriggeringRecordCollection.Factory(
-                RecordTypes.TES4,
-                RecordTypes.GMST,
-                RecordTypes.KYWD,
-                RecordTypes.LCRT,
-                RecordTypes.AACT,
-                RecordTypes.TRNS,
-                RecordTypes.CMPO,
-                RecordTypes.TXST,
-                RecordTypes.GLOB,
-                RecordTypes.DMGT,
-                RecordTypes.CLAS,
-                RecordTypes.FACT,
-                RecordTypes.HDPT,
-                RecordTypes.RACE,
-                RecordTypes.SOUN,
-                RecordTypes.ASPC,
-                RecordTypes.MGEF,
-                RecordTypes.LTEX,
-                RecordTypes.ENCH,
-                RecordTypes.SPEL,
-                RecordTypes.ACTI,
-                RecordTypes.TACT,
-                RecordTypes.ARMO,
-                RecordTypes.BOOK,
-                RecordTypes.CONT,
-                RecordTypes.DOOR,
-                RecordTypes.INGR,
-                RecordTypes.LIGH,
-                RecordTypes.MISC,
-                RecordTypes.STAT,
-                RecordTypes.SCOL,
-                RecordTypes.MSTT,
-                RecordTypes.GRAS,
-                RecordTypes.TREE,
-                RecordTypes.FLOR,
-                RecordTypes.FURN,
-                RecordTypes.WEAP,
-                RecordTypes.AMMO,
-                RecordTypes.NPC_,
-                RecordTypes.LVLN,
-                RecordTypes.KEYM,
-                RecordTypes.ALCH,
-                RecordTypes.IDLM,
-                RecordTypes.NOTE,
-                RecordTypes.PROJ,
-                RecordTypes.HAZD,
-                RecordTypes.BNDS);
-        });
         public static readonly Type BinaryWriteTranslation = typeof(Fallout4ModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

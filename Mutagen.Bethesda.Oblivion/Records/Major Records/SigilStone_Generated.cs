@@ -1050,6 +1050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 RecordTypes.SCRI,
                 RecordTypes.EFID,
                 RecordTypes.EFIT,
+                RecordTypes.SCIT,
                 RecordTypes.DATA);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SigilStoneBinaryWriteTranslation);

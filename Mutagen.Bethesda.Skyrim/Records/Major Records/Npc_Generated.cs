@@ -3404,6 +3404,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.PRKZ,
                 RecordTypes.CNTO,
                 RecordTypes.COCT,
+                RecordTypes.COED,
                 RecordTypes.AIDT,
                 RecordTypes.PKID,
                 RecordTypes.KWDA,

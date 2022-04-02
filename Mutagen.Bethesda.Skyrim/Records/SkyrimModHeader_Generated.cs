@@ -1320,6 +1320,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.CNAM,
                 RecordTypes.SNAM,
                 RecordTypes.MAST,
+                RecordTypes.DATA,
                 RecordTypes.ONAM,
                 RecordTypes.XXXX,
                 RecordTypes.INTV,

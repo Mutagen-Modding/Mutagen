@@ -868,7 +868,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return TriggeringRecordCollection.Factory(
                 RecordTypes.QSTA,
-                RecordTypes.CTDA);
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestTargetBinaryWriteTranslation);
         #region Interface

@@ -1640,7 +1640,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.MPGS,
                 RecordTypes.FMRI,
                 RecordTypes.FMRN,
-                RecordTypes.WMAP);
+                RecordTypes.WMAP,
+                RecordTypes.TTEF,
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.TTET,
+                RecordTypes.TTEB,
+                RecordTypes.TTEC,
+                RecordTypes.TTED);
         });
         public static readonly Type BinaryWriteTranslation = typeof(HeadDataBinaryWriteTranslation);
         #region Interface

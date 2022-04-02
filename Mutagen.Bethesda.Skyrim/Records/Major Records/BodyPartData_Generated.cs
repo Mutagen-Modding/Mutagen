@@ -876,7 +876,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return TriggeringRecordCollection.Factory(
                 RecordTypes.BPTD,
                 RecordTypes.MODL,
-                RecordTypes.BPTN);
+                RecordTypes.BPTN,
+                RecordTypes.PNAM,
+                RecordTypes.BPNN,
+                RecordTypes.BPNT,
+                RecordTypes.BPNI,
+                RecordTypes.BPND,
+                RecordTypes.NAM1,
+                RecordTypes.NAM4,
+                RecordTypes.NAM5);
         });
         public static readonly Type BinaryWriteTranslation = typeof(BodyPartDataBinaryWriteTranslation);
         #region Interface

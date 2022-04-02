@@ -1056,7 +1056,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 RecordTypes.DELE,
                 RecordTypes.CNAM,
                 RecordTypes.SNAM,
-                RecordTypes.MAST);
+                RecordTypes.MAST,
+                RecordTypes.DATA);
         });
         public static readonly Type BinaryWriteTranslation = typeof(OblivionModHeaderBinaryWriteTranslation);
         #region Interface

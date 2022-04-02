@@ -1263,11 +1263,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.RCLR,
                 RecordTypes.WNAM,
                 RecordTypes.RPLI,
+                RecordTypes.RPLD,
+                RecordTypes.ANAM,
                 RecordTypes.RDAT,
                 RecordTypes.ICON,
                 RecordTypes.MICO,
-                RecordTypes.RLDM,
-                RecordTypes.ANAM);
+                RecordTypes.RLDM);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);
         #region Interface

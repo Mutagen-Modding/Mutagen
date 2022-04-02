@@ -901,7 +901,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.NAM0,
                 RecordTypes.SCHR,
                 RecordTypes.SCTX,
-                RecordTypes.QNAM);
+                RecordTypes.QNAM,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestStageBinaryWriteTranslation);
         #region Interface

@@ -1073,6 +1073,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.HNAM,
                 RecordTypes.NAM0,
                 RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
                 RecordTypes.NEXT,
                 RecordTypes.SCHR,
                 RecordTypes.SCDA,

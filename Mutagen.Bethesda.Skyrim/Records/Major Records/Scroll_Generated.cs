@@ -1893,7 +1893,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.SPIT,
                 RecordTypes.EFID,
                 RecordTypes.EFIT,
-                RecordTypes.CTDA);
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ScrollBinaryWriteTranslation);
         #region Interface

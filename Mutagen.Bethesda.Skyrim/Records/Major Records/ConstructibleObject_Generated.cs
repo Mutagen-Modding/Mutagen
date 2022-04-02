@@ -1048,7 +1048,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.COBJ,
                 RecordTypes.CNTO,
                 RecordTypes.COCT,
+                RecordTypes.COED,
                 RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
                 RecordTypes.CNAM,
                 RecordTypes.BNAM,
                 RecordTypes.NAM1);

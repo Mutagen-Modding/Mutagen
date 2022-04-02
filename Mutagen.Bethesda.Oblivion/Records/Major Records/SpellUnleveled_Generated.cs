@@ -847,7 +847,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 RecordTypes.SPEL,
                 RecordTypes.SPIT,
                 RecordTypes.EFID,
-                RecordTypes.EFIT);
+                RecordTypes.EFIT,
+                RecordTypes.SCIT,
+                RecordTypes.FULL);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SpellUnleveledBinaryWriteTranslation);
         #region Interface

@@ -803,7 +803,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return TriggeringRecordCollection.Factory(
                 RecordTypes.DEBR,
-                RecordTypes.DATA);
+                RecordTypes.DATA,
+                RecordTypes.MODT);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DebrisBinaryWriteTranslation);
         #region Interface

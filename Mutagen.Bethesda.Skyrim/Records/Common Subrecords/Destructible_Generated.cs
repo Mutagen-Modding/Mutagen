@@ -811,7 +811,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return TriggeringRecordCollection.Factory(
                 RecordTypes.DEST,
                 RecordTypes.DSTD,
-                RecordTypes.DMDL);
+                RecordTypes.DMDL,
+                RecordTypes.DSTF,
+                RecordTypes.DMDT,
+                RecordTypes.DMDS);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DestructibleBinaryWriteTranslation);
         #region Interface

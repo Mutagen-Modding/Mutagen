@@ -1223,6 +1223,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 RecordTypes.CTDA,
                 RecordTypes.CTDT,
                 RecordTypes.INDX,
+                RecordTypes.QSDT,
+                RecordTypes.CNAM,
+                RecordTypes.SCHD,
+                RecordTypes.SCHR,
                 RecordTypes.QSTA);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestBinaryWriteTranslation);

@@ -1488,6 +1488,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.CNAM,
                 RecordTypes.SNAM,
                 RecordTypes.MAST,
+                RecordTypes.DATA,
                 RecordTypes.ONAM,
                 RecordTypes.XXXX,
                 RecordTypes.SCRN,
