@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Fallout4
         public enum MajorFlag
         {
             IsPerch = 0x0000_0080,
-            HasDistantLOD = 0x0000_8000,
+            HasDistantLod = 0x0000_8000,
             RandomAnimStart = 0x0001_0000,
             IsMarker = 0x0080_0000,
             PowerArmor = 0x0200_0000,

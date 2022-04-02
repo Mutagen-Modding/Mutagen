@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Fallout4
         [Flags]
         public enum MajorFlag
         {
-            HasDistantLOD = 0x0000_8000
+            HasDistantLod = 0x0000_8000
         }
     }
 }

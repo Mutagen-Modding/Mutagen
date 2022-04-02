@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Fallout4
             HeadtrackMarker = 0x0000_0400,
             UsedAsPlatform = 0x0000_0800,
             PackInUseOnly = 0x0000_1000,
-            HasDistantLOD = 0x0000_8000,
+            HasDistantLod = 0x0000_8000,
             RandomAnimStart = 0x0001_0000,
             Dangerous = 0x0002_0000,
             IgnoreObjectInteraction = 0x0010_0000,

@@ -12,7 +12,7 @@
       <RefDirect name="Land" refName="RegionLand" binary="NoGeneration" />
       <RefDirect name="Grasses" refName="RegionGrasses" binary="NoGeneration" />
       <RefDirect name="Sounds" refName="RegionSounds" binary="NoGeneration" />
-      <Float name="LODDisplayDistanceMultiplier" recordType="RLDM" />
+      <Float name="LodDisplayDistanceMultiplier" recordType="RLDM" />
       <Float name="OcclusionAccuracyDist" recordType="ANAM" />
     </Fields>
     <LinkInterface>IEmittance</LinkInterface>

@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Fallout4
             HiddenFromLocalMap = 0x0000_0200,
             UsedAsPlatform = 0x0000_0800,
             PackInUseOnly = 0x0000_2000,
-            HasDistantLOD = 0x0000_8000,
+            HasDistantLod = 0x0000_8000,
             RandomAnimStart = 0x0001_0000,
             HasCurrents = 0x0008_0000,
             Obstacle = 0x0200_0000,
