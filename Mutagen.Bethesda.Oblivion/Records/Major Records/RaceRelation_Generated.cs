@@ -400,7 +400,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = RaceRelation_Registration.TriggeringRecordType;
         public IEnumerable<IFormLinkGetter> ContainedFormLinks => RaceRelationCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceRelationSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion

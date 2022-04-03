@@ -375,7 +375,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = RegionData_Registration.TriggeringRecordType;
         public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => RegionDataCommon.Instance.GetContainedFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion

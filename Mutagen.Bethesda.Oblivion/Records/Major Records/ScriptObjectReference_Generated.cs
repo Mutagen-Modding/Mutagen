@@ -352,7 +352,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = ScriptObjectReference_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ScriptObjectReferenceCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion

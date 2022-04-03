@@ -425,7 +425,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = PerkEntryPointModifyActorValue_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PerkEntryPointModifyActorValueCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointModifyActorValueSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion

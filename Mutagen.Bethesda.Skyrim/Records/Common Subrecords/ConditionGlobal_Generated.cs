@@ -400,7 +400,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = ConditionGlobal_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ConditionGlobalCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionGlobalSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion

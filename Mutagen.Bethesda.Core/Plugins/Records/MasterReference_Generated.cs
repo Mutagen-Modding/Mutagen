@@ -390,10 +390,6 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = MasterReference_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MasterReferenceBinaryWriteTranslation.Instance;

@@ -516,7 +516,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = AVirtualMachineAdapter_Registration.TriggeringRecordType;
         public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => AVirtualMachineAdapterCommon.Instance.GetContainedFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AVirtualMachineAdapterSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion

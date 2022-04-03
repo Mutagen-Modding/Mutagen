@@ -371,7 +371,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = PerkEntryPointAddLeveledItem_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PerkEntryPointAddLeveledItemCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointAddLeveledItemSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion

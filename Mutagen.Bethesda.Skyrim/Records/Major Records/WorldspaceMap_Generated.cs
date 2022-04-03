@@ -547,7 +547,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = WorldspaceMap_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {

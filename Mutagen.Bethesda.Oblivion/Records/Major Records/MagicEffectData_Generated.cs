@@ -702,7 +702,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = MagicEffectData_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {

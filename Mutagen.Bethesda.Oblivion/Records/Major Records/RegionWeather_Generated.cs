@@ -439,7 +439,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = RegionWeather_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RegionWeatherCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionWeatherSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion

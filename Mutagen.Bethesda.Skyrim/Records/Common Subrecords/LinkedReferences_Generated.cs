@@ -438,7 +438,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = LinkedReferences_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {

@@ -1168,7 +1168,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = WaterData_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {

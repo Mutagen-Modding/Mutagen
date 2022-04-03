@@ -391,10 +391,6 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = FurnitureMarkerEntryPoints_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => FurnitureMarkerEntryPointsBinaryWriteTranslation.Instance;

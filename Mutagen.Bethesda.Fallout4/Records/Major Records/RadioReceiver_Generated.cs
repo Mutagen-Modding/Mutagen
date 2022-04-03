@@ -524,7 +524,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = RadioReceiver_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {

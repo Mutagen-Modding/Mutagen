@@ -568,7 +568,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = NpcFaceTintingLayer_Registration.TriggeringRecordType;
         [Flags]
         public enum TETIDataType
         {

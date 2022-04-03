@@ -545,7 +545,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = APerkEffect_Registration.TriggeringRecordType;
         public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => APerkEffectCommon.Instance.GetContainedFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEffectSetterCommon.Instance.RemapLinks(this, mapping);
         [Flags]

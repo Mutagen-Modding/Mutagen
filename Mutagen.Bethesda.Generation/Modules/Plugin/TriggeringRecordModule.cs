@@ -778,7 +778,8 @@ public class TriggeringRecordModule : GenerationModule
                 fg.AppendLine($"public static readonly {nameof(RecordType)} {Plugins.Internals.Constants.GrupRecordTypeMember} = (RecordType){grupLoqui.TargetObjectGeneration.Name}.{Plugins.Internals.Constants.GrupRecordTypeMember};");
             }
         }
-        else if (await obj.IsSingleTriggerSource())
+        else if (await obj.IsSingleTriggerSource() 
+            && (obj.GetObjectType() != ObjectType.Mod && obj.GetObjectType() != ObjectType.Subrecord))
         {
             await obj.IsSingleTriggerSource();
             fg.AppendLine($"public{obj.NewOverride(b => !b.Abstract)}static readonly {nameof(RecordType)} {Plugins.Internals.Constants.GrupRecordTypeMember} = {obj.RegistrationName}.{Plugins.Internals.Constants.TriggeringRecordTypeMember};");

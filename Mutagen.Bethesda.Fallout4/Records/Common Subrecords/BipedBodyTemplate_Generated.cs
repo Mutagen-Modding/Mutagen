@@ -354,10 +354,6 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = BipedBodyTemplate_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => BipedBodyTemplateBinaryWriteTranslation.Instance;

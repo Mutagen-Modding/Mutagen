@@ -1489,7 +1489,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = CombatStyleData_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {
