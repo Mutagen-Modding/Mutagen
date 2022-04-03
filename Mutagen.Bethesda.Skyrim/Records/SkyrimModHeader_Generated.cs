@@ -1309,15 +1309,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.TES4;
-        public static ITriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ITriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<ITriggeringRecordCollection>(() =>
+        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
         {
-            return TriggeringRecordCollection.Factory(RecordTypes.TES4);
+            return RecordCollection.Factory(RecordTypes.TES4);
         });
-        public static ITriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<ITriggeringRecordCollection> _AllRecordTypes = new Lazy<ITriggeringRecordCollection>(() =>
+        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
         {
-            return TriggeringRecordCollection.Factory(
+            return RecordCollection.Factory(
                 RecordTypes.TES4,
                 RecordTypes.HEDR,
                 RecordTypes.OFST,

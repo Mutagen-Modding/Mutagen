@@ -894,10 +894,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ITriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ITriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<ITriggeringRecordCollection>(() =>
+        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
         {
-            return TriggeringRecordCollection.Factory(
+            return RecordCollection.Factory(
                 RecordTypes.MPGN,
                 RecordTypes.MPPI,
                 RecordTypes.MPPN,
@@ -908,10 +908,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.MPPK,
                 RecordTypes.MPGS);
         });
-        public static ITriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<ITriggeringRecordCollection> _AllRecordTypes = new Lazy<ITriggeringRecordCollection>(() =>
+        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
         {
-            return TriggeringRecordCollection.Factory(
+            return RecordCollection.Factory(
                 RecordTypes.MPGN,
                 RecordTypes.MPPI,
                 RecordTypes.MPPN,
@@ -1622,7 +1622,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        subrecordType: MorphPreset_Registration.AllRecordTypes,
+                        allRecordTypes: MorphPreset_Registration.AllRecordTypes,
                         countType: RecordTypes.MPPC,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => MorphPresetBinaryOverlay.MorphPresetFactory(new OverlayStream(s, p), p, recConv),

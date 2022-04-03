@@ -5,18 +5,18 @@ using DynamicData;
 
 namespace Mutagen.Bethesda.Plugins.Internals;
 
-public interface ITriggeringRecordCollection
+public interface IRecordCollection
 {
     bool Contains(RecordType type);
     int IndexOf(RecordType type);
 }
 
-public class TriggeringRecordCollection : ITriggeringRecordCollection
+public class RecordCollection : IRecordCollection
 {
     private readonly IReadOnlyList<RecordType> _ordered;
     private readonly IReadOnlySet<RecordType> _set;
 
-    private TriggeringRecordCollection(params RecordType[] types)
+    private RecordCollection(params RecordType[] types)
     {
         _ordered = types;
         _set = types.ToHashSet();
@@ -26,28 +26,28 @@ public class TriggeringRecordCollection : ITriggeringRecordCollection
 
     public int IndexOf(RecordType type) => _ordered.IndexOf(type);
 
-    public static ITriggeringRecordCollection Factory(params RecordType[] types)
+    public static IRecordCollection Factory(params RecordType[] types)
     {
         if (types.Length == 0)
         {
-            return EmptyTriggeringRecordCollection.Instance;
+            return EmptyRecordCollection.Instance;
         }
         else if (types.Length == 1)
         {
-            return new SingleTriggeringRecordCollection(types[0]);
+            return new SingleRecordCollection(types[0]);
         }
         else
         {
-            return new TriggeringRecordCollection(types);
+            return new RecordCollection(types);
         }
     }
 }
 
-public class SingleTriggeringRecordCollection : ITriggeringRecordCollection
+public class SingleRecordCollection : IRecordCollection
 {
     private readonly RecordType _type;
 
-    public SingleTriggeringRecordCollection(RecordType type)
+    public SingleRecordCollection(RecordType type)
     {
         _type = type;
     }
@@ -57,9 +57,9 @@ public class SingleTriggeringRecordCollection : ITriggeringRecordCollection
     public int IndexOf(RecordType type) => _type == type ? 0 : -1;
 }
 
-public class EmptyTriggeringRecordCollection : ITriggeringRecordCollection
+public class EmptyRecordCollection : IRecordCollection
 {
-    public static readonly EmptyTriggeringRecordCollection Instance = new();
+    public static readonly EmptyRecordCollection Instance = new();
 
     public bool Contains(RecordType type) => false;
 

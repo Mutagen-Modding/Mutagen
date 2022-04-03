@@ -646,10 +646,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.PRKE;
-        public static ITriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ITriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<ITriggeringRecordCollection>(() =>
+        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
         {
-            return TriggeringRecordCollection.Factory(RecordTypes.PRKE);
+            return RecordCollection.Factory(RecordTypes.PRKE);
         });
         public static RecordType AllRecordTypes => TriggeringRecordType;
         public static readonly Type BinaryWriteTranslation = typeof(PerkEntryPointAddLeveledItemBinaryWriteTranslation);

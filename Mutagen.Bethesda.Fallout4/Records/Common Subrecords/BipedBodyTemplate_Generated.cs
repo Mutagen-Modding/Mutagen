@@ -652,10 +652,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.BOD2;
-        public static ITriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ITriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<ITriggeringRecordCollection>(() =>
+        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
         {
-            return TriggeringRecordCollection.Factory(RecordTypes.BOD2);
+            return RecordCollection.Factory(RecordTypes.BOD2);
         });
         public static RecordType AllRecordTypes => TriggeringRecordType;
         public static readonly Type BinaryWriteTranslation = typeof(BipedBodyTemplateBinaryWriteTranslation);

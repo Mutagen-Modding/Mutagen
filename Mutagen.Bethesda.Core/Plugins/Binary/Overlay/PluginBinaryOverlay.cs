@@ -317,7 +317,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
 
         public static int[] ParseLocationsRecordPerTrigger(
             OverlayStream stream,
-            ITriggeringRecordCollection triggers,
+            IRecordCollection triggers,
             RecordHeaderConstants constants,
             bool skipHeader,
             TypedParseParams? parseParams = null)
@@ -347,8 +347,8 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
         public static int[] ParseRecordLocations(
             OverlayStream stream,
             long finalPos,
-            ITriggeringRecordCollection triggers,
-            ITriggeringRecordCollection includeTriggers,
+            IRecordCollection triggers,
+            IRecordCollection includeTriggers,
             RecordHeaderConstants constants,
             bool skipHeader)
         {
@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             OverlayStream stream,
             long finalPos,
             RecordType trigger,
-            ITriggeringRecordCollection includeTriggers,
+            IRecordCollection includeTriggers,
             RecordHeaderConstants constants,
             bool skipHeader)
         {
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
         private static int[] ParseRecordLocationsInternal(
             OverlayStream stream,
             uint? count,
-            ITriggeringRecordCollection trigger,
+            IRecordCollection trigger,
             RecordHeaderConstants constants,
             bool skipHeader,
             TypedParseParams? parseParams = null)
@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
         public static int[] ParseRecordLocationsByCount(
             OverlayStream stream,
             uint count,
-            ITriggeringRecordCollection trigger,
+            IRecordCollection trigger,
             RecordHeaderConstants constants,
             bool skipHeader,
             TypedParseParams? parseParams = null)
@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
         /// <returns>Array of located positions relative to the stream's position at the start</returns>
         public static int[] ParseRecordLocations(
             OverlayStream stream,
-            ITriggeringRecordCollection trigger,
+            IRecordCollection trigger,
             RecordHeaderConstants constants,
             bool skipHeader,
             TypedParseParams? parseParams = null)
@@ -561,7 +561,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
         public static int[] ParseRecordLocations(
             OverlayStream stream,
             long finalPos,
-            ITriggeringRecordCollection triggers,
+            IRecordCollection triggers,
             RecordType includeTrigger,
             RecordHeaderConstants constants,
             bool skipHeader)
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
 
         public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
             OverlayStream stream,
-            ITriggeringRecordCollection trigger,
+            IRecordCollection trigger,
             StreamTypedFactory<T> factory,
             TypedParseParams? parseParams)
         {
@@ -688,7 +688,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
 
         public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
             OverlayStream stream,
-            ITriggeringRecordCollection trigger,
+            IRecordCollection trigger,
             ConverterFactory<T> factory,
             TypedParseParams? parseParams)
         {

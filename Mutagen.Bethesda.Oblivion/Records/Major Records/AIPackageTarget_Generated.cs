@@ -726,10 +726,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.PTDT;
-        public static ITriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ITriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<ITriggeringRecordCollection>(() =>
+        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
         {
-            return TriggeringRecordCollection.Factory(RecordTypes.PTDT);
+            return RecordCollection.Factory(RecordTypes.PTDT);
         });
         public static RecordType AllRecordTypes => TriggeringRecordType;
         public static readonly Type BinaryWriteTranslation = typeof(AIPackageTargetBinaryWriteTranslation);

@@ -33,7 +33,7 @@ public class BinaryOverlayTests
         }
 
         data.Position = 0;
-        var triggers = TriggeringRecordCollection.Factory(RecordTypes.EDID);
+        var triggers = RecordCollection.Factory(RecordTypes.EDID);
         var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
         var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
             stream,
@@ -74,7 +74,7 @@ public class BinaryOverlayTests
         }
 
         data.Position = 0;
-        var triggers = TriggeringRecordCollection.Factory(RecordTypes.EDID);
+        var triggers = RecordCollection.Factory(RecordTypes.EDID);
         var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
         var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
             stream,
@@ -123,7 +123,7 @@ public class BinaryOverlayTests
         }
 
         data.Position = 0;
-        var triggers = TriggeringRecordCollection.Factory(RecordTypes.EDID, RecordTypes.DATA);
+        var triggers = RecordCollection.Factory(RecordTypes.EDID, RecordTypes.DATA);
         var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
         var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
             stream,
@@ -176,7 +176,7 @@ public class BinaryOverlayTests
         }
 
         data.Position = 0;
-        var triggers = TriggeringRecordCollection.Factory(RecordTypes.EDID, RecordTypes.DATA);
+        var triggers = RecordCollection.Factory(RecordTypes.EDID, RecordTypes.DATA);
         var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
         var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
             stream,

@@ -268,12 +268,12 @@ public class TriggeringRecordModule : GenerationModule
         }
         if (count >= 1)
         {
-            fg.AppendLine($"public static ITriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;");
-            fg.AppendLine($"private static readonly Lazy<ITriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<ITriggeringRecordCollection>(() =>");
+            fg.AppendLine($"public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;");
+            fg.AppendLine($"private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>");
             using (new BraceWrapper(fg) { AppendSemicolon = true, AppendParenthesis = true })
             {
                 using (var args = new ArgsWrapper(fg,
-                    "return TriggeringRecordCollection.Factory"))
+                    "return RecordCollection.Factory"))
                 {
                     foreach (var trigger in trigRecordTypes)
                     {
@@ -288,7 +288,7 @@ public class TriggeringRecordModule : GenerationModule
             var all = await GetAllRecordTypes(obj).ToArrayAsync();
             if (count > 1 && trigRecordTypes.ToHashSet().Equals(all.ToHashSet()))
             {
-                fg.AppendLine($"public static ITriggeringRecordCollection AllRecordTypes => _TriggeringRecordTypes.Value;");
+                fg.AppendLine($"public static IRecordCollection AllRecordTypes => _TriggeringRecordTypes.Value;");
             }
             else if (all.Length == 1)
             {
@@ -296,12 +296,12 @@ public class TriggeringRecordModule : GenerationModule
             }
             else if (count > 0)
             {
-                fg.AppendLine($"public static ITriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;");
-                fg.AppendLine($"private static readonly Lazy<ITriggeringRecordCollection> _AllRecordTypes = new Lazy<ITriggeringRecordCollection>(() =>");
+                fg.AppendLine($"public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;");
+                fg.AppendLine($"private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>");
                 using (new BraceWrapper(fg) { AppendSemicolon = true, AppendParenthesis = true })
                 {
                     using (var args = new ArgsWrapper(fg,
-                        "return TriggeringRecordCollection.Factory"))
+                        "return RecordCollection.Factory"))
                     {
                         foreach (var trigger in all)
                         {

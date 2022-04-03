@@ -5519,15 +5519,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.NPC_;
-        public static ITriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ITriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<ITriggeringRecordCollection>(() =>
+        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
         {
-            return TriggeringRecordCollection.Factory(RecordTypes.NPC_);
+            return RecordCollection.Factory(RecordTypes.NPC_);
         });
-        public static ITriggeringRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<ITriggeringRecordCollection> _AllRecordTypes = new Lazy<ITriggeringRecordCollection>(() =>
+        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
+        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
         {
-            return TriggeringRecordCollection.Factory(
+            return RecordCollection.Factory(
                 RecordTypes.NPC_,
                 RecordTypes.VMAD,
                 RecordTypes.OBND,
@@ -10429,7 +10429,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        subrecordType: ContainerEntry_Registration.AllRecordTypes,
+                        allRecordTypes: ContainerEntry_Registration.AllRecordTypes,
                         countType: RecordTypes.COCT,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
@@ -10486,7 +10486,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        subrecordType: ObjectTemplate_Registration.AllRecordTypes,
+                        allRecordTypes: ObjectTemplate_Registration.AllRecordTypes,
                         countType: RecordTypes.OBTE,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => ObjectTemplateBinaryOverlay<Npc.Property>.ObjectTemplateFactory(new OverlayStream(s, p), p, recConv),
@@ -10590,7 +10590,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        subrecordType: NpcSound_Registration.AllRecordTypes,
+                        allRecordTypes: NpcSound_Registration.AllRecordTypes,
                         countType: RecordTypes.CS2H,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => NpcSoundBinaryOverlay.NpcSoundFactory(new OverlayStream(s, p), p, recConv),

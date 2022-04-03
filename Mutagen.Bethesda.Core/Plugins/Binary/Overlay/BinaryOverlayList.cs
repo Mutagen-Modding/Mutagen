@@ -161,7 +161,7 @@ public abstract class BinaryOverlayList
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
         int countLength,
-        ITriggeringRecordCollection subrecordType,
+        IRecordCollection allRecordTypes,
         RecordType countType,
         TypedParseParams? parseParams,
         PluginBinaryOverlay.SpanRecordFactory<T> getter,
@@ -188,7 +188,7 @@ public abstract class BinaryOverlayList
                 locs: PluginBinaryOverlay.ParseRecordLocationsByCount(
                     stream: stream,
                     count: count,
-                    trigger: subrecordType,
+                    trigger: allRecordTypes,
                     constants: package.MetaData.Constants.SubConstants,
                     skipHeader: false));
         }
@@ -202,7 +202,7 @@ public abstract class BinaryOverlayList
                 locs: PluginBinaryOverlay.ParseRecordLocations(
                     stream: stream,
                     constants: package.MetaData.Constants.SubConstants,
-                    trigger: subrecordType,
+                    trigger: allRecordTypes,
                     skipHeader: skipHeader,
                     parseParams: parseParams?.RecordTypeConverter));
         }
@@ -310,7 +310,7 @@ public abstract class BinaryOverlayList
     public static IReadOnlyList<T> FactoryByCount<T>(
         ReadOnlyMemorySlice<byte> mem,
         BinaryOverlayFactoryPackage package,
-        ITriggeringRecordCollection subrecordType,
+        IRecordCollection subrecordType,
         int itemLength,
         uint count,
         PluginBinaryOverlay.SpanFactory<T> getter)
@@ -637,7 +637,7 @@ public abstract class BinaryOverlayList
         private readonly BinaryOverlayFactoryPackage _package;
         private readonly ReadOnlyMemorySlice<byte> _mem;
         private readonly PluginBinaryOverlay.SpanFactory<T> _getter;
-        private readonly ITriggeringRecordCollection _recordTypes;
+        private readonly IRecordCollection _recordTypes;
         private readonly int _totalItemLength;
 
         public BinaryOverlayListByStartIndexWithRecordSet(
@@ -645,7 +645,7 @@ public abstract class BinaryOverlayList
             BinaryOverlayFactoryPackage package,
             PluginBinaryOverlay.SpanFactory<T> getter,
             int itemLength,
-            ITriggeringRecordCollection recordTypes)
+            IRecordCollection recordTypes)
         {
             this._mem = mem;
             this._package = package;

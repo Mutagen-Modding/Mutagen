@@ -940,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             IConditionDataGetter IConditionGetter.Data => this.Data;
 
-            private static ITriggeringRecordCollection IncludeTriggers = TriggeringRecordCollection.Factory(
+            private static IRecordCollection IncludeTriggers = RecordCollection.Factory(
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
 

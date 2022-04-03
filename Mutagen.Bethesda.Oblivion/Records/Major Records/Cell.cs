@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class CellBinaryOverlay
         {
-            static readonly ITriggeringRecordCollection TypicalPlacedTypes = TriggeringRecordCollection.Factory(
+            static readonly IRecordCollection TypicalPlacedTypes = RecordCollection.Factory(
                 RecordTypes.ACHR,
                 RecordTypes.ACRE,
                 RecordTypes.REFR);

@@ -1001,7 +1001,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                         args.AddPassArg($"stream");
                         args.Add($"package: _package");
                         args.Add($"countLength: {counterLen}");
-                        args.Add($"subrecordType: {subData.AllRecordSetAccessor}");
+                        args.Add($"allRecordTypes: {subData.AllRecordSetAccessor}");
                         args.Add($"countType: {objGen.RecordTypeHeaderName(new RecordType((string)typeGen.CustomData[CounterRecordType]))}");
                         args.Add($"parseParams: {converterAccessor}");
                         args.Add($"getter: (s, p, recConv) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}(s, p), p, recConv)");

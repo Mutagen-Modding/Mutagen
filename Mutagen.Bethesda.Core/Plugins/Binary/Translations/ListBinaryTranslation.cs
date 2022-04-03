@@ -95,7 +95,7 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
     public ExtendedList<T> Parse(
         MutagenFrame reader,
         BinarySubParseRecordDelegate<T> transl,
-        ITriggeringRecordCollection? triggeringRecord = null)
+        IRecordCollection? triggeringRecord = null)
     {
         var ret = new ExtendedList<T>();
         while (!reader.Complete)
@@ -124,7 +124,7 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
     public ExtendedList<T> Parse(
         MutagenFrame reader,
         BinaryMasterParseRecordDelegate<T> transl,
-        ITriggeringRecordCollection? triggeringRecord = null,
+        IRecordCollection? triggeringRecord = null,
         TypedParseParams? translationParams = null)
     {
         var ret = new ExtendedList<T>();
@@ -253,7 +253,7 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
     public ExtendedList<T> Parse(
         MutagenFrame reader,
         BinarySubParseDelegate<MutagenFrame, T> transl,
-        ITriggeringRecordCollection triggeringRecord)
+        IRecordCollection triggeringRecord)
     {
         var ret = new ExtendedList<T>();
         while (!reader.Complete)
@@ -282,7 +282,7 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
     public ExtendedList<T> Parse(
         MutagenFrame reader,
         BinaryMasterParseDelegate<T> transl,
-        ITriggeringRecordCollection triggeringRecord,
+        IRecordCollection triggeringRecord,
         TypedParseParams? translationParams = null)
     {
         var ret = new ExtendedList<T>();
@@ -648,7 +648,7 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
         RecordType countRecord,
         int countLengthLength,
         BinaryMasterParseDelegate<T> transl,
-        ITriggeringRecordCollection triggeringRecord,
+        IRecordCollection triggeringRecord,
         TypedParseParams? translationParams = null,
         bool nullIfZero = true)
     {
@@ -686,7 +686,7 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
         MutagenFrame reader,
         int amount,
         BinaryMasterParseDelegate<T> transl,
-        ITriggeringRecordCollection? triggeringRecord = null,
+        IRecordCollection? triggeringRecord = null,
         TypedParseParams? translationParams = null,
         bool nullIfZero = false)
     {
