@@ -1368,15 +1368,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.HDPT;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.HDPT);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.HDPT);
+            var all = RecordCollection.Factory(
                 RecordTypes.HDPT,
                 RecordTypes.FULL,
                 RecordTypes.MODL,
@@ -1391,6 +1387,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.CTDA,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(HeadPartBinaryWriteTranslation);
         #region Interface
@@ -2441,7 +2438,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.Parts.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Part>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Part_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Part_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Part.TryCreateFromBinary));
                     return (int)HeadPart_FieldIndex.Parts;
@@ -2469,7 +2466,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Condition.TryCreateFromBinary));
                     return (int)HeadPart_FieldIndex.Conditions;
@@ -2681,7 +2678,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     this.Parts = this.ParseRepeatedTypelessSubrecord<PartBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: Part_Registration.TriggeringRecordTypes,
+                        trigger: Part_Registration.TriggerSpecs,
                         factory: PartBinaryOverlay.PartFactory);
                     return (int)HeadPart_FieldIndex.Parts;
                 }

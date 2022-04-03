@@ -1142,15 +1142,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.REGN;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.REGN);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.REGN);
+            var all = RecordCollection.Factory(
                 RecordTypes.REGN,
                 RecordTypes.ICON,
                 RecordTypes.RCLR,
@@ -1158,6 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 RecordTypes.RPLI,
                 RecordTypes.RPLD,
                 RecordTypes.RDAT);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);
         #region Interface
@@ -2215,7 +2212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Areas.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RegionArea>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
+                            triggeringRecord: RegionArea_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: RegionArea.TryCreateFromBinary));
                     return (int)Region_FieldIndex.Areas;
@@ -2400,7 +2397,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Areas = this.ParseRepeatedTypelessSubrecord<RegionAreaBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: RegionArea_Registration.TriggeringRecordTypes,
+                        trigger: RegionArea_Registration.TriggerSpecs,
                         factory: RegionAreaBinaryOverlay.RegionAreaFactory);
                     return (int)Region_FieldIndex.Areas;
                 }

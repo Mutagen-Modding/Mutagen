@@ -837,20 +837,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DLBR;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.DLBR);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.DLBR);
+            var all = RecordCollection.Factory(
                 RecordTypes.DLBR,
                 RecordTypes.QNAM,
                 RecordTypes.TNAM,
                 RecordTypes.DNAM,
                 RecordTypes.SNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DialogBranchBinaryWriteTranslation);
         #region Interface

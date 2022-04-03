@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using Mutagen.Bethesda.Generation.Fields;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
 using BoolType = Mutagen.Bethesda.Generation.Fields.BoolType;
+using Mutagen.Bethesda.Plugins.Internals;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -260,55 +261,55 @@ public class TriggeringRecordModule : GenerationModule
         HashSet<RecordType> trigRecordTypes = new HashSet<RecordType>();
         var data = obj.GetObjectData();
         trigRecordTypes.Add((await data.GenerationTypes).SelectMany((kv) => kv.Key));
-        var count = trigRecordTypes.Count();
-        if (obj.Name.EndsWith("MajorRecord")) return;
-        if (count == 1)
+
+        if (trigRecordTypes.Count == 1)
         {
             fg.AppendLine($"public static readonly {nameof(RecordType)} {Plugins.Internals.Constants.TriggeringRecordTypeMember} = {obj.RecordTypeHeaderName(trigRecordTypes.First())};");
         }
-        if (count >= 1)
+
+        if (obj.GetObjectType() == ObjectType.Group || obj.GetObjectType() == ObjectType.Mod) return;
+        if (obj.Name.EndsWith("MajorRecord")) return;
+
+        var all = await GetAllRecordTypes(obj).ToArrayAsync();
+        var same = trigRecordTypes.ToHashSet().OrderBy(x => x.TypeInt).SequenceEqual(all.ToHashSet().OrderBy(x => x.TypeInt));
+
+        if (trigRecordTypes.Count == 0 && all.Length == 0) return;
+
+        fg.AppendLine($"public static {nameof(RecordTriggerSpecs)} TriggerSpecs => _recordSpecs.Value;");
+        fg.AppendLine($"private static readonly Lazy<{nameof(RecordTriggerSpecs)}> _recordSpecs = new Lazy<{nameof(RecordTriggerSpecs)}>(() =>");
+        using (new BraceWrapper(fg) { AppendSemicolon = true, AppendParenthesis = true })
         {
-            fg.AppendLine($"public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;");
-            fg.AppendLine($"private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>");
-            using (new BraceWrapper(fg) { AppendSemicolon = true, AppendParenthesis = true })
+            if (same)
             {
                 using (var args = new ArgsWrapper(fg,
-                    "return RecordCollection.Factory"))
+                    "var all = RecordCollection.Factory"))
+                {
+                    foreach (var trigger in all)
+                    {
+                        args.Add($"{obj.RecordTypeHeaderName(trigger)}");
+                    }
+                }
+                fg.AppendLine($"return new RecordTriggerSpecs(allRecordTypes: all);");
+            }
+            else
+            {
+                using (var args = new ArgsWrapper(fg,
+                    "var triggers = RecordCollection.Factory"))
                 {
                     foreach (var trigger in trigRecordTypes)
                     {
                         args.Add($"{obj.RecordTypeHeaderName(trigger)}");
                     }
                 }
-            }
-        }
-
-        if (obj.GetObjectType() != ObjectType.Group && obj.GetObjectType() != ObjectType.Mod)
-        {
-            var all = await GetAllRecordTypes(obj).ToArrayAsync();
-            if (count > 1 && trigRecordTypes.ToHashSet().Equals(all.ToHashSet()))
-            {
-                fg.AppendLine($"public static IRecordCollection AllRecordTypes => _TriggeringRecordTypes.Value;");
-            }
-            else if (all.Length == 1)
-            {
-                fg.AppendLine($"public static RecordType AllRecordTypes => {Plugins.Internals.Constants.TriggeringRecordTypeMember};");
-            }
-            else if (count > 0)
-            {
-                fg.AppendLine($"public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;");
-                fg.AppendLine($"private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>");
-                using (new BraceWrapper(fg) { AppendSemicolon = true, AppendParenthesis = true })
+                using (var args = new ArgsWrapper(fg,
+                    "var all = RecordCollection.Factory"))
                 {
-                    using (var args = new ArgsWrapper(fg,
-                        "return RecordCollection.Factory"))
+                    foreach (var trigger in all)
                     {
-                        foreach (var trigger in all)
-                        {
-                            args.Add($"{obj.RecordTypeHeaderName(trigger)}");
-                        }
+                        args.Add($"{obj.RecordTypeHeaderName(trigger)}");
                     }
                 }
+                fg.AppendLine($"return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);");
             }
         }
 
@@ -755,16 +756,12 @@ public class TriggeringRecordModule : GenerationModule
         {
             if (loqui.TargetObjectGeneration != null)
             {
-                data.TriggeringRecordSetAccessor = $"{loqui.TargetObjectGeneration.RegistrationName}.TriggeringRecordTypes";
+                data.TriggeringRecordSetAccessor = $"{loqui.TargetObjectGeneration.RegistrationName}.TriggerSpecs";
             }
             else if (data.TriggeringRecordAccessors.Count == 1)
             {
                 data.TriggeringRecordSetAccessor = data.TriggeringRecordAccessors.First();
             }
-        }
-        if (loqui?.TargetObjectGeneration != null)
-        {
-            data.AllRecordSetAccessor = $"{loqui.TargetObjectGeneration.RegistrationName}.AllRecordTypes";
         }
     }
 

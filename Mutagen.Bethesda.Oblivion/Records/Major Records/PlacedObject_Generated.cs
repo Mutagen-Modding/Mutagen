@@ -1653,15 +1653,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.REFR;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.REFR);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.REFR);
+            var all = RecordCollection.Factory(
                 RecordTypes.REFR,
                 RecordTypes.NAME,
                 RecordTypes.XPCI,
@@ -1687,6 +1683,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 RecordTypes.XSCL,
                 RecordTypes.XSOL,
                 RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PlacedObjectBinaryWriteTranslation);
         #region Interface

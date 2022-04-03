@@ -784,21 +784,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(
+            var all = RecordCollection.Factory(
                 RecordTypes.CSDT,
                 RecordTypes.CSDI,
                 RecordTypes.CSDC);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
-                RecordTypes.CSDT,
-                RecordTypes.CSDI,
-                RecordTypes.CSDC);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(CreatureSoundBinaryWriteTranslation);
         #region Interface
@@ -1239,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Sounds.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SoundItem>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: SoundItem_Registration.TriggeringRecordTypes,
+                            triggeringRecord: SoundItem_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: SoundItem.TryCreateFromBinary));
                     return (int)CreatureSound_FieldIndex.Sounds;
@@ -1388,7 +1381,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Sounds = this.ParseRepeatedTypelessSubrecord<SoundItemBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: SoundItem_Registration.TriggeringRecordTypes,
+                        trigger: SoundItem_Registration.TriggerSpecs,
                         factory: SoundItemBinaryOverlay.SoundItemFactory);
                     return (int)CreatureSound_FieldIndex.Sounds;
                 }

@@ -944,15 +944,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.LVSP;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.LVSP);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.LVSP);
+            var all = RecordCollection.Factory(
                 RecordTypes.LVSP,
                 RecordTypes.OBND,
                 RecordTypes.LVLD,
@@ -960,6 +956,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.LVLO,
                 RecordTypes.COED,
                 RecordTypes.LLCT);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LeveledSpellBinaryWriteTranslation);
         #region Interface
@@ -1762,7 +1759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             reader: frame,
                             countLengthLength: 1,
                             countRecord: RecordTypes.LLCT,
-                            triggeringRecord: LeveledSpellEntry_Registration.TriggeringRecordTypes,
+                            triggeringRecord: LeveledSpellEntry_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: LeveledSpellEntry.TryCreateFromBinary)
                         .CastExtendedList<LeveledSpellEntry>();
@@ -1929,7 +1926,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         countLength: 1,
-                        allRecordTypes: LeveledSpellEntry_Registration.AllRecordTypes,
+                        trigger: LeveledSpellEntry_Registration.TriggerSpecs,
                         countType: RecordTypes.LLCT,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => LeveledSpellEntryBinaryOverlay.LeveledSpellEntryFactory(new OverlayStream(s, p), p, recConv),

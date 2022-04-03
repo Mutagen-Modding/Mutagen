@@ -1211,15 +1211,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.CLOT;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.CLOT);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.CLOT);
+            var all = RecordCollection.Factory(
                 RecordTypes.CLOT,
                 RecordTypes.FULL,
                 RecordTypes.SCRI,
@@ -1239,6 +1235,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 RecordTypes.MO4T,
                 RecordTypes.ICO2,
                 RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static RecordTypeConverter MaleWorldModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(

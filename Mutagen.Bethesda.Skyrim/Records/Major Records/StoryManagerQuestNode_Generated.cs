@@ -920,15 +920,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.SMQN;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.SMQN);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.SMQN);
+            var all = RecordCollection.Factory(
                 RecordTypes.SMQN,
                 RecordTypes.DNAM,
                 RecordTypes.XNAM,
@@ -937,6 +933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.FNAM,
                 RecordTypes.RNAM,
                 RecordTypes.QNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(StoryManagerQuestNodeBinaryWriteTranslation);
         #region Interface
@@ -1824,7 +1821,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.QNAM,
-                            triggeringRecord: StoryManagerQuest_Registration.TriggeringRecordTypes,
+                            triggeringRecord: StoryManagerQuest_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: StoryManagerQuest.TryCreateFromBinary));
                     return (int)StoryManagerQuestNode_FieldIndex.Quests;
@@ -1990,7 +1987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        allRecordTypes: StoryManagerQuest_Registration.AllRecordTypes,
+                        trigger: StoryManagerQuest_Registration.TriggerSpecs,
                         countType: RecordTypes.QNAM,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => StoryManagerQuestBinaryOverlay.StoryManagerQuestFactory(new OverlayStream(s, p), p, recConv),

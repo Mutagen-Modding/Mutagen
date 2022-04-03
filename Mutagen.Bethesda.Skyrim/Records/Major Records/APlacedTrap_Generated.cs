@@ -1736,10 +1736,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(
+            var all = RecordCollection.Factory(
                 RecordTypes.VMAD,
                 RecordTypes.NAME,
                 RecordTypes.XEZN,
@@ -1767,38 +1767,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.PGRE,
                 RecordTypes.PHZD,
                 RecordTypes.PMIS);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
-                RecordTypes.VMAD,
-                RecordTypes.NAME,
-                RecordTypes.XEZN,
-                RecordTypes.XOWN,
-                RecordTypes.XRNK,
-                RecordTypes.XHTW,
-                RecordTypes.XFVC,
-                RecordTypes.XPWR,
-                RecordTypes.XLKR,
-                RecordTypes.XAPD,
-                RecordTypes.XESP,
-                RecordTypes.XEMI,
-                RecordTypes.XMBR,
-                RecordTypes.XIS2,
-                RecordTypes.XLRT,
-                RecordTypes.XLRL,
-                RecordTypes.XLOD,
-                RecordTypes.XSCL,
-                RecordTypes.DATA,
-                RecordTypes.PARW,
-                RecordTypes.PBEA,
-                RecordTypes.PFLA,
-                RecordTypes.PCON,
-                RecordTypes.PBAR,
-                RecordTypes.PGRE,
-                RecordTypes.PHZD,
-                RecordTypes.PMIS);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(APlacedTrapBinaryWriteTranslation);
         #region Interface

@@ -917,20 +917,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(
                 RecordTypes.DEST,
                 RecordTypes.DAMC,
                 RecordTypes.DSTD,
                 RecordTypes.DSTA,
                 RecordTypes.DMDL);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var all = RecordCollection.Factory(
                 RecordTypes.DEST,
                 RecordTypes.DAMC,
                 RecordTypes.DSTD,
@@ -939,6 +935,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.DSTF,
                 RecordTypes.DMDT,
                 RecordTypes.DMDS);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DestructibleBinaryWriteTranslation);
         #region Interface
@@ -1501,7 +1498,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.Stages.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<DestructionStage>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: DestructionStage_Registration.TriggeringRecordTypes,
+                            triggeringRecord: DestructionStage_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: DestructionStage.TryCreateFromBinary));
                     return (int)Destructible_FieldIndex.Stages;
@@ -1665,7 +1662,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     this.Stages = this.ParseRepeatedTypelessSubrecord<DestructionStageBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: DestructionStage_Registration.TriggeringRecordTypes,
+                        trigger: DestructionStage_Registration.TriggerSpecs,
                         factory: DestructionStageBinaryOverlay.DestructionStageFactory);
                     return (int)Destructible_FieldIndex.Stages;
                 }

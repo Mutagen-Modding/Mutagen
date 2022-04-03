@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Fallout4
                 item.MorphValues.SetTo(
                     Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MorphValue>.Instance.Parse(
                         reader: frame.SpawnAll(),
-                        triggeringRecord: MorphValue_Registration.TriggeringRecordTypes,
+                        triggeringRecord: MorphValue_Registration.TriggerSpecs,
                         transl: MorphValue.TryCreateFromBinary));
 
                 // Read off last index subrecord
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Fallout4
                 
                 ExtendedList<Bone> list = Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Bone>.Instance.Parse(
                     reader: frame.SpawnAll(),
-                    triggeringRecord: Bone_Registration.TriggeringRecordTypes,
+                    triggeringRecord: Bone_Registration.TriggerSpecs,
                     transl: Bone.TryCreateFromBinary);
                 if (genderFrame.AsInt32() == 0)
                 {
@@ -227,7 +227,7 @@ namespace Mutagen.Bethesda.Fallout4
                 IReadOnlyList<IBoneGetter> list = this.ParseRepeatedTypelessSubrecord(
                     stream: stream,
                     parseParams: null,
-                    trigger: Bone_Registration.TriggeringRecordTypes,
+                    trigger: Bone_Registration.TriggerSpecs,
                     factory: BoneBinaryOverlay.BoneFactory);
                 if (genderFrame.AsInt32() == 0)
                 {
@@ -293,7 +293,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MorphValues = this.ParseRepeatedTypelessSubrecord<MorphValueBinaryOverlay>(
                     stream: stream,
                     parseParams: null,
-                    trigger: MorphValue_Registration.TriggeringRecordTypes,
+                    trigger: MorphValue_Registration.TriggerSpecs,
                     factory: MorphValueBinaryOverlay.MorphValueFactory);
 
                 // Read off last index subrecord

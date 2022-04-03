@@ -5132,15 +5132,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.RACE;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.RACE);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.RACE);
+            var all = RecordCollection.Factory(
                 RecordTypes.RACE,
                 RecordTypes.STCP,
                 RecordTypes.FULL,
@@ -5215,6 +5211,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.HLTX,
                 RecordTypes.QSTI,
                 RecordTypes.BSMP);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static RecordTypeConverter SkeletalModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
@@ -8868,7 +8865,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.Attacks.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Attack>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Attack_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Attack_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Attack.TryCreateFromBinary));
                     return (int)Race_FieldIndex.Attacks;
@@ -8954,7 +8951,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.MovementDataOverrides.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MovementDataOverride>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: MovementDataOverride_Registration.TriggeringRecordTypes,
+                            triggeringRecord: MovementDataOverride_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: MovementDataOverride.TryCreateFromBinary));
                     return (int)Race_FieldIndex.MovementDataOverrides;
@@ -8973,7 +8970,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.EquipmentSlots.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<EquipmentSlot>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: EquipmentSlot_Registration.TriggeringRecordTypes,
+                            triggeringRecord: EquipmentSlot_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: EquipmentSlot.TryCreateFromBinary));
                     return (int)Race_FieldIndex.EquipmentSlots;
@@ -9064,7 +9061,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.Subgraphs.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Subgraph>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Subgraph_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Subgraph_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Subgraph.TryCreateFromBinary));
                     return (int)Race_FieldIndex.Subgraphs;
@@ -9750,7 +9747,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.SPCT,
-                        subrecordType: RecordTypes.SPLO,
+                        trigger: RecordTypes.SPLO,
                         getter: (s, p) => new FormLink<ISpellRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return (int)Race_FieldIndex.ActorEffect;
                 }
@@ -9773,7 +9770,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
-                        subrecordType: RecordTypes.KWDA,
+                        trigger: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return (int)Race_FieldIndex.Keywords;
                 }
@@ -9871,7 +9868,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     this.Attacks = this.ParseRepeatedTypelessSubrecord<AttackBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: Attack_Registration.TriggeringRecordTypes,
+                        trigger: Attack_Registration.TriggerSpecs,
                         factory: AttackBinaryOverlay.AttackFactory);
                     return (int)Race_FieldIndex.Attacks;
                 }
@@ -9953,7 +9950,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     this.MovementDataOverrides = this.ParseRepeatedTypelessSubrecord<MovementDataOverrideBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: MovementDataOverride_Registration.TriggeringRecordTypes,
+                        trigger: MovementDataOverride_Registration.TriggerSpecs,
                         factory: MovementDataOverrideBinaryOverlay.MovementDataOverrideFactory);
                     return (int)Race_FieldIndex.MovementDataOverrides;
                 }
@@ -9968,7 +9965,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     this.EquipmentSlots = this.ParseRepeatedTypelessSubrecord<EquipmentSlotBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: EquipmentSlot_Registration.TriggeringRecordTypes,
+                        trigger: EquipmentSlot_Registration.TriggerSpecs,
                         factory: EquipmentSlotBinaryOverlay.EquipmentSlotFactory);
                     return (int)Race_FieldIndex.EquipmentSlots;
                 }
@@ -10050,7 +10047,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     this.Subgraphs = this.ParseRepeatedTypelessSubrecord<SubgraphBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: Subgraph_Registration.TriggeringRecordTypes,
+                        trigger: Subgraph_Registration.TriggerSpecs,
                         factory: SubgraphBinaryOverlay.SubgraphFactory);
                     return (int)Race_FieldIndex.Subgraphs;
                 }

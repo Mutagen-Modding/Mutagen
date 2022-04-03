@@ -1588,10 +1588,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(
                 RecordTypes.NNAM,
                 RecordTypes.INDX,
                 RecordTypes.HEAD,
@@ -1614,11 +1614,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.FMRI,
                 RecordTypes.FMRN,
                 RecordTypes.WMAP);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var all = RecordCollection.Factory(
                 RecordTypes.NNAM,
                 RecordTypes.INDX,
                 RecordTypes.HEAD,
@@ -1649,6 +1645,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.TTEB,
                 RecordTypes.TTEC,
                 RecordTypes.TTED);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(HeadDataBinaryWriteTranslation);
         #region Interface
@@ -2556,7 +2553,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.HeadParts.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<HeadPartReference>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: HeadPartReference_Registration.TriggeringRecordTypes,
+                            triggeringRecord: HeadPartReference_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: HeadPartReference.TryCreateFromBinary));
                     return (int)HeadData_FieldIndex.HeadParts;
@@ -2606,7 +2603,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.TintLayers.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TintGroup>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: TintGroup_Registration.TriggeringRecordTypes,
+                            triggeringRecord: TintGroup_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: TintGroup.TryCreateFromBinary));
                     return (int)HeadData_FieldIndex.TintLayers;
@@ -2625,7 +2622,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.MorphGroups.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MorphGroup>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: MorphGroup_Registration.TriggeringRecordTypes,
+                            triggeringRecord: MorphGroup_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: MorphGroup.TryCreateFromBinary));
                     return (int)HeadData_FieldIndex.MorphGroups;
@@ -2637,7 +2634,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.FaceMorphs.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<FaceMorph>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: FaceMorph_Registration.TriggeringRecordTypes,
+                            triggeringRecord: FaceMorph_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: FaceMorph.TryCreateFromBinary));
                     return (int)HeadData_FieldIndex.FaceMorphs;
@@ -2810,7 +2807,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     this.HeadParts = this.ParseRepeatedTypelessSubrecord<HeadPartReferenceBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: HeadPartReference_Registration.TriggeringRecordTypes,
+                        trigger: HeadPartReference_Registration.TriggerSpecs,
                         factory: HeadPartReferenceBinaryOverlay.HeadPartReferenceFactory);
                     return (int)HeadData_FieldIndex.HeadParts;
                 }
@@ -2873,7 +2870,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     this.TintLayers = this.ParseRepeatedTypelessSubrecord<TintGroupBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: TintGroup_Registration.TriggeringRecordTypes,
+                        trigger: TintGroup_Registration.TriggerSpecs,
                         factory: TintGroupBinaryOverlay.TintGroupFactory);
                     return (int)HeadData_FieldIndex.TintLayers;
                 }
@@ -2891,7 +2888,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     this.MorphGroups = this.ParseRepeatedTypelessSubrecord<MorphGroupBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: MorphGroup_Registration.TriggeringRecordTypes,
+                        trigger: MorphGroup_Registration.TriggerSpecs,
                         factory: MorphGroupBinaryOverlay.MorphGroupFactory);
                     return (int)HeadData_FieldIndex.MorphGroups;
                 }
@@ -2902,7 +2899,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     this.FaceMorphs = this.ParseRepeatedTypelessSubrecord<FaceMorphBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: FaceMorph_Registration.TriggeringRecordTypes,
+                        trigger: FaceMorph_Registration.TriggerSpecs,
                         factory: FaceMorphBinaryOverlay.FaceMorphFactory);
                     return (int)HeadData_FieldIndex.FaceMorphs;
                 }

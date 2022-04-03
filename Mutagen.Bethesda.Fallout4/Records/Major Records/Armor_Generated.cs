@@ -2439,15 +2439,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.ARMO;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.ARMO);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.ARMO);
+            var all = RecordCollection.Factory(
                 RecordTypes.ARMO,
                 RecordTypes.VMAD,
                 RecordTypes.OBND,
@@ -2491,6 +2487,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.OBTF,
                 RecordTypes.OBTS,
                 RecordTypes.STOP);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ArmorBinaryWriteTranslation);
         public static RecordTypeConverter WorldModelFemaleConverter = new RecordTypeConverter(
@@ -4367,7 +4364,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.Armatures.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ArmorAddonModel>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: ArmorAddonModel_Registration.TriggeringRecordTypes,
+                            triggeringRecord: ArmorAddonModel_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: ArmorAddonModel.TryCreateFromBinary));
                     return (int)Armor_FieldIndex.Armatures;
@@ -4424,7 +4421,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                             reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.OBTE,
-                            triggeringRecord: ObjectTemplate_Registration.TriggeringRecordTypes,
+                            triggeringRecord: ObjectTemplate_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: ObjectTemplate<Armor.Property>.TryCreateFromBinary)
                         .CastExtendedList<ObjectTemplate<Armor.Property>>();
@@ -4772,7 +4769,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
-                        subrecordType: RecordTypes.KWDA,
+                        trigger: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return (int)Armor_FieldIndex.Keywords;
                 }
@@ -4792,7 +4789,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     this.Armatures = this.ParseRepeatedTypelessSubrecord<ArmorAddonModelBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: ArmorAddonModel_Registration.TriggeringRecordTypes,
+                        trigger: ArmorAddonModel_Registration.TriggerSpecs,
                         factory: ArmorAddonModelBinaryOverlay.ArmorAddonModelFactory);
                     return (int)Armor_FieldIndex.Armatures;
                 }
@@ -4841,7 +4838,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        allRecordTypes: ObjectTemplate_Registration.AllRecordTypes,
+                        trigger: ObjectTemplate_Registration.TriggerSpecs,
                         countType: RecordTypes.OBTE,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => ObjectTemplateBinaryOverlay<Armor.Property>.ObjectTemplateFactory(new OverlayStream(s, p), p, recConv),

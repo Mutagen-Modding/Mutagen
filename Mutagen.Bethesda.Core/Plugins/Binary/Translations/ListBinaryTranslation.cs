@@ -95,13 +95,13 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
     public ExtendedList<T> Parse(
         MutagenFrame reader,
         BinarySubParseRecordDelegate<T> transl,
-        IRecordCollection? triggeringRecord = null)
+        RecordTriggerSpecs? triggeringRecord = null)
     {
         var ret = new ExtendedList<T>();
         while (!reader.Complete)
         {
             var nextRecord = HeaderTranslation.GetNextRecordType(reader.Reader);
-            if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
+            if (!triggeringRecord?.TriggeringRecordTypes.Contains(nextRecord) ?? false) break;
             if (!IsLoqui)
             {
                 reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
@@ -124,7 +124,7 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
     public ExtendedList<T> Parse(
         MutagenFrame reader,
         BinaryMasterParseRecordDelegate<T> transl,
-        IRecordCollection? triggeringRecord = null,
+        RecordTriggerSpecs? triggeringRecord = null,
         TypedParseParams? translationParams = null)
     {
         var ret = new ExtendedList<T>();
@@ -132,7 +132,7 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
         {
             var nextRecord = HeaderTranslation.GetNextRecordType(reader.Reader);
             nextRecord = translationParams.ConvertToStandard(nextRecord);
-            if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
+            if (!triggeringRecord?.TriggeringRecordTypes.Contains(nextRecord) ?? false) break;
             if (!IsLoqui)
             {
                 reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
@@ -253,13 +253,13 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
     public ExtendedList<T> Parse(
         MutagenFrame reader,
         BinarySubParseDelegate<MutagenFrame, T> transl,
-        IRecordCollection triggeringRecord)
+        RecordTriggerSpecs triggeringRecord)
     {
         var ret = new ExtendedList<T>();
         while (!reader.Complete)
         {
             var nextRecord = HeaderTranslation.GetNextRecordType(reader.Reader);
-            if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
+            if (!triggeringRecord?.TriggeringRecordTypes.Contains(nextRecord) ?? false) break;
             if (!IsLoqui)
             {
                 reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
@@ -282,7 +282,7 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
     public ExtendedList<T> Parse(
         MutagenFrame reader,
         BinaryMasterParseDelegate<T> transl,
-        IRecordCollection triggeringRecord,
+        RecordTriggerSpecs triggeringRecord,
         TypedParseParams? translationParams = null)
     {
         var ret = new ExtendedList<T>();
@@ -290,7 +290,7 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
         {
             var nextRecord = HeaderTranslation.GetNextRecordType(reader.Reader);
             nextRecord = translationParams.ConvertToStandard(nextRecord);
-            if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
+            if (!triggeringRecord?.TriggeringRecordTypes.Contains(nextRecord) ?? false) break;
             if (!IsLoqui)
             {
                 reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
@@ -648,7 +648,7 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
         RecordType countRecord,
         int countLengthLength,
         BinaryMasterParseDelegate<T> transl,
-        IRecordCollection triggeringRecord,
+        RecordTriggerSpecs triggeringRecord,
         TypedParseParams? translationParams = null,
         bool nullIfZero = true)
     {
@@ -686,7 +686,7 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
         MutagenFrame reader,
         int amount,
         BinaryMasterParseDelegate<T> transl,
-        IRecordCollection? triggeringRecord = null,
+        RecordTriggerSpecs? triggeringRecord = null,
         TypedParseParams? translationParams = null,
         bool nullIfZero = false)
     {
@@ -696,7 +696,7 @@ public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, Mut
         for (int i = 0; i < amount; i++)
         {
             var nextRecord = HeaderTranslation.GetNextRecordType(reader.Reader);
-            if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
+            if (!triggeringRecord?.TriggeringRecordTypes.Contains(nextRecord) ?? false) break;
             if (!IsLoqui)
             {
                 reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;

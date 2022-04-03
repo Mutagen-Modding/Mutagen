@@ -807,21 +807,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(
+            var all = RecordCollection.Factory(
                 RecordTypes.MODL,
                 RecordTypes.INDX,
                 RecordTypes.ICON);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
-                RecordTypes.MODL,
-                RecordTypes.INDX,
-                RecordTypes.ICON);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(BodyDataBinaryWriteTranslation);
         #region Interface
@@ -1288,7 +1281,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.BodyParts.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<BodyPart>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: BodyPart_Registration.TriggeringRecordTypes,
+                            triggeringRecord: BodyPart_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: BodyPart.TryCreateFromBinary));
                     return (int)BodyData_FieldIndex.BodyParts;
@@ -1436,7 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.BodyParts = this.ParseRepeatedTypelessSubrecord<BodyPartBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: BodyPart_Registration.TriggeringRecordTypes,
+                        trigger: BodyPart_Registration.TriggerSpecs,
                         factory: BodyPartBinaryOverlay.BodyPartFactory);
                     return (int)BodyData_FieldIndex.BodyParts;
                 }

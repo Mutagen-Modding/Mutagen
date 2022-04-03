@@ -939,18 +939,11 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                         args.Add($"countType: {objGen.RecordTypeHeaderName(new RecordType((string)typeGen.CustomData[CounterRecordType]))}");
                         if (subData.HasTrigger)
                         {
-                            if (list.SubTypeGeneration is not LoquiType)
-                            {
-                                args.Add($"subrecordType: {subData.TriggeringRecordSetAccessor}");
-                            }
-                            else
-                            {
-                                args.Add($"subrecordType: {subData.AllRecordSetAccessor}");
-                            }
+                            args.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
                         }
                         else
                         {
-                            args.Add($"subrecordType: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
+                            args.Add($"trigger: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
                         }
                         if (subGenTypes.Count <= 1)
                         {
@@ -1001,7 +994,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                         args.AddPassArg($"stream");
                         args.Add($"package: _package");
                         args.Add($"countLength: {counterLen}");
-                        args.Add($"allRecordTypes: {subData.AllRecordSetAccessor}");
+                        args.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
                         args.Add($"countType: {objGen.RecordTypeHeaderName(new RecordType((string)typeGen.CustomData[CounterRecordType]))}");
                         args.Add($"parseParams: {converterAccessor}");
                         args.Add($"getter: (s, p, recConv) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}(s, p), p, recConv)");

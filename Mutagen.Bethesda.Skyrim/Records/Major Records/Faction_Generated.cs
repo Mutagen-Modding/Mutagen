@@ -1643,15 +1643,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.FACT;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.FACT);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.FACT);
+            var all = RecordCollection.Factory(
                 RecordTypes.FACT,
                 RecordTypes.FULL,
                 RecordTypes.XNAM,
@@ -1675,6 +1671,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.CITC,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FactionBinaryWriteTranslation);
         #region Interface
@@ -2987,7 +2984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Ranks.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Rank>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Rank_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Rank_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Rank.TryCreateFromBinary));
                     return (int)Faction_FieldIndex.Ranks;
@@ -3023,7 +3020,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.CITC,
-                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Condition.TryCreateFromBinary)
                         .CastExtendedList<Condition>();
@@ -3287,7 +3284,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Ranks = this.ParseRepeatedTypelessSubrecord<RankBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: Rank_Registration.TriggeringRecordTypes,
+                        trigger: Rank_Registration.TriggerSpecs,
                         factory: RankBinaryOverlay.RankFactory);
                     return (int)Faction_FieldIndex.Ranks;
                 }

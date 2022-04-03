@@ -862,10 +862,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(
                 RecordTypes.PNAM,
                 RecordTypes.SNAM,
                 RecordTypes.CTDA,
@@ -873,11 +873,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.SMBN,
                 RecordTypes.SMQN,
                 RecordTypes.SMEN);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var all = RecordCollection.Factory(
                 RecordTypes.PNAM,
                 RecordTypes.SNAM,
                 RecordTypes.CTDA,
@@ -887,6 +883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.SMEN,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(AStoryManagerNodeBinaryWriteTranslation);
         #region Interface
@@ -1610,7 +1607,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.CITC,
-                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Condition.TryCreateFromBinary));
                     return (int)AStoryManagerNode_FieldIndex.Conditions;

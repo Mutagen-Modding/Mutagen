@@ -894,10 +894,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(
+            var all = RecordCollection.Factory(
                 RecordTypes.MPGN,
                 RecordTypes.MPPI,
                 RecordTypes.MPPN,
@@ -907,20 +907,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.MPPC,
                 RecordTypes.MPPK,
                 RecordTypes.MPGS);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
-                RecordTypes.MPGN,
-                RecordTypes.MPPI,
-                RecordTypes.MPPN,
-                RecordTypes.MPPM,
-                RecordTypes.MPPT,
-                RecordTypes.MPPF,
-                RecordTypes.MPPC,
-                RecordTypes.MPPK,
-                RecordTypes.MPGS);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MorphGroupBinaryWriteTranslation);
         #region Interface
@@ -1441,7 +1428,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                             reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.MPPC,
-                            triggeringRecord: MorphPreset_Registration.TriggeringRecordTypes,
+                            triggeringRecord: MorphPreset_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: MorphPreset.TryCreateFromBinary)
                         .CastExtendedList<MorphPreset>();
@@ -1622,7 +1609,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        allRecordTypes: MorphPreset_Registration.AllRecordTypes,
+                        trigger: MorphPreset_Registration.TriggerSpecs,
                         countType: RecordTypes.MPPC,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => MorphPresetBinaryOverlay.MorphPresetFactory(new OverlayStream(s, p), p, recConv),

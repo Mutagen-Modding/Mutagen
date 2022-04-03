@@ -940,9 +940,10 @@ namespace Mutagen.Bethesda.Skyrim
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             IConditionDataGetter IConditionGetter.Data => this.Data;
 
-            private static IRecordCollection IncludeTriggers = RecordCollection.Factory(
-                RecordTypes.CIS1,
-                RecordTypes.CIS2);
+            private static RecordTriggerSpecs IncludeTriggers = new RecordTriggerSpecs(
+                RecordCollection.Factory(
+                    RecordTypes.CIS1,
+                    RecordTypes.CIS2));
 
             public partial Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_data.Span[location]);
             public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_data.Span[0]);

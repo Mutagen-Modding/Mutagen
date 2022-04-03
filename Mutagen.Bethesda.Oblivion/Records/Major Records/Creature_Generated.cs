@@ -2196,15 +2196,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.CREA;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.CREA);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.CREA);
+            var all = RecordCollection.Factory(
                 RecordTypes.CREA,
                 RecordTypes.FULL,
                 RecordTypes.MODL,
@@ -2231,6 +2227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 RecordTypes.CSDT,
                 RecordTypes.CSDI,
                 RecordTypes.CSDC);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(CreatureBinaryWriteTranslation);
         #region Interface
@@ -3976,7 +3973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Sounds.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<CreatureSound>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: CreatureSound_Registration.TriggeringRecordTypes,
+                            triggeringRecord: CreatureSound_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: CreatureSound.TryCreateFromBinary));
                     return (int)Creature_FieldIndex.Sounds;
@@ -4345,7 +4342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Sounds = this.ParseRepeatedTypelessSubrecord<CreatureSoundBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: CreatureSound_Registration.TriggeringRecordTypes,
+                        trigger: CreatureSound_Registration.TriggerSpecs,
                         factory: CreatureSoundBinaryOverlay.CreatureSoundFactory);
                     return (int)Creature_FieldIndex.Sounds;
                 }

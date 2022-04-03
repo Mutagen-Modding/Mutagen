@@ -1039,15 +1039,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.FACT;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.FACT);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.FACT);
+            var all = RecordCollection.Factory(
                 RecordTypes.FACT,
                 RecordTypes.FULL,
                 RecordTypes.XNAM,
@@ -1057,6 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 RecordTypes.MNAM,
                 RecordTypes.FNAM,
                 RecordTypes.INAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FactionBinaryWriteTranslation);
         #region Interface
@@ -1903,7 +1900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Ranks.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Rank>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Rank_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Rank_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Rank.TryCreateFromBinary));
                     return (int)Faction_FieldIndex.Ranks;
@@ -2087,7 +2084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Ranks = this.ParseRepeatedTypelessSubrecord<RankBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: Rank_Registration.TriggeringRecordTypes,
+                        trigger: Rank_Registration.TriggerSpecs,
                         factory: RankBinaryOverlay.RankFactory);
                     return (int)Faction_FieldIndex.Ranks;
                 }

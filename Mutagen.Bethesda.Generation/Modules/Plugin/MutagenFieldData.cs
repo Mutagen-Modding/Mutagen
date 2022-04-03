@@ -17,7 +17,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
         public HashSet<RecordType> TriggeringRecordTypes { get; } = new();
         public HashSet<string> TriggeringRecordAccessors = new();
         public string TriggeringRecordSetAccessor { get; set; }
-        public string AllRecordSetAccessor { get; set; }
         public bool HasTrigger => this.TriggeringRecordAccessors.Count > 0 || SubLoquiTypes.Count > 0;
         public bool HandleTrigger = true;
         public int? Length;

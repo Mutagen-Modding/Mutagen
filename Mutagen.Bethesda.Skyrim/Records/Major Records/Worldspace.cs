@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Skyrim
                         var varMeta = stream.GetVariableHeader();
                         switch (varMeta.RecordTypeInt)
                         {
-                            case 0x4C4C4543: // "CELL":
+                            case RecordTypeInts.CELL:
                                 this._TopCellLocation = checked((int)stream.Position);
                                 stream.Position += checked((int)varMeta.TotalLength);
                                 if (!stream.Complete)
@@ -184,14 +184,14 @@ namespace Mutagen.Bethesda.Skyrim
                                     }
                                 }
                                 break;
-                            case 0x50555247: // "GRUP":
+                            case RecordTypeInts.GRUP:
                                 this.SubCells = BinaryOverlayList.FactoryByArray<IWorldspaceBlockGetter>(
                                     stream.RemainingMemory,
                                     _package,
                                     getter: (s, p) => WorldspaceBlockBinaryOverlay.WorldspaceBlockFactory(new OverlayStream(s, p), p),
                                     locs: ParseRecordLocations(
                                         stream: new OverlayStream(stream.RemainingMemory, _package),
-                                        trigger: WorldspaceBlock_Registration.TriggeringRecordType,
+                                        trigger: RecordTypes.GRUP,
                                         constants: GameConstants.Oblivion.GroupConstants,
                                         skipHeader: false));
                                 break;

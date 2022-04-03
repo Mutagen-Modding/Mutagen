@@ -1190,15 +1190,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.REGN;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.REGN);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.REGN);
+            var all = RecordCollection.Factory(
                 RecordTypes.REGN,
                 RecordTypes.RCLR,
                 RecordTypes.WNAM,
@@ -1206,6 +1202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.RPLD,
                 RecordTypes.RDAT,
                 RecordTypes.ICON);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);
         #region Interface
@@ -2282,7 +2279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.RegionAreas.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RegionArea>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
+                            triggeringRecord: RegionArea_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: RegionArea.TryCreateFromBinary));
                     return (int)Region_FieldIndex.RegionAreas;
@@ -2452,7 +2449,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.RegionAreas = this.ParseRepeatedTypelessSubrecord<RegionAreaBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: RegionArea_Registration.TriggeringRecordTypes,
+                        trigger: RegionArea_Registration.TriggerSpecs,
                         factory: RegionAreaBinaryOverlay.RegionAreaFactory);
                     return (int)Region_FieldIndex.RegionAreas;
                 }

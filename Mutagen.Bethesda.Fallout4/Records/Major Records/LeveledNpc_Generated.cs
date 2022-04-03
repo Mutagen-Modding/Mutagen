@@ -1196,15 +1196,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.LVLN;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.LVLN);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.LVLN);
+            var all = RecordCollection.Factory(
                 RecordTypes.LVLN,
                 RecordTypes.OBND,
                 RecordTypes.LVLD,
@@ -1216,6 +1212,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.LLCT,
                 RecordTypes.LLKC,
                 RecordTypes.MODL);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LeveledNpcBinaryWriteTranslation);
         #region Interface
@@ -2214,7 +2211,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                             reader: frame,
                             countLengthLength: 1,
                             countRecord: RecordTypes.LLCT,
-                            triggeringRecord: LeveledNpcEntry_Registration.TriggeringRecordTypes,
+                            triggeringRecord: LeveledNpcEntry_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: LeveledNpcEntry.TryCreateFromBinary)
                         .CastExtendedList<LeveledNpcEntry>();
@@ -2418,7 +2415,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         stream: stream,
                         package: _package,
                         countLength: 1,
-                        allRecordTypes: LeveledNpcEntry_Registration.AllRecordTypes,
+                        trigger: LeveledNpcEntry_Registration.TriggerSpecs,
                         countType: RecordTypes.LLCT,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => LeveledNpcEntryBinaryOverlay.LeveledNpcEntryFactory(new OverlayStream(s, p), p, recConv),

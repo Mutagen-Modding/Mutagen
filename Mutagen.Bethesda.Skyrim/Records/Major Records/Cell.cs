@@ -331,17 +331,18 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class CellBinaryOverlay
         {
-            static readonly IRecordCollection TypicalPlacedTypes = RecordCollection.Factory(
-                RecordTypes.ACHR,
-                RecordTypes.REFR,
-                RecordTypes.PARW,
-                RecordTypes.PBAR,
-                RecordTypes.PBEA,
-                RecordTypes.PCON,
-                RecordTypes.PFLA,
-                RecordTypes.PHZD,
-                RecordTypes.PMIS,
-                RecordTypes.PGRE);
+            static readonly RecordTriggerSpecs TypicalPlacedTypes = new RecordTriggerSpecs(
+                RecordCollection.Factory(
+                    RecordTypes.ACHR,
+                    RecordTypes.REFR,
+                    RecordTypes.PARW,
+                    RecordTypes.PBAR,
+                    RecordTypes.PBEA,
+                    RecordTypes.PCON,
+                    RecordTypes.PFLA,
+                    RecordTypes.PHZD,
+                    RecordTypes.PMIS,
+                    RecordTypes.PGRE));
 
             internal bool InsideWorldspace;
 
@@ -521,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 {
                                     var majorMeta = stream.GetMajorRecord();
                                     var recType = majorMeta.RecordType;
-                                    if (TypicalPlacedTypes.Contains(recType))
+                                    if (TypicalPlacedTypes.TriggeringRecordTypes.Contains(recType))
                                     {
                                         ret.Add(checked((int)(stream.Position - subStartPos)));
                                         stream.Position += (int)majorMeta.TotalLength;

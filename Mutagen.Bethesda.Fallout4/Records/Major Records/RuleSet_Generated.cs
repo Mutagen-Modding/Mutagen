@@ -782,6 +782,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory();
+            var all = RecordCollection.Factory(
+                RecordTypes.WNAM,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.XNAM,
+                RecordTypes.YNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(RuleSetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1215,7 +1227,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.Names.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RuleName>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RuleName_Registration.TriggeringRecordTypes,
+                            triggeringRecord: RuleName_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: RuleName.TryCreateFromBinary));
                     return (int)RuleSet_FieldIndex.Names;
@@ -1356,7 +1368,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     this.Names = this.ParseRepeatedTypelessSubrecord<RuleNameBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: RuleName_Registration.TriggeringRecordTypes,
+                        trigger: RuleName_Registration.TriggerSpecs,
                         factory: RuleNameBinaryOverlay.RuleNameFactory);
                     return (int)RuleSet_FieldIndex.Names;
                 }

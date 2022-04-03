@@ -980,17 +980,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(
                 RecordTypes.SCHD,
                 RecordTypes.SCHR);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var all = RecordCollection.Factory(
                 RecordTypes.SCHD,
                 RecordTypes.SCHR,
                 RecordTypes.SCDA,
@@ -999,6 +995,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 RecordTypes.SCVR,
                 RecordTypes.SCRV,
                 RecordTypes.SCRO);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ScriptFieldsBinaryWriteTranslation);
         #region Interface
@@ -1608,7 +1605,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.LocalVariables.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocalVariable>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: LocalVariable_Registration.TriggeringRecordTypes,
+                            triggeringRecord: LocalVariable_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: LocalVariable.TryCreateFromBinary));
                     return (int)ScriptFields_FieldIndex.LocalVariables;
@@ -1619,7 +1616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.References.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AScriptReference>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: AScriptReference_Registration.TriggeringRecordTypes,
+                            triggeringRecord: AScriptReference_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: (MutagenFrame r, RecordType header, [MaybeNullWhen(false)] out AScriptReference listSubItem, TypedParseParams? translationParams) =>
                             {
@@ -1825,7 +1822,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.LocalVariables = this.ParseRepeatedTypelessSubrecord<LocalVariableBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: LocalVariable_Registration.TriggeringRecordTypes,
+                        trigger: LocalVariable_Registration.TriggerSpecs,
                         factory: LocalVariableBinaryOverlay.LocalVariableFactory);
                     return (int)ScriptFields_FieldIndex.LocalVariables;
                 }
@@ -1835,7 +1832,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.References = this.ParseRepeatedTypelessSubrecord<AScriptReferenceBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: AScriptReference_Registration.TriggeringRecordTypes,
+                        trigger: AScriptReference_Registration.TriggerSpecs,
                         factory: (s, r, p, recConv) =>
                         {
                             switch (r.TypeInt)

@@ -1379,10 +1379,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(
+            var all = RecordCollection.Factory(
                 RecordTypes.INDX,
                 RecordTypes.HEAD,
                 RecordTypes.MPAI,
@@ -1398,26 +1398,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.TINV,
                 RecordTypes.TIRS,
                 RecordTypes.MODL);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
-                RecordTypes.INDX,
-                RecordTypes.HEAD,
-                RecordTypes.MPAI,
-                RecordTypes.RPRM,
-                RecordTypes.AHCM,
-                RecordTypes.FTSM,
-                RecordTypes.DFTM,
-                RecordTypes.TINI,
-                RecordTypes.TINT,
-                RecordTypes.TINP,
-                RecordTypes.TIND,
-                RecordTypes.TINC,
-                RecordTypes.TINV,
-                RecordTypes.TIRS,
-                RecordTypes.MODL);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(HeadDataBinaryWriteTranslation);
         #region Interface
@@ -2223,7 +2204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.HeadParts.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<HeadPartReference>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: HeadPartReference_Registration.TriggeringRecordTypes,
+                            triggeringRecord: HeadPartReference_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: HeadPartReference.TryCreateFromBinary));
                     return (int)HeadData_FieldIndex.HeadParts;
@@ -2283,7 +2264,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TintMasks.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TintAssets>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: TintAssets_Registration.TriggeringRecordTypes,
+                            triggeringRecord: TintAssets_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: TintAssets.TryCreateFromBinary));
                     return (int)HeadData_FieldIndex.TintMasks;
@@ -2440,7 +2421,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.HeadParts = this.ParseRepeatedTypelessSubrecord<HeadPartReferenceBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: HeadPartReference_Registration.TriggeringRecordTypes,
+                        trigger: HeadPartReference_Registration.TriggerSpecs,
                         factory: HeadPartReferenceBinaryOverlay.HeadPartReferenceFactory);
                     return (int)HeadData_FieldIndex.HeadParts;
                 }
@@ -2516,7 +2497,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.TintMasks = this.ParseRepeatedTypelessSubrecord<TintAssetsBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: TintAssets_Registration.TriggeringRecordTypes,
+                        trigger: TintAssets_Registration.TriggerSpecs,
                         factory: TintAssetsBinaryOverlay.TintAssetsFactory);
                     return (int)HeadData_FieldIndex.TintMasks;
                 }

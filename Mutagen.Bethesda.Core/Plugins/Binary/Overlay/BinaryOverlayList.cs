@@ -55,7 +55,7 @@ public abstract class BinaryOverlayList
     public static IReadOnlyList<T> FactoryByCount<T>(
         ReadOnlyMemorySlice<byte> mem,
         BinaryOverlayFactoryPackage package,
-        RecordType subrecordType,
+        RecordType trigger,
         int itemLength,
         uint count,
         PluginBinaryOverlay.SpanFactory<T> getter,
@@ -70,7 +70,7 @@ public abstract class BinaryOverlayList
             package,
             getter,
             itemLength,
-            subrecordType,
+            trigger,
             skipHeader: skipHeader);
     }
 
@@ -79,7 +79,7 @@ public abstract class BinaryOverlayList
         BinaryOverlayFactoryPackage package,
         int itemLength,
         int countLength,
-        RecordType subrecordType,
+        RecordType trigger,
         RecordType countType,
         PluginBinaryOverlay.SpanFactory<T> getter)
     {
@@ -96,10 +96,10 @@ public abstract class BinaryOverlayList
                 _ => throw new NotImplementedException(),
             };
             stream.Position += initialHeader.TotalLength;
-            if (!stream.TryReadSubrecordFrame(subrecordType, out var contentFrame))
+            if (!stream.TryReadSubrecordFrame(trigger, out var contentFrame))
             {
                 if (count == 0) return Array.Empty<T>();
-                throw new ArgumentException($"List with a non zero {initialHeader.RecordType} counter did not follow up with expected type: {subrecordType}");
+                throw new ArgumentException($"List with a non zero {initialHeader.RecordType} counter did not follow up with expected type: {trigger}");
             }
             return new BinaryOverlayListByStartIndex<T>(
                 contentFrame.Content,
@@ -122,7 +122,7 @@ public abstract class BinaryOverlayList
         BinaryOverlayFactoryPackage package,
         int itemLength,
         int countLength,
-        RecordType subrecordType,
+        RecordType trigger,
         RecordType countType,
         PluginBinaryOverlay.SpanFactory<T> getter)
     {
@@ -140,7 +140,7 @@ public abstract class BinaryOverlayList
             };
             stream.Position += initialHeader.TotalLength;
             if (count == 0) return null;
-            var contentFrame = stream.ReadSubrecordFrame(subrecordType);
+            var contentFrame = stream.ReadSubrecordFrame(trigger);
             return new BinaryOverlayListByStartIndex<T>(
                 contentFrame.Content,
                 package,
@@ -161,7 +161,7 @@ public abstract class BinaryOverlayList
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
         int countLength,
-        IRecordCollection allRecordTypes,
+        RecordTriggerSpecs trigger,
         RecordType countType,
         TypedParseParams? parseParams,
         PluginBinaryOverlay.SpanRecordFactory<T> getter,
@@ -188,7 +188,7 @@ public abstract class BinaryOverlayList
                 locs: PluginBinaryOverlay.ParseRecordLocationsByCount(
                     stream: stream,
                     count: count,
-                    trigger: allRecordTypes,
+                    trigger: trigger,
                     constants: package.MetaData.Constants.SubConstants,
                     skipHeader: false));
         }
@@ -202,7 +202,7 @@ public abstract class BinaryOverlayList
                 locs: PluginBinaryOverlay.ParseRecordLocations(
                     stream: stream,
                     constants: package.MetaData.Constants.SubConstants,
-                    trigger: allRecordTypes,
+                    trigger: trigger,
                     skipHeader: skipHeader,
                     parseParams: parseParams?.RecordTypeConverter));
         }
@@ -212,7 +212,7 @@ public abstract class BinaryOverlayList
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
         int countLength,
-        RecordType subrecordType,
+        RecordType trigger,
         RecordType countType,
         TypedParseParams? parseParams,
         PluginBinaryOverlay.SpanRecordFactory<T> getter,
@@ -239,7 +239,7 @@ public abstract class BinaryOverlayList
                 locs: PluginBinaryOverlay.ParseRecordLocationsByCount(
                     stream: stream,
                     count: count,
-                    trigger: subrecordType,
+                    trigger: trigger,
                     constants: package.MetaData.Constants.SubConstants,
                     skipHeader: false));
         }
@@ -253,7 +253,7 @@ public abstract class BinaryOverlayList
                 locs: PluginBinaryOverlay.ParseRecordLocations(
                     stream: stream,
                     constants: package.MetaData.Constants.SubConstants,
-                    trigger: subrecordType,
+                    trigger: trigger,
                     skipHeader: skipHeader,
                     parseParams: parseParams?.RecordTypeConverter));
         }
@@ -264,7 +264,7 @@ public abstract class BinaryOverlayList
         BinaryOverlayFactoryPackage package,
         int itemLength,
         int countLength,
-        RecordType subrecordType,
+        RecordType trigger,
         RecordType countType,
         PluginBinaryOverlay.SpanFactory<T> getter,
         bool skipHeader = true)
@@ -288,7 +288,7 @@ public abstract class BinaryOverlayList
                 mem.Slice(countLen, contentLen),
                 package: package,
                 itemLength: itemLength,
-                subrecordType: subrecordType,
+                trigger: trigger,
                 count: count,
                 getter: getter,
                 skipHeader: skipHeader);
@@ -302,7 +302,7 @@ public abstract class BinaryOverlayList
                 locs: PluginBinaryOverlay.ParseRecordLocations(
                     stream: stream,
                     constants: package.MetaData.Constants.SubConstants,
-                    trigger: subrecordType,
+                    trigger: trigger,
                     skipHeader: skipHeader));
         }
     }
@@ -310,7 +310,7 @@ public abstract class BinaryOverlayList
     public static IReadOnlyList<T> FactoryByCount<T>(
         ReadOnlyMemorySlice<byte> mem,
         BinaryOverlayFactoryPackage package,
-        IRecordCollection subrecordType,
+        RecordTriggerSpecs trigger,
         int itemLength,
         uint count,
         PluginBinaryOverlay.SpanFactory<T> getter)
@@ -324,7 +324,7 @@ public abstract class BinaryOverlayList
             package,
             getter,
             itemLength,
-            subrecordType);
+            trigger.TriggeringRecordTypes);
     }
 
     public static IReadOnlyList<T> FactoryByCount<T>(

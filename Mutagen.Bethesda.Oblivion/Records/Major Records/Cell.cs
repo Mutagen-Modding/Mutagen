@@ -294,10 +294,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class CellBinaryOverlay
         {
-            static readonly IRecordCollection TypicalPlacedTypes = RecordCollection.Factory(
-                RecordTypes.ACHR,
-                RecordTypes.ACRE,
-                RecordTypes.REFR);
+            static readonly RecordTriggerSpecs TypicalPlacedTypes = new RecordTriggerSpecs(
+                RecordCollection.Factory(
+                    RecordTypes.ACHR,
+                    RecordTypes.ACRE,
+                    RecordTypes.REFR));
 
             private ReadOnlyMemorySlice<byte>? _grupData;
 
@@ -419,7 +420,7 @@ namespace Mutagen.Bethesda.Oblivion
                                     {
                                         var majorMeta = stream.GetMajorRecord();
                                         var recType = majorMeta.RecordType;
-                                        if (TypicalPlacedTypes.Contains(recType))
+                                        if (TypicalPlacedTypes.TriggeringRecordTypes.Contains(recType))
                                         {
                                             ret.Add(checked((int)(stream.Position - subStartPos)));
                                         }

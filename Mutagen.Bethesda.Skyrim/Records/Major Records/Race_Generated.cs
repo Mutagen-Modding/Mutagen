@@ -4517,15 +4517,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.RACE;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.RACE);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.RACE);
+            var all = RecordCollection.Factory(
                 RecordTypes.RACE,
                 RecordTypes.FULL,
                 RecordTypes.DESC,
@@ -4581,6 +4577,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.DFTF,
                 RecordTypes.NAM8,
                 RecordTypes.RNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static RecordTypeConverter SkeletalModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
@@ -7865,7 +7862,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Attacks.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Attack>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Attack_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Attack_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Attack.TryCreateFromBinary));
                     return (int)Race_FieldIndex.Attacks;
@@ -7959,7 +7956,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MovementTypes.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RaceMovementType>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RaceMovementType_Registration.TriggeringRecordTypes,
+                            triggeringRecord: RaceMovementType_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: RaceMovementType.TryCreateFromBinary));
                     return (int)Race_FieldIndex.MovementTypes;
@@ -8612,7 +8609,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.SPCT,
-                        subrecordType: RecordTypes.SPLO,
+                        trigger: RecordTypes.SPLO,
                         getter: (s, p) => new FormLink<ISpellRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return (int)Race_FieldIndex.ActorEffect;
                 }
@@ -8639,7 +8636,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
-                        subrecordType: RecordTypes.KWDA,
+                        trigger: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return (int)Race_FieldIndex.Keywords;
                 }
@@ -8720,7 +8717,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Attacks = this.ParseRepeatedTypelessSubrecord<AttackBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: Attack_Registration.TriggeringRecordTypes,
+                        trigger: Attack_Registration.TriggerSpecs,
                         factory: AttackBinaryOverlay.AttackFactory);
                     return (int)Race_FieldIndex.Attacks;
                 }
@@ -8816,7 +8813,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.MovementTypes = this.ParseRepeatedTypelessSubrecord<RaceMovementTypeBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: RaceMovementType_Registration.TriggeringRecordTypes,
+                        trigger: RaceMovementType_Registration.TriggerSpecs,
                         factory: RaceMovementTypeBinaryOverlay.RaceMovementTypeFactory);
                     return (int)Race_FieldIndex.MovementTypes;
                 }

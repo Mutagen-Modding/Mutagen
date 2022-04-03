@@ -988,15 +988,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.COLL;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.COLL);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.COLL);
+            var all = RecordCollection.Factory(
                 RecordTypes.COLL,
                 RecordTypes.DESC,
                 RecordTypes.BNAM,
@@ -1005,6 +1001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.MNAM,
                 RecordTypes.CNAM,
                 RecordTypes.INTV);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(CollisionLayerBinaryWriteTranslation);
         #region Interface
@@ -2017,7 +2014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.INTV,
-                        subrecordType: RecordTypes.CNAM,
+                        trigger: RecordTypes.CNAM,
                         getter: (s, p) => new FormLink<ICollisionLayerGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return (int)CollisionLayer_FieldIndex.CollidesWith;
                 }

@@ -726,11 +726,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = typeof(Fallout4Group_Registration<>);
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.GRUP;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(RecordTypes.GRUP);
-        });
         public static readonly Type BinaryWriteTranslation = typeof(Fallout4GroupBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

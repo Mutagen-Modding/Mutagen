@@ -698,21 +698,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(
+            var all = RecordCollection.Factory(
                 RecordTypes.CSDT,
                 RecordTypes.CSDI,
                 RecordTypes.CSDC);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
-                RecordTypes.CSDT,
-                RecordTypes.CSDI,
-                RecordTypes.CSDC);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(NpcSoundTypesBinaryWriteTranslation);
         #region Interface
@@ -1204,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Types.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NpcSoundType>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: NpcSoundType_Registration.TriggeringRecordTypes,
+                            triggeringRecord: NpcSoundType_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: NpcSoundType.TryCreateFromBinary));
                     return (int)NpcSoundTypes_FieldIndex.Types;
@@ -1325,7 +1318,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Types = this.ParseRepeatedTypelessSubrecord<NpcSoundTypeBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: NpcSoundType_Registration.TriggeringRecordTypes,
+                        trigger: NpcSoundType_Registration.TriggerSpecs,
                         factory: NpcSoundTypeBinaryOverlay.NpcSoundTypeFactory);
                     return (int)NpcSoundTypes_FieldIndex.Types;
                 }

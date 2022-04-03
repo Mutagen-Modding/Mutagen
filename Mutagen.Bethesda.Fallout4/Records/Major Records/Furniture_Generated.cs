@@ -2551,15 +2551,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.FURN;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.FURN);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.FURN);
+            var all = RecordCollection.Factory(
                 RecordTypes.FURN,
                 RecordTypes.VMAD,
                 RecordTypes.OBND,
@@ -2600,6 +2596,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 RecordTypes.OBTS,
                 RecordTypes.STOP,
                 RecordTypes.NVNM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FurnitureBinaryWriteTranslation);
         #region Interface
@@ -4628,7 +4625,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                             reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.CITC,
-                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Condition.TryCreateFromBinary)
                         .CastExtendedList<Condition>();
@@ -4726,7 +4723,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                             reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.OBTE,
-                            triggeringRecord: ObjectTemplate_Registration.TriggeringRecordTypes,
+                            triggeringRecord: ObjectTemplate_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: ObjectTemplate<Furniture.Property>.TryCreateFromBinary)
                         .CastExtendedList<ObjectTemplate<Furniture.Property>>();
@@ -5052,7 +5049,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
-                        subrecordType: RecordTypes.KWDA,
+                        trigger: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return (int)Furniture_FieldIndex.Keywords;
                 }
@@ -5119,7 +5116,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        allRecordTypes: ContainerEntry_Registration.AllRecordTypes,
+                        trigger: RecordTypes.CNTO,
                         countType: RecordTypes.COCT,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
@@ -5202,7 +5199,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        allRecordTypes: ObjectTemplate_Registration.AllRecordTypes,
+                        trigger: ObjectTemplate_Registration.TriggerSpecs,
                         countType: RecordTypes.OBTE,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => ObjectTemplateBinaryOverlay<Furniture.Property>.ObjectTemplateFactory(new OverlayStream(s, p), p, recConv),

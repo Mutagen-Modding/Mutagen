@@ -897,10 +897,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(
+            var all = RecordCollection.Factory(
                 RecordTypes.TINI,
                 RecordTypes.TINT,
                 RecordTypes.TINP,
@@ -908,18 +908,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.TINC,
                 RecordTypes.TINV,
                 RecordTypes.TIRS);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
-                RecordTypes.TINI,
-                RecordTypes.TINT,
-                RecordTypes.TINP,
-                RecordTypes.TIND,
-                RecordTypes.TINC,
-                RecordTypes.TINV,
-                RecordTypes.TIRS);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(TintAssetsBinaryWriteTranslation);
         #region Interface
@@ -1455,7 +1444,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Presets.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TintPreset>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: TintPreset_Registration.TriggeringRecordTypes,
+                            triggeringRecord: TintPreset_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: TintPreset.TryCreateFromBinary));
                     return (int)TintAssets_FieldIndex.Presets;
@@ -1635,7 +1624,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Presets = this.ParseRepeatedTypelessSubrecord<TintPresetBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: TintPreset_Registration.TriggeringRecordTypes,
+                        trigger: TintPreset_Registration.TriggerSpecs,
                         factory: TintPresetBinaryOverlay.TintPresetFactory);
                     return (int)TintAssets_FieldIndex.Presets;
                 }

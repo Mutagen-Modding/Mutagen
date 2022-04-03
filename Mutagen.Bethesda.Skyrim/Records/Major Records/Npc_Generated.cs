@@ -3373,15 +3373,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.NPC_;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.NPC_);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.NPC_);
+            var all = RecordCollection.Factory(
                 RecordTypes.NPC_,
                 RecordTypes.VMAD,
                 RecordTypes.OBND,
@@ -3443,6 +3439,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 RecordTypes.TINC,
                 RecordTypes.TINV,
                 RecordTypes.TIAS);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(NpcBinaryWriteTranslation);
         #region Interface
@@ -5912,7 +5909,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Attacks.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Attack>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Attack_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Attack_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Attack.TryCreateFromBinary));
                     return (int)Npc_FieldIndex.Attacks;
@@ -6154,7 +6151,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TintLayers.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TintLayer>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: TintLayer_Registration.TriggeringRecordTypes,
+                            triggeringRecord: TintLayer_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: TintLayer.TryCreateFromBinary));
                     return (int)Npc_FieldIndex.TintLayers;
@@ -6512,7 +6509,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.SPCT,
-                        subrecordType: RecordTypes.SPLO,
+                        trigger: RecordTypes.SPLO,
                         getter: (s, p) => new FormLink<ISpellRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return (int)Npc_FieldIndex.ActorEffect;
                 }
@@ -6547,7 +6544,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Attacks = this.ParseRepeatedTypelessSubrecord<AttackBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: Attack_Registration.TriggeringRecordTypes,
+                        trigger: Attack_Registration.TriggerSpecs,
                         factory: AttackBinaryOverlay.AttackFactory);
                     return (int)Npc_FieldIndex.Attacks;
                 }
@@ -6580,7 +6577,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 0x8,
                         countLength: 4,
                         countType: RecordTypes.PRKZ,
-                        subrecordType: PerkPlacement_Registration.AllRecordTypes,
+                        trigger: RecordTypes.PRKR,
                         getter: (s, p) => PerkPlacementBinaryOverlay.PerkPlacementFactory(s, p),
                         skipHeader: false);
                     return (int)Npc_FieldIndex.Perks;
@@ -6592,7 +6589,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        allRecordTypes: ContainerEntry_Registration.AllRecordTypes,
+                        trigger: RecordTypes.CNTO,
                         countType: RecordTypes.COCT,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
@@ -6627,7 +6624,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
-                        subrecordType: RecordTypes.KWDA,
+                        trigger: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return (int)Npc_FieldIndex.Keywords;
                 }
@@ -6772,7 +6769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.TintLayers = this.ParseRepeatedTypelessSubrecord<TintLayerBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: TintLayer_Registration.TriggeringRecordTypes,
+                        trigger: TintLayer_Registration.TriggerSpecs,
                         factory: TintLayerBinaryOverlay.TintLayerFactory);
                     return (int)Npc_FieldIndex.TintLayers;
                 }

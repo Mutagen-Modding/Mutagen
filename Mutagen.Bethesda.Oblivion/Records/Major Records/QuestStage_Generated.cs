@@ -783,15 +783,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.INDX;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.INDX);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.INDX);
+            var all = RecordCollection.Factory(
                 RecordTypes.INDX,
                 RecordTypes.QSDT,
                 RecordTypes.CTDA,
@@ -799,6 +795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 RecordTypes.CNAM,
                 RecordTypes.SCHD,
                 RecordTypes.SCHR);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestStageBinaryWriteTranslation);
         #region Interface
@@ -1236,7 +1233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.LogEntries.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LogEntry>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: LogEntry_Registration.TriggeringRecordTypes,
+                            triggeringRecord: LogEntry_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: LogEntry.TryCreateFromBinary));
                     return (int)QuestStage_FieldIndex.LogEntries;
@@ -1388,7 +1385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.LogEntries = this.ParseRepeatedTypelessSubrecord<LogEntryBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: LogEntry_Registration.TriggeringRecordTypes,
+                        trigger: LogEntry_Registration.TriggerSpecs,
                         factory: LogEntryBinaryOverlay.LogEntryFactory);
                     return (int)QuestStage_FieldIndex.LogEntries;
                 }

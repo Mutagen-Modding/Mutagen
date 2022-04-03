@@ -894,21 +894,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.ENCH;
-        public static IRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _TriggeringRecordTypes = new Lazy<IRecordCollection>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return RecordCollection.Factory(RecordTypes.ENCH);
-        });
-        public static IRecordCollection AllRecordTypes => _AllRecordTypes.Value;
-        private static readonly Lazy<IRecordCollection> _AllRecordTypes = new Lazy<IRecordCollection>(() =>
-        {
-            return RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(RecordTypes.ENCH);
+            var all = RecordCollection.Factory(
                 RecordTypes.ENCH,
                 RecordTypes.FULL,
                 RecordTypes.ENIT,
                 RecordTypes.EFID,
                 RecordTypes.EFIT,
                 RecordTypes.SCIT);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(EnchantmentBinaryWriteTranslation);
         #region Interface
@@ -1680,7 +1677,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Effects.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Effect>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Effect_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Effect_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Effect.TryCreateFromBinary));
                     return (int)Enchantment_FieldIndex.Effects;
@@ -1838,7 +1835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: Effect_Registration.TriggeringRecordTypes,
+                        trigger: Effect_Registration.TriggerSpecs,
                         factory: EffectBinaryOverlay.EffectFactory);
                     return (int)Enchantment_FieldIndex.Effects;
                 }
