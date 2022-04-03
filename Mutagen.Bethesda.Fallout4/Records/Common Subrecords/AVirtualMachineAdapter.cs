@@ -35,16 +35,21 @@ namespace Mutagen.Bethesda.Fallout4
                 ushort count = frame.ReadUInt16();
                 for (int i = 0; i < count; i++)
                 {
-                    var scriptName = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort);
-                    var scriptFlags = (ScriptEntry.Flag)frame.ReadUInt8();
-                    var entry = new ScriptEntry()
-                    {
-                        Name = scriptName,
-                        Flags = scriptFlags,
-                    };
-                    FillProperties(frame, objectFormat, entry);
-                    yield return entry;
+                    yield return ReadEntry(frame, objectFormat);
                 }
+            }
+
+            public static ScriptEntry ReadEntry(MutagenFrame frame, ushort objectFormat)
+            {
+                var scriptName = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort);
+                var scriptFlags = (ScriptEntry.Flag)frame.ReadUInt8();
+                var entry = new ScriptEntry()
+                {
+                    Name = scriptName,
+                    Flags = scriptFlags,
+                };
+                FillProperties(frame, objectFormat, entry);
+                return entry;
             }
 
             public static partial void FillBinaryScriptsCustom(MutagenFrame frame, IAVirtualMachineAdapter item)
@@ -52,69 +57,74 @@ namespace Mutagen.Bethesda.Fallout4
                 item.Scripts.AddRange(ReadEntries(frame, item.ObjectFormat));
             }
 
+            public static ScriptProperty ParseProperty(MutagenFrame frame, ushort objectFormat)
+            {
+                var name = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort);
+                var type = (ScriptProperty.Type)frame.ReadUInt8();
+                var flags = (ScriptProperty.Flag)frame.ReadUInt8();
+                ScriptProperty prop = type switch
+                {
+                    ScriptProperty.Type.None => new ScriptProperty(),
+                    ScriptProperty.Type.Object => new ScriptObjectProperty(),
+                    ScriptProperty.Type.String => new ScriptStringProperty(),
+                    ScriptProperty.Type.Int => new ScriptIntProperty(),
+                    ScriptProperty.Type.Float => new ScriptFloatProperty(),
+                    ScriptProperty.Type.Bool => new ScriptBoolProperty(),
+                    ScriptProperty.Type.Variable => new ScriptVariableProperty(),
+                    ScriptProperty.Type.Struct => new ScriptStructProperty(),
+                    ScriptProperty.Type.ArrayOfObject => new ScriptObjectListProperty(),
+                    ScriptProperty.Type.ArrayOfString => new ScriptStringListProperty(),
+                    ScriptProperty.Type.ArrayOfInt => new ScriptIntListProperty(),
+                    ScriptProperty.Type.ArrayOfFloat => new ScriptFloatListProperty(),
+                    ScriptProperty.Type.ArrayOfBool => new ScriptBoolListProperty(),
+                    ScriptProperty.Type.ArrayOfVariable => new ScriptVariableListProperty(),
+                    ScriptProperty.Type.ArrayOfStruct => new ScriptStructListProperty(),
+                    _ => throw new NotImplementedException(),
+                };
+                prop.Name = name;
+                prop.Flags = flags;
+                switch (prop)
+                {
+                    case ScriptObjectProperty obj:
+                        FillObject(frame, obj, objectFormat);
+                        break;
+                    case ScriptObjectListProperty objList:
+                        var objListCount = frame.ReadUInt32();
+                        for (int j = 0; j < objListCount; j++)
+                        {
+                            var subObj = new ScriptObjectProperty();
+                            FillObject(frame, subObj, objectFormat);
+                            objList.Objects.Add(subObj);
+                        }
+                        break;
+                    case ScriptVariableProperty varProp:
+                    case ScriptVariableListProperty varPropList:
+                        throw new NotImplementedException();
+                    case ScriptStructProperty subStructs:
+                        FillStruct(frame, subStructs, objectFormat);
+                        break;
+                    case ScriptStructListProperty structList:
+                        var structListCount = frame.ReadUInt32();
+                        for (int j = 0; j < structListCount; j++)
+                        {
+                            var subStructs = new ScriptStructProperty();
+                            FillStruct(frame, subStructs, objectFormat);
+                            structList.Structs.Add(subStructs);
+                        }
+                        break;
+                    default:
+                        prop.CopyInFromBinary(frame);
+                        break;
+                }
+                return prop;
+            }
+
             static void FillProperties(MutagenFrame frame, ushort objectFormat, IScriptEntry item, bool isStruct = false)
             {
                 var count = isStruct ? frame.ReadUInt32() : frame.ReadUInt16();
                 for (int i = 0; i < count; i++)
                 {
-                    var name = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort);
-                    var type = (ScriptProperty.Type)frame.ReadUInt8();
-                    var flags = (ScriptProperty.Flag)frame.ReadUInt8();
-                    ScriptProperty prop = type switch
-                    {
-                        ScriptProperty.Type.None => new ScriptProperty(),
-                        ScriptProperty.Type.Object => new ScriptObjectProperty(),
-                        ScriptProperty.Type.String => new ScriptStringProperty(),
-                        ScriptProperty.Type.Int => new ScriptIntProperty(),
-                        ScriptProperty.Type.Float => new ScriptFloatProperty(),
-                        ScriptProperty.Type.Bool => new ScriptBoolProperty(),
-                        ScriptProperty.Type.Variable => new ScriptVariableProperty(),
-                        ScriptProperty.Type.Struct => new ScriptStructProperty(),
-                        ScriptProperty.Type.ArrayOfObject => new ScriptObjectListProperty(),
-                        ScriptProperty.Type.ArrayOfString => new ScriptStringListProperty(),
-                        ScriptProperty.Type.ArrayOfInt => new ScriptIntListProperty(),
-                        ScriptProperty.Type.ArrayOfFloat => new ScriptFloatListProperty(),
-                        ScriptProperty.Type.ArrayOfBool => new ScriptBoolListProperty(),
-                        ScriptProperty.Type.ArrayOfVariable => new ScriptVariableListProperty(),
-                        ScriptProperty.Type.ArrayOfStruct => new ScriptStructListProperty(),
-                        _ => throw new NotImplementedException(),
-                    };
-                    prop.Name = name;
-                    prop.Flags = flags;
-                    switch (prop)
-                    {
-                        case ScriptObjectProperty obj:
-                            FillObject(frame, obj, objectFormat);
-                            break;
-                        case ScriptObjectListProperty objList:
-                            var objListCount = frame.ReadUInt32();
-                            for (int j = 0; j < objListCount; j++)
-                            {
-                                var subObj = new ScriptObjectProperty();
-                                FillObject(frame, subObj, objectFormat);
-                                objList.Objects.Add(subObj);
-                            }
-                            break;
-                        case ScriptVariableProperty varProp:
-                        case ScriptVariableListProperty varPropList:
-                            throw new NotImplementedException();
-                        case ScriptStructProperty subStructs:
-                            FillStruct(frame, subStructs, objectFormat);
-                            break;
-                        case ScriptStructListProperty structList:
-                            var structListCount = frame.ReadUInt32();
-                            for (int j = 0; j < structListCount; j++)
-                            {
-                                var subStructs = new ScriptStructProperty();
-                                FillStruct(frame, subStructs, objectFormat);
-                                structList.Structs.Add(subStructs);
-                            }
-                            break;
-                        default:
-                            prop.CopyInFromBinary(frame);
-                            break;
-                    }
-                    item.Properties.Add(prop);
+                    item.Properties.Add(ParseProperty(frame, objectFormat));
                 }
             }
 
@@ -151,6 +161,89 @@ namespace Mutagen.Bethesda.Fallout4
 
         public partial class AVirtualMachineAdapterBinaryWriteTranslation
         {
+            public static void WriteProperty(MutagenWriter writer, IScriptPropertyGetter property, ushort objFormat)
+            {
+                writer.Write(property.Name, StringBinaryType.PrependLengthUShort, encoding: writer.MetaData.Encodings.NonTranslated);
+                var type = property switch
+                {
+                    ScriptObjectProperty _ => ScriptProperty.Type.Object,
+                    ScriptStringProperty _ => ScriptProperty.Type.String,
+                    ScriptIntProperty _ => ScriptProperty.Type.Int,
+                    ScriptFloatProperty _ => ScriptProperty.Type.Float,
+                    ScriptBoolProperty _ => ScriptProperty.Type.Bool,
+                    ScriptVariableProperty _ => ScriptProperty.Type.Variable,
+                    ScriptStructProperty _ => ScriptProperty.Type.Struct,
+                    ScriptObjectListProperty _ => ScriptProperty.Type.ArrayOfObject,
+                    ScriptStringListProperty _ => ScriptProperty.Type.ArrayOfString,
+                    ScriptIntListProperty _ => ScriptProperty.Type.ArrayOfInt,
+                    ScriptFloatListProperty _ => ScriptProperty.Type.ArrayOfFloat,
+                    ScriptBoolListProperty _ => ScriptProperty.Type.ArrayOfBool,
+                    ScriptVariableListProperty _ => ScriptProperty.Type.ArrayOfVariable,
+                    ScriptStructListProperty _ => ScriptProperty.Type.ArrayOfStruct,
+                    ScriptProperty _ => ScriptProperty.Type.None,
+                    _ => throw new NotImplementedException(),
+                };
+                writer.Write((byte)type);
+                writer.Write((byte)property.Flags);
+                switch (property)
+                {
+                    case ScriptObjectProperty obj:
+                        WriteObject(writer, obj, objFormat);
+                        break;
+                    case ScriptObjectListProperty objList:
+                        var objsList = objList.Objects;
+                        writer.Write(objsList.Count);
+                        foreach (var subObj in objsList)
+                        {
+                            WriteObject(writer, subObj, objFormat);
+                        }
+                        break;
+                    case ScriptVariableProperty varProp:
+                    case ScriptVariableListProperty varPropList:
+                        throw new NotImplementedException();
+                    case ScriptStructProperty subStructs:
+                        WriteScripts(writer, objFormat, (IReadOnlyList<IScriptEntryGetter>)subStructs.Members, true);
+                        break;
+                    case ScriptStructListProperty structList:
+                        var structsList = structList.Structs;
+                        writer.Write(checked((uint)structsList.Count));
+                        for (int i = 0; i < structsList.Count; ++i)
+                        {
+                            var subStructs = structsList[i];
+                            WriteScripts(writer, objFormat, (IReadOnlyList<IScriptEntryGetter>)subStructs.Members, true);
+                        }
+
+                        break;
+                    default:
+                        property.WriteToBinary(writer);
+                        break;
+                }
+            }
+
+            public static void WriteEntry(
+                MutagenWriter writer, 
+                IScriptEntryGetter entry, 
+                ushort objFormat,
+                bool isStruct = false)
+            {
+                if (!isStruct)
+                {
+                    StringBinaryTranslation.Instance.Write(writer, entry.Name, StringBinaryType.PrependLengthUShort);
+                    writer.Write((byte)entry.Flags);
+                }
+
+                var properties = entry.Properties;
+                if (isStruct)
+                    writer.Write(checked((uint)properties.Count));
+                else
+                    writer.Write(checked((ushort)properties.Count));
+
+                foreach (var property in properties)
+                {
+                    WriteProperty(writer, property, objFormat);
+                }
+            }
+
             public static void WriteScripts(
                 MutagenWriter writer,
                 ushort objFormat,
@@ -162,76 +255,7 @@ namespace Mutagen.Bethesda.Fallout4
 
                 foreach (var entry in scripts)
                 {
-                    if (!isStruct)
-                    {
-                        StringBinaryTranslation.Instance.Write(writer, entry.Name, StringBinaryType.PrependLengthUShort);
-                        writer.Write((byte)entry.Flags);
-                    }
-
-                    var properties = entry.Properties;
-                    if (isStruct)
-                        writer.Write(checked((uint)properties.Count));
-                    else
-                        writer.Write(checked((ushort)properties.Count));
-
-                    foreach (var property in properties)
-                    {
-                        writer.Write(property.Name, StringBinaryType.PrependLengthUShort, encoding: writer.MetaData.Encodings.NonTranslated);
-                        var type = property switch
-                        {
-                            ScriptObjectProperty _ => ScriptProperty.Type.Object,
-                            ScriptStringProperty _ => ScriptProperty.Type.String,
-                            ScriptIntProperty _ => ScriptProperty.Type.Int,
-                            ScriptFloatProperty _ => ScriptProperty.Type.Float,
-                            ScriptBoolProperty _ => ScriptProperty.Type.Bool,
-                            ScriptVariableProperty _ => ScriptProperty.Type.Variable,
-                            ScriptStructProperty _ => ScriptProperty.Type.Struct,
-                            ScriptObjectListProperty _ => ScriptProperty.Type.ArrayOfObject,
-                            ScriptStringListProperty _ => ScriptProperty.Type.ArrayOfString,
-                            ScriptIntListProperty _ => ScriptProperty.Type.ArrayOfInt,
-                            ScriptFloatListProperty _ => ScriptProperty.Type.ArrayOfFloat,
-                            ScriptBoolListProperty _ => ScriptProperty.Type.ArrayOfBool,
-                            ScriptVariableListProperty _ => ScriptProperty.Type.ArrayOfVariable,
-                            ScriptStructListProperty _ => ScriptProperty.Type.ArrayOfStruct,
-                            ScriptProperty _ => ScriptProperty.Type.None,
-                            _ => throw new NotImplementedException(),
-                        };
-                        writer.Write((byte)type);
-                        writer.Write((byte)property.Flags);
-                        switch (property)
-                        {
-                            case ScriptObjectProperty obj:
-                                WriteObject(writer, obj, objFormat);
-                                break;
-                            case ScriptObjectListProperty objList:
-                                var objsList = objList.Objects;
-                                writer.Write(objsList.Count);
-                                foreach (var subObj in objsList)
-                                {
-                                    WriteObject(writer, subObj, objFormat);
-                                }
-                                break;
-                            case ScriptVariableProperty varProp:
-                            case ScriptVariableListProperty varPropList:
-                                throw new NotImplementedException();
-                            case ScriptStructProperty subStructs:
-                                WriteScripts(writer, objFormat, (IReadOnlyList<IScriptEntryGetter>)subStructs.Members, true);
-                                break;
-                            case ScriptStructListProperty structList:
-                                var structsList = structList.Structs;
-                                writer.Write(checked((uint)structsList.Count));
-                                for (int i = 0; i < structsList.Count; ++i)
-                                {
-                                    var subStructs = structsList[i];
-                                    WriteScripts(writer, objFormat, (IReadOnlyList<IScriptEntryGetter>)subStructs.Members, true);
-                                }
-
-                                break;
-                            default:
-                                property.WriteToBinary(writer);
-                                break;
-                        }
-                    }
+                    WriteEntry(writer, entry, objFormat, isStruct: isStruct);
                 }
             }
 

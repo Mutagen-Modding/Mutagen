@@ -33,7 +33,7 @@
       </FormLink>
       <Enum name="EnabledEntryPoints" enumName="Furniture.EntryPointType" recordType="ENAM" binary="Custom" />
       <RefList name="MarkerEntryPoints" refName="FurnitureMarkerEntryPoints" />
-      <String name="ModelFilename" recordType="XMRK" />
+      <String name="MarkerModel" recordType="XMRK" />
       <RefList name="MarkerParameters" refName="FurnitureMarkerParameters" recordType="SNAM" binary="Custom" />
       <List name="AttachParentSlots" recordType="APPR">
         <FormLink refName="Keyword" />

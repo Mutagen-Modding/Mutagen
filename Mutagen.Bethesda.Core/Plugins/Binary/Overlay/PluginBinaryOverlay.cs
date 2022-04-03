@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             {
                 var varMeta = constants.GetVariableMeta(stream);
                 var recType = parseParams.ConvertToStandard(varMeta.RecordType);
-                var index = trigger.TriggeringRecordTypes.IndexOf(recType);
+                var index = trigger.AllRecordTypes.IndexOf(recType);
                 if (index != -1)
                 {
                     // If new record isn't before one we've already parsed, just continue
@@ -451,15 +451,23 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
                     }
 
                     // Otherwise mark as a new record location
-                    if (skipHeader)
+                    if (trigger.AllAreTriggers
+                        || trigger.TriggeringRecordTypes.Contains(recType))
                     {
-                        stream.Position += varMeta.HeaderLength;
-                        ret.Add(stream.Position - startingPos);
-                        stream.Position += (int)varMeta.ContentLength;
+                        if (skipHeader)
+                        {
+                            stream.Position += varMeta.HeaderLength;
+                            ret.Add(stream.Position - startingPos);
+                            stream.Position += (int)varMeta.ContentLength;
+                        }
+                        else
+                        {
+                            ret.Add(stream.Position - startingPos);
+                            stream.Position += (int)varMeta.TotalLength;
+                        }
                     }
                     else
                     {
-                        ret.Add(stream.Position - startingPos);
                         stream.Position += (int)varMeta.TotalLength;
                     }
 

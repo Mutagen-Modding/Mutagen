@@ -319,10 +319,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
-        #region ModelFilename
-        public String? ModelFilename { get; set; }
+        #region MarkerModel
+        public String? MarkerModel { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IFurnitureGetter.ModelFilename => this.ModelFilename;
+        String? IFurnitureGetter.MarkerModel => this.MarkerModel;
         #endregion
         #region MarkerParameters
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AssociatedForm = initialValue;
                 this.EnabledEntryPoints = initialValue;
                 this.MarkerEntryPoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>());
-                this.ModelFilename = initialValue;
+                this.MarkerModel = initialValue;
                 this.MarkerParameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>());
                 this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem AssociatedForm,
                 TItem EnabledEntryPoints,
                 TItem MarkerEntryPoints,
-                TItem ModelFilename,
+                TItem MarkerModel,
                 TItem MarkerParameters,
                 TItem AttachParentSlots,
                 TItem ObjectTemplates,
@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AssociatedForm = AssociatedForm;
                 this.EnabledEntryPoints = EnabledEntryPoints;
                 this.MarkerEntryPoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>?>(MarkerEntryPoints, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>());
-                this.ModelFilename = ModelFilename;
+                this.MarkerModel = MarkerModel;
                 this.MarkerParameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>?>(MarkerParameters, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>());
                 this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(ObjectTemplates, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem AssociatedForm;
             public TItem EnabledEntryPoints;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>?>? MarkerEntryPoints;
-            public TItem ModelFilename;
+            public TItem MarkerModel;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>?>? MarkerParameters;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AttachParentSlots;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>? ObjectTemplates;
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.AssociatedForm, rhs.AssociatedForm)) return false;
                 if (!object.Equals(this.EnabledEntryPoints, rhs.EnabledEntryPoints)) return false;
                 if (!object.Equals(this.MarkerEntryPoints, rhs.MarkerEntryPoints)) return false;
-                if (!object.Equals(this.ModelFilename, rhs.ModelFilename)) return false;
+                if (!object.Equals(this.MarkerModel, rhs.MarkerModel)) return false;
                 if (!object.Equals(this.MarkerParameters, rhs.MarkerParameters)) return false;
                 if (!object.Equals(this.AttachParentSlots, rhs.AttachParentSlots)) return false;
                 if (!object.Equals(this.ObjectTemplates, rhs.ObjectTemplates)) return false;
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.AssociatedForm);
                 hash.Add(this.EnabledEntryPoints);
                 hash.Add(this.MarkerEntryPoints);
-                hash.Add(this.ModelFilename);
+                hash.Add(this.MarkerModel);
                 hash.Add(this.MarkerParameters);
                 hash.Add(this.AttachParentSlots);
                 hash.Add(this.ObjectTemplates);
@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (!eval(this.ModelFilename)) return false;
+                if (!eval(this.MarkerModel)) return false;
                 if (this.MarkerParameters != null)
                 {
                     if (!eval(this.MarkerParameters.Overall)) return false;
@@ -854,7 +854,7 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (eval(this.ModelFilename)) return true;
+                if (eval(this.MarkerModel)) return true;
                 if (this.MarkerParameters != null)
                 {
                     if (eval(this.MarkerParameters.Overall)) return true;
@@ -1001,7 +1001,7 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                obj.ModelFilename = eval(this.ModelFilename);
+                obj.MarkerModel = eval(this.MarkerModel);
                 if (MarkerParameters != null)
                 {
                     obj.MarkerParameters = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FurnitureMarkerParameters.Mask<R>?>>?>(eval(this.MarkerParameters.Overall), Enumerable.Empty<MaskItemIndexed<R, FurnitureMarkerParameters.Mask<R>?>>());
@@ -1249,9 +1249,9 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.ModelFilename ?? true)
+                    if (printMask?.MarkerModel ?? true)
                     {
-                        fg.AppendItem(ModelFilename, "ModelFilename");
+                        fg.AppendItem(MarkerModel, "MarkerModel");
                     }
                     if ((printMask?.MarkerParameters?.Overall ?? true)
                         && MarkerParameters is {} MarkerParametersItem)
@@ -1363,7 +1363,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? AssociatedForm;
             public Exception? EnabledEntryPoints;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerEntryPoints.ErrorMask?>>?>? MarkerEntryPoints;
-            public Exception? ModelFilename;
+            public Exception? MarkerModel;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerParameters.ErrorMask?>>?>? MarkerParameters;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AttachParentSlots;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>? ObjectTemplates;
@@ -1419,8 +1419,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return EnabledEntryPoints;
                     case Furniture_FieldIndex.MarkerEntryPoints:
                         return MarkerEntryPoints;
-                    case Furniture_FieldIndex.ModelFilename:
-                        return ModelFilename;
+                    case Furniture_FieldIndex.MarkerModel:
+                        return MarkerModel;
                     case Furniture_FieldIndex.MarkerParameters:
                         return MarkerParameters;
                     case Furniture_FieldIndex.AttachParentSlots:
@@ -1504,8 +1504,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Furniture_FieldIndex.MarkerEntryPoints:
                         this.MarkerEntryPoints = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerEntryPoints.ErrorMask?>>?>(ex, null);
                         break;
-                    case Furniture_FieldIndex.ModelFilename:
-                        this.ModelFilename = ex;
+                    case Furniture_FieldIndex.MarkerModel:
+                        this.MarkerModel = ex;
                         break;
                     case Furniture_FieldIndex.MarkerParameters:
                         this.MarkerParameters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerParameters.ErrorMask?>>?>(ex, null);
@@ -1596,8 +1596,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Furniture_FieldIndex.MarkerEntryPoints:
                         this.MarkerEntryPoints = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerEntryPoints.ErrorMask?>>?>)obj;
                         break;
-                    case Furniture_FieldIndex.ModelFilename:
-                        this.ModelFilename = (Exception?)obj;
+                    case Furniture_FieldIndex.MarkerModel:
+                        this.MarkerModel = (Exception?)obj;
                         break;
                     case Furniture_FieldIndex.MarkerParameters:
                         this.MarkerParameters = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerParameters.ErrorMask?>>?>)obj;
@@ -1644,7 +1644,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (AssociatedForm != null) return true;
                 if (EnabledEntryPoints != null) return true;
                 if (MarkerEntryPoints != null) return true;
-                if (ModelFilename != null) return true;
+                if (MarkerModel != null) return true;
                 if (MarkerParameters != null) return true;
                 if (AttachParentSlots != null) return true;
                 if (ObjectTemplates != null) return true;
@@ -1811,7 +1811,7 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     fg.AppendLine("]");
                 }
-                fg.AppendItem(ModelFilename, "ModelFilename");
+                fg.AppendItem(MarkerModel, "MarkerModel");
                 if (MarkerParameters is {} MarkerParametersItem)
                 {
                     fg.AppendLine("MarkerParameters =>");
@@ -1909,7 +1909,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.AssociatedForm = this.AssociatedForm.Combine(rhs.AssociatedForm);
                 ret.EnabledEntryPoints = this.EnabledEntryPoints.Combine(rhs.EnabledEntryPoints);
                 ret.MarkerEntryPoints = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerEntryPoints.ErrorMask?>>?>(ExceptionExt.Combine(this.MarkerEntryPoints?.Overall, rhs.MarkerEntryPoints?.Overall), ExceptionExt.Combine(this.MarkerEntryPoints?.Specific, rhs.MarkerEntryPoints?.Specific));
-                ret.ModelFilename = this.ModelFilename.Combine(rhs.ModelFilename);
+                ret.MarkerModel = this.MarkerModel.Combine(rhs.MarkerModel);
                 ret.MarkerParameters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerParameters.ErrorMask?>>?>(ExceptionExt.Combine(this.MarkerParameters?.Overall, rhs.MarkerParameters?.Overall), ExceptionExt.Combine(this.MarkerParameters?.Specific, rhs.MarkerParameters?.Specific));
                 ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
                 ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
@@ -1958,7 +1958,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool AssociatedForm;
             public bool EnabledEntryPoints;
             public FurnitureMarkerEntryPoints.TranslationMask? MarkerEntryPoints;
-            public bool ModelFilename;
+            public bool MarkerModel;
             public FurnitureMarkerParameters.TranslationMask? MarkerParameters;
             public bool AttachParentSlots;
             public ObjectTemplate.TranslationMask? ObjectTemplates;
@@ -1985,7 +1985,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.UsesSkill = defaultOn;
                 this.AssociatedForm = defaultOn;
                 this.EnabledEntryPoints = defaultOn;
-                this.ModelFilename = defaultOn;
+                this.MarkerModel = defaultOn;
                 this.AttachParentSlots = defaultOn;
                 this.WBDTDataTypeState = defaultOn;
             }
@@ -2016,7 +2016,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((AssociatedForm, null));
                 ret.Add((EnabledEntryPoints, null));
                 ret.Add((MarkerEntryPoints == null ? DefaultOn : !MarkerEntryPoints.GetCrystal().CopyNothing, MarkerEntryPoints?.GetCrystal()));
-                ret.Add((ModelFilename, null));
+                ret.Add((MarkerModel, null));
                 ret.Add((MarkerParameters == null ? DefaultOn : !MarkerParameters.GetCrystal().CopyNothing, MarkerParameters?.GetCrystal()));
                 ret.Add((AttachParentSlots, null));
                 ret.Add((ObjectTemplates == null ? DefaultOn : !ObjectTemplates.GetCrystal().CopyNothing, ObjectTemplates?.GetCrystal()));
@@ -2219,7 +2219,7 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<IFurnitureAssociationGetter> AssociatedForm { get; set; }
         new Furniture.EntryPointType? EnabledEntryPoints { get; set; }
         new ExtendedList<FurnitureMarkerEntryPoints> MarkerEntryPoints { get; }
-        new String? ModelFilename { get; set; }
+        new String? MarkerModel { get; set; }
         new ExtendedList<FurnitureMarkerParameters>? MarkerParameters { get; set; }
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; set; }
         new ExtendedList<ObjectTemplate<Furniture.Property>>? ObjectTemplates { get; set; }
@@ -2304,7 +2304,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IFurnitureAssociationGetter> AssociatedForm { get; }
         Furniture.EntryPointType? EnabledEntryPoints { get; }
         IReadOnlyList<IFurnitureMarkerEntryPointsGetter> MarkerEntryPoints { get; }
-        String? ModelFilename { get; }
+        String? MarkerModel { get; }
         IReadOnlyList<IFurnitureMarkerParametersGetter>? MarkerParameters { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; }
         IReadOnlyList<IObjectTemplateGetter<Furniture.Property>>? ObjectTemplates { get; }
@@ -2499,7 +2499,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         AssociatedForm = 24,
         EnabledEntryPoints = 25,
         MarkerEntryPoints = 26,
-        ModelFilename = 27,
+        MarkerModel = 27,
         MarkerParameters = 28,
         AttachParentSlots = 29,
         ObjectTemplates = 30,
@@ -2661,7 +2661,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.AssociatedForm.Clear();
             item.EnabledEntryPoints = default;
             item.MarkerEntryPoints.Clear();
-            item.ModelFilename = default;
+            item.MarkerModel = default;
             item.MarkerParameters = null;
             item.AttachParentSlots = null;
             item.ObjectTemplates = null;
@@ -2816,7 +2816,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 rhs.MarkerEntryPoints,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.ModelFilename = string.Equals(item.ModelFilename, rhs.ModelFilename);
+            ret.MarkerModel = string.Equals(item.MarkerModel, rhs.MarkerModel);
             ret.MarkerParameters = item.MarkerParameters.CollectionEqualsHelper(
                 rhs.MarkerParameters,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -3053,10 +3053,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.ModelFilename ?? true)
-                && item.ModelFilename is {} ModelFilenameItem)
+            if ((printMask?.MarkerModel ?? true)
+                && item.MarkerModel is {} MarkerModelItem)
             {
-                fg.AppendItem(ModelFilenameItem, "ModelFilename");
+                fg.AppendItem(MarkerModelItem, "MarkerModel");
             }
             if ((printMask?.MarkerParameters?.Overall ?? true)
                 && item.MarkerParameters is {} MarkerParametersItem)
@@ -3272,9 +3272,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 if (!lhs.MarkerEntryPoints.SequenceEqualNullable(rhs.MarkerEntryPoints)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.ModelFilename) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerModel) ?? true))
             {
-                if (!string.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
+                if (!string.Equals(lhs.MarkerModel, rhs.MarkerModel)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerParameters) ?? true))
             {
@@ -3376,9 +3376,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 hash.Add(EnabledEntryPointsitem);
             }
             hash.Add(item.MarkerEntryPoints);
-            if (item.ModelFilename is {} ModelFilenameitem)
+            if (item.MarkerModel is {} MarkerModelitem)
             {
-                hash.Add(ModelFilenameitem);
+                hash.Add(MarkerModelitem);
             }
             hash.Add(item.MarkerParameters);
             hash.Add(item.AttachParentSlots);
@@ -3892,9 +3892,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.ModelFilename) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerModel) ?? true))
             {
-                item.ModelFilename = rhs.ModelFilename;
+                item.MarkerModel = rhs.MarkerModel;
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerParameters) ?? true))
             {
@@ -4331,7 +4331,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ModelFilename,
+                item: item.MarkerModel,
                 header: translationParams.ConvertToCustom(RecordTypes.XMRK),
                 binaryType: StringBinaryType.NullTerminate);
             FurnitureBinaryWriteTranslation.WriteBinaryMarkerParameters(
@@ -4694,10 +4694,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.XMRK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ModelFilename = StringBinaryTranslation.Instance.Parse(
+                    item.MarkerModel = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)Furniture_FieldIndex.ModelFilename;
+                    return (int)Furniture_FieldIndex.MarkerModel;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -4916,9 +4916,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public Furniture.EntryPointType? EnabledEntryPoints => GetEnabledEntryPointsCustom();
         #endregion
         public IReadOnlyList<IFurnitureMarkerEntryPointsGetter> MarkerEntryPoints { get; private set; } = ListExt.Empty<FurnitureMarkerEntryPointsBinaryOverlay>();
-        #region ModelFilename
-        private int? _ModelFilenameLocation;
-        public String? ModelFilename => _ModelFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ModelFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region MarkerModel
+        private int? _MarkerModelLocation;
+        public String? MarkerModel => _MarkerModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MarkerModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region MarkerParameters
         partial void MarkerParametersCustomParse(
@@ -5168,8 +5168,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.XMRK:
                 {
-                    _ModelFilenameLocation = (stream.Position - offset);
-                    return (int)Furniture_FieldIndex.ModelFilename;
+                    _MarkerModelLocation = (stream.Position - offset);
+                    return (int)Furniture_FieldIndex.MarkerModel;
                 }
                 case RecordTypeInts.SNAM:
                 {

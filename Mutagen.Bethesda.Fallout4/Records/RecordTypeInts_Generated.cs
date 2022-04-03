@@ -45,9 +45,11 @@ public partial class RecordTypeInts
     public const int BODT = 0x54444F42;
     public const int BOOK = 0x4B4F4F42;
     public const int BPTD = 0x44545042;
+    public const int BSIZ = 0x5A495342;
     public const int BSMB = 0x424D5342;
     public const int BSMP = 0x504D5342;
     public const int BSMS = 0x534D5342;
+    public const int BTXT = 0x54585442;
     public const int CDIX = 0x58494443;
     public const int CELL = 0x4C4C4543;
     public const int CIAD = 0x44414943;
@@ -188,6 +190,8 @@ public partial class RecordTypeInts
     public const int INRD = 0x44524E49;
     public const int INTV = 0x56544E49;
     public const int IPDS = 0x53445049;
+    public const int ISIZ = 0x5A495349;
+    public const int ITID = 0x44495449;
     public const int ITXT = 0x54585449;
     public const int JAIL = 0x4C49414A;
     public const int JIAD = 0x4441494A;

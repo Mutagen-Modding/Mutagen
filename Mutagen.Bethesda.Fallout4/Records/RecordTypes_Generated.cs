@@ -47,9 +47,11 @@ public partial class RecordTypes
     public static readonly RecordType BODT = new(0x54444F42);
     public static readonly RecordType BOOK = new(0x4B4F4F42);
     public static readonly RecordType BPTD = new(0x44545042);
+    public static readonly RecordType BSIZ = new(0x5A495342);
     public static readonly RecordType BSMB = new(0x424D5342);
     public static readonly RecordType BSMP = new(0x504D5342);
     public static readonly RecordType BSMS = new(0x534D5342);
+    public static readonly RecordType BTXT = new(0x54585442);
     public static readonly RecordType CDIX = new(0x58494443);
     public static readonly RecordType CELL = new(0x4C4C4543);
     public static readonly RecordType CIAD = new(0x44414943);
@@ -190,6 +192,8 @@ public partial class RecordTypes
     public static readonly RecordType INRD = new(0x44524E49);
     public static readonly RecordType INTV = new(0x56544E49);
     public static readonly RecordType IPDS = new(0x53445049);
+    public static readonly RecordType ISIZ = new(0x5A495349);
+    public static readonly RecordType ITID = new(0x44495449);
     public static readonly RecordType ITXT = new(0x54585449);
     public static readonly RecordType JAIL = new(0x4C49414A);
     public static readonly RecordType JIAD = new(0x4441494A);

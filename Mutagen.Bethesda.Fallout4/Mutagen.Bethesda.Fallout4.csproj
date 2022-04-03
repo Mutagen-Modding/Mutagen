@@ -124,10 +124,16 @@
     <Compile Include="Records\Common Subrecords\ScriptFragments.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\ScriptFragmentsIndexed.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\ScriptProperty.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ScriptPropertyStruct.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VirtualMachineAdapterIndexed.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Fallout4Group.cs">
@@ -381,6 +387,15 @@
     </Compile>
     <Compile Include="Records\Major Records\TalkingActivator.cs">
       <DependentUpon>TalkingActivator.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Terminal.cs">
+      <DependentUpon>Terminal.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalBodyText.cs">
+      <DependentUpon>Terminal.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalMenuItem.cs">
+      <DependentUpon>Terminal.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\TextureSet.cs">
       <DependentUpon>TextureSet.xml</DependentUpon>
@@ -717,9 +732,6 @@
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ScriptFragment_Generated.cs">
-      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\IndexedScriptFragment_Generated.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ScriptFragments_Generated.cs">
@@ -1350,6 +1362,24 @@
     </Compile>
     <Compile Include="Records\Major Records\BendableSpline_Generated.cs">
       <DependentUpon>BendableSpline.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VirtualMachineAdapterIndexed_Generated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ScriptFragmentsIndexed_Generated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ScriptFragmentIndexed_Generated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalHolotapeEntry_Generated.cs">
+      <DependentUpon>Terminal.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalBodyText_Generated.cs">
+      <DependentUpon>Terminal.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalMenuItem_Generated.cs">
+      <DependentUpon>Terminal.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -35,13 +35,13 @@ using System.Text;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class IndexedScriptFragment :
-        IEquatable<IIndexedScriptFragmentGetter>,
-        IIndexedScriptFragment,
-        ILoquiObjectSetter<IndexedScriptFragment>
+    public partial class ScriptFragmentIndexed :
+        IEquatable<IScriptFragmentIndexedGetter>,
+        ILoquiObjectSetter<ScriptFragmentIndexed>,
+        IScriptFragmentIndexed
     {
         #region Ctor
-        public IndexedScriptFragment()
+        public ScriptFragmentIndexed()
         {
             CustomCtor();
         }
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Fallout4
             FileGeneration fg,
             string? name = null)
         {
-            IndexedScriptFragmentMixIn.ToString(
+            ScriptFragmentIndexedMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -80,16 +80,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IIndexedScriptFragmentGetter rhs) return false;
-            return ((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IScriptFragmentIndexedGetter rhs) return false;
+            return ((ScriptFragmentIndexedCommon)((IScriptFragmentIndexedGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IIndexedScriptFragmentGetter? obj)
+        public bool Equals(IScriptFragmentIndexedGetter? obj)
         {
-            return ((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptFragmentIndexedCommon)((IScriptFragmentIndexedGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ScriptFragmentIndexedCommon)((IScriptFragmentIndexedGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new IndexedScriptFragment.Mask<R>();
+                var ret = new ScriptFragmentIndexed.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -216,16 +216,16 @@ namespace Mutagen.Bethesda.Fallout4
                 return ToString(printMask: null);
             }
 
-            public string ToString(IndexedScriptFragment.Mask<bool>? printMask = null)
+            public string ToString(ScriptFragmentIndexed.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, IndexedScriptFragment.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, ScriptFragmentIndexed.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(IndexedScriptFragment.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(ScriptFragmentIndexed.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -284,18 +284,18 @@ namespace Mutagen.Bethesda.Fallout4
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                IndexedScriptFragment_FieldIndex enu = (IndexedScriptFragment_FieldIndex)index;
+                ScriptFragmentIndexed_FieldIndex enu = (ScriptFragmentIndexed_FieldIndex)index;
                 switch (enu)
                 {
-                    case IndexedScriptFragment_FieldIndex.FragmentIndex:
+                    case ScriptFragmentIndexed_FieldIndex.FragmentIndex:
                         return FragmentIndex;
-                    case IndexedScriptFragment_FieldIndex.Unknown:
+                    case ScriptFragmentIndexed_FieldIndex.Unknown:
                         return Unknown;
-                    case IndexedScriptFragment_FieldIndex.Unknown2:
+                    case ScriptFragmentIndexed_FieldIndex.Unknown2:
                         return Unknown2;
-                    case IndexedScriptFragment_FieldIndex.ScriptName:
+                    case ScriptFragmentIndexed_FieldIndex.ScriptName:
                         return ScriptName;
-                    case IndexedScriptFragment_FieldIndex.FragmentName:
+                    case ScriptFragmentIndexed_FieldIndex.FragmentName:
                         return FragmentName;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -304,22 +304,22 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthException(int index, Exception ex)
             {
-                IndexedScriptFragment_FieldIndex enu = (IndexedScriptFragment_FieldIndex)index;
+                ScriptFragmentIndexed_FieldIndex enu = (ScriptFragmentIndexed_FieldIndex)index;
                 switch (enu)
                 {
-                    case IndexedScriptFragment_FieldIndex.FragmentIndex:
+                    case ScriptFragmentIndexed_FieldIndex.FragmentIndex:
                         this.FragmentIndex = ex;
                         break;
-                    case IndexedScriptFragment_FieldIndex.Unknown:
+                    case ScriptFragmentIndexed_FieldIndex.Unknown:
                         this.Unknown = ex;
                         break;
-                    case IndexedScriptFragment_FieldIndex.Unknown2:
+                    case ScriptFragmentIndexed_FieldIndex.Unknown2:
                         this.Unknown2 = ex;
                         break;
-                    case IndexedScriptFragment_FieldIndex.ScriptName:
+                    case ScriptFragmentIndexed_FieldIndex.ScriptName:
                         this.ScriptName = ex;
                         break;
-                    case IndexedScriptFragment_FieldIndex.FragmentName:
+                    case ScriptFragmentIndexed_FieldIndex.FragmentName:
                         this.FragmentName = ex;
                         break;
                     default:
@@ -329,22 +329,22 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthMask(int index, object obj)
             {
-                IndexedScriptFragment_FieldIndex enu = (IndexedScriptFragment_FieldIndex)index;
+                ScriptFragmentIndexed_FieldIndex enu = (ScriptFragmentIndexed_FieldIndex)index;
                 switch (enu)
                 {
-                    case IndexedScriptFragment_FieldIndex.FragmentIndex:
+                    case ScriptFragmentIndexed_FieldIndex.FragmentIndex:
                         this.FragmentIndex = (Exception?)obj;
                         break;
-                    case IndexedScriptFragment_FieldIndex.Unknown:
+                    case ScriptFragmentIndexed_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
-                    case IndexedScriptFragment_FieldIndex.Unknown2:
+                    case ScriptFragmentIndexed_FieldIndex.Unknown2:
                         this.Unknown2 = (Exception?)obj;
                         break;
-                    case IndexedScriptFragment_FieldIndex.ScriptName:
+                    case ScriptFragmentIndexed_FieldIndex.ScriptName:
                         this.ScriptName = (Exception?)obj;
                         break;
-                    case IndexedScriptFragment_FieldIndex.FragmentName:
+                    case ScriptFragmentIndexed_FieldIndex.FragmentName:
                         this.FragmentName = (Exception?)obj;
                         break;
                     default:
@@ -486,25 +486,25 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => IndexedScriptFragmentBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ScriptFragmentIndexedBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((IndexedScriptFragmentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ScriptFragmentIndexedBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static IndexedScriptFragment CreateFromBinary(
+        public static ScriptFragmentIndexed CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new IndexedScriptFragment();
-            ((IndexedScriptFragmentSetterCommon)((IIndexedScriptFragmentGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new ScriptFragmentIndexed();
+            ((ScriptFragmentIndexedSetterCommon)((IScriptFragmentIndexedGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out IndexedScriptFragment item,
+            out ScriptFragmentIndexed item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -530,21 +530,21 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((IndexedScriptFragmentSetterCommon)((IIndexedScriptFragmentGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ScriptFragmentIndexedSetterCommon)((IScriptFragmentIndexedGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static IndexedScriptFragment GetNew()
+        internal static ScriptFragmentIndexed GetNew()
         {
-            return new IndexedScriptFragment();
+            return new ScriptFragmentIndexed();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IIndexedScriptFragment :
-        IIndexedScriptFragmentGetter,
-        ILoquiObjectSetter<IIndexedScriptFragment>
+    public partial interface IScriptFragmentIndexed :
+        ILoquiObjectSetter<IScriptFragmentIndexed>,
+        IScriptFragmentIndexedGetter
     {
         new UInt16 FragmentIndex { get; set; }
         new Int16 Unknown { get; set; }
@@ -553,10 +553,10 @@ namespace Mutagen.Bethesda.Fallout4
         new String FragmentName { get; set; }
     }
 
-    public partial interface IIndexedScriptFragmentGetter :
+    public partial interface IScriptFragmentIndexedGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IIndexedScriptFragmentGetter>
+        ILoquiObject<IScriptFragmentIndexedGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => IndexedScriptFragment_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ScriptFragmentIndexed_Registration.Instance;
         UInt16 FragmentIndex { get; }
         Int16 Unknown { get; }
         SByte Unknown2 { get; }
@@ -576,42 +576,42 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common MixIn
-    public static partial class IndexedScriptFragmentMixIn
+    public static partial class ScriptFragmentIndexedMixIn
     {
-        public static void Clear(this IIndexedScriptFragment item)
+        public static void Clear(this IScriptFragmentIndexed item)
         {
-            ((IndexedScriptFragmentSetterCommon)((IIndexedScriptFragmentGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ScriptFragmentIndexedSetterCommon)((IScriptFragmentIndexedGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static IndexedScriptFragment.Mask<bool> GetEqualsMask(
-            this IIndexedScriptFragmentGetter item,
-            IIndexedScriptFragmentGetter rhs,
+        public static ScriptFragmentIndexed.Mask<bool> GetEqualsMask(
+            this IScriptFragmentIndexedGetter item,
+            IScriptFragmentIndexedGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ScriptFragmentIndexedCommon)((IScriptFragmentIndexedGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IIndexedScriptFragmentGetter item,
+            this IScriptFragmentIndexedGetter item,
             string? name = null,
-            IndexedScriptFragment.Mask<bool>? printMask = null)
+            ScriptFragmentIndexed.Mask<bool>? printMask = null)
         {
-            return ((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)item).CommonInstance()!).ToString(
+            return ((ScriptFragmentIndexedCommon)((IScriptFragmentIndexedGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IIndexedScriptFragmentGetter item,
+            this IScriptFragmentIndexedGetter item,
             FileGeneration fg,
             string? name = null,
-            IndexedScriptFragment.Mask<bool>? printMask = null)
+            ScriptFragmentIndexed.Mask<bool>? printMask = null)
         {
-            ((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)item).CommonInstance()!).ToString(
+            ((ScriptFragmentIndexedCommon)((IScriptFragmentIndexedGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -619,21 +619,21 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IIndexedScriptFragmentGetter item,
-            IIndexedScriptFragmentGetter rhs,
-            IndexedScriptFragment.TranslationMask? equalsMask = null)
+            this IScriptFragmentIndexedGetter item,
+            IScriptFragmentIndexedGetter rhs,
+            ScriptFragmentIndexed.TranslationMask? equalsMask = null)
         {
-            return ((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)item).CommonInstance()!).Equals(
+            return ((ScriptFragmentIndexedCommon)((IScriptFragmentIndexedGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IIndexedScriptFragment lhs,
-            IIndexedScriptFragmentGetter rhs)
+            this IScriptFragmentIndexed lhs,
+            IScriptFragmentIndexedGetter rhs)
         {
-            ((IndexedScriptFragmentSetterTranslationCommon)((IIndexedScriptFragmentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ScriptFragmentIndexedSetterTranslationCommon)((IScriptFragmentIndexedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -642,11 +642,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IIndexedScriptFragment lhs,
-            IIndexedScriptFragmentGetter rhs,
-            IndexedScriptFragment.TranslationMask? copyMask = null)
+            this IScriptFragmentIndexed lhs,
+            IScriptFragmentIndexedGetter rhs,
+            ScriptFragmentIndexed.TranslationMask? copyMask = null)
         {
-            ((IndexedScriptFragmentSetterTranslationCommon)((IIndexedScriptFragmentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ScriptFragmentIndexedSetterTranslationCommon)((IScriptFragmentIndexedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -655,28 +655,28 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IIndexedScriptFragment lhs,
-            IIndexedScriptFragmentGetter rhs,
-            out IndexedScriptFragment.ErrorMask errorMask,
-            IndexedScriptFragment.TranslationMask? copyMask = null)
+            this IScriptFragmentIndexed lhs,
+            IScriptFragmentIndexedGetter rhs,
+            out ScriptFragmentIndexed.ErrorMask errorMask,
+            ScriptFragmentIndexed.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((IndexedScriptFragmentSetterTranslationCommon)((IIndexedScriptFragmentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ScriptFragmentIndexedSetterTranslationCommon)((IScriptFragmentIndexedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = IndexedScriptFragment.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ScriptFragmentIndexed.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IIndexedScriptFragment lhs,
-            IIndexedScriptFragmentGetter rhs,
+            this IScriptFragmentIndexed lhs,
+            IScriptFragmentIndexedGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((IndexedScriptFragmentSetterTranslationCommon)((IIndexedScriptFragmentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ScriptFragmentIndexedSetterTranslationCommon)((IScriptFragmentIndexedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -684,32 +684,32 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static IndexedScriptFragment DeepCopy(
-            this IIndexedScriptFragmentGetter item,
-            IndexedScriptFragment.TranslationMask? copyMask = null)
+        public static ScriptFragmentIndexed DeepCopy(
+            this IScriptFragmentIndexedGetter item,
+            ScriptFragmentIndexed.TranslationMask? copyMask = null)
         {
-            return ((IndexedScriptFragmentSetterTranslationCommon)((IIndexedScriptFragmentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ScriptFragmentIndexedSetterTranslationCommon)((IScriptFragmentIndexedGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static IndexedScriptFragment DeepCopy(
-            this IIndexedScriptFragmentGetter item,
-            out IndexedScriptFragment.ErrorMask errorMask,
-            IndexedScriptFragment.TranslationMask? copyMask = null)
+        public static ScriptFragmentIndexed DeepCopy(
+            this IScriptFragmentIndexedGetter item,
+            out ScriptFragmentIndexed.ErrorMask errorMask,
+            ScriptFragmentIndexed.TranslationMask? copyMask = null)
         {
-            return ((IndexedScriptFragmentSetterTranslationCommon)((IIndexedScriptFragmentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ScriptFragmentIndexedSetterTranslationCommon)((IScriptFragmentIndexedGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static IndexedScriptFragment DeepCopy(
-            this IIndexedScriptFragmentGetter item,
+        public static ScriptFragmentIndexed DeepCopy(
+            this IScriptFragmentIndexedGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((IndexedScriptFragmentSetterTranslationCommon)((IIndexedScriptFragmentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ScriptFragmentIndexedSetterTranslationCommon)((IScriptFragmentIndexedGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -717,11 +717,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IIndexedScriptFragment item,
+            this IScriptFragmentIndexed item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((IndexedScriptFragmentSetterCommon)((IIndexedScriptFragmentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ScriptFragmentIndexedSetterCommon)((IScriptFragmentIndexedGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     #region Field Index
-    public enum IndexedScriptFragment_FieldIndex
+    public enum ScriptFragmentIndexed_FieldIndex
     {
         FragmentIndex = 0,
         Unknown = 1,
@@ -748,9 +748,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class IndexedScriptFragment_Registration : ILoquiRegistration
+    public partial class ScriptFragmentIndexed_Registration : ILoquiRegistration
     {
-        public static readonly IndexedScriptFragment_Registration Instance = new IndexedScriptFragment_Registration();
+        public static readonly ScriptFragmentIndexed_Registration Instance = new ScriptFragmentIndexed_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
@@ -765,23 +765,23 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const ushort FieldCount = 5;
 
-        public static readonly Type MaskType = typeof(IndexedScriptFragment.Mask<>);
+        public static readonly Type MaskType = typeof(ScriptFragmentIndexed.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(IndexedScriptFragment.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ScriptFragmentIndexed.ErrorMask);
 
-        public static readonly Type ClassType = typeof(IndexedScriptFragment);
+        public static readonly Type ClassType = typeof(ScriptFragmentIndexed);
 
-        public static readonly Type GetterType = typeof(IIndexedScriptFragmentGetter);
+        public static readonly Type GetterType = typeof(IScriptFragmentIndexedGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IIndexedScriptFragment);
+        public static readonly Type SetterType = typeof(IScriptFragmentIndexed);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.IndexedScriptFragment";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.ScriptFragmentIndexed";
 
-        public const string Name = "IndexedScriptFragment";
+        public const string Name = "ScriptFragmentIndexed";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -789,7 +789,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(IndexedScriptFragmentBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ScriptFragmentIndexedBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -822,13 +822,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class IndexedScriptFragmentSetterCommon
+    public partial class ScriptFragmentIndexedSetterCommon
     {
-        public static readonly IndexedScriptFragmentSetterCommon Instance = new IndexedScriptFragmentSetterCommon();
+        public static readonly ScriptFragmentIndexedSetterCommon Instance = new ScriptFragmentIndexedSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IIndexedScriptFragment item)
+        public void Clear(IScriptFragmentIndexed item)
         {
             ClearPartial();
             item.FragmentIndex = default;
@@ -839,7 +839,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public void RemapLinks(IIndexedScriptFragment obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IScriptFragmentIndexed obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -847,7 +847,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IIndexedScriptFragment item,
+            IScriptFragmentIndexed item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -855,23 +855,23 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: IndexedScriptFragmentBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: ScriptFragmentIndexedBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    public partial class IndexedScriptFragmentCommon
+    public partial class ScriptFragmentIndexedCommon
     {
-        public static readonly IndexedScriptFragmentCommon Instance = new IndexedScriptFragmentCommon();
+        public static readonly ScriptFragmentIndexedCommon Instance = new ScriptFragmentIndexedCommon();
 
-        public IndexedScriptFragment.Mask<bool> GetEqualsMask(
-            IIndexedScriptFragmentGetter item,
-            IIndexedScriptFragmentGetter rhs,
+        public ScriptFragmentIndexed.Mask<bool> GetEqualsMask(
+            IScriptFragmentIndexedGetter item,
+            IScriptFragmentIndexedGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new IndexedScriptFragment.Mask<bool>(false);
-            ((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ScriptFragmentIndexed.Mask<bool>(false);
+            ((ScriptFragmentIndexedCommon)((IScriptFragmentIndexedGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -880,9 +880,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void FillEqualsMask(
-            IIndexedScriptFragmentGetter item,
-            IIndexedScriptFragmentGetter rhs,
-            IndexedScriptFragment.Mask<bool> ret,
+            IScriptFragmentIndexedGetter item,
+            IScriptFragmentIndexedGetter rhs,
+            ScriptFragmentIndexed.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -894,9 +894,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public string ToString(
-            IIndexedScriptFragmentGetter item,
+            IScriptFragmentIndexedGetter item,
             string? name = null,
-            IndexedScriptFragment.Mask<bool>? printMask = null)
+            ScriptFragmentIndexed.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -908,18 +908,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void ToString(
-            IIndexedScriptFragmentGetter item,
+            IScriptFragmentIndexedGetter item,
             FileGeneration fg,
             string? name = null,
-            IndexedScriptFragment.Mask<bool>? printMask = null)
+            ScriptFragmentIndexed.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"IndexedScriptFragment =>");
+                fg.AppendLine($"ScriptFragmentIndexed =>");
             }
             else
             {
-                fg.AppendLine($"{name} (IndexedScriptFragment) =>");
+                fg.AppendLine($"{name} (ScriptFragmentIndexed) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -933,9 +933,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         protected static void ToStringFields(
-            IIndexedScriptFragmentGetter item,
+            IScriptFragmentIndexedGetter item,
             FileGeneration fg,
-            IndexedScriptFragment.Mask<bool>? printMask = null)
+            ScriptFragmentIndexed.Mask<bool>? printMask = null)
         {
             if (printMask?.FragmentIndex ?? true)
             {
@@ -961,35 +961,35 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IIndexedScriptFragmentGetter? lhs,
-            IIndexedScriptFragmentGetter? rhs,
+            IScriptFragmentIndexedGetter? lhs,
+            IScriptFragmentIndexedGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)IndexedScriptFragment_FieldIndex.FragmentIndex) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ScriptFragmentIndexed_FieldIndex.FragmentIndex) ?? true))
             {
                 if (lhs.FragmentIndex != rhs.FragmentIndex) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)IndexedScriptFragment_FieldIndex.Unknown) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ScriptFragmentIndexed_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)IndexedScriptFragment_FieldIndex.Unknown2) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ScriptFragmentIndexed_FieldIndex.Unknown2) ?? true))
             {
                 if (lhs.Unknown2 != rhs.Unknown2) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)IndexedScriptFragment_FieldIndex.ScriptName) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ScriptFragmentIndexed_FieldIndex.ScriptName) ?? true))
             {
                 if (!string.Equals(lhs.ScriptName, rhs.ScriptName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)IndexedScriptFragment_FieldIndex.FragmentName) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ScriptFragmentIndexed_FieldIndex.FragmentName) ?? true))
             {
                 if (!string.Equals(lhs.FragmentName, rhs.FragmentName)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IIndexedScriptFragmentGetter item)
+        public virtual int GetHashCode(IScriptFragmentIndexedGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.FragmentIndex);
@@ -1005,11 +1005,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public object GetNew()
         {
-            return IndexedScriptFragment.GetNew();
+            return ScriptFragmentIndexed.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IIndexedScriptFragmentGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IScriptFragmentIndexedGetter obj)
         {
             yield break;
         }
@@ -1017,35 +1017,35 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class IndexedScriptFragmentSetterTranslationCommon
+    public partial class ScriptFragmentIndexedSetterTranslationCommon
     {
-        public static readonly IndexedScriptFragmentSetterTranslationCommon Instance = new IndexedScriptFragmentSetterTranslationCommon();
+        public static readonly ScriptFragmentIndexedSetterTranslationCommon Instance = new ScriptFragmentIndexedSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IIndexedScriptFragment item,
-            IIndexedScriptFragmentGetter rhs,
+            IScriptFragmentIndexed item,
+            IScriptFragmentIndexedGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)IndexedScriptFragment_FieldIndex.FragmentIndex) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ScriptFragmentIndexed_FieldIndex.FragmentIndex) ?? true))
             {
                 item.FragmentIndex = rhs.FragmentIndex;
             }
-            if ((copyMask?.GetShouldTranslate((int)IndexedScriptFragment_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ScriptFragmentIndexed_FieldIndex.Unknown) ?? true))
             {
                 item.Unknown = rhs.Unknown;
             }
-            if ((copyMask?.GetShouldTranslate((int)IndexedScriptFragment_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ScriptFragmentIndexed_FieldIndex.Unknown2) ?? true))
             {
                 item.Unknown2 = rhs.Unknown2;
             }
-            if ((copyMask?.GetShouldTranslate((int)IndexedScriptFragment_FieldIndex.ScriptName) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ScriptFragmentIndexed_FieldIndex.ScriptName) ?? true))
             {
                 item.ScriptName = rhs.ScriptName;
             }
-            if ((copyMask?.GetShouldTranslate((int)IndexedScriptFragment_FieldIndex.FragmentName) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ScriptFragmentIndexed_FieldIndex.FragmentName) ?? true))
             {
                 item.FragmentName = rhs.FragmentName;
             }
@@ -1053,12 +1053,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #endregion
         
-        public IndexedScriptFragment DeepCopy(
-            IIndexedScriptFragmentGetter item,
-            IndexedScriptFragment.TranslationMask? copyMask = null)
+        public ScriptFragmentIndexed DeepCopy(
+            IScriptFragmentIndexedGetter item,
+            ScriptFragmentIndexed.TranslationMask? copyMask = null)
         {
-            IndexedScriptFragment ret = (IndexedScriptFragment)((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)item).CommonInstance()!).GetNew();
-            ((IndexedScriptFragmentSetterTranslationCommon)((IIndexedScriptFragmentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ScriptFragmentIndexed ret = (ScriptFragmentIndexed)((ScriptFragmentIndexedCommon)((IScriptFragmentIndexedGetter)item).CommonInstance()!).GetNew();
+            ((ScriptFragmentIndexedSetterTranslationCommon)((IScriptFragmentIndexedGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1067,30 +1067,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
         
-        public IndexedScriptFragment DeepCopy(
-            IIndexedScriptFragmentGetter item,
-            out IndexedScriptFragment.ErrorMask errorMask,
-            IndexedScriptFragment.TranslationMask? copyMask = null)
+        public ScriptFragmentIndexed DeepCopy(
+            IScriptFragmentIndexedGetter item,
+            out ScriptFragmentIndexed.ErrorMask errorMask,
+            ScriptFragmentIndexed.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            IndexedScriptFragment ret = (IndexedScriptFragment)((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)item).CommonInstance()!).GetNew();
-            ((IndexedScriptFragmentSetterTranslationCommon)((IIndexedScriptFragmentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ScriptFragmentIndexed ret = (ScriptFragmentIndexed)((ScriptFragmentIndexedCommon)((IScriptFragmentIndexedGetter)item).CommonInstance()!).GetNew();
+            ((ScriptFragmentIndexedSetterTranslationCommon)((IScriptFragmentIndexedGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = IndexedScriptFragment.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ScriptFragmentIndexed.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public IndexedScriptFragment DeepCopy(
-            IIndexedScriptFragmentGetter item,
+        public ScriptFragmentIndexed DeepCopy(
+            IScriptFragmentIndexedGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            IndexedScriptFragment ret = (IndexedScriptFragment)((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)item).CommonInstance()!).GetNew();
-            ((IndexedScriptFragmentSetterTranslationCommon)((IIndexedScriptFragmentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ScriptFragmentIndexed ret = (ScriptFragmentIndexed)((ScriptFragmentIndexedCommon)((IScriptFragmentIndexedGetter)item).CommonInstance()!).GetNew();
+            ((ScriptFragmentIndexedSetterTranslationCommon)((IScriptFragmentIndexedGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1106,27 +1106,27 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class IndexedScriptFragment
+    public partial class ScriptFragmentIndexed
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => IndexedScriptFragment_Registration.Instance;
-        public static IndexedScriptFragment_Registration StaticRegistration => IndexedScriptFragment_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ScriptFragmentIndexed_Registration.Instance;
+        public static ScriptFragmentIndexed_Registration StaticRegistration => ScriptFragmentIndexed_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => IndexedScriptFragmentCommon.Instance;
+        protected object CommonInstance() => ScriptFragmentIndexedCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return IndexedScriptFragmentSetterCommon.Instance;
+            return ScriptFragmentIndexedSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => IndexedScriptFragmentSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ScriptFragmentIndexedSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IIndexedScriptFragmentGetter.CommonInstance() => this.CommonInstance();
+        object IScriptFragmentIndexedGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IIndexedScriptFragmentGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IScriptFragmentIndexedGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IIndexedScriptFragmentGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IScriptFragmentIndexedGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1137,12 +1137,12 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class IndexedScriptFragmentBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class ScriptFragmentIndexedBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static IndexedScriptFragmentBinaryWriteTranslation Instance = new IndexedScriptFragmentBinaryWriteTranslation();
+        public readonly static ScriptFragmentIndexedBinaryWriteTranslation Instance = new ScriptFragmentIndexedBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IIndexedScriptFragmentGetter item,
+            IScriptFragmentIndexedGetter item,
             MutagenWriter writer)
         {
             writer.Write(item.FragmentIndex);
@@ -1160,7 +1160,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public void Write(
             MutagenWriter writer,
-            IIndexedScriptFragmentGetter item,
+            IScriptFragmentIndexedGetter item,
             TypedWriteParams? translationParams = null)
         {
             WriteEmbedded(
@@ -1174,19 +1174,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IIndexedScriptFragmentGetter)item,
+                item: (IScriptFragmentIndexedGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    public partial class IndexedScriptFragmentBinaryCreateTranslation
+    public partial class ScriptFragmentIndexedBinaryCreateTranslation
     {
-        public readonly static IndexedScriptFragmentBinaryCreateTranslation Instance = new IndexedScriptFragmentBinaryCreateTranslation();
+        public readonly static ScriptFragmentIndexedBinaryCreateTranslation Instance = new ScriptFragmentIndexedBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IIndexedScriptFragment item,
+            IScriptFragmentIndexed item,
             MutagenFrame frame)
         {
             item.FragmentIndex = frame.ReadUInt16();
@@ -1206,14 +1206,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class IndexedScriptFragmentBinaryTranslationMixIn
+    public static class ScriptFragmentIndexedBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IIndexedScriptFragmentGetter item,
+            this IScriptFragmentIndexedGetter item,
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((IndexedScriptFragmentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((ScriptFragmentIndexedBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1226,38 +1226,38 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class IndexedScriptFragmentBinaryOverlay :
+    public partial class ScriptFragmentIndexedBinaryOverlay :
         PluginBinaryOverlay,
-        IIndexedScriptFragmentGetter
+        IScriptFragmentIndexedGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => IndexedScriptFragment_Registration.Instance;
-        public static IndexedScriptFragment_Registration StaticRegistration => IndexedScriptFragment_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ScriptFragmentIndexed_Registration.Instance;
+        public static ScriptFragmentIndexed_Registration StaticRegistration => ScriptFragmentIndexed_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => IndexedScriptFragmentCommon.Instance;
+        protected object CommonInstance() => ScriptFragmentIndexedCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => IndexedScriptFragmentSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ScriptFragmentIndexedSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IIndexedScriptFragmentGetter.CommonInstance() => this.CommonInstance();
+        object IScriptFragmentIndexedGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IIndexedScriptFragmentGetter.CommonSetterInstance() => null;
+        object? IScriptFragmentIndexedGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IIndexedScriptFragmentGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IScriptFragmentIndexedGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => IndexedScriptFragmentBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ScriptFragmentIndexedBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((IndexedScriptFragmentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ScriptFragmentIndexedBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             int offset);
 
         partial void CustomCtor();
-        protected IndexedScriptFragmentBinaryOverlay(
+        protected ScriptFragmentIndexedBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1290,12 +1290,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             this.CustomCtor();
         }
 
-        public static IndexedScriptFragmentBinaryOverlay IndexedScriptFragmentFactory(
+        public static ScriptFragmentIndexedBinaryOverlay ScriptFragmentIndexedFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new IndexedScriptFragmentBinaryOverlay(
+            var ret = new ScriptFragmentIndexedBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -1309,12 +1309,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
 
-        public static IndexedScriptFragmentBinaryOverlay IndexedScriptFragmentFactory(
+        public static ScriptFragmentIndexedBinaryOverlay ScriptFragmentIndexedFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return IndexedScriptFragmentFactory(
+            return ScriptFragmentIndexedFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1326,7 +1326,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FileGeneration fg,
             string? name = null)
         {
-            IndexedScriptFragmentMixIn.ToString(
+            ScriptFragmentIndexedMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1336,16 +1336,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IIndexedScriptFragmentGetter rhs) return false;
-            return ((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IScriptFragmentIndexedGetter rhs) return false;
+            return ((ScriptFragmentIndexedCommon)((IScriptFragmentIndexedGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IIndexedScriptFragmentGetter? obj)
+        public bool Equals(IScriptFragmentIndexedGetter? obj)
         {
-            return ((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptFragmentIndexedCommon)((IScriptFragmentIndexedGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ScriptFragmentIndexedCommon)((IScriptFragmentIndexedGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

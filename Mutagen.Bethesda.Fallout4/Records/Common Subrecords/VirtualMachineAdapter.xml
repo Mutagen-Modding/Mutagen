@@ -8,6 +8,11 @@
     </Fields>
   </Object>
   <Object name="VirtualMachineAdapter" objType="Subrecord" baseClass="AVirtualMachineAdapter" recordType="VMAD" GUID="80726bd6-7d34-412c-b7f2-a381c271066d" ID="111" />
+  <Object name="VirtualMachineAdapterIndexed" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord" GUID="14284d41-1d41-4699-8c5f-e6b7925ef990" ID="429">
+    <Fields>
+      <RefDirect name="ScriptFragments" refName="ScriptFragmentsIndexed" binary="Custom" nullable="True" />
+    </Fields>
+  </Object>
   <Object name="ScriptEntry" objType="Subrecord" GUID="df2181a6-efca-4ef5-97bb-8ca5f78f5830" ID="112">
     <Fields>
       <String name="Name" binaryType="PrependLengthUShort" binary="NoGeneration" />
@@ -125,7 +130,7 @@
       <String name="FragmentName" binaryType="PrependLengthUShort" />
     </Fields>
   </Object>
-  <Object name="IndexedScriptFragment" objType="Subrecord" GUID="90d728bd-a3c0-4be7-95b6-06fd625786cc" ID="125">
+  <Object name="ScriptFragmentIndexed" objType="Subrecord" GUID="90d728bd-a3c0-4be7-95b6-06fd625786cc" ID="125">
     <Fields>
       <UInt16 name="FragmentIndex" />
       <Int16 name="Unknown" />
@@ -141,6 +146,13 @@
       <String name="FileName" binaryType="PrependLengthUShort" binary="NoGeneration" />
       <RefDirect name="OnBegin" nullable="True" binary="NoGeneration" refName="ScriptFragment" />
       <RefDirect name="OnEnd" nullable="True" binary="NoGeneration" refName="ScriptFragment" />
+    </Fields>
+  </Object>
+  <Object name="ScriptFragmentsIndexed" objType="Subrecord" GUID="111c1431-8ddc-44ab-83e1-8acac57ea4f2" ID="430">
+    <Fields>
+      <Int8 name="ExtraBindDataVersion" default="3" binary="NoGeneration" />
+      <RefDirect name="Script" refName="ScriptEntry" binary="NoGeneration" />
+      <RefList name="Fragments" refName="ScriptFragmentIndexed" binary="NoGeneration" />
     </Fields>
   </Object>
 </Loqui>

@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [VirtualMachineAdapter]
+    /// Implemented by: [VirtualMachineAdapter, VirtualMachineAdapterIndexed]
     /// </summary>
     public abstract partial class AVirtualMachineAdapter :
         IAVirtualMachineAdapter,
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [VirtualMachineAdapter]
+    /// Implemented by: [VirtualMachineAdapter, VirtualMachineAdapterIndexed]
     /// </summary>
     public partial interface IAVirtualMachineAdapter :
         IAVirtualMachineAdapterGetter,
@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [VirtualMachineAdapter]
+    /// Implemented by: [VirtualMachineAdapter, VirtualMachineAdapterIndexed]
     /// </summary>
     public partial interface IAVirtualMachineAdapterGetter :
         ILoquiObject,

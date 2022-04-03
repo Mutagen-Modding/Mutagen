@@ -103,6 +103,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Projectiles_Object = new Fallout4Group<Projectile>(this);
             _Hazards_Object = new Fallout4Group<Hazard>(this);
             _BendableSplines_Object = new Fallout4Group<BendableSpline>(this);
+            _Terminals_Object = new Fallout4Group<Terminal>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -437,6 +438,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IBendableSplineGetter> IFallout4ModGetter.BendableSplines => _BendableSplines_Object;
         #endregion
+        #region Terminals
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<Terminal> _Terminals_Object;
+        public Fallout4Group<Terminal> Terminals => _Terminals_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<ITerminalGetter> IFallout4ModGetter.Terminals => _Terminals_Object;
+        #endregion
 
         #region To String
 
@@ -522,6 +530,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Projectiles = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Hazards = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.BendableSplines = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.Terminals = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -571,7 +580,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Holotapes,
                 TItem Projectiles,
                 TItem Hazards,
-                TItem BendableSplines)
+                TItem BendableSplines,
+                TItem Terminals)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -620,6 +630,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Projectiles = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Projectiles, new Fallout4Group.Mask<TItem>(Projectiles));
                 this.Hazards = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Hazards, new Fallout4Group.Mask<TItem>(Hazards));
                 this.BendableSplines = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(BendableSplines, new Fallout4Group.Mask<TItem>(BendableSplines));
+                this.Terminals = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Terminals, new Fallout4Group.Mask<TItem>(Terminals));
             }
 
             #pragma warning disable CS8618
@@ -678,6 +689,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Projectiles { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Hazards { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? BendableSplines { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Terminals { get; set; }
             #endregion
 
             #region Equals
@@ -737,6 +749,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Projectiles, rhs.Projectiles)) return false;
                 if (!object.Equals(this.Hazards, rhs.Hazards)) return false;
                 if (!object.Equals(this.BendableSplines, rhs.BendableSplines)) return false;
+                if (!object.Equals(this.Terminals, rhs.Terminals)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -789,6 +802,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Projectiles);
                 hash.Add(this.Hazards);
                 hash.Add(this.BendableSplines);
+                hash.Add(this.Terminals);
                 return hash.ToHashCode();
             }
 
@@ -1032,6 +1046,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.BendableSplines.Overall)) return false;
                     if (this.BendableSplines.Specific != null && !this.BendableSplines.Specific.All(eval)) return false;
                 }
+                if (Terminals != null)
+                {
+                    if (!eval(this.Terminals.Overall)) return false;
+                    if (this.Terminals.Specific != null && !this.Terminals.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1274,6 +1293,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.BendableSplines.Overall)) return true;
                     if (this.BendableSplines.Specific != null && this.BendableSplines.Specific.Any(eval)) return true;
                 }
+                if (Terminals != null)
+                {
+                    if (eval(this.Terminals.Overall)) return true;
+                    if (this.Terminals.Specific != null && this.Terminals.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1335,6 +1359,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Projectiles = this.Projectiles == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Projectiles.Overall), this.Projectiles.Specific?.Translate(eval));
                 obj.Hazards = this.Hazards == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Hazards.Overall), this.Hazards.Specific?.Translate(eval));
                 obj.BendableSplines = this.BendableSplines == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.BendableSplines.Overall), this.BendableSplines.Specific?.Translate(eval));
+                obj.Terminals = this.Terminals == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Terminals.Overall), this.Terminals.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1545,6 +1570,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         BendableSplines?.ToString(fg);
                     }
+                    if (printMask?.Terminals?.Overall ?? true)
+                    {
+                        Terminals?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1617,6 +1646,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Projectile.ErrorMask>?>? Projectiles;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Hazard.ErrorMask>?>? Hazards;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<BendableSpline.ErrorMask>?>? BendableSplines;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<Terminal.ErrorMask>?>? Terminals;
             #endregion
 
             #region IErrorMask
@@ -1719,6 +1749,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Hazards;
                     case Fallout4Mod_FieldIndex.BendableSplines:
                         return BendableSplines;
+                    case Fallout4Mod_FieldIndex.Terminals:
+                        return Terminals;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1869,6 +1901,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.BendableSplines:
                         this.BendableSplines = new MaskItem<Exception?, Fallout4Group.ErrorMask<BendableSpline.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Terminals:
+                        this.Terminals = new MaskItem<Exception?, Fallout4Group.ErrorMask<Terminal.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2021,6 +2056,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.BendableSplines:
                         this.BendableSplines = (MaskItem<Exception?, Fallout4Group.ErrorMask<BendableSpline.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.Terminals:
+                        this.Terminals = (MaskItem<Exception?, Fallout4Group.ErrorMask<Terminal.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2076,6 +2114,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Projectiles != null) return true;
                 if (Hazards != null) return true;
                 if (BendableSplines != null) return true;
+                if (Terminals != null) return true;
                 return false;
             }
             #endregion
@@ -2157,6 +2196,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Projectiles?.ToString(fg);
                 Hazards?.ToString(fg);
                 BendableSplines?.ToString(fg);
+                Terminals?.ToString(fg);
             }
             #endregion
 
@@ -2212,6 +2252,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Projectiles = this.Projectiles.Combine(rhs.Projectiles, (l, r) => l.Combine(r));
                 ret.Hazards = this.Hazards.Combine(rhs.Hazards, (l, r) => l.Combine(r));
                 ret.BendableSplines = this.BendableSplines.Combine(rhs.BendableSplines, (l, r) => l.Combine(r));
+                ret.Terminals = this.Terminals.Combine(rhs.Terminals, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2282,6 +2323,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<Projectile.TranslationMask>? Projectiles;
             public Fallout4Group.TranslationMask<Hazard.TranslationMask>? Hazards;
             public Fallout4Group.TranslationMask<BendableSpline.TranslationMask>? BendableSplines;
+            public Fallout4Group.TranslationMask<Terminal.TranslationMask>? Terminals;
             #endregion
 
             #region Ctors
@@ -2353,6 +2395,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Projectiles != null ? Projectiles.OnOverall : DefaultOn, Projectiles?.GetCrystal()));
                 ret.Add((Hazards != null ? Hazards.OnOverall : DefaultOn, Hazards?.GetCrystal()));
                 ret.Add((BendableSplines != null ? BendableSplines.OnOverall : DefaultOn, BendableSplines?.GetCrystal()));
+                ret.Add((Terminals != null ? Terminals.OnOverall : DefaultOn, Terminals?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2440,6 +2483,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Projectiles_Object = new Fallout4Group<Projectile>(this);
             _Hazards_Object = new Fallout4Group<Hazard>(this);
             _BendableSplines_Object = new Fallout4Group<BendableSpline>(this);
+            _Terminals_Object = new Fallout4Group<Terminal>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -2630,6 +2674,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.BendableSplines.RecordCache.Set(rhsMod.BendableSplines.RecordCache.Items);
             }
+            if (mask?.Terminals ?? true)
+            {
+                this.Terminals.RecordCache.Set(rhsMod.Terminals.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -2686,6 +2734,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += Projectiles.RecordCache.Count > 0 ? 1 : default(uint);
             count += Hazards.RecordCache.Count > 0 ? 1 : default(uint);
             count += BendableSplines.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Terminals.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -2981,6 +3030,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<Projectile> Projectiles { get; }
         new Fallout4Group<Hazard> Hazards { get; }
         new Fallout4Group<BendableSpline> BendableSplines { get; }
+        new Fallout4Group<Terminal> Terminals { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -3046,6 +3096,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IProjectileGetter> Projectiles { get; }
         IFallout4GroupGetter<IHazardGetter> Hazards { get; }
         IFallout4GroupGetter<IBendableSplineGetter> BendableSplines { get; }
+        IFallout4GroupGetter<ITerminalGetter> Terminals { get; }
 
     }
 
@@ -3655,6 +3706,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Projectiles = 44,
         Hazards = 45,
         BendableSplines = 46,
+        Terminals = 47,
     }
     #endregion
 
@@ -3672,9 +3724,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 47;
+        public const ushort AdditionalFieldCount = 48;
 
-        public const ushort FieldCount = 47;
+        public const ushort FieldCount = 48;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -3789,6 +3841,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Projectiles.Clear();
             item.Hazards.Clear();
             item.BendableSplines.Clear();
+            item.Terminals.Clear();
         }
         
         #region Mutagen
@@ -3836,6 +3889,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Projectiles.RemapLinks(mapping);
             obj.Hazards.RemapLinks(mapping);
             obj.BendableSplines.RemapLinks(mapping);
+            obj.Terminals.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -3916,6 +3970,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Projectiles.Remove(keys);
             obj.Hazards.Remove(keys);
             obj.BendableSplines.Remove(keys);
+            obj.Terminals.Remove(keys);
         }
         
         public void Remove(
@@ -4347,6 +4402,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         type: type,
                         keys: keys);
                     break;
+                case "Terminal":
+                case "ITerminalGetter":
+                case "ITerminal":
+                case "ITerminalInternal":
+                    obj.Terminals.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
@@ -4389,6 +4452,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMovableStaticGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ITerminalGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IHarvestTarget":
@@ -4589,6 +4653,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Projectiles = MaskItemExt.Factory(item.Projectiles.GetEqualsMask(rhs.Projectiles, include), include);
             ret.Hazards = MaskItemExt.Factory(item.Hazards.GetEqualsMask(rhs.Hazards, include), include);
             ret.BendableSplines = MaskItemExt.Factory(item.BendableSplines.GetEqualsMask(rhs.BendableSplines, include), include);
+            ret.Terminals = MaskItemExt.Factory(item.Terminals.GetEqualsMask(rhs.Terminals, include), include);
         }
         
         public string ToString(
@@ -4822,6 +4887,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (printMask?.BendableSplines?.Overall ?? true)
             {
                 item.BendableSplines?.ToString(fg, "BendableSplines");
+            }
+            if (printMask?.Terminals?.Overall ?? true)
+            {
+                item.Terminals?.ToString(fg, "Terminals");
             }
         }
         
@@ -5208,6 +5277,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 else if (!isBendableSplinesEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Terminals) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Terminals, rhs.Terminals, out var lhsTerminals, out var rhsTerminals, out var isTerminalsEqual))
+                {
+                    if (!object.Equals(lhsTerminals, rhsTerminals)) return false;
+                }
+                else if (!isTerminalsEqual) return false;
+            }
             return true;
         }
         
@@ -5261,6 +5338,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.Projectiles);
             hash.Add(item.Hazards);
             hash.Add(item.BendableSplines);
+            hash.Add(item.Terminals);
             return hash.ToHashCode();
         }
         
@@ -5509,6 +5587,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IBendableSpline":
                 case "IBendableSplineInternal":
                     return obj.BendableSplines;
+                case "Terminal":
+                case "ITerminalGetter":
+                case "ITerminal":
+                case "ITerminalInternal":
+                    return obj.Terminals;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -5533,7 +5616,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[46];
+            Stream[] outputStreams = new Stream[47];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -5581,6 +5664,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             toDo.Add(() => WriteGroupParallel(item.Projectiles, 43, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Hazards, 44, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.BendableSplines, 45, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Terminals, 46, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -5796,6 +5880,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
+            foreach (var item in obj.Terminals.ContainedFormLinks)
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -5982,6 +6070,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 yield return item;
             }
             foreach (var item in obj.BendableSplines.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Terminals.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -6434,6 +6526,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         yield return item;
                     }
                     yield break;
+                case "Terminal":
+                case "ITerminalGetter":
+                case "ITerminal":
+                case "ITerminalInternal":
+                    foreach (var item in obj.Terminals.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout4, obj, type, out var linkInterfaces))
                     {
@@ -6869,6 +6970,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 modKey: obj.ModKey,
                 group: (m) => m.BendableSplines,
                 groupGetter: (m) => m.BendableSplines))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Terminal, ITerminalGetter>(
+                srcGroup: obj.Terminals,
+                type: typeof(ITerminalGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Terminals,
+                groupGetter: (m) => m.Terminals))
             {
                 yield return item;
             }
@@ -7543,6 +7653,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         modKey: obj.ModKey,
                         group: (m) => m.BendableSplines,
                         groupGetter: (m) => m.BendableSplines))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Terminal":
+                case "ITerminalGetter":
+                case "ITerminal":
+                case "ITerminalInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, Terminal, ITerminalGetter>(
+                        srcGroup: obj.Terminals,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Terminals,
+                        groupGetter: (m) => m.Terminals))
                     {
                         yield return item;
                     }
@@ -8527,6 +8651,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Terminals) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Terminals);
+                try
+                {
+                    item.Terminals.DeepCopyIn(
+                        rhs: rhs.Terminals,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Terminals));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -8663,6 +8807,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Projectiles;
         public bool Hazards;
         public bool BendableSplines;
+        public bool Terminals;
         public GroupMask()
         {
         }
@@ -8714,6 +8859,7 @@ namespace Mutagen.Bethesda.Fallout4
             Projectiles = defaultValue;
             Hazards = defaultValue;
             BendableSplines = defaultValue;
+            Terminals = defaultValue;
         }
     }
 
@@ -9247,6 +9393,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)BendableSplinesItem).BinaryWriteTranslator).Write<IBendableSplineGetter>(
                         item: BendableSplinesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Terminals ?? true)
+            {
+                var TerminalsItem = item.Terminals;
+                if (TerminalsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)TerminalsItem).BinaryWriteTranslator).Write<ITerminalGetter>(
+                        item: TerminalsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -9961,6 +10118,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     }
                     return (int)Fallout4Mod_FieldIndex.BendableSplines;
                 }
+                case RecordTypeInts.TERM:
+                {
+                    if (importMask?.Terminals ?? true)
+                    {
+                        item.Terminals.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Terminals;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -10352,6 +10523,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private IFallout4GroupGetter<IBendableSplineGetter>? _BendableSplines => _BendableSplinesLocations != null ? Fallout4GroupBinaryOverlay<IBendableSplineGetter>.Fallout4GroupFactory(_data, _BendableSplinesLocations, _package) : default;
         public IFallout4GroupGetter<IBendableSplineGetter> BendableSplines => _BendableSplines ?? new Fallout4Group<BendableSpline>(this);
         #endregion
+        #region Terminals
+        private List<RangeInt64>? _TerminalsLocations;
+        private IFallout4GroupGetter<ITerminalGetter>? _Terminals => _TerminalsLocations != null ? Fallout4GroupBinaryOverlay<ITerminalGetter>.Fallout4GroupFactory(_data, _TerminalsLocations, _package) : default;
+        public IFallout4GroupGetter<ITerminalGetter> Terminals => _Terminals ?? new Fallout4Group<Terminal>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -10715,6 +10891,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     _BendableSplinesLocations ??= new();
                     _BendableSplinesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.BendableSplines;
+                }
+                case RecordTypeInts.TERM:
+                {
+                    _TerminalsLocations ??= new();
+                    _TerminalsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.Terminals;
                 }
                 default:
                     return default(int?);

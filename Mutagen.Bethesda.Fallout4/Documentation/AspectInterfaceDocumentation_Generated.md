@@ -45,6 +45,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - RuleName
 - Spell
 - TalkingActivator
+- Terminal
 - Weapon
 ### IModeled
 - Activator
@@ -74,6 +75,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Static
 - StaticCollection
 - TalkingActivator
+- Terminal
 - Tree
 - Weapon
 ### INamed
@@ -137,6 +139,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Static
 - StaticCollection
 - TalkingActivator
+- Terminal
 - TintGroup
 - TintTemplateOption
 - Tree
@@ -174,6 +177,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Static
 - StaticCollection
 - TalkingActivator
+- Terminal
 - TextureSet
 - Tree
 - Weapon
@@ -466,6 +470,11 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 - IScripted
+### Terminal
+- IKeyworded
+- IModeled
+- INamed
+- IObjectBounded
 ### TextureSet
 - IObjectBounded
 ### TintGroup
