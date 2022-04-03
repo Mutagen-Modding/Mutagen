@@ -266,7 +266,7 @@ public class TriggeringRecordModule : GenerationModule
         {
             fg.AppendLine($"public static readonly {nameof(RecordType)} {Plugins.Internals.Constants.TriggeringRecordTypeMember} = {obj.RecordTypeHeaderName(trigRecordTypes.First())};");
         }
-        else if (count > 1)
+        if (count >= 1)
         {
             fg.AppendLine($"public static ITriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;");
             fg.AppendLine($"private static readonly Lazy<ITriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<ITriggeringRecordCollection>(() =>");

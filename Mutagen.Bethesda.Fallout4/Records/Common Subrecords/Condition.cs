@@ -941,15 +941,6 @@ namespace Mutagen.Bethesda.Fallout4
 
     namespace Internals
     {
-        public partial class Condition_Registration
-        {
-            public static ITriggeringRecordCollection TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-            private static readonly Lazy<ITriggeringRecordCollection> _TriggeringRecordTypes = new Lazy<ITriggeringRecordCollection>(() =>
-            {
-                return TriggeringRecordCollection.Factory(RecordTypes.CTDA);
-            });
-        }
-
         public partial class ConditionBinaryCreateTranslation
         {
             public const byte CompareMask = 0xE0;
