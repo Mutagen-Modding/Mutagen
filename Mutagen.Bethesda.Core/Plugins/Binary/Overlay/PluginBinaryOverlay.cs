@@ -347,45 +347,6 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
         public static int[] ParseRecordLocations(
             OverlayStream stream,
             long finalPos,
-            IRecordCollection triggers,
-            IRecordCollection includeTriggers,
-            RecordHeaderConstants constants,
-            bool skipHeader)
-        {
-            List<int> ret = new List<int>();
-            var startingPos = stream.Position;
-            while (!stream.Complete && stream.Position < finalPos)
-            {
-                var varMeta = constants.GetVariableMeta(stream);
-                var recType = varMeta.RecordType;
-                var trigger = triggers.Contains(recType);
-                var includeTrigger = includeTriggers.Contains(recType);
-                if (!trigger && !includeTrigger) break;
-                if (trigger)
-                {
-                    if (skipHeader)
-                    {
-                        stream.Position += varMeta.HeaderLength;
-                        ret.Add(stream.Position - startingPos);
-                        stream.Position += (int)varMeta.ContentLength;
-                    }
-                    else
-                    {
-                        ret.Add(stream.Position - startingPos);
-                        stream.Position += (int)varMeta.TotalLength;
-                    }
-                }
-                else
-                {
-                    stream.Position += (int)varMeta.TotalLength;
-                }
-            }
-            return ret.ToArray();
-        }
-
-        public static int[] ParseRecordLocations(
-            OverlayStream stream,
-            long finalPos,
             RecordType trigger,
             IRecordCollection includeTriggers,
             RecordHeaderConstants constants,
@@ -556,45 +517,6 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             TypedParseParams? parseParams = null)
         {
             return ParseRecordLocationsInternal(stream, count: null, trigger, constants, skipHeader, parseParams);
-        }
-
-        public static int[] ParseRecordLocations(
-            OverlayStream stream,
-            long finalPos,
-            IRecordCollection triggers,
-            RecordType includeTrigger,
-            RecordHeaderConstants constants,
-            bool skipHeader)
-        {
-            List<int> ret = new List<int>();
-            var startingPos = stream.Position;
-            while (!stream.Complete && stream.Position < finalPos)
-            {
-                var varMeta = constants.GetVariableMeta(stream);
-                var recType = varMeta.RecordType;
-                var trigger = triggers.Contains(recType);
-                var isIncludeTrigger = recType == includeTrigger;
-                if (!trigger && !isIncludeTrigger) break;
-                if (trigger)
-                {
-                    if (skipHeader)
-                    {
-                        stream.Position += varMeta.HeaderLength;
-                        ret.Add(stream.Position - startingPos);
-                        stream.Position += (int)varMeta.ContentLength;
-                    }
-                    else
-                    {
-                        ret.Add(stream.Position - startingPos);
-                        stream.Position += (int)varMeta.TotalLength;
-                    }
-                }
-                else
-                {
-                    stream.Position += (int)varMeta.TotalLength;
-                }
-            }
-            return ret.ToArray();
         }
 
         public static int[] ParseRecordLocations(
