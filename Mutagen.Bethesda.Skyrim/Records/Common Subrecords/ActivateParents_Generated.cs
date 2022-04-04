@@ -1225,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Parents.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ActivateParent>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.XAPR,
+                            triggeringRecord: ActivateParent_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: ActivateParent.TryCreateFromBinary));
                     return (int)ActivateParents_FieldIndex.Parents;

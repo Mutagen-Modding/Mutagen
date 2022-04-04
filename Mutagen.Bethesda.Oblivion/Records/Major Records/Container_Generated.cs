@@ -2003,7 +2003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Items.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ContainerItem>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.CNTO,
+                            triggeringRecord: ContainerItem_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: ContainerItem.TryCreateFromBinary));
                     return (int)Container_FieldIndex.Items;

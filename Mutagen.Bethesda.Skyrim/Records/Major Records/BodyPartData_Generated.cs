@@ -1637,7 +1637,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Parts.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<BodyPart>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.BPTN,
+                            triggeringRecord: BodyPart_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: BodyPart.TryCreateFromBinary));
                     return (int)BodyPartData_FieldIndex.Parts;
@@ -1781,7 +1781,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Parts = this.ParseRepeatedTypelessSubrecord<BodyPartBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: RecordTypes.BPTN,
+                        trigger: BodyPart_Registration.TriggerSpecs,
                         factory: BodyPartBinaryOverlay.BodyPartFactory);
                     return (int)BodyPartData_FieldIndex.Parts;
                 }

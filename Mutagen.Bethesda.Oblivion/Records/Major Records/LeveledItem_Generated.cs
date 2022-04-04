@@ -1622,7 +1622,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Entries.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LeveledItemEntry>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.LVLO,
+                            triggeringRecord: LeveledItemEntry_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: LeveledItemEntry.TryCreateFromBinary));
                     return (int)LeveledItem_FieldIndex.Entries;

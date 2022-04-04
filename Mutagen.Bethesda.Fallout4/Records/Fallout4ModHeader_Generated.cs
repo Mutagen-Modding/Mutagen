@@ -2441,7 +2441,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.TransientTypes.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TransientType>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.TNAM,
+                            triggeringRecord: TransientType_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: TransientType.TryCreateFromBinary));
                     return (int)Fallout4ModHeader_FieldIndex.TransientTypes;
@@ -2671,7 +2671,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     this.MasterReferences = this.ParseRepeatedTypelessSubrecord<MasterReferenceBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: RecordTypes.MAST,
+                        trigger: MasterReference_Registration.TriggerSpecs,
                         factory: MasterReferenceBinaryOverlay.MasterReferenceFactory);
                     return (int)Fallout4ModHeader_FieldIndex.MasterReferences;
                 }

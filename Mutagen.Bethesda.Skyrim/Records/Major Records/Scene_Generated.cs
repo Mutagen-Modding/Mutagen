@@ -2672,7 +2672,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Phases.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ScenePhase>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.HNAM,
+                            triggeringRecord: ScenePhase_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: ScenePhase.TryCreateFromBinary));
                     return (int)Scene_FieldIndex.Phases;
@@ -2682,7 +2682,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Actors.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SceneActor>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.ALID,
+                            triggeringRecord: SceneActor_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: SceneActor.TryCreateFromBinary));
                     return (int)Scene_FieldIndex.Actors;
@@ -2692,7 +2692,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Actions.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SceneAction>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.ANAM,
+                            triggeringRecord: SceneAction_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: SceneAction.TryCreateFromBinary));
                     return (int)Scene_FieldIndex.Actions;
@@ -2916,7 +2916,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Phases = this.ParseRepeatedTypelessSubrecord<ScenePhaseBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: RecordTypes.HNAM,
+                        trigger: ScenePhase_Registration.TriggerSpecs,
                         factory: ScenePhaseBinaryOverlay.ScenePhaseFactory);
                     return (int)Scene_FieldIndex.Phases;
                 }
@@ -2925,7 +2925,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Actors = this.ParseRepeatedTypelessSubrecord<SceneActorBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: RecordTypes.ALID,
+                        trigger: SceneActor_Registration.TriggerSpecs,
                         factory: SceneActorBinaryOverlay.SceneActorFactory);
                     return (int)Scene_FieldIndex.Actors;
                 }
@@ -2934,7 +2934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Actions = this.ParseRepeatedTypelessSubrecord<SceneActionBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: RecordTypes.ANAM,
+                        trigger: SceneAction_Registration.TriggerSpecs,
                         factory: SceneActionBinaryOverlay.SceneActionFactory);
                     return (int)Scene_FieldIndex.Actions;
                 }

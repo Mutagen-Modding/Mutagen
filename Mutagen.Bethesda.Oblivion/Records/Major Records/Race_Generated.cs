@@ -3226,7 +3226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Relations.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RaceRelation>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.XNAM,
+                            triggeringRecord: RaceRelation_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: RaceRelation.TryCreateFromBinary));
                     return (int)Race_FieldIndex.Relations;

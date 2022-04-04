@@ -1737,7 +1737,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Entries.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LeveledCreatureEntry>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.LVLO,
+                            triggeringRecord: LeveledCreatureEntry_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: LeveledCreatureEntry.TryCreateFromBinary));
                     return (int)LeveledCreature_FieldIndex.Entries;

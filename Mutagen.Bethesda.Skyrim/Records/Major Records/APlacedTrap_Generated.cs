@@ -3187,7 +3187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Reflections.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<WaterReflection>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.XPWR,
+                            triggeringRecord: WaterReflection_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: WaterReflection.TryCreateFromBinary));
                     return (int)APlacedTrap_FieldIndex.Reflections;
@@ -3197,7 +3197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.LinkedReferences.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LinkedReferences>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.XLKR,
+                            triggeringRecord: LinkedReferences_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: LinkedReferences.TryCreateFromBinary));
                     return (int)APlacedTrap_FieldIndex.LinkedReferences;

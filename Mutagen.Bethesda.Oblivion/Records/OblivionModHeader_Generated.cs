@@ -1914,7 +1914,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.MasterReferences = this.ParseRepeatedTypelessSubrecord<MasterReferenceBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: RecordTypes.MAST,
+                        trigger: MasterReference_Registration.TriggerSpecs,
                         factory: MasterReferenceBinaryOverlay.MasterReferenceFactory);
                     return (int)OblivionModHeader_FieldIndex.MasterReferences;
                 }

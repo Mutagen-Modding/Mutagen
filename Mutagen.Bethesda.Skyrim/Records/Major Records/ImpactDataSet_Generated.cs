@@ -1490,7 +1490,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Impacts.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ImpactData>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.PNAM,
+                            triggeringRecord: ImpactData_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: ImpactData.TryCreateFromBinary));
                     return (int)ImpactDataSet_FieldIndex.Impacts;

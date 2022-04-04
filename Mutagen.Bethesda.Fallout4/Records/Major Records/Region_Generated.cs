@@ -2392,7 +2392,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.RegionAreas.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RegionArea>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.RPLI,
+                            triggeringRecord: RegionArea_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: RegionArea.TryCreateFromBinary));
                     return (int)Region_FieldIndex.RegionAreas;

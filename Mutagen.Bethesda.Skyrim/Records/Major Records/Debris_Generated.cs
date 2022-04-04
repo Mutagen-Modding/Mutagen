@@ -1481,7 +1481,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Models.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<DebrisModel>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.DATA,
+                            triggeringRecord: DebrisModel_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: DebrisModel.TryCreateFromBinary));
                     return (int)Debris_FieldIndex.Models;
@@ -1615,7 +1615,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Models = this.ParseRepeatedTypelessSubrecord<DebrisModelBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: RecordTypes.DATA,
+                        trigger: DebrisModel_Registration.TriggerSpecs,
                         factory: DebrisModelBinaryOverlay.DebrisModelFactory);
                     return (int)Debris_FieldIndex.Models;
                 }

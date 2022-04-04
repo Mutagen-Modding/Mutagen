@@ -2938,7 +2938,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Responses.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<DialogResponse>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.TRDT,
+                            triggeringRecord: DialogResponse_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: DialogResponse.TryCreateFromBinary));
                     return (int)DialogResponses_FieldIndex.Responses;
@@ -3226,7 +3226,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Responses = this.ParseRepeatedTypelessSubrecord<DialogResponseBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: RecordTypes.TRDT,
+                        trigger: DialogResponse_Registration.TriggerSpecs,
                         factory: DialogResponseBinaryOverlay.DialogResponseFactory);
                     return (int)DialogResponses_FieldIndex.Responses;
                 }

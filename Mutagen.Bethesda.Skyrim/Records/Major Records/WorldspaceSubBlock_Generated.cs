@@ -2055,7 +2055,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Items.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Cell>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.CELL,
+                            triggeringRecord: Cell_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Cell.TryCreateFromBinary));
                     return (int)WorldspaceSubBlock_FieldIndex.Items;

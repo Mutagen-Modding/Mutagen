@@ -1947,7 +1947,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PerkTree.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ActorValuePerkNode>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.PNAM,
+                            triggeringRecord: ActorValuePerkNode_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: ActorValuePerkNode.TryCreateFromBinary));
                     return (int)ActorValueInformation_FieldIndex.PerkTree;
@@ -2135,7 +2135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.PerkTree = this.ParseRepeatedTypelessSubrecord<ActorValuePerkNodeBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: RecordTypes.PNAM,
+                        trigger: ActorValuePerkNode_Registration.TriggerSpecs,
                         factory: ActorValuePerkNodeBinaryOverlay.ActorValuePerkNodeFactory);
                     return (int)ActorValueInformation_FieldIndex.PerkTree;
                 }

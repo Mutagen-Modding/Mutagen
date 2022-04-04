@@ -1606,7 +1606,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Locations.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LoadScreenLocation>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.LNAM,
+                            triggeringRecord: LoadScreenLocation_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: LoadScreenLocation.TryCreateFromBinary));
                     return (int)LoadScreen_FieldIndex.Locations;

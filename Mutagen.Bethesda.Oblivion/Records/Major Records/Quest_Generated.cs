@@ -2205,7 +2205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Stages.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<QuestStage>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.INDX,
+                            triggeringRecord: QuestStage_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: QuestStage.TryCreateFromBinary));
                     return (int)Quest_FieldIndex.Stages;
@@ -2215,7 +2215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Targets.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<QuestTarget>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.QSTA,
+                            triggeringRecord: QuestTarget_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: QuestTarget.TryCreateFromBinary));
                     return (int)Quest_FieldIndex.Targets;
@@ -2407,7 +2407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Stages = this.ParseRepeatedTypelessSubrecord<QuestStageBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: RecordTypes.INDX,
+                        trigger: QuestStage_Registration.TriggerSpecs,
                         factory: QuestStageBinaryOverlay.QuestStageFactory);
                     return (int)Quest_FieldIndex.Stages;
                 }
@@ -2416,7 +2416,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Targets = this.ParseRepeatedTypelessSubrecord<QuestTargetBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: RecordTypes.QSTA,
+                        trigger: QuestTarget_Registration.TriggerSpecs,
                         factory: QuestTargetBinaryOverlay.QuestTargetFactory);
                     return (int)Quest_FieldIndex.Targets;
                 }

@@ -1770,7 +1770,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.WordsOfPower.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ShoutWord>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.SNAM,
+                            triggeringRecord: ShoutWord_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: ShoutWord.TryCreateFromBinary));
                     return (int)Shout_FieldIndex.WordsOfPower;

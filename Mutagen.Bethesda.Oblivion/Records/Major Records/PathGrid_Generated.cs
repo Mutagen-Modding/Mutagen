@@ -1946,7 +1946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.PointToReferenceMappings.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PointToReferenceMapping>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.PGRL,
+                            triggeringRecord: PointToReferenceMapping_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: PointToReferenceMapping.TryCreateFromBinary));
                     return (int)PathGrid_FieldIndex.PointToReferenceMappings;

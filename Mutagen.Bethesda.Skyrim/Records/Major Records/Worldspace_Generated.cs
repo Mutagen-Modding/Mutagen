@@ -5176,7 +5176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.LargeReferences.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<WorldspaceGridReference>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.RNAM,
+                            triggeringRecord: WorldspaceGridReference_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: WorldspaceGridReference.TryCreateFromBinary));
                     return (int)Worldspace_FieldIndex.LargeReferences;

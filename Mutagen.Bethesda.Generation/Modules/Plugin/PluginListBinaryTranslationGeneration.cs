@@ -939,7 +939,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                         args.Add($"countType: {objGen.RecordTypeHeaderName(new RecordType((string)typeGen.CustomData[CounterRecordType]))}");
                         if (subData.HasTrigger)
                         {
-                            args.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
+                            args.Add($"trigger: {subData.TriggeringRecordAccessor ?? subData.TriggeringRecordSetAccessor}");
                         }
                         else
                         {

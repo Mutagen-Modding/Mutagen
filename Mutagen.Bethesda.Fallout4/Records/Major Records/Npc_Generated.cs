@@ -9248,7 +9248,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.Factions.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RankPlacement>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.SNAM,
+                            triggeringRecord: RankPlacement_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: RankPlacement.TryCreateFromBinary));
                     return (int)Npc_FieldIndex.Factions;
@@ -9394,7 +9394,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                             reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.PRKZ,
-                            triggeringRecord: RecordTypes.PRKR,
+                            triggeringRecord: PerkPlacement_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: PerkPlacement.TryCreateFromBinary)
                         .CastExtendedList<PerkPlacement>();
@@ -9430,7 +9430,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                             reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.COCT,
-                            triggeringRecord: RecordTypes.CNTO,
+                            triggeringRecord: ContainerEntry_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: ContainerEntry.TryCreateFromBinary)
                         .CastExtendedList<ContainerEntry>();
@@ -9704,7 +9704,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.FaceTintingLayers.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NpcFaceTintingLayer>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.TETI,
+                            triggeringRecord: NpcFaceTintingLayer_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: NpcFaceTintingLayer.TryCreateFromBinary));
                     return (int)Npc_FieldIndex.FaceTintingLayers;
@@ -10426,7 +10426,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        trigger: RecordTypes.CNTO,
+                        trigger: ContainerEntry_Registration.TriggerSpecs,
                         countType: RecordTypes.COCT,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
@@ -10651,7 +10651,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     this.FaceTintingLayers = this.ParseRepeatedTypelessSubrecord<NpcFaceTintingLayerBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: RecordTypes.TETI,
+                        trigger: NpcFaceTintingLayer_Registration.TriggerSpecs,
                         factory: NpcFaceTintingLayerBinaryOverlay.NpcFaceTintingLayerFactory);
                     return (int)Npc_FieldIndex.FaceTintingLayers;
                 }

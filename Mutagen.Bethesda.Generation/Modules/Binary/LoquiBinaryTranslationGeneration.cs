@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                     if (NeedsHeaderProcessing(loquiGen))
                     {
                         needsHeaderWrite = true;
-                        fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}(writer, {loquiGen.GetFieldData().TriggeringRecordSetAccessor}))");
+                        fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}(writer, {loquiGen.GetFieldData().TriggeringRecordAccessor}))");
                     }
                     using (new BraceWrapper(fg, doIt: needsHeaderWrite))
                     {

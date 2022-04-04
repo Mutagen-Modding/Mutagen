@@ -3754,7 +3754,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Factions.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RankPlacement>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.SNAM,
+                            triggeringRecord: RankPlacement_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: RankPlacement.TryCreateFromBinary));
                     return (int)Npc_FieldIndex.Factions;
@@ -3791,7 +3791,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Items.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ItemEntry>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.CNTO,
+                            triggeringRecord: ItemEntry_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: ItemEntry.TryCreateFromBinary));
                     return (int)Npc_FieldIndex.Items;

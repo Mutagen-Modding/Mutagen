@@ -1367,7 +1367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Targets.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<QuestObjectiveTarget>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.QSTA,
+                            triggeringRecord: QuestObjectiveTarget_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: QuestObjectiveTarget.TryCreateFromBinary));
                     return (int)QuestObjective_FieldIndex.Targets;
@@ -1532,7 +1532,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Targets = this.ParseRepeatedTypelessSubrecord<QuestObjectiveTargetBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: RecordTypes.QSTA,
+                        trigger: QuestObjectiveTarget_Registration.TriggerSpecs,
                         factory: QuestObjectiveTargetBinaryOverlay.QuestObjectiveTargetFactory);
                     return (int)QuestObjective_FieldIndex.Targets;
                 }

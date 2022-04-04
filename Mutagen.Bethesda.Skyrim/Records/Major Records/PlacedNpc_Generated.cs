@@ -3780,7 +3780,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.LinkedReferences.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LinkedReferences>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.XLKR,
+                            triggeringRecord: LinkedReferences_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: LinkedReferences.TryCreateFromBinary));
                     return (int)PlacedNpc_FieldIndex.LinkedReferences;

@@ -1743,7 +1743,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MapInfos.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavigationMapInfo>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.NVMI,
+                            triggeringRecord: NavigationMapInfo_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: NavigationMapInfo.TryCreateFromBinary));
                     return (int)NavigationMeshInfoMap_FieldIndex.MapInfos;

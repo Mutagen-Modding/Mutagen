@@ -2274,7 +2274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Sounds.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<WeatherSound>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.SNAM,
+                            triggeringRecord: WeatherSound_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: WeatherSound.TryCreateFromBinary));
                     return (int)Weather_FieldIndex.Sounds;

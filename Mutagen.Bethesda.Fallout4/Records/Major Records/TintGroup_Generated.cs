@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.Options.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TintTemplateOption>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.TETI,
+                            triggeringRecord: TintTemplateOption_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: TintTemplateOption.TryCreateFromBinary));
                     return (int)TintGroup_FieldIndex.Options;
@@ -1521,7 +1521,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     this.Options = this.ParseRepeatedTypelessSubrecord<TintTemplateOptionBinaryOverlay>(
                         stream: stream,
                         parseParams: parseParams,
-                        trigger: RecordTypes.TETI,
+                        trigger: TintTemplateOption_Registration.TriggerSpecs,
                         factory: TintTemplateOptionBinaryOverlay.TintTemplateOptionFactory);
                     return (int)TintGroup_FieldIndex.Options;
                 }

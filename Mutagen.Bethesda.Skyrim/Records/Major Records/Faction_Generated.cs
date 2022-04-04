@@ -2922,7 +2922,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Relations.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Relation>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.XNAM,
+                            triggeringRecord: Relation_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Relation.TryCreateFromBinary));
                     return (int)Faction_FieldIndex.Relations;

@@ -541,7 +541,7 @@ public class TriggeringRecordModule : GenerationModule
             }
         }
 
-        SetTriggeringRecordAccessors(obj, field, data);
+        await SetTriggeringRecordAccessors(obj, field, data);
 
         if (!field.NullableProperty.Value.HasBeenSet)
         {
@@ -703,7 +703,7 @@ public class TriggeringRecordModule : GenerationModule
         }
     }
 
-    private void SetTriggeringRecordAccessors(ObjectGeneration obj, TypeGeneration field, MutagenFieldData data)
+    private async Task SetTriggeringRecordAccessors(ObjectGeneration obj, TypeGeneration field, MutagenFieldData data)
     {
         var loqui = field as LoquiType;
         if (!data.HasTrigger)
@@ -740,6 +740,15 @@ public class TriggeringRecordModule : GenerationModule
                 data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(new RecordType(counterTypeStr)));
                 data.TriggeringRecordTypes.Add(new RecordType(counterTypeStr));
             }
+            if (cont.SubTypeGeneration is LoquiType contLoqui && contLoqui.TargetObjectGeneration != null)
+            {
+                data.TriggeringRecordSetAccessor = $"{contLoqui.TargetObjectGeneration.RegistrationName}.TriggerSpecs";
+            }
+        }
+        if (data.TriggeringRecordTypes.Count == 1
+           && data.SubLoquiTypes.Count == 0)
+        {
+            data.TriggeringRecordAccessor = obj.RecordTypeHeaderName(data.TriggeringRecordTypes.First());
         }
         if (data.RecordType.HasValue
             && data.TriggeringRecordTypes.Count == 0)
@@ -747,21 +756,29 @@ public class TriggeringRecordModule : GenerationModule
             data.TriggeringRecordSetAccessor = obj.RecordTypeHeaderName(data.RecordType.Value);
             data.TriggeringRecordTypes.Add(data.RecordType.Value);
         }
-        else if (data.TriggeringRecordTypes.Count == 1
-            && data.SubLoquiTypes.Count == 0)
-        {
-            data.TriggeringRecordSetAccessor = obj.RecordTypeHeaderName(data.TriggeringRecordTypes.First());
-        }
         else if (loqui != null)
         {
             if (loqui.TargetObjectGeneration != null)
             {
-                data.TriggeringRecordSetAccessor = $"{loqui.TargetObjectGeneration.RegistrationName}.TriggerSpecs";
+                var all = await GetAllRecordTypes(loqui.TargetObjectGeneration).ToArrayAsync();
+                if (all.Length > 0 && loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group)
+                {
+                    data.TriggeringRecordSetAccessor = $"{loqui.TargetObjectGeneration.RegistrationName}.TriggerSpecs";
+                }
+                else if (data.TriggeringRecordAccessors.Count == 1)
+                {
+                    data.TriggeringRecordSetAccessor = obj.RecordTypeHeaderName(data.TriggeringRecordTypes.First());
+                }
             }
             else if (data.TriggeringRecordAccessors.Count == 1)
             {
                 data.TriggeringRecordSetAccessor = data.TriggeringRecordAccessors.First();
             }
+        }
+        else if (data.TriggeringRecordTypes.Count == 1
+            && data.SubLoquiTypes.Count == 0)
+        {
+            data.TriggeringRecordSetAccessor = obj.RecordTypeHeaderName(data.TriggeringRecordTypes.First());
         }
     }
 

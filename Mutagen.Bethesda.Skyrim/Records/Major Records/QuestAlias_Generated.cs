@@ -3745,7 +3745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.COCT,
-                            triggeringRecord: RecordTypes.CNTO,
+                            triggeringRecord: ContainerEntry_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: ContainerEntry.TryCreateFromBinary)
                         .CastExtendedList<ContainerEntry>();
@@ -4156,7 +4156,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        trigger: RecordTypes.CNTO,
+                        trigger: ContainerEntry_Registration.TriggerSpecs,
                         countType: RecordTypes.COCT,
                         parseParams: parseParams,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
