@@ -16,8 +16,8 @@
 		<FormLink name="CloseSound" refName="SoundDescriptor" recordType="ANAM" />
 		<FormLink name="LoopSound" refName="SoundDescriptor" recordType="BNAM" />
 		<Enum name="Flags" enumName="Door.Flag" byteLength="1" recordType="FNAM" nullable="False" />
-		<String name="AlternateTextOpen" recordType="ONAM" translated="DL" />
-		<String name="AlternateTextClose" recordType="CNAM" translated="DL" />
+		<String name="AlternateTextOpen" recordType="ONAM" translated="Normal" />
+		<String name="AlternateTextClose" recordType="CNAM" translated="Normal" />
 	</Fields>
 	<LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IStaticObject</LinkInterface>

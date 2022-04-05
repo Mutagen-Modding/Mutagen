@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Faction" recordType="FACT" objType="Record" baseClass="Fallout4MajorRecord" GUID="83706bf6-d13c-488f-9a03-71aef37baf12" ID="70">
     <Fields>
-      <String name="Name" recordType="FULL"/>
+      <String name="Name" recordType="FULL" translated="Normal" />
       <RefList name="Relations" refName="Relation" />
       <Enum name="Flags" recordType="DATA" enumName="Faction.FactionFlag" byteLength="4" nullable="False" />
       <FormLink name="ExteriorJailMarker" recordType="JAIL" refName="PlacedObject" />

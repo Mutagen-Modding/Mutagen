@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Class" recordType="CLAS" objType="Record" baseClass="Fallout4MajorRecord" GUID="52233944-872e-4364-bf4d-9253df4d2bf4" ID="53">
     <Fields>
-      <String name="Name" recordType="FULL" />
+      <String name="Name" recordType="FULL" translated="Normal" />
       <String name="Description" recordType="DESC" nullable="False" />
       <String name="Icon" recordType="ICON" />
 	  <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
