@@ -8,81 +8,80 @@ using Noggog.Testing.AutoFixture.Testing;
 using NSubstitute;
 using Xunit;
 
-namespace Mutagen.Bethesda.Core.UnitTests.AutoData
+namespace Mutagen.Bethesda.UnitTests.AutoData;
+
+public class ModPathParameterBuilderTests
 {
-    public class ModPathParameterBuilderTests
+    class NonInteresting
     {
-        class NonInteresting
+        public void NormalName(ModPath path)
         {
-            public void NormalName(ModPath path)
-            {
-            }
         }
+    }
         
-        [Theory, BasicAutoData]
-        public void QueryingNonInterestingNameReturnsNoSpecimen(
-            ISpecimenContext context,
-            ModPathParameterBuilder sut)
+    [Theory, BasicAutoData]
+    public void QueryingNonInterestingNameReturnsNoSpecimen(
+        ISpecimenContext context,
+        ModPathParameterBuilder sut)
+    {
+        foreach (var method in typeof(NonInteresting).Methods())
         {
-            foreach (var method in typeof(NonInteresting).Methods())
-            {
-                var param = method.GetParameters().First();
-                sut.Create(param, context)
-                    .Should().BeOfType<NoSpecimen>();
-            }
+            var param = method.GetParameters().First();
+            sut.Create(param, context)
+                .Should().BeOfType<NoSpecimen>();
         }
+    }
         
-        class ExistingName
+    class ExistingName
+    {
+        public void Start(ModPath existingName)
         {
-            public void Start(ModPath existingName)
-            {
-            }
+        }
             
-            public void End(ModPath nameExisting)
-            {
-            }
+        public void End(ModPath nameExisting)
+        {
+        }
             
-            public void Sandwich(ModPath nameExistingName)
-            {
-            }
-        }
-        
-        [Theory, BasicAutoData]
-        public void ExistingNameQueriesModPath(
-            FilePath filePath,
-            ModKey modKey,
-            ISpecimenContext context,
-            ModPathParameterBuilder sut)
+        public void Sandwich(ModPath nameExistingName)
         {
-            var modPath = new ModPath(modKey, filePath);
-            context.MockToReturn(modPath);
-            foreach (var method in typeof(ExistingName).Methods())
-            {
-                var param = method.GetParameters().First();
-                context.ClearReceivedCalls();
-                sut.Create(param, context);
-                context.ShouldHaveCreated<ModPath>();
-            }
         }
+    }
         
-        [Theory, BasicAutoData]
-        public void ExistingNameCallsToMakeExist(
-            FilePath filePath,
-            ModKey modKey,
-            ISpecimenContext context,
-            ModPathParameterBuilder sut)
+    [Theory, BasicAutoData]
+    public void ExistingNameQueriesModPath(
+        FilePath filePath,
+        ModKey modKey,
+        ISpecimenContext context,
+        ModPathParameterBuilder sut)
+    {
+        var modPath = new ModPath(modKey, filePath);
+        context.MockToReturn(modPath);
+        foreach (var method in typeof(ExistingName).Methods())
         {
-            var modPath = new ModPath(modKey, filePath);
-            context.MockToReturn(modPath);
-            foreach (var method in typeof(ExistingName).Methods())
-            {
-                var param = method.GetParameters().First();
-                sut.MakeModExist.ClearReceivedCalls();
-                ModPath mk = (ModPath)sut.Create(param, context);
-                sut.MakeModExist
-                    .Received(1)
-                    .MakeExist(mk, context);
-            }
+            var param = method.GetParameters().First();
+            context.ClearReceivedCalls();
+            sut.Create(param, context);
+            context.ShouldHaveCreated<ModPath>();
+        }
+    }
+        
+    [Theory, BasicAutoData]
+    public void ExistingNameCallsToMakeExist(
+        FilePath filePath,
+        ModKey modKey,
+        ISpecimenContext context,
+        ModPathParameterBuilder sut)
+    {
+        var modPath = new ModPath(modKey, filePath);
+        context.MockToReturn(modPath);
+        foreach (var method in typeof(ExistingName).Methods())
+        {
+            var param = method.GetParameters().First();
+            sut.MakeModExist.ClearReceivedCalls();
+            ModPath mk = (ModPath)sut.Create(param, context);
+            sut.MakeModExist
+                .Received(1)
+                .MakeExist(mk, context);
         }
     }
 }

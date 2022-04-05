@@ -7,7 +7,7 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using Xunit;
 
-namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Binary;
+namespace Mutagen.Bethesda.UnitTests.Plugins.Binary;
 
 public class BinaryOverlayTests
 {

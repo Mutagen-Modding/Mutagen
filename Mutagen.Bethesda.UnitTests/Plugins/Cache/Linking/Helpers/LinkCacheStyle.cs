@@ -1,8 +1,7 @@
-﻿namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers
+﻿namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers;
+
+public enum LinkCacheStyle
 {
-    public enum LinkCacheStyle
-    {
-        HasCaching,
-        OnlyDirect
-    }
+    HasCaching,
+    OnlyDirect
 }

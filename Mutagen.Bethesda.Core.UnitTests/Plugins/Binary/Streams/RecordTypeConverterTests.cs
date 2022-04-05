@@ -4,7 +4,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Xunit;
 
-namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Binary.Streams;
+namespace Mutagen.Bethesda.UnitTests.Plugins.Binary.Streams;
 
 public class RecordTypeConverterTests
 {

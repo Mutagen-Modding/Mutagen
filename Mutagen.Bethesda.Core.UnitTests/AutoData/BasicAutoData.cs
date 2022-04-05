@@ -2,21 +2,20 @@
 using AutoFixture.AutoNSubstitute;
 using AutoFixture.Xunit2;
 
-namespace Mutagen.Bethesda.Core.UnitTests.AutoData
+namespace Mutagen.Bethesda.UnitTests.AutoData;
+
+public class BasicAutoData : AutoDataAttribute
 {
-    public class BasicAutoData : AutoDataAttribute
-    {
-        public BasicAutoData()
-            : base(() =>
-            {
-                var ret = new Fixture();
-                ret.Customize(new AutoNSubstituteCustomization()
-                {
-                    ConfigureMembers = true
-                });
-                return ret;
-            })
+    public BasicAutoData()
+        : base(() =>
         {
-        }
+            var ret = new Fixture();
+            ret.Customize(new AutoNSubstituteCustomization()
+            {
+                ConfigureMembers = true
+            });
+            return ret;
+        })
+    {
     }
 }

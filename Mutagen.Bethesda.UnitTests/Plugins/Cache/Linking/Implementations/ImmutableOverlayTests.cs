@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reactive.Disposables;
-using Mutagen.Bethesda.Core.UnitTests;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Cache;

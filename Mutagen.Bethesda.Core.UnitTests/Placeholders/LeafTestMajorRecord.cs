@@ -1,10 +1,9 @@
-﻿namespace Mutagen.Bethesda.Core.UnitTests.Placeholders
-{
-    public interface ILeafTestMajorRecordGetter : ITestMajorRecordGetter
-    {
-    }
+﻿namespace Mutagen.Bethesda.UnitTests.Placeholders;
 
-    public interface ILeafTestMajorRecord : ITestMajorRecord
-    {
-    }
+public interface ILeafTestMajorRecordGetter : ITestMajorRecordGetter
+{
+}
+
+public interface ILeafTestMajorRecord : ITestMajorRecord
+{
 }

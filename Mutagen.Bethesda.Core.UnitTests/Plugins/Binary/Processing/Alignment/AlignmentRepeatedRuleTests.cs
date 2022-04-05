@@ -9,7 +9,7 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using Xunit;
 
-namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Binary.Processing.Alignment;
+namespace Mutagen.Bethesda.UnitTests.Plugins.Binary.Processing.Alignment;
 
 public class AlignmentRepeatedRuleTests
 {

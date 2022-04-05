@@ -3,18 +3,17 @@ using Mutagen.Bethesda.Installs.DI;
 using Noggog;
 using Xunit;
 
-namespace Mutagen.Bethesda.Core.UnitTests.Installs
+namespace Mutagen.Bethesda.UnitTests.Installs;
+
+public class GamesDictCompleteness
 {
-    public class GamesDictCompleteness
+    [Fact]
+    public void GameDictCompleteness()
     {
-        [Fact]
-        public void GameDictCompleteness()
+        foreach (var rel in EnumExt.GetValues<GameRelease>())
         {
-            foreach (var rel in EnumExt.GetValues<GameRelease>())
-            {
-                GameLocator.Games.ContainsKey(rel)
-                    .Should().BeTrue();
-            }
+            GameLocator.Games.ContainsKey(rel)
+                .Should().BeTrue();
         }
     }
 }
