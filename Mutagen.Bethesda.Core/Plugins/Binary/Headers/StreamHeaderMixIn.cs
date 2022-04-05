@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if SubrecordHeader was retrieved</returns>
-        public static bool TryReadMajorRecord<TStream>(this TStream stream, GameConstants constants, RecordType targetType, out MajorRecordHeader header, int offset = 0, bool readSafe = true)
+        public static bool TryReadMajorRecord<TStream>(this TStream stream, GameConstants constants,RecordType targetType,  out MajorRecordHeader header, int offset = 0, bool readSafe = true)
             where TStream : IBinaryReadStream
         {
             if (stream.Remaining < constants.MajorConstants.HeaderLength + offset)
@@ -514,12 +514,24 @@ namespace Mutagen.Bethesda
         /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
+        /// <param name="automaticallyDecompress">Whether to automatically decompress when applicable</param>
         /// <returns>A MajorRecordFrame struct</returns>
-        public static MajorRecordFrame GetMajorRecordFrame<TStream>(this TStream stream, GameConstants constants, int offset = 0, bool readSafe = true)
+        public static MajorRecordFrame GetMajorRecordFrame<TStream>(
+            this TStream stream, 
+            GameConstants constants,
+            int offset = 0,
+            bool readSafe = true,
+            bool automaticallyDecompress = false)
             where TStream : IBinaryReadStream
         {
             var meta = GetMajorRecord(stream, constants, offset, readSafe: readSafe);
-            return new MajorRecordFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), offset: offset, readSafe: readSafe));
+            var ret = new MajorRecordFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), offset: offset, readSafe: readSafe));
+            if (automaticallyDecompress && ret.IsCompressed)
+            {
+                return ret.Decompress(out _);
+            }
+
+            return ret;
         }
 
         /// <summary>
@@ -550,12 +562,23 @@ namespace Mutagen.Bethesda
         /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
+        /// <param name="automaticallyDecompress">Whether to automatically decompress when applicable</param>
         /// <returns>A MajorRecordFrame struct</returns>
-        public static MajorRecordFrame ReadMajorRecordFrame<TStream>(this TStream stream, GameConstants constants, bool readSafe = true)
+        public static MajorRecordFrame ReadMajorRecordFrame<TStream>(
+            this TStream stream, 
+            GameConstants constants, 
+            bool readSafe = true,
+            bool automaticallyDecompress = false)
             where TStream : IBinaryReadStream
         {
             var meta = GetMajorRecord(stream, constants, offset: 0, readSafe: readSafe);
-            return new MajorRecordFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength), readSafe: readSafe));
+            var ret = new MajorRecordFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength), readSafe: readSafe));
+            if (automaticallyDecompress && ret.IsCompressed)
+            {
+                return ret.Decompress(out _);
+            }
+
+            return ret;
         }
 
         /// <summary>
@@ -1342,11 +1365,16 @@ namespace Mutagen.Bethesda
         /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
+        /// <param name="automaticallyDecompress">Whether to automatically decompress when applicable</param>
         /// <returns>A MajorRecordFrame struct</returns>
-        public static MajorRecordFrame GetMajorRecordFrame<TStream>(this TStream stream, int offset = 0, bool readSafe = true)
+        public static MajorRecordFrame GetMajorRecordFrame<TStream>(
+            this TStream stream,
+            int offset = 0,
+            bool readSafe = true, 
+            bool automaticallyDecompress = false)
             where TStream : IMutagenReadStream
         {
-            return GetMajorRecordFrame(stream, stream.MetaData.Constants, offset: offset, readSafe: readSafe);
+            return GetMajorRecordFrame(stream, stream.MetaData.Constants, offset: offset, readSafe: readSafe, automaticallyDecompress: automaticallyDecompress);
         }
 
         /// <summary>
@@ -1358,11 +1386,15 @@ namespace Mutagen.Bethesda
         /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
+        /// <param name="automaticallyDecompress">Whether to automatically decompress when applicable</param>
         /// <returns>A MajorRecordFrame struct</returns>
-        public static MajorRecordFrame ReadMajorRecordFrame<TStream>(this TStream stream, bool readSafe = true)
+        public static MajorRecordFrame ReadMajorRecordFrame<TStream>(
+            this TStream stream,
+            bool readSafe = true, 
+            bool automaticallyDecompress = false)
             where TStream : IMutagenReadStream
         {
-            return ReadMajorRecordFrame(stream, stream.MetaData.Constants, readSafe: readSafe);
+            return ReadMajorRecordFrame(stream, stream.MetaData.Constants, readSafe: readSafe, automaticallyDecompress: automaticallyDecompress);
         }
 
         /// <summary>

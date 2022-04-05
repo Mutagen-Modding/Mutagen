@@ -6,6 +6,7 @@ using System.Buffers.Binary;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Headers
 {
@@ -323,6 +324,23 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
         public IEnumerator<SubrecordPinFrame> GetEnumerator() => HeaderExt.EnumerateSubrecords(this).GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public MajorRecordFrame Decompress(out byte[] rawDecompressedBytes)
+        {
+            // ToDo
+            // Copy less bytes around with some better API calls
+            var resultLen = BinaryPrimitives.ReadUInt32LittleEndian(Content);
+            rawDecompressedBytes = Decompression.Decompress(Content.Slice(4).ToArray(), resultLen);
+            var resultBytes = new byte[HeaderData.Length + rawDecompressedBytes.Length];
+            HeaderData.Span.CopyTo(resultBytes);
+            BinaryPrimitives.WriteUInt32LittleEndian(
+                resultBytes.AsSpan(4),
+                (uint)rawDecompressedBytes.Length);
+            rawDecompressedBytes.AsSpan().CopyTo(resultBytes.AsSpan(HeaderData.Length));
+            return new MajorRecordFrame(
+                Header.Meta, 
+                resultBytes);
+        }
 
         #region Header Forwarding
         /// <summary>

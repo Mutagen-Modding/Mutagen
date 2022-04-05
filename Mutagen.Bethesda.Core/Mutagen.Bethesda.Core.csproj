@@ -180,6 +180,7 @@
     <Compile Include="Plugins\Binary\Processing\Alignment\ModRecordAligner.cs" />
     <Compile Include="Plugins\Binary\Processing\ModGroupMerger.cs" />
     <Compile Include="Plugins\Binary\Processing\ModTrimmer.cs" />
+    <Compile Include="Plugins\Binary\Streams\Decompression.cs" />
     <Compile Include="Plugins\Binary\Streams\EncodingBundle.cs" />
     <Compile Include="Plugins\Binary\Translations\Array2dBinaryTranslation.cs">
       <CodeLanguage>cs</CodeLanguage>
