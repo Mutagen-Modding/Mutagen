@@ -33,6 +33,31 @@ namespace Mutagen.Bethesda.Environments
 
             return GameEnvironmentState<TModSetter, TModGetter>.Construct(release, gameFolderPath, linkCachePrefs);
         }
+
+        public IGameEnvironmentState<TModGetter> Construct<TModGetter>(
+            GameRelease release,
+            LinkCachePreferences? linkCachePrefs = null)
+            where TModGetter : class, IModGetter
+        {
+            if (!GameLocations.TryGetGameFolder(release, out var gameFolderPath))
+            {
+                throw new ArgumentException($"Could not find game folder automatically.");
+            }
+
+            return GameEnvironmentState<TModGetter>.Construct(release, gameFolderPath, linkCachePrefs);
+        }
+
+        public IGameEnvironmentState Construct(
+            GameRelease release,
+            LinkCachePreferences? linkCachePrefs = null)
+        {
+            if (!GameLocations.TryGetGameFolder(release, out var gameFolderPath))
+            {
+                throw new ArgumentException($"Could not find game folder automatically.");
+            }
+
+            return GameEnvironmentState.Construct(release, gameFolderPath, linkCachePrefs);
+        }
     }
 
     public interface IGameEnvironmentState : IDisposable
@@ -80,11 +105,122 @@ namespace Mutagen.Bethesda.Environments
     /// <summary>
     /// A class housing commonly used utilities when interacting with a game environment
     /// </summary>
-    public class GameEnvironmentState<TMod> : 
-        IDataDirectoryProvider, 
+    public class GameEnvironmentState :
+        IDataDirectoryProvider,
         IPluginListingsPathProvider,
         ICreationClubListingsPathProvider,
-        IGameEnvironmentState<TMod> 
+        IGameEnvironmentState
+    {
+        private readonly bool _dispose;
+
+        public DirectoryPath DataFolderPath { get; }
+
+        public GameRelease GameRelease { get; }
+        public FilePath LoadOrderFilePath { get; }
+
+        public FilePath? CreationClubListingsFilePath { get; }
+
+        public ILinkCache LinkCache { get; }
+
+        public ILoadOrderGetter<IModListingGetter<IModGetter>> LoadOrder { get; }
+
+        public GameEnvironmentState(
+            GameRelease gameRelease,
+            DirectoryPath dataFolderPath,
+            FilePath loadOrderFilePath,
+            FilePath? creationClubListingsFilePath,
+            ILoadOrder<IModListingGetter<IModGetter>> loadOrder,
+            ILinkCache linkCache,
+            bool dispose = true)
+        {
+            GameRelease = gameRelease;
+            LoadOrderFilePath = loadOrderFilePath;
+            DataFolderPath = dataFolderPath;
+            CreationClubListingsFilePath = creationClubListingsFilePath;
+            LoadOrder = loadOrder;
+            LinkCache = linkCache;
+            _dispose = dispose;
+        }
+
+        public void Dispose()
+        {
+            if (!_dispose) return;
+            LoadOrder.Dispose();
+            LinkCache.Dispose();
+        }
+
+        public static IGameEnvironmentState Construct(
+            GameRelease release,
+            DirectoryPath gameFolder,
+            LinkCachePreferences? linkCachePrefs = null)
+        {
+            var dataDirectory = new DataDirectoryInjection(Path.Combine(gameFolder, "Data"));
+            var gameReleaseInjection = new GameReleaseInjection(release);
+            var pluginRawListingsReader = new PluginRawListingsReader(
+                IFileSystemExt.DefaultFilesystem,
+                new PluginListingsParser(
+                    new ModListingParser(
+                        new HasEnabledMarkersProvider(
+                            gameReleaseInjection))));
+            var category = new GameCategoryContext(gameReleaseInjection);
+            var pluginListingsPathProvider = new PluginListingsPathProvider(gameReleaseInjection);
+            var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
+                category,
+                new CreationClubEnabledProvider(
+                    category),
+                new GameDirectoryInjection(gameFolder));
+            return new GameEnvironmentProvider<IModGetter>(
+                    gameReleaseInjection,
+                    new LoadOrderImporter<IModGetter>(
+                        IFileSystemExt.DefaultFilesystem,
+                        dataDirectory,
+                        new LoadOrderListingsProvider(
+                            new OrderListings(),
+                            new ImplicitListingsProvider(
+                                IFileSystemExt.DefaultFilesystem,
+                                dataDirectory,
+                                new ImplicitListingModKeyProvider(
+                                    gameReleaseInjection)),
+                            new PluginListingsProvider(
+                                gameReleaseInjection,
+                                new TimestampedPluginListingsProvider(
+                                    new TimestampAligner(IFileSystemExt.DefaultFilesystem),
+                                    new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
+                                    pluginRawListingsReader,
+                                    dataDirectory,
+                                    pluginListingsPathProvider),
+                                new EnabledPluginListingsProvider(
+                                    pluginRawListingsReader,
+                                    pluginListingsPathProvider)),
+                            new CreationClubListingsProvider(
+                                IFileSystemExt.DefaultFilesystem,
+                                dataDirectory,
+                                creationClubListingsPathProvider,
+                                new CreationClubRawListingsReader())),
+                        new ModImporter(
+                            IFileSystemExt.DefaultFilesystem,
+                            gameReleaseInjection)),
+                    dataDirectory,
+                    pluginListingsPathProvider,
+                    creationClubListingsPathProvider)
+                .Construct();
+        }
+
+        DirectoryPath IDataDirectoryProvider.Path => DataFolderPath;
+
+        FilePath IPluginListingsPathProvider.Path => LoadOrderFilePath;
+
+        FilePath? ICreationClubListingsPathProvider.Path => CreationClubListingsFilePath;
+    }
+
+    /// <summary>
+    /// A class housing commonly used utilities when interacting with a game environment
+    /// </summary>
+    public class GameEnvironmentState<TMod> :
+        IDataDirectoryProvider,
+        IPluginListingsPathProvider,
+        ICreationClubListingsPathProvider,
+        IGameEnvironmentState<TMod>
         where TMod : class, IModGetter
     {
         private readonly bool _dispose;
@@ -97,7 +233,7 @@ namespace Mutagen.Bethesda.Environments
         public FilePath? CreationClubListingsFilePath { get; }
 
         public ILoadOrder<IModListing<TMod>> LoadOrder { get; }
-        
+
         public ILinkCache LinkCache { get; }
 
         public GameEnvironmentState(
@@ -161,7 +297,7 @@ namespace Mutagen.Bethesda.Environments
                                 gameReleaseInjection,
                                 new TimestampedPluginListingsProvider(
                                     new TimestampAligner(IFileSystemExt.DefaultFilesystem),
-                                    new TimestampedPluginListingsPreferences() {ThrowOnMissingMods = false},
+                                    new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
                                     pluginRawListingsReader,
                                     dataDirectory,
                                     pluginListingsPathProvider),

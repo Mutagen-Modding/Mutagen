@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO.Abstractions;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Strings;
@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Plugins.Records.DI
         TMod Import(ModPath modPath, StringsReadParameters? stringsParam = null);
     }
 
-    public class ModImporter : IModImporter
+    public class ModImporter : IModImporter, IModImporter<IModGetter>
     {
         private readonly IFileSystem _fileSystem;
         private readonly IGameReleaseContext _gameRelease;
