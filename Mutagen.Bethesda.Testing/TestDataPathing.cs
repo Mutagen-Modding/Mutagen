@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
+using Noggog;
 
 namespace Mutagen.Bethesda.Testing;
 
@@ -41,6 +42,11 @@ public class TestDataPathing
     public static string SubgraphOutOfOrder = "Files/Fallout4/SubgraphOutOfOrder.esp";
     public static string SkyrimConditionWithTwoStrings = "Files/Skyrim/ConditionWithTwoStrings.esp";
     public static string CountDisagreesWithReality = "Files/Core/CountDisagreesWithReality.esp";
+
+    public static byte[] GetBytes(FilePath path)
+    {
+        return File.ReadAllBytes(path);
+    }
 
     public static MutagenFrame GetReadFrame(ModPath path, GameRelease release, ModKey? modKey = null)
     {

@@ -62,4 +62,19 @@
         </Content>
     </ItemGroup>
 
+    <ItemGroup>
+        <None Update="Plugins\Binary\Headers\MajorBytes">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Plugins\Binary\Headers\EnumerateSubrecordsDirect">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Plugins\Binary\Headers\EnumerateSubrecordsDirectWithOverflow">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Plugins\Binary\Headers\ModHeaderOverflow">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
 </Project>
