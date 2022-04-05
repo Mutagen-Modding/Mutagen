@@ -575,22 +575,12 @@ public static class HeaderExt
         }
     }
 
-    internal static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(ReadOnlyMemorySlice<byte> span, GameConstants meta, int loc)
-    {
-        while (loc < span.Length)
-        {
-            var subHeader = new SubrecordPinFrame(meta, span.Slice(loc), loc);
-            yield return subHeader;
-            loc += subHeader.TotalLength;
-        }
-    }
-
-    internal static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(ReadOnlyMemorySlice<byte> span, GameConstants meta, int loc, ICollection<RecordType> lengthOverflowTypes)
+    internal static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(ReadOnlyMemorySlice<byte> span, GameConstants meta, int loc, ICollection<RecordType>? lengthOverflowTypes = null)
     {
         while (loc < span.Length)
         {
             var subFrame = new SubrecordPinFrame(meta, span.Slice(loc), loc);
-            if (lengthOverflowTypes.Contains(subFrame.RecordType))
+            if (lengthOverflowTypes?.Contains(subFrame.RecordType) ?? false)
             { // Length overflow record
                 var nextLen = subFrame.AsUInt32();
                 loc += subFrame.TotalLength;
@@ -606,49 +596,15 @@ public static class HeaderExt
     }
 
     /// <summary>
-    /// Enumerates locations of the contained subrecords.<br/>
-    /// Locations are relative to the RecordType of the MajorRecordFrame.
-    /// </summary>
-    /// <param name="majorFrame">MajorRecordFrame to iterate</param>
-    public static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(this MajorRecordFrame majorFrame) => EnumerateSubrecords(majorFrame.HeaderAndContentData, majorFrame.Meta, majorFrame.HeaderLength);
-
-    /// <summary>
-    /// Enumerates locations of the contained subrecords, while considering some specified RecordTypes as special length overflow subrecords.<br/>
-    /// These length overflow subrecords will be skipped, and simply used to parse the next subrecord properly.<br />
-    /// Locations are relative to the RecordType of the MajorRecordFrame.
-    /// </summary>
-    /// <param name="majorFrame">MajorRecordFrame to iterate</param>
-    /// <param name="lengthOverflowTypes">Known RecordTypes that signify a length overflow subrecord</param>
-    public static IEnumerable<SubrecordPinFrame> EnumerateSubrecordsWithLengthOverflow(this MajorRecordFrame majorFrame, params RecordType[] lengthOverflowTypes)
-    {
-        return EnumerateSubrecords(majorFrame, (ICollection<RecordType>)lengthOverflowTypes.ToHashSet());
-    }
-
-    /// <summary>
     /// Enumerates locations of the contained subrecords, while considering some specified RecordTypes as special length overflow subrecords.<br/>
     /// These length overflow subrecords will be skipped, and simply used to parse the next subrecord properly.<br />
     /// Locations are relative to the RecordType of the MajorRecordFrame.
     /// </summary>
     /// <param name="majorFrame">MajorRecordFrame to iterate</param>
     /// <param name="lengthOverflowTypes">Collection of known RecordTypes that signify a length overflow subrecord</param>
-    public static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(this MajorRecordFrame majorFrame, ICollection<RecordType> lengthOverflowTypes)
+    public static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(this MajorRecordFrame majorFrame, ICollection<RecordType>? lengthOverflowTypes = null)
     {
-        int loc = majorFrame.HeaderLength;
-        while (loc < majorFrame.HeaderAndContentData.Length)
-        {
-            var subFrame = new SubrecordPinFrame(majorFrame.Meta, majorFrame.HeaderAndContentData.Slice(loc), loc);
-            if (lengthOverflowTypes.Contains(subFrame.RecordType))
-            { // Length overflow record
-                var nextLen = subFrame.AsUInt32();
-                loc += subFrame.TotalLength;
-                var span = majorFrame.HeaderAndContentData.Slice(loc, checked((int)(nextLen + majorFrame.Meta.SubConstants.HeaderLength)));
-                var subHeader = new SubrecordHeader(majorFrame.Meta, span);
-                yield return SubrecordPinFrame.FactoryNoTrim(subHeader, span, loc);
-                continue;
-            }
-            yield return subFrame;
-            loc += subFrame.TotalLength;
-        }
+        return EnumerateSubrecords(majorFrame.HeaderAndContentData, majorFrame.Meta, majorFrame.HeaderLength, lengthOverflowTypes ?? _headerOverflow);
     }
 
     private static readonly ICollection<RecordType> _headerOverflow = new List<RecordType>() { RecordTypes.XXXX };
@@ -656,15 +612,16 @@ public static class HeaderExt
     /// <summary>
     /// Enumerates locations of the contained subrecords.<br/>
     /// Locations are relative to the RecordType of the ModHeaderFrame.
+    /// <param name="lengthOverflowTypes">Collection of known RecordTypes that signify a length overflow subrecord</param>
     /// </summary>
-    public static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(this ModHeaderFrame modHeader)
+    public static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(this ModHeaderFrame modHeader, ICollection<RecordType>? lengthOverflowTypes = null)
     {
-        return EnumerateSubrecords(modHeader.HeaderAndContentData, modHeader.Meta, modHeader.HeaderLength, _headerOverflow);
+        return EnumerateSubrecords(modHeader.HeaderAndContentData, modHeader.Meta, modHeader.HeaderLength, lengthOverflowTypes ?? _headerOverflow);
     }
 
     public static IEnumerable<SubrecordPinFrame> Masters(this ModHeaderFrame modHeader)
     {
-        foreach (var pin in EnumerateSubrecords(modHeader))
+        foreach (var pin in EnumerateSubrecords(modHeader, lengthOverflowTypes: Array.Empty<RecordType>()))
         {
             if (pin.RecordType == RecordTypes.MAST)
             {
