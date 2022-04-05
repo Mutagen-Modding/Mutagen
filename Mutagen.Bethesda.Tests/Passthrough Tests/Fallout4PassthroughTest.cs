@@ -105,6 +105,22 @@ namespace Mutagen.Bethesda.Tests
                 RecordTypes.DATA,
                 RecordTypes.SNAM
             });
+            ret.AddAlignments(
+                RecordTypes.LVLI,
+                RecordTypes.EDID,
+                RecordTypes.OBND,
+                RecordTypes.LVLD,
+                RecordTypes.LVLM,
+                RecordTypes.LVLF
+            );
+            ret.StopMarkers.Add(RecordTypes.LVLI, new[]
+            {
+                RecordTypes.LVLG,
+                RecordTypes.LLCT,
+                RecordTypes.LLKC,
+                RecordTypes.LVSG,
+                RecordTypes.ONAM,
+            });
             return ret;
         }
 

@@ -79,7 +79,9 @@ namespace Mutagen.Bethesda.Fallout4
         public Byte ChanceNone { get; set; } = default;
         #endregion
         #region MaxCount
-        public Byte MaxCount { get; set; } = default;
+        public Byte? MaxCount { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Byte? ILeveledItemGetter.MaxCount => this.MaxCount;
         #endregion
         #region Flags
         public LeveledItem.Flag Flags { get; set; } = default;
@@ -950,7 +952,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }
-        new Byte MaxCount { get; set; }
+        new Byte? MaxCount { get; set; }
         new LeveledItem.Flag Flags { get; set; }
         new IFormLinkNullable<IGlobalGetter> Global { get; set; }
         new ExtendedList<LeveledItemEntry>? Entries { get; set; }
@@ -986,7 +988,7 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Byte ChanceNone { get; }
-        Byte MaxCount { get; }
+        Byte? MaxCount { get; }
         LeveledItem.Flag Flags { get; }
         IFormLinkNullableGetter<IGlobalGetter> Global { get; }
         IReadOnlyList<ILeveledItemEntryGetter>? Entries { get; }
@@ -1445,9 +1447,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 fg.AppendItem(item.ChanceNone, "ChanceNone");
             }
-            if (printMask?.MaxCount ?? true)
+            if ((printMask?.MaxCount ?? true)
+                && item.MaxCount is {} MaxCountItem)
             {
-                fg.AppendItem(item.MaxCount, "MaxCount");
+                fg.AppendItem(MaxCountItem, "MaxCount");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1622,7 +1625,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
             hash.Add(item.ChanceNone);
-            hash.Add(item.MaxCount);
+            if (item.MaxCount is {} MaxCountitem)
+            {
+                hash.Add(MaxCountitem);
+            }
             hash.Add(item.Flags);
             hash.Add(item.Global);
             hash.Add(item.Entries);
@@ -2034,7 +2040,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 item: item.ChanceNone,
                 header: translationParams.ConvertToCustom(RecordTypes.LVLD));
-            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.MaxCount,
                 header: translationParams.ConvertToCustom(RecordTypes.LVLM));
@@ -2081,7 +2087,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item.OverrideName,
                 header: translationParams.ConvertToCustom(RecordTypes.ONAM),
                 binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.DL);
+                source: StringsSource.Normal);
         }
 
         public void Write(
@@ -2240,7 +2246,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OverrideName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        source: StringsSource.DL,
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)LeveledItem_FieldIndex.OverrideName;
                 }
@@ -2313,7 +2319,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region MaxCount
         private int? _MaxCountLocation;
-        public Byte MaxCount => _MaxCountLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MaxCountLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
+        public Byte? MaxCount => _MaxCountLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MaxCountLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
         #endregion
         #region Flags
         private int? _FlagsLocation;
@@ -2331,7 +2337,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region OverrideName
         private int? _OverrideNameLocation;
-        public ITranslatedStringGetter? OverrideName => _OverrideNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _OverrideNameLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? OverrideName => _OverrideNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _OverrideNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

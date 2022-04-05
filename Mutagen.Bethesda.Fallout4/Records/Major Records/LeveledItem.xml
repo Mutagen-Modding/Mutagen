@@ -4,13 +4,13 @@
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <UInt8 name="ChanceNone" recordType="LVLD" nullable="False" />
-      <UInt8 name="MaxCount" recordType="LVLM" nullable="False" />
+      <UInt8 name="MaxCount" recordType="LVLM" />
       <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledItem.Flag" byteLength="1" />
       <FormLink name="Global" recordType="LVLG" refName="Global" />
       <RefList name="Entries" counterRecType="LLCT" refName="LeveledItemEntry" counterLength="1" />
       <RefList name="FilterKeywordChances" refName="FilterKeywordChance" recordType="LLKC" />
       <FormLink name="EpicLootChance" recordType="LVSG" refName="Global" />
-      <String name="OverrideName" recordType="ONAM" translated="DL" />
+      <String name="OverrideName" recordType="ONAM" translated="Normal" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>

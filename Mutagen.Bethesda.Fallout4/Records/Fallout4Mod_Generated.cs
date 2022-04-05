@@ -104,6 +104,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Hazards_Object = new Fallout4Group<Hazard>(this);
             _BendableSplines_Object = new Fallout4Group<BendableSpline>(this);
             _Terminals_Object = new Fallout4Group<Terminal>(this);
+            _LeveledItems_Object = new Fallout4Group<LeveledItem>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -445,6 +446,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<ITerminalGetter> IFallout4ModGetter.Terminals => _Terminals_Object;
         #endregion
+        #region LeveledItems
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<LeveledItem> _LeveledItems_Object;
+        public Fallout4Group<LeveledItem> LeveledItems => _LeveledItems_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<ILeveledItemGetter> IFallout4ModGetter.LeveledItems => _LeveledItems_Object;
+        #endregion
 
         #region To String
 
@@ -531,6 +539,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Hazards = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.BendableSplines = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Terminals = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.LeveledItems = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -581,7 +590,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Projectiles,
                 TItem Hazards,
                 TItem BendableSplines,
-                TItem Terminals)
+                TItem Terminals,
+                TItem LeveledItems)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -631,6 +641,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Hazards = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Hazards, new Fallout4Group.Mask<TItem>(Hazards));
                 this.BendableSplines = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(BendableSplines, new Fallout4Group.Mask<TItem>(BendableSplines));
                 this.Terminals = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Terminals, new Fallout4Group.Mask<TItem>(Terminals));
+                this.LeveledItems = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(LeveledItems, new Fallout4Group.Mask<TItem>(LeveledItems));
             }
 
             #pragma warning disable CS8618
@@ -690,6 +701,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Hazards { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? BendableSplines { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Terminals { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? LeveledItems { get; set; }
             #endregion
 
             #region Equals
@@ -750,6 +762,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Hazards, rhs.Hazards)) return false;
                 if (!object.Equals(this.BendableSplines, rhs.BendableSplines)) return false;
                 if (!object.Equals(this.Terminals, rhs.Terminals)) return false;
+                if (!object.Equals(this.LeveledItems, rhs.LeveledItems)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -803,6 +816,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Hazards);
                 hash.Add(this.BendableSplines);
                 hash.Add(this.Terminals);
+                hash.Add(this.LeveledItems);
                 return hash.ToHashCode();
             }
 
@@ -1051,6 +1065,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Terminals.Overall)) return false;
                     if (this.Terminals.Specific != null && !this.Terminals.Specific.All(eval)) return false;
                 }
+                if (LeveledItems != null)
+                {
+                    if (!eval(this.LeveledItems.Overall)) return false;
+                    if (this.LeveledItems.Specific != null && !this.LeveledItems.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1298,6 +1317,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Terminals.Overall)) return true;
                     if (this.Terminals.Specific != null && this.Terminals.Specific.Any(eval)) return true;
                 }
+                if (LeveledItems != null)
+                {
+                    if (eval(this.LeveledItems.Overall)) return true;
+                    if (this.LeveledItems.Specific != null && this.LeveledItems.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1360,6 +1384,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Hazards = this.Hazards == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Hazards.Overall), this.Hazards.Specific?.Translate(eval));
                 obj.BendableSplines = this.BendableSplines == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.BendableSplines.Overall), this.BendableSplines.Specific?.Translate(eval));
                 obj.Terminals = this.Terminals == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Terminals.Overall), this.Terminals.Specific?.Translate(eval));
+                obj.LeveledItems = this.LeveledItems == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.LeveledItems.Overall), this.LeveledItems.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1574,6 +1599,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Terminals?.ToString(fg);
                     }
+                    if (printMask?.LeveledItems?.Overall ?? true)
+                    {
+                        LeveledItems?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1647,6 +1676,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Hazard.ErrorMask>?>? Hazards;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<BendableSpline.ErrorMask>?>? BendableSplines;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Terminal.ErrorMask>?>? Terminals;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<LeveledItem.ErrorMask>?>? LeveledItems;
             #endregion
 
             #region IErrorMask
@@ -1751,6 +1781,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return BendableSplines;
                     case Fallout4Mod_FieldIndex.Terminals:
                         return Terminals;
+                    case Fallout4Mod_FieldIndex.LeveledItems:
+                        return LeveledItems;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1904,6 +1936,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.Terminals:
                         this.Terminals = new MaskItem<Exception?, Fallout4Group.ErrorMask<Terminal.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.LeveledItems:
+                        this.LeveledItems = new MaskItem<Exception?, Fallout4Group.ErrorMask<LeveledItem.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2059,6 +2094,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.Terminals:
                         this.Terminals = (MaskItem<Exception?, Fallout4Group.ErrorMask<Terminal.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.LeveledItems:
+                        this.LeveledItems = (MaskItem<Exception?, Fallout4Group.ErrorMask<LeveledItem.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2115,6 +2153,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Hazards != null) return true;
                 if (BendableSplines != null) return true;
                 if (Terminals != null) return true;
+                if (LeveledItems != null) return true;
                 return false;
             }
             #endregion
@@ -2197,6 +2236,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Hazards?.ToString(fg);
                 BendableSplines?.ToString(fg);
                 Terminals?.ToString(fg);
+                LeveledItems?.ToString(fg);
             }
             #endregion
 
@@ -2253,6 +2293,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Hazards = this.Hazards.Combine(rhs.Hazards, (l, r) => l.Combine(r));
                 ret.BendableSplines = this.BendableSplines.Combine(rhs.BendableSplines, (l, r) => l.Combine(r));
                 ret.Terminals = this.Terminals.Combine(rhs.Terminals, (l, r) => l.Combine(r));
+                ret.LeveledItems = this.LeveledItems.Combine(rhs.LeveledItems, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2324,6 +2365,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<Hazard.TranslationMask>? Hazards;
             public Fallout4Group.TranslationMask<BendableSpline.TranslationMask>? BendableSplines;
             public Fallout4Group.TranslationMask<Terminal.TranslationMask>? Terminals;
+            public Fallout4Group.TranslationMask<LeveledItem.TranslationMask>? LeveledItems;
             #endregion
 
             #region Ctors
@@ -2396,6 +2438,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Hazards != null ? Hazards.OnOverall : DefaultOn, Hazards?.GetCrystal()));
                 ret.Add((BendableSplines != null ? BendableSplines.OnOverall : DefaultOn, BendableSplines?.GetCrystal()));
                 ret.Add((Terminals != null ? Terminals.OnOverall : DefaultOn, Terminals?.GetCrystal()));
+                ret.Add((LeveledItems != null ? LeveledItems.OnOverall : DefaultOn, LeveledItems?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2484,6 +2527,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Hazards_Object = new Fallout4Group<Hazard>(this);
             _BendableSplines_Object = new Fallout4Group<BendableSpline>(this);
             _Terminals_Object = new Fallout4Group<Terminal>(this);
+            _LeveledItems_Object = new Fallout4Group<LeveledItem>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -2678,6 +2722,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Terminals.RecordCache.Set(rhsMod.Terminals.RecordCache.Items);
             }
+            if (mask?.LeveledItems ?? true)
+            {
+                this.LeveledItems.RecordCache.Set(rhsMod.LeveledItems.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -2735,6 +2783,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += Hazards.RecordCache.Count > 0 ? 1 : default(uint);
             count += BendableSplines.RecordCache.Count > 0 ? 1 : default(uint);
             count += Terminals.RecordCache.Count > 0 ? 1 : default(uint);
+            count += LeveledItems.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -3031,6 +3080,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<Hazard> Hazards { get; }
         new Fallout4Group<BendableSpline> BendableSplines { get; }
         new Fallout4Group<Terminal> Terminals { get; }
+        new Fallout4Group<LeveledItem> LeveledItems { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -3097,6 +3147,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IHazardGetter> Hazards { get; }
         IFallout4GroupGetter<IBendableSplineGetter> BendableSplines { get; }
         IFallout4GroupGetter<ITerminalGetter> Terminals { get; }
+        IFallout4GroupGetter<ILeveledItemGetter> LeveledItems { get; }
 
     }
 
@@ -3707,6 +3758,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Hazards = 45,
         BendableSplines = 46,
         Terminals = 47,
+        LeveledItems = 48,
     }
     #endregion
 
@@ -3724,9 +3776,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 48;
+        public const ushort AdditionalFieldCount = 49;
 
-        public const ushort FieldCount = 48;
+        public const ushort FieldCount = 49;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -3842,6 +3894,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Hazards.Clear();
             item.BendableSplines.Clear();
             item.Terminals.Clear();
+            item.LeveledItems.Clear();
         }
         
         #region Mutagen
@@ -3890,6 +3943,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Hazards.RemapLinks(mapping);
             obj.BendableSplines.RemapLinks(mapping);
             obj.Terminals.RemapLinks(mapping);
+            obj.LeveledItems.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -3971,6 +4025,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Hazards.Remove(keys);
             obj.BendableSplines.Remove(keys);
             obj.Terminals.Remove(keys);
+            obj.LeveledItems.Remove(keys);
         }
         
         public void Remove(
@@ -4410,6 +4465,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         type: type,
                         keys: keys);
                     break;
+                case "LeveledItem":
+                case "ILeveledItemGetter":
+                case "ILeveledItem":
+                case "ILeveledItemInternal":
+                    obj.LeveledItems.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
@@ -4464,6 +4527,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
@@ -4475,12 +4540,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IOutfitTarget":
                 case "IOutfitTargetGetter":
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IConstructible":
                 case "IConstructibleGetter":
@@ -4654,6 +4721,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Hazards = MaskItemExt.Factory(item.Hazards.GetEqualsMask(rhs.Hazards, include), include);
             ret.BendableSplines = MaskItemExt.Factory(item.BendableSplines.GetEqualsMask(rhs.BendableSplines, include), include);
             ret.Terminals = MaskItemExt.Factory(item.Terminals.GetEqualsMask(rhs.Terminals, include), include);
+            ret.LeveledItems = MaskItemExt.Factory(item.LeveledItems.GetEqualsMask(rhs.LeveledItems, include), include);
         }
         
         public string ToString(
@@ -4891,6 +4959,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (printMask?.Terminals?.Overall ?? true)
             {
                 item.Terminals?.ToString(fg, "Terminals");
+            }
+            if (printMask?.LeveledItems?.Overall ?? true)
+            {
+                item.LeveledItems?.ToString(fg, "LeveledItems");
             }
         }
         
@@ -5285,6 +5357,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 else if (!isTerminalsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LeveledItems) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.LeveledItems, rhs.LeveledItems, out var lhsLeveledItems, out var rhsLeveledItems, out var isLeveledItemsEqual))
+                {
+                    if (!object.Equals(lhsLeveledItems, rhsLeveledItems)) return false;
+                }
+                else if (!isLeveledItemsEqual) return false;
+            }
             return true;
         }
         
@@ -5339,6 +5419,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.Hazards);
             hash.Add(item.BendableSplines);
             hash.Add(item.Terminals);
+            hash.Add(item.LeveledItems);
             return hash.ToHashCode();
         }
         
@@ -5592,6 +5673,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "ITerminal":
                 case "ITerminalInternal":
                     return obj.Terminals;
+                case "LeveledItem":
+                case "ILeveledItemGetter":
+                case "ILeveledItem":
+                case "ILeveledItemInternal":
+                    return obj.LeveledItems;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -5616,7 +5702,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[47];
+            Stream[] outputStreams = new Stream[48];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -5665,6 +5751,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             toDo.Add(() => WriteGroupParallel(item.Hazards, 44, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.BendableSplines, 45, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Terminals, 46, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 47, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -5884,6 +5971,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
+            foreach (var item in obj.LeveledItems.ContainedFormLinks)
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -6074,6 +6165,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 yield return item;
             }
             foreach (var item in obj.Terminals.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LeveledItems.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -6535,6 +6630,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         yield return item;
                     }
                     yield break;
+                case "LeveledItem":
+                case "ILeveledItemGetter":
+                case "ILeveledItem":
+                case "ILeveledItemInternal":
+                    foreach (var item in obj.LeveledItems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout4, obj, type, out var linkInterfaces))
                     {
@@ -6979,6 +7083,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 modKey: obj.ModKey,
                 group: (m) => m.Terminals,
                 groupGetter: (m) => m.Terminals))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, LeveledItem, ILeveledItemGetter>(
+                srcGroup: obj.LeveledItems,
+                type: typeof(ILeveledItemGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LeveledItems,
+                groupGetter: (m) => m.LeveledItems))
             {
                 yield return item;
             }
@@ -7667,6 +7780,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         modKey: obj.ModKey,
                         group: (m) => m.Terminals,
                         groupGetter: (m) => m.Terminals))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LeveledItem":
+                case "ILeveledItemGetter":
+                case "ILeveledItem":
+                case "ILeveledItemInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, LeveledItem, ILeveledItemGetter>(
+                        srcGroup: obj.LeveledItems,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LeveledItems,
+                        groupGetter: (m) => m.LeveledItems))
                     {
                         yield return item;
                     }
@@ -8671,6 +8798,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LeveledItems) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.LeveledItems);
+                try
+                {
+                    item.LeveledItems.DeepCopyIn(
+                        rhs: rhs.LeveledItems,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.LeveledItems));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -8808,6 +8955,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Hazards;
         public bool BendableSplines;
         public bool Terminals;
+        public bool LeveledItems;
         public GroupMask()
         {
         }
@@ -8860,6 +9008,7 @@ namespace Mutagen.Bethesda.Fallout4
             Hazards = defaultValue;
             BendableSplines = defaultValue;
             Terminals = defaultValue;
+            LeveledItems = defaultValue;
         }
     }
 
@@ -9404,6 +9553,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)TerminalsItem).BinaryWriteTranslator).Write<ITerminalGetter>(
                         item: TerminalsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.LeveledItems ?? true)
+            {
+                var LeveledItemsItem = item.LeveledItems;
+                if (LeveledItemsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)LeveledItemsItem).BinaryWriteTranslator).Write<ILeveledItemGetter>(
+                        item: LeveledItemsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -10132,6 +10292,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     }
                     return (int)Fallout4Mod_FieldIndex.Terminals;
                 }
+                case RecordTypeInts.LVLI:
+                {
+                    if (importMask?.LeveledItems ?? true)
+                    {
+                        item.LeveledItems.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.LeveledItems;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -10528,6 +10702,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private IFallout4GroupGetter<ITerminalGetter>? _Terminals => _TerminalsLocations != null ? Fallout4GroupBinaryOverlay<ITerminalGetter>.Fallout4GroupFactory(_data, _TerminalsLocations, _package) : default;
         public IFallout4GroupGetter<ITerminalGetter> Terminals => _Terminals ?? new Fallout4Group<Terminal>(this);
         #endregion
+        #region LeveledItems
+        private List<RangeInt64>? _LeveledItemsLocations;
+        private IFallout4GroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocations != null ? Fallout4GroupBinaryOverlay<ILeveledItemGetter>.Fallout4GroupFactory(_data, _LeveledItemsLocations, _package) : default;
+        public IFallout4GroupGetter<ILeveledItemGetter> LeveledItems => _LeveledItems ?? new Fallout4Group<LeveledItem>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -10897,6 +11076,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     _TerminalsLocations ??= new();
                     _TerminalsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Terminals;
+                }
+                case RecordTypeInts.LVLI:
+                {
+                    _LeveledItemsLocations ??= new();
+                    _LeveledItemsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.LeveledItems;
                 }
                 default:
                     return default(int?);

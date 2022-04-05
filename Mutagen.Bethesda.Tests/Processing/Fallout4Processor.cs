@@ -223,6 +223,7 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "PROJ", "FULL" },
                     new RecordType[] { "HAZD", "FULL" },
                     new RecordType[] { "TERM", "FULL" },
+                    new RecordType[] { "LVLI", "ONAM" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]
