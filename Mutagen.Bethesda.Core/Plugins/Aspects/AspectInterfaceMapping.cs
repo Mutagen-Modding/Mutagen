@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Aspects;
@@ -12,7 +12,7 @@ public interface IAspectInterfaceMapGetter
     bool TryGetByFullName(string name, [MaybeNullWhen(false)] out Type type);
 }
 
-public class AspectInterfaceMapper : IAspectInterfaceMapGetter
+internal class AspectInterfaceMapper : IAspectInterfaceMapGetter
 {
     public Dictionary<GameCategory, IReadOnlyDictionary<Type, InterfaceMappingResult>> Mappings = new();
     public Dictionary<string, Type> NameToInterfaceTypeMapping = new();
@@ -77,5 +77,5 @@ public static class AspectInterfaceMapping
 
     public static IAspectInterfaceMapGetter Instance => _mapper.Value;
 
-    public static AspectInterfaceMapper InternalInstance => _mapper.Value;
+    internal static AspectInterfaceMapper InternalInstance => _mapper.Value;
 }

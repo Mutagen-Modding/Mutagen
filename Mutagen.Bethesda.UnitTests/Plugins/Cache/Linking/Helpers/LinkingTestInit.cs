@@ -1,5 +1,5 @@
 ﻿using System;
-using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers;
 

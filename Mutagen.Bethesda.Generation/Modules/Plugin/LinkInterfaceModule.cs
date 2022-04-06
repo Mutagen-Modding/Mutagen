@@ -1,8 +1,12 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System.Xml.Linq;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -113,7 +117,7 @@ public class LinkInterfaceModule : GenerationModule
         ObjectGeneration.AddAutogenerationComment(mappingGen);
         mappingGen.AppendLine($"using System;");
         mappingGen.AppendLine($"using System.Collections.Generic;");
-        mappingGen.AppendLine($"using Mutagen.Bethesda.Plugins.Records.Internals;");
+        mappingGen.AppendLine($"using Mutagen.Bethesda.Plugins.Records.Mapping;");
         mappingGen.AppendLine($"using Loqui;");
         mappingGen.AppendLine();
         using (new NamespaceWrapper(mappingGen, $"{proto.DefaultNamespace}.Internals", fileScoped: false))

@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Loqui;
 
-namespace Mutagen.Bethesda.Plugins.Records.Internals;
+namespace Mutagen.Bethesda.Plugins.Records.Mapping;
 
-public interface ILinkInterfaceMapping
+internal interface ILinkInterfaceMapping
 {
     GameCategory GameCategory { get; }
     IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes { get; } 

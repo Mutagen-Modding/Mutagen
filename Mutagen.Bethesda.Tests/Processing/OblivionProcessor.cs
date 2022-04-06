@@ -3,13 +3,13 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
 

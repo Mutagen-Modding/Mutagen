@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Mutagen.Bethesda.Plugins.Records.Internals;
+namespace Mutagen.Bethesda.Plugins.Records.Mapping;
 
 public interface ILinkInterfaceMapGetter
 {
@@ -11,7 +11,7 @@ public interface ILinkInterfaceMapGetter
     bool TryGetByFullName(string name, [MaybeNullWhen(false)] out Type type);
 }
 
-public class LinkInterfaceMapper : ILinkInterfaceMapGetter
+internal class LinkInterfaceMapper : ILinkInterfaceMapGetter
 {
     public Dictionary<GameCategory, IReadOnlyDictionary<Type, InterfaceMappingResult>> Mappings = new();
     public Dictionary<string, Type> NameToInterfaceTypeMapping = new();

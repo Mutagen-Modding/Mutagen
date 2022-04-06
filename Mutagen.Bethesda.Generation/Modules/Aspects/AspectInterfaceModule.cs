@@ -1,7 +1,11 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Loqui.Generation;
 using Noggog;
 using Loqui;
-using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda.Generation.Modules.Aspects;
 
@@ -165,7 +169,7 @@ public class AspectInterfaceModule : GenerationModule
         ObjectGeneration.AddAutogenerationComment(mappingGen);
         mappingGen.AppendLine($"using System;");
         mappingGen.AppendLine($"using System.Collections.Generic;");
-        mappingGen.AppendLine($"using Mutagen.Bethesda.Plugins.Records.Internals;");
+        mappingGen.AppendLine($"using Mutagen.Bethesda.Plugins.Records.Mapping;");
         mappingGen.AppendLine($"using Mutagen.Bethesda.Plugins.Aspects;");
         mappingGen.AppendLine($"using Loqui;");
         mappingGen.AppendLine();

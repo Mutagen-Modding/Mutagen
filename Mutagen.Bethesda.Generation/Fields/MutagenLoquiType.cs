@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Loqui;
 using Loqui.Generation;
-using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 
 namespace Mutagen.Bethesda.Generation.Fields;

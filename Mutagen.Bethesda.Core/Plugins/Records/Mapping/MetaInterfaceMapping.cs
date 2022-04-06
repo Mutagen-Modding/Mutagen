@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using Loqui;
 using Mutagen.Bethesda.Plugins.Aspects;
 
-namespace Mutagen.Bethesda.Plugins.Records.Internals;
+namespace Mutagen.Bethesda.Plugins.Records.Mapping;
 
 public interface IMetaInterfaceMapGetter
 {

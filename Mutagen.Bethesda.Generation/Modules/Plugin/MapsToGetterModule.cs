@@ -11,5 +11,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             if (obj.Abstract || !await obj.IsMajorRecord()) return;
             obj.Interfaces.Add(LoquiInterfaceDefinitionType.IGetter, $"IMapsToGetter<{obj.Interface(getter: true, internalInterface: false)}>");
         }
+
+        public override async IAsyncEnumerable<string> RequiredUsingStatements(ObjectGeneration obj)
+        {
+            yield return "Loqui.Interfaces";
+        }
     }
 }

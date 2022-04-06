@@ -7,7 +7,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Records.Internals;
 
-public class GroupMergeGetter<TGroup, TMajor> : IGroupGetter<TMajor>, IReadOnlyCache<TMajor, FormKey>
+internal class GroupMergeGetter<TGroup, TMajor> : IGroupGetter<TMajor>, IReadOnlyCache<TMajor, FormKey>
     where TGroup : class, IGroupGetter<TMajor>
     where TMajor : class, IMajorRecordGetter
 {

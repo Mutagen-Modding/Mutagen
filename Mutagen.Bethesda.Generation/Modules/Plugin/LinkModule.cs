@@ -3,433 +3,432 @@ using Loqui.Generation;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Generation.Fields;
+using Mutagen.Bethesda.Plugins.Meta;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
 
-namespace Mutagen.Bethesda.Generation.Modules.Plugin
+namespace Mutagen.Bethesda.Generation.Modules.Plugin;
+
+public class LinkModule : GenerationModule
 {
-    public class LinkModule : GenerationModule
+    public override async IAsyncEnumerable<(LoquiInterfaceType Location, string Interface)> Interfaces(ObjectGeneration obj)
     {
-        public override async IAsyncEnumerable<(LoquiInterfaceType Location, string Interface)> Interfaces(ObjectGeneration obj)
+        if (await HasLinks(obj, includeBaseClass: false) != Case.No)
         {
-            if (await HasLinks(obj, includeBaseClass: false) != Case.No)
+            yield return (LoquiInterfaceType.IGetter, $"{nameof(IFormLinkContainerGetter)}");
+            yield return (LoquiInterfaceType.ISetter, $"{nameof(IFormLinkContainer)}");
+        }
+    }
+
+    public static async Task<Case> HasLinks(LoquiType loqui, bool includeBaseClass, GenericSpecification? specifications = null)
+    {
+        if (specifications != null)
+        {
+            foreach (var target in specifications.Specifications.Values)
             {
-                yield return (LoquiInterfaceType.IGetter, $"{nameof(IFormLinkContainerGetter)}");
-                yield return (LoquiInterfaceType.ISetter, $"{nameof(IFormLinkContainer)}");
+                if (!ObjectNamedKey.TryFactory(target, out var key)) continue;
+                var specObj = loqui.ObjectGen.ProtoGen.Gen.ObjectGenerationsByObjectNameKey[key];
+                return await HasLinks(specObj, includeBaseClass);
             }
         }
-
-        public static async Task<Case> HasLinks(LoquiType loqui, bool includeBaseClass, GenericSpecification? specifications = null)
+        if (loqui.TargetObjectGeneration != null)
         {
-            if (specifications != null)
+            return await HasLinks(loqui.TargetObjectGeneration, includeBaseClass, loqui.GenericSpecification);
+        }
+        else
+        {
+            return Case.Maybe;
+        }
+    }
+
+    public static async Task<Case> HasLinks(ObjectGeneration obj, bool includeBaseClass, GenericSpecification specifications = null)
+    {
+        if (obj.Name == "MajorRecord") return Case.Yes;
+        if (obj.IterateFields(includeBaseClass: includeBaseClass).Any((f) => f is FormLinkType)) return Case.Yes;
+        Case bestCase = Case.No;
+        foreach (var field in obj.IterateFields(includeBaseClass: includeBaseClass))
+        {
+            if (field is LoquiType loqui)
             {
-                foreach (var target in specifications.Specifications.Values)
+                var subCase = await HasLinks(loqui, includeBaseClass: true, specifications);
+                if (subCase > bestCase)
                 {
-                    if (!ObjectNamedKey.TryFactory(target, out var key)) continue;
-                    var specObj = loqui.ObjectGen.ProtoGen.Gen.ObjectGenerationsByObjectNameKey[key];
-                    return await HasLinks(specObj, includeBaseClass);
+                    bestCase = subCase;
                 }
             }
-            if (loqui.TargetObjectGeneration != null)
+            else if (field is ContainerType cont)
             {
-                return await HasLinks(loqui.TargetObjectGeneration, includeBaseClass, loqui.GenericSpecification);
-            }
-            else
-            {
-                return Case.Maybe;
-            }
-        }
-
-        public static async Task<Case> HasLinks(ObjectGeneration obj, bool includeBaseClass, GenericSpecification specifications = null)
-        {
-            if (obj.Name == "MajorRecord") return Case.Yes;
-            if (obj.IterateFields(includeBaseClass: includeBaseClass).Any((f) => f is FormLinkType)) return Case.Yes;
-            Case bestCase = Case.No;
-            foreach (var field in obj.IterateFields(includeBaseClass: includeBaseClass))
-            {
-                if (field is LoquiType loqui)
+                if (cont.SubTypeGeneration is LoquiType contLoqui)
                 {
-                    var subCase = await HasLinks(loqui, includeBaseClass: true, specifications);
+                    var subCase = await HasLinks(contLoqui, includeBaseClass: true, specifications);
                     if (subCase > bestCase)
                     {
                         bestCase = subCase;
                     }
                 }
-                else if (field is ContainerType cont)
+                else if (cont.SubTypeGeneration is FormLinkType)
                 {
-                    if (cont.SubTypeGeneration is LoquiType contLoqui)
-                    {
-                        var subCase = await HasLinks(contLoqui, includeBaseClass: true, specifications);
-                        if (subCase > bestCase)
-                        {
-                            bestCase = subCase;
-                        }
-                    }
-                    else if (cont.SubTypeGeneration is FormLinkType)
-                    {
-                        return Case.Yes;
-                    }
-                }
-                else if (field is DictType dict)
-                {
-                    if (dict.ValueTypeGen is LoquiType valLoqui)
-                    {
-                        var subCase = await HasLinks(valLoqui, includeBaseClass: true, specifications);
-                        if (subCase > bestCase)
-                        {
-                            bestCase = subCase;
-                        }
-                    }
-                    if (dict.KeyTypeGen is LoquiType keyLoqui)
-                    {
-                        var subCase = await HasLinks(keyLoqui, includeBaseClass: true, specifications);
-                        if (subCase > bestCase)
-                        {
-                            bestCase = subCase;
-                        }
-                    }
-                    if (dict.ValueTypeGen is FormLinkType)
-                    {
-                        return Case.Yes;
-                    }
+                    return Case.Yes;
                 }
             }
-
-            // If no, check subclasses
-            if (bestCase == Case.No)
+            else if (field is DictType dict)
             {
-                foreach (var inheritingObject in await obj.InheritingObjects())
+                if (dict.ValueTypeGen is LoquiType valLoqui)
                 {
-                    var subCase = await HasLinks(inheritingObject, includeBaseClass: false, specifications: specifications);
-                    if (subCase != Case.No) return Case.Maybe;
+                    var subCase = await HasLinks(valLoqui, includeBaseClass: true, specifications);
+                    if (subCase > bestCase)
+                    {
+                        bestCase = subCase;
+                    }
+                }
+                if (dict.KeyTypeGen is LoquiType keyLoqui)
+                {
+                    var subCase = await HasLinks(keyLoqui, includeBaseClass: true, specifications);
+                    if (subCase > bestCase)
+                    {
+                        bestCase = subCase;
+                    }
+                }
+                if (dict.ValueTypeGen is FormLinkType)
+                {
+                    return Case.Yes;
                 }
             }
-
-            return bestCase;
         }
 
-        public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg, MaskTypeSet maskTypes)
+        // If no, check subclasses
+        if (bestCase == Case.No)
         {
-            if (maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class))
+            foreach (var inheritingObject in await obj.InheritingObjects())
             {
-                fg.AppendLine($"public IEnumerable<{nameof(IFormLinkGetter)}> GetContainedFormLinks({obj.Interface(getter: true)} obj)");
-                using (new BraceWrapper(fg))
+                var subCase = await HasLinks(inheritingObject, includeBaseClass: false, specifications: specifications);
+                if (subCase != Case.No) return Case.Maybe;
+            }
+        }
+
+        return bestCase;
+    }
+
+    public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg, MaskTypeSet maskTypes)
+    {
+        if (maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class))
+        {
+            fg.AppendLine($"public IEnumerable<{nameof(IFormLinkGetter)}> GetContainedFormLinks({obj.Interface(getter: true)} obj)");
+            using (new BraceWrapper(fg))
+            {
+                foreach (var baseClass in obj.BaseClassTrail())
                 {
-                    foreach (var baseClass in obj.BaseClassTrail())
+                    if (await HasLinks(baseClass, includeBaseClass: true) != Case.No)
                     {
-                        if (await HasLinks(baseClass, includeBaseClass: true) != Case.No)
+                        fg.AppendLine("foreach (var item in base.GetContainedFormLinks(obj))");
+                        using (new BraceWrapper(fg))
                         {
-                            fg.AppendLine("foreach (var item in base.GetContainedFormLinks(obj))");
+                            fg.AppendLine("yield return item;");
+                        }
+                        break;
+                    }
+                }
+                var startCount = fg.Count;
+                foreach (var field in obj.IterateFields(nonIntegrated: true))
+                {
+                    if (field is FormLinkType formLink)
+                    {
+                        if (field.Nullable)
+                        {
+                            fg.AppendLine($"if ({nameof(FormLinkInformation)}.{nameof(FormLinkInformation.TryFactory)}(obj.{field.Name}, out var {field.Name}Info))");
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine("yield return item;");
+                                fg.AppendLine($"yield return {field.Name}Info;");
                             }
-                            break;
+                        }
+                        else if (formLink.FormIDType == FormLinkType.FormIDTypeEnum.Normal)
+                        {
+                            fg.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(obj.{field.Name});");
                         }
                     }
-                    var startCount = fg.Count;
-                    foreach (var field in obj.IterateFields(nonIntegrated: true))
+                    else if (field is FormKeyType formKey
+                             && obj.Name != "MajorRecord")
                     {
-                        if (field is FormLinkType formLink)
+                        if (field.Nullable)
                         {
-                            if (field.Nullable)
-                            {
-                                fg.AppendLine($"if ({nameof(FormLinkInformation)}.{nameof(FormLinkInformation.TryFactory)}(obj.{field.Name}, out var {field.Name}Info))");
-                                using (new BraceWrapper(fg))
-                                {
-                                    fg.AppendLine($"yield return {field.Name}Info;");
-                                }
-                            }
-                            else if (formLink.FormIDType == FormLinkType.FormIDTypeEnum.Normal)
-                            {
-                                fg.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(obj.{field.Name});");
-                            }
-                        }
-                        else if (field is FormKeyType formKey
-                            && obj.Name != "MajorRecord")
-                        {
-                            if (field.Nullable)
-                            {
-                                fg.AppendLine($"if (obj.{field.Name} != null)");
-                                using (new BraceWrapper(fg))
-                                {
-                                    fg.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(obj.{field.Name}.AsLink<I{obj.ProtoGen.Protocol.Namespace}MajorRecordGetter>());");
-                                }
-                            }
-                            else
+                            fg.AppendLine($"if (obj.{field.Name} != null)");
+                            using (new BraceWrapper(fg))
                             {
                                 fg.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(obj.{field.Name}.AsLink<I{obj.ProtoGen.Protocol.Namespace}MajorRecordGetter>());");
                             }
                         }
-                        else if (field is LoquiType loqui)
+                        else
                         {
-                            Case subLinkCase;
-                            if (loqui.TargetObjectGeneration != null)
-                            {
-                                subLinkCase = await HasLinks(loqui, includeBaseClass: true);
-                            }
-                            else
-                            {
-                                subLinkCase = Case.Maybe;
-                            }
-                            if (subLinkCase == Case.No) continue;
-                            var doBrace = true;
-                            var access = $"obj.{field.Name}";
-                            if (subLinkCase == Case.Maybe)
-                            {
-                                fg.AppendLine($"if (obj.{field.Name} is {nameof(IFormLinkContainerGetter)} {field.Name}linkCont)");
-                                access = $"{field.Name}linkCont";
-                            }
-                            else if (loqui.Nullable)
-                            {
-                                fg.AppendLine($"if (obj.{field.Name} is {{}} {field.Name}Items)");
-                                access = $"{field.Name}Items";
-                            }
-                            else
-                            {
-                                doBrace = false;
-                            }
-                            using (new BraceWrapper(fg, doIt: doBrace))
-                            {
-                                fg.AppendLine($"foreach (var item in {access}.{nameof(IFormLinkContainerGetter.ContainedFormLinks)})");
-                                using (new BraceWrapper(fg))
-                                {
-                                    fg.AppendLine($"yield return item;");
-                                }
-                            }
+                            fg.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(obj.{field.Name}.AsLink<I{obj.ProtoGen.Protocol.Namespace}MajorRecordGetter>());");
                         }
-                        else if (field is WrapperType cont)
+                    }
+                    else if (field is LoquiType loqui)
+                    {
+                        Case subLinkCase;
+                        if (loqui.TargetObjectGeneration != null)
                         {
-                            var access = $"obj.{field.Name}";
-                            if (field.Nullable)
-                            {
-                                access = $"{field.Name}Item";
-                            }
-
-                            FileGeneration subFg = new FileGeneration();
-                            if (cont.SubTypeGeneration is LoquiType contLoqui
-                                && await HasLinks(contLoqui, includeBaseClass: true) != Case.No)
-                            {
-                                string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".NotNull()" : null;
-                                var linktype = await HasLinks(contLoqui, includeBaseClass: true);
-                                if (linktype != Case.No)
-                                {
-                                    switch (linktype)
-                                    {
-                                        case Case.Yes:
-                                            subFg.AppendLine($"foreach (var item in {access}{filterNulls}.SelectMany(f => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
-                                            break;
-                                        case Case.Maybe:
-                                            subFg.AppendLine($"foreach (var item in {access}{filterNulls}.WhereCastable<{contLoqui.TypeName(getter: true)}, {nameof(IFormLinkContainerGetter)}>()");
-                                            using (new DepthWrapper(subFg))
-                                            {
-                                                subFg.AppendLine($".SelectMany((f) => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
-                                            }
-                                            break;
-                                        default:
-                                            throw new NotImplementedException();
-                                    }
-                                }
-                            }
-                            else if (cont.SubTypeGeneration is FormLinkType formIDType
-                                && formIDType.FormIDType == FormLinkType.FormIDTypeEnum.Normal)
-                            {
-                                string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".NotNull()" : null;
-                                subFg.AppendLine($"foreach (var item in {access}{filterNulls})");
-                            }
-                            else
-                            {
-                                continue;
-                            }
-
-                            if (field.Nullable)
-                            {
-                                fg.AppendLine($"if (obj.{field.Name} is {{}} {field.Name}Item)");
-                            }
-                            using (new BraceWrapper(fg, doIt: field.Nullable))
-                            {
-                                fg.AppendLines(subFg);
-                                using (new BraceWrapper(fg))
-                                {
-                                    fg.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(item);");
-                                }
-                            }
+                            subLinkCase = await HasLinks(loqui, includeBaseClass: true);
                         }
-                        else if (field is DictType dict)
+                        else
                         {
-                            if (dict.ValueTypeGen is LoquiType dictLoqui
-                                && await HasLinks(dictLoqui, includeBaseClass: true) != Case.No)
-                            {
-                                var valuesAccessor = dict.Mode == DictMode.KeyedValue ? "Items" : "Values";
-                                var linktype = await HasLinks(dictLoqui, includeBaseClass: true);
-                                switch (linktype)
-                                {
-                                    case Case.Yes:
-                                        fg.AppendLine($"foreach (var item in obj.{field.Name}.{valuesAccessor}.SelectMany(f => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
-                                        break;
-                                    case Case.Maybe:
-                                        fg.AppendLine($"foreach (var item in obj.{field.Name}.{valuesAccessor}.WhereCastable<{dictLoqui.TypeName(getter: true)}, {nameof(IFormLinkContainerGetter)}>()");
-                                        using (new DepthWrapper(fg))
-                                        {
-                                            fg.AppendLine($".SelectMany((f) => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
-                                        }
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-                            else if (dict.ValueTypeGen is FormLinkType formIDType)
-                            {
-                                fg.AppendLine($"foreach (var item in obj.{field.Name}.Values)");
-                            }
-                            else
-                            {
-                                continue;
-                            }
+                            subLinkCase = Case.Maybe;
+                        }
+                        if (subLinkCase == Case.No) continue;
+                        var doBrace = true;
+                        var access = $"obj.{field.Name}";
+                        if (subLinkCase == Case.Maybe)
+                        {
+                            fg.AppendLine($"if (obj.{field.Name} is {nameof(IFormLinkContainerGetter)} {field.Name}linkCont)");
+                            access = $"{field.Name}linkCont";
+                        }
+                        else if (loqui.Nullable)
+                        {
+                            fg.AppendLine($"if (obj.{field.Name} is {{}} {field.Name}Items)");
+                            access = $"{field.Name}Items";
+                        }
+                        else
+                        {
+                            doBrace = false;
+                        }
+                        using (new BraceWrapper(fg, doIt: doBrace))
+                        {
+                            fg.AppendLine($"foreach (var item in {access}.{nameof(IFormLinkContainerGetter.ContainedFormLinks)})");
                             using (new BraceWrapper(fg))
                             {
                                 fg.AppendLine($"yield return item;");
                             }
                         }
-                        else if (field is BreakType breakType)
+                    }
+                    else if (field is WrapperType cont)
+                    {
+                        var access = $"obj.{field.Name}";
+                        if (field.Nullable)
                         {
-                            if (fg.Count > startCount)
+                            access = $"{field.Name}Item";
+                        }
+
+                        FileGeneration subFg = new FileGeneration();
+                        if (cont.SubTypeGeneration is LoquiType contLoqui
+                            && await HasLinks(contLoqui, includeBaseClass: true) != Case.No)
+                        {
+                            string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".NotNull()" : null;
+                            var linktype = await HasLinks(contLoqui, includeBaseClass: true);
+                            if (linktype != Case.No)
                             {
-                                fg.AppendLine($"if (obj.{VersioningModule.VersioningFieldName}.HasFlag({obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakType.Index})) yield break;");
+                                switch (linktype)
+                                {
+                                    case Case.Yes:
+                                        subFg.AppendLine($"foreach (var item in {access}{filterNulls}.SelectMany(f => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
+                                        break;
+                                    case Case.Maybe:
+                                        subFg.AppendLine($"foreach (var item in {access}{filterNulls}.WhereCastable<{contLoqui.TypeName(getter: true)}, {nameof(IFormLinkContainerGetter)}>()");
+                                        using (new DepthWrapper(subFg))
+                                        {
+                                            subFg.AppendLine($".SelectMany((f) => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
+                                        }
+                                        break;
+                                    default:
+                                        throw new NotImplementedException();
+                                }
                             }
                         }
-                    }
-                    // Remove trailing breaks
-                    while (fg.Count > startCount)
-                    {
-                        if (fg[fg.Count - 1].AsSpan().TrimStart().StartsWith($"if (obj.{VersioningModule.VersioningFieldName}"))
+                        else if (cont.SubTypeGeneration is FormLinkType formIDType
+                                 && formIDType.FormIDType == FormLinkType.FormIDTypeEnum.Normal)
                         {
-                            fg.RemoveAt(fg.Count - 1);
+                            string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".NotNull()" : null;
+                            subFg.AppendLine($"foreach (var item in {access}{filterNulls})");
                         }
                         else
                         {
-                            break;
+                            continue;
                         }
-                    }
-                    fg.AppendLine("yield break;");
-                }
-                fg.AppendLine();
-            }
 
-            if (maskTypes.Applicable(LoquiInterfaceType.ISetter, CommonGenerics.Class))
-            {
-                fg.AppendLine($"public void RemapLinks({obj.Interface(getter: false)} obj, IReadOnlyDictionary<FormKey, FormKey> mapping)");
-                using (new BraceWrapper(fg))
-                {
-                    foreach (var baseClass in obj.BaseClassTrail())
-                    {
-                        if (await HasLinks(baseClass, includeBaseClass: true) != Case.No)
+                        if (field.Nullable)
                         {
-                            fg.AppendLine("base.RemapLinks(obj, mapping);");
-                            break;
+                            fg.AppendLine($"if (obj.{field.Name} is {{}} {field.Name}Item)");
+                        }
+                        using (new BraceWrapper(fg, doIt: field.Nullable))
+                        {
+                            fg.AppendLines(subFg);
+                            using (new BraceWrapper(fg))
+                            {
+                                fg.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(item);");
+                            }
                         }
                     }
-                    var startCount = fg.Count;
-                    foreach (var field in obj.IterateFields(nonIntegrated: true))
+                    else if (field is DictType dict)
                     {
-                        if (field is FormLinkType formLink
-                            && formLink.FormIDType == FormLinkType.FormIDTypeEnum.Normal)
+                        if (dict.ValueTypeGen is LoquiType dictLoqui
+                            && await HasLinks(dictLoqui, includeBaseClass: true) != Case.No)
                         {
-                            fg.AppendLine($"obj.{field.Name}.Relink(mapping);");
-                        }
-                        else if (field is FormKeyType formKey
-                            && obj.Name != "MajorRecord")
-                        {
-                            fg.AppendLine($"obj.{field.Name} = {nameof(RemappingMixIn)}.Remap(obj.{field.Name}, mapping);");
-                        }
-                        else if (field is LoquiType loqui)
-                        {
-                            Case subLinkCase;
-                            if (loqui.TargetObjectGeneration != null)
+                            var valuesAccessor = dict.Mode == DictMode.KeyedValue ? "Items" : "Values";
+                            var linktype = await HasLinks(dictLoqui, includeBaseClass: true);
+                            switch (linktype)
                             {
-                                subLinkCase = await HasLinks(loqui, includeBaseClass: true);
+                                case Case.Yes:
+                                    fg.AppendLine($"foreach (var item in obj.{field.Name}.{valuesAccessor}.SelectMany(f => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
+                                    break;
+                                case Case.Maybe:
+                                    fg.AppendLine($"foreach (var item in obj.{field.Name}.{valuesAccessor}.WhereCastable<{dictLoqui.TypeName(getter: true)}, {nameof(IFormLinkContainerGetter)}>()");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendLine($".SelectMany((f) => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
+                                    }
+                                    break;
+                                default:
+                                    break;
                             }
-                            else
-                            {
-                                subLinkCase = Case.Maybe;
-                            }
-                            if (subLinkCase == Case.No) continue;
+                        }
+                        else if (dict.ValueTypeGen is FormLinkType formIDType)
+                        {
+                            fg.AppendLine($"foreach (var item in obj.{field.Name}.Values)");
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                        using (new BraceWrapper(fg))
+                        {
+                            fg.AppendLine($"yield return item;");
+                        }
+                    }
+                    else if (field is BreakType breakType)
+                    {
+                        if (fg.Count > startCount)
+                        {
+                            fg.AppendLine($"if (obj.{VersioningModule.VersioningFieldName}.HasFlag({obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakType.Index})) yield break;");
+                        }
+                    }
+                }
+                // Remove trailing breaks
+                while (fg.Count > startCount)
+                {
+                    if (fg[fg.Count - 1].AsSpan().TrimStart().StartsWith($"if (obj.{VersioningModule.VersioningFieldName}"))
+                    {
+                        fg.RemoveAt(fg.Count - 1);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                fg.AppendLine("yield break;");
+            }
+            fg.AppendLine();
+        }
+
+        if (maskTypes.Applicable(LoquiInterfaceType.ISetter, CommonGenerics.Class))
+        {
+            fg.AppendLine($"public void RemapLinks({obj.Interface(getter: false)} obj, IReadOnlyDictionary<FormKey, FormKey> mapping)");
+            using (new BraceWrapper(fg))
+            {
+                foreach (var baseClass in obj.BaseClassTrail())
+                {
+                    if (await HasLinks(baseClass, includeBaseClass: true) != Case.No)
+                    {
+                        fg.AppendLine("base.RemapLinks(obj, mapping);");
+                        break;
+                    }
+                }
+                var startCount = fg.Count;
+                foreach (var field in obj.IterateFields(nonIntegrated: true))
+                {
+                    if (field is FormLinkType formLink
+                        && formLink.FormIDType == FormLinkType.FormIDTypeEnum.Normal)
+                    {
+                        fg.AppendLine($"obj.{field.Name}.Relink(mapping);");
+                    }
+                    else if (field is FormKeyType formKey
+                             && obj.Name != "MajorRecord")
+                    {
+                        fg.AppendLine($"obj.{field.Name} = {nameof(RemappingMixIn)}.Remap(obj.{field.Name}, mapping);");
+                    }
+                    else if (field is LoquiType loqui)
+                    {
+                        Case subLinkCase;
+                        if (loqui.TargetObjectGeneration != null)
+                        {
+                            subLinkCase = await HasLinks(loqui, includeBaseClass: true);
+                        }
+                        else
+                        {
+                            subLinkCase = Case.Maybe;
+                        }
+                        if (subLinkCase == Case.No) continue;
+                        fg.AppendLine($"obj.{field.Name}{(field.Nullable ? "?" : null)}.RemapLinks(mapping);");
+                    }
+                    else if (field is WrapperType cont)
+                    {
+                        if ((cont.SubTypeGeneration is LoquiType contLoqui
+                             && await HasLinks(contLoqui, includeBaseClass: true) != Case.No)
+                            || (cont.SubTypeGeneration is FormLinkType formIDType
+                                && formIDType.FormIDType == FormLinkType.FormIDTypeEnum.Normal))
+                        {
                             fg.AppendLine($"obj.{field.Name}{(field.Nullable ? "?" : null)}.RemapLinks(mapping);");
                         }
-                        else if (field is WrapperType cont)
+                    }
+                    else if (field is DictType dict)
+                    {
+                        if (dict.Mode == DictMode.KeyedValue
+                            && dict.ValueTypeGen is LoquiType dictLoqui
+                            && await HasLinks(dictLoqui, includeBaseClass: true) != Case.No)
                         {
-                            if ((cont.SubTypeGeneration is LoquiType contLoqui
-                                && await HasLinks(contLoqui, includeBaseClass: true) != Case.No)
-                                || (cont.SubTypeGeneration is FormLinkType formIDType
-                                    && formIDType.FormIDType == FormLinkType.FormIDTypeEnum.Normal))
-                            {
-                                fg.AppendLine($"obj.{field.Name}{(field.Nullable ? "?" : null)}.RemapLinks(mapping);");
-                            }
+                            fg.AppendLine($"obj.{field.Name}{(field.Nullable ? "?" : null)}.RemapLinks(mapping);");
                         }
-                        else if (field is DictType dict)
+                        else if (dict.ValueTypeGen is FormLinkType formIDType)
                         {
-                            if (dict.Mode == DictMode.KeyedValue
-                                && dict.ValueTypeGen is LoquiType dictLoqui
-                                && await HasLinks(dictLoqui, includeBaseClass: true) != Case.No)
-                            {
-                                fg.AppendLine($"obj.{field.Name}{(field.Nullable ? "?" : null)}.RemapLinks(mapping);");
-                            }
-                            else if (dict.ValueTypeGen is FormLinkType formIDType)
-                            {
-                                fg.AppendLine($"obj.{field.Name}{(field.Nullable ? "?" : null)}.RemapLinks(mapping);");
-                            }
-                        }
-                        else if (field is BreakType breakType)
-                        {
-                            if (fg.Count > startCount)
-                            {
-                                fg.AppendLine($"if (obj.{VersioningModule.VersioningFieldName}.HasFlag({obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakType.Index})) return;");
-                            }
+                            fg.AppendLine($"obj.{field.Name}{(field.Nullable ? "?" : null)}.RemapLinks(mapping);");
                         }
                     }
-                    // Remove trailing breaks
-                    while (fg.Count > startCount)
+                    else if (field is BreakType breakType)
                     {
-                        if (fg[^1].AsSpan().TrimStart().StartsWith($"if (obj.{VersioningModule.VersioningFieldName}"))
+                        if (fg.Count > startCount)
                         {
-                            fg.RemoveAt(fg.Count - 1);
-                        }
-                        else
-                        {
-                            break;
+                            fg.AppendLine($"if (obj.{VersioningModule.VersioningFieldName}.HasFlag({obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakType.Index})) return;");
                         }
                     }
                 }
-                fg.AppendLine();
+                // Remove trailing breaks
+                while (fg.Count > startCount)
+                {
+                    if (fg[^1].AsSpan().TrimStart().StartsWith($"if (obj.{VersioningModule.VersioningFieldName}"))
+                    {
+                        fg.RemoveAt(fg.Count - 1);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
             }
+            fg.AppendLine();
         }
+    }
 
-        public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
+    {
+        await base.GenerateInClass(obj, fg);
+        if (obj.GetObjectType() != ObjectType.Mod)
         {
-            await base.GenerateInClass(obj, fg);
-            if (obj.GetObjectType() != ObjectType.Mod)
-            {
-                var linkCase = await HasLinks(obj, includeBaseClass: true);
-                if (linkCase == Case.No) return;
-            }
-            await GenerateInterfaceImplementation(obj, fg, getter: false);
+            var linkCase = await HasLinks(obj, includeBaseClass: true);
+            if (linkCase == Case.No) return;
         }
+        await GenerateInterfaceImplementation(obj, fg, getter: false);
+    }
 
-        public static async Task GenerateInterfaceImplementation(ObjectGeneration obj, FileGeneration fg, bool getter)
+    public static async Task GenerateInterfaceImplementation(ObjectGeneration obj, FileGeneration fg, bool getter)
+    {
+        var shouldAlwaysOverride = obj.IsTopLevelGroup();
+        fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: true) != Case.No)}IEnumerable<{nameof(IFormLinkGetter)}> {nameof(IFormLinkContainerGetter.ContainedFormLinks)} => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetContainedFormLinks(this);");
+
+        if (!getter)
         {
-            var shouldAlwaysOverride = obj.IsTopLevelGroup();
-            fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: true) != Case.No)}IEnumerable<{nameof(IFormLinkGetter)}> {nameof(IFormLinkContainerGetter.ContainedFormLinks)} => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetContainedFormLinks(this);");
-
-            if (!getter)
-            {
-                fg.AppendLine($"public{await obj.FunctionOverride(async (o) => await HasLinks(o, includeBaseClass: true) != Case.No)}void {nameof(IFormLinkContainer.RemapLinks)}(IReadOnlyDictionary<FormKey, FormKey> mapping) => {obj.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Instance.RemapLinks(this, mapping);");
-            }
+            fg.AppendLine($"public{await obj.FunctionOverride(async (o) => await HasLinks(o, includeBaseClass: true) != Case.No)}void {nameof(IFormLinkContainer.RemapLinks)}(IReadOnlyDictionary<FormKey, FormKey> mapping) => {obj.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Instance.RemapLinks(this, mapping);");
         }
     }
 }

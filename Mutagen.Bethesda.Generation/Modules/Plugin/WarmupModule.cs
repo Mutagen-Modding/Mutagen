@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             FileGeneration fg = new FileGeneration();
             ObjectGeneration.AddAutogenerationComment(fg);
             fg.AppendLine("using Loqui;");
-            fg.AppendLine("using Mutagen.Bethesda.Plugins.Records.Internals;");
+            fg.AppendLine("using Mutagen.Bethesda.Plugins.Records.Mapping;");
             fg.AppendLine();
 
             using (new NamespaceWrapper(fg, proto.DefaultNamespace, fileScoped: false))

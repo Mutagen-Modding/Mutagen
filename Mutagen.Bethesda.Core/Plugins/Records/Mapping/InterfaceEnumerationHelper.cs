@@ -7,9 +7,9 @@ using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Cache.Internals;
 using Noggog;
 
-namespace Mutagen.Bethesda.Plugins.Records.Internals;
+namespace Mutagen.Bethesda.Plugins.Records.Mapping;
 
-public static class InterfaceEnumerationHelper
+internal static class InterfaceEnumerationHelper
 {
     public static bool TryEnumerateLinkRecordsFor<T>(
         GameCategory category,

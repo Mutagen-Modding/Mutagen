@@ -1,10 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Generation.Modules.Aspects;
+using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
@@ -22,6 +26,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
         {
             if (await MajorRecordModule.HasMajorRecordsInTree(obj, false) == Case.No) return;
             GenerateClassImplementation(obj, fg);
+        }
+
+        public override async IAsyncEnumerable<string> RequiredUsingStatements(ObjectGeneration obj)
+        {
+            yield return "Mutagen.Bethesda.Plugins.Records.Mapping";
         }
 
         public static void GenerateClassImplementation(ObjectGeneration obj, FileGeneration fg, bool onlyGetter = false)

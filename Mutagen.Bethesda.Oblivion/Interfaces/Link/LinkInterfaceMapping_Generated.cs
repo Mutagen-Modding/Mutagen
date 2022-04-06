@@ -5,7 +5,7 @@
 */
 using System;
 using System.Collections.Generic;
-using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Loqui;
 
 namespace Mutagen.Bethesda.Oblivion.Internals
