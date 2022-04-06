@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -650,10 +651,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ObjectProperty_FieldIndex
+    internal enum ObjectProperty_FieldIndex
     {
         ActorValue = 0,
         Value = 1,
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ObjectProperty_Registration : ILoquiRegistration
+    internal partial class ObjectProperty_Registration : ILoquiRegistration
     {
         public static readonly ObjectProperty_Registration Instance = new ObjectProperty_Registration();
 
@@ -735,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ObjectPropertySetterCommon
+    internal partial class ObjectPropertySetterCommon
     {
         public static readonly ObjectPropertySetterCommon Instance = new ObjectPropertySetterCommon();
 
@@ -772,7 +773,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ObjectPropertyCommon
+    internal partial class ObjectPropertyCommon
     {
         public static readonly ObjectPropertyCommon Instance = new ObjectPropertyCommon();
 
@@ -899,7 +900,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ObjectPropertySetterTranslationCommon
+    internal partial class ObjectPropertySetterTranslationCommon
     {
         public static readonly ObjectPropertySetterTranslationCommon Instance = new ObjectPropertySetterTranslationCommon();
 
@@ -981,7 +982,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectProperty_Registration.Instance;
-        public static ObjectProperty_Registration StaticRegistration => ObjectProperty_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ObjectProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ObjectPropertyCommon.Instance;
         [DebuggerStepThrough]
@@ -1005,7 +1006,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ObjectPropertyBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1046,7 +1047,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ObjectPropertyBinaryCreateTranslation
+    internal partial class ObjectPropertyBinaryCreateTranslation
     {
         public readonly static ObjectPropertyBinaryCreateTranslation Instance = new ObjectPropertyBinaryCreateTranslation();
 
@@ -1082,16 +1083,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ObjectPropertyBinaryOverlay :
+    internal partial class ObjectPropertyBinaryOverlay :
         PluginBinaryOverlay,
         IObjectPropertyGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectProperty_Registration.Instance;
-        public static ObjectProperty_Registration StaticRegistration => ObjectProperty_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ObjectProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ObjectPropertyCommon.Instance;
         [DebuggerStepThrough]

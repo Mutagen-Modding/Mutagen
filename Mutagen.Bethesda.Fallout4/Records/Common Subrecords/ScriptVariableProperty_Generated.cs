@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -567,10 +568,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ScriptVariableProperty_FieldIndex
+    internal enum ScriptVariableProperty_FieldIndex
     {
         Name = 0,
         Flags = 1,
@@ -579,7 +580,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ScriptVariableProperty_Registration : ILoquiRegistration
+    internal partial class ScriptVariableProperty_Registration : ILoquiRegistration
     {
         public static readonly ScriptVariableProperty_Registration Instance = new ScriptVariableProperty_Registration();
 
@@ -653,7 +654,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ScriptVariablePropertySetterCommon : ScriptPropertySetterCommon
+    internal partial class ScriptVariablePropertySetterCommon : ScriptPropertySetterCommon
     {
         public new static readonly ScriptVariablePropertySetterCommon Instance = new ScriptVariablePropertySetterCommon();
 
@@ -706,7 +707,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ScriptVariablePropertyCommon : ScriptPropertyCommon
+    internal partial class ScriptVariablePropertyCommon : ScriptPropertyCommon
     {
         public new static readonly ScriptVariablePropertyCommon Instance = new ScriptVariablePropertyCommon();
 
@@ -862,7 +863,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ScriptVariablePropertySetterTranslationCommon : ScriptPropertySetterTranslationCommon
+    internal partial class ScriptVariablePropertySetterTranslationCommon : ScriptPropertySetterTranslationCommon
     {
         public new static readonly ScriptVariablePropertySetterTranslationCommon Instance = new ScriptVariablePropertySetterTranslationCommon();
 
@@ -962,7 +963,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptVariableProperty_Registration.Instance;
-        public new static ScriptVariableProperty_Registration StaticRegistration => ScriptVariableProperty_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ScriptVariableProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptVariablePropertyCommon.Instance;
         [DebuggerStepThrough]
@@ -980,7 +981,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ScriptVariablePropertyBinaryWriteTranslation :
         ScriptPropertyBinaryWriteTranslation,
@@ -1032,7 +1033,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ScriptVariablePropertyBinaryCreateTranslation : ScriptPropertyBinaryCreateTranslation
+    internal partial class ScriptVariablePropertyBinaryCreateTranslation : ScriptPropertyBinaryCreateTranslation
     {
         public new readonly static ScriptVariablePropertyBinaryCreateTranslation Instance = new ScriptVariablePropertyBinaryCreateTranslation();
 
@@ -1059,16 +1060,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ScriptVariablePropertyBinaryOverlay :
+    internal partial class ScriptVariablePropertyBinaryOverlay :
         ScriptPropertyBinaryOverlay,
         IScriptVariablePropertyGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptVariableProperty_Registration.Instance;
-        public new static ScriptVariableProperty_Registration StaticRegistration => ScriptVariableProperty_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ScriptVariableProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptVariablePropertyCommon.Instance;
         [DebuggerStepThrough]

@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -600,10 +601,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Package_FieldIndex
+    internal enum Package_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -615,7 +616,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Package_Registration : ILoquiRegistration
+    internal partial class Package_Registration : ILoquiRegistration
     {
         public static readonly Package_Registration Instance = new Package_Registration();
 
@@ -696,7 +697,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class PackageSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class PackageSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly PackageSetterCommon Instance = new PackageSetterCommon();
 
@@ -765,7 +766,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class PackageCommon : Fallout4MajorRecordCommon
+    internal partial class PackageCommon : Fallout4MajorRecordCommon
     {
         public new static readonly PackageCommon Instance = new PackageCommon();
 
@@ -987,7 +988,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class PackageSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class PackageSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly PackageSetterTranslationCommon Instance = new PackageSetterTranslationCommon();
 
@@ -1142,7 +1143,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Package_Registration.Instance;
-        public new static Package_Registration StaticRegistration => Package_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Package_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageCommon.Instance;
         [DebuggerStepThrough]
@@ -1160,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PackageBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -1229,7 +1230,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class PackageBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class PackageBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static PackageBinaryCreateTranslation Instance = new PackageBinaryCreateTranslation();
 
@@ -1256,16 +1257,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class PackageBinaryOverlay :
+    internal partial class PackageBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IPackageGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Package_Registration.Instance;
-        public new static Package_Registration StaticRegistration => Package_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Package_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageCommon.Instance;
         [DebuggerStepThrough]

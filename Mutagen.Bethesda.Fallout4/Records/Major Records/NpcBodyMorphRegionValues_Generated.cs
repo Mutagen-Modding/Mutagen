@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -734,10 +735,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum NpcBodyMorphRegionValues_FieldIndex
+    internal enum NpcBodyMorphRegionValues_FieldIndex
     {
         Head = 0,
         UpperTorso = 1,
@@ -748,7 +749,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class NpcBodyMorphRegionValues_Registration : ILoquiRegistration
+    internal partial class NpcBodyMorphRegionValues_Registration : ILoquiRegistration
     {
         public static readonly NpcBodyMorphRegionValues_Registration Instance = new NpcBodyMorphRegionValues_Registration();
 
@@ -822,7 +823,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class NpcBodyMorphRegionValuesSetterCommon
+    internal partial class NpcBodyMorphRegionValuesSetterCommon
     {
         public static readonly NpcBodyMorphRegionValuesSetterCommon Instance = new NpcBodyMorphRegionValuesSetterCommon();
 
@@ -861,7 +862,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class NpcBodyMorphRegionValuesCommon
+    internal partial class NpcBodyMorphRegionValuesCommon
     {
         public static readonly NpcBodyMorphRegionValuesCommon Instance = new NpcBodyMorphRegionValuesCommon();
 
@@ -1017,7 +1018,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class NpcBodyMorphRegionValuesSetterTranslationCommon
+    internal partial class NpcBodyMorphRegionValuesSetterTranslationCommon
     {
         public static readonly NpcBodyMorphRegionValuesSetterTranslationCommon Instance = new NpcBodyMorphRegionValuesSetterTranslationCommon();
 
@@ -1111,7 +1112,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcBodyMorphRegionValues_Registration.Instance;
-        public static NpcBodyMorphRegionValues_Registration StaticRegistration => NpcBodyMorphRegionValues_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcBodyMorphRegionValues_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcBodyMorphRegionValuesCommon.Instance;
         [DebuggerStepThrough]
@@ -1135,7 +1136,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NpcBodyMorphRegionValuesBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1185,7 +1186,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class NpcBodyMorphRegionValuesBinaryCreateTranslation
+    internal partial class NpcBodyMorphRegionValuesBinaryCreateTranslation
     {
         public readonly static NpcBodyMorphRegionValuesBinaryCreateTranslation Instance = new NpcBodyMorphRegionValuesBinaryCreateTranslation();
 
@@ -1224,16 +1225,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class NpcBodyMorphRegionValuesBinaryOverlay :
+    internal partial class NpcBodyMorphRegionValuesBinaryOverlay :
         PluginBinaryOverlay,
         INpcBodyMorphRegionValuesGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcBodyMorphRegionValues_Registration.Instance;
-        public static NpcBodyMorphRegionValues_Registration StaticRegistration => NpcBodyMorphRegionValues_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcBodyMorphRegionValues_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcBodyMorphRegionValuesCommon.Instance;
         [DebuggerStepThrough]

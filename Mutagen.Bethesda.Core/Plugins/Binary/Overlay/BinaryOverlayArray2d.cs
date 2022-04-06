@@ -4,7 +4,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay;
 
-public static class BinaryOverlayArray2d
+internal static class BinaryOverlayArray2d
 {
     public static IReadOnlyArray2d<T> Factory<T>(
         ReadOnlyMemorySlice<byte> mem,

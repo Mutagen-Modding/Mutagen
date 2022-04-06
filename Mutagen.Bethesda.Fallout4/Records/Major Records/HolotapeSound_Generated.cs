@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -568,17 +569,17 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum HolotapeSound_FieldIndex
+    internal enum HolotapeSound_FieldIndex
     {
         Sound = 0,
     }
     #endregion
 
     #region Registration
-    public partial class HolotapeSound_Registration : ILoquiRegistration
+    internal partial class HolotapeSound_Registration : ILoquiRegistration
     {
         public static readonly HolotapeSound_Registration Instance = new HolotapeSound_Registration();
 
@@ -652,7 +653,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class HolotapeSoundSetterCommon : AHolotapeDataSetterCommon
+    internal partial class HolotapeSoundSetterCommon : AHolotapeDataSetterCommon
     {
         public new static readonly HolotapeSoundSetterCommon Instance = new HolotapeSoundSetterCommon();
 
@@ -706,7 +707,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class HolotapeSoundCommon : AHolotapeDataCommon
+    internal partial class HolotapeSoundCommon : AHolotapeDataCommon
     {
         public new static readonly HolotapeSoundCommon Instance = new HolotapeSoundCommon();
 
@@ -859,7 +860,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class HolotapeSoundSetterTranslationCommon : AHolotapeDataSetterTranslationCommon
+    internal partial class HolotapeSoundSetterTranslationCommon : AHolotapeDataSetterTranslationCommon
     {
         public new static readonly HolotapeSoundSetterTranslationCommon Instance = new HolotapeSoundSetterTranslationCommon();
 
@@ -959,7 +960,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HolotapeSound_Registration.Instance;
-        public new static HolotapeSound_Registration StaticRegistration => HolotapeSound_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => HolotapeSound_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HolotapeSoundCommon.Instance;
         [DebuggerStepThrough]
@@ -977,7 +978,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class HolotapeSoundBinaryWriteTranslation :
         AHolotapeDataBinaryWriteTranslation,
@@ -1028,7 +1029,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class HolotapeSoundBinaryCreateTranslation : AHolotapeDataBinaryCreateTranslation
+    internal partial class HolotapeSoundBinaryCreateTranslation : AHolotapeDataBinaryCreateTranslation
     {
         public new readonly static HolotapeSoundBinaryCreateTranslation Instance = new HolotapeSoundBinaryCreateTranslation();
 
@@ -1052,16 +1053,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class HolotapeSoundBinaryOverlay :
+    internal partial class HolotapeSoundBinaryOverlay :
         AHolotapeDataBinaryOverlay,
         IHolotapeSoundGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HolotapeSound_Registration.Instance;
-        public new static HolotapeSound_Registration StaticRegistration => HolotapeSound_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => HolotapeSound_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HolotapeSoundCommon.Instance;
         [DebuggerStepThrough]

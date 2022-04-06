@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1371,10 +1372,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum FaceFxPhonemes_FieldIndex
+    internal enum FaceFxPhonemes_FieldIndex
     {
         ForceNames = 0,
         Aah_LipBigAah = 1,
@@ -1397,7 +1398,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class FaceFxPhonemes_Registration : ILoquiRegistration
+    internal partial class FaceFxPhonemes_Registration : ILoquiRegistration
     {
         public static readonly FaceFxPhonemes_Registration Instance = new FaceFxPhonemes_Registration();
 
@@ -1471,7 +1472,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class FaceFxPhonemesSetterCommon
+    internal partial class FaceFxPhonemesSetterCommon
     {
         public static readonly FaceFxPhonemesSetterCommon Instance = new FaceFxPhonemesSetterCommon();
 
@@ -1522,7 +1523,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FaceFxPhonemesCommon
+    internal partial class FaceFxPhonemesCommon
     {
         public static readonly FaceFxPhonemesCommon Instance = new FaceFxPhonemesCommon();
 
@@ -1990,7 +1991,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FaceFxPhonemesSetterTranslationCommon
+    internal partial class FaceFxPhonemesSetterTranslationCommon
     {
         public static readonly FaceFxPhonemesSetterTranslationCommon Instance = new FaceFxPhonemesSetterTranslationCommon();
 
@@ -2484,7 +2485,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceFxPhonemes_Registration.Instance;
-        public static FaceFxPhonemes_Registration StaticRegistration => FaceFxPhonemes_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FaceFxPhonemes_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FaceFxPhonemesCommon.Instance;
         [DebuggerStepThrough]
@@ -2508,7 +2509,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class FaceFxPhonemesBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -2543,7 +2544,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class FaceFxPhonemesBinaryCreateTranslation
+    internal partial class FaceFxPhonemesBinaryCreateTranslation
     {
         public readonly static FaceFxPhonemesBinaryCreateTranslation Instance = new FaceFxPhonemesBinaryCreateTranslation();
 
@@ -2577,16 +2578,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class FaceFxPhonemesBinaryOverlay :
+    internal partial class FaceFxPhonemesBinaryOverlay :
         PluginBinaryOverlay,
         IFaceFxPhonemesGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceFxPhonemes_Registration.Instance;
-        public static FaceFxPhonemes_Registration StaticRegistration => FaceFxPhonemes_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FaceFxPhonemes_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FaceFxPhonemesCommon.Instance;
         [DebuggerStepThrough]

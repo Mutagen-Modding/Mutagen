@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -833,10 +834,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum TreeData_FieldIndex
+    internal enum TreeData_FieldIndex
     {
         LeafCurvature = 0,
         MinimumLeafAngle = 1,
@@ -850,7 +851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class TreeData_Registration : ILoquiRegistration
+    internal partial class TreeData_Registration : ILoquiRegistration
     {
         public static readonly TreeData_Registration Instance = new TreeData_Registration();
 
@@ -931,7 +932,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class TreeDataSetterCommon
+    internal partial class TreeDataSetterCommon
     {
         public static readonly TreeDataSetterCommon Instance = new TreeDataSetterCommon();
 
@@ -977,7 +978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class TreeDataCommon
+    internal partial class TreeDataCommon
     {
         public static readonly TreeDataCommon Instance = new TreeDataCommon();
 
@@ -1163,7 +1164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class TreeDataSetterTranslationCommon
+    internal partial class TreeDataSetterTranslationCommon
     {
         public static readonly TreeDataSetterTranslationCommon Instance = new TreeDataSetterTranslationCommon();
 
@@ -1269,7 +1270,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TreeData_Registration.Instance;
-        public static TreeData_Registration StaticRegistration => TreeData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TreeData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TreeDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1293,7 +1294,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class TreeDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1357,7 +1358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class TreeDataBinaryCreateTranslation
+    internal partial class TreeDataBinaryCreateTranslation
     {
         public readonly static TreeDataBinaryCreateTranslation Instance = new TreeDataBinaryCreateTranslation();
 
@@ -1399,16 +1400,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class TreeDataBinaryOverlay :
+    internal partial class TreeDataBinaryOverlay :
         PluginBinaryOverlay,
         ITreeDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TreeData_Registration.Instance;
-        public static TreeData_Registration StaticRegistration => TreeData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TreeData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TreeDataCommon.Instance;
         [DebuggerStepThrough]

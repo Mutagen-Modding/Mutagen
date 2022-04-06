@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -682,10 +683,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Rank_FieldIndex
+    internal enum Rank_FieldIndex
     {
         RankNumber = 0,
         Name = 1,
@@ -694,7 +695,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Rank_Registration : ILoquiRegistration
+    internal partial class Rank_Registration : ILoquiRegistration
     {
         public static readonly Rank_Registration Instance = new Rank_Registration();
 
@@ -778,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class RankSetterCommon
+    internal partial class RankSetterCommon
     {
         public static readonly RankSetterCommon Instance = new RankSetterCommon();
 
@@ -816,7 +817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RankCommon
+    internal partial class RankCommon
     {
         public static readonly RankCommon Instance = new RankCommon();
 
@@ -968,7 +969,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RankSetterTranslationCommon
+    internal partial class RankSetterTranslationCommon
     {
         public static readonly RankSetterTranslationCommon Instance = new RankSetterTranslationCommon();
 
@@ -1060,7 +1061,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Rank_Registration.Instance;
-        public static Rank_Registration StaticRegistration => Rank_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Rank_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RankCommon.Instance;
         [DebuggerStepThrough]
@@ -1084,7 +1085,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RankBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1136,7 +1137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class RankBinaryCreateTranslation
+    internal partial class RankBinaryCreateTranslation
     {
         public readonly static RankBinaryCreateTranslation Instance = new RankBinaryCreateTranslation();
 
@@ -1215,16 +1216,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class RankBinaryOverlay :
+    internal partial class RankBinaryOverlay :
         PluginBinaryOverlay,
         IRankGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Rank_Registration.Instance;
-        public static Rank_Registration StaticRegistration => Rank_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Rank_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RankCommon.Instance;
         [DebuggerStepThrough]

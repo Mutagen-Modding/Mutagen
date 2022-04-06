@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -607,10 +608,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LensFlare_FieldIndex
+    internal enum LensFlare_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -622,7 +623,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LensFlare_Registration : ILoquiRegistration
+    internal partial class LensFlare_Registration : ILoquiRegistration
     {
         public static readonly LensFlare_Registration Instance = new LensFlare_Registration();
 
@@ -703,7 +704,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LensFlareSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class LensFlareSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly LensFlareSetterCommon Instance = new LensFlareSetterCommon();
 
@@ -772,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LensFlareCommon : SkyrimMajorRecordCommon
+    internal partial class LensFlareCommon : SkyrimMajorRecordCommon
     {
         public new static readonly LensFlareCommon Instance = new LensFlareCommon();
 
@@ -994,7 +995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LensFlareSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class LensFlareSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly LensFlareSetterTranslationCommon Instance = new LensFlareSetterTranslationCommon();
 
@@ -1149,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LensFlare_Registration.Instance;
-        public new static LensFlare_Registration StaticRegistration => LensFlare_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LensFlare_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LensFlareCommon.Instance;
         [DebuggerStepThrough]
@@ -1167,7 +1168,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LensFlareBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1236,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LensFlareBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class LensFlareBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static LensFlareBinaryCreateTranslation Instance = new LensFlareBinaryCreateTranslation();
 
@@ -1263,16 +1264,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LensFlareBinaryOverlay :
+    internal partial class LensFlareBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ILensFlareGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LensFlare_Registration.Instance;
-        public new static LensFlare_Registration StaticRegistration => LensFlare_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LensFlare_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LensFlareCommon.Instance;
         [DebuggerStepThrough]

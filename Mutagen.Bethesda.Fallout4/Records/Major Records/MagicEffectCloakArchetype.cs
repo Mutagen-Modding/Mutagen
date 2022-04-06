@@ -25,11 +25,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ISpellGetter> Association { get; }
     }
 
-    namespace Internals
+    internal partial class MagicEffectCloakArchetypeBinaryOverlay
     {
-        public partial class MagicEffectCloakArchetypeBinaryOverlay
-        {
-            public IFormLinkGetter<ISpellGetter> Association => this.AssociationKey.AsLink<ISpellGetter>();
-        }
+        public IFormLinkGetter<ISpellGetter> Association => this.AssociationKey.AsLink<ISpellGetter>();
     }
 }

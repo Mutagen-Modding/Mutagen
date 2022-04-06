@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -4388,10 +4389,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Race_FieldIndex
+    internal enum Race_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -4475,7 +4476,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Race_Registration : ILoquiRegistration
+    internal partial class Race_Registration : ILoquiRegistration
     {
         public static readonly Race_Registration Instance = new Race_Registration();
 
@@ -4629,7 +4630,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class RaceSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class RaceSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly RaceSetterCommon Instance = new RaceSetterCommon();
 
@@ -4806,7 +4807,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class RaceCommon : SkyrimMajorRecordCommon
+    internal partial class RaceCommon : SkyrimMajorRecordCommon
     {
         public new static readonly RaceCommon Instance = new RaceCommon();
 
@@ -6198,7 +6199,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class RaceSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class RaceSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly RaceSetterTranslationCommon Instance = new RaceSetterTranslationCommon();
 
@@ -7020,7 +7021,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
-        public new static Race_Registration StaticRegistration => Race_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Race_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RaceCommon.Instance;
         [DebuggerStepThrough]
@@ -7038,7 +7039,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class RaceBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -7628,7 +7629,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class RaceBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class RaceBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static RaceBinaryCreateTranslation Instance = new RaceBinaryCreateTranslation();
 
@@ -8103,16 +8104,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class RaceBinaryOverlay :
+    internal partial class RaceBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IRaceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
-        public new static Race_Registration StaticRegistration => Race_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Race_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RaceCommon.Instance;
         [DebuggerStepThrough]

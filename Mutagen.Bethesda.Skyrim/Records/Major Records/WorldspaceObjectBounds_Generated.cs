@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -635,10 +636,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WorldspaceObjectBounds_FieldIndex
+    internal enum WorldspaceObjectBounds_FieldIndex
     {
         Min = 0,
         Max = 1,
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WorldspaceObjectBounds_Registration : ILoquiRegistration
+    internal partial class WorldspaceObjectBounds_Registration : ILoquiRegistration
     {
         public static readonly WorldspaceObjectBounds_Registration Instance = new WorldspaceObjectBounds_Registration();
 
@@ -728,7 +729,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WorldspaceObjectBoundsSetterCommon
+    internal partial class WorldspaceObjectBoundsSetterCommon
     {
         public static readonly WorldspaceObjectBoundsSetterCommon Instance = new WorldspaceObjectBoundsSetterCommon();
 
@@ -765,7 +766,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceObjectBoundsCommon
+    internal partial class WorldspaceObjectBoundsCommon
     {
         public static readonly WorldspaceObjectBoundsCommon Instance = new WorldspaceObjectBoundsCommon();
 
@@ -891,7 +892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceObjectBoundsSetterTranslationCommon
+    internal partial class WorldspaceObjectBoundsSetterTranslationCommon
     {
         public static readonly WorldspaceObjectBoundsSetterTranslationCommon Instance = new WorldspaceObjectBoundsSetterTranslationCommon();
 
@@ -973,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceObjectBounds_Registration.Instance;
-        public static WorldspaceObjectBounds_Registration StaticRegistration => WorldspaceObjectBounds_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceObjectBounds_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceObjectBoundsCommon.Instance;
         [DebuggerStepThrough]
@@ -997,7 +998,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceObjectBoundsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1066,7 +1067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WorldspaceObjectBoundsBinaryCreateTranslation
+    internal partial class WorldspaceObjectBoundsBinaryCreateTranslation
     {
         public readonly static WorldspaceObjectBoundsBinaryCreateTranslation Instance = new WorldspaceObjectBoundsBinaryCreateTranslation();
 
@@ -1141,16 +1142,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WorldspaceObjectBoundsBinaryOverlay :
+    internal partial class WorldspaceObjectBoundsBinaryOverlay :
         PluginBinaryOverlay,
         IWorldspaceObjectBoundsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceObjectBounds_Registration.Instance;
-        public static WorldspaceObjectBounds_Registration StaticRegistration => WorldspaceObjectBounds_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceObjectBounds_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceObjectBoundsCommon.Instance;
         [DebuggerStepThrough]

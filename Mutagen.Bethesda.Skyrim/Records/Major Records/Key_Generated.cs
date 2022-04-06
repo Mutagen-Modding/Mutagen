@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1343,10 +1344,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Key_FieldIndex
+    internal enum Key_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1370,7 +1371,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Key_Registration : ILoquiRegistration
+    internal partial class Key_Registration : ILoquiRegistration
     {
         public static readonly Key_Registration Instance = new Key_Registration();
 
@@ -1466,7 +1467,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class KeySetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class KeySetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly KeySetterCommon Instance = new KeySetterCommon();
 
@@ -1553,7 +1554,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class KeyCommon : SkyrimMajorRecordCommon
+    internal partial class KeyCommon : SkyrimMajorRecordCommon
     {
         public new static readonly KeyCommon Instance = new KeyCommon();
 
@@ -2001,7 +2002,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class KeySetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class KeySetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly KeySetterTranslationCommon Instance = new KeySetterTranslationCommon();
 
@@ -2333,7 +2334,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Key_Registration.Instance;
-        public new static Key_Registration StaticRegistration => Key_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Key_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => KeyCommon.Instance;
         [DebuggerStepThrough]
@@ -2351,7 +2352,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class KeyBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2508,7 +2509,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class KeyBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class KeyBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static KeyBinaryCreateTranslation Instance = new KeyBinaryCreateTranslation();
 
@@ -2633,16 +2634,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class KeyBinaryOverlay :
+    internal partial class KeyBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IKeyGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Key_Registration.Instance;
-        public new static Key_Registration StaticRegistration => Key_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Key_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => KeyCommon.Instance;
         [DebuggerStepThrough]

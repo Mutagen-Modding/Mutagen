@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -636,10 +637,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LinkedReferenceColor_FieldIndex
+    internal enum LinkedReferenceColor_FieldIndex
     {
         Start = 0,
         End = 1,
@@ -647,7 +648,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LinkedReferenceColor_Registration : ILoquiRegistration
+    internal partial class LinkedReferenceColor_Registration : ILoquiRegistration
     {
         public static readonly LinkedReferenceColor_Registration Instance = new LinkedReferenceColor_Registration();
 
@@ -728,7 +729,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LinkedReferenceColorSetterCommon
+    internal partial class LinkedReferenceColorSetterCommon
     {
         public static readonly LinkedReferenceColorSetterCommon Instance = new LinkedReferenceColorSetterCommon();
 
@@ -768,7 +769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LinkedReferenceColorCommon
+    internal partial class LinkedReferenceColorCommon
     {
         public static readonly LinkedReferenceColorCommon Instance = new LinkedReferenceColorCommon();
 
@@ -894,7 +895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LinkedReferenceColorSetterTranslationCommon
+    internal partial class LinkedReferenceColorSetterTranslationCommon
     {
         public static readonly LinkedReferenceColorSetterTranslationCommon Instance = new LinkedReferenceColorSetterTranslationCommon();
 
@@ -976,7 +977,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LinkedReferenceColor_Registration.Instance;
-        public static LinkedReferenceColor_Registration StaticRegistration => LinkedReferenceColor_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LinkedReferenceColor_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LinkedReferenceColorCommon.Instance;
         [DebuggerStepThrough]
@@ -1000,7 +1001,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LinkedReferenceColorBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1048,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LinkedReferenceColorBinaryCreateTranslation
+    internal partial class LinkedReferenceColorBinaryCreateTranslation
     {
         public readonly static LinkedReferenceColorBinaryCreateTranslation Instance = new LinkedReferenceColorBinaryCreateTranslation();
 
@@ -1084,16 +1085,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LinkedReferenceColorBinaryOverlay :
+    internal partial class LinkedReferenceColorBinaryOverlay :
         PluginBinaryOverlay,
         ILinkedReferenceColorGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LinkedReferenceColor_Registration.Instance;
-        public static LinkedReferenceColor_Registration StaticRegistration => LinkedReferenceColor_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LinkedReferenceColor_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LinkedReferenceColorCommon.Instance;
         [DebuggerStepThrough]

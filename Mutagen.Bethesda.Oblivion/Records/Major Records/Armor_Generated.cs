@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1143,10 +1144,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Armor_FieldIndex
+    internal enum Armor_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1169,7 +1170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Armor_Registration : ILoquiRegistration
+    internal partial class Armor_Registration : ILoquiRegistration
     {
         public static readonly Armor_Registration Instance = new Armor_Registration();
 
@@ -1300,7 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ArmorSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class ArmorSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly ArmorSetterCommon Instance = new ArmorSetterCommon();
 
@@ -1383,7 +1384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ArmorCommon : OblivionMajorRecordCommon
+    internal partial class ArmorCommon : OblivionMajorRecordCommon
     {
         public new static readonly ArmorCommon Instance = new ArmorCommon();
 
@@ -1819,7 +1820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ArmorSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class ArmorSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly ArmorSetterTranslationCommon Instance = new ArmorSetterTranslationCommon();
 
@@ -2154,7 +2155,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Armor_Registration.Instance;
-        public new static Armor_Registration StaticRegistration => Armor_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Armor_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArmorCommon.Instance;
         [DebuggerStepThrough]
@@ -2172,7 +2173,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ArmorBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -2323,7 +2324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ArmorBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class ArmorBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static ArmorBinaryCreateTranslation Instance = new ArmorBinaryCreateTranslation();
 
@@ -2453,16 +2454,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ArmorBinaryOverlay :
+    internal partial class ArmorBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IArmorGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Armor_Registration.Instance;
-        public new static Armor_Registration StaticRegistration => Armor_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Armor_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArmorCommon.Instance;
         [DebuggerStepThrough]

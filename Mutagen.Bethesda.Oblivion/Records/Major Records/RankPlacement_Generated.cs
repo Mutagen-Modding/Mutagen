@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -691,10 +692,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum RankPlacement_FieldIndex
+    internal enum RankPlacement_FieldIndex
     {
         Faction = 0,
         Rank = 1,
@@ -703,7 +704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class RankPlacement_Registration : ILoquiRegistration
+    internal partial class RankPlacement_Registration : ILoquiRegistration
     {
         public static readonly RankPlacement_Registration Instance = new RankPlacement_Registration();
 
@@ -784,7 +785,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class RankPlacementSetterCommon
+    internal partial class RankPlacementSetterCommon
     {
         public static readonly RankPlacementSetterCommon Instance = new RankPlacementSetterCommon();
 
@@ -826,7 +827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RankPlacementCommon
+    internal partial class RankPlacementCommon
     {
         public static readonly RankPlacementCommon Instance = new RankPlacementCommon();
 
@@ -963,7 +964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RankPlacementSetterTranslationCommon
+    internal partial class RankPlacementSetterTranslationCommon
     {
         public static readonly RankPlacementSetterTranslationCommon Instance = new RankPlacementSetterTranslationCommon();
 
@@ -1049,7 +1050,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RankPlacement_Registration.Instance;
-        public static RankPlacement_Registration StaticRegistration => RankPlacement_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RankPlacement_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RankPlacementCommon.Instance;
         [DebuggerStepThrough]
@@ -1073,7 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RankPlacementBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1122,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class RankPlacementBinaryCreateTranslation
+    internal partial class RankPlacementBinaryCreateTranslation
     {
         public readonly static RankPlacementBinaryCreateTranslation Instance = new RankPlacementBinaryCreateTranslation();
 
@@ -1159,16 +1160,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class RankPlacementBinaryOverlay :
+    internal partial class RankPlacementBinaryOverlay :
         PluginBinaryOverlay,
         IRankPlacementGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RankPlacement_Registration.Instance;
-        public static RankPlacement_Registration StaticRegistration => RankPlacement_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RankPlacement_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RankPlacementCommon.Instance;
         [DebuggerStepThrough]

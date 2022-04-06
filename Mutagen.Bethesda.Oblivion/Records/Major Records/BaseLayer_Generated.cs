@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -629,17 +630,17 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum BaseLayer_FieldIndex
+    internal enum BaseLayer_FieldIndex
     {
         Header = 0,
     }
     #endregion
 
     #region Registration
-    public partial class BaseLayer_Registration : ILoquiRegistration
+    internal partial class BaseLayer_Registration : ILoquiRegistration
     {
         public static readonly BaseLayer_Registration Instance = new BaseLayer_Registration();
 
@@ -721,7 +722,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class BaseLayerSetterCommon
+    internal partial class BaseLayerSetterCommon
     {
         public static readonly BaseLayerSetterCommon Instance = new BaseLayerSetterCommon();
 
@@ -758,7 +759,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class BaseLayerCommon
+    internal partial class BaseLayerCommon
     {
         public static readonly BaseLayerCommon Instance = new BaseLayerCommon();
 
@@ -893,7 +894,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class BaseLayerSetterTranslationCommon
+    internal partial class BaseLayerSetterTranslationCommon
     {
         public static readonly BaseLayerSetterTranslationCommon Instance = new BaseLayerSetterTranslationCommon();
 
@@ -993,7 +994,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
-        public static BaseLayer_Registration StaticRegistration => BaseLayer_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BaseLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => BaseLayerCommon.Instance;
         [DebuggerStepThrough]
@@ -1017,7 +1018,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class BaseLayerBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1061,7 +1062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class BaseLayerBinaryCreateTranslation
+    internal partial class BaseLayerBinaryCreateTranslation
     {
         public readonly static BaseLayerBinaryCreateTranslation Instance = new BaseLayerBinaryCreateTranslation();
 
@@ -1120,16 +1121,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class BaseLayerBinaryOverlay :
+    internal partial class BaseLayerBinaryOverlay :
         PluginBinaryOverlay,
         IBaseLayerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
-        public static BaseLayer_Registration StaticRegistration => BaseLayer_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BaseLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => BaseLayerCommon.Instance;
         [DebuggerStepThrough]

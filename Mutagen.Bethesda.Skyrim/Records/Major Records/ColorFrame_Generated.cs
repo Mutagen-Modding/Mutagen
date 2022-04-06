@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -636,10 +637,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ColorFrame_FieldIndex
+    internal enum ColorFrame_FieldIndex
     {
         Time = 0,
         Color = 1,
@@ -647,7 +648,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ColorFrame_Registration : ILoquiRegistration
+    internal partial class ColorFrame_Registration : ILoquiRegistration
     {
         public static readonly ColorFrame_Registration Instance = new ColorFrame_Registration();
 
@@ -721,7 +722,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ColorFrameSetterCommon
+    internal partial class ColorFrameSetterCommon
     {
         public static readonly ColorFrameSetterCommon Instance = new ColorFrameSetterCommon();
 
@@ -757,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ColorFrameCommon
+    internal partial class ColorFrameCommon
     {
         public static readonly ColorFrameCommon Instance = new ColorFrameCommon();
 
@@ -883,7 +884,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ColorFrameSetterTranslationCommon
+    internal partial class ColorFrameSetterTranslationCommon
     {
         public static readonly ColorFrameSetterTranslationCommon Instance = new ColorFrameSetterTranslationCommon();
 
@@ -965,7 +966,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ColorFrame_Registration.Instance;
-        public static ColorFrame_Registration StaticRegistration => ColorFrame_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ColorFrame_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ColorFrameCommon.Instance;
         [DebuggerStepThrough]
@@ -989,7 +990,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ColorFrameBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1031,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ColorFrameBinaryCreateTranslation
+    internal partial class ColorFrameBinaryCreateTranslation
     {
         public readonly static ColorFrameBinaryCreateTranslation Instance = new ColorFrameBinaryCreateTranslation();
 
@@ -1067,16 +1068,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ColorFrameBinaryOverlay :
+    internal partial class ColorFrameBinaryOverlay :
         PluginBinaryOverlay,
         IColorFrameGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ColorFrame_Registration.Instance;
-        public static ColorFrame_Registration StaticRegistration => ColorFrame_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ColorFrame_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ColorFrameCommon.Instance;
         [DebuggerStepThrough]

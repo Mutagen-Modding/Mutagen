@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -701,10 +702,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum SeasonalIngredientProduction_FieldIndex
+    internal enum SeasonalIngredientProduction_FieldIndex
     {
         Spring = 0,
         Summer = 1,
@@ -714,7 +715,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class SeasonalIngredientProduction_Registration : ILoquiRegistration
+    internal partial class SeasonalIngredientProduction_Registration : ILoquiRegistration
     {
         public static readonly SeasonalIngredientProduction_Registration Instance = new SeasonalIngredientProduction_Registration();
 
@@ -795,7 +796,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class SeasonalIngredientProductionSetterCommon
+    internal partial class SeasonalIngredientProductionSetterCommon
     {
         public static readonly SeasonalIngredientProductionSetterCommon Instance = new SeasonalIngredientProductionSetterCommon();
 
@@ -837,7 +838,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class SeasonalIngredientProductionCommon
+    internal partial class SeasonalIngredientProductionCommon
     {
         public static readonly SeasonalIngredientProductionCommon Instance = new SeasonalIngredientProductionCommon();
 
@@ -983,7 +984,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class SeasonalIngredientProductionSetterTranslationCommon
+    internal partial class SeasonalIngredientProductionSetterTranslationCommon
     {
         public static readonly SeasonalIngredientProductionSetterTranslationCommon Instance = new SeasonalIngredientProductionSetterTranslationCommon();
 
@@ -1073,7 +1074,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SeasonalIngredientProduction_Registration.Instance;
-        public static SeasonalIngredientProduction_Registration StaticRegistration => SeasonalIngredientProduction_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SeasonalIngredientProduction_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SeasonalIngredientProductionCommon.Instance;
         [DebuggerStepThrough]
@@ -1097,7 +1098,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SeasonalIngredientProductionBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1143,7 +1144,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class SeasonalIngredientProductionBinaryCreateTranslation
+    internal partial class SeasonalIngredientProductionBinaryCreateTranslation
     {
         public readonly static SeasonalIngredientProductionBinaryCreateTranslation Instance = new SeasonalIngredientProductionBinaryCreateTranslation();
 
@@ -1181,16 +1182,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class SeasonalIngredientProductionBinaryOverlay :
+    internal partial class SeasonalIngredientProductionBinaryOverlay :
         PluginBinaryOverlay,
         ISeasonalIngredientProductionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SeasonalIngredientProduction_Registration.Instance;
-        public static SeasonalIngredientProduction_Registration StaticRegistration => SeasonalIngredientProduction_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SeasonalIngredientProduction_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SeasonalIngredientProductionCommon.Instance;
         [DebuggerStepThrough]

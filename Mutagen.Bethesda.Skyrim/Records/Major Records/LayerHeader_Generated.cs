@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -716,10 +717,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LayerHeader_FieldIndex
+    internal enum LayerHeader_FieldIndex
     {
         Texture = 0,
         Quadrant = 1,
@@ -729,7 +730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LayerHeader_Registration : ILoquiRegistration
+    internal partial class LayerHeader_Registration : ILoquiRegistration
     {
         public static readonly LayerHeader_Registration Instance = new LayerHeader_Registration();
 
@@ -810,7 +811,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LayerHeaderSetterCommon
+    internal partial class LayerHeaderSetterCommon
     {
         public static readonly LayerHeaderSetterCommon Instance = new LayerHeaderSetterCommon();
 
@@ -853,7 +854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LayerHeaderCommon
+    internal partial class LayerHeaderCommon
     {
         public static readonly LayerHeaderCommon Instance = new LayerHeaderCommon();
 
@@ -1000,7 +1001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LayerHeaderSetterTranslationCommon
+    internal partial class LayerHeaderSetterTranslationCommon
     {
         public static readonly LayerHeaderSetterTranslationCommon Instance = new LayerHeaderSetterTranslationCommon();
 
@@ -1090,7 +1091,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LayerHeader_Registration.Instance;
-        public static LayerHeader_Registration StaticRegistration => LayerHeader_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LayerHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LayerHeaderCommon.Instance;
         [DebuggerStepThrough]
@@ -1114,7 +1115,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LayerHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1165,7 +1166,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LayerHeaderBinaryCreateTranslation
+    internal partial class LayerHeaderBinaryCreateTranslation
     {
         public readonly static LayerHeaderBinaryCreateTranslation Instance = new LayerHeaderBinaryCreateTranslation();
 
@@ -1205,16 +1206,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LayerHeaderBinaryOverlay :
+    internal partial class LayerHeaderBinaryOverlay :
         PluginBinaryOverlay,
         ILayerHeaderGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LayerHeader_Registration.Instance;
-        public static LayerHeader_Registration StaticRegistration => LayerHeader_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LayerHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LayerHeaderCommon.Instance;
         [DebuggerStepThrough]

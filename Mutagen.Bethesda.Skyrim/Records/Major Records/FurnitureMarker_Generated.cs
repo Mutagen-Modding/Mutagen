@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -747,10 +748,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum FurnitureMarker_FieldIndex
+    internal enum FurnitureMarker_FieldIndex
     {
         Enabled = 0,
         DisabledEntryPoints = 1,
@@ -760,7 +761,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class FurnitureMarker_Registration : ILoquiRegistration
+    internal partial class FurnitureMarker_Registration : ILoquiRegistration
     {
         public static readonly FurnitureMarker_Registration Instance = new FurnitureMarker_Registration();
 
@@ -834,7 +835,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class FurnitureMarkerSetterCommon
+    internal partial class FurnitureMarkerSetterCommon
     {
         public static readonly FurnitureMarkerSetterCommon Instance = new FurnitureMarkerSetterCommon();
 
@@ -873,7 +874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FurnitureMarkerCommon
+    internal partial class FurnitureMarkerCommon
     {
         public static readonly FurnitureMarkerCommon Instance = new FurnitureMarkerCommon();
 
@@ -1047,7 +1048,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FurnitureMarkerSetterTranslationCommon
+    internal partial class FurnitureMarkerSetterTranslationCommon
     {
         public static readonly FurnitureMarkerSetterTranslationCommon Instance = new FurnitureMarkerSetterTranslationCommon();
 
@@ -1181,7 +1182,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FurnitureMarker_Registration.Instance;
-        public static FurnitureMarker_Registration StaticRegistration => FurnitureMarker_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FurnitureMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FurnitureMarkerCommon.Instance;
         [DebuggerStepThrough]
@@ -1205,7 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class FurnitureMarkerBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1256,7 +1257,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class FurnitureMarkerBinaryCreateTranslation
+    internal partial class FurnitureMarkerBinaryCreateTranslation
     {
         public readonly static FurnitureMarkerBinaryCreateTranslation Instance = new FurnitureMarkerBinaryCreateTranslation();
 
@@ -1297,16 +1298,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class FurnitureMarkerBinaryOverlay :
+    internal partial class FurnitureMarkerBinaryOverlay :
         PluginBinaryOverlay,
         IFurnitureMarkerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FurnitureMarker_Registration.Instance;
-        public static FurnitureMarker_Registration StaticRegistration => FurnitureMarker_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FurnitureMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FurnitureMarkerCommon.Instance;
         [DebuggerStepThrough]

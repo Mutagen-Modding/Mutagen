@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1080,10 +1081,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum TextureSet_FieldIndex
+    internal enum TextureSet_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1107,7 +1108,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class TextureSet_Registration : ILoquiRegistration
+    internal partial class TextureSet_Registration : ILoquiRegistration
     {
         public static readonly TextureSet_Registration Instance = new TextureSet_Registration();
 
@@ -1202,7 +1203,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class TextureSetSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class TextureSetSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly TextureSetSetterCommon Instance = new TextureSetSetterCommon();
 
@@ -1283,7 +1284,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TextureSetCommon : Fallout4MajorRecordCommon
+    internal partial class TextureSetCommon : Fallout4MajorRecordCommon
     {
         public new static readonly TextureSetCommon Instance = new TextureSetCommon();
 
@@ -1677,7 +1678,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TextureSetSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class TextureSetSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly TextureSetSetterTranslationCommon Instance = new TextureSetSetterTranslationCommon();
 
@@ -1920,7 +1921,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TextureSet_Registration.Instance;
-        public new static TextureSet_Registration StaticRegistration => TextureSet_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => TextureSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TextureSetCommon.Instance;
         [DebuggerStepThrough]
@@ -1938,7 +1939,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TextureSetBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -2082,7 +2083,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class TextureSetBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class TextureSetBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static TextureSetBinaryCreateTranslation Instance = new TextureSetBinaryCreateTranslation();
 
@@ -2222,16 +2223,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class TextureSetBinaryOverlay :
+    internal partial class TextureSetBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         ITextureSetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TextureSet_Registration.Instance;
-        public new static TextureSet_Registration StaticRegistration => TextureSet_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => TextureSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TextureSetCommon.Instance;
         [DebuggerStepThrough]

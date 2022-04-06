@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1262,10 +1263,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Tree_FieldIndex
+    internal enum Tree_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1290,7 +1291,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Tree_Registration : ILoquiRegistration
+    internal partial class Tree_Registration : ILoquiRegistration
     {
         public static readonly Tree_Registration Instance = new Tree_Registration();
 
@@ -1381,7 +1382,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class TreeSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class TreeSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly TreeSetterCommon Instance = new TreeSetterCommon();
 
@@ -1467,7 +1468,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TreeCommon : SkyrimMajorRecordCommon
+    internal partial class TreeCommon : SkyrimMajorRecordCommon
     {
         public new static readonly TreeCommon Instance = new TreeCommon();
 
@@ -1885,7 +1886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TreeSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class TreeSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly TreeSetterTranslationCommon Instance = new TreeSetterTranslationCommon();
 
@@ -2176,7 +2177,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
-        public new static Tree_Registration StaticRegistration => Tree_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Tree_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TreeCommon.Instance;
         [DebuggerStepThrough]
@@ -2194,7 +2195,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class TreeBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2343,7 +2344,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class TreeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class TreeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static TreeBinaryCreateTranslation Instance = new TreeBinaryCreateTranslation();
 
@@ -2447,16 +2448,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class TreeBinaryOverlay :
+    internal partial class TreeBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ITreeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
-        public new static Tree_Registration StaticRegistration => Tree_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Tree_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TreeCommon.Instance;
         [DebuggerStepThrough]

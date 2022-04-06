@@ -58,7 +58,7 @@ public class TestDataPathing
                     new MasterReferenceCollection(modKey ?? path.ModKey))));
     }
 
-    public static OverlayStream GetOverlayStream(ModPath path, GameRelease release, ModKey? modKey = null)
+    internal static OverlayStream GetOverlayStream(ModPath path, GameRelease release, ModKey? modKey = null)
     {
         return new OverlayStream(
             File.ReadAllBytes(path),

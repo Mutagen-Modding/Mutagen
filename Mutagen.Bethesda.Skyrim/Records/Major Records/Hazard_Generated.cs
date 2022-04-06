@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1279,10 +1280,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Hazard_FieldIndex
+    internal enum Hazard_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1309,7 +1310,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Hazard_Registration : ILoquiRegistration
+    internal partial class Hazard_Registration : ILoquiRegistration
     {
         public static readonly Hazard_Registration Instance = new Hazard_Registration();
 
@@ -1397,7 +1398,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class HazardSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class HazardSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly HazardSetterCommon Instance = new HazardSetterCommon();
 
@@ -1487,7 +1488,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class HazardCommon : SkyrimMajorRecordCommon
+    internal partial class HazardCommon : SkyrimMajorRecordCommon
     {
         public new static readonly HazardCommon Instance = new HazardCommon();
 
@@ -1894,7 +1895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class HazardSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class HazardSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly HazardSetterTranslationCommon Instance = new HazardSetterTranslationCommon();
 
@@ -2149,7 +2150,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Hazard_Registration.Instance;
-        public new static Hazard_Registration StaticRegistration => Hazard_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Hazard_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HazardCommon.Instance;
         [DebuggerStepThrough]
@@ -2167,7 +2168,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class HazardBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2312,7 +2313,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class HazardBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class HazardBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static HazardBinaryCreateTranslation Instance = new HazardBinaryCreateTranslation();
 
@@ -2407,16 +2408,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class HazardBinaryOverlay :
+    internal partial class HazardBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IHazardGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Hazard_Registration.Instance;
-        public new static Hazard_Registration StaticRegistration => Hazard_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Hazard_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HazardCommon.Instance;
         [DebuggerStepThrough]

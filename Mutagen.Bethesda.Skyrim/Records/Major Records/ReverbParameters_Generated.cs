@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1054,10 +1055,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ReverbParameters_FieldIndex
+    internal enum ReverbParameters_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1082,7 +1083,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ReverbParameters_Registration : ILoquiRegistration
+    internal partial class ReverbParameters_Registration : ILoquiRegistration
     {
         public static readonly ReverbParameters_Registration Instance = new ReverbParameters_Registration();
 
@@ -1166,7 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ReverbParametersSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ReverbParametersSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ReverbParametersSetterCommon Instance = new ReverbParametersSetterCommon();
 
@@ -1248,7 +1249,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ReverbParametersCommon : SkyrimMajorRecordCommon
+    internal partial class ReverbParametersCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ReverbParametersCommon Instance = new ReverbParametersCommon();
 
@@ -1600,7 +1601,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ReverbParametersSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ReverbParametersSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ReverbParametersSetterTranslationCommon Instance = new ReverbParametersSetterTranslationCommon();
 
@@ -1807,7 +1808,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ReverbParameters_Registration.Instance;
-        public new static ReverbParameters_Registration StaticRegistration => ReverbParameters_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ReverbParameters_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ReverbParametersCommon.Instance;
         [DebuggerStepThrough]
@@ -1825,7 +1826,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ReverbParametersBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1935,7 +1936,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ReverbParametersBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ReverbParametersBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ReverbParametersBinaryCreateTranslation Instance = new ReverbParametersBinaryCreateTranslation();
 
@@ -2006,16 +2007,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ReverbParametersBinaryOverlay :
+    internal partial class ReverbParametersBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IReverbParametersGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ReverbParameters_Registration.Instance;
-        public new static ReverbParameters_Registration StaticRegistration => ReverbParameters_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ReverbParameters_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ReverbParametersCommon.Instance;
         [DebuggerStepThrough]

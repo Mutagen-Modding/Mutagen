@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -668,10 +669,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum DistantLODData_FieldIndex
+    internal enum DistantLODData_FieldIndex
     {
         Unknown0 = 0,
         Unknown1 = 1,
@@ -680,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class DistantLODData_Registration : ILoquiRegistration
+    internal partial class DistantLODData_Registration : ILoquiRegistration
     {
         public static readonly DistantLODData_Registration Instance = new DistantLODData_Registration();
 
@@ -761,7 +762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class DistantLODDataSetterCommon
+    internal partial class DistantLODDataSetterCommon
     {
         public static readonly DistantLODDataSetterCommon Instance = new DistantLODDataSetterCommon();
 
@@ -802,7 +803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class DistantLODDataCommon
+    internal partial class DistantLODDataCommon
     {
         public static readonly DistantLODDataCommon Instance = new DistantLODDataCommon();
 
@@ -938,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class DistantLODDataSetterTranslationCommon
+    internal partial class DistantLODDataSetterTranslationCommon
     {
         public static readonly DistantLODDataSetterTranslationCommon Instance = new DistantLODDataSetterTranslationCommon();
 
@@ -1024,7 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
-        public static DistantLODData_Registration StaticRegistration => DistantLODData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DistantLODData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DistantLODDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1048,7 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class DistantLODDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1099,7 +1100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class DistantLODDataBinaryCreateTranslation
+    internal partial class DistantLODDataBinaryCreateTranslation
     {
         public readonly static DistantLODDataBinaryCreateTranslation Instance = new DistantLODDataBinaryCreateTranslation();
 
@@ -1136,16 +1137,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class DistantLODDataBinaryOverlay :
+    internal partial class DistantLODDataBinaryOverlay :
         PluginBinaryOverlay,
         IDistantLODDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
-        public static DistantLODData_Registration StaticRegistration => DistantLODData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DistantLODData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DistantLODDataCommon.Instance;
         [DebuggerStepThrough]

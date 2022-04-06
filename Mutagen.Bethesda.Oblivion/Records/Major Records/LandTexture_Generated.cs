@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -842,10 +843,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum LandTexture_FieldIndex
+    internal enum LandTexture_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -860,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class LandTexture_Registration : ILoquiRegistration
+    internal partial class LandTexture_Registration : ILoquiRegistration
     {
         public static readonly LandTexture_Registration Instance = new LandTexture_Registration();
 
@@ -947,7 +948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LandTextureSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class LandTextureSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly LandTextureSetterCommon Instance = new LandTextureSetterCommon();
 
@@ -1021,7 +1022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LandTextureCommon : OblivionMajorRecordCommon
+    internal partial class LandTextureCommon : OblivionMajorRecordCommon
     {
         public new static readonly LandTextureCommon Instance = new LandTextureCommon();
 
@@ -1322,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LandTextureSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class LandTextureSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly LandTextureSetterTranslationCommon Instance = new LandTextureSetterTranslationCommon();
 
@@ -1530,7 +1531,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LandTexture_Registration.Instance;
-        public new static LandTexture_Registration StaticRegistration => LandTexture_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LandTexture_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LandTextureCommon.Instance;
         [DebuggerStepThrough]
@@ -1548,7 +1549,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LandTextureBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1656,7 +1657,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LandTextureBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class LandTextureBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static LandTextureBinaryCreateTranslation Instance = new LandTextureBinaryCreateTranslation();
 
@@ -1734,16 +1735,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LandTextureBinaryOverlay :
+    internal partial class LandTextureBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         ILandTextureGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LandTexture_Registration.Instance;
-        public new static LandTexture_Registration StaticRegistration => LandTexture_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LandTexture_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LandTextureCommon.Instance;
         [DebuggerStepThrough]

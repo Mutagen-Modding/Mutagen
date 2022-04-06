@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -979,10 +980,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ConstructibleObject_FieldIndex
+    internal enum ConstructibleObject_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -999,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ConstructibleObject_Registration : ILoquiRegistration
+    internal partial class ConstructibleObject_Registration : ILoquiRegistration
     {
         public static readonly ConstructibleObject_Registration Instance = new ConstructibleObject_Registration();
 
@@ -1091,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ConstructibleObjectSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ConstructibleObjectSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ConstructibleObjectSetterCommon Instance = new ConstructibleObjectSetterCommon();
 
@@ -1169,7 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ConstructibleObjectCommon : SkyrimMajorRecordCommon
+    internal partial class ConstructibleObjectCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ConstructibleObjectCommon Instance = new ConstructibleObjectCommon();
 
@@ -1501,7 +1502,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ConstructibleObjectSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ConstructibleObjectSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ConstructibleObjectSetterTranslationCommon Instance = new ConstructibleObjectSetterTranslationCommon();
 
@@ -1724,7 +1725,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConstructibleObject_Registration.Instance;
-        public new static ConstructibleObject_Registration StaticRegistration => ConstructibleObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ConstructibleObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ConstructibleObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -1742,7 +1743,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ConstructibleObjectBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1860,7 +1861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ConstructibleObjectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ConstructibleObjectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ConstructibleObjectBinaryCreateTranslation Instance = new ConstructibleObjectBinaryCreateTranslation();
 
@@ -1952,16 +1953,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ConstructibleObjectBinaryOverlay :
+    internal partial class ConstructibleObjectBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IConstructibleObjectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConstructibleObject_Registration.Instance;
-        public new static ConstructibleObject_Registration StaticRegistration => ConstructibleObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ConstructibleObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ConstructibleObjectCommon.Instance;
         [DebuggerStepThrough]

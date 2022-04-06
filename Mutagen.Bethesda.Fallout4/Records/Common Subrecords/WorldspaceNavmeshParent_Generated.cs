@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -608,10 +609,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum WorldspaceNavmeshParent_FieldIndex
+    internal enum WorldspaceNavmeshParent_FieldIndex
     {
         Parent = 0,
         Coordinates = 1,
@@ -619,7 +620,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class WorldspaceNavmeshParent_Registration : ILoquiRegistration
+    internal partial class WorldspaceNavmeshParent_Registration : ILoquiRegistration
     {
         public static readonly WorldspaceNavmeshParent_Registration Instance = new WorldspaceNavmeshParent_Registration();
 
@@ -693,7 +694,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class WorldspaceNavmeshParentSetterCommon : ANavmeshParentSetterCommon
+    internal partial class WorldspaceNavmeshParentSetterCommon : ANavmeshParentSetterCommon
     {
         public new static readonly WorldspaceNavmeshParentSetterCommon Instance = new WorldspaceNavmeshParentSetterCommon();
 
@@ -748,7 +749,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class WorldspaceNavmeshParentCommon : ANavmeshParentCommon
+    internal partial class WorldspaceNavmeshParentCommon : ANavmeshParentCommon
     {
         public new static readonly WorldspaceNavmeshParentCommon Instance = new WorldspaceNavmeshParentCommon();
 
@@ -911,7 +912,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class WorldspaceNavmeshParentSetterTranslationCommon : ANavmeshParentSetterTranslationCommon
+    internal partial class WorldspaceNavmeshParentSetterTranslationCommon : ANavmeshParentSetterTranslationCommon
     {
         public new static readonly WorldspaceNavmeshParentSetterTranslationCommon Instance = new WorldspaceNavmeshParentSetterTranslationCommon();
 
@@ -1015,7 +1016,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceNavmeshParent_Registration.Instance;
-        public new static WorldspaceNavmeshParent_Registration StaticRegistration => WorldspaceNavmeshParent_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => WorldspaceNavmeshParent_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WorldspaceNavmeshParentCommon.Instance;
         [DebuggerStepThrough]
@@ -1033,7 +1034,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class WorldspaceNavmeshParentBinaryWriteTranslation :
         ANavmeshParentBinaryWriteTranslation,
@@ -1087,7 +1088,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class WorldspaceNavmeshParentBinaryCreateTranslation : ANavmeshParentBinaryCreateTranslation
+    internal partial class WorldspaceNavmeshParentBinaryCreateTranslation : ANavmeshParentBinaryCreateTranslation
     {
         public new readonly static WorldspaceNavmeshParentBinaryCreateTranslation Instance = new WorldspaceNavmeshParentBinaryCreateTranslation();
 
@@ -1112,16 +1113,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class WorldspaceNavmeshParentBinaryOverlay :
+    internal partial class WorldspaceNavmeshParentBinaryOverlay :
         ANavmeshParentBinaryOverlay,
         IWorldspaceNavmeshParentGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceNavmeshParent_Registration.Instance;
-        public new static WorldspaceNavmeshParent_Registration StaticRegistration => WorldspaceNavmeshParent_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => WorldspaceNavmeshParent_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WorldspaceNavmeshParentCommon.Instance;
         [DebuggerStepThrough]

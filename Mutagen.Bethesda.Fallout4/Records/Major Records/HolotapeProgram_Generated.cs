@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -553,17 +554,17 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum HolotapeProgram_FieldIndex
+    internal enum HolotapeProgram_FieldIndex
     {
         File = 0,
     }
     #endregion
 
     #region Registration
-    public partial class HolotapeProgram_Registration : ILoquiRegistration
+    internal partial class HolotapeProgram_Registration : ILoquiRegistration
     {
         public static readonly HolotapeProgram_Registration Instance = new HolotapeProgram_Registration();
 
@@ -637,7 +638,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class HolotapeProgramSetterCommon : AHolotapeDataSetterCommon
+    internal partial class HolotapeProgramSetterCommon : AHolotapeDataSetterCommon
     {
         public new static readonly HolotapeProgramSetterCommon Instance = new HolotapeProgramSetterCommon();
 
@@ -690,7 +691,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class HolotapeProgramCommon : AHolotapeDataCommon
+    internal partial class HolotapeProgramCommon : AHolotapeDataCommon
     {
         public new static readonly HolotapeProgramCommon Instance = new HolotapeProgramCommon();
 
@@ -842,7 +843,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class HolotapeProgramSetterTranslationCommon : AHolotapeDataSetterTranslationCommon
+    internal partial class HolotapeProgramSetterTranslationCommon : AHolotapeDataSetterTranslationCommon
     {
         public new static readonly HolotapeProgramSetterTranslationCommon Instance = new HolotapeProgramSetterTranslationCommon();
 
@@ -942,7 +943,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HolotapeProgram_Registration.Instance;
-        public new static HolotapeProgram_Registration StaticRegistration => HolotapeProgram_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => HolotapeProgram_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HolotapeProgramCommon.Instance;
         [DebuggerStepThrough]
@@ -960,7 +961,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class HolotapeProgramBinaryWriteTranslation :
         AHolotapeDataBinaryWriteTranslation,
@@ -1012,7 +1013,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class HolotapeProgramBinaryCreateTranslation : AHolotapeDataBinaryCreateTranslation
+    internal partial class HolotapeProgramBinaryCreateTranslation : AHolotapeDataBinaryCreateTranslation
     {
         public new readonly static HolotapeProgramBinaryCreateTranslation Instance = new HolotapeProgramBinaryCreateTranslation();
 
@@ -1039,16 +1040,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class HolotapeProgramBinaryOverlay :
+    internal partial class HolotapeProgramBinaryOverlay :
         AHolotapeDataBinaryOverlay,
         IHolotapeProgramGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HolotapeProgram_Registration.Instance;
-        public new static HolotapeProgram_Registration StaticRegistration => HolotapeProgram_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => HolotapeProgram_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HolotapeProgramCommon.Instance;
         [DebuggerStepThrough]

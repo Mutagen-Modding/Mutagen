@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -925,10 +926,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CollisionLayer_FieldIndex
+    internal enum CollisionLayer_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -946,7 +947,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CollisionLayer_Registration : ILoquiRegistration
+    internal partial class CollisionLayer_Registration : ILoquiRegistration
     {
         public static readonly CollisionLayer_Registration Instance = new CollisionLayer_Registration();
 
@@ -1036,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CollisionLayerSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class CollisionLayerSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly CollisionLayerSetterCommon Instance = new CollisionLayerSetterCommon();
 
@@ -1112,7 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CollisionLayerCommon : SkyrimMajorRecordCommon
+    internal partial class CollisionLayerCommon : SkyrimMajorRecordCommon
     {
         public new static readonly CollisionLayerCommon Instance = new CollisionLayerCommon();
 
@@ -1419,7 +1420,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CollisionLayerSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class CollisionLayerSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly CollisionLayerSetterTranslationCommon Instance = new CollisionLayerSetterTranslationCommon();
 
@@ -1621,7 +1622,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CollisionLayer_Registration.Instance;
-        public new static CollisionLayer_Registration StaticRegistration => CollisionLayer_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CollisionLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CollisionLayerCommon.Instance;
         [DebuggerStepThrough]
@@ -1639,7 +1640,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CollisionLayerBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1758,7 +1759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CollisionLayerBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class CollisionLayerBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static CollisionLayerBinaryCreateTranslation Instance = new CollisionLayerBinaryCreateTranslation();
 
@@ -1859,16 +1860,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CollisionLayerBinaryOverlay :
+    internal partial class CollisionLayerBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ICollisionLayerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CollisionLayer_Registration.Instance;
-        public new static CollisionLayer_Registration StaticRegistration => CollisionLayer_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CollisionLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CollisionLayerCommon.Instance;
         [DebuggerStepThrough]

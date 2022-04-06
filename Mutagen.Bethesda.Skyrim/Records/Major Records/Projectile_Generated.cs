@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1895,10 +1896,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Projectile_FieldIndex
+    internal enum Projectile_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1942,7 +1943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Projectile_Registration : ILoquiRegistration
+    internal partial class Projectile_Registration : ILoquiRegistration
     {
         public static readonly Projectile_Registration Instance = new Projectile_Registration();
 
@@ -2035,7 +2036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ProjectileSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ProjectileSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ProjectileSetterCommon Instance = new ProjectileSetterCommon();
 
@@ -2147,7 +2148,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ProjectileCommon : SkyrimMajorRecordCommon
+    internal partial class ProjectileCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ProjectileCommon Instance = new ProjectileCommon();
 
@@ -2748,7 +2749,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ProjectileSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ProjectileSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ProjectileSetterTranslationCommon Instance = new ProjectileSetterTranslationCommon();
 
@@ -3100,7 +3101,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Projectile_Registration.Instance;
-        public new static Projectile_Registration StaticRegistration => Projectile_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Projectile_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ProjectileCommon.Instance;
         [DebuggerStepThrough]
@@ -3118,7 +3119,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ProjectileBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -3330,7 +3331,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ProjectileBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ProjectileBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ProjectileBinaryCreateTranslation Instance = new ProjectileBinaryCreateTranslation();
 
@@ -3474,16 +3475,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ProjectileBinaryOverlay :
+    internal partial class ProjectileBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IProjectileGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Projectile_Registration.Instance;
-        public new static Projectile_Registration StaticRegistration => Projectile_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Projectile_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ProjectileCommon.Instance;
         [DebuggerStepThrough]

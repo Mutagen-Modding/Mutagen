@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -812,10 +813,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum MorphPreset_FieldIndex
+    internal enum MorphPreset_FieldIndex
     {
         Index = 0,
         Name = 1,
@@ -826,7 +827,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class MorphPreset_Registration : ILoquiRegistration
+    internal partial class MorphPreset_Registration : ILoquiRegistration
     {
         public static readonly MorphPreset_Registration Instance = new MorphPreset_Registration();
 
@@ -911,7 +912,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class MorphPresetSetterCommon
+    internal partial class MorphPresetSetterCommon
     {
         public static readonly MorphPresetSetterCommon Instance = new MorphPresetSetterCommon();
 
@@ -952,7 +953,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MorphPresetCommon
+    internal partial class MorphPresetCommon
     {
         public static readonly MorphPresetCommon Instance = new MorphPresetCommon();
 
@@ -1128,7 +1129,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MorphPresetSetterTranslationCommon
+    internal partial class MorphPresetSetterTranslationCommon
     {
         public static readonly MorphPresetSetterTranslationCommon Instance = new MorphPresetSetterTranslationCommon();
 
@@ -1229,7 +1230,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MorphPreset_Registration.Instance;
-        public static MorphPreset_Registration StaticRegistration => MorphPreset_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MorphPreset_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MorphPresetCommon.Instance;
         [DebuggerStepThrough]
@@ -1253,7 +1254,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MorphPresetBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1313,7 +1314,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class MorphPresetBinaryCreateTranslation
+    internal partial class MorphPresetBinaryCreateTranslation
     {
         public readonly static MorphPresetBinaryCreateTranslation Instance = new MorphPresetBinaryCreateTranslation();
 
@@ -1404,16 +1405,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class MorphPresetBinaryOverlay :
+    internal partial class MorphPresetBinaryOverlay :
         PluginBinaryOverlay,
         IMorphPresetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MorphPreset_Registration.Instance;
-        public static MorphPreset_Registration StaticRegistration => MorphPreset_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MorphPreset_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MorphPresetCommon.Instance;
         [DebuggerStepThrough]

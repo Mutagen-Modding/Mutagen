@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -586,10 +587,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PerkAdapter_FieldIndex
+    internal enum PerkAdapter_FieldIndex
     {
         Version = 0,
         ObjectFormat = 1,
@@ -599,7 +600,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PerkAdapter_Registration : ILoquiRegistration
+    internal partial class PerkAdapter_Registration : ILoquiRegistration
     {
         public static readonly PerkAdapter_Registration Instance = new PerkAdapter_Registration();
 
@@ -680,7 +681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PerkAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
+    internal partial class PerkAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
     {
         public new static readonly PerkAdapterSetterCommon Instance = new PerkAdapterSetterCommon();
 
@@ -737,7 +738,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkAdapterCommon : AVirtualMachineAdapterCommon
+    internal partial class PerkAdapterCommon : AVirtualMachineAdapterCommon
     {
         public new static readonly PerkAdapterCommon Instance = new PerkAdapterCommon();
 
@@ -907,7 +908,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
+    internal partial class PerkAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
     {
         public new static readonly PerkAdapterSetterTranslationCommon Instance = new PerkAdapterSetterTranslationCommon();
 
@@ -1029,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkAdapter_Registration.Instance;
-        public new static PerkAdapter_Registration StaticRegistration => PerkAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -1047,7 +1048,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkAdapterBinaryWriteTranslation :
         AVirtualMachineAdapterBinaryWriteTranslation,
@@ -1121,7 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PerkAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
+    internal partial class PerkAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
     {
         public new readonly static PerkAdapterBinaryCreateTranslation Instance = new PerkAdapterBinaryCreateTranslation();
 
@@ -1155,16 +1156,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PerkAdapterBinaryOverlay :
+    internal partial class PerkAdapterBinaryOverlay :
         AVirtualMachineAdapterBinaryOverlay,
         IPerkAdapterGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkAdapter_Registration.Instance;
-        public new static PerkAdapter_Registration StaticRegistration => PerkAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkAdapterCommon.Instance;
         [DebuggerStepThrough]

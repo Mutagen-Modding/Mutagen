@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -611,10 +612,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ConditionFloat_FieldIndex
+    internal enum ConditionFloat_FieldIndex
     {
         CompareOperator = 0,
         Flags = 1,
@@ -625,7 +626,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ConditionFloat_Registration : ILoquiRegistration
+    internal partial class ConditionFloat_Registration : ILoquiRegistration
     {
         public static readonly ConditionFloat_Registration Instance = new ConditionFloat_Registration();
 
@@ -706,7 +707,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ConditionFloatSetterCommon : ConditionSetterCommon
+    internal partial class ConditionFloatSetterCommon : ConditionSetterCommon
     {
         public new static readonly ConditionFloatSetterCommon Instance = new ConditionFloatSetterCommon();
 
@@ -768,7 +769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ConditionFloatCommon : ConditionCommon
+    internal partial class ConditionFloatCommon : ConditionCommon
     {
         public new static readonly ConditionFloatCommon Instance = new ConditionFloatCommon();
 
@@ -944,7 +945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ConditionFloatSetterTranslationCommon : ConditionSetterTranslationCommon
+    internal partial class ConditionFloatSetterTranslationCommon : ConditionSetterTranslationCommon
     {
         public new static readonly ConditionFloatSetterTranslationCommon Instance = new ConditionFloatSetterTranslationCommon();
 
@@ -1066,7 +1067,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConditionFloat_Registration.Instance;
-        public new static ConditionFloat_Registration StaticRegistration => ConditionFloat_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ConditionFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ConditionFloatCommon.Instance;
         [DebuggerStepThrough]
@@ -1084,7 +1085,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ConditionFloatBinaryWriteTranslation :
         ConditionBinaryWriteTranslation,
@@ -1175,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ConditionFloatBinaryCreateTranslation : ConditionBinaryCreateTranslation
+    internal partial class ConditionFloatBinaryCreateTranslation : ConditionBinaryCreateTranslation
     {
         public new readonly static ConditionFloatBinaryCreateTranslation Instance = new ConditionFloatBinaryCreateTranslation();
 
@@ -1220,16 +1221,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ConditionFloatBinaryOverlay :
+    internal partial class ConditionFloatBinaryOverlay :
         ConditionBinaryOverlay,
         IConditionFloatGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConditionFloat_Registration.Instance;
-        public new static ConditionFloat_Registration StaticRegistration => ConditionFloat_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ConditionFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ConditionFloatCommon.Instance;
         [DebuggerStepThrough]

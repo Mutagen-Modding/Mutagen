@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -807,10 +808,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum QuestFragmentAlias_FieldIndex
+    internal enum QuestFragmentAlias_FieldIndex
     {
         Property = 0,
         Version = 1,
@@ -820,7 +821,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class QuestFragmentAlias_Registration : ILoquiRegistration
+    internal partial class QuestFragmentAlias_Registration : ILoquiRegistration
     {
         public static readonly QuestFragmentAlias_Registration Instance = new QuestFragmentAlias_Registration();
 
@@ -894,7 +895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class QuestFragmentAliasSetterCommon
+    internal partial class QuestFragmentAliasSetterCommon
     {
         public static readonly QuestFragmentAliasSetterCommon Instance = new QuestFragmentAliasSetterCommon();
 
@@ -934,7 +935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class QuestFragmentAliasCommon
+    internal partial class QuestFragmentAliasCommon
     {
         public static readonly QuestFragmentAliasCommon Instance = new QuestFragmentAliasCommon();
 
@@ -1110,7 +1111,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class QuestFragmentAliasSetterTranslationCommon
+    internal partial class QuestFragmentAliasSetterTranslationCommon
     {
         public static readonly QuestFragmentAliasSetterTranslationCommon Instance = new QuestFragmentAliasSetterTranslationCommon();
 
@@ -1238,7 +1239,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestFragmentAlias_Registration.Instance;
-        public static QuestFragmentAlias_Registration StaticRegistration => QuestFragmentAlias_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => QuestFragmentAlias_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestFragmentAliasCommon.Instance;
         [DebuggerStepThrough]
@@ -1262,7 +1263,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class QuestFragmentAliasBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1331,7 +1332,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class QuestFragmentAliasBinaryCreateTranslation
+    internal partial class QuestFragmentAliasBinaryCreateTranslation
     {
         public readonly static QuestFragmentAliasBinaryCreateTranslation Instance = new QuestFragmentAliasBinaryCreateTranslation();
 
@@ -1381,16 +1382,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class QuestFragmentAliasBinaryOverlay :
+    internal partial class QuestFragmentAliasBinaryOverlay :
         PluginBinaryOverlay,
         IQuestFragmentAliasGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestFragmentAlias_Registration.Instance;
-        public static QuestFragmentAlias_Registration StaticRegistration => QuestFragmentAlias_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => QuestFragmentAlias_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestFragmentAliasCommon.Instance;
         [DebuggerStepThrough]

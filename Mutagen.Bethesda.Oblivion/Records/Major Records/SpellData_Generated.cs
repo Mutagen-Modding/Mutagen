@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -701,10 +702,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum SpellData_FieldIndex
+    internal enum SpellData_FieldIndex
     {
         Type = 0,
         Cost = 1,
@@ -714,7 +715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class SpellData_Registration : ILoquiRegistration
+    internal partial class SpellData_Registration : ILoquiRegistration
     {
         public static readonly SpellData_Registration Instance = new SpellData_Registration();
 
@@ -795,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class SpellDataSetterCommon
+    internal partial class SpellDataSetterCommon
     {
         public static readonly SpellDataSetterCommon Instance = new SpellDataSetterCommon();
 
@@ -837,7 +838,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SpellDataCommon
+    internal partial class SpellDataCommon
     {
         public static readonly SpellDataCommon Instance = new SpellDataCommon();
 
@@ -983,7 +984,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SpellDataSetterTranslationCommon
+    internal partial class SpellDataSetterTranslationCommon
     {
         public static readonly SpellDataSetterTranslationCommon Instance = new SpellDataSetterTranslationCommon();
 
@@ -1073,7 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpellData_Registration.Instance;
-        public static SpellData_Registration StaticRegistration => SpellData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SpellData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SpellDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1097,7 +1098,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SpellDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1152,7 +1153,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class SpellDataBinaryCreateTranslation
+    internal partial class SpellDataBinaryCreateTranslation
     {
         public readonly static SpellDataBinaryCreateTranslation Instance = new SpellDataBinaryCreateTranslation();
 
@@ -1196,16 +1197,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class SpellDataBinaryOverlay :
+    internal partial class SpellDataBinaryOverlay :
         PluginBinaryOverlay,
         ISpellDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpellData_Registration.Instance;
-        public static SpellData_Registration StaticRegistration => SpellData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SpellData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SpellDataCommon.Instance;
         [DebuggerStepThrough]

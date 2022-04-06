@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -925,10 +926,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum ScriptFields_FieldIndex
+    internal enum ScriptFields_FieldIndex
     {
         MetadataSummary = 0,
         CompiledScript = 1,
@@ -939,7 +940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class ScriptFields_Registration : ILoquiRegistration
+    internal partial class ScriptFields_Registration : ILoquiRegistration
     {
         public static readonly ScriptFields_Registration Instance = new ScriptFields_Registration();
 
@@ -1030,7 +1031,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ScriptFieldsSetterCommon
+    internal partial class ScriptFieldsSetterCommon
     {
         public static readonly ScriptFieldsSetterCommon Instance = new ScriptFieldsSetterCommon();
 
@@ -1070,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ScriptFieldsCommon
+    internal partial class ScriptFieldsCommon
     {
         public static readonly ScriptFieldsCommon Instance = new ScriptFieldsCommon();
 
@@ -1277,7 +1278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ScriptFieldsSetterTranslationCommon
+    internal partial class ScriptFieldsSetterTranslationCommon
     {
         public static readonly ScriptFieldsSetterTranslationCommon Instance = new ScriptFieldsSetterTranslationCommon();
 
@@ -1434,7 +1435,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptFields_Registration.Instance;
-        public static ScriptFields_Registration StaticRegistration => ScriptFields_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScriptFields_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptFieldsCommon.Instance;
         [DebuggerStepThrough]
@@ -1458,7 +1459,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ScriptFieldsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1547,7 +1548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ScriptFieldsBinaryCreateTranslation
+    internal partial class ScriptFieldsBinaryCreateTranslation
     {
         public readonly static ScriptFieldsBinaryCreateTranslation Instance = new ScriptFieldsBinaryCreateTranslation();
 
@@ -1674,16 +1675,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ScriptFieldsBinaryOverlay :
+    internal partial class ScriptFieldsBinaryOverlay :
         PluginBinaryOverlay,
         IScriptFieldsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptFields_Registration.Instance;
-        public static ScriptFields_Registration StaticRegistration => ScriptFields_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScriptFields_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptFieldsCommon.Instance;
         [DebuggerStepThrough]

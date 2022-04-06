@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1054,10 +1055,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum TextureSet_FieldIndex
+    internal enum TextureSet_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1080,7 +1081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class TextureSet_Registration : ILoquiRegistration
+    internal partial class TextureSet_Registration : ILoquiRegistration
     {
         public static readonly TextureSet_Registration Instance = new TextureSet_Registration();
 
@@ -1174,7 +1175,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class TextureSetSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class TextureSetSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly TextureSetSetterCommon Instance = new TextureSetSetterCommon();
 
@@ -1254,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TextureSetCommon : SkyrimMajorRecordCommon
+    internal partial class TextureSetCommon : SkyrimMajorRecordCommon
     {
         public new static readonly TextureSetCommon Instance = new TextureSetCommon();
 
@@ -1638,7 +1639,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TextureSetSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class TextureSetSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly TextureSetSetterTranslationCommon Instance = new TextureSetSetterTranslationCommon();
 
@@ -1877,7 +1878,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TextureSet_Registration.Instance;
-        public new static TextureSet_Registration StaticRegistration => TextureSet_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => TextureSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TextureSetCommon.Instance;
         [DebuggerStepThrough]
@@ -1895,7 +1896,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class TextureSetBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2034,7 +2035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class TextureSetBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class TextureSetBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static TextureSetBinaryCreateTranslation Instance = new TextureSetBinaryCreateTranslation();
 
@@ -2166,16 +2167,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class TextureSetBinaryOverlay :
+    internal partial class TextureSetBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ITextureSetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TextureSet_Registration.Instance;
-        public new static TextureSet_Registration StaticRegistration => TextureSet_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => TextureSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TextureSetCommon.Instance;
         [DebuggerStepThrough]

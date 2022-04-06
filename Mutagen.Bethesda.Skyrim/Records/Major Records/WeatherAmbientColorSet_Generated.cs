@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -738,10 +739,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WeatherAmbientColorSet_FieldIndex
+    internal enum WeatherAmbientColorSet_FieldIndex
     {
         Sunrise = 0,
         Day = 1,
@@ -751,7 +752,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WeatherAmbientColorSet_Registration : ILoquiRegistration
+    internal partial class WeatherAmbientColorSet_Registration : ILoquiRegistration
     {
         public static readonly WeatherAmbientColorSet_Registration Instance = new WeatherAmbientColorSet_Registration();
 
@@ -832,7 +833,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WeatherAmbientColorSetSetterCommon
+    internal partial class WeatherAmbientColorSetSetterCommon
     {
         public static readonly WeatherAmbientColorSetSetterCommon Instance = new WeatherAmbientColorSetSetterCommon();
 
@@ -874,7 +875,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeatherAmbientColorSetCommon
+    internal partial class WeatherAmbientColorSetCommon
     {
         public static readonly WeatherAmbientColorSetCommon Instance = new WeatherAmbientColorSetCommon();
 
@@ -1036,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeatherAmbientColorSetSetterTranslationCommon
+    internal partial class WeatherAmbientColorSetSetterTranslationCommon
     {
         public static readonly WeatherAmbientColorSetSetterTranslationCommon Instance = new WeatherAmbientColorSetSetterTranslationCommon();
 
@@ -1198,7 +1199,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherAmbientColorSet_Registration.Instance;
-        public static WeatherAmbientColorSet_Registration StaticRegistration => WeatherAmbientColorSet_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherAmbientColorSet_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherAmbientColorSetCommon.Instance;
         [DebuggerStepThrough]
@@ -1222,7 +1223,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeatherAmbientColorSetBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1264,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WeatherAmbientColorSetBinaryCreateTranslation
+    internal partial class WeatherAmbientColorSetBinaryCreateTranslation
     {
         public readonly static WeatherAmbientColorSetBinaryCreateTranslation Instance = new WeatherAmbientColorSetBinaryCreateTranslation();
 
@@ -1298,16 +1299,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WeatherAmbientColorSetBinaryOverlay :
+    internal partial class WeatherAmbientColorSetBinaryOverlay :
         PluginBinaryOverlay,
         IWeatherAmbientColorSetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherAmbientColorSet_Registration.Instance;
-        public static WeatherAmbientColorSet_Registration StaticRegistration => WeatherAmbientColorSet_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherAmbientColorSet_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherAmbientColorSetCommon.Instance;
         [DebuggerStepThrough]

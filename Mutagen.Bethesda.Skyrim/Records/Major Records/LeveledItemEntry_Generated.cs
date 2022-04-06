@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -674,10 +675,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LeveledItemEntry_FieldIndex
+    internal enum LeveledItemEntry_FieldIndex
     {
         Data = 0,
         ExtraData = 1,
@@ -685,7 +686,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LeveledItemEntry_Registration : ILoquiRegistration
+    internal partial class LeveledItemEntry_Registration : ILoquiRegistration
     {
         public static readonly LeveledItemEntry_Registration Instance = new LeveledItemEntry_Registration();
 
@@ -767,7 +768,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LeveledItemEntrySetterCommon
+    internal partial class LeveledItemEntrySetterCommon
     {
         public static readonly LeveledItemEntrySetterCommon Instance = new LeveledItemEntrySetterCommon();
 
@@ -806,7 +807,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LeveledItemEntryCommon
+    internal partial class LeveledItemEntryCommon
     {
         public static readonly LeveledItemEntryCommon Instance = new LeveledItemEntryCommon();
 
@@ -970,7 +971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LeveledItemEntrySetterTranslationCommon
+    internal partial class LeveledItemEntrySetterTranslationCommon
     {
         public static readonly LeveledItemEntrySetterTranslationCommon Instance = new LeveledItemEntrySetterTranslationCommon();
 
@@ -1096,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledItemEntry_Registration.Instance;
-        public static LeveledItemEntry_Registration StaticRegistration => LeveledItemEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LeveledItemEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LeveledItemEntryCommon.Instance;
         [DebuggerStepThrough]
@@ -1120,7 +1121,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LeveledItemEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1171,7 +1172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LeveledItemEntryBinaryCreateTranslation
+    internal partial class LeveledItemEntryBinaryCreateTranslation
     {
         public readonly static LeveledItemEntryBinaryCreateTranslation Instance = new LeveledItemEntryBinaryCreateTranslation();
 
@@ -1234,16 +1235,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LeveledItemEntryBinaryOverlay :
+    internal partial class LeveledItemEntryBinaryOverlay :
         PluginBinaryOverlay,
         ILeveledItemEntryGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledItemEntry_Registration.Instance;
-        public static LeveledItemEntry_Registration StaticRegistration => LeveledItemEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LeveledItemEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LeveledItemEntryCommon.Instance;
         [DebuggerStepThrough]

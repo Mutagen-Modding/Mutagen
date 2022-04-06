@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1125,10 +1126,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Weather_FieldIndex
+    internal enum Weather_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1147,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Weather_Registration : ILoquiRegistration
+    internal partial class Weather_Registration : ILoquiRegistration
     {
         public static readonly Weather_Registration Instance = new Weather_Registration();
 
@@ -1238,7 +1239,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class WeatherSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class WeatherSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly WeatherSetterCommon Instance = new WeatherSetterCommon();
 
@@ -1316,7 +1317,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WeatherCommon : OblivionMajorRecordCommon
+    internal partial class WeatherCommon : OblivionMajorRecordCommon
     {
         public new static readonly WeatherCommon Instance = new WeatherCommon();
 
@@ -1711,7 +1712,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WeatherSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class WeatherSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly WeatherSetterTranslationCommon Instance = new WeatherSetterTranslationCommon();
 
@@ -2034,7 +2035,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weather_Registration.Instance;
-        public new static Weather_Registration StaticRegistration => Weather_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Weather_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WeatherCommon.Instance;
         [DebuggerStepThrough]
@@ -2052,7 +2053,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class WeatherBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -2195,7 +2196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class WeatherBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class WeatherBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static WeatherBinaryCreateTranslation Instance = new WeatherBinaryCreateTranslation();
 
@@ -2303,16 +2304,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class WeatherBinaryOverlay :
+    internal partial class WeatherBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IWeatherGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weather_Registration.Instance;
-        public new static Weather_Registration StaticRegistration => Weather_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Weather_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WeatherCommon.Instance;
         [DebuggerStepThrough]

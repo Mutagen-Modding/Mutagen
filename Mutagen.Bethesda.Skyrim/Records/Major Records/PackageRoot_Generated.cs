@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -635,10 +636,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PackageRoot_FieldIndex
+    internal enum PackageRoot_FieldIndex
     {
         BranchCount = 0,
         Flags = 1,
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PackageRoot_Registration : ILoquiRegistration
+    internal partial class PackageRoot_Registration : ILoquiRegistration
     {
         public static readonly PackageRoot_Registration Instance = new PackageRoot_Registration();
 
@@ -720,7 +721,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PackageRootSetterCommon
+    internal partial class PackageRootSetterCommon
     {
         public static readonly PackageRootSetterCommon Instance = new PackageRootSetterCommon();
 
@@ -756,7 +757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageRootCommon
+    internal partial class PackageRootCommon
     {
         public static readonly PackageRootCommon Instance = new PackageRootCommon();
 
@@ -882,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageRootSetterTranslationCommon
+    internal partial class PackageRootSetterTranslationCommon
     {
         public static readonly PackageRootSetterTranslationCommon Instance = new PackageRootSetterTranslationCommon();
 
@@ -964,7 +965,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageRoot_Registration.Instance;
-        public static PackageRoot_Registration StaticRegistration => PackageRoot_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PackageRoot_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageRootCommon.Instance;
         [DebuggerStepThrough]
@@ -988,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageRootBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1028,7 +1029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PackageRootBinaryCreateTranslation
+    internal partial class PackageRootBinaryCreateTranslation
     {
         public readonly static PackageRootBinaryCreateTranslation Instance = new PackageRootBinaryCreateTranslation();
 
@@ -1066,16 +1067,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageRootBinaryOverlay :
+    internal partial class PackageRootBinaryOverlay :
         PluginBinaryOverlay,
         IPackageRootGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageRoot_Registration.Instance;
-        public static PackageRoot_Registration StaticRegistration => PackageRoot_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PackageRoot_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageRootCommon.Instance;
         [DebuggerStepThrough]

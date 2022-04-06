@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -650,10 +651,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ArmorResistance_FieldIndex
+    internal enum ArmorResistance_FieldIndex
     {
         DamageType = 0,
         Value = 1,
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ArmorResistance_Registration : ILoquiRegistration
+    internal partial class ArmorResistance_Registration : ILoquiRegistration
     {
         public static readonly ArmorResistance_Registration Instance = new ArmorResistance_Registration();
 
@@ -735,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ArmorResistanceSetterCommon
+    internal partial class ArmorResistanceSetterCommon
     {
         public static readonly ArmorResistanceSetterCommon Instance = new ArmorResistanceSetterCommon();
 
@@ -772,7 +773,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ArmorResistanceCommon
+    internal partial class ArmorResistanceCommon
     {
         public static readonly ArmorResistanceCommon Instance = new ArmorResistanceCommon();
 
@@ -899,7 +900,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ArmorResistanceSetterTranslationCommon
+    internal partial class ArmorResistanceSetterTranslationCommon
     {
         public static readonly ArmorResistanceSetterTranslationCommon Instance = new ArmorResistanceSetterTranslationCommon();
 
@@ -981,7 +982,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorResistance_Registration.Instance;
-        public static ArmorResistance_Registration StaticRegistration => ArmorResistance_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ArmorResistance_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ArmorResistanceCommon.Instance;
         [DebuggerStepThrough]
@@ -1005,7 +1006,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ArmorResistanceBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1044,7 +1045,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ArmorResistanceBinaryCreateTranslation
+    internal partial class ArmorResistanceBinaryCreateTranslation
     {
         public readonly static ArmorResistanceBinaryCreateTranslation Instance = new ArmorResistanceBinaryCreateTranslation();
 
@@ -1080,16 +1081,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ArmorResistanceBinaryOverlay :
+    internal partial class ArmorResistanceBinaryOverlay :
         PluginBinaryOverlay,
         IArmorResistanceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorResistance_Registration.Instance;
-        public static ArmorResistance_Registration StaticRegistration => ArmorResistance_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ArmorResistance_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ArmorResistanceCommon.Instance;
         [DebuggerStepThrough]

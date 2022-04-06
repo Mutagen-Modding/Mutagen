@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -693,10 +694,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum LocationReferenceType_FieldIndex
+    internal enum LocationReferenceType_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -710,7 +711,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class LocationReferenceType_Registration : ILoquiRegistration
+    internal partial class LocationReferenceType_Registration : ILoquiRegistration
     {
         public static readonly LocationReferenceType_Registration Instance = new LocationReferenceType_Registration();
 
@@ -795,7 +796,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class LocationReferenceTypeSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class LocationReferenceTypeSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly LocationReferenceTypeSetterCommon Instance = new LocationReferenceTypeSetterCommon();
 
@@ -866,7 +867,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LocationReferenceTypeCommon : Fallout4MajorRecordCommon
+    internal partial class LocationReferenceTypeCommon : Fallout4MajorRecordCommon
     {
         public new static readonly LocationReferenceTypeCommon Instance = new LocationReferenceTypeCommon();
 
@@ -1116,7 +1117,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LocationReferenceTypeSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class LocationReferenceTypeSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly LocationReferenceTypeSetterTranslationCommon Instance = new LocationReferenceTypeSetterTranslationCommon();
 
@@ -1286,7 +1287,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationReferenceType_Registration.Instance;
-        public new static LocationReferenceType_Registration StaticRegistration => LocationReferenceType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationReferenceType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationReferenceTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1304,7 +1305,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LocationReferenceTypeBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -1394,7 +1395,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class LocationReferenceTypeBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class LocationReferenceTypeBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static LocationReferenceTypeBinaryCreateTranslation Instance = new LocationReferenceTypeBinaryCreateTranslation();
 
@@ -1456,16 +1457,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class LocationReferenceTypeBinaryOverlay :
+    internal partial class LocationReferenceTypeBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         ILocationReferenceTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationReferenceType_Registration.Instance;
-        public new static LocationReferenceType_Registration StaticRegistration => LocationReferenceType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationReferenceType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationReferenceTypeCommon.Instance;
         [DebuggerStepThrough]

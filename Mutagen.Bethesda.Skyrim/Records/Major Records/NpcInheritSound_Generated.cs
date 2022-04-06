@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -568,17 +569,17 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum NpcInheritSound_FieldIndex
+    internal enum NpcInheritSound_FieldIndex
     {
         InheritsSoundsFrom = 0,
     }
     #endregion
 
     #region Registration
-    public partial class NpcInheritSound_Registration : ILoquiRegistration
+    internal partial class NpcInheritSound_Registration : ILoquiRegistration
     {
         public static readonly NpcInheritSound_Registration Instance = new NpcInheritSound_Registration();
 
@@ -659,7 +660,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NpcInheritSoundSetterCommon : ANpcSoundDefinitionSetterCommon
+    internal partial class NpcInheritSoundSetterCommon : ANpcSoundDefinitionSetterCommon
     {
         public new static readonly NpcInheritSoundSetterCommon Instance = new NpcInheritSoundSetterCommon();
 
@@ -714,7 +715,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcInheritSoundCommon : ANpcSoundDefinitionCommon
+    internal partial class NpcInheritSoundCommon : ANpcSoundDefinitionCommon
     {
         public new static readonly NpcInheritSoundCommon Instance = new NpcInheritSoundCommon();
 
@@ -870,7 +871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcInheritSoundSetterTranslationCommon : ANpcSoundDefinitionSetterTranslationCommon
+    internal partial class NpcInheritSoundSetterTranslationCommon : ANpcSoundDefinitionSetterTranslationCommon
     {
         public new static readonly NpcInheritSoundSetterTranslationCommon Instance = new NpcInheritSoundSetterTranslationCommon();
 
@@ -970,7 +971,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcInheritSound_Registration.Instance;
-        public new static NpcInheritSound_Registration StaticRegistration => NpcInheritSound_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => NpcInheritSound_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcInheritSoundCommon.Instance;
         [DebuggerStepThrough]
@@ -988,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NpcInheritSoundBinaryWriteTranslation :
         ANpcSoundDefinitionBinaryWriteTranslation,
@@ -1042,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NpcInheritSoundBinaryCreateTranslation : ANpcSoundDefinitionBinaryCreateTranslation
+    internal partial class NpcInheritSoundBinaryCreateTranslation : ANpcSoundDefinitionBinaryCreateTranslation
     {
         public new readonly static NpcInheritSoundBinaryCreateTranslation Instance = new NpcInheritSoundBinaryCreateTranslation();
 
@@ -1089,16 +1090,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NpcInheritSoundBinaryOverlay :
+    internal partial class NpcInheritSoundBinaryOverlay :
         ANpcSoundDefinitionBinaryOverlay,
         INpcInheritSoundGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcInheritSound_Registration.Instance;
-        public new static NpcInheritSound_Registration StaticRegistration => NpcInheritSound_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => NpcInheritSound_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcInheritSoundCommon.Instance;
         [DebuggerStepThrough]

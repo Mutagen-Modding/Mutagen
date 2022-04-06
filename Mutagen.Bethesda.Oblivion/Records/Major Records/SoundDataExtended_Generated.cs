@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -650,10 +651,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum SoundDataExtended_FieldIndex
+    internal enum SoundDataExtended_FieldIndex
     {
         MinimumAttenuationDistance = 0,
         MaximumAttenuationDistance = 1,
@@ -666,7 +667,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class SoundDataExtended_Registration : ILoquiRegistration
+    internal partial class SoundDataExtended_Registration : ILoquiRegistration
     {
         public static readonly SoundDataExtended_Registration Instance = new SoundDataExtended_Registration();
 
@@ -747,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class SoundDataExtendedSetterCommon : SoundDataSetterCommon
+    internal partial class SoundDataExtendedSetterCommon : SoundDataSetterCommon
     {
         public new static readonly SoundDataExtendedSetterCommon Instance = new SoundDataExtendedSetterCommon();
 
@@ -805,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SoundDataExtendedCommon : SoundDataCommon
+    internal partial class SoundDataExtendedCommon : SoundDataCommon
     {
         public new static readonly SoundDataExtendedCommon Instance = new SoundDataExtendedCommon();
 
@@ -981,7 +982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SoundDataExtendedSetterTranslationCommon : SoundDataSetterTranslationCommon
+    internal partial class SoundDataExtendedSetterTranslationCommon : SoundDataSetterTranslationCommon
     {
         public new static readonly SoundDataExtendedSetterTranslationCommon Instance = new SoundDataExtendedSetterTranslationCommon();
 
@@ -1118,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundDataExtended_Registration.Instance;
-        public new static SoundDataExtended_Registration StaticRegistration => SoundDataExtended_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SoundDataExtended_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundDataExtendedCommon.Instance;
         [DebuggerStepThrough]
@@ -1136,7 +1137,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SoundDataExtendedBinaryWriteTranslation :
         SoundDataBinaryWriteTranslation,
@@ -1231,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class SoundDataExtendedBinaryCreateTranslation : SoundDataBinaryCreateTranslation
+    internal partial class SoundDataExtendedBinaryCreateTranslation : SoundDataBinaryCreateTranslation
     {
         public new readonly static SoundDataExtendedBinaryCreateTranslation Instance = new SoundDataExtendedBinaryCreateTranslation();
 
@@ -1275,16 +1276,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class SoundDataExtendedBinaryOverlay :
+    internal partial class SoundDataExtendedBinaryOverlay :
         SoundDataBinaryOverlay,
         ISoundDataExtendedInternalGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundDataExtended_Registration.Instance;
-        public new static SoundDataExtended_Registration StaticRegistration => SoundDataExtended_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SoundDataExtended_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundDataExtendedCommon.Instance;
         [DebuggerStepThrough]

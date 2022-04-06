@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -716,10 +717,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum EdgeLink_FieldIndex
+    internal enum EdgeLink_FieldIndex
     {
         Unknown = 0,
         Mesh = 1,
@@ -729,7 +730,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class EdgeLink_Registration : ILoquiRegistration
+    internal partial class EdgeLink_Registration : ILoquiRegistration
     {
         public static readonly EdgeLink_Registration Instance = new EdgeLink_Registration();
 
@@ -803,7 +804,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class EdgeLinkSetterCommon
+    internal partial class EdgeLinkSetterCommon
     {
         public static readonly EdgeLinkSetterCommon Instance = new EdgeLinkSetterCommon();
 
@@ -842,7 +843,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class EdgeLinkCommon
+    internal partial class EdgeLinkCommon
     {
         public static readonly EdgeLinkCommon Instance = new EdgeLinkCommon();
 
@@ -989,7 +990,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class EdgeLinkSetterTranslationCommon
+    internal partial class EdgeLinkSetterTranslationCommon
     {
         public static readonly EdgeLinkSetterTranslationCommon Instance = new EdgeLinkSetterTranslationCommon();
 
@@ -1079,7 +1080,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EdgeLink_Registration.Instance;
-        public static EdgeLink_Registration StaticRegistration => EdgeLink_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EdgeLink_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EdgeLinkCommon.Instance;
         [DebuggerStepThrough]
@@ -1103,7 +1104,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class EdgeLinkBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1144,7 +1145,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class EdgeLinkBinaryCreateTranslation
+    internal partial class EdgeLinkBinaryCreateTranslation
     {
         public readonly static EdgeLinkBinaryCreateTranslation Instance = new EdgeLinkBinaryCreateTranslation();
 
@@ -1182,16 +1183,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class EdgeLinkBinaryOverlay :
+    internal partial class EdgeLinkBinaryOverlay :
         PluginBinaryOverlay,
         IEdgeLinkGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EdgeLink_Registration.Instance;
-        public static EdgeLink_Registration StaticRegistration => EdgeLink_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EdgeLink_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EdgeLinkCommon.Instance;
         [DebuggerStepThrough]

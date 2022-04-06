@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -852,10 +853,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Patrol_FieldIndex
+    internal enum Patrol_FieldIndex
     {
         IdleTime = 0,
         Idle = 1,
@@ -866,7 +867,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Patrol_Registration : ILoquiRegistration
+    internal partial class Patrol_Registration : ILoquiRegistration
     {
         public static readonly Patrol_Registration Instance = new Patrol_Registration();
 
@@ -954,7 +955,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PatrolSetterCommon
+    internal partial class PatrolSetterCommon
     {
         public static readonly PatrolSetterCommon Instance = new PatrolSetterCommon();
 
@@ -996,7 +997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PatrolCommon
+    internal partial class PatrolCommon
     {
         public static readonly PatrolCommon Instance = new PatrolCommon();
 
@@ -1183,7 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PatrolSetterTranslationCommon
+    internal partial class PatrolSetterTranslationCommon
     {
         public static readonly PatrolSetterTranslationCommon Instance = new PatrolSetterTranslationCommon();
 
@@ -1311,7 +1312,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Patrol_Registration.Instance;
-        public static Patrol_Registration StaticRegistration => Patrol_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Patrol_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PatrolCommon.Instance;
         [DebuggerStepThrough]
@@ -1335,7 +1336,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PatrolBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1420,7 +1421,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PatrolBinaryCreateTranslation
+    internal partial class PatrolBinaryCreateTranslation
     {
         public readonly static PatrolBinaryCreateTranslation Instance = new PatrolBinaryCreateTranslation();
 
@@ -1519,16 +1520,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PatrolBinaryOverlay :
+    internal partial class PatrolBinaryOverlay :
         PluginBinaryOverlay,
         IPatrolGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Patrol_Registration.Instance;
-        public static Patrol_Registration StaticRegistration => Patrol_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Patrol_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PatrolCommon.Instance;
         [DebuggerStepThrough]

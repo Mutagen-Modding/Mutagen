@@ -1,12 +1,8 @@
 using System;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+partial class PcLevelMultBinaryOverlay
 {
-    namespace Internals
-    {
-        public partial class PcLevelMultBinaryOverlay
-        {
-            public float LevelMult => throw new NotImplementedException();
-        }
-    }
+    public float LevelMult => throw new NotImplementedException();
 }

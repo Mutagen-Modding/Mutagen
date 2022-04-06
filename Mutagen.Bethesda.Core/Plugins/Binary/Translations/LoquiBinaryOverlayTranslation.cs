@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-public class LoquiBinaryOverlayTranslation<T>
+internal class LoquiBinaryOverlayTranslation<T>
 {
     public delegate T CreateFunc(
         OverlayStream stream,
@@ -19,7 +19,7 @@ public class LoquiBinaryOverlayTranslation<T>
     {
         var regis = LoquiRegistration.GetRegister(typeof(T));
         if (regis == null) throw new ArgumentException();
-        var className = $"{regis.Namespace}.Internals.{regis.Name}BinaryOverlay";
+        var className = $"{regis.Namespace}.{regis.Name}BinaryOverlay";
 
         var tType = regis.ClassType.Assembly.GetType(className)!;
         var method = tType.GetMethods()

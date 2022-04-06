@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -734,10 +735,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LocationCoordinate_FieldIndex
+    internal enum LocationCoordinate_FieldIndex
     {
         Location = 0,
         Coordinates = 1,
@@ -745,7 +746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LocationCoordinate_Registration : ILoquiRegistration
+    internal partial class LocationCoordinate_Registration : ILoquiRegistration
     {
         public static readonly LocationCoordinate_Registration Instance = new LocationCoordinate_Registration();
 
@@ -819,7 +820,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LocationCoordinateSetterCommon
+    internal partial class LocationCoordinateSetterCommon
     {
         public static readonly LocationCoordinateSetterCommon Instance = new LocationCoordinateSetterCommon();
 
@@ -856,7 +857,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationCoordinateCommon
+    internal partial class LocationCoordinateCommon
     {
         public static readonly LocationCoordinateCommon Instance = new LocationCoordinateCommon();
 
@@ -1000,7 +1001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationCoordinateSetterTranslationCommon
+    internal partial class LocationCoordinateSetterTranslationCommon
     {
         public static readonly LocationCoordinateSetterTranslationCommon Instance = new LocationCoordinateSetterTranslationCommon();
 
@@ -1095,7 +1096,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCoordinate_Registration.Instance;
-        public static LocationCoordinate_Registration StaticRegistration => LocationCoordinate_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocationCoordinate_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCoordinateCommon.Instance;
         [DebuggerStepThrough]
@@ -1119,7 +1120,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LocationCoordinateBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1167,7 +1168,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LocationCoordinateBinaryCreateTranslation
+    internal partial class LocationCoordinateBinaryCreateTranslation
     {
         public readonly static LocationCoordinateBinaryCreateTranslation Instance = new LocationCoordinateBinaryCreateTranslation();
 
@@ -1212,16 +1213,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LocationCoordinateBinaryOverlay :
+    internal partial class LocationCoordinateBinaryOverlay :
         PluginBinaryOverlay,
         ILocationCoordinateGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCoordinate_Registration.Instance;
-        public static LocationCoordinate_Registration StaticRegistration => LocationCoordinate_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocationCoordinate_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCoordinateCommon.Instance;
         [DebuggerStepThrough]

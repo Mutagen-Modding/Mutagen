@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -883,10 +884,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Water_FieldIndex
+    internal enum Water_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -904,7 +905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Water_Registration : ILoquiRegistration
+    internal partial class Water_Registration : ILoquiRegistration
     {
         public static readonly Water_Registration Instance = new Water_Registration();
 
@@ -994,7 +995,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class WaterSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class WaterSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly WaterSetterCommon Instance = new WaterSetterCommon();
 
@@ -1072,7 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WaterCommon : OblivionMajorRecordCommon
+    internal partial class WaterCommon : OblivionMajorRecordCommon
     {
         public new static readonly WaterCommon Instance = new WaterCommon();
 
@@ -1413,7 +1414,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WaterSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class WaterSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly WaterSetterTranslationCommon Instance = new WaterSetterTranslationCommon();
 
@@ -1640,7 +1641,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
-        public new static Water_Registration StaticRegistration => Water_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Water_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WaterCommon.Instance;
         [DebuggerStepThrough]
@@ -1658,7 +1659,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class WaterBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1786,7 +1787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class WaterBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class WaterBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static WaterBinaryCreateTranslation Instance = new WaterBinaryCreateTranslation();
 
@@ -1888,16 +1889,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class WaterBinaryOverlay :
+    internal partial class WaterBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IWaterGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
-        public new static Water_Registration StaticRegistration => Water_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Water_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WaterCommon.Instance;
         [DebuggerStepThrough]

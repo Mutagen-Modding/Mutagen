@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -781,10 +782,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum SpellUnleveled_FieldIndex
+    internal enum SpellUnleveled_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -798,7 +799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class SpellUnleveled_Registration : ILoquiRegistration
+    internal partial class SpellUnleveled_Registration : ILoquiRegistration
     {
         public static readonly SpellUnleveled_Registration Instance = new SpellUnleveled_Registration();
 
@@ -886,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class SpellUnleveledSetterCommon : SpellSetterCommon
+    internal partial class SpellUnleveledSetterCommon : SpellSetterCommon
     {
         public new static readonly SpellUnleveledSetterCommon Instance = new SpellUnleveledSetterCommon();
 
@@ -974,7 +975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SpellUnleveledCommon : SpellCommon
+    internal partial class SpellUnleveledCommon : SpellCommon
     {
         public new static readonly SpellUnleveledCommon Instance = new SpellUnleveledCommon();
 
@@ -1295,7 +1296,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SpellUnleveledSetterTranslationCommon : SpellSetterTranslationCommon
+    internal partial class SpellUnleveledSetterTranslationCommon : SpellSetterTranslationCommon
     {
         public new static readonly SpellUnleveledSetterTranslationCommon Instance = new SpellUnleveledSetterTranslationCommon();
 
@@ -1530,7 +1531,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpellUnleveled_Registration.Instance;
-        public new static SpellUnleveled_Registration StaticRegistration => SpellUnleveled_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SpellUnleveled_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SpellUnleveledCommon.Instance;
         [DebuggerStepThrough]
@@ -1548,7 +1549,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SpellUnleveledBinaryWriteTranslation :
         SpellBinaryWriteTranslation,
@@ -1659,7 +1660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class SpellUnleveledBinaryCreateTranslation : SpellBinaryCreateTranslation
+    internal partial class SpellUnleveledBinaryCreateTranslation : SpellBinaryCreateTranslation
     {
         public new readonly static SpellUnleveledBinaryCreateTranslation Instance = new SpellUnleveledBinaryCreateTranslation();
 
@@ -1725,16 +1726,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class SpellUnleveledBinaryOverlay :
+    internal partial class SpellUnleveledBinaryOverlay :
         SpellBinaryOverlay,
         ISpellUnleveledGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpellUnleveled_Registration.Instance;
-        public new static SpellUnleveled_Registration StaticRegistration => SpellUnleveled_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SpellUnleveled_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SpellUnleveledCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -635,10 +636,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum DialogResponseFlags_FieldIndex
+    internal enum DialogResponseFlags_FieldIndex
     {
         Flags = 0,
         ResetHours = 1,
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class DialogResponseFlags_Registration : ILoquiRegistration
+    internal partial class DialogResponseFlags_Registration : ILoquiRegistration
     {
         public static readonly DialogResponseFlags_Registration Instance = new DialogResponseFlags_Registration();
 
@@ -727,7 +728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class DialogResponseFlagsSetterCommon
+    internal partial class DialogResponseFlagsSetterCommon
     {
         public static readonly DialogResponseFlagsSetterCommon Instance = new DialogResponseFlagsSetterCommon();
 
@@ -767,7 +768,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DialogResponseFlagsCommon
+    internal partial class DialogResponseFlagsCommon
     {
         public static readonly DialogResponseFlagsCommon Instance = new DialogResponseFlagsCommon();
 
@@ -893,7 +894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DialogResponseFlagsSetterTranslationCommon
+    internal partial class DialogResponseFlagsSetterTranslationCommon
     {
         public static readonly DialogResponseFlagsSetterTranslationCommon Instance = new DialogResponseFlagsSetterTranslationCommon();
 
@@ -975,7 +976,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponseFlags_Registration.Instance;
-        public static DialogResponseFlags_Registration StaticRegistration => DialogResponseFlags_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DialogResponseFlags_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponseFlagsCommon.Instance;
         [DebuggerStepThrough]
@@ -999,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DialogResponseFlagsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1050,7 +1051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class DialogResponseFlagsBinaryCreateTranslation
+    internal partial class DialogResponseFlagsBinaryCreateTranslation
     {
         public readonly static DialogResponseFlagsBinaryCreateTranslation Instance = new DialogResponseFlagsBinaryCreateTranslation();
 
@@ -1091,16 +1092,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class DialogResponseFlagsBinaryOverlay :
+    internal partial class DialogResponseFlagsBinaryOverlay :
         PluginBinaryOverlay,
         IDialogResponseFlagsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponseFlags_Registration.Instance;
-        public static DialogResponseFlags_Registration StaticRegistration => DialogResponseFlags_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DialogResponseFlags_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponseFlagsCommon.Instance;
         [DebuggerStepThrough]

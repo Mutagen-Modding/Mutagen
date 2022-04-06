@@ -4,47 +4,43 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+partial class SkyrimListGroupBinaryCreateTranslation<T>
 {
-    namespace Internals
+    public static partial void FillBinaryContainedRecordTypeCustom(
+        MutagenFrame frame,
+        ISkyrimListGroup<T> item)
     {
-        public partial class SkyrimListGroupBinaryCreateTranslation<T>
-        {
-            public static partial void FillBinaryContainedRecordTypeCustom(
-                MutagenFrame frame,
-                ISkyrimListGroup<T> item)
-            {
-                frame.Reader.Position += 4;
-            }
-        }
+        frame.Reader.Position += 4;
+    }
+}
 
-        public partial class SkyrimListGroupBinaryWriteTranslation
-        {
-            public static partial void WriteBinaryContainedRecordTypeCustom<T>(
-                MutagenWriter writer,
-                ISkyrimListGroupGetter<T> item)
-                where T : class, ICellBlockGetter, IBinaryItem
-            {
-                Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE.TypeInt);
-            }
-        }
+partial class SkyrimListGroupBinaryWriteTranslation
+{
+    public static partial void WriteBinaryContainedRecordTypeCustom<T>(
+        MutagenWriter writer,
+        ISkyrimListGroupGetter<T> item)
+        where T : class, ICellBlockGetter, IBinaryItem
+    {
+        Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            writer,
+            GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE.TypeInt);
+    }
+}
 
-        public partial class SkyrimListGroupBinaryOverlay<T> : AListGroupBinaryOverlay<T>
-        {
-            partial void CustomFactoryEnd(
-                OverlayStream stream,
-                int finalPos,
-                int offset)
-            {
-                _Records = GroupListOverlay<T>.Factory(
-                    stream,
-                    _data,
-                    _package,
-                    offset: offset,
-                    objectType: ObjectType.Group);
-            }
-        }
+partial class SkyrimListGroupBinaryOverlay<T> : AListGroupBinaryOverlay<T>
+{
+    partial void CustomFactoryEnd(
+        OverlayStream stream,
+        int finalPos,
+        int offset)
+    {
+        _Records = GroupListOverlay<T>.Factory(
+            stream,
+            _data,
+            _package,
+            offset: offset,
+            objectType: ObjectType.Group);
     }
 }

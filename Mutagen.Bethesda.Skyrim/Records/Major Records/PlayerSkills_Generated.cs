@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1090,10 +1091,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PlayerSkills_FieldIndex
+    internal enum PlayerSkills_FieldIndex
     {
         SkillValues = 0,
         SkillOffsets = 1,
@@ -1108,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PlayerSkills_Registration : ILoquiRegistration
+    internal partial class PlayerSkills_Registration : ILoquiRegistration
     {
         public static readonly PlayerSkills_Registration Instance = new PlayerSkills_Registration();
 
@@ -1189,7 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PlayerSkillsSetterCommon
+    internal partial class PlayerSkillsSetterCommon
     {
         public static readonly PlayerSkillsSetterCommon Instance = new PlayerSkillsSetterCommon();
 
@@ -1236,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlayerSkillsCommon
+    internal partial class PlayerSkillsCommon
     {
         public static readonly PlayerSkillsCommon Instance = new PlayerSkillsCommon();
 
@@ -1468,7 +1469,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlayerSkillsSetterTranslationCommon
+    internal partial class PlayerSkillsSetterTranslationCommon
     {
         public static readonly PlayerSkillsSetterTranslationCommon Instance = new PlayerSkillsSetterTranslationCommon();
 
@@ -1578,7 +1579,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlayerSkills_Registration.Instance;
-        public static PlayerSkills_Registration StaticRegistration => PlayerSkills_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PlayerSkills_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PlayerSkillsCommon.Instance;
         [DebuggerStepThrough]
@@ -1602,7 +1603,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PlayerSkillsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1663,7 +1664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PlayerSkillsBinaryCreateTranslation
+    internal partial class PlayerSkillsBinaryCreateTranslation
     {
         public readonly static PlayerSkillsBinaryCreateTranslation Instance = new PlayerSkillsBinaryCreateTranslation();
 
@@ -1712,16 +1713,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PlayerSkillsBinaryOverlay :
+    internal partial class PlayerSkillsBinaryOverlay :
         PluginBinaryOverlay,
         IPlayerSkillsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlayerSkills_Registration.Instance;
-        public static PlayerSkills_Registration StaticRegistration => PlayerSkills_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PlayerSkills_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PlayerSkillsCommon.Instance;
         [DebuggerStepThrough]

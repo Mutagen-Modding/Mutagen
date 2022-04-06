@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -569,10 +570,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PackageDataInt_FieldIndex
+    internal enum PackageDataInt_FieldIndex
     {
         Name = 0,
         Flags = 1,
@@ -581,7 +582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PackageDataInt_Registration : ILoquiRegistration
+    internal partial class PackageDataInt_Registration : ILoquiRegistration
     {
         public static readonly PackageDataInt_Registration Instance = new PackageDataInt_Registration();
 
@@ -663,7 +664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PackageDataIntSetterCommon : APackageDataSetterCommon
+    internal partial class PackageDataIntSetterCommon : APackageDataSetterCommon
     {
         public new static readonly PackageDataIntSetterCommon Instance = new PackageDataIntSetterCommon();
 
@@ -717,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageDataIntCommon : APackageDataCommon
+    internal partial class PackageDataIntCommon : APackageDataCommon
     {
         public new static readonly PackageDataIntCommon Instance = new PackageDataIntCommon();
 
@@ -873,7 +874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageDataIntSetterTranslationCommon : APackageDataSetterTranslationCommon
+    internal partial class PackageDataIntSetterTranslationCommon : APackageDataSetterTranslationCommon
     {
         public new static readonly PackageDataIntSetterTranslationCommon Instance = new PackageDataIntSetterTranslationCommon();
 
@@ -973,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataInt_Registration.Instance;
-        public new static PackageDataInt_Registration StaticRegistration => PackageDataInt_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageDataInt_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataIntCommon.Instance;
         [DebuggerStepThrough]
@@ -991,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageDataIntBinaryWriteTranslation :
         APackageDataBinaryWriteTranslation,
@@ -1043,7 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PackageDataIntBinaryCreateTranslation : APackageDataBinaryCreateTranslation
+    internal partial class PackageDataIntBinaryCreateTranslation : APackageDataBinaryCreateTranslation
     {
         public new readonly static PackageDataIntBinaryCreateTranslation Instance = new PackageDataIntBinaryCreateTranslation();
 
@@ -1066,16 +1067,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageDataIntBinaryOverlay :
+    internal partial class PackageDataIntBinaryOverlay :
         APackageDataBinaryOverlay,
         IPackageDataIntGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataInt_Registration.Instance;
-        public new static PackageDataInt_Registration StaticRegistration => PackageDataInt_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageDataInt_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataIntCommon.Instance;
         [DebuggerStepThrough]

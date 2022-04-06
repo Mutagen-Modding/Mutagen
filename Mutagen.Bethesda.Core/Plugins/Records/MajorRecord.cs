@@ -132,12 +132,9 @@ namespace Mutagen.Bethesda.Plugins.Records
             return FormLinkInformation.Factory(majorRec);
         }
     }
-}
-
-namespace Mutagen.Bethesda.Plugins.Records.Internals
-{
+    
     [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormKey.ToString()}")]
-    public abstract partial class MajorRecordBinaryOverlay : IMajorRecordGetter
+    internal abstract partial class MajorRecordBinaryOverlay : IMajorRecordGetter
     {
         public bool IsCompressed => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Constants.CompressedFlag);
         public bool IsDeleted => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Constants.DeletedFlag);

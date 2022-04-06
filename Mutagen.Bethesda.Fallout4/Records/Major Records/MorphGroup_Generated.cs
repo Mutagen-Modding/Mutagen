@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -840,10 +841,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum MorphGroup_FieldIndex
+    internal enum MorphGroup_FieldIndex
     {
         Name = 0,
         MorphPresets = 1,
@@ -853,7 +854,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class MorphGroup_Registration : ILoquiRegistration
+    internal partial class MorphGroup_Registration : ILoquiRegistration
     {
         public static readonly MorphGroup_Registration Instance = new MorphGroup_Registration();
 
@@ -942,7 +943,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class MorphGroupSetterCommon
+    internal partial class MorphGroupSetterCommon
     {
         public static readonly MorphGroupSetterCommon Instance = new MorphGroupSetterCommon();
 
@@ -982,7 +983,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MorphGroupCommon
+    internal partial class MorphGroupCommon
     {
         public static readonly MorphGroupCommon Instance = new MorphGroupCommon();
 
@@ -1165,7 +1166,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MorphGroupSetterTranslationCommon
+    internal partial class MorphGroupSetterTranslationCommon
     {
         public static readonly MorphGroupSetterTranslationCommon Instance = new MorphGroupSetterTranslationCommon();
 
@@ -1297,7 +1298,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MorphGroup_Registration.Instance;
-        public static MorphGroup_Registration StaticRegistration => MorphGroup_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MorphGroup_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MorphGroupCommon.Instance;
         [DebuggerStepThrough]
@@ -1321,7 +1322,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MorphGroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1384,7 +1385,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class MorphGroupBinaryCreateTranslation
+    internal partial class MorphGroupBinaryCreateTranslation
     {
         public readonly static MorphGroupBinaryCreateTranslation Instance = new MorphGroupBinaryCreateTranslation();
 
@@ -1477,16 +1478,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class MorphGroupBinaryOverlay :
+    internal partial class MorphGroupBinaryOverlay :
         PluginBinaryOverlay,
         IMorphGroupGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MorphGroup_Registration.Instance;
-        public static MorphGroup_Registration StaticRegistration => MorphGroup_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MorphGroup_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MorphGroupCommon.Instance;
         [DebuggerStepThrough]

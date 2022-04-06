@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -788,10 +789,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Bone_FieldIndex
+    internal enum Bone_FieldIndex
     {
         Name = 0,
         Values = 1,
@@ -800,7 +801,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Bone_Registration : ILoquiRegistration
+    internal partial class Bone_Registration : ILoquiRegistration
     {
         public static readonly Bone_Registration Instance = new Bone_Registration();
 
@@ -883,7 +884,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class BoneSetterCommon
+    internal partial class BoneSetterCommon
     {
         public static readonly BoneSetterCommon Instance = new BoneSetterCommon();
 
@@ -921,7 +922,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class BoneCommon
+    internal partial class BoneCommon
     {
         public static readonly BoneCommon Instance = new BoneCommon();
 
@@ -1083,7 +1084,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class BoneSetterTranslationCommon
+    internal partial class BoneSetterTranslationCommon
     {
         public static readonly BoneSetterTranslationCommon Instance = new BoneSetterTranslationCommon();
 
@@ -1198,7 +1199,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Bone_Registration.Instance;
-        public static Bone_Registration StaticRegistration => Bone_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Bone_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BoneCommon.Instance;
         [DebuggerStepThrough]
@@ -1222,7 +1223,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class BoneBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1273,7 +1274,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class BoneBinaryCreateTranslation
+    internal partial class BoneBinaryCreateTranslation
     {
         public readonly static BoneBinaryCreateTranslation Instance = new BoneBinaryCreateTranslation();
 
@@ -1351,16 +1352,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class BoneBinaryOverlay :
+    internal partial class BoneBinaryOverlay :
         PluginBinaryOverlay,
         IBoneGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Bone_Registration.Instance;
-        public static Bone_Registration StaticRegistration => Bone_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Bone_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BoneCommon.Instance;
         [DebuggerStepThrough]

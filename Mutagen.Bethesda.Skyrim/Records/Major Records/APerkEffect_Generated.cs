@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -783,10 +784,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum APerkEffect_FieldIndex
+    internal enum APerkEffect_FieldIndex
     {
         Rank = 0,
         Priority = 1,
@@ -796,7 +797,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class APerkEffect_Registration : ILoquiRegistration
+    internal partial class APerkEffect_Registration : ILoquiRegistration
     {
         public static readonly APerkEffect_Registration Instance = new APerkEffect_Registration();
 
@@ -884,7 +885,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class APerkEffectSetterCommon
+    internal partial class APerkEffectSetterCommon
     {
         public static readonly APerkEffectSetterCommon Instance = new APerkEffectSetterCommon();
 
@@ -918,7 +919,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class APerkEffectCommon
+    internal partial class APerkEffectCommon
     {
         public static readonly APerkEffectCommon Instance = new APerkEffectCommon();
 
@@ -1086,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class APerkEffectSetterTranslationCommon
+    internal partial class APerkEffectSetterTranslationCommon
     {
         public static readonly APerkEffectSetterTranslationCommon Instance = new APerkEffectSetterTranslationCommon();
 
@@ -1196,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APerkEffect_Registration.Instance;
-        public static APerkEffect_Registration StaticRegistration => APerkEffect_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => APerkEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => APerkEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1220,7 +1221,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class APerkEffectBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1270,7 +1271,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class APerkEffectBinaryCreateTranslation
+    internal partial class APerkEffectBinaryCreateTranslation
     {
         public readonly static APerkEffectBinaryCreateTranslation Instance = new APerkEffectBinaryCreateTranslation();
 
@@ -1333,16 +1334,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public abstract partial class APerkEffectBinaryOverlay :
+    internal abstract partial class APerkEffectBinaryOverlay :
         PluginBinaryOverlay,
         IAPerkEffectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APerkEffect_Registration.Instance;
-        public static APerkEffect_Registration StaticRegistration => APerkEffect_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => APerkEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => APerkEffectCommon.Instance;
         [DebuggerStepThrough]

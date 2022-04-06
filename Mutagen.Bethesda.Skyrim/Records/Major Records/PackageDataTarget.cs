@@ -1,42 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+public partial class PackageDataTarget
 {
-    public partial class PackageDataTarget
+    public enum Types
     {
-        public enum Types
-        {
-            Target,
-            SingleRef,
-        }
-
-        #region Target
-        public APackageTarget Target { get; set; } = null!;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAPackageTargetGetter IPackageDataTargetGetter.Target => Target;
-        #endregion
-
-        partial void CustomCtor()
-        {
-            Target = new PackageTargetObjectType();
-        }
-
-        public PackageDataTarget(APackageTarget target)
-        {
-            Target = target;
-        }
+        Target,
+        SingleRef,
     }
 
-    namespace Internals
-    {
-        public partial class PackageDataTargetBinaryOverlay
-        {
-            public PackageDataTarget.Types Type => throw new NotImplementedException();
+    #region Target
+    public APackageTarget Target { get; set; } = null!;
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IAPackageTargetGetter IPackageDataTargetGetter.Target => Target;
+    #endregion
 
-            public IAPackageTargetGetter Target => throw new NotImplementedException();
-        }
+    partial void CustomCtor()
+    {
+        Target = new PackageTargetObjectType();
     }
+
+    public PackageDataTarget(APackageTarget target)
+    {
+        Target = target;
+    }
+}
+
+partial class PackageDataTargetBinaryOverlay
+{
+    public PackageDataTarget.Types Type => throw new NotImplementedException();
+
+    public IAPackageTargetGetter Target => throw new NotImplementedException();
 }

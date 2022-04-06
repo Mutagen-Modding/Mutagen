@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -913,10 +914,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SkyrimMajorRecord_FieldIndex
+    internal enum SkyrimMajorRecord_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -928,7 +929,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SkyrimMajorRecord_Registration : ILoquiRegistration
+    internal partial class SkyrimMajorRecord_Registration : ILoquiRegistration
     {
         public static readonly SkyrimMajorRecord_Registration Instance = new SkyrimMajorRecord_Registration();
 
@@ -1002,7 +1003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SkyrimMajorRecordSetterCommon : MajorRecordSetterCommon
+    internal partial class SkyrimMajorRecordSetterCommon : MajorRecordSetterCommon
     {
         public new static readonly SkyrimMajorRecordSetterCommon Instance = new SkyrimMajorRecordSetterCommon();
 
@@ -1114,7 +1115,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SkyrimMajorRecordCommon : MajorRecordCommon
+    internal partial class SkyrimMajorRecordCommon : MajorRecordCommon
     {
         public new static readonly SkyrimMajorRecordCommon Instance = new SkyrimMajorRecordCommon();
 
@@ -1364,7 +1365,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SkyrimMajorRecordSetterTranslationCommon : MajorRecordSetterTranslationCommon
+    internal partial class SkyrimMajorRecordSetterTranslationCommon : MajorRecordSetterTranslationCommon
     {
         public new static readonly SkyrimMajorRecordSetterTranslationCommon Instance = new SkyrimMajorRecordSetterTranslationCommon();
 
@@ -1497,7 +1498,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMajorRecord_Registration.Instance;
-        public new static SkyrimMajorRecord_Registration StaticRegistration => SkyrimMajorRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SkyrimMajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SkyrimMajorRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1515,7 +1516,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SkyrimMajorRecordBinaryWriteTranslation :
         MajorRecordBinaryWriteTranslation,
@@ -1579,7 +1580,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SkyrimMajorRecordBinaryCreateTranslation : MajorRecordBinaryCreateTranslation
+    internal partial class SkyrimMajorRecordBinaryCreateTranslation : MajorRecordBinaryCreateTranslation
     {
         public new readonly static SkyrimMajorRecordBinaryCreateTranslation Instance = new SkyrimMajorRecordBinaryCreateTranslation();
 
@@ -1608,16 +1609,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public abstract partial class SkyrimMajorRecordBinaryOverlay :
+    internal abstract partial class SkyrimMajorRecordBinaryOverlay :
         MajorRecordBinaryOverlay,
         ISkyrimMajorRecordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMajorRecord_Registration.Instance;
-        public new static SkyrimMajorRecord_Registration StaticRegistration => SkyrimMajorRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SkyrimMajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SkyrimMajorRecordCommon.Instance;
         [DebuggerStepThrough]

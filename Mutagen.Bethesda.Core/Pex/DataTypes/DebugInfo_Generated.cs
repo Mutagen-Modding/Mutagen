@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Pex;
-using Mutagen.Bethesda.Pex.Internals;
 using Noggog;
 using System;
 using System.Collections;
@@ -888,10 +887,10 @@ namespace Mutagen.Bethesda.Pex
 
 }
 
-namespace Mutagen.Bethesda.Pex.Internals
+namespace Mutagen.Bethesda.Pex
 {
     #region Field Index
-    public enum DebugInfo_FieldIndex
+    internal enum DebugInfo_FieldIndex
     {
         ModificationTime = 0,
         Functions = 1,
@@ -901,7 +900,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Registration
-    public partial class DebugInfo_Registration : ILoquiRegistration
+    internal partial class DebugInfo_Registration : ILoquiRegistration
     {
         public static readonly DebugInfo_Registration Instance = new DebugInfo_Registration();
 
@@ -974,7 +973,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Common
-    public partial class DebugInfoSetterCommon
+    internal partial class DebugInfoSetterCommon
     {
         public static readonly DebugInfoSetterCommon Instance = new DebugInfoSetterCommon();
 
@@ -990,7 +989,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class DebugInfoCommon
+    internal partial class DebugInfoCommon
     {
         public static readonly DebugInfoCommon Instance = new DebugInfoCommon();
 
@@ -1179,7 +1178,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class DebugInfoSetterTranslationCommon
+    internal partial class DebugInfoSetterTranslationCommon
     {
         public static readonly DebugInfoSetterTranslationCommon Instance = new DebugInfoSetterTranslationCommon();
 
@@ -1329,7 +1328,7 @@ namespace Mutagen.Bethesda.Pex
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DebugInfo_Registration.Instance;
-        public static DebugInfo_Registration StaticRegistration => DebugInfo_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DebugInfo_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DebugInfoCommon.Instance;
         [DebuggerStepThrough]

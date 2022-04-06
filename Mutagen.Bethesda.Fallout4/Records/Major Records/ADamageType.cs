@@ -1,61 +1,56 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Fallout4;
+
+public partial class ADamageType
 {
-    public partial class ADamageType
+    public static ADamageType CreateFromBinary(
+        MutagenFrame frame,
+        TypedParseParams? translationParams)
     {
-        public static ADamageType CreateFromBinary(
-            MutagenFrame frame,
-            TypedParseParams? translationParams)
+        var majorMeta = frame.GetMajorRecordFrame();
+        if (majorMeta.FormVersion >= 78)
         {
-            var majorMeta = frame.GetMajorRecordFrame();
-            if (majorMeta.FormVersion >= 78)
-            {
-                return DamageType.CreateFromBinary(frame, translationParams); 
-            }
-            else
-            {
-                return DamageTypeIndexed.CreateFromBinary(frame, translationParams);
-            }
+            return DamageType.CreateFromBinary(frame, translationParams); 
+        }
+        else
+        {
+            return DamageTypeIndexed.CreateFromBinary(frame, translationParams);
         }
     }
+}
 
-    namespace Internals
+partial class ADamageTypeBinaryOverlay
+{
+    public static ADamageTypeBinaryOverlay ADamageTypeFactory(
+        OverlayStream stream,
+        BinaryOverlayFactoryPackage package,
+        TypedParseParams? translationParams)
     {
-        public partial class ADamageTypeBinaryOverlay
+        var majorFrame = package.MetaData.Constants.MajorRecordFrame(stream.RemainingMemory);
+        if (majorFrame.FormVersion >= 78)
         {
-            public static ADamageTypeBinaryOverlay ADamageTypeFactory(
-                OverlayStream stream,
-                BinaryOverlayFactoryPackage package,
-                TypedParseParams? translationParams)
-            {
-                var majorFrame = package.MetaData.Constants.MajorRecordFrame(stream.RemainingMemory);
-                if (majorFrame.FormVersion >= 78)
-                {
-                    return DamageTypeBinaryOverlay.DamageTypeFactory(stream, package, translationParams);
-                }
-                else
-                {
-                    return  DamageTypeIndexedBinaryOverlay.DamageTypeIndexedFactory(stream, package, translationParams);
-                }
-            }
+            return DamageTypeBinaryOverlay.DamageTypeFactory(stream, package, translationParams);
         }
+        else
+        {
+            return  DamageTypeIndexedBinaryOverlay.DamageTypeIndexedFactory(stream, package, translationParams);
+        }
+    }
+}
 
-        public partial class ADamageTypeBinaryCreateTranslation
-        {
-            public static partial void FillBinaryCustomLogicCustom(MutagenFrame frame, IADamageTypeInternal item)
-            {
-            }
-        }
+partial class ADamageTypeBinaryCreateTranslation
+{
+    public static partial void FillBinaryCustomLogicCustom(MutagenFrame frame, IADamageTypeInternal item)
+    {
+    }
+}
 
-        public partial class ADamageTypeBinaryWriteTranslation
-        {
-            public static partial void WriteBinaryCustomLogicCustom(MutagenWriter writer, IADamageTypeGetter item)
-            {
-            }
-        }
+partial class ADamageTypeBinaryWriteTranslation
+{
+    public static partial void WriteBinaryCustomLogicCustom(MutagenWriter writer, IADamageTypeGetter item)
+    {
     }
 }

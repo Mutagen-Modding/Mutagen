@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1000,10 +1001,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum RaceData_FieldIndex
+    internal enum RaceData_FieldIndex
     {
         SkillBoost0 = 0,
         SkillBoost1 = 1,
@@ -1020,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class RaceData_Registration : ILoquiRegistration
+    internal partial class RaceData_Registration : ILoquiRegistration
     {
         public static readonly RaceData_Registration Instance = new RaceData_Registration();
 
@@ -1101,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class RaceDataSetterCommon
+    internal partial class RaceDataSetterCommon
     {
         public static readonly RaceDataSetterCommon Instance = new RaceDataSetterCommon();
 
@@ -1152,7 +1153,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RaceDataCommon
+    internal partial class RaceDataCommon
     {
         public static readonly RaceDataCommon Instance = new RaceDataCommon();
 
@@ -1400,7 +1401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RaceDataSetterTranslationCommon
+    internal partial class RaceDataSetterTranslationCommon
     {
         public static readonly RaceDataSetterTranslationCommon Instance = new RaceDataSetterTranslationCommon();
 
@@ -1642,7 +1643,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceData_Registration.Instance;
-        public static RaceData_Registration StaticRegistration => RaceData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RaceData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RaceDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1666,7 +1667,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RaceDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1749,7 +1750,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class RaceDataBinaryCreateTranslation
+    internal partial class RaceDataBinaryCreateTranslation
     {
         public readonly static RaceDataBinaryCreateTranslation Instance = new RaceDataBinaryCreateTranslation();
 
@@ -1800,16 +1801,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class RaceDataBinaryOverlay :
+    internal partial class RaceDataBinaryOverlay :
         PluginBinaryOverlay,
         IRaceDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceData_Registration.Instance;
-        public static RaceData_Registration StaticRegistration => RaceData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RaceData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RaceDataCommon.Instance;
         [DebuggerStepThrough]

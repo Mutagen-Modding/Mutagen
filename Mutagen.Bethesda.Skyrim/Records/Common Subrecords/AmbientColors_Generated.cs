@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -877,10 +878,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum AmbientColors_FieldIndex
+    internal enum AmbientColors_FieldIndex
     {
         Versioning = 0,
         DirectionalXPlus = 1,
@@ -895,7 +896,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class AmbientColors_Registration : ILoquiRegistration
+    internal partial class AmbientColors_Registration : ILoquiRegistration
     {
         public static readonly AmbientColors_Registration Instance = new AmbientColors_Registration();
 
@@ -969,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class AmbientColorsSetterCommon
+    internal partial class AmbientColorsSetterCommon
     {
         public static readonly AmbientColorsSetterCommon Instance = new AmbientColorsSetterCommon();
 
@@ -1012,7 +1013,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AmbientColorsCommon
+    internal partial class AmbientColorsCommon
     {
         public static readonly AmbientColorsCommon Instance = new AmbientColorsCommon();
 
@@ -1208,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AmbientColorsSetterTranslationCommon
+    internal partial class AmbientColorsSetterTranslationCommon
     {
         public static readonly AmbientColorsSetterTranslationCommon Instance = new AmbientColorsSetterTranslationCommon();
 
@@ -1319,7 +1320,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AmbientColors_Registration.Instance;
-        public static AmbientColors_Registration StaticRegistration => AmbientColors_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AmbientColors_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AmbientColorsCommon.Instance;
         [DebuggerStepThrough]
@@ -1343,7 +1344,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AmbientColorsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1405,7 +1406,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class AmbientColorsBinaryCreateTranslation
+    internal partial class AmbientColorsBinaryCreateTranslation
     {
         public readonly static AmbientColorsBinaryCreateTranslation Instance = new AmbientColorsBinaryCreateTranslation();
 
@@ -1452,16 +1453,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class AmbientColorsBinaryOverlay :
+    internal partial class AmbientColorsBinaryOverlay :
         PluginBinaryOverlay,
         IAmbientColorsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AmbientColors_Registration.Instance;
-        public static AmbientColors_Registration StaticRegistration => AmbientColors_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AmbientColors_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AmbientColorsCommon.Instance;
         [DebuggerStepThrough]

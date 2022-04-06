@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -661,10 +662,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Attack_FieldIndex
+    internal enum Attack_FieldIndex
     {
         AttackData = 0,
         AttackEvent = 1,
@@ -672,7 +673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Attack_Registration : ILoquiRegistration
+    internal partial class Attack_Registration : ILoquiRegistration
     {
         public static readonly Attack_Registration Instance = new Attack_Registration();
 
@@ -754,7 +755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class AttackSetterCommon
+    internal partial class AttackSetterCommon
     {
         public static readonly AttackSetterCommon Instance = new AttackSetterCommon();
 
@@ -792,7 +793,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AttackCommon
+    internal partial class AttackCommon
     {
         public static readonly AttackCommon Instance = new AttackCommon();
 
@@ -941,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AttackSetterTranslationCommon
+    internal partial class AttackSetterTranslationCommon
     {
         public static readonly AttackSetterTranslationCommon Instance = new AttackSetterTranslationCommon();
 
@@ -1045,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Attack_Registration.Instance;
-        public static Attack_Registration StaticRegistration => Attack_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Attack_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AttackCommon.Instance;
         [DebuggerStepThrough]
@@ -1069,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AttackBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1118,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class AttackBinaryCreateTranslation
+    internal partial class AttackBinaryCreateTranslation
     {
         public readonly static AttackBinaryCreateTranslation Instance = new AttackBinaryCreateTranslation();
 
@@ -1184,16 +1185,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class AttackBinaryOverlay :
+    internal partial class AttackBinaryOverlay :
         PluginBinaryOverlay,
         IAttackGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Attack_Registration.Instance;
-        public static Attack_Registration StaticRegistration => Attack_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Attack_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AttackCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -742,10 +743,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum AssociationType_FieldIndex
+    internal enum AssociationType_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -760,7 +761,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class AssociationType_Registration : ILoquiRegistration
+    internal partial class AssociationType_Registration : ILoquiRegistration
     {
         public static readonly AssociationType_Registration Instance = new AssociationType_Registration();
 
@@ -848,7 +849,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class AssociationTypeSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class AssociationTypeSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly AssociationTypeSetterCommon Instance = new AssociationTypeSetterCommon();
 
@@ -920,7 +921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AssociationTypeCommon : SkyrimMajorRecordCommon
+    internal partial class AssociationTypeCommon : SkyrimMajorRecordCommon
     {
         public new static readonly AssociationTypeCommon Instance = new AssociationTypeCommon();
 
@@ -1188,7 +1189,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AssociationTypeSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class AssociationTypeSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly AssociationTypeSetterTranslationCommon Instance = new AssociationTypeSetterTranslationCommon();
 
@@ -1367,7 +1368,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AssociationType_Registration.Instance;
-        public new static AssociationType_Registration StaticRegistration => AssociationType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AssociationType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AssociationTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1385,7 +1386,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AssociationTypeBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1484,7 +1485,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class AssociationTypeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class AssociationTypeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static AssociationTypeBinaryCreateTranslation Instance = new AssociationTypeBinaryCreateTranslation();
 
@@ -1564,16 +1565,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class AssociationTypeBinaryOverlay :
+    internal partial class AssociationTypeBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IAssociationTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AssociationType_Registration.Instance;
-        public new static AssociationType_Registration StaticRegistration => AssociationType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AssociationType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AssociationTypeCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1048,10 +1049,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum CellBlock_FieldIndex
+    internal enum CellBlock_FieldIndex
     {
         BlockNumber = 0,
         GroupType = 1,
@@ -1061,7 +1062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class CellBlock_Registration : ILoquiRegistration
+    internal partial class CellBlock_Registration : ILoquiRegistration
     {
         public static readonly CellBlock_Registration Instance = new CellBlock_Registration();
 
@@ -1136,7 +1137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class CellBlockSetterCommon
+    internal partial class CellBlockSetterCommon
     {
         public static readonly CellBlockSetterCommon Instance = new CellBlockSetterCommon();
 
@@ -1311,7 +1312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CellBlockCommon
+    internal partial class CellBlockCommon
     {
         public static readonly CellBlockCommon Instance = new CellBlockCommon();
 
@@ -1625,7 +1626,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CellBlockSetterTranslationCommon
+    internal partial class CellBlockSetterTranslationCommon
     {
         public static readonly CellBlockSetterTranslationCommon Instance = new CellBlockSetterTranslationCommon();
 
@@ -1735,7 +1736,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellBlock_Registration.Instance;
-        public static CellBlock_Registration StaticRegistration => CellBlock_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CellBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellBlockCommon.Instance;
         [DebuggerStepThrough]
@@ -1759,7 +1760,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CellBlockBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1827,7 +1828,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class CellBlockBinaryCreateTranslation
+    internal partial class CellBlockBinaryCreateTranslation
     {
         public readonly static CellBlockBinaryCreateTranslation Instance = new CellBlockBinaryCreateTranslation();
 
@@ -1894,16 +1895,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class CellBlockBinaryOverlay :
+    internal partial class CellBlockBinaryOverlay :
         PluginBinaryOverlay,
         ICellBlockGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellBlock_Registration.Instance;
-        public static CellBlock_Registration StaticRegistration => CellBlock_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CellBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellBlockCommon.Instance;
         [DebuggerStepThrough]

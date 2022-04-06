@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -518,10 +519,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum MagicEffectWerewolfArchetype_FieldIndex
+    internal enum MagicEffectWerewolfArchetype_FieldIndex
     {
         Type = 0,
         AssociationKey = 1,
@@ -530,7 +531,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class MagicEffectWerewolfArchetype_Registration : ILoquiRegistration
+    internal partial class MagicEffectWerewolfArchetype_Registration : ILoquiRegistration
     {
         public static readonly MagicEffectWerewolfArchetype_Registration Instance = new MagicEffectWerewolfArchetype_Registration();
 
@@ -604,7 +605,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MagicEffectWerewolfArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
+    internal partial class MagicEffectWerewolfArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
     {
         public new static readonly MagicEffectWerewolfArchetypeSetterCommon Instance = new MagicEffectWerewolfArchetypeSetterCommon();
 
@@ -655,7 +656,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectWerewolfArchetypeCommon : MagicEffectArchetypeCommon
+    internal partial class MagicEffectWerewolfArchetypeCommon : MagicEffectArchetypeCommon
     {
         public new static readonly MagicEffectWerewolfArchetypeCommon Instance = new MagicEffectWerewolfArchetypeCommon();
 
@@ -799,7 +800,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectWerewolfArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
+    internal partial class MagicEffectWerewolfArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
     {
         public new static readonly MagicEffectWerewolfArchetypeSetterTranslationCommon Instance = new MagicEffectWerewolfArchetypeSetterTranslationCommon();
 
@@ -924,7 +925,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectWerewolfArchetype_Registration.Instance;
-        public new static MagicEffectWerewolfArchetype_Registration StaticRegistration => MagicEffectWerewolfArchetype_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MagicEffectWerewolfArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectWerewolfArchetypeCommon.Instance;
         [DebuggerStepThrough]
@@ -942,7 +943,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MagicEffectWerewolfArchetypeBinaryWriteTranslation :
         MagicEffectArchetypeBinaryWriteTranslation,
@@ -984,7 +985,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class MagicEffectWerewolfArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
+    internal partial class MagicEffectWerewolfArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
     {
         public new readonly static MagicEffectWerewolfArchetypeBinaryCreateTranslation Instance = new MagicEffectWerewolfArchetypeBinaryCreateTranslation();
 
@@ -1001,16 +1002,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MagicEffectWerewolfArchetypeBinaryOverlay :
+    internal partial class MagicEffectWerewolfArchetypeBinaryOverlay :
         MagicEffectArchetypeBinaryOverlay,
         IMagicEffectWerewolfArchetypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectWerewolfArchetype_Registration.Instance;
-        public new static MagicEffectWerewolfArchetype_Registration StaticRegistration => MagicEffectWerewolfArchetype_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MagicEffectWerewolfArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectWerewolfArchetypeCommon.Instance;
         [DebuggerStepThrough]

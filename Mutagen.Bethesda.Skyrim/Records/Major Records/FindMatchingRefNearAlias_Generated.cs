@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -639,10 +640,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum FindMatchingRefNearAlias_FieldIndex
+    internal enum FindMatchingRefNearAlias_FieldIndex
     {
         AliasIndex = 0,
         Type = 1,
@@ -650,7 +651,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class FindMatchingRefNearAlias_Registration : ILoquiRegistration
+    internal partial class FindMatchingRefNearAlias_Registration : ILoquiRegistration
     {
         public static readonly FindMatchingRefNearAlias_Registration Instance = new FindMatchingRefNearAlias_Registration();
 
@@ -732,7 +733,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class FindMatchingRefNearAliasSetterCommon
+    internal partial class FindMatchingRefNearAliasSetterCommon
     {
         public static readonly FindMatchingRefNearAliasSetterCommon Instance = new FindMatchingRefNearAliasSetterCommon();
 
@@ -769,7 +770,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FindMatchingRefNearAliasCommon
+    internal partial class FindMatchingRefNearAliasCommon
     {
         public static readonly FindMatchingRefNearAliasCommon Instance = new FindMatchingRefNearAliasCommon();
 
@@ -903,7 +904,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FindMatchingRefNearAliasSetterTranslationCommon
+    internal partial class FindMatchingRefNearAliasSetterTranslationCommon
     {
         public static readonly FindMatchingRefNearAliasSetterTranslationCommon Instance = new FindMatchingRefNearAliasSetterTranslationCommon();
 
@@ -985,7 +986,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FindMatchingRefNearAlias_Registration.Instance;
-        public static FindMatchingRefNearAlias_Registration StaticRegistration => FindMatchingRefNearAlias_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FindMatchingRefNearAlias_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FindMatchingRefNearAliasCommon.Instance;
         [DebuggerStepThrough]
@@ -1009,7 +1010,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class FindMatchingRefNearAliasBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1067,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class FindMatchingRefNearAliasBinaryCreateTranslation
+    internal partial class FindMatchingRefNearAliasBinaryCreateTranslation
     {
         public readonly static FindMatchingRefNearAliasBinaryCreateTranslation Instance = new FindMatchingRefNearAliasBinaryCreateTranslation();
 
@@ -1139,16 +1140,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class FindMatchingRefNearAliasBinaryOverlay :
+    internal partial class FindMatchingRefNearAliasBinaryOverlay :
         PluginBinaryOverlay,
         IFindMatchingRefNearAliasGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FindMatchingRefNearAlias_Registration.Instance;
-        public static FindMatchingRefNearAlias_Registration StaticRegistration => FindMatchingRefNearAlias_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FindMatchingRefNearAlias_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FindMatchingRefNearAliasCommon.Instance;
         [DebuggerStepThrough]

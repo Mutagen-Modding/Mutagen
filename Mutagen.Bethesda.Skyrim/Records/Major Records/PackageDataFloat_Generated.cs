@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -569,10 +570,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PackageDataFloat_FieldIndex
+    internal enum PackageDataFloat_FieldIndex
     {
         Name = 0,
         Flags = 1,
@@ -581,7 +582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PackageDataFloat_Registration : ILoquiRegistration
+    internal partial class PackageDataFloat_Registration : ILoquiRegistration
     {
         public static readonly PackageDataFloat_Registration Instance = new PackageDataFloat_Registration();
 
@@ -663,7 +664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PackageDataFloatSetterCommon : APackageDataSetterCommon
+    internal partial class PackageDataFloatSetterCommon : APackageDataSetterCommon
     {
         public new static readonly PackageDataFloatSetterCommon Instance = new PackageDataFloatSetterCommon();
 
@@ -717,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageDataFloatCommon : APackageDataCommon
+    internal partial class PackageDataFloatCommon : APackageDataCommon
     {
         public new static readonly PackageDataFloatCommon Instance = new PackageDataFloatCommon();
 
@@ -873,7 +874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageDataFloatSetterTranslationCommon : APackageDataSetterTranslationCommon
+    internal partial class PackageDataFloatSetterTranslationCommon : APackageDataSetterTranslationCommon
     {
         public new static readonly PackageDataFloatSetterTranslationCommon Instance = new PackageDataFloatSetterTranslationCommon();
 
@@ -973,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataFloat_Registration.Instance;
-        public new static PackageDataFloat_Registration StaticRegistration => PackageDataFloat_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageDataFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataFloatCommon.Instance;
         [DebuggerStepThrough]
@@ -991,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageDataFloatBinaryWriteTranslation :
         APackageDataBinaryWriteTranslation,
@@ -1043,7 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PackageDataFloatBinaryCreateTranslation : APackageDataBinaryCreateTranslation
+    internal partial class PackageDataFloatBinaryCreateTranslation : APackageDataBinaryCreateTranslation
     {
         public new readonly static PackageDataFloatBinaryCreateTranslation Instance = new PackageDataFloatBinaryCreateTranslation();
 
@@ -1066,16 +1067,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageDataFloatBinaryOverlay :
+    internal partial class PackageDataFloatBinaryOverlay :
         APackageDataBinaryOverlay,
         IPackageDataFloatGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataFloat_Registration.Instance;
-        public new static PackageDataFloat_Registration StaticRegistration => PackageDataFloat_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageDataFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataFloatCommon.Instance;
         [DebuggerStepThrough]

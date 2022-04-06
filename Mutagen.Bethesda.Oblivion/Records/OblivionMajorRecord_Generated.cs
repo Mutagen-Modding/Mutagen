@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -860,10 +861,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum OblivionMajorRecord_FieldIndex
+    internal enum OblivionMajorRecord_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -874,7 +875,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class OblivionMajorRecord_Registration : ILoquiRegistration
+    internal partial class OblivionMajorRecord_Registration : ILoquiRegistration
     {
         public static readonly OblivionMajorRecord_Registration Instance = new OblivionMajorRecord_Registration();
 
@@ -948,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class OblivionMajorRecordSetterCommon : MajorRecordSetterCommon
+    internal partial class OblivionMajorRecordSetterCommon : MajorRecordSetterCommon
     {
         public new static readonly OblivionMajorRecordSetterCommon Instance = new OblivionMajorRecordSetterCommon();
 
@@ -1059,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class OblivionMajorRecordCommon : MajorRecordCommon
+    internal partial class OblivionMajorRecordCommon : MajorRecordCommon
     {
         public new static readonly OblivionMajorRecordCommon Instance = new OblivionMajorRecordCommon();
 
@@ -1299,7 +1300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class OblivionMajorRecordSetterTranslationCommon : MajorRecordSetterTranslationCommon
+    internal partial class OblivionMajorRecordSetterTranslationCommon : MajorRecordSetterTranslationCommon
     {
         public new static readonly OblivionMajorRecordSetterTranslationCommon Instance = new OblivionMajorRecordSetterTranslationCommon();
 
@@ -1428,7 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMajorRecord_Registration.Instance;
-        public new static OblivionMajorRecord_Registration StaticRegistration => OblivionMajorRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => OblivionMajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => OblivionMajorRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1446,7 +1447,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class OblivionMajorRecordBinaryWriteTranslation :
         MajorRecordBinaryWriteTranslation,
@@ -1508,7 +1509,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class OblivionMajorRecordBinaryCreateTranslation : MajorRecordBinaryCreateTranslation
+    internal partial class OblivionMajorRecordBinaryCreateTranslation : MajorRecordBinaryCreateTranslation
     {
         public new readonly static OblivionMajorRecordBinaryCreateTranslation Instance = new OblivionMajorRecordBinaryCreateTranslation();
 
@@ -1535,16 +1536,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public abstract partial class OblivionMajorRecordBinaryOverlay :
+    internal abstract partial class OblivionMajorRecordBinaryOverlay :
         MajorRecordBinaryOverlay,
         IOblivionMajorRecordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMajorRecord_Registration.Instance;
-        public new static OblivionMajorRecord_Registration StaticRegistration => OblivionMajorRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => OblivionMajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => OblivionMajorRecordCommon.Instance;
         [DebuggerStepThrough]

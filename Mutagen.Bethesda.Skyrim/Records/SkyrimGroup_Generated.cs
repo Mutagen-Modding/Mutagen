@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Skyrim.Records;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -671,10 +672,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SkyrimGroup_FieldIndex
+    internal enum SkyrimGroup_FieldIndex
     {
         Type = 0,
         LastModified = 1,
@@ -684,7 +685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SkyrimGroup_Registration : ILoquiRegistration
+    internal partial class SkyrimGroup_Registration : ILoquiRegistration
     {
         public static readonly SkyrimGroup_Registration Instance = new SkyrimGroup_Registration();
 
@@ -757,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public class SkyrimGroup_Registration<T> : SkyrimGroup_Registration
+    internal class SkyrimGroup_Registration<T> : SkyrimGroup_Registration
         where T : SkyrimMajorRecord, IBinaryItem
     {
         public static readonly SkyrimGroup_Registration<T> GenericInstance = new SkyrimGroup_Registration<T>();
@@ -766,7 +767,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SkyrimGroupSetterCommon<T>
+    internal partial class SkyrimGroupSetterCommon<T>
         where T : class, ISkyrimMajorRecordInternal, IBinaryItem
     {
         public static readonly SkyrimGroupSetterCommon<T> Instance = new SkyrimGroupSetterCommon<T>();
@@ -872,7 +873,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SkyrimGroupCommon<T>
+    internal partial class SkyrimGroupCommon<T>
         where T : class, ISkyrimMajorRecordGetter, IBinaryItem
     {
         public static readonly SkyrimGroupCommon<T> Instance = new SkyrimGroupCommon<T>();
@@ -1113,7 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SkyrimGroupSetterTranslationCommon
+    internal partial class SkyrimGroupSetterTranslationCommon
     {
         public static readonly SkyrimGroupSetterTranslationCommon Instance = new SkyrimGroupSetterTranslationCommon();
 
@@ -1232,7 +1233,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimGroup_Registration.Instance;
-        public static SkyrimGroup_Registration StaticRegistration => SkyrimGroup_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SkyrimGroup_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(SkyrimGroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
@@ -1256,7 +1257,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SkyrimGroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1343,7 +1344,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SkyrimGroupBinaryCreateTranslation<T>
+    internal partial class SkyrimGroupBinaryCreateTranslation<T>
         where T : class, ISkyrimMajorRecordInternal, IBinaryItem
     {
         public readonly static SkyrimGroupBinaryCreateTranslation<T> Instance = new SkyrimGroupBinaryCreateTranslation<T>();
@@ -1418,15 +1419,15 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SkyrimGroupBinaryOverlay<T> : ISkyrimGroupGetter<T>
+    internal partial class SkyrimGroupBinaryOverlay<T> : ISkyrimGroupGetter<T>
         where T : class, ISkyrimMajorRecordGetter, IBinaryItem
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimGroup_Registration.Instance;
-        public static SkyrimGroup_Registration StaticRegistration => SkyrimGroup_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SkyrimGroup_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(SkyrimGroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]

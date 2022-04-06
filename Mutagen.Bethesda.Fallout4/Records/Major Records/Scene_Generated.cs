@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -600,10 +601,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Scene_FieldIndex
+    internal enum Scene_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -615,7 +616,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Scene_Registration : ILoquiRegistration
+    internal partial class Scene_Registration : ILoquiRegistration
     {
         public static readonly Scene_Registration Instance = new Scene_Registration();
 
@@ -696,7 +697,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class SceneSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class SceneSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly SceneSetterCommon Instance = new SceneSetterCommon();
 
@@ -765,7 +766,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class SceneCommon : Fallout4MajorRecordCommon
+    internal partial class SceneCommon : Fallout4MajorRecordCommon
     {
         public new static readonly SceneCommon Instance = new SceneCommon();
 
@@ -987,7 +988,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class SceneSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class SceneSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly SceneSetterTranslationCommon Instance = new SceneSetterTranslationCommon();
 
@@ -1142,7 +1143,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Scene_Registration.Instance;
-        public new static Scene_Registration StaticRegistration => Scene_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Scene_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SceneCommon.Instance;
         [DebuggerStepThrough]
@@ -1160,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SceneBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -1229,7 +1230,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class SceneBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class SceneBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static SceneBinaryCreateTranslation Instance = new SceneBinaryCreateTranslation();
 
@@ -1256,16 +1257,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class SceneBinaryOverlay :
+    internal partial class SceneBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         ISceneGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Scene_Registration.Instance;
-        public new static Scene_Registration StaticRegistration => Scene_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Scene_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SceneCommon.Instance;
         [DebuggerStepThrough]

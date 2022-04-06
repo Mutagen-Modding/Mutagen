@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -602,10 +603,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ActorValueInformation_FieldIndex
+    internal enum ActorValueInformation_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -617,7 +618,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ActorValueInformation_Registration : ILoquiRegistration
+    internal partial class ActorValueInformation_Registration : ILoquiRegistration
     {
         public static readonly ActorValueInformation_Registration Instance = new ActorValueInformation_Registration();
 
@@ -698,7 +699,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ActorValueInformationSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class ActorValueInformationSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly ActorValueInformationSetterCommon Instance = new ActorValueInformationSetterCommon();
 
@@ -767,7 +768,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ActorValueInformationCommon : Fallout4MajorRecordCommon
+    internal partial class ActorValueInformationCommon : Fallout4MajorRecordCommon
     {
         public new static readonly ActorValueInformationCommon Instance = new ActorValueInformationCommon();
 
@@ -989,7 +990,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ActorValueInformationSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class ActorValueInformationSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly ActorValueInformationSetterTranslationCommon Instance = new ActorValueInformationSetterTranslationCommon();
 
@@ -1144,7 +1145,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValueInformation_Registration.Instance;
-        public new static ActorValueInformation_Registration StaticRegistration => ActorValueInformation_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ActorValueInformation_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActorValueInformationCommon.Instance;
         [DebuggerStepThrough]
@@ -1162,7 +1163,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ActorValueInformationBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -1231,7 +1232,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ActorValueInformationBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class ActorValueInformationBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static ActorValueInformationBinaryCreateTranslation Instance = new ActorValueInformationBinaryCreateTranslation();
 
@@ -1258,16 +1259,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ActorValueInformationBinaryOverlay :
+    internal partial class ActorValueInformationBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IActorValueInformationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValueInformation_Registration.Instance;
-        public new static ActorValueInformation_Registration StaticRegistration => ActorValueInformation_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ActorValueInformation_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActorValueInformationCommon.Instance;
         [DebuggerStepThrough]

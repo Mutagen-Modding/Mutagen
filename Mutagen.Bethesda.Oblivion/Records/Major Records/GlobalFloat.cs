@@ -18,12 +18,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
     }
 
-    namespace Internals
+    internal partial class GlobalFloatBinaryOverlay
     {
-        public partial class GlobalFloatBinaryOverlay
-        {
-            public override char TypeChar => GlobalFloat.TRIGGER_CHAR;
-            public override float? RawFloat => this.Data;
-        }
+        public override char TypeChar => GlobalFloat.TRIGGER_CHAR;
+        public override float? RawFloat => this.Data;
     }
 }

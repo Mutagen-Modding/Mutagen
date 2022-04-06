@@ -1,9 +1,8 @@
 using System;
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4;
+
+partial class PcLevelMultBinaryOverlay
 {
-    public partial class PcLevelMultBinaryOverlay
-    {
-        public float LevelMult => throw new NotImplementedException();
-    }
+    public float LevelMult => throw new NotImplementedException();
 }

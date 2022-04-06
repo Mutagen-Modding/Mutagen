@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -600,10 +601,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum AttractionRule_FieldIndex
+    internal enum AttractionRule_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -615,7 +616,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class AttractionRule_Registration : ILoquiRegistration
+    internal partial class AttractionRule_Registration : ILoquiRegistration
     {
         public static readonly AttractionRule_Registration Instance = new AttractionRule_Registration();
 
@@ -696,7 +697,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class AttractionRuleSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class AttractionRuleSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly AttractionRuleSetterCommon Instance = new AttractionRuleSetterCommon();
 
@@ -765,7 +766,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class AttractionRuleCommon : Fallout4MajorRecordCommon
+    internal partial class AttractionRuleCommon : Fallout4MajorRecordCommon
     {
         public new static readonly AttractionRuleCommon Instance = new AttractionRuleCommon();
 
@@ -987,7 +988,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class AttractionRuleSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class AttractionRuleSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly AttractionRuleSetterTranslationCommon Instance = new AttractionRuleSetterTranslationCommon();
 
@@ -1142,7 +1143,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AttractionRule_Registration.Instance;
-        public new static AttractionRule_Registration StaticRegistration => AttractionRule_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AttractionRule_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AttractionRuleCommon.Instance;
         [DebuggerStepThrough]
@@ -1160,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AttractionRuleBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -1229,7 +1230,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class AttractionRuleBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class AttractionRuleBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static AttractionRuleBinaryCreateTranslation Instance = new AttractionRuleBinaryCreateTranslation();
 
@@ -1256,16 +1257,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class AttractionRuleBinaryOverlay :
+    internal partial class AttractionRuleBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IAttractionRuleGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AttractionRule_Registration.Instance;
-        public new static AttractionRule_Registration StaticRegistration => AttractionRule_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AttractionRule_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AttractionRuleCommon.Instance;
         [DebuggerStepThrough]

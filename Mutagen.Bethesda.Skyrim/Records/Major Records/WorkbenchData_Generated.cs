@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -637,10 +638,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WorkbenchData_FieldIndex
+    internal enum WorkbenchData_FieldIndex
     {
         BenchType = 0,
         UsesSkill = 1,
@@ -648,7 +649,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WorkbenchData_Registration : ILoquiRegistration
+    internal partial class WorkbenchData_Registration : ILoquiRegistration
     {
         public static readonly WorkbenchData_Registration Instance = new WorkbenchData_Registration();
 
@@ -729,7 +730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WorkbenchDataSetterCommon
+    internal partial class WorkbenchDataSetterCommon
     {
         public static readonly WorkbenchDataSetterCommon Instance = new WorkbenchDataSetterCommon();
 
@@ -769,7 +770,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorkbenchDataCommon
+    internal partial class WorkbenchDataCommon
     {
         public static readonly WorkbenchDataCommon Instance = new WorkbenchDataCommon();
 
@@ -899,7 +900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorkbenchDataSetterTranslationCommon
+    internal partial class WorkbenchDataSetterTranslationCommon
     {
         public static readonly WorkbenchDataSetterTranslationCommon Instance = new WorkbenchDataSetterTranslationCommon();
 
@@ -981,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorkbenchData_Registration.Instance;
-        public static WorkbenchData_Registration StaticRegistration => WorkbenchData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorkbenchData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorkbenchDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1005,7 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorkbenchDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1055,7 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WorkbenchDataBinaryCreateTranslation
+    internal partial class WorkbenchDataBinaryCreateTranslation
     {
         public readonly static WorkbenchDataBinaryCreateTranslation Instance = new WorkbenchDataBinaryCreateTranslation();
 
@@ -1096,16 +1097,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WorkbenchDataBinaryOverlay :
+    internal partial class WorkbenchDataBinaryOverlay :
         PluginBinaryOverlay,
         IWorkbenchDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorkbenchData_Registration.Instance;
-        public static WorkbenchData_Registration StaticRegistration => WorkbenchData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorkbenchData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorkbenchDataCommon.Instance;
         [DebuggerStepThrough]

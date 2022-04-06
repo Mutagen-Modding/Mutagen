@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -701,10 +702,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum NpcFaceParts_FieldIndex
+    internal enum NpcFaceParts_FieldIndex
     {
         Nose = 0,
         Unknown = 1,
@@ -714,7 +715,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class NpcFaceParts_Registration : ILoquiRegistration
+    internal partial class NpcFaceParts_Registration : ILoquiRegistration
     {
         public static readonly NpcFaceParts_Registration Instance = new NpcFaceParts_Registration();
 
@@ -795,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NpcFacePartsSetterCommon
+    internal partial class NpcFacePartsSetterCommon
     {
         public static readonly NpcFacePartsSetterCommon Instance = new NpcFacePartsSetterCommon();
 
@@ -837,7 +838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcFacePartsCommon
+    internal partial class NpcFacePartsCommon
     {
         public static readonly NpcFacePartsCommon Instance = new NpcFacePartsCommon();
 
@@ -983,7 +984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcFacePartsSetterTranslationCommon
+    internal partial class NpcFacePartsSetterTranslationCommon
     {
         public static readonly NpcFacePartsSetterTranslationCommon Instance = new NpcFacePartsSetterTranslationCommon();
 
@@ -1073,7 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcFaceParts_Registration.Instance;
-        public static NpcFaceParts_Registration StaticRegistration => NpcFaceParts_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcFaceParts_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcFacePartsCommon.Instance;
         [DebuggerStepThrough]
@@ -1097,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NpcFacePartsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1143,7 +1144,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NpcFacePartsBinaryCreateTranslation
+    internal partial class NpcFacePartsBinaryCreateTranslation
     {
         public readonly static NpcFacePartsBinaryCreateTranslation Instance = new NpcFacePartsBinaryCreateTranslation();
 
@@ -1181,16 +1182,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NpcFacePartsBinaryOverlay :
+    internal partial class NpcFacePartsBinaryOverlay :
         PluginBinaryOverlay,
         INpcFacePartsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcFaceParts_Registration.Instance;
-        public static NpcFaceParts_Registration StaticRegistration => NpcFaceParts_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcFaceParts_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcFacePartsCommon.Instance;
         [DebuggerStepThrough]

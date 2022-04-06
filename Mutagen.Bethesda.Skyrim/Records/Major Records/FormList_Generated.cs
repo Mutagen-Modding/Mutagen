@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -749,10 +750,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum FormList_FieldIndex
+    internal enum FormList_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -765,7 +766,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class FormList_Registration : ILoquiRegistration
+    internal partial class FormList_Registration : ILoquiRegistration
     {
         public static readonly FormList_Registration Instance = new FormList_Registration();
 
@@ -849,7 +850,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class FormListSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class FormListSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly FormListSetterCommon Instance = new FormListSetterCommon();
 
@@ -920,7 +921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FormListCommon : SkyrimMajorRecordCommon
+    internal partial class FormListCommon : SkyrimMajorRecordCommon
     {
         public new static readonly FormListCommon Instance = new FormListCommon();
 
@@ -1173,7 +1174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FormListSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class FormListSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly FormListSetterTranslationCommon Instance = new FormListSetterTranslationCommon();
 
@@ -1347,7 +1348,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FormList_Registration.Instance;
-        public new static FormList_Registration StaticRegistration => FormList_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => FormList_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FormListCommon.Instance;
         [DebuggerStepThrough]
@@ -1365,7 +1366,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class FormListBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1457,7 +1458,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class FormListBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class FormListBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static FormListBinaryCreateTranslation Instance = new FormListBinaryCreateTranslation();
 
@@ -1516,16 +1517,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class FormListBinaryOverlay :
+    internal partial class FormListBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IFormListGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FormList_Registration.Instance;
-        public new static FormList_Registration StaticRegistration => FormList_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => FormList_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FormListCommon.Instance;
         [DebuggerStepThrough]

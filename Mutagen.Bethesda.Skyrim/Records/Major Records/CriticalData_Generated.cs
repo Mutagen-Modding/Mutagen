@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -894,10 +895,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CriticalData_FieldIndex
+    internal enum CriticalData_FieldIndex
     {
         Versioning = 0,
         Damage = 1,
@@ -912,7 +913,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CriticalData_Registration : ILoquiRegistration
+    internal partial class CriticalData_Registration : ILoquiRegistration
     {
         public static readonly CriticalData_Registration Instance = new CriticalData_Registration();
 
@@ -993,7 +994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CriticalDataSetterCommon
+    internal partial class CriticalDataSetterCommon
     {
         public static readonly CriticalDataSetterCommon Instance = new CriticalDataSetterCommon();
 
@@ -1041,7 +1042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CriticalDataCommon
+    internal partial class CriticalDataCommon
     {
         public static readonly CriticalDataCommon Instance = new CriticalDataCommon();
 
@@ -1238,7 +1239,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CriticalDataSetterTranslationCommon
+    internal partial class CriticalDataSetterTranslationCommon
     {
         public static readonly CriticalDataSetterTranslationCommon Instance = new CriticalDataSetterTranslationCommon();
 
@@ -1349,7 +1350,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CriticalData_Registration.Instance;
-        public static CriticalData_Registration StaticRegistration => CriticalData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CriticalData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CriticalDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1373,7 +1374,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CriticalDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1441,7 +1442,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CriticalDataBinaryCreateTranslation
+    internal partial class CriticalDataBinaryCreateTranslation
     {
         public readonly static CriticalDataBinaryCreateTranslation Instance = new CriticalDataBinaryCreateTranslation();
 
@@ -1496,16 +1497,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CriticalDataBinaryOverlay :
+    internal partial class CriticalDataBinaryOverlay :
         PluginBinaryOverlay,
         ICriticalDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CriticalData_Registration.Instance;
-        public static CriticalData_Registration StaticRegistration => CriticalData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CriticalData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CriticalDataCommon.Instance;
         [DebuggerStepThrough]

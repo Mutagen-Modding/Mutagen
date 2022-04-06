@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -814,10 +815,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum AcousticSpace_FieldIndex
+    internal enum AcousticSpace_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -833,7 +834,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class AcousticSpace_Registration : ILoquiRegistration
+    internal partial class AcousticSpace_Registration : ILoquiRegistration
     {
         public static readonly AcousticSpace_Registration Instance = new AcousticSpace_Registration();
 
@@ -920,7 +921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class AcousticSpaceSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class AcousticSpaceSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly AcousticSpaceSetterCommon Instance = new AcousticSpaceSetterCommon();
 
@@ -996,7 +997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AcousticSpaceCommon : SkyrimMajorRecordCommon
+    internal partial class AcousticSpaceCommon : SkyrimMajorRecordCommon
     {
         public new static readonly AcousticSpaceCommon Instance = new AcousticSpaceCommon();
 
@@ -1274,7 +1275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AcousticSpaceSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class AcousticSpaceSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly AcousticSpaceSetterTranslationCommon Instance = new AcousticSpaceSetterTranslationCommon();
 
@@ -1463,7 +1464,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AcousticSpace_Registration.Instance;
-        public new static AcousticSpace_Registration StaticRegistration => AcousticSpace_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AcousticSpace_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AcousticSpaceCommon.Instance;
         [DebuggerStepThrough]
@@ -1481,7 +1482,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AcousticSpaceBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1580,7 +1581,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class AcousticSpaceBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class AcousticSpaceBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static AcousticSpaceBinaryCreateTranslation Instance = new AcousticSpaceBinaryCreateTranslation();
 
@@ -1653,16 +1654,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class AcousticSpaceBinaryOverlay :
+    internal partial class AcousticSpaceBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IAcousticSpaceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AcousticSpace_Registration.Instance;
-        public new static AcousticSpace_Registration StaticRegistration => AcousticSpace_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AcousticSpace_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AcousticSpaceCommon.Instance;
         [DebuggerStepThrough]

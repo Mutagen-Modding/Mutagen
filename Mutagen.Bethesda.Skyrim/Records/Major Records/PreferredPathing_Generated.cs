@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -816,10 +817,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PreferredPathing_FieldIndex
+    internal enum PreferredPathing_FieldIndex
     {
         NavmeshSets = 0,
         NavmeshTree = 1,
@@ -827,7 +828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PreferredPathing_Registration : ILoquiRegistration
+    internal partial class PreferredPathing_Registration : ILoquiRegistration
     {
         public static readonly PreferredPathing_Registration Instance = new PreferredPathing_Registration();
 
@@ -908,7 +909,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PreferredPathingSetterCommon
+    internal partial class PreferredPathingSetterCommon
     {
         public static readonly PreferredPathingSetterCommon Instance = new PreferredPathingSetterCommon();
 
@@ -950,7 +951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PreferredPathingCommon
+    internal partial class PreferredPathingCommon
     {
         public static readonly PreferredPathingCommon Instance = new PreferredPathingCommon();
 
@@ -1118,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PreferredPathingSetterTranslationCommon
+    internal partial class PreferredPathingSetterTranslationCommon
     {
         public static readonly PreferredPathingSetterTranslationCommon Instance = new PreferredPathingSetterTranslationCommon();
 
@@ -1240,7 +1241,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PreferredPathing_Registration.Instance;
-        public static PreferredPathing_Registration StaticRegistration => PreferredPathing_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PreferredPathing_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PreferredPathingCommon.Instance;
         [DebuggerStepThrough]
@@ -1264,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PreferredPathingBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1330,7 +1331,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PreferredPathingBinaryCreateTranslation
+    internal partial class PreferredPathingBinaryCreateTranslation
     {
         public readonly static PreferredPathingBinaryCreateTranslation Instance = new PreferredPathingBinaryCreateTranslation();
 
@@ -1374,16 +1375,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PreferredPathingBinaryOverlay :
+    internal partial class PreferredPathingBinaryOverlay :
         PluginBinaryOverlay,
         IPreferredPathingGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PreferredPathing_Registration.Instance;
-        public static PreferredPathing_Registration StaticRegistration => PreferredPathing_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PreferredPathing_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PreferredPathingCommon.Instance;
         [DebuggerStepThrough]

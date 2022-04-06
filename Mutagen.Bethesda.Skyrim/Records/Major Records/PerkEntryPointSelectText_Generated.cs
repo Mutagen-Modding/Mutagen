@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -577,10 +578,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PerkEntryPointSelectText_FieldIndex
+    internal enum PerkEntryPointSelectText_FieldIndex
     {
         Rank = 0,
         Priority = 1,
@@ -593,7 +594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PerkEntryPointSelectText_Registration : ILoquiRegistration
+    internal partial class PerkEntryPointSelectText_Registration : ILoquiRegistration
     {
         public static readonly PerkEntryPointSelectText_Registration Instance = new PerkEntryPointSelectText_Registration();
 
@@ -674,7 +675,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PerkEntryPointSelectTextSetterCommon : APerkEntryPointEffectSetterCommon
+    internal partial class PerkEntryPointSelectTextSetterCommon : APerkEntryPointEffectSetterCommon
     {
         public new static readonly PerkEntryPointSelectTextSetterCommon Instance = new PerkEntryPointSelectTextSetterCommon();
 
@@ -744,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkEntryPointSelectTextCommon : APerkEntryPointEffectCommon
+    internal partial class PerkEntryPointSelectTextCommon : APerkEntryPointEffectCommon
     {
         public new static readonly PerkEntryPointSelectTextCommon Instance = new PerkEntryPointSelectTextCommon();
 
@@ -941,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkEntryPointSelectTextSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon
+    internal partial class PerkEntryPointSelectTextSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon
     {
         public new static readonly PerkEntryPointSelectTextSetterTranslationCommon Instance = new PerkEntryPointSelectTextSetterTranslationCommon();
 
@@ -1057,7 +1058,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointSelectText_Registration.Instance;
-        public new static PerkEntryPointSelectText_Registration StaticRegistration => PerkEntryPointSelectText_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkEntryPointSelectText_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointSelectTextCommon.Instance;
         [DebuggerStepThrough]
@@ -1075,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkEntryPointSelectTextBinaryWriteTranslation :
         APerkEntryPointEffectBinaryWriteTranslation,
@@ -1145,7 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PerkEntryPointSelectTextBinaryCreateTranslation : APerkEntryPointEffectBinaryCreateTranslation
+    internal partial class PerkEntryPointSelectTextBinaryCreateTranslation : APerkEntryPointEffectBinaryCreateTranslation
     {
         public new readonly static PerkEntryPointSelectTextBinaryCreateTranslation Instance = new PerkEntryPointSelectTextBinaryCreateTranslation();
 
@@ -1175,16 +1176,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PerkEntryPointSelectTextBinaryOverlay :
+    internal partial class PerkEntryPointSelectTextBinaryOverlay :
         APerkEntryPointEffectBinaryOverlay,
         IPerkEntryPointSelectTextGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointSelectText_Registration.Instance;
-        public new static PerkEntryPointSelectText_Registration StaticRegistration => PerkEntryPointSelectText_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkEntryPointSelectText_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointSelectTextCommon.Instance;
         [DebuggerStepThrough]

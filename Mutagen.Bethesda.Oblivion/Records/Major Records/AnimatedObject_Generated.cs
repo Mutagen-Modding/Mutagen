@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -713,10 +714,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum AnimatedObject_FieldIndex
+    internal enum AnimatedObject_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -729,7 +730,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class AnimatedObject_Registration : ILoquiRegistration
+    internal partial class AnimatedObject_Registration : ILoquiRegistration
     {
         public static readonly AnimatedObject_Registration Instance = new AnimatedObject_Registration();
 
@@ -814,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class AnimatedObjectSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class AnimatedObjectSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly AnimatedObjectSetterCommon Instance = new AnimatedObjectSetterCommon();
 
@@ -886,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AnimatedObjectCommon : OblivionMajorRecordCommon
+    internal partial class AnimatedObjectCommon : OblivionMajorRecordCommon
     {
         public new static readonly AnimatedObjectCommon Instance = new AnimatedObjectCommon();
 
@@ -1142,7 +1143,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AnimatedObjectSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class AnimatedObjectSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly AnimatedObjectSetterTranslationCommon Instance = new AnimatedObjectSetterTranslationCommon();
 
@@ -1327,7 +1328,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimatedObject_Registration.Instance;
-        public new static AnimatedObject_Registration StaticRegistration => AnimatedObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AnimatedObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AnimatedObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -1345,7 +1346,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AnimatedObjectBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1438,7 +1439,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class AnimatedObjectBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class AnimatedObjectBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static AnimatedObjectBinaryCreateTranslation Instance = new AnimatedObjectBinaryCreateTranslation();
 
@@ -1501,16 +1502,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class AnimatedObjectBinaryOverlay :
+    internal partial class AnimatedObjectBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IAnimatedObjectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimatedObject_Registration.Instance;
-        public new static AnimatedObject_Registration StaticRegistration => AnimatedObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AnimatedObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AnimatedObjectCommon.Instance;
         [DebuggerStepThrough]

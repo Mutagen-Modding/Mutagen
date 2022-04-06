@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -680,17 +681,17 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum NavmeshGridArray_FieldIndex
+    internal enum NavmeshGridArray_FieldIndex
     {
         GridCell = 0,
     }
     #endregion
 
     #region Registration
-    public partial class NavmeshGridArray_Registration : ILoquiRegistration
+    internal partial class NavmeshGridArray_Registration : ILoquiRegistration
     {
         public static readonly NavmeshGridArray_Registration Instance = new NavmeshGridArray_Registration();
 
@@ -764,7 +765,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class NavmeshGridArraySetterCommon
+    internal partial class NavmeshGridArraySetterCommon
     {
         public static readonly NavmeshGridArraySetterCommon Instance = new NavmeshGridArraySetterCommon();
 
@@ -799,7 +800,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class NavmeshGridArrayCommon
+    internal partial class NavmeshGridArrayCommon
     {
         public static readonly NavmeshGridArrayCommon Instance = new NavmeshGridArrayCommon();
 
@@ -932,7 +933,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class NavmeshGridArraySetterTranslationCommon
+    internal partial class NavmeshGridArraySetterTranslationCommon
     {
         public static readonly NavmeshGridArraySetterTranslationCommon Instance = new NavmeshGridArraySetterTranslationCommon();
 
@@ -1023,7 +1024,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavmeshGridArray_Registration.Instance;
-        public static NavmeshGridArray_Registration StaticRegistration => NavmeshGridArray_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavmeshGridArray_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavmeshGridArrayCommon.Instance;
         [DebuggerStepThrough]
@@ -1047,7 +1048,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NavmeshGridArrayBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1086,7 +1087,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class NavmeshGridArrayBinaryCreateTranslation
+    internal partial class NavmeshGridArrayBinaryCreateTranslation
     {
         public readonly static NavmeshGridArrayBinaryCreateTranslation Instance = new NavmeshGridArrayBinaryCreateTranslation();
 
@@ -1124,16 +1125,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class NavmeshGridArrayBinaryOverlay :
+    internal partial class NavmeshGridArrayBinaryOverlay :
         PluginBinaryOverlay,
         INavmeshGridArrayGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavmeshGridArray_Registration.Instance;
-        public static NavmeshGridArray_Registration StaticRegistration => NavmeshGridArray_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavmeshGridArray_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavmeshGridArrayCommon.Instance;
         [DebuggerStepThrough]

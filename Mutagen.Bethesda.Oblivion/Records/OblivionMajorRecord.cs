@@ -30,16 +30,13 @@ namespace Mutagen.Bethesda.Oblivion
         protected override ushort? FormVersionAbstract => null;
     }
 
-    namespace Internals
+    internal partial class OblivionMajorRecordBinaryOverlay
     {
-        public partial class OblivionMajorRecordBinaryOverlay
-        {
-            protected override ushort? FormVersionAbstract => null;
+        protected override ushort? FormVersionAbstract => null;
 
-            public OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlags
-            {
-                get => (OblivionMajorRecord.OblivionMajorRecordFlag)this.MajorRecordFlagsRaw;
-            }
+        public OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlags
+        {
+            get => (OblivionMajorRecord.OblivionMajorRecordFlag)this.MajorRecordFlagsRaw;
         }
     }
 }

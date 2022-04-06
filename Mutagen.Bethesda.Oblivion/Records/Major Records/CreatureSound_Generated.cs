@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -732,10 +733,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum CreatureSound_FieldIndex
+    internal enum CreatureSound_FieldIndex
     {
         SoundType = 0,
         Sounds = 1,
@@ -743,7 +744,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class CreatureSound_Registration : ILoquiRegistration
+    internal partial class CreatureSound_Registration : ILoquiRegistration
     {
         public static readonly CreatureSound_Registration Instance = new CreatureSound_Registration();
 
@@ -826,7 +827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class CreatureSoundSetterCommon
+    internal partial class CreatureSoundSetterCommon
     {
         public static readonly CreatureSoundSetterCommon Instance = new CreatureSoundSetterCommon();
 
@@ -864,7 +865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CreatureSoundCommon
+    internal partial class CreatureSoundCommon
     {
         public static readonly CreatureSoundCommon Instance = new CreatureSoundCommon();
 
@@ -1015,7 +1016,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CreatureSoundSetterTranslationCommon
+    internal partial class CreatureSoundSetterTranslationCommon
     {
         public static readonly CreatureSoundSetterTranslationCommon Instance = new CreatureSoundSetterTranslationCommon();
 
@@ -1117,7 +1118,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureSound_Registration.Instance;
-        public static CreatureSound_Registration StaticRegistration => CreatureSound_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CreatureSound_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreatureSoundCommon.Instance;
         [DebuggerStepThrough]
@@ -1141,7 +1142,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CreatureSoundBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1194,7 +1195,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class CreatureSoundBinaryCreateTranslation
+    internal partial class CreatureSoundBinaryCreateTranslation
     {
         public readonly static CreatureSoundBinaryCreateTranslation Instance = new CreatureSoundBinaryCreateTranslation();
 
@@ -1266,16 +1267,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class CreatureSoundBinaryOverlay :
+    internal partial class CreatureSoundBinaryOverlay :
         PluginBinaryOverlay,
         ICreatureSoundGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureSound_Registration.Instance;
-        public static CreatureSound_Registration StaticRegistration => CreatureSound_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CreatureSound_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreatureSoundCommon.Instance;
         [DebuggerStepThrough]

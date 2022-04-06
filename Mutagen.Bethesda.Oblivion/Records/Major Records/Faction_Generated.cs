@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -978,10 +979,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Faction_FieldIndex
+    internal enum Faction_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -997,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Faction_Registration : ILoquiRegistration
+    internal partial class Faction_Registration : ILoquiRegistration
     {
         public static readonly Faction_Registration Instance = new Faction_Registration();
 
@@ -1088,7 +1089,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class FactionSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class FactionSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly FactionSetterCommon Instance = new FactionSetterCommon();
 
@@ -1163,7 +1164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class FactionCommon : OblivionMajorRecordCommon
+    internal partial class FactionCommon : OblivionMajorRecordCommon
     {
         public new static readonly FactionCommon Instance = new FactionCommon();
 
@@ -1483,7 +1484,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class FactionSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class FactionSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly FactionSetterTranslationCommon Instance = new FactionSetterTranslationCommon();
 
@@ -1698,7 +1699,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Faction_Registration.Instance;
-        public new static Faction_Registration StaticRegistration => Faction_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Faction_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FactionCommon.Instance;
         [DebuggerStepThrough]
@@ -1716,7 +1717,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class FactionBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1834,7 +1835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class FactionBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class FactionBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static FactionBinaryCreateTranslation Instance = new FactionBinaryCreateTranslation();
 
@@ -1929,16 +1930,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class FactionBinaryOverlay :
+    internal partial class FactionBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IFactionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Faction_Registration.Instance;
-        public new static Faction_Registration StaticRegistration => Faction_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Faction_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FactionCommon.Instance;
         [DebuggerStepThrough]

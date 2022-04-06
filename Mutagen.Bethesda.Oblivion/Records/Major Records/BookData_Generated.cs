@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -701,10 +702,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum BookData_FieldIndex
+    internal enum BookData_FieldIndex
     {
         Flags = 0,
         Teaches = 1,
@@ -714,7 +715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class BookData_Registration : ILoquiRegistration
+    internal partial class BookData_Registration : ILoquiRegistration
     {
         public static readonly BookData_Registration Instance = new BookData_Registration();
 
@@ -795,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class BookDataSetterCommon
+    internal partial class BookDataSetterCommon
     {
         public static readonly BookDataSetterCommon Instance = new BookDataSetterCommon();
 
@@ -837,7 +838,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class BookDataCommon
+    internal partial class BookDataCommon
     {
         public static readonly BookDataCommon Instance = new BookDataCommon();
 
@@ -983,7 +984,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class BookDataSetterTranslationCommon
+    internal partial class BookDataSetterTranslationCommon
     {
         public static readonly BookDataSetterTranslationCommon Instance = new BookDataSetterTranslationCommon();
 
@@ -1073,7 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookData_Registration.Instance;
-        public static BookData_Registration StaticRegistration => BookData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BookData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BookDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1097,7 +1098,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class BookDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1153,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class BookDataBinaryCreateTranslation
+    internal partial class BookDataBinaryCreateTranslation
     {
         public readonly static BookDataBinaryCreateTranslation Instance = new BookDataBinaryCreateTranslation();
 
@@ -1195,16 +1196,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class BookDataBinaryOverlay :
+    internal partial class BookDataBinaryOverlay :
         PluginBinaryOverlay,
         IBookDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookData_Registration.Instance;
-        public static BookData_Registration StaticRegistration => BookData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BookData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BookDataCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -690,10 +691,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LocationCellEnablePoint_FieldIndex
+    internal enum LocationCellEnablePoint_FieldIndex
     {
         Actor = 0,
         Ref = 1,
@@ -702,7 +703,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LocationCellEnablePoint_Registration : ILoquiRegistration
+    internal partial class LocationCellEnablePoint_Registration : ILoquiRegistration
     {
         public static readonly LocationCellEnablePoint_Registration Instance = new LocationCellEnablePoint_Registration();
 
@@ -776,7 +777,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LocationCellEnablePointSetterCommon
+    internal partial class LocationCellEnablePointSetterCommon
     {
         public static readonly LocationCellEnablePointSetterCommon Instance = new LocationCellEnablePointSetterCommon();
 
@@ -815,7 +816,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationCellEnablePointCommon
+    internal partial class LocationCellEnablePointCommon
     {
         public static readonly LocationCellEnablePointCommon Instance = new LocationCellEnablePointCommon();
 
@@ -953,7 +954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationCellEnablePointSetterTranslationCommon
+    internal partial class LocationCellEnablePointSetterTranslationCommon
     {
         public static readonly LocationCellEnablePointSetterTranslationCommon Instance = new LocationCellEnablePointSetterTranslationCommon();
 
@@ -1039,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCellEnablePoint_Registration.Instance;
-        public static LocationCellEnablePoint_Registration StaticRegistration => LocationCellEnablePoint_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocationCellEnablePoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCellEnablePointCommon.Instance;
         [DebuggerStepThrough]
@@ -1063,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LocationCellEnablePointBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1108,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LocationCellEnablePointBinaryCreateTranslation
+    internal partial class LocationCellEnablePointBinaryCreateTranslation
     {
         public readonly static LocationCellEnablePointBinaryCreateTranslation Instance = new LocationCellEnablePointBinaryCreateTranslation();
 
@@ -1147,16 +1148,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LocationCellEnablePointBinaryOverlay :
+    internal partial class LocationCellEnablePointBinaryOverlay :
         PluginBinaryOverlay,
         ILocationCellEnablePointGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCellEnablePoint_Registration.Instance;
-        public static LocationCellEnablePoint_Registration StaticRegistration => LocationCellEnablePoint_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocationCellEnablePoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCellEnablePointCommon.Instance;
         [DebuggerStepThrough]

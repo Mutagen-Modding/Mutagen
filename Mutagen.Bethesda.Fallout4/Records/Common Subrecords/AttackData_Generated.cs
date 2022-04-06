@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -947,10 +948,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum AttackData_FieldIndex
+    internal enum AttackData_FieldIndex
     {
         DamageMult = 0,
         Chance = 1,
@@ -967,7 +968,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class AttackData_Registration : ILoquiRegistration
+    internal partial class AttackData_Registration : ILoquiRegistration
     {
         public static readonly AttackData_Registration Instance = new AttackData_Registration();
 
@@ -1048,7 +1049,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class AttackDataSetterCommon
+    internal partial class AttackDataSetterCommon
     {
         public static readonly AttackDataSetterCommon Instance = new AttackDataSetterCommon();
 
@@ -1098,7 +1099,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class AttackDataCommon
+    internal partial class AttackDataCommon
     {
         public static readonly AttackDataCommon Instance = new AttackDataCommon();
 
@@ -1315,7 +1316,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class AttackDataSetterTranslationCommon
+    internal partial class AttackDataSetterTranslationCommon
     {
         public static readonly AttackDataSetterTranslationCommon Instance = new AttackDataSetterTranslationCommon();
 
@@ -1433,7 +1434,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AttackData_Registration.Instance;
-        public static AttackData_Registration StaticRegistration => AttackData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AttackData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AttackDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1457,7 +1458,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AttackDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1531,7 +1532,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class AttackDataBinaryCreateTranslation
+    internal partial class AttackDataBinaryCreateTranslation
     {
         public readonly static AttackDataBinaryCreateTranslation Instance = new AttackDataBinaryCreateTranslation();
 
@@ -1578,16 +1579,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class AttackDataBinaryOverlay :
+    internal partial class AttackDataBinaryOverlay :
         PluginBinaryOverlay,
         IAttackDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AttackData_Registration.Instance;
-        public static AttackData_Registration StaticRegistration => AttackData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AttackData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AttackDataCommon.Instance;
         [DebuggerStepThrough]

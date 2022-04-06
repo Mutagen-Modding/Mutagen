@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -3502,10 +3503,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PlacedObject_FieldIndex
+    internal enum PlacedObject_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -3575,7 +3576,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PlacedObject_Registration : ILoquiRegistration
+    internal partial class PlacedObject_Registration : ILoquiRegistration
     {
         public static readonly PlacedObject_Registration Instance = new PlacedObject_Registration();
 
@@ -3717,7 +3718,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PlacedObjectSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class PlacedObjectSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly PlacedObjectSetterCommon Instance = new PlacedObjectSetterCommon();
 
@@ -3872,7 +3873,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedObjectCommon : SkyrimMajorRecordCommon
+    internal partial class PlacedObjectCommon : SkyrimMajorRecordCommon
     {
         public new static readonly PlacedObjectCommon Instance = new PlacedObjectCommon();
 
@@ -5184,7 +5185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedObjectSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class PlacedObjectSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly PlacedObjectSetterTranslationCommon Instance = new PlacedObjectSetterTranslationCommon();
 
@@ -6100,7 +6101,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedObject_Registration.Instance;
-        public new static PlacedObject_Registration StaticRegistration => PlacedObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -6118,7 +6119,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PlacedObjectBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -6532,7 +6533,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PlacedObjectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class PlacedObjectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static PlacedObjectBinaryCreateTranslation Instance = new PlacedObjectBinaryCreateTranslation();
 
@@ -6932,16 +6933,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PlacedObjectBinaryOverlay :
+    internal partial class PlacedObjectBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IPlacedObjectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedObject_Registration.Instance;
-        public new static PlacedObject_Registration StaticRegistration => PlacedObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedObjectCommon.Instance;
         [DebuggerStepThrough]

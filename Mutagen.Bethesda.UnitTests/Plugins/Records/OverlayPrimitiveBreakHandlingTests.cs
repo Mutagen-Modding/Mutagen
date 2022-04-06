@@ -1,7 +1,7 @@
-﻿using System.Linq;
+using System.Linq;
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
-using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
 using Xunit;
 

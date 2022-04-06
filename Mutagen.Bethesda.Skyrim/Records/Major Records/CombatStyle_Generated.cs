@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1340,10 +1341,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CombatStyle_FieldIndex
+    internal enum CombatStyle_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1372,7 +1373,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CombatStyle_Registration : ILoquiRegistration
+    internal partial class CombatStyle_Registration : ILoquiRegistration
     {
         public static readonly CombatStyle_Registration Instance = new CombatStyle_Registration();
 
@@ -1462,7 +1463,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CombatStyleSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class CombatStyleSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly CombatStyleSetterCommon Instance = new CombatStyleSetterCommon();
 
@@ -1548,7 +1549,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CombatStyleCommon : SkyrimMajorRecordCommon
+    internal partial class CombatStyleCommon : SkyrimMajorRecordCommon
     {
         public new static readonly CombatStyleCommon Instance = new CombatStyleCommon();
 
@@ -1988,7 +1989,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CombatStyleSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class CombatStyleSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly CombatStyleSetterTranslationCommon Instance = new CombatStyleSetterTranslationCommon();
 
@@ -2284,7 +2285,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyle_Registration.Instance;
-        public new static CombatStyle_Registration StaticRegistration => CombatStyle_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CombatStyle_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CombatStyleCommon.Instance;
         [DebuggerStepThrough]
@@ -2302,7 +2303,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CombatStyleBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2466,7 +2467,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CombatStyleBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class CombatStyleBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static CombatStyleBinaryCreateTranslation Instance = new CombatStyleBinaryCreateTranslation();
 
@@ -2577,16 +2578,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CombatStyleBinaryOverlay :
+    internal partial class CombatStyleBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ICombatStyleGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyle_Registration.Instance;
-        public new static CombatStyle_Registration StaticRegistration => CombatStyle_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CombatStyle_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CombatStyleCommon.Instance;
         [DebuggerStepThrough]

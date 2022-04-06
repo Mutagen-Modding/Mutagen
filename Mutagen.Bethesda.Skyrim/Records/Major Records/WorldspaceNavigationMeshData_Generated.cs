@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -632,10 +633,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WorldspaceNavigationMeshData_FieldIndex
+    internal enum WorldspaceNavigationMeshData_FieldIndex
     {
         NavmeshVersion = 0,
         Magic = 1,
@@ -655,7 +656,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WorldspaceNavigationMeshData_Registration : ILoquiRegistration
+    internal partial class WorldspaceNavigationMeshData_Registration : ILoquiRegistration
     {
         public static readonly WorldspaceNavigationMeshData_Registration Instance = new WorldspaceNavigationMeshData_Registration();
 
@@ -729,7 +730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WorldspaceNavigationMeshDataSetterCommon : ANavigationMeshDataSetterCommon
+    internal partial class WorldspaceNavigationMeshDataSetterCommon : ANavigationMeshDataSetterCommon
     {
         public new static readonly WorldspaceNavigationMeshDataSetterCommon Instance = new WorldspaceNavigationMeshDataSetterCommon();
 
@@ -784,7 +785,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceNavigationMeshDataCommon : ANavigationMeshDataCommon
+    internal partial class WorldspaceNavigationMeshDataCommon : ANavigationMeshDataCommon
     {
         public new static readonly WorldspaceNavigationMeshDataCommon Instance = new WorldspaceNavigationMeshDataCommon();
 
@@ -971,7 +972,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceNavigationMeshDataSetterTranslationCommon : ANavigationMeshDataSetterTranslationCommon
+    internal partial class WorldspaceNavigationMeshDataSetterTranslationCommon : ANavigationMeshDataSetterTranslationCommon
     {
         public new static readonly WorldspaceNavigationMeshDataSetterTranslationCommon Instance = new WorldspaceNavigationMeshDataSetterTranslationCommon();
 
@@ -1075,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceNavigationMeshData_Registration.Instance;
-        public new static WorldspaceNavigationMeshData_Registration StaticRegistration => WorldspaceNavigationMeshData_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => WorldspaceNavigationMeshData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WorldspaceNavigationMeshDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1093,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceNavigationMeshDataBinaryWriteTranslation :
         ANavigationMeshDataBinaryWriteTranslation,
@@ -1144,7 +1145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WorldspaceNavigationMeshDataBinaryCreateTranslation : ANavigationMeshDataBinaryCreateTranslation
+    internal partial class WorldspaceNavigationMeshDataBinaryCreateTranslation : ANavigationMeshDataBinaryCreateTranslation
     {
         public new readonly static WorldspaceNavigationMeshDataBinaryCreateTranslation Instance = new WorldspaceNavigationMeshDataBinaryCreateTranslation();
 
@@ -1170,16 +1171,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WorldspaceNavigationMeshDataBinaryOverlay :
+    internal partial class WorldspaceNavigationMeshDataBinaryOverlay :
         ANavigationMeshDataBinaryOverlay,
         IWorldspaceNavigationMeshDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceNavigationMeshData_Registration.Instance;
-        public new static WorldspaceNavigationMeshData_Registration StaticRegistration => WorldspaceNavigationMeshData_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => WorldspaceNavigationMeshData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WorldspaceNavigationMeshDataCommon.Instance;
         [DebuggerStepThrough]

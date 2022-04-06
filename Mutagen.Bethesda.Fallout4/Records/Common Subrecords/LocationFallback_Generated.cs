@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -593,10 +594,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum LocationFallback_FieldIndex
+    internal enum LocationFallback_FieldIndex
     {
         Type = 0,
         Data = 1,
@@ -604,7 +605,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class LocationFallback_Registration : ILoquiRegistration
+    internal partial class LocationFallback_Registration : ILoquiRegistration
     {
         public static readonly LocationFallback_Registration Instance = new LocationFallback_Registration();
 
@@ -678,7 +679,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class LocationFallbackSetterCommon : ALocationTargetSetterCommon
+    internal partial class LocationFallbackSetterCommon : ALocationTargetSetterCommon
     {
         public new static readonly LocationFallbackSetterCommon Instance = new LocationFallbackSetterCommon();
 
@@ -732,7 +733,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LocationFallbackCommon : ALocationTargetCommon
+    internal partial class LocationFallbackCommon : ALocationTargetCommon
     {
         public new static readonly LocationFallbackCommon Instance = new LocationFallbackCommon();
 
@@ -894,7 +895,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LocationFallbackSetterTranslationCommon : ALocationTargetSetterTranslationCommon
+    internal partial class LocationFallbackSetterTranslationCommon : ALocationTargetSetterTranslationCommon
     {
         public new static readonly LocationFallbackSetterTranslationCommon Instance = new LocationFallbackSetterTranslationCommon();
 
@@ -998,7 +999,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationFallback_Registration.Instance;
-        public new static LocationFallback_Registration StaticRegistration => LocationFallback_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationFallback_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationFallbackCommon.Instance;
         [DebuggerStepThrough]
@@ -1016,7 +1017,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LocationFallbackBinaryWriteTranslation :
         ALocationTargetBinaryWriteTranslation,
@@ -1069,7 +1070,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class LocationFallbackBinaryCreateTranslation : ALocationTargetBinaryCreateTranslation
+    internal partial class LocationFallbackBinaryCreateTranslation : ALocationTargetBinaryCreateTranslation
     {
         public new readonly static LocationFallbackBinaryCreateTranslation Instance = new LocationFallbackBinaryCreateTranslation();
 
@@ -1096,16 +1097,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class LocationFallbackBinaryOverlay :
+    internal partial class LocationFallbackBinaryOverlay :
         ALocationTargetBinaryOverlay,
         ILocationFallbackGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationFallback_Registration.Instance;
-        public new static LocationFallback_Registration StaticRegistration => LocationFallback_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationFallback_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationFallbackCommon.Instance;
         [DebuggerStepThrough]

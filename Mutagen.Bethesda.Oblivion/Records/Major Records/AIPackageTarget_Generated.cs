@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -668,10 +669,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum AIPackageTarget_FieldIndex
+    internal enum AIPackageTarget_FieldIndex
     {
         ObjectType = 0,
         Object = 1,
@@ -680,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class AIPackageTarget_Registration : ILoquiRegistration
+    internal partial class AIPackageTarget_Registration : ILoquiRegistration
     {
         public static readonly AIPackageTarget_Registration Instance = new AIPackageTarget_Registration();
 
@@ -761,7 +762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class AIPackageTargetSetterCommon
+    internal partial class AIPackageTargetSetterCommon
     {
         public static readonly AIPackageTargetSetterCommon Instance = new AIPackageTargetSetterCommon();
 
@@ -802,7 +803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AIPackageTargetCommon
+    internal partial class AIPackageTargetCommon
     {
         public static readonly AIPackageTargetCommon Instance = new AIPackageTargetCommon();
 
@@ -938,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AIPackageTargetSetterTranslationCommon
+    internal partial class AIPackageTargetSetterTranslationCommon
     {
         public static readonly AIPackageTargetSetterTranslationCommon Instance = new AIPackageTargetSetterTranslationCommon();
 
@@ -1024,7 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageTarget_Registration.Instance;
-        public static AIPackageTarget_Registration StaticRegistration => AIPackageTarget_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AIPackageTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -1048,7 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AIPackageTargetBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1096,7 +1097,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class AIPackageTargetBinaryCreateTranslation
+    internal partial class AIPackageTargetBinaryCreateTranslation
     {
         public readonly static AIPackageTargetBinaryCreateTranslation Instance = new AIPackageTargetBinaryCreateTranslation();
 
@@ -1135,16 +1136,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class AIPackageTargetBinaryOverlay :
+    internal partial class AIPackageTargetBinaryOverlay :
         PluginBinaryOverlay,
         IAIPackageTargetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageTarget_Registration.Instance;
-        public static AIPackageTarget_Registration StaticRegistration => AIPackageTarget_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AIPackageTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageTargetCommon.Instance;
         [DebuggerStepThrough]

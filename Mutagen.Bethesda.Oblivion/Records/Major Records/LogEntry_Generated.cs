@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -815,10 +816,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum LogEntry_FieldIndex
+    internal enum LogEntry_FieldIndex
     {
         Flags = 0,
         Conditions = 1,
@@ -828,7 +829,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class LogEntry_Registration : ILoquiRegistration
+    internal partial class LogEntry_Registration : ILoquiRegistration
     {
         public static readonly LogEntry_Registration Instance = new LogEntry_Registration();
 
@@ -914,7 +915,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LogEntrySetterCommon
+    internal partial class LogEntrySetterCommon
     {
         public static readonly LogEntrySetterCommon Instance = new LogEntrySetterCommon();
 
@@ -954,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LogEntryCommon
+    internal partial class LogEntryCommon
     {
         public static readonly LogEntryCommon Instance = new LogEntryCommon();
 
@@ -1144,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LogEntrySetterTranslationCommon
+    internal partial class LogEntrySetterTranslationCommon
     {
         public static readonly LogEntrySetterTranslationCommon Instance = new LogEntrySetterTranslationCommon();
 
@@ -1276,7 +1277,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LogEntry_Registration.Instance;
-        public static LogEntry_Registration StaticRegistration => LogEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LogEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LogEntryCommon.Instance;
         [DebuggerStepThrough]
@@ -1300,7 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LogEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1365,7 +1366,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LogEntryBinaryCreateTranslation
+    internal partial class LogEntryBinaryCreateTranslation
     {
         public readonly static LogEntryBinaryCreateTranslation Instance = new LogEntryBinaryCreateTranslation();
 
@@ -1455,16 +1456,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LogEntryBinaryOverlay :
+    internal partial class LogEntryBinaryOverlay :
         PluginBinaryOverlay,
         ILogEntryGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LogEntry_Registration.Instance;
-        public static LogEntry_Registration StaticRegistration => LogEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LogEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LogEntryCommon.Instance;
         [DebuggerStepThrough]

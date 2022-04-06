@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -858,10 +859,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum AlchemicalApparatus_FieldIndex
+    internal enum AlchemicalApparatus_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -877,7 +878,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class AlchemicalApparatus_Registration : ILoquiRegistration
+    internal partial class AlchemicalApparatus_Registration : ILoquiRegistration
     {
         public static readonly AlchemicalApparatus_Registration Instance = new AlchemicalApparatus_Registration();
 
@@ -965,7 +966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class AlchemicalApparatusSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class AlchemicalApparatusSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly AlchemicalApparatusSetterCommon Instance = new AlchemicalApparatusSetterCommon();
 
@@ -1040,7 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AlchemicalApparatusCommon : OblivionMajorRecordCommon
+    internal partial class AlchemicalApparatusCommon : OblivionMajorRecordCommon
     {
         public new static readonly AlchemicalApparatusCommon Instance = new AlchemicalApparatusCommon();
 
@@ -1346,7 +1347,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AlchemicalApparatusSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class AlchemicalApparatusSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly AlchemicalApparatusSetterTranslationCommon Instance = new AlchemicalApparatusSetterTranslationCommon();
 
@@ -1565,7 +1566,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatus_Registration.Instance;
-        public new static AlchemicalApparatus_Registration StaticRegistration => AlchemicalApparatus_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AlchemicalApparatus_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AlchemicalApparatusCommon.Instance;
         [DebuggerStepThrough]
@@ -1583,7 +1584,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AlchemicalApparatusBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1693,7 +1694,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class AlchemicalApparatusBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class AlchemicalApparatusBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static AlchemicalApparatusBinaryCreateTranslation Instance = new AlchemicalApparatusBinaryCreateTranslation();
 
@@ -1777,16 +1778,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class AlchemicalApparatusBinaryOverlay :
+    internal partial class AlchemicalApparatusBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IAlchemicalApparatusGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatus_Registration.Instance;
-        public new static AlchemicalApparatus_Registration StaticRegistration => AlchemicalApparatus_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AlchemicalApparatus_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AlchemicalApparatusCommon.Instance;
         [DebuggerStepThrough]

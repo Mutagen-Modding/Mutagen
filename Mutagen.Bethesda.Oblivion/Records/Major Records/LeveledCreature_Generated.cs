@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -878,10 +879,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum LeveledCreature_FieldIndex
+    internal enum LeveledCreature_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -897,7 +898,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class LeveledCreature_Registration : ILoquiRegistration
+    internal partial class LeveledCreature_Registration : ILoquiRegistration
     {
         public static readonly LeveledCreature_Registration Instance = new LeveledCreature_Registration();
 
@@ -985,7 +986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LeveledCreatureSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class LeveledCreatureSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly LeveledCreatureSetterCommon Instance = new LeveledCreatureSetterCommon();
 
@@ -1062,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LeveledCreatureCommon : OblivionMajorRecordCommon
+    internal partial class LeveledCreatureCommon : OblivionMajorRecordCommon
     {
         public new static readonly LeveledCreatureCommon Instance = new LeveledCreatureCommon();
 
@@ -1369,7 +1370,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LeveledCreatureSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class LeveledCreatureSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly LeveledCreatureSetterTranslationCommon Instance = new LeveledCreatureSetterTranslationCommon();
 
@@ -1564,7 +1565,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledCreature_Registration.Instance;
-        public new static LeveledCreature_Registration StaticRegistration => LeveledCreature_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LeveledCreature_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledCreatureCommon.Instance;
         [DebuggerStepThrough]
@@ -1582,7 +1583,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LeveledCreatureBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1692,7 +1693,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LeveledCreatureBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class LeveledCreatureBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static LeveledCreatureBinaryCreateTranslation Instance = new LeveledCreatureBinaryCreateTranslation();
 
@@ -1778,16 +1779,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LeveledCreatureBinaryOverlay :
+    internal partial class LeveledCreatureBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         ILeveledCreatureGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledCreature_Registration.Instance;
-        public new static LeveledCreature_Registration StaticRegistration => LeveledCreature_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LeveledCreature_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledCreatureCommon.Instance;
         [DebuggerStepThrough]

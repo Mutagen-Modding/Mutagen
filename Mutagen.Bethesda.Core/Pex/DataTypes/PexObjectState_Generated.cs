@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Pex;
-using Mutagen.Bethesda.Pex.Internals;
 using Noggog;
 using System;
 using System.Collections;
@@ -652,10 +651,10 @@ namespace Mutagen.Bethesda.Pex
 
 }
 
-namespace Mutagen.Bethesda.Pex.Internals
+namespace Mutagen.Bethesda.Pex
 {
     #region Field Index
-    public enum PexObjectState_FieldIndex
+    internal enum PexObjectState_FieldIndex
     {
         Name = 0,
         Functions = 1,
@@ -663,7 +662,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Registration
-    public partial class PexObjectState_Registration : ILoquiRegistration
+    internal partial class PexObjectState_Registration : ILoquiRegistration
     {
         public static readonly PexObjectState_Registration Instance = new PexObjectState_Registration();
 
@@ -736,7 +735,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Common
-    public partial class PexObjectStateSetterCommon
+    internal partial class PexObjectStateSetterCommon
     {
         public static readonly PexObjectStateSetterCommon Instance = new PexObjectStateSetterCommon();
 
@@ -750,7 +749,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class PexObjectStateCommon
+    internal partial class PexObjectStateCommon
     {
         public static readonly PexObjectStateCommon Instance = new PexObjectStateCommon();
 
@@ -889,7 +888,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class PexObjectStateSetterTranslationCommon
+    internal partial class PexObjectStateSetterTranslationCommon
     {
         public static readonly PexObjectStateSetterTranslationCommon Instance = new PexObjectStateSetterTranslationCommon();
 
@@ -991,7 +990,7 @@ namespace Mutagen.Bethesda.Pex
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PexObjectState_Registration.Instance;
-        public static PexObjectState_Registration StaticRegistration => PexObjectState_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PexObjectState_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PexObjectStateCommon.Instance;
         [DebuggerStepThrough]

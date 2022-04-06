@@ -1,25 +1,18 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Fallout4;
+
+public partial class ConditionFloat
 {
-    public partial class ConditionFloat
-    {
-        #region Data
-        public override ConditionData Data { get; set; } = new FunctionConditionData();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IConditionDataGetter IConditionFloatGetter.Data => Data;
-        #endregion
-    }
+    #region Data
+    public override ConditionData Data { get; set; } = new FunctionConditionData();
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IConditionDataGetter IConditionFloatGetter.Data => Data;
+    #endregion
+}
 
-    namespace Internals
-    {
-        public partial class ConditionFloatBinaryOverlay
-        {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            IConditionDataGetter IConditionFloatGetter.Data => Data;
-        }
-    }
+partial class ConditionFloatBinaryOverlay
+{
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IConditionDataGetter IConditionFloatGetter.Data => Data;
 }

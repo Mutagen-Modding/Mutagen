@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -637,10 +638,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum GlobalShort_FieldIndex
+    internal enum GlobalShort_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -652,7 +653,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class GlobalShort_Registration : ILoquiRegistration
+    internal partial class GlobalShort_Registration : ILoquiRegistration
     {
         public static readonly GlobalShort_Registration Instance = new GlobalShort_Registration();
 
@@ -736,7 +737,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class GlobalShortSetterCommon : GlobalSetterCommon
+    internal partial class GlobalShortSetterCommon : GlobalSetterCommon
     {
         public new static readonly GlobalShortSetterCommon Instance = new GlobalShortSetterCommon();
 
@@ -822,7 +823,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class GlobalShortCommon : GlobalCommon
+    internal partial class GlobalShortCommon : GlobalCommon
     {
         public new static readonly GlobalShortCommon Instance = new GlobalShortCommon();
 
@@ -1102,7 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class GlobalShortSetterTranslationCommon : GlobalSetterTranslationCommon
+    internal partial class GlobalShortSetterTranslationCommon : GlobalSetterTranslationCommon
     {
         public new static readonly GlobalShortSetterTranslationCommon Instance = new GlobalShortSetterTranslationCommon();
 
@@ -1291,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalShort_Registration.Instance;
-        public new static GlobalShort_Registration StaticRegistration => GlobalShort_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GlobalShort_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalShortCommon.Instance;
         [DebuggerStepThrough]
@@ -1309,7 +1310,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class GlobalShortBinaryWriteTranslation :
         GlobalBinaryWriteTranslation,
@@ -1418,7 +1419,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class GlobalShortBinaryCreateTranslation : GlobalBinaryCreateTranslation
+    internal partial class GlobalShortBinaryCreateTranslation : GlobalBinaryCreateTranslation
     {
         public new readonly static GlobalShortBinaryCreateTranslation Instance = new GlobalShortBinaryCreateTranslation();
 
@@ -1479,16 +1480,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class GlobalShortBinaryOverlay :
+    internal partial class GlobalShortBinaryOverlay :
         GlobalBinaryOverlay,
         IGlobalShortGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalShort_Registration.Instance;
-        public new static GlobalShort_Registration StaticRegistration => GlobalShort_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GlobalShort_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalShortCommon.Instance;
         [DebuggerStepThrough]

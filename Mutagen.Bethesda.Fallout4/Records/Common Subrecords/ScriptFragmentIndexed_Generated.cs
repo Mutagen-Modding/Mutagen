@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -734,10 +735,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ScriptFragmentIndexed_FieldIndex
+    internal enum ScriptFragmentIndexed_FieldIndex
     {
         FragmentIndex = 0,
         Unknown = 1,
@@ -748,7 +749,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ScriptFragmentIndexed_Registration : ILoquiRegistration
+    internal partial class ScriptFragmentIndexed_Registration : ILoquiRegistration
     {
         public static readonly ScriptFragmentIndexed_Registration Instance = new ScriptFragmentIndexed_Registration();
 
@@ -822,7 +823,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ScriptFragmentIndexedSetterCommon
+    internal partial class ScriptFragmentIndexedSetterCommon
     {
         public static readonly ScriptFragmentIndexedSetterCommon Instance = new ScriptFragmentIndexedSetterCommon();
 
@@ -861,7 +862,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ScriptFragmentIndexedCommon
+    internal partial class ScriptFragmentIndexedCommon
     {
         public static readonly ScriptFragmentIndexedCommon Instance = new ScriptFragmentIndexedCommon();
 
@@ -1017,7 +1018,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ScriptFragmentIndexedSetterTranslationCommon
+    internal partial class ScriptFragmentIndexedSetterTranslationCommon
     {
         public static readonly ScriptFragmentIndexedSetterTranslationCommon Instance = new ScriptFragmentIndexedSetterTranslationCommon();
 
@@ -1111,7 +1112,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptFragmentIndexed_Registration.Instance;
-        public static ScriptFragmentIndexed_Registration StaticRegistration => ScriptFragmentIndexed_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScriptFragmentIndexed_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptFragmentIndexedCommon.Instance;
         [DebuggerStepThrough]
@@ -1135,7 +1136,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ScriptFragmentIndexedBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1181,7 +1182,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ScriptFragmentIndexedBinaryCreateTranslation
+    internal partial class ScriptFragmentIndexedBinaryCreateTranslation
     {
         public readonly static ScriptFragmentIndexedBinaryCreateTranslation Instance = new ScriptFragmentIndexedBinaryCreateTranslation();
 
@@ -1224,16 +1225,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ScriptFragmentIndexedBinaryOverlay :
+    internal partial class ScriptFragmentIndexedBinaryOverlay :
         PluginBinaryOverlay,
         IScriptFragmentIndexedGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptFragmentIndexed_Registration.Instance;
-        public static ScriptFragmentIndexed_Registration StaticRegistration => ScriptFragmentIndexed_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScriptFragmentIndexed_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptFragmentIndexedCommon.Instance;
         [DebuggerStepThrough]

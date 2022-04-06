@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1395,10 +1396,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SoulGem_FieldIndex
+    internal enum SoulGem_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1424,7 +1425,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SoulGem_Registration : ILoquiRegistration
+    internal partial class SoulGem_Registration : ILoquiRegistration
     {
         public static readonly SoulGem_Registration Instance = new SoulGem_Registration();
 
@@ -1522,7 +1523,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SoulGemSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class SoulGemSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly SoulGemSetterCommon Instance = new SoulGemSetterCommon();
 
@@ -1611,7 +1612,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SoulGemCommon : SkyrimMajorRecordCommon
+    internal partial class SoulGemCommon : SkyrimMajorRecordCommon
     {
         public new static readonly SoulGemCommon Instance = new SoulGemCommon();
 
@@ -2076,7 +2077,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SoulGemSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class SoulGemSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly SoulGemSetterTranslationCommon Instance = new SoulGemSetterTranslationCommon();
 
@@ -2398,7 +2399,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoulGem_Registration.Instance;
-        public new static SoulGem_Registration StaticRegistration => SoulGem_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SoulGem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoulGemCommon.Instance;
         [DebuggerStepThrough]
@@ -2416,7 +2417,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SoulGemBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2582,7 +2583,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SoulGemBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class SoulGemBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static SoulGemBinaryCreateTranslation Instance = new SoulGemBinaryCreateTranslation();
 
@@ -2724,16 +2725,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SoulGemBinaryOverlay :
+    internal partial class SoulGemBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ISoulGemGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoulGem_Registration.Instance;
-        public new static SoulGem_Registration StaticRegistration => SoulGem_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SoulGem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoulGemCommon.Instance;
         [DebuggerStepThrough]

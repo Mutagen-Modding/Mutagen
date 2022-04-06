@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -554,16 +555,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum OwnerTarget_FieldIndex
+    internal enum OwnerTarget_FieldIndex
     {
     }
     #endregion
 
     #region Registration
-    public partial class OwnerTarget_Registration : ILoquiRegistration
+    internal partial class OwnerTarget_Registration : ILoquiRegistration
     {
         public static readonly OwnerTarget_Registration Instance = new OwnerTarget_Registration();
 
@@ -637,7 +638,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class OwnerTargetSetterCommon
+    internal partial class OwnerTargetSetterCommon
     {
         public static readonly OwnerTargetSetterCommon Instance = new OwnerTargetSetterCommon();
 
@@ -666,7 +667,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class OwnerTargetCommon
+    internal partial class OwnerTargetCommon
     {
         public static readonly OwnerTargetCommon Instance = new OwnerTargetCommon();
 
@@ -772,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class OwnerTargetSetterTranslationCommon
+    internal partial class OwnerTargetSetterTranslationCommon
     {
         public static readonly OwnerTargetSetterTranslationCommon Instance = new OwnerTargetSetterTranslationCommon();
 
@@ -846,7 +847,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OwnerTarget_Registration.Instance;
-        public static OwnerTarget_Registration StaticRegistration => OwnerTarget_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => OwnerTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => OwnerTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -870,7 +871,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class OwnerTargetBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -896,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class OwnerTargetBinaryCreateTranslation
+    internal partial class OwnerTargetBinaryCreateTranslation
     {
         public readonly static OwnerTargetBinaryCreateTranslation Instance = new OwnerTargetBinaryCreateTranslation();
 
@@ -924,16 +925,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public abstract partial class OwnerTargetBinaryOverlay :
+    internal abstract partial class OwnerTargetBinaryOverlay :
         PluginBinaryOverlay,
         IOwnerTargetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OwnerTarget_Registration.Instance;
-        public static OwnerTarget_Registration StaticRegistration => OwnerTarget_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => OwnerTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => OwnerTargetCommon.Instance;
         [DebuggerStepThrough]

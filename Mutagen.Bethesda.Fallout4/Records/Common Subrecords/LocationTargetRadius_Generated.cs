@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -681,10 +682,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum LocationTargetRadius_FieldIndex
+    internal enum LocationTargetRadius_FieldIndex
     {
         Target = 0,
         Radius = 1,
@@ -693,7 +694,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class LocationTargetRadius_Registration : ILoquiRegistration
+    internal partial class LocationTargetRadius_Registration : ILoquiRegistration
     {
         public static readonly LocationTargetRadius_Registration Instance = new LocationTargetRadius_Registration();
 
@@ -767,7 +768,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class LocationTargetRadiusSetterCommon
+    internal partial class LocationTargetRadiusSetterCommon
     {
         public static readonly LocationTargetRadiusSetterCommon Instance = new LocationTargetRadiusSetterCommon();
 
@@ -805,7 +806,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LocationTargetRadiusCommon
+    internal partial class LocationTargetRadiusCommon
     {
         public static readonly LocationTargetRadiusCommon Instance = new LocationTargetRadiusCommon();
 
@@ -952,7 +953,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LocationTargetRadiusSetterTranslationCommon
+    internal partial class LocationTargetRadiusSetterTranslationCommon
     {
         public static readonly LocationTargetRadiusSetterTranslationCommon Instance = new LocationTargetRadiusSetterTranslationCommon();
 
@@ -1056,7 +1057,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationTargetRadius_Registration.Instance;
-        public static LocationTargetRadius_Registration StaticRegistration => LocationTargetRadius_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocationTargetRadius_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationTargetRadiusCommon.Instance;
         [DebuggerStepThrough]
@@ -1080,7 +1081,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LocationTargetRadiusBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1133,7 +1134,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class LocationTargetRadiusBinaryCreateTranslation
+    internal partial class LocationTargetRadiusBinaryCreateTranslation
     {
         public readonly static LocationTargetRadiusBinaryCreateTranslation Instance = new LocationTargetRadiusBinaryCreateTranslation();
 
@@ -1176,16 +1177,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class LocationTargetRadiusBinaryOverlay :
+    internal partial class LocationTargetRadiusBinaryOverlay :
         PluginBinaryOverlay,
         ILocationTargetRadiusGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationTargetRadius_Registration.Instance;
-        public static LocationTargetRadius_Registration StaticRegistration => LocationTargetRadius_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocationTargetRadius_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationTargetRadiusCommon.Instance;
         [DebuggerStepThrough]

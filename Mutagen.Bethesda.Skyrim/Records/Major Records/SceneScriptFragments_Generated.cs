@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -654,10 +655,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SceneScriptFragments_FieldIndex
+    internal enum SceneScriptFragments_FieldIndex
     {
         Unknown = 0,
         FileName = 1,
@@ -668,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SceneScriptFragments_Registration : ILoquiRegistration
+    internal partial class SceneScriptFragments_Registration : ILoquiRegistration
     {
         public static readonly SceneScriptFragments_Registration Instance = new SceneScriptFragments_Registration();
 
@@ -742,7 +743,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SceneScriptFragmentsSetterCommon : ScriptFragmentsSetterCommon
+    internal partial class SceneScriptFragmentsSetterCommon : ScriptFragmentsSetterCommon
     {
         public new static readonly SceneScriptFragmentsSetterCommon Instance = new SceneScriptFragmentsSetterCommon();
 
@@ -794,7 +795,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SceneScriptFragmentsCommon : ScriptFragmentsCommon
+    internal partial class SceneScriptFragmentsCommon : ScriptFragmentsCommon
     {
         public new static readonly SceneScriptFragmentsCommon Instance = new SceneScriptFragmentsCommon();
 
@@ -967,7 +968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SceneScriptFragmentsSetterTranslationCommon : ScriptFragmentsSetterTranslationCommon
+    internal partial class SceneScriptFragmentsSetterTranslationCommon : ScriptFragmentsSetterTranslationCommon
     {
         public new static readonly SceneScriptFragmentsSetterTranslationCommon Instance = new SceneScriptFragmentsSetterTranslationCommon();
 
@@ -1087,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SceneScriptFragments_Registration.Instance;
-        public new static SceneScriptFragments_Registration StaticRegistration => SceneScriptFragments_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SceneScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SceneScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]
@@ -1105,7 +1106,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SceneScriptFragmentsBinaryWriteTranslation :
         ScriptFragmentsBinaryWriteTranslation,
@@ -1168,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SceneScriptFragmentsBinaryCreateTranslation : ScriptFragmentsBinaryCreateTranslation
+    internal partial class SceneScriptFragmentsBinaryCreateTranslation : ScriptFragmentsBinaryCreateTranslation
     {
         public new readonly static SceneScriptFragmentsBinaryCreateTranslation Instance = new SceneScriptFragmentsBinaryCreateTranslation();
 
@@ -1199,16 +1200,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SceneScriptFragmentsBinaryOverlay :
+    internal partial class SceneScriptFragmentsBinaryOverlay :
         ScriptFragmentsBinaryOverlay,
         ISceneScriptFragmentsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SceneScriptFragments_Registration.Instance;
-        public new static SceneScriptFragments_Registration StaticRegistration => SceneScriptFragments_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SceneScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SceneScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]

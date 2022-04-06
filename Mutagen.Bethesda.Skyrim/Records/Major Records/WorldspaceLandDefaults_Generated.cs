@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -635,10 +636,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WorldspaceLandDefaults_FieldIndex
+    internal enum WorldspaceLandDefaults_FieldIndex
     {
         DefaultLandHeight = 0,
         DefaultWaterHeight = 1,
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WorldspaceLandDefaults_Registration : ILoquiRegistration
+    internal partial class WorldspaceLandDefaults_Registration : ILoquiRegistration
     {
         public static readonly WorldspaceLandDefaults_Registration Instance = new WorldspaceLandDefaults_Registration();
 
@@ -727,7 +728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WorldspaceLandDefaultsSetterCommon
+    internal partial class WorldspaceLandDefaultsSetterCommon
     {
         public static readonly WorldspaceLandDefaultsSetterCommon Instance = new WorldspaceLandDefaultsSetterCommon();
 
@@ -767,7 +768,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceLandDefaultsCommon
+    internal partial class WorldspaceLandDefaultsCommon
     {
         public static readonly WorldspaceLandDefaultsCommon Instance = new WorldspaceLandDefaultsCommon();
 
@@ -893,7 +894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceLandDefaultsSetterTranslationCommon
+    internal partial class WorldspaceLandDefaultsSetterTranslationCommon
     {
         public static readonly WorldspaceLandDefaultsSetterTranslationCommon Instance = new WorldspaceLandDefaultsSetterTranslationCommon();
 
@@ -975,7 +976,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceLandDefaults_Registration.Instance;
-        public static WorldspaceLandDefaults_Registration StaticRegistration => WorldspaceLandDefaults_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceLandDefaults_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceLandDefaultsCommon.Instance;
         [DebuggerStepThrough]
@@ -999,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceLandDefaultsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1047,7 +1048,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WorldspaceLandDefaultsBinaryCreateTranslation
+    internal partial class WorldspaceLandDefaultsBinaryCreateTranslation
     {
         public readonly static WorldspaceLandDefaultsBinaryCreateTranslation Instance = new WorldspaceLandDefaultsBinaryCreateTranslation();
 
@@ -1083,16 +1084,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WorldspaceLandDefaultsBinaryOverlay :
+    internal partial class WorldspaceLandDefaultsBinaryOverlay :
         PluginBinaryOverlay,
         IWorldspaceLandDefaultsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceLandDefaults_Registration.Instance;
-        public static WorldspaceLandDefaults_Registration StaticRegistration => WorldspaceLandDefaults_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceLandDefaults_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceLandDefaultsCommon.Instance;
         [DebuggerStepThrough]

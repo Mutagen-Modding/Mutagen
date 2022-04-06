@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -704,10 +705,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum ArmorData_FieldIndex
+    internal enum ArmorData_FieldIndex
     {
         ArmorValue = 0,
         Value = 1,
@@ -717,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class ArmorData_Registration : ILoquiRegistration
+    internal partial class ArmorData_Registration : ILoquiRegistration
     {
         public static readonly ArmorData_Registration Instance = new ArmorData_Registration();
 
@@ -798,7 +799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ArmorDataSetterCommon
+    internal partial class ArmorDataSetterCommon
     {
         public static readonly ArmorDataSetterCommon Instance = new ArmorDataSetterCommon();
 
@@ -840,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ArmorDataCommon
+    internal partial class ArmorDataCommon
     {
         public static readonly ArmorDataCommon Instance = new ArmorDataCommon();
 
@@ -986,7 +987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ArmorDataSetterTranslationCommon
+    internal partial class ArmorDataSetterTranslationCommon
     {
         public static readonly ArmorDataSetterTranslationCommon Instance = new ArmorDataSetterTranslationCommon();
 
@@ -1076,7 +1077,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorData_Registration.Instance;
-        public static ArmorData_Registration StaticRegistration => ArmorData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ArmorData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ArmorDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1100,7 +1101,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ArmorDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1163,7 +1164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ArmorDataBinaryCreateTranslation
+    internal partial class ArmorDataBinaryCreateTranslation
     {
         public readonly static ArmorDataBinaryCreateTranslation Instance = new ArmorDataBinaryCreateTranslation();
 
@@ -1207,16 +1208,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ArmorDataBinaryOverlay :
+    internal partial class ArmorDataBinaryOverlay :
         PluginBinaryOverlay,
         IArmorDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorData_Registration.Instance;
-        public static ArmorData_Registration StaticRegistration => ArmorData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ArmorData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ArmorDataCommon.Instance;
         [DebuggerStepThrough]

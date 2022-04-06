@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -760,10 +761,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum RoadPoint_FieldIndex
+    internal enum RoadPoint_FieldIndex
     {
         Point = 0,
         NumConnectionsFluffBytes = 1,
@@ -772,7 +773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class RoadPoint_Registration : ILoquiRegistration
+    internal partial class RoadPoint_Registration : ILoquiRegistration
     {
         public static readonly RoadPoint_Registration Instance = new RoadPoint_Registration();
 
@@ -846,7 +847,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class RoadPointSetterCommon
+    internal partial class RoadPointSetterCommon
     {
         public static readonly RoadPointSetterCommon Instance = new RoadPointSetterCommon();
 
@@ -883,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RoadPointCommon
+    internal partial class RoadPointCommon
     {
         public static readonly RoadPointCommon Instance = new RoadPointCommon();
 
@@ -1036,7 +1037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RoadPointSetterTranslationCommon
+    internal partial class RoadPointSetterTranslationCommon
     {
         public static readonly RoadPointSetterTranslationCommon Instance = new RoadPointSetterTranslationCommon();
 
@@ -1135,7 +1136,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RoadPoint_Registration.Instance;
-        public static RoadPoint_Registration StaticRegistration => RoadPoint_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RoadPoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RoadPointCommon.Instance;
         [DebuggerStepThrough]
@@ -1159,7 +1160,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RoadPointBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1204,7 +1205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class RoadPointBinaryCreateTranslation
+    internal partial class RoadPointBinaryCreateTranslation
     {
         public readonly static RoadPointBinaryCreateTranslation Instance = new RoadPointBinaryCreateTranslation();
 
@@ -1244,16 +1245,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class RoadPointBinaryOverlay :
+    internal partial class RoadPointBinaryOverlay :
         PluginBinaryOverlay,
         IRoadPointGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RoadPoint_Registration.Instance;
-        public static RoadPoint_Registration StaticRegistration => RoadPoint_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RoadPoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RoadPointCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -656,10 +657,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum GlobalInt_FieldIndex
+    internal enum GlobalInt_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -672,7 +673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class GlobalInt_Registration : ILoquiRegistration
+    internal partial class GlobalInt_Registration : ILoquiRegistration
     {
         public static readonly GlobalInt_Registration Instance = new GlobalInt_Registration();
 
@@ -756,7 +757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class GlobalIntSetterCommon : GlobalSetterCommon
+    internal partial class GlobalIntSetterCommon : GlobalSetterCommon
     {
         public new static readonly GlobalIntSetterCommon Instance = new GlobalIntSetterCommon();
 
@@ -842,7 +843,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class GlobalIntCommon : GlobalCommon
+    internal partial class GlobalIntCommon : GlobalCommon
     {
         public new static readonly GlobalIntCommon Instance = new GlobalIntCommon();
 
@@ -1126,7 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class GlobalIntSetterTranslationCommon : GlobalSetterTranslationCommon
+    internal partial class GlobalIntSetterTranslationCommon : GlobalSetterTranslationCommon
     {
         public new static readonly GlobalIntSetterTranslationCommon Instance = new GlobalIntSetterTranslationCommon();
 
@@ -1315,7 +1316,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalInt_Registration.Instance;
-        public new static GlobalInt_Registration StaticRegistration => GlobalInt_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GlobalInt_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalIntCommon.Instance;
         [DebuggerStepThrough]
@@ -1333,7 +1334,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class GlobalIntBinaryWriteTranslation :
         GlobalBinaryWriteTranslation,
@@ -1442,7 +1443,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class GlobalIntBinaryCreateTranslation : GlobalBinaryCreateTranslation
+    internal partial class GlobalIntBinaryCreateTranslation : GlobalBinaryCreateTranslation
     {
         public new readonly static GlobalIntBinaryCreateTranslation Instance = new GlobalIntBinaryCreateTranslation();
 
@@ -1503,16 +1504,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class GlobalIntBinaryOverlay :
+    internal partial class GlobalIntBinaryOverlay :
         GlobalBinaryOverlay,
         IGlobalIntGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalInt_Registration.Instance;
-        public new static GlobalInt_Registration StaticRegistration => GlobalInt_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GlobalInt_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalIntCommon.Instance;
         [DebuggerStepThrough]

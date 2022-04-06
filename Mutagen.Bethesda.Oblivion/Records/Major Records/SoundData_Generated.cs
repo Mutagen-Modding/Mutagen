@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -715,10 +716,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum SoundData_FieldIndex
+    internal enum SoundData_FieldIndex
     {
         MinimumAttenuationDistance = 0,
         MaximumAttenuationDistance = 1,
@@ -728,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class SoundData_Registration : ILoquiRegistration
+    internal partial class SoundData_Registration : ILoquiRegistration
     {
         public static readonly SoundData_Registration Instance = new SoundData_Registration();
 
@@ -810,7 +811,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class SoundDataSetterCommon
+    internal partial class SoundDataSetterCommon
     {
         public static readonly SoundDataSetterCommon Instance = new SoundDataSetterCommon();
 
@@ -852,7 +853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SoundDataCommon
+    internal partial class SoundDataCommon
     {
         public static readonly SoundDataCommon Instance = new SoundDataCommon();
 
@@ -998,7 +999,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SoundDataSetterTranslationCommon
+    internal partial class SoundDataSetterTranslationCommon
     {
         public static readonly SoundDataSetterTranslationCommon Instance = new SoundDataSetterTranslationCommon();
 
@@ -1103,7 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundData_Registration.Instance;
-        public static SoundData_Registration StaticRegistration => SoundData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SoundData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => SoundDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1127,7 +1128,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SoundDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1209,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class SoundDataBinaryCreateTranslation
+    internal partial class SoundDataBinaryCreateTranslation
     {
         public readonly static SoundDataBinaryCreateTranslation Instance = new SoundDataBinaryCreateTranslation();
 
@@ -1262,16 +1263,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class SoundDataBinaryOverlay :
+    internal partial class SoundDataBinaryOverlay :
         PluginBinaryOverlay,
         ISoundDataInternalGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundData_Registration.Instance;
-        public static SoundData_Registration StaticRegistration => SoundData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SoundData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => SoundDataCommon.Instance;
         [DebuggerStepThrough]

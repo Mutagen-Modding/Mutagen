@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -650,10 +651,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum DefaultObject_FieldIndex
+    internal enum DefaultObject_FieldIndex
     {
         Use = 0,
         Object = 1,
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class DefaultObject_Registration : ILoquiRegistration
+    internal partial class DefaultObject_Registration : ILoquiRegistration
     {
         public static readonly DefaultObject_Registration Instance = new DefaultObject_Registration();
 
@@ -735,7 +736,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class DefaultObjectSetterCommon
+    internal partial class DefaultObjectSetterCommon
     {
         public static readonly DefaultObjectSetterCommon Instance = new DefaultObjectSetterCommon();
 
@@ -772,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DefaultObjectCommon
+    internal partial class DefaultObjectCommon
     {
         public static readonly DefaultObjectCommon Instance = new DefaultObjectCommon();
 
@@ -899,7 +900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DefaultObjectSetterTranslationCommon
+    internal partial class DefaultObjectSetterTranslationCommon
     {
         public static readonly DefaultObjectSetterTranslationCommon Instance = new DefaultObjectSetterTranslationCommon();
 
@@ -981,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DefaultObject_Registration.Instance;
-        public static DefaultObject_Registration StaticRegistration => DefaultObject_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DefaultObject_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DefaultObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -1005,7 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DefaultObjectBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1046,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class DefaultObjectBinaryCreateTranslation
+    internal partial class DefaultObjectBinaryCreateTranslation
     {
         public readonly static DefaultObjectBinaryCreateTranslation Instance = new DefaultObjectBinaryCreateTranslation();
 
@@ -1082,16 +1083,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class DefaultObjectBinaryOverlay :
+    internal partial class DefaultObjectBinaryOverlay :
         PluginBinaryOverlay,
         IDefaultObjectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DefaultObject_Registration.Instance;
-        public static DefaultObject_Registration StaticRegistration => DefaultObject_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DefaultObject_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DefaultObjectCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -721,10 +722,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum RegionArea_FieldIndex
+    internal enum RegionArea_FieldIndex
     {
         EdgeFallOff = 0,
         RegionPointListData = 1,
@@ -732,7 +733,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class RegionArea_Registration : ILoquiRegistration
+    internal partial class RegionArea_Registration : ILoquiRegistration
     {
         public static readonly RegionArea_Registration Instance = new RegionArea_Registration();
 
@@ -814,7 +815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class RegionAreaSetterCommon
+    internal partial class RegionAreaSetterCommon
     {
         public static readonly RegionAreaSetterCommon Instance = new RegionAreaSetterCommon();
 
@@ -851,7 +852,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class RegionAreaCommon
+    internal partial class RegionAreaCommon
     {
         public static readonly RegionAreaCommon Instance = new RegionAreaCommon();
 
@@ -999,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class RegionAreaSetterTranslationCommon
+    internal partial class RegionAreaSetterTranslationCommon
     {
         public static readonly RegionAreaSetterTranslationCommon Instance = new RegionAreaSetterTranslationCommon();
 
@@ -1103,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionArea_Registration.Instance;
-        public static RegionArea_Registration StaticRegistration => RegionArea_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RegionArea_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RegionAreaCommon.Instance;
         [DebuggerStepThrough]
@@ -1127,7 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class RegionAreaBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1173,7 +1174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class RegionAreaBinaryCreateTranslation
+    internal partial class RegionAreaBinaryCreateTranslation
     {
         public readonly static RegionAreaBinaryCreateTranslation Instance = new RegionAreaBinaryCreateTranslation();
 
@@ -1242,16 +1243,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class RegionAreaBinaryOverlay :
+    internal partial class RegionAreaBinaryOverlay :
         PluginBinaryOverlay,
         IRegionAreaGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionArea_Registration.Instance;
-        public static RegionArea_Registration StaticRegistration => RegionArea_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RegionArea_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RegionAreaCommon.Instance;
         [DebuggerStepThrough]

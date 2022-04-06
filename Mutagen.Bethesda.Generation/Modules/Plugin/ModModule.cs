@@ -339,10 +339,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
         public void GenerateModGameCategoryRegistration(ObjectGeneration obj, FileGeneration fg)
         {
-            using (var ns = new NamespaceWrapper(fg, $"Mutagen.Bethesda.{obj.GetObjectData().GameCategory}.Internals", fileScoped: false))
+            using (var ns = new NamespaceWrapper(fg, obj.ProtoGen.DefaultNamespace, fileScoped: false))
             {
                 using (var c = new ClassWrapper(fg, $"{obj.Name}_Registration"))
                 {
+                    c.Public = PermissionLevel.@internal;
                     c.Partial = true;
                     c.Interfaces.Add(nameof(IModRegistration));
                 }

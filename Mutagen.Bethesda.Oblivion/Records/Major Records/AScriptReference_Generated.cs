@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -554,16 +555,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum AScriptReference_FieldIndex
+    internal enum AScriptReference_FieldIndex
     {
     }
     #endregion
 
     #region Registration
-    public partial class AScriptReference_Registration : ILoquiRegistration
+    internal partial class AScriptReference_Registration : ILoquiRegistration
     {
         public static readonly AScriptReference_Registration Instance = new AScriptReference_Registration();
 
@@ -645,7 +646,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class AScriptReferenceSetterCommon
+    internal partial class AScriptReferenceSetterCommon
     {
         public static readonly AScriptReferenceSetterCommon Instance = new AScriptReferenceSetterCommon();
 
@@ -674,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AScriptReferenceCommon
+    internal partial class AScriptReferenceCommon
     {
         public static readonly AScriptReferenceCommon Instance = new AScriptReferenceCommon();
 
@@ -780,7 +781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AScriptReferenceSetterTranslationCommon
+    internal partial class AScriptReferenceSetterTranslationCommon
     {
         public static readonly AScriptReferenceSetterTranslationCommon Instance = new AScriptReferenceSetterTranslationCommon();
 
@@ -854,7 +855,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AScriptReference_Registration.Instance;
-        public static AScriptReference_Registration StaticRegistration => AScriptReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AScriptReference_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => AScriptReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -878,7 +879,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AScriptReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -904,7 +905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class AScriptReferenceBinaryCreateTranslation
+    internal partial class AScriptReferenceBinaryCreateTranslation
     {
         public readonly static AScriptReferenceBinaryCreateTranslation Instance = new AScriptReferenceBinaryCreateTranslation();
 
@@ -932,16 +933,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public abstract partial class AScriptReferenceBinaryOverlay :
+    internal abstract partial class AScriptReferenceBinaryOverlay :
         PluginBinaryOverlay,
         IAScriptReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AScriptReference_Registration.Instance;
-        public static AScriptReference_Registration StaticRegistration => AScriptReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AScriptReference_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => AScriptReferenceCommon.Instance;
         [DebuggerStepThrough]

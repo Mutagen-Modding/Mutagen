@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -610,10 +611,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PerkEntryPointAddRangeToValue_FieldIndex
+    internal enum PerkEntryPointAddRangeToValue_FieldIndex
     {
         Rank = 0,
         Priority = 1,
@@ -627,7 +628,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PerkEntryPointAddRangeToValue_Registration : ILoquiRegistration
+    internal partial class PerkEntryPointAddRangeToValue_Registration : ILoquiRegistration
     {
         public static readonly PerkEntryPointAddRangeToValue_Registration Instance = new PerkEntryPointAddRangeToValue_Registration();
 
@@ -708,7 +709,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PerkEntryPointAddRangeToValueSetterCommon : APerkEntryPointEffectSetterCommon
+    internal partial class PerkEntryPointAddRangeToValueSetterCommon : APerkEntryPointEffectSetterCommon
     {
         public new static readonly PerkEntryPointAddRangeToValueSetterCommon Instance = new PerkEntryPointAddRangeToValueSetterCommon();
 
@@ -779,7 +780,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkEntryPointAddRangeToValueCommon : APerkEntryPointEffectCommon
+    internal partial class PerkEntryPointAddRangeToValueCommon : APerkEntryPointEffectCommon
     {
         public new static readonly PerkEntryPointAddRangeToValueCommon Instance = new PerkEntryPointAddRangeToValueCommon();
 
@@ -986,7 +987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkEntryPointAddRangeToValueSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon
+    internal partial class PerkEntryPointAddRangeToValueSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon
     {
         public new static readonly PerkEntryPointAddRangeToValueSetterTranslationCommon Instance = new PerkEntryPointAddRangeToValueSetterTranslationCommon();
 
@@ -1106,7 +1107,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointAddRangeToValue_Registration.Instance;
-        public new static PerkEntryPointAddRangeToValue_Registration StaticRegistration => PerkEntryPointAddRangeToValue_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkEntryPointAddRangeToValue_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointAddRangeToValueCommon.Instance;
         [DebuggerStepThrough]
@@ -1124,7 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkEntryPointAddRangeToValueBinaryWriteTranslation :
         APerkEntryPointEffectBinaryWriteTranslation,
@@ -1196,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PerkEntryPointAddRangeToValueBinaryCreateTranslation : APerkEntryPointEffectBinaryCreateTranslation
+    internal partial class PerkEntryPointAddRangeToValueBinaryCreateTranslation : APerkEntryPointEffectBinaryCreateTranslation
     {
         public new readonly static PerkEntryPointAddRangeToValueBinaryCreateTranslation Instance = new PerkEntryPointAddRangeToValueBinaryCreateTranslation();
 
@@ -1224,16 +1225,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PerkEntryPointAddRangeToValueBinaryOverlay :
+    internal partial class PerkEntryPointAddRangeToValueBinaryOverlay :
         APerkEntryPointEffectBinaryOverlay,
         IPerkEntryPointAddRangeToValueGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointAddRangeToValue_Registration.Instance;
-        public new static PerkEntryPointAddRangeToValue_Registration StaticRegistration => PerkEntryPointAddRangeToValue_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkEntryPointAddRangeToValue_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointAddRangeToValueCommon.Instance;
         [DebuggerStepThrough]

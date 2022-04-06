@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -668,10 +669,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum OblivionListGroup_FieldIndex
+    internal enum OblivionListGroup_FieldIndex
     {
         Type = 0,
         LastModified = 1,
@@ -680,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class OblivionListGroup_Registration : ILoquiRegistration
+    internal partial class OblivionListGroup_Registration : ILoquiRegistration
     {
         public static readonly OblivionListGroup_Registration Instance = new OblivionListGroup_Registration();
 
@@ -753,7 +754,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class OblivionListGroup_Registration<T> : OblivionListGroup_Registration
+    internal class OblivionListGroup_Registration<T> : OblivionListGroup_Registration
         where T : CellBlock, IBinaryItem
     {
         public static readonly OblivionListGroup_Registration<T> GenericInstance = new OblivionListGroup_Registration<T>();
@@ -762,7 +763,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class OblivionListGroupSetterCommon<T>
+    internal partial class OblivionListGroupSetterCommon<T>
         where T : class, ICellBlock, IBinaryItem
     {
         public static readonly OblivionListGroupSetterCommon<T> Instance = new OblivionListGroupSetterCommon<T>();
@@ -865,7 +866,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class OblivionListGroupCommon<T>
+    internal partial class OblivionListGroupCommon<T>
         where T : class, ICellBlockGetter, IBinaryItem
     {
         public static readonly OblivionListGroupCommon<T> Instance = new OblivionListGroupCommon<T>();
@@ -1088,7 +1089,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class OblivionListGroupSetterTranslationCommon
+    internal partial class OblivionListGroupSetterTranslationCommon
     {
         public static readonly OblivionListGroupSetterTranslationCommon Instance = new OblivionListGroupSetterTranslationCommon();
 
@@ -1203,7 +1204,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionListGroup_Registration.Instance;
-        public static OblivionListGroup_Registration StaticRegistration => OblivionListGroup_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => OblivionListGroup_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(OblivionListGroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
@@ -1227,7 +1228,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class OblivionListGroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1312,7 +1313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class OblivionListGroupBinaryCreateTranslation<T>
+    internal partial class OblivionListGroupBinaryCreateTranslation<T>
         where T : class, ICellBlock, IBinaryItem
     {
         public readonly static OblivionListGroupBinaryCreateTranslation<T> Instance = new OblivionListGroupBinaryCreateTranslation<T>();
@@ -1388,15 +1389,15 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class OblivionListGroupBinaryOverlay<T> : IOblivionListGroupGetter<T>
+    internal partial class OblivionListGroupBinaryOverlay<T> : IOblivionListGroupGetter<T>
         where T : class, ICellBlockGetter, IBinaryItem
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionListGroup_Registration.Instance;
-        public static OblivionListGroup_Registration StaticRegistration => OblivionListGroup_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => OblivionListGroup_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(OblivionListGroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]

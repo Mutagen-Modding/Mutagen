@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -696,10 +697,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SoundOutputChannels_FieldIndex
+    internal enum SoundOutputChannels_FieldIndex
     {
         Channel0 = 0,
         Channel1 = 1,
@@ -708,7 +709,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SoundOutputChannels_Registration : ILoquiRegistration
+    internal partial class SoundOutputChannels_Registration : ILoquiRegistration
     {
         public static readonly SoundOutputChannels_Registration Instance = new SoundOutputChannels_Registration();
 
@@ -789,7 +790,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SoundOutputChannelsSetterCommon
+    internal partial class SoundOutputChannelsSetterCommon
     {
         public static readonly SoundOutputChannelsSetterCommon Instance = new SoundOutputChannelsSetterCommon();
 
@@ -830,7 +831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SoundOutputChannelsCommon
+    internal partial class SoundOutputChannelsCommon
     {
         public static readonly SoundOutputChannelsCommon Instance = new SoundOutputChannelsCommon();
 
@@ -978,7 +979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SoundOutputChannelsSetterTranslationCommon
+    internal partial class SoundOutputChannelsSetterTranslationCommon
     {
         public static readonly SoundOutputChannelsSetterTranslationCommon Instance = new SoundOutputChannelsSetterTranslationCommon();
 
@@ -1118,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundOutputChannels_Registration.Instance;
-        public static SoundOutputChannels_Registration StaticRegistration => SoundOutputChannels_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SoundOutputChannels_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundOutputChannelsCommon.Instance;
         [DebuggerStepThrough]
@@ -1142,7 +1143,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SoundOutputChannelsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1196,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SoundOutputChannelsBinaryCreateTranslation
+    internal partial class SoundOutputChannelsBinaryCreateTranslation
     {
         public readonly static SoundOutputChannelsBinaryCreateTranslation Instance = new SoundOutputChannelsBinaryCreateTranslation();
 
@@ -1233,16 +1234,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SoundOutputChannelsBinaryOverlay :
+    internal partial class SoundOutputChannelsBinaryOverlay :
         PluginBinaryOverlay,
         ISoundOutputChannelsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundOutputChannels_Registration.Instance;
-        public static SoundOutputChannels_Registration StaticRegistration => SoundOutputChannels_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SoundOutputChannels_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundOutputChannelsCommon.Instance;
         [DebuggerStepThrough]

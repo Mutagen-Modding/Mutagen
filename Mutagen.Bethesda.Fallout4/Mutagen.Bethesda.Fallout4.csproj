@@ -72,6 +72,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="InternalsPermissions.cs" />
     <Compile Include="Records\Common Subrecords\NavmeshGeometry.cs">
       <DependentUpon>NavmeshGeometry.xml</DependentUpon>
     </Compile>
@@ -446,11 +447,8 @@
     <Compile Include="Records\Major Records\GameSettingBool_Generated.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\RecordTypeInts.cs" />
     <Compile Include="Records\RecordTypes.cs" />
     <Compile Include="WarmupFallout4_Generated.cs" />
-    <Compile Include="Records\RecordTypes_Generated.cs" />
-    <Compile Include="Records\RecordTypeInts_Generated.cs" />
     <Compile Include="Records\Fallout4ModHeader_Generated.cs">
       <DependentUpon>Fallout4ModHeader.xml</DependentUpon>
     </Compile>
@@ -680,9 +678,6 @@
     <Compile Include="Records\Common Subrecords\DestructableData_Generated.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\Resistance_Generated.cs">
-      <DependentUpon>Destructible.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\DestructionStage_Generated.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
     </Compile>
@@ -841,9 +836,6 @@
     </Compile>
     <Compile Include="Records\Major Records\Npc_Generated.cs">
       <DependentUpon>Npc.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\NavigationMesh_Generated.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\SoundOutputModel_Generated.cs">
       <DependentUpon>SoundOutputModel.xml</DependentUpon>
@@ -1136,9 +1128,6 @@
     <Compile Include="Records\Major Records\ColorFrame_Generated.cs">
       <DependentUpon>ImageSpaceAdapter.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\TaperEffectiveness_Generated.cs">
-      <DependentUpon>Hazard.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\DualCastData_Generated.cs">
       <DependentUpon>DualCastData.xml</DependentUpon>
     </Compile>
@@ -1381,6 +1370,8 @@
     <Compile Include="Records\Major Records\TerminalMenuItem_Generated.cs">
       <DependentUpon>Terminal.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\RecordTypes_Generated.cs" />
+    <Compile Include="Records\RecordTypeInts_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

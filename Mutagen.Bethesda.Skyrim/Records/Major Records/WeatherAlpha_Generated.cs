@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -701,10 +702,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WeatherAlpha_FieldIndex
+    internal enum WeatherAlpha_FieldIndex
     {
         Sunrise = 0,
         Day = 1,
@@ -714,7 +715,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WeatherAlpha_Registration : ILoquiRegistration
+    internal partial class WeatherAlpha_Registration : ILoquiRegistration
     {
         public static readonly WeatherAlpha_Registration Instance = new WeatherAlpha_Registration();
 
@@ -788,7 +789,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WeatherAlphaSetterCommon
+    internal partial class WeatherAlphaSetterCommon
     {
         public static readonly WeatherAlphaSetterCommon Instance = new WeatherAlphaSetterCommon();
 
@@ -826,7 +827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeatherAlphaCommon
+    internal partial class WeatherAlphaCommon
     {
         public static readonly WeatherAlphaCommon Instance = new WeatherAlphaCommon();
 
@@ -972,7 +973,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeatherAlphaSetterTranslationCommon
+    internal partial class WeatherAlphaSetterTranslationCommon
     {
         public static readonly WeatherAlphaSetterTranslationCommon Instance = new WeatherAlphaSetterTranslationCommon();
 
@@ -1062,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherAlpha_Registration.Instance;
-        public static WeatherAlpha_Registration StaticRegistration => WeatherAlpha_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherAlpha_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherAlphaCommon.Instance;
         [DebuggerStepThrough]
@@ -1086,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeatherAlphaBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1133,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WeatherAlphaBinaryCreateTranslation
+    internal partial class WeatherAlphaBinaryCreateTranslation
     {
         public readonly static WeatherAlphaBinaryCreateTranslation Instance = new WeatherAlphaBinaryCreateTranslation();
 
@@ -1171,16 +1172,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WeatherAlphaBinaryOverlay :
+    internal partial class WeatherAlphaBinaryOverlay :
         PluginBinaryOverlay,
         IWeatherAlphaGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherAlpha_Registration.Instance;
-        public static WeatherAlpha_Registration StaticRegistration => WeatherAlpha_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherAlpha_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherAlphaCommon.Instance;
         [DebuggerStepThrough]

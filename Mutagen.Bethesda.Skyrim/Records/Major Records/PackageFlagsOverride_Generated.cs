@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -775,10 +776,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PackageFlagsOverride_FieldIndex
+    internal enum PackageFlagsOverride_FieldIndex
     {
         SetFlags = 0,
         ClearFlags = 1,
@@ -790,7 +791,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PackageFlagsOverride_Registration : ILoquiRegistration
+    internal partial class PackageFlagsOverride_Registration : ILoquiRegistration
     {
         public static readonly PackageFlagsOverride_Registration Instance = new PackageFlagsOverride_Registration();
 
@@ -871,7 +872,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PackageFlagsOverrideSetterCommon
+    internal partial class PackageFlagsOverrideSetterCommon
     {
         public static readonly PackageFlagsOverrideSetterCommon Instance = new PackageFlagsOverrideSetterCommon();
 
@@ -915,7 +916,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageFlagsOverrideCommon
+    internal partial class PackageFlagsOverrideCommon
     {
         public static readonly PackageFlagsOverrideCommon Instance = new PackageFlagsOverrideCommon();
 
@@ -1081,7 +1082,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageFlagsOverrideSetterTranslationCommon
+    internal partial class PackageFlagsOverrideSetterTranslationCommon
     {
         public static readonly PackageFlagsOverrideSetterTranslationCommon Instance = new PackageFlagsOverrideSetterTranslationCommon();
 
@@ -1179,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageFlagsOverride_Registration.Instance;
-        public static PackageFlagsOverride_Registration StaticRegistration => PackageFlagsOverride_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PackageFlagsOverride_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageFlagsOverrideCommon.Instance;
         [DebuggerStepThrough]
@@ -1203,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageFlagsOverrideBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1268,7 +1269,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PackageFlagsOverrideBinaryCreateTranslation
+    internal partial class PackageFlagsOverrideBinaryCreateTranslation
     {
         public readonly static PackageFlagsOverrideBinaryCreateTranslation Instance = new PackageFlagsOverrideBinaryCreateTranslation();
 
@@ -1318,16 +1319,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageFlagsOverrideBinaryOverlay :
+    internal partial class PackageFlagsOverrideBinaryOverlay :
         PluginBinaryOverlay,
         IPackageFlagsOverrideGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageFlagsOverride_Registration.Instance;
-        public static PackageFlagsOverride_Registration StaticRegistration => PackageFlagsOverride_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PackageFlagsOverride_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageFlagsOverrideCommon.Instance;
         [DebuggerStepThrough]

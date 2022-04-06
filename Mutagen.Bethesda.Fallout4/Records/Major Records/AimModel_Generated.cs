@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -600,10 +601,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum AimModel_FieldIndex
+    internal enum AimModel_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -615,7 +616,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class AimModel_Registration : ILoquiRegistration
+    internal partial class AimModel_Registration : ILoquiRegistration
     {
         public static readonly AimModel_Registration Instance = new AimModel_Registration();
 
@@ -696,7 +697,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class AimModelSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class AimModelSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly AimModelSetterCommon Instance = new AimModelSetterCommon();
 
@@ -765,7 +766,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class AimModelCommon : Fallout4MajorRecordCommon
+    internal partial class AimModelCommon : Fallout4MajorRecordCommon
     {
         public new static readonly AimModelCommon Instance = new AimModelCommon();
 
@@ -987,7 +988,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class AimModelSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class AimModelSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly AimModelSetterTranslationCommon Instance = new AimModelSetterTranslationCommon();
 
@@ -1142,7 +1143,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AimModel_Registration.Instance;
-        public new static AimModel_Registration StaticRegistration => AimModel_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AimModel_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AimModelCommon.Instance;
         [DebuggerStepThrough]
@@ -1160,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AimModelBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -1229,7 +1230,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class AimModelBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class AimModelBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static AimModelBinaryCreateTranslation Instance = new AimModelBinaryCreateTranslation();
 
@@ -1256,16 +1257,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class AimModelBinaryOverlay :
+    internal partial class AimModelBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IAimModelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AimModel_Registration.Instance;
-        public new static AimModel_Registration StaticRegistration => AimModel_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AimModel_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AimModelCommon.Instance;
         [DebuggerStepThrough]

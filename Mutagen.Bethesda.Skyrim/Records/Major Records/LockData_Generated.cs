@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -765,10 +766,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LockData_FieldIndex
+    internal enum LockData_FieldIndex
     {
         Level = 0,
         Unused = 1,
@@ -779,7 +780,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LockData_Registration : ILoquiRegistration
+    internal partial class LockData_Registration : ILoquiRegistration
     {
         public static readonly LockData_Registration Instance = new LockData_Registration();
 
@@ -860,7 +861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LockDataSetterCommon
+    internal partial class LockDataSetterCommon
     {
         public static readonly LockDataSetterCommon Instance = new LockDataSetterCommon();
 
@@ -904,7 +905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LockDataCommon
+    internal partial class LockDataCommon
     {
         public static readonly LockDataCommon Instance = new LockDataCommon();
 
@@ -1061,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LockDataSetterTranslationCommon
+    internal partial class LockDataSetterTranslationCommon
     {
         public static readonly LockDataSetterTranslationCommon Instance = new LockDataSetterTranslationCommon();
 
@@ -1155,7 +1156,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LockData_Registration.Instance;
-        public static LockData_Registration StaticRegistration => LockData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LockData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LockDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1179,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LockDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1238,7 +1239,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LockDataBinaryCreateTranslation
+    internal partial class LockDataBinaryCreateTranslation
     {
         public readonly static LockDataBinaryCreateTranslation Instance = new LockDataBinaryCreateTranslation();
 
@@ -1281,16 +1282,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LockDataBinaryOverlay :
+    internal partial class LockDataBinaryOverlay :
         PluginBinaryOverlay,
         ILockDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LockData_Registration.Instance;
-        public static LockData_Registration StaticRegistration => LockData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LockData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LockDataCommon.Instance;
         [DebuggerStepThrough]

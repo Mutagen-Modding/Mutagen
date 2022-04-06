@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -518,10 +519,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum MagicEffectSummonCreatureArchetype_FieldIndex
+    internal enum MagicEffectSummonCreatureArchetype_FieldIndex
     {
         Type = 0,
         AssociationKey = 1,
@@ -530,7 +531,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class MagicEffectSummonCreatureArchetype_Registration : ILoquiRegistration
+    internal partial class MagicEffectSummonCreatureArchetype_Registration : ILoquiRegistration
     {
         public static readonly MagicEffectSummonCreatureArchetype_Registration Instance = new MagicEffectSummonCreatureArchetype_Registration();
 
@@ -604,7 +605,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MagicEffectSummonCreatureArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
+    internal partial class MagicEffectSummonCreatureArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
     {
         public new static readonly MagicEffectSummonCreatureArchetypeSetterCommon Instance = new MagicEffectSummonCreatureArchetypeSetterCommon();
 
@@ -655,7 +656,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectSummonCreatureArchetypeCommon : MagicEffectArchetypeCommon
+    internal partial class MagicEffectSummonCreatureArchetypeCommon : MagicEffectArchetypeCommon
     {
         public new static readonly MagicEffectSummonCreatureArchetypeCommon Instance = new MagicEffectSummonCreatureArchetypeCommon();
 
@@ -799,7 +800,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectSummonCreatureArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
+    internal partial class MagicEffectSummonCreatureArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
     {
         public new static readonly MagicEffectSummonCreatureArchetypeSetterTranslationCommon Instance = new MagicEffectSummonCreatureArchetypeSetterTranslationCommon();
 
@@ -924,7 +925,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSummonCreatureArchetype_Registration.Instance;
-        public new static MagicEffectSummonCreatureArchetype_Registration StaticRegistration => MagicEffectSummonCreatureArchetype_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MagicEffectSummonCreatureArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectSummonCreatureArchetypeCommon.Instance;
         [DebuggerStepThrough]
@@ -942,7 +943,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MagicEffectSummonCreatureArchetypeBinaryWriteTranslation :
         MagicEffectArchetypeBinaryWriteTranslation,
@@ -984,7 +985,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class MagicEffectSummonCreatureArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
+    internal partial class MagicEffectSummonCreatureArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
     {
         public new readonly static MagicEffectSummonCreatureArchetypeBinaryCreateTranslation Instance = new MagicEffectSummonCreatureArchetypeBinaryCreateTranslation();
 
@@ -1001,16 +1002,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MagicEffectSummonCreatureArchetypeBinaryOverlay :
+    internal partial class MagicEffectSummonCreatureArchetypeBinaryOverlay :
         MagicEffectArchetypeBinaryOverlay,
         IMagicEffectSummonCreatureArchetypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSummonCreatureArchetype_Registration.Instance;
-        public new static MagicEffectSummonCreatureArchetype_Registration StaticRegistration => MagicEffectSummonCreatureArchetype_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MagicEffectSummonCreatureArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectSummonCreatureArchetypeCommon.Instance;
         [DebuggerStepThrough]

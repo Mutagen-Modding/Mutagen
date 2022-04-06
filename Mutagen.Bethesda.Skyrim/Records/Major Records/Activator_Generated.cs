@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1370,10 +1371,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Activator_FieldIndex
+    internal enum Activator_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1398,7 +1399,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Activator_Registration : ILoquiRegistration
+    internal partial class Activator_Registration : ILoquiRegistration
     {
         public static readonly Activator_Registration Instance = new Activator_Registration();
 
@@ -1497,7 +1498,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ActivatorSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ActivatorSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ActivatorSetterCommon Instance = new ActivatorSetterCommon();
 
@@ -1587,7 +1588,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ActivatorCommon : SkyrimMajorRecordCommon
+    internal partial class ActivatorCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ActivatorCommon Instance = new ActivatorCommon();
 
@@ -2057,7 +2058,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ActivatorSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ActivatorSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ActivatorSetterTranslationCommon Instance = new ActivatorSetterTranslationCommon();
 
@@ -2371,7 +2372,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Activator_Registration.Instance;
-        public new static Activator_Registration StaticRegistration => Activator_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Activator_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActivatorCommon.Instance;
         [DebuggerStepThrough]
@@ -2389,7 +2390,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ActivatorBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2546,7 +2547,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ActivatorBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ActivatorBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ActivatorBinaryCreateTranslation Instance = new ActivatorBinaryCreateTranslation();
 
@@ -2691,16 +2692,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ActivatorBinaryOverlay :
+    internal partial class ActivatorBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IActivatorGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Activator_Registration.Instance;
-        public new static Activator_Registration StaticRegistration => Activator_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Activator_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActivatorCommon.Instance;
         [DebuggerStepThrough]

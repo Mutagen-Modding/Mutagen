@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -693,10 +694,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum StoryManagerQuest_FieldIndex
+    internal enum StoryManagerQuest_FieldIndex
     {
         Quest = 0,
         FNAM = 1,
@@ -705,7 +706,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class StoryManagerQuest_Registration : ILoquiRegistration
+    internal partial class StoryManagerQuest_Registration : ILoquiRegistration
     {
         public static readonly StoryManagerQuest_Registration Instance = new StoryManagerQuest_Registration();
 
@@ -788,7 +789,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class StoryManagerQuestSetterCommon
+    internal partial class StoryManagerQuestSetterCommon
     {
         public static readonly StoryManagerQuestSetterCommon Instance = new StoryManagerQuestSetterCommon();
 
@@ -827,7 +828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class StoryManagerQuestCommon
+    internal partial class StoryManagerQuestCommon
     {
         public static readonly StoryManagerQuestCommon Instance = new StoryManagerQuestCommon();
 
@@ -975,7 +976,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class StoryManagerQuestSetterTranslationCommon
+    internal partial class StoryManagerQuestSetterTranslationCommon
     {
         public static readonly StoryManagerQuestSetterTranslationCommon Instance = new StoryManagerQuestSetterTranslationCommon();
 
@@ -1068,7 +1069,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => StoryManagerQuest_Registration.Instance;
-        public static StoryManagerQuest_Registration StaticRegistration => StoryManagerQuest_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => StoryManagerQuest_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => StoryManagerQuestCommon.Instance;
         [DebuggerStepThrough]
@@ -1092,7 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class StoryManagerQuestBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1142,7 +1143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class StoryManagerQuestBinaryCreateTranslation
+    internal partial class StoryManagerQuestBinaryCreateTranslation
     {
         public readonly static StoryManagerQuestBinaryCreateTranslation Instance = new StoryManagerQuestBinaryCreateTranslation();
 
@@ -1216,16 +1217,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class StoryManagerQuestBinaryOverlay :
+    internal partial class StoryManagerQuestBinaryOverlay :
         PluginBinaryOverlay,
         IStoryManagerQuestGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => StoryManagerQuest_Registration.Instance;
-        public static StoryManagerQuest_Registration StaticRegistration => StoryManagerQuest_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => StoryManagerQuest_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => StoryManagerQuestCommon.Instance;
         [DebuggerStepThrough]

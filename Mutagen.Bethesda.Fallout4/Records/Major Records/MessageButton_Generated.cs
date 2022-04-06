@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -733,10 +734,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum MessageButton_FieldIndex
+    internal enum MessageButton_FieldIndex
     {
         Text = 0,
         Conditions = 1,
@@ -744,7 +745,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class MessageButton_Registration : ILoquiRegistration
+    internal partial class MessageButton_Registration : ILoquiRegistration
     {
         public static readonly MessageButton_Registration Instance = new MessageButton_Registration();
 
@@ -831,7 +832,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class MessageButtonSetterCommon
+    internal partial class MessageButtonSetterCommon
     {
         public static readonly MessageButtonSetterCommon Instance = new MessageButtonSetterCommon();
 
@@ -869,7 +870,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MessageButtonCommon
+    internal partial class MessageButtonCommon
     {
         public static readonly MessageButtonCommon Instance = new MessageButtonCommon();
 
@@ -1021,7 +1022,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MessageButtonSetterTranslationCommon
+    internal partial class MessageButtonSetterTranslationCommon
     {
         public static readonly MessageButtonSetterTranslationCommon Instance = new MessageButtonSetterTranslationCommon();
 
@@ -1123,7 +1124,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MessageButton_Registration.Instance;
-        public static MessageButton_Registration StaticRegistration => MessageButton_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MessageButton_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MessageButtonCommon.Instance;
         [DebuggerStepThrough]
@@ -1147,7 +1148,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MessageButtonBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1201,7 +1202,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class MessageButtonBinaryCreateTranslation
+    internal partial class MessageButtonBinaryCreateTranslation
     {
         public readonly static MessageButtonBinaryCreateTranslation Instance = new MessageButtonBinaryCreateTranslation();
 
@@ -1273,16 +1274,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class MessageButtonBinaryOverlay :
+    internal partial class MessageButtonBinaryOverlay :
         PluginBinaryOverlay,
         IMessageButtonGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MessageButton_Registration.Instance;
-        public static MessageButton_Registration StaticRegistration => MessageButton_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MessageButton_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MessageButtonCommon.Instance;
         [DebuggerStepThrough]

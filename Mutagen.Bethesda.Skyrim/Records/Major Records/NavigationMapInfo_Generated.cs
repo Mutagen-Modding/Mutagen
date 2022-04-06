@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1264,10 +1265,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum NavigationMapInfo_FieldIndex
+    internal enum NavigationMapInfo_FieldIndex
     {
         NavigationMesh = 0,
         Unknown = 1,
@@ -1285,7 +1286,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class NavigationMapInfo_Registration : ILoquiRegistration
+    internal partial class NavigationMapInfo_Registration : ILoquiRegistration
     {
         public static readonly NavigationMapInfo_Registration Instance = new NavigationMapInfo_Registration();
 
@@ -1366,7 +1367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NavigationMapInfoSetterCommon
+    internal partial class NavigationMapInfoSetterCommon
     {
         public static readonly NavigationMapInfoSetterCommon Instance = new NavigationMapInfoSetterCommon();
 
@@ -1422,7 +1423,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NavigationMapInfoCommon
+    internal partial class NavigationMapInfoCommon
     {
         public static readonly NavigationMapInfoCommon Instance = new NavigationMapInfoCommon();
 
@@ -1726,7 +1727,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NavigationMapInfoSetterTranslationCommon
+    internal partial class NavigationMapInfoSetterTranslationCommon
     {
         public static readonly NavigationMapInfoSetterTranslationCommon Instance = new NavigationMapInfoSetterTranslationCommon();
 
@@ -1920,7 +1921,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavigationMapInfo_Registration.Instance;
-        public static NavigationMapInfo_Registration StaticRegistration => NavigationMapInfo_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavigationMapInfo_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavigationMapInfoCommon.Instance;
         [DebuggerStepThrough]
@@ -1944,7 +1945,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NavigationMapInfoBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -2062,7 +2063,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NavigationMapInfoBinaryCreateTranslation
+    internal partial class NavigationMapInfoBinaryCreateTranslation
     {
         public readonly static NavigationMapInfoBinaryCreateTranslation Instance = new NavigationMapInfoBinaryCreateTranslation();
 
@@ -2132,16 +2133,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NavigationMapInfoBinaryOverlay :
+    internal partial class NavigationMapInfoBinaryOverlay :
         PluginBinaryOverlay,
         INavigationMapInfoGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavigationMapInfo_Registration.Instance;
-        public static NavigationMapInfo_Registration StaticRegistration => NavigationMapInfo_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavigationMapInfo_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavigationMapInfoCommon.Instance;
         [DebuggerStepThrough]

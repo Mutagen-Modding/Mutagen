@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -809,10 +810,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum NpcFaceMorph_FieldIndex
+    internal enum NpcFaceMorph_FieldIndex
     {
         Index = 0,
         Position = 1,
@@ -825,7 +826,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class NpcFaceMorph_Registration : ILoquiRegistration
+    internal partial class NpcFaceMorph_Registration : ILoquiRegistration
     {
         public static readonly NpcFaceMorph_Registration Instance = new NpcFaceMorph_Registration();
 
@@ -907,7 +908,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class NpcFaceMorphSetterCommon
+    internal partial class NpcFaceMorphSetterCommon
     {
         public static readonly NpcFaceMorphSetterCommon Instance = new NpcFaceMorphSetterCommon();
 
@@ -949,7 +950,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class NpcFaceMorphCommon
+    internal partial class NpcFaceMorphCommon
     {
         public static readonly NpcFaceMorphCommon Instance = new NpcFaceMorphCommon();
 
@@ -1129,7 +1130,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class NpcFaceMorphSetterTranslationCommon
+    internal partial class NpcFaceMorphSetterTranslationCommon
     {
         public static readonly NpcFaceMorphSetterTranslationCommon Instance = new NpcFaceMorphSetterTranslationCommon();
 
@@ -1231,7 +1232,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcFaceMorph_Registration.Instance;
-        public static NpcFaceMorph_Registration StaticRegistration => NpcFaceMorph_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcFaceMorph_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcFaceMorphCommon.Instance;
         [DebuggerStepThrough]
@@ -1255,7 +1256,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NpcFaceMorphBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1323,7 +1324,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class NpcFaceMorphBinaryCreateTranslation
+    internal partial class NpcFaceMorphBinaryCreateTranslation
     {
         public readonly static NpcFaceMorphBinaryCreateTranslation Instance = new NpcFaceMorphBinaryCreateTranslation();
 
@@ -1393,16 +1394,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class NpcFaceMorphBinaryOverlay :
+    internal partial class NpcFaceMorphBinaryOverlay :
         PluginBinaryOverlay,
         INpcFaceMorphGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcFaceMorph_Registration.Instance;
-        public static NpcFaceMorph_Registration StaticRegistration => NpcFaceMorph_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcFaceMorph_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcFaceMorphCommon.Instance;
         [DebuggerStepThrough]

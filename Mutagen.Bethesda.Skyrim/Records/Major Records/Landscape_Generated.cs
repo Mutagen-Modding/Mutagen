@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1179,10 +1180,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Landscape_FieldIndex
+    internal enum Landscape_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1200,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Landscape_Registration : ILoquiRegistration
+    internal partial class Landscape_Registration : ILoquiRegistration
     {
         public static readonly Landscape_Registration Instance = new Landscape_Registration();
 
@@ -1290,7 +1291,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LandscapeSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class LandscapeSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly LandscapeSetterCommon Instance = new LandscapeSetterCommon();
 
@@ -1367,7 +1368,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LandscapeCommon : SkyrimMajorRecordCommon
+    internal partial class LandscapeCommon : SkyrimMajorRecordCommon
     {
         public new static readonly LandscapeCommon Instance = new LandscapeCommon();
 
@@ -1747,7 +1748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LandscapeSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class LandscapeSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly LandscapeSetterTranslationCommon Instance = new LandscapeSetterTranslationCommon();
 
@@ -2035,7 +2036,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Landscape_Registration.Instance;
-        public new static Landscape_Registration StaticRegistration => Landscape_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Landscape_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LandscapeCommon.Instance;
         [DebuggerStepThrough]
@@ -2053,7 +2054,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LandscapeBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2178,7 +2179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LandscapeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class LandscapeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static LandscapeBinaryCreateTranslation Instance = new LandscapeBinaryCreateTranslation();
 
@@ -2303,16 +2304,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LandscapeBinaryOverlay :
+    internal partial class LandscapeBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ILandscapeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Landscape_Registration.Instance;
-        public new static Landscape_Registration StaticRegistration => Landscape_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Landscape_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LandscapeCommon.Instance;
         [DebuggerStepThrough]

@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -649,10 +650,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum GameSettingUInt_FieldIndex
+    internal enum GameSettingUInt_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -665,7 +666,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class GameSettingUInt_Registration : ILoquiRegistration
+    internal partial class GameSettingUInt_Registration : ILoquiRegistration
     {
         public static readonly GameSettingUInt_Registration Instance = new GameSettingUInt_Registration();
 
@@ -749,7 +750,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class GameSettingUIntSetterCommon : GameSettingSetterCommon
+    internal partial class GameSettingUIntSetterCommon : GameSettingSetterCommon
     {
         public new static readonly GameSettingUIntSetterCommon Instance = new GameSettingUIntSetterCommon();
 
@@ -835,7 +836,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class GameSettingUIntCommon : GameSettingCommon
+    internal partial class GameSettingUIntCommon : GameSettingCommon
     {
         public new static readonly GameSettingUIntCommon Instance = new GameSettingUIntCommon();
 
@@ -1119,7 +1120,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class GameSettingUIntSetterTranslationCommon : GameSettingSetterTranslationCommon
+    internal partial class GameSettingUIntSetterTranslationCommon : GameSettingSetterTranslationCommon
     {
         public new static readonly GameSettingUIntSetterTranslationCommon Instance = new GameSettingUIntSetterTranslationCommon();
 
@@ -1308,7 +1309,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingUInt_Registration.Instance;
-        public new static GameSettingUInt_Registration StaticRegistration => GameSettingUInt_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GameSettingUInt_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingUIntCommon.Instance;
         [DebuggerStepThrough]
@@ -1326,7 +1327,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class GameSettingUIntBinaryWriteTranslation :
         GameSettingBinaryWriteTranslation,
@@ -1423,7 +1424,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class GameSettingUIntBinaryCreateTranslation : GameSettingBinaryCreateTranslation
+    internal partial class GameSettingUIntBinaryCreateTranslation : GameSettingBinaryCreateTranslation
     {
         public new readonly static GameSettingUIntBinaryCreateTranslation Instance = new GameSettingUIntBinaryCreateTranslation();
 
@@ -1479,16 +1480,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class GameSettingUIntBinaryOverlay :
+    internal partial class GameSettingUIntBinaryOverlay :
         GameSettingBinaryOverlay,
         IGameSettingUIntGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingUInt_Registration.Instance;
-        public new static GameSettingUInt_Registration StaticRegistration => GameSettingUInt_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GameSettingUInt_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingUIntCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -666,10 +667,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum RaceMovementType_FieldIndex
+    internal enum RaceMovementType_FieldIndex
     {
         MovementType = 0,
         Overrides = 1,
@@ -677,7 +678,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class RaceMovementType_Registration : ILoquiRegistration
+    internal partial class RaceMovementType_Registration : ILoquiRegistration
     {
         public static readonly RaceMovementType_Registration Instance = new RaceMovementType_Registration();
 
@@ -759,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class RaceMovementTypeSetterCommon
+    internal partial class RaceMovementTypeSetterCommon
     {
         public static readonly RaceMovementTypeSetterCommon Instance = new RaceMovementTypeSetterCommon();
 
@@ -797,7 +798,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class RaceMovementTypeCommon
+    internal partial class RaceMovementTypeCommon
     {
         public static readonly RaceMovementTypeCommon Instance = new RaceMovementTypeCommon();
 
@@ -939,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class RaceMovementTypeSetterTranslationCommon
+    internal partial class RaceMovementTypeSetterTranslationCommon
     {
         public static readonly RaceMovementTypeSetterTranslationCommon Instance = new RaceMovementTypeSetterTranslationCommon();
 
@@ -1043,7 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceMovementType_Registration.Instance;
-        public static RaceMovementType_Registration StaticRegistration => RaceMovementType_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RaceMovementType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RaceMovementTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1067,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class RaceMovementTypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1115,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class RaceMovementTypeBinaryCreateTranslation
+    internal partial class RaceMovementTypeBinaryCreateTranslation
     {
         public readonly static RaceMovementTypeBinaryCreateTranslation Instance = new RaceMovementTypeBinaryCreateTranslation();
 
@@ -1179,16 +1180,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class RaceMovementTypeBinaryOverlay :
+    internal partial class RaceMovementTypeBinaryOverlay :
         PluginBinaryOverlay,
         IRaceMovementTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceMovementType_Registration.Instance;
-        public static RaceMovementType_Registration StaticRegistration => RaceMovementType_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RaceMovementType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RaceMovementTypeCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -703,10 +704,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PlacedArrow_FieldIndex
+    internal enum PlacedArrow_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -736,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PlacedArrow_Registration : ILoquiRegistration
+    internal partial class PlacedArrow_Registration : ILoquiRegistration
     {
         public static readonly PlacedArrow_Registration Instance = new PlacedArrow_Registration();
 
@@ -817,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PlacedArrowSetterCommon : APlacedTrapSetterCommon
+    internal partial class PlacedArrowSetterCommon : APlacedTrapSetterCommon
     {
         public new static readonly PlacedArrowSetterCommon Instance = new PlacedArrowSetterCommon();
 
@@ -904,7 +905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedArrowCommon : APlacedTrapCommon
+    internal partial class PlacedArrowCommon : APlacedTrapCommon
     {
         public new static readonly PlacedArrowCommon Instance = new PlacedArrowCommon();
 
@@ -1219,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedArrowSetterTranslationCommon : APlacedTrapSetterTranslationCommon
+    internal partial class PlacedArrowSetterTranslationCommon : APlacedTrapSetterTranslationCommon
     {
         public new static readonly PlacedArrowSetterTranslationCommon Instance = new PlacedArrowSetterTranslationCommon();
 
@@ -1408,7 +1409,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedArrow_Registration.Instance;
-        public new static PlacedArrow_Registration StaticRegistration => PlacedArrow_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedArrow_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedArrowCommon.Instance;
         [DebuggerStepThrough]
@@ -1426,7 +1427,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PlacedArrowBinaryWriteTranslation :
         APlacedTrapBinaryWriteTranslation,
@@ -1515,7 +1516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PlacedArrowBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
+    internal partial class PlacedArrowBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
     {
         public new readonly static PlacedArrowBinaryCreateTranslation Instance = new PlacedArrowBinaryCreateTranslation();
 
@@ -1542,16 +1543,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PlacedArrowBinaryOverlay :
+    internal partial class PlacedArrowBinaryOverlay :
         APlacedTrapBinaryOverlay,
         IPlacedArrowGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedArrow_Registration.Instance;
-        public new static PlacedArrow_Registration StaticRegistration => PlacedArrow_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedArrow_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedArrowCommon.Instance;
         [DebuggerStepThrough]

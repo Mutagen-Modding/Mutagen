@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -798,10 +799,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum LeveledItem_FieldIndex
+    internal enum LeveledItem_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -815,7 +816,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class LeveledItem_Registration : ILoquiRegistration
+    internal partial class LeveledItem_Registration : ILoquiRegistration
     {
         public static readonly LeveledItem_Registration Instance = new LeveledItem_Registration();
 
@@ -902,7 +903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LeveledItemSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class LeveledItemSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly LeveledItemSetterCommon Instance = new LeveledItemSetterCommon();
 
@@ -975,7 +976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LeveledItemCommon : OblivionMajorRecordCommon
+    internal partial class LeveledItemCommon : OblivionMajorRecordCommon
     {
         public new static readonly LeveledItemCommon Instance = new LeveledItemCommon();
 
@@ -1254,7 +1255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LeveledItemSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class LeveledItemSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly LeveledItemSetterTranslationCommon Instance = new LeveledItemSetterTranslationCommon();
 
@@ -1441,7 +1442,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledItem_Registration.Instance;
-        public new static LeveledItem_Registration StaticRegistration => LeveledItem_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LeveledItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledItemCommon.Instance;
         [DebuggerStepThrough]
@@ -1459,7 +1460,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LeveledItemBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1577,7 +1578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LeveledItemBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class LeveledItemBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static LeveledItemBinaryCreateTranslation Instance = new LeveledItemBinaryCreateTranslation();
 
@@ -1661,16 +1662,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LeveledItemBinaryOverlay :
+    internal partial class LeveledItemBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         ILeveledItemGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledItem_Registration.Instance;
-        public new static LeveledItem_Registration StaticRegistration => LeveledItem_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LeveledItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledItemCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -668,10 +669,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Effect_FieldIndex
+    internal enum Effect_FieldIndex
     {
         Data = 0,
         ScriptEffect = 1,
@@ -679,7 +680,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Effect_Registration : ILoquiRegistration
+    internal partial class Effect_Registration : ILoquiRegistration
     {
         public static readonly Effect_Registration Instance = new Effect_Registration();
 
@@ -766,7 +767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class EffectSetterCommon
+    internal partial class EffectSetterCommon
     {
         public static readonly EffectSetterCommon Instance = new EffectSetterCommon();
 
@@ -805,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class EffectCommon
+    internal partial class EffectCommon
     {
         public static readonly EffectCommon Instance = new EffectCommon();
 
@@ -958,7 +959,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class EffectSetterTranslationCommon
+    internal partial class EffectSetterTranslationCommon
     {
         public static readonly EffectSetterTranslationCommon Instance = new EffectSetterTranslationCommon();
 
@@ -1080,7 +1081,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Effect_Registration.Instance;
-        public static Effect_Registration StaticRegistration => Effect_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Effect_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1104,7 +1105,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class EffectBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1169,7 +1170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class EffectBinaryCreateTranslation
+    internal partial class EffectBinaryCreateTranslation
     {
         public readonly static EffectBinaryCreateTranslation Instance = new EffectBinaryCreateTranslation();
 
@@ -1247,16 +1248,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class EffectBinaryOverlay :
+    internal partial class EffectBinaryOverlay :
         PluginBinaryOverlay,
         IEffectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Effect_Registration.Instance;
-        public static Effect_Registration StaticRegistration => Effect_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Effect_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EffectCommon.Instance;
         [DebuggerStepThrough]

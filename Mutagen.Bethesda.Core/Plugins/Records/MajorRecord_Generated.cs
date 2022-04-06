@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Plugins.Records.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Plugins.Records.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -996,10 +997,10 @@ namespace Mutagen.Bethesda.Plugins.Records
 
 }
 
-namespace Mutagen.Bethesda.Plugins.Records.Internals
+namespace Mutagen.Bethesda.Plugins.Records
 {
     #region Field Index
-    public enum MajorRecord_FieldIndex
+    internal enum MajorRecord_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1009,7 +1010,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
     #endregion
 
     #region Registration
-    public partial class MajorRecord_Registration : ILoquiRegistration
+    internal partial class MajorRecord_Registration : ILoquiRegistration
     {
         public static readonly MajorRecord_Registration Instance = new MajorRecord_Registration();
 
@@ -1083,7 +1084,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
     #endregion
 
     #region Common
-    public partial class MajorRecordSetterCommon
+    internal partial class MajorRecordSetterCommon
     {
         public static readonly MajorRecordSetterCommon Instance = new MajorRecordSetterCommon();
 
@@ -1175,7 +1176,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         #endregion
         
     }
-    public partial class MajorRecordCommon
+    internal partial class MajorRecordCommon
     {
         public static readonly MajorRecordCommon Instance = new MajorRecordCommon();
 
@@ -1383,7 +1384,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         #endregion
         
     }
-    public partial class MajorRecordSetterTranslationCommon
+    internal partial class MajorRecordSetterTranslationCommon
     {
         public static readonly MajorRecordSetterTranslationCommon Instance = new MajorRecordSetterTranslationCommon();
 
@@ -1488,7 +1489,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MajorRecord_Registration.Instance;
-        public static MajorRecord_Registration StaticRegistration => MajorRecord_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => MajorRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1512,7 +1513,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Plugins.Records.Internals
+namespace Mutagen.Bethesda.Plugins.Records
 {
     public partial class MajorRecordBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1577,7 +1578,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
 
     }
 
-    public partial class MajorRecordBinaryCreateTranslation
+    internal partial class MajorRecordBinaryCreateTranslation
     {
         public readonly static MajorRecordBinaryCreateTranslation Instance = new MajorRecordBinaryCreateTranslation();
 
@@ -1641,16 +1642,16 @@ namespace Mutagen.Bethesda.Plugins.Records
 
 
 }
-namespace Mutagen.Bethesda.Plugins.Records.Internals
+namespace Mutagen.Bethesda.Plugins.Records
 {
-    public abstract partial class MajorRecordBinaryOverlay :
+    internal abstract partial class MajorRecordBinaryOverlay :
         PluginBinaryOverlay,
         IMajorRecordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MajorRecord_Registration.Instance;
-        public static MajorRecord_Registration StaticRegistration => MajorRecord_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => MajorRecordCommon.Instance;
         [DebuggerStepThrough]

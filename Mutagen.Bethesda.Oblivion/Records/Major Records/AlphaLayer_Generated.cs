@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -574,10 +575,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum AlphaLayer_FieldIndex
+    internal enum AlphaLayer_FieldIndex
     {
         Header = 0,
         AlphaLayerData = 1,
@@ -585,7 +586,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class AlphaLayer_Registration : ILoquiRegistration
+    internal partial class AlphaLayer_Registration : ILoquiRegistration
     {
         public static readonly AlphaLayer_Registration Instance = new AlphaLayer_Registration();
 
@@ -673,7 +674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class AlphaLayerSetterCommon : BaseLayerSetterCommon
+    internal partial class AlphaLayerSetterCommon : BaseLayerSetterCommon
     {
         public new static readonly AlphaLayerSetterCommon Instance = new AlphaLayerSetterCommon();
 
@@ -727,7 +728,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AlphaLayerCommon : BaseLayerCommon
+    internal partial class AlphaLayerCommon : BaseLayerCommon
     {
         public new static readonly AlphaLayerCommon Instance = new AlphaLayerCommon();
 
@@ -885,7 +886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AlphaLayerSetterTranslationCommon : BaseLayerSetterTranslationCommon
+    internal partial class AlphaLayerSetterTranslationCommon : BaseLayerSetterTranslationCommon
     {
         public new static readonly AlphaLayerSetterTranslationCommon Instance = new AlphaLayerSetterTranslationCommon();
 
@@ -992,7 +993,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlphaLayer_Registration.Instance;
-        public new static AlphaLayer_Registration StaticRegistration => AlphaLayer_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AlphaLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AlphaLayerCommon.Instance;
         [DebuggerStepThrough]
@@ -1010,7 +1011,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AlphaLayerBinaryWriteTranslation :
         BaseLayerBinaryWriteTranslation,
@@ -1068,7 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class AlphaLayerBinaryCreateTranslation : BaseLayerBinaryCreateTranslation
+    internal partial class AlphaLayerBinaryCreateTranslation : BaseLayerBinaryCreateTranslation
     {
         public new readonly static AlphaLayerBinaryCreateTranslation Instance = new AlphaLayerBinaryCreateTranslation();
 
@@ -1115,16 +1116,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class AlphaLayerBinaryOverlay :
+    internal partial class AlphaLayerBinaryOverlay :
         BaseLayerBinaryOverlay,
         IAlphaLayerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlphaLayer_Registration.Instance;
-        public new static AlphaLayer_Registration StaticRegistration => AlphaLayer_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AlphaLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AlphaLayerCommon.Instance;
         [DebuggerStepThrough]

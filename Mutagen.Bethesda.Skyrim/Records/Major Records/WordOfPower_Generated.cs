@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -739,10 +740,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WordOfPower_FieldIndex
+    internal enum WordOfPower_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -756,7 +757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WordOfPower_Registration : ILoquiRegistration
+    internal partial class WordOfPower_Registration : ILoquiRegistration
     {
         public static readonly WordOfPower_Registration Instance = new WordOfPower_Registration();
 
@@ -841,7 +842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WordOfPowerSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class WordOfPowerSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly WordOfPowerSetterCommon Instance = new WordOfPowerSetterCommon();
 
@@ -912,7 +913,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WordOfPowerCommon : SkyrimMajorRecordCommon
+    internal partial class WordOfPowerCommon : SkyrimMajorRecordCommon
     {
         public new static readonly WordOfPowerCommon Instance = new WordOfPowerCommon();
 
@@ -1158,7 +1159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WordOfPowerSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class WordOfPowerSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly WordOfPowerSetterTranslationCommon Instance = new WordOfPowerSetterTranslationCommon();
 
@@ -1321,7 +1322,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WordOfPower_Registration.Instance;
-        public new static WordOfPower_Registration StaticRegistration => WordOfPower_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => WordOfPower_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WordOfPowerCommon.Instance;
         [DebuggerStepThrough]
@@ -1339,7 +1340,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WordOfPowerBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1433,7 +1434,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WordOfPowerBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class WordOfPowerBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static WordOfPowerBinaryCreateTranslation Instance = new WordOfPowerBinaryCreateTranslation();
 
@@ -1501,16 +1502,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WordOfPowerBinaryOverlay :
+    internal partial class WordOfPowerBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IWordOfPowerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WordOfPower_Registration.Instance;
-        public new static WordOfPower_Registration StaticRegistration => WordOfPower_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => WordOfPower_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WordOfPowerCommon.Instance;
         [DebuggerStepThrough]

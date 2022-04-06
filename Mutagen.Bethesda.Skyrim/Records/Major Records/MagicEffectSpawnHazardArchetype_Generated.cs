@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -518,10 +519,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum MagicEffectSpawnHazardArchetype_FieldIndex
+    internal enum MagicEffectSpawnHazardArchetype_FieldIndex
     {
         Type = 0,
         AssociationKey = 1,
@@ -530,7 +531,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class MagicEffectSpawnHazardArchetype_Registration : ILoquiRegistration
+    internal partial class MagicEffectSpawnHazardArchetype_Registration : ILoquiRegistration
     {
         public static readonly MagicEffectSpawnHazardArchetype_Registration Instance = new MagicEffectSpawnHazardArchetype_Registration();
 
@@ -604,7 +605,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MagicEffectSpawnHazardArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
+    internal partial class MagicEffectSpawnHazardArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
     {
         public new static readonly MagicEffectSpawnHazardArchetypeSetterCommon Instance = new MagicEffectSpawnHazardArchetypeSetterCommon();
 
@@ -655,7 +656,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectSpawnHazardArchetypeCommon : MagicEffectArchetypeCommon
+    internal partial class MagicEffectSpawnHazardArchetypeCommon : MagicEffectArchetypeCommon
     {
         public new static readonly MagicEffectSpawnHazardArchetypeCommon Instance = new MagicEffectSpawnHazardArchetypeCommon();
 
@@ -799,7 +800,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectSpawnHazardArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
+    internal partial class MagicEffectSpawnHazardArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
     {
         public new static readonly MagicEffectSpawnHazardArchetypeSetterTranslationCommon Instance = new MagicEffectSpawnHazardArchetypeSetterTranslationCommon();
 
@@ -924,7 +925,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSpawnHazardArchetype_Registration.Instance;
-        public new static MagicEffectSpawnHazardArchetype_Registration StaticRegistration => MagicEffectSpawnHazardArchetype_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MagicEffectSpawnHazardArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectSpawnHazardArchetypeCommon.Instance;
         [DebuggerStepThrough]
@@ -942,7 +943,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MagicEffectSpawnHazardArchetypeBinaryWriteTranslation :
         MagicEffectArchetypeBinaryWriteTranslation,
@@ -984,7 +985,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class MagicEffectSpawnHazardArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
+    internal partial class MagicEffectSpawnHazardArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
     {
         public new readonly static MagicEffectSpawnHazardArchetypeBinaryCreateTranslation Instance = new MagicEffectSpawnHazardArchetypeBinaryCreateTranslation();
 
@@ -1001,16 +1002,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MagicEffectSpawnHazardArchetypeBinaryOverlay :
+    internal partial class MagicEffectSpawnHazardArchetypeBinaryOverlay :
         MagicEffectArchetypeBinaryOverlay,
         IMagicEffectSpawnHazardArchetypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSpawnHazardArchetype_Registration.Instance;
-        public new static MagicEffectSpawnHazardArchetype_Registration StaticRegistration => MagicEffectSpawnHazardArchetype_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MagicEffectSpawnHazardArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectSpawnHazardArchetypeCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -942,10 +943,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PackageEvent_FieldIndex
+    internal enum PackageEvent_FieldIndex
     {
         Idle = 0,
         SCHR = 1,
@@ -958,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PackageEvent_Registration : ILoquiRegistration
+    internal partial class PackageEvent_Registration : ILoquiRegistration
     {
         public static readonly PackageEvent_Registration Instance = new PackageEvent_Registration();
 
@@ -1045,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PackageEventSetterCommon
+    internal partial class PackageEventSetterCommon
     {
         public static readonly PackageEventSetterCommon Instance = new PackageEventSetterCommon();
 
@@ -1089,7 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageEventCommon
+    internal partial class PackageEventCommon
     {
         public static readonly PackageEventCommon Instance = new PackageEventCommon();
 
@@ -1311,7 +1312,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageEventSetterTranslationCommon
+    internal partial class PackageEventSetterTranslationCommon
     {
         public static readonly PackageEventSetterTranslationCommon Instance = new PackageEventSetterTranslationCommon();
 
@@ -1468,7 +1469,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageEvent_Registration.Instance;
-        public static PackageEvent_Registration StaticRegistration => PackageEvent_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PackageEvent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageEventCommon.Instance;
         [DebuggerStepThrough]
@@ -1492,7 +1493,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageEventBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1569,7 +1570,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PackageEventBinaryCreateTranslation
+    internal partial class PackageEventBinaryCreateTranslation
     {
         public readonly static PackageEventBinaryCreateTranslation Instance = new PackageEventBinaryCreateTranslation();
 
@@ -1674,16 +1675,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageEventBinaryOverlay :
+    internal partial class PackageEventBinaryOverlay :
         PluginBinaryOverlay,
         IPackageEventGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageEvent_Registration.Instance;
-        public static PackageEvent_Registration StaticRegistration => PackageEvent_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PackageEvent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageEventCommon.Instance;
         [DebuggerStepThrough]

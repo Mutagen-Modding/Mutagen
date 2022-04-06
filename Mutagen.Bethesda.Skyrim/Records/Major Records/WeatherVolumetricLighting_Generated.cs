@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -737,10 +738,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WeatherVolumetricLighting_FieldIndex
+    internal enum WeatherVolumetricLighting_FieldIndex
     {
         Sunrise = 0,
         Day = 1,
@@ -750,7 +751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WeatherVolumetricLighting_Registration : ILoquiRegistration
+    internal partial class WeatherVolumetricLighting_Registration : ILoquiRegistration
     {
         public static readonly WeatherVolumetricLighting_Registration Instance = new WeatherVolumetricLighting_Registration();
 
@@ -831,7 +832,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WeatherVolumetricLightingSetterCommon
+    internal partial class WeatherVolumetricLightingSetterCommon
     {
         public static readonly WeatherVolumetricLightingSetterCommon Instance = new WeatherVolumetricLightingSetterCommon();
 
@@ -877,7 +878,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeatherVolumetricLightingCommon
+    internal partial class WeatherVolumetricLightingCommon
     {
         public static readonly WeatherVolumetricLightingCommon Instance = new WeatherVolumetricLightingCommon();
 
@@ -1027,7 +1028,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeatherVolumetricLightingSetterTranslationCommon
+    internal partial class WeatherVolumetricLightingSetterTranslationCommon
     {
         public static readonly WeatherVolumetricLightingSetterTranslationCommon Instance = new WeatherVolumetricLightingSetterTranslationCommon();
 
@@ -1117,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherVolumetricLighting_Registration.Instance;
-        public static WeatherVolumetricLighting_Registration StaticRegistration => WeatherVolumetricLighting_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherVolumetricLighting_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherVolumetricLightingCommon.Instance;
         [DebuggerStepThrough]
@@ -1141,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeatherVolumetricLightingBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1195,7 +1196,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WeatherVolumetricLightingBinaryCreateTranslation
+    internal partial class WeatherVolumetricLightingBinaryCreateTranslation
     {
         public readonly static WeatherVolumetricLightingBinaryCreateTranslation Instance = new WeatherVolumetricLightingBinaryCreateTranslation();
 
@@ -1233,16 +1234,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WeatherVolumetricLightingBinaryOverlay :
+    internal partial class WeatherVolumetricLightingBinaryOverlay :
         PluginBinaryOverlay,
         IWeatherVolumetricLightingGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherVolumetricLighting_Registration.Instance;
-        public static WeatherVolumetricLighting_Registration StaticRegistration => WeatherVolumetricLighting_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherVolumetricLighting_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherVolumetricLightingCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -647,10 +648,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum GetEventData_FieldIndex
+    internal enum GetEventData_FieldIndex
     {
         RunOnType = 0,
         Reference = 1,
@@ -662,7 +663,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class GetEventData_Registration : ILoquiRegistration
+    internal partial class GetEventData_Registration : ILoquiRegistration
     {
         public static readonly GetEventData_Registration Instance = new GetEventData_Registration();
 
@@ -736,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class GetEventDataSetterCommon : ConditionDataSetterCommon
+    internal partial class GetEventDataSetterCommon : ConditionDataSetterCommon
     {
         public new static readonly GetEventDataSetterCommon Instance = new GetEventDataSetterCommon();
 
@@ -792,7 +793,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class GetEventDataCommon : ConditionDataCommon
+    internal partial class GetEventDataCommon : ConditionDataCommon
     {
         public new static readonly GetEventDataCommon Instance = new GetEventDataCommon();
 
@@ -971,7 +972,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class GetEventDataSetterTranslationCommon : ConditionDataSetterTranslationCommon
+    internal partial class GetEventDataSetterTranslationCommon : ConditionDataSetterTranslationCommon
     {
         public new static readonly GetEventDataSetterTranslationCommon Instance = new GetEventDataSetterTranslationCommon();
 
@@ -1079,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GetEventData_Registration.Instance;
-        public new static GetEventData_Registration StaticRegistration => GetEventData_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GetEventData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GetEventDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1097,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class GetEventDataBinaryWriteTranslation :
         ConditionDataBinaryWriteTranslation,
@@ -1169,7 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class GetEventDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
+    internal partial class GetEventDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
     {
         public new readonly static GetEventDataBinaryCreateTranslation Instance = new GetEventDataBinaryCreateTranslation();
 
@@ -1205,16 +1206,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class GetEventDataBinaryOverlay :
+    internal partial class GetEventDataBinaryOverlay :
         ConditionDataBinaryOverlay,
         IGetEventDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GetEventData_Registration.Instance;
-        public new static GetEventData_Registration StaticRegistration => GetEventData_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GetEventData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GetEventDataCommon.Instance;
         [DebuggerStepThrough]

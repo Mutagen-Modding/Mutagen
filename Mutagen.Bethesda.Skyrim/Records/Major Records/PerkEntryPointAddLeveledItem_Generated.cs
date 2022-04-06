@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -587,10 +588,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PerkEntryPointAddLeveledItem_FieldIndex
+    internal enum PerkEntryPointAddLeveledItem_FieldIndex
     {
         Rank = 0,
         Priority = 1,
@@ -603,7 +604,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PerkEntryPointAddLeveledItem_Registration : ILoquiRegistration
+    internal partial class PerkEntryPointAddLeveledItem_Registration : ILoquiRegistration
     {
         public static readonly PerkEntryPointAddLeveledItem_Registration Instance = new PerkEntryPointAddLeveledItem_Registration();
 
@@ -684,7 +685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PerkEntryPointAddLeveledItemSetterCommon : APerkEntryPointEffectSetterCommon
+    internal partial class PerkEntryPointAddLeveledItemSetterCommon : APerkEntryPointEffectSetterCommon
     {
         public new static readonly PerkEntryPointAddLeveledItemSetterCommon Instance = new PerkEntryPointAddLeveledItemSetterCommon();
 
@@ -755,7 +756,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkEntryPointAddLeveledItemCommon : APerkEntryPointEffectCommon
+    internal partial class PerkEntryPointAddLeveledItemCommon : APerkEntryPointEffectCommon
     {
         public new static readonly PerkEntryPointAddLeveledItemCommon Instance = new PerkEntryPointAddLeveledItemCommon();
 
@@ -953,7 +954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkEntryPointAddLeveledItemSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon
+    internal partial class PerkEntryPointAddLeveledItemSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon
     {
         public new static readonly PerkEntryPointAddLeveledItemSetterTranslationCommon Instance = new PerkEntryPointAddLeveledItemSetterTranslationCommon();
 
@@ -1069,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointAddLeveledItem_Registration.Instance;
-        public new static PerkEntryPointAddLeveledItem_Registration StaticRegistration => PerkEntryPointAddLeveledItem_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkEntryPointAddLeveledItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointAddLeveledItemCommon.Instance;
         [DebuggerStepThrough]
@@ -1087,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkEntryPointAddLeveledItemBinaryWriteTranslation :
         APerkEntryPointEffectBinaryWriteTranslation,
@@ -1156,7 +1157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PerkEntryPointAddLeveledItemBinaryCreateTranslation : APerkEntryPointEffectBinaryCreateTranslation
+    internal partial class PerkEntryPointAddLeveledItemBinaryCreateTranslation : APerkEntryPointEffectBinaryCreateTranslation
     {
         public new readonly static PerkEntryPointAddLeveledItemBinaryCreateTranslation Instance = new PerkEntryPointAddLeveledItemBinaryCreateTranslation();
 
@@ -1183,16 +1184,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PerkEntryPointAddLeveledItemBinaryOverlay :
+    internal partial class PerkEntryPointAddLeveledItemBinaryOverlay :
         APerkEntryPointEffectBinaryOverlay,
         IPerkEntryPointAddLeveledItemGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointAddLeveledItem_Registration.Instance;
-        public new static PerkEntryPointAddLeveledItem_Registration StaticRegistration => PerkEntryPointAddLeveledItem_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkEntryPointAddLeveledItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointAddLeveledItemCommon.Instance;
         [DebuggerStepThrough]

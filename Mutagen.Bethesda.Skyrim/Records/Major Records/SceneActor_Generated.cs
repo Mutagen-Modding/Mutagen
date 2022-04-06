@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -672,10 +673,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SceneActor_FieldIndex
+    internal enum SceneActor_FieldIndex
     {
         ID = 0,
         Flags = 1,
@@ -684,7 +685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SceneActor_Registration : ILoquiRegistration
+    internal partial class SceneActor_Registration : ILoquiRegistration
     {
         public static readonly SceneActor_Registration Instance = new SceneActor_Registration();
 
@@ -769,7 +770,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SceneActorSetterCommon
+    internal partial class SceneActorSetterCommon
     {
         public static readonly SceneActorSetterCommon Instance = new SceneActorSetterCommon();
 
@@ -807,7 +808,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SceneActorCommon
+    internal partial class SceneActorCommon
     {
         public static readonly SceneActorCommon Instance = new SceneActorCommon();
 
@@ -951,7 +952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SceneActorSetterTranslationCommon
+    internal partial class SceneActorSetterTranslationCommon
     {
         public static readonly SceneActorSetterTranslationCommon Instance = new SceneActorSetterTranslationCommon();
 
@@ -1037,7 +1038,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SceneActor_Registration.Instance;
-        public static SceneActor_Registration StaticRegistration => SceneActor_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SceneActor_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SceneActorCommon.Instance;
         [DebuggerStepThrough]
@@ -1061,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SceneActorBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1112,7 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SceneActorBinaryCreateTranslation
+    internal partial class SceneActorBinaryCreateTranslation
     {
         public readonly static SceneActorBinaryCreateTranslation Instance = new SceneActorBinaryCreateTranslation();
 
@@ -1186,16 +1187,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SceneActorBinaryOverlay :
+    internal partial class SceneActorBinaryOverlay :
         PluginBinaryOverlay,
         ISceneActorGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SceneActor_Registration.Instance;
-        public static SceneActor_Registration StaticRegistration => SceneActor_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SceneActor_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SceneActorCommon.Instance;
         [DebuggerStepThrough]

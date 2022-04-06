@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -777,10 +778,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ScriptEntry_FieldIndex
+    internal enum ScriptEntry_FieldIndex
     {
         Name = 0,
         Flags = 1,
@@ -789,7 +790,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ScriptEntry_Registration : ILoquiRegistration
+    internal partial class ScriptEntry_Registration : ILoquiRegistration
     {
         public static readonly ScriptEntry_Registration Instance = new ScriptEntry_Registration();
 
@@ -863,7 +864,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ScriptEntrySetterCommon
+    internal partial class ScriptEntrySetterCommon
     {
         public static readonly ScriptEntrySetterCommon Instance = new ScriptEntrySetterCommon();
 
@@ -901,7 +902,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ScriptEntryCommon
+    internal partial class ScriptEntryCommon
     {
         public static readonly ScriptEntryCommon Instance = new ScriptEntryCommon();
 
@@ -1059,7 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ScriptEntrySetterTranslationCommon
+    internal partial class ScriptEntrySetterTranslationCommon
     {
         public static readonly ScriptEntrySetterTranslationCommon Instance = new ScriptEntrySetterTranslationCommon();
 
@@ -1165,7 +1166,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptEntry_Registration.Instance;
-        public static ScriptEntry_Registration StaticRegistration => ScriptEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScriptEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptEntryCommon.Instance;
         [DebuggerStepThrough]
@@ -1189,7 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ScriptEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1224,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ScriptEntryBinaryCreateTranslation
+    internal partial class ScriptEntryBinaryCreateTranslation
     {
         public readonly static ScriptEntryBinaryCreateTranslation Instance = new ScriptEntryBinaryCreateTranslation();
 
@@ -1258,16 +1259,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ScriptEntryBinaryOverlay :
+    internal partial class ScriptEntryBinaryOverlay :
         PluginBinaryOverlay,
         IScriptEntryGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptEntry_Registration.Instance;
-        public static ScriptEntry_Registration StaticRegistration => ScriptEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScriptEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptEntryCommon.Instance;
         [DebuggerStepThrough]

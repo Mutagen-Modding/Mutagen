@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -769,10 +770,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Eyes_FieldIndex
+    internal enum Eyes_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -787,7 +788,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Eyes_Registration : ILoquiRegistration
+    internal partial class Eyes_Registration : ILoquiRegistration
     {
         public static readonly Eyes_Registration Instance = new Eyes_Registration();
 
@@ -873,7 +874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class EyesSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class EyesSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly EyesSetterCommon Instance = new EyesSetterCommon();
 
@@ -945,7 +946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class EyesCommon : SkyrimMajorRecordCommon
+    internal partial class EyesCommon : SkyrimMajorRecordCommon
     {
         public new static readonly EyesCommon Instance = new EyesCommon();
 
@@ -1197,7 +1198,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class EyesSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class EyesSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly EyesSetterTranslationCommon Instance = new EyesSetterTranslationCommon();
 
@@ -1364,7 +1365,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Eyes_Registration.Instance;
-        public new static Eyes_Registration StaticRegistration => Eyes_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Eyes_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EyesCommon.Instance;
         [DebuggerStepThrough]
@@ -1382,7 +1383,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class EyesBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1480,7 +1481,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class EyesBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class EyesBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static EyesBinaryCreateTranslation Instance = new EyesBinaryCreateTranslation();
 
@@ -1555,16 +1556,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class EyesBinaryOverlay :
+    internal partial class EyesBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IEyesGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Eyes_Registration.Instance;
-        public new static Eyes_Registration StaticRegistration => Eyes_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Eyes_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EyesCommon.Instance;
         [DebuggerStepThrough]

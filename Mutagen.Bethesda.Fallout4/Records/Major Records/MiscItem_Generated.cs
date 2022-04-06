@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1669,10 +1670,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum MiscItem_FieldIndex
+    internal enum MiscItem_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1700,7 +1701,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class MiscItem_Registration : ILoquiRegistration
+    internal partial class MiscItem_Registration : ILoquiRegistration
     {
         public static readonly MiscItem_Registration Instance = new MiscItem_Registration();
 
@@ -1803,7 +1804,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class MiscItemSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class MiscItemSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly MiscItemSetterCommon Instance = new MiscItemSetterCommon();
 
@@ -1897,7 +1898,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MiscItemCommon : Fallout4MajorRecordCommon
+    internal partial class MiscItemCommon : Fallout4MajorRecordCommon
     {
         public new static readonly MiscItemCommon Instance = new MiscItemCommon();
 
@@ -2440,7 +2441,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MiscItemSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class MiscItemSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly MiscItemSetterTranslationCommon Instance = new MiscItemSetterTranslationCommon();
 
@@ -2838,7 +2839,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MiscItem_Registration.Instance;
-        public new static MiscItem_Registration StaticRegistration => MiscItem_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MiscItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MiscItemCommon.Instance;
         [DebuggerStepThrough]
@@ -2856,7 +2857,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MiscItemBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -3038,7 +3039,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class MiscItemBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class MiscItemBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static MiscItemBinaryCreateTranslation Instance = new MiscItemBinaryCreateTranslation();
 
@@ -3198,16 +3199,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class MiscItemBinaryOverlay :
+    internal partial class MiscItemBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IMiscItemGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MiscItem_Registration.Instance;
-        public new static MiscItem_Registration StaticRegistration => MiscItem_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MiscItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MiscItemCommon.Instance;
         [DebuggerStepThrough]

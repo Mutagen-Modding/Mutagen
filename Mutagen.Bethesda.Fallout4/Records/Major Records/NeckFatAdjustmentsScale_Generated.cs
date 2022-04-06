@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -668,10 +669,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum NeckFatAdjustmentsScale_FieldIndex
+    internal enum NeckFatAdjustmentsScale_FieldIndex
     {
         Unknown = 0,
         X = 1,
@@ -680,7 +681,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class NeckFatAdjustmentsScale_Registration : ILoquiRegistration
+    internal partial class NeckFatAdjustmentsScale_Registration : ILoquiRegistration
     {
         public static readonly NeckFatAdjustmentsScale_Registration Instance = new NeckFatAdjustmentsScale_Registration();
 
@@ -754,7 +755,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class NeckFatAdjustmentsScaleSetterCommon
+    internal partial class NeckFatAdjustmentsScaleSetterCommon
     {
         public static readonly NeckFatAdjustmentsScaleSetterCommon Instance = new NeckFatAdjustmentsScaleSetterCommon();
 
@@ -791,7 +792,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class NeckFatAdjustmentsScaleCommon
+    internal partial class NeckFatAdjustmentsScaleCommon
     {
         public static readonly NeckFatAdjustmentsScaleCommon Instance = new NeckFatAdjustmentsScaleCommon();
 
@@ -927,7 +928,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class NeckFatAdjustmentsScaleSetterTranslationCommon
+    internal partial class NeckFatAdjustmentsScaleSetterTranslationCommon
     {
         public static readonly NeckFatAdjustmentsScaleSetterTranslationCommon Instance = new NeckFatAdjustmentsScaleSetterTranslationCommon();
 
@@ -1013,7 +1014,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NeckFatAdjustmentsScale_Registration.Instance;
-        public static NeckFatAdjustmentsScale_Registration StaticRegistration => NeckFatAdjustmentsScale_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NeckFatAdjustmentsScale_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NeckFatAdjustmentsScaleCommon.Instance;
         [DebuggerStepThrough]
@@ -1037,7 +1038,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NeckFatAdjustmentsScaleBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1079,7 +1080,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class NeckFatAdjustmentsScaleBinaryCreateTranslation
+    internal partial class NeckFatAdjustmentsScaleBinaryCreateTranslation
     {
         public readonly static NeckFatAdjustmentsScaleBinaryCreateTranslation Instance = new NeckFatAdjustmentsScaleBinaryCreateTranslation();
 
@@ -1116,16 +1117,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class NeckFatAdjustmentsScaleBinaryOverlay :
+    internal partial class NeckFatAdjustmentsScaleBinaryOverlay :
         PluginBinaryOverlay,
         INeckFatAdjustmentsScaleGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NeckFatAdjustmentsScale_Registration.Instance;
-        public static NeckFatAdjustmentsScale_Registration StaticRegistration => NeckFatAdjustmentsScale_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NeckFatAdjustmentsScale_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NeckFatAdjustmentsScaleCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -635,10 +636,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum KeyFrame_FieldIndex
+    internal enum KeyFrame_FieldIndex
     {
         Time = 0,
         Value = 1,
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class KeyFrame_Registration : ILoquiRegistration
+    internal partial class KeyFrame_Registration : ILoquiRegistration
     {
         public static readonly KeyFrame_Registration Instance = new KeyFrame_Registration();
 
@@ -720,7 +721,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class KeyFrameSetterCommon
+    internal partial class KeyFrameSetterCommon
     {
         public static readonly KeyFrameSetterCommon Instance = new KeyFrameSetterCommon();
 
@@ -756,7 +757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class KeyFrameCommon
+    internal partial class KeyFrameCommon
     {
         public static readonly KeyFrameCommon Instance = new KeyFrameCommon();
 
@@ -882,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class KeyFrameSetterTranslationCommon
+    internal partial class KeyFrameSetterTranslationCommon
     {
         public static readonly KeyFrameSetterTranslationCommon Instance = new KeyFrameSetterTranslationCommon();
 
@@ -964,7 +965,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => KeyFrame_Registration.Instance;
-        public static KeyFrame_Registration StaticRegistration => KeyFrame_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => KeyFrame_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => KeyFrameCommon.Instance;
         [DebuggerStepThrough]
@@ -988,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class KeyFrameBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1029,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class KeyFrameBinaryCreateTranslation
+    internal partial class KeyFrameBinaryCreateTranslation
     {
         public readonly static KeyFrameBinaryCreateTranslation Instance = new KeyFrameBinaryCreateTranslation();
 
@@ -1065,16 +1066,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class KeyFrameBinaryOverlay :
+    internal partial class KeyFrameBinaryOverlay :
         PluginBinaryOverlay,
         IKeyFrameGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => KeyFrame_Registration.Instance;
-        public static KeyFrame_Registration StaticRegistration => KeyFrame_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => KeyFrame_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => KeyFrameCommon.Instance;
         [DebuggerStepThrough]

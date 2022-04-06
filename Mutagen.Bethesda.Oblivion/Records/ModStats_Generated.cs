@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -668,10 +669,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum ModStats_FieldIndex
+    internal enum ModStats_FieldIndex
     {
         Version = 0,
         NumRecords = 1,
@@ -680,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class ModStats_Registration : ILoquiRegistration
+    internal partial class ModStats_Registration : ILoquiRegistration
     {
         public static readonly ModStats_Registration Instance = new ModStats_Registration();
 
@@ -761,7 +762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ModStatsSetterCommon
+    internal partial class ModStatsSetterCommon
     {
         public static readonly ModStatsSetterCommon Instance = new ModStatsSetterCommon();
 
@@ -802,7 +803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ModStatsCommon
+    internal partial class ModStatsCommon
     {
         public static readonly ModStatsCommon Instance = new ModStatsCommon();
 
@@ -938,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ModStatsSetterTranslationCommon
+    internal partial class ModStatsSetterTranslationCommon
     {
         public static readonly ModStatsSetterTranslationCommon Instance = new ModStatsSetterTranslationCommon();
 
@@ -1024,7 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ModStats_Registration.Instance;
-        public static ModStats_Registration StaticRegistration => ModStats_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ModStats_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ModStatsCommon.Instance;
         [DebuggerStepThrough]
@@ -1048,7 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ModStatsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1095,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ModStatsBinaryCreateTranslation
+    internal partial class ModStatsBinaryCreateTranslation
     {
         public readonly static ModStatsBinaryCreateTranslation Instance = new ModStatsBinaryCreateTranslation();
 
@@ -1132,16 +1133,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ModStatsBinaryOverlay :
+    internal partial class ModStatsBinaryOverlay :
         PluginBinaryOverlay,
         IModStatsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ModStats_Registration.Instance;
-        public static ModStats_Registration StaticRegistration => ModStats_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ModStats_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ModStatsCommon.Instance;
         [DebuggerStepThrough]

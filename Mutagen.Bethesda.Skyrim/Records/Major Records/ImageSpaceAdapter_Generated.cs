@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -7368,10 +7369,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ImageSpaceAdapter_FieldIndex
+    internal enum ImageSpaceAdapter_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -7444,7 +7445,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ImageSpaceAdapter_Registration : ILoquiRegistration
+    internal partial class ImageSpaceAdapter_Registration : ILoquiRegistration
     {
         public static readonly ImageSpaceAdapter_Registration Instance = new ImageSpaceAdapter_Registration();
 
@@ -7583,7 +7584,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ImageSpaceAdapterSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ImageSpaceAdapterSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ImageSpaceAdapterSetterCommon Instance = new ImageSpaceAdapterSetterCommon();
 
@@ -7713,7 +7714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImageSpaceAdapterCommon : SkyrimMajorRecordCommon
+    internal partial class ImageSpaceAdapterCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ImageSpaceAdapterCommon Instance = new ImageSpaceAdapterCommon();
 
@@ -9535,7 +9536,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImageSpaceAdapterSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ImageSpaceAdapterSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ImageSpaceAdapterSetterTranslationCommon Instance = new ImageSpaceAdapterSetterTranslationCommon();
 
@@ -11474,7 +11475,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceAdapter_Registration.Instance;
-        public new static ImageSpaceAdapter_Registration StaticRegistration => ImageSpaceAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ImageSpaceAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImageSpaceAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -11492,7 +11493,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImageSpaceAdapterBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -12312,7 +12313,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ImageSpaceAdapterBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ImageSpaceAdapterBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ImageSpaceAdapterBinaryCreateTranslation Instance = new ImageSpaceAdapterBinaryCreateTranslation();
 
@@ -12950,16 +12951,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ImageSpaceAdapterBinaryOverlay :
+    internal partial class ImageSpaceAdapterBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IImageSpaceAdapterGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceAdapter_Registration.Instance;
-        public new static ImageSpaceAdapter_Registration StaticRegistration => ImageSpaceAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ImageSpaceAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImageSpaceAdapterCommon.Instance;
         [DebuggerStepThrough]

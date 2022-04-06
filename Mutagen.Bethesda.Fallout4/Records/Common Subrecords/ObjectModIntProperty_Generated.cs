@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -328,10 +329,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ObjectModIntProperty_FieldIndex
+    internal enum ObjectModIntProperty_FieldIndex
     {
         Property = 0,
         Step = 1,
@@ -342,7 +343,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ObjectModIntProperty_Registration : ILoquiRegistration
+    internal partial class ObjectModIntProperty_Registration : ILoquiRegistration
     {
         public static readonly ObjectModIntProperty_Registration Instance = new ObjectModIntProperty_Registration();
 
@@ -414,7 +415,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public class ObjectModIntProperty_Registration<T> : ObjectModIntProperty_Registration
+    internal class ObjectModIntProperty_Registration<T> : ObjectModIntProperty_Registration
         where T : struct, Enum
     {
         public static readonly ObjectModIntProperty_Registration<T> GenericInstance = new ObjectModIntProperty_Registration<T>();
@@ -423,7 +424,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ObjectModIntPropertySetterCommon<T> : AObjectModPropertySetterCommon<T>
+    internal partial class ObjectModIntPropertySetterCommon<T> : AObjectModPropertySetterCommon<T>
         where T : struct, Enum
     {
         public new static readonly ObjectModIntPropertySetterCommon<T> Instance = new ObjectModIntPropertySetterCommon<T>();
@@ -479,7 +480,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ObjectModIntPropertyCommon<T> : AObjectModPropertyCommon<T>
+    internal partial class ObjectModIntPropertyCommon<T> : AObjectModPropertyCommon<T>
         where T : struct, Enum
     {
         public new static readonly ObjectModIntPropertyCommon<T> Instance = new ObjectModIntPropertyCommon<T>();
@@ -656,7 +657,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ObjectModIntPropertySetterTranslationCommon : AObjectModPropertySetterTranslationCommon
+    internal partial class ObjectModIntPropertySetterTranslationCommon : AObjectModPropertySetterTranslationCommon
     {
         public new static readonly ObjectModIntPropertySetterTranslationCommon Instance = new ObjectModIntPropertySetterTranslationCommon();
 
@@ -768,7 +769,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectModIntProperty_Registration.Instance;
-        public new static ObjectModIntProperty_Registration StaticRegistration => ObjectModIntProperty_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ObjectModIntProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(ObjectModIntPropertyCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
@@ -786,7 +787,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ObjectModIntPropertyBinaryWriteTranslation :
         AObjectModPropertyBinaryWriteTranslation,
@@ -842,7 +843,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ObjectModIntPropertyBinaryCreateTranslation<T> : AObjectModPropertyBinaryCreateTranslation<T>
+    internal partial class ObjectModIntPropertyBinaryCreateTranslation<T> : AObjectModPropertyBinaryCreateTranslation<T>
         where T : struct, Enum
     {
         public new readonly static ObjectModIntPropertyBinaryCreateTranslation<T> Instance = new ObjectModIntPropertyBinaryCreateTranslation<T>();
@@ -874,9 +875,9 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ObjectModIntPropertyBinaryOverlay<T> :
+    internal partial class ObjectModIntPropertyBinaryOverlay<T> :
         AObjectModPropertyBinaryOverlay<T>,
         IObjectModIntPropertyGetter<T>
         where T : struct, Enum
@@ -884,7 +885,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectModIntProperty_Registration.Instance;
-        public new static ObjectModIntProperty_Registration StaticRegistration => ObjectModIntProperty_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ObjectModIntProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(ObjectModIntPropertyCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]

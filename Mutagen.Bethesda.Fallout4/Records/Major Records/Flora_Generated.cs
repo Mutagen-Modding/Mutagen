@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1475,10 +1476,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Flora_FieldIndex
+    internal enum Flora_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1504,7 +1505,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Flora_Registration : ILoquiRegistration
+    internal partial class Flora_Registration : ILoquiRegistration
     {
         public static readonly Flora_Registration Instance = new Flora_Registration();
 
@@ -1606,7 +1607,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class FloraSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class FloraSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly FloraSetterCommon Instance = new FloraSetterCommon();
 
@@ -1697,7 +1698,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class FloraCommon : Fallout4MajorRecordCommon
+    internal partial class FloraCommon : Fallout4MajorRecordCommon
     {
         public new static readonly FloraCommon Instance = new FloraCommon();
 
@@ -2206,7 +2207,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class FloraSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class FloraSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly FloraSetterTranslationCommon Instance = new FloraSetterTranslationCommon();
 
@@ -2588,7 +2589,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Flora_Registration.Instance;
-        public new static Flora_Registration StaticRegistration => Flora_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Flora_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FloraCommon.Instance;
         [DebuggerStepThrough]
@@ -2606,7 +2607,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class FloraBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -2777,7 +2778,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class FloraBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class FloraBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static FloraBinaryCreateTranslation Instance = new FloraBinaryCreateTranslation();
 
@@ -2931,16 +2932,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class FloraBinaryOverlay :
+    internal partial class FloraBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IFloraGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Flora_Registration.Instance;
-        public new static Flora_Registration StaticRegistration => Flora_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Flora_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FloraCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -679,10 +680,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum LocalVariable_FieldIndex
+    internal enum LocalVariable_FieldIndex
     {
         Data = 0,
         Name = 1,
@@ -690,7 +691,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class LocalVariable_Registration : ILoquiRegistration
+    internal partial class LocalVariable_Registration : ILoquiRegistration
     {
         public static readonly LocalVariable_Registration Instance = new LocalVariable_Registration();
 
@@ -772,7 +773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LocalVariableSetterCommon
+    internal partial class LocalVariableSetterCommon
     {
         public static readonly LocalVariableSetterCommon Instance = new LocalVariableSetterCommon();
 
@@ -809,7 +810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LocalVariableCommon
+    internal partial class LocalVariableCommon
     {
         public static readonly LocalVariableCommon Instance = new LocalVariableCommon();
 
@@ -951,7 +952,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LocalVariableSetterTranslationCommon
+    internal partial class LocalVariableSetterTranslationCommon
     {
         public static readonly LocalVariableSetterTranslationCommon Instance = new LocalVariableSetterTranslationCommon();
 
@@ -1055,7 +1056,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocalVariable_Registration.Instance;
-        public static LocalVariable_Registration StaticRegistration => LocalVariable_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocalVariable_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocalVariableCommon.Instance;
         [DebuggerStepThrough]
@@ -1079,7 +1080,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LocalVariableBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1128,7 +1129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LocalVariableBinaryCreateTranslation
+    internal partial class LocalVariableBinaryCreateTranslation
     {
         public readonly static LocalVariableBinaryCreateTranslation Instance = new LocalVariableBinaryCreateTranslation();
 
@@ -1194,16 +1195,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LocalVariableBinaryOverlay :
+    internal partial class LocalVariableBinaryOverlay :
         PluginBinaryOverlay,
         ILocalVariableGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocalVariable_Registration.Instance;
-        public static LocalVariable_Registration StaticRegistration => LocalVariable_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocalVariable_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocalVariableCommon.Instance;
         [DebuggerStepThrough]

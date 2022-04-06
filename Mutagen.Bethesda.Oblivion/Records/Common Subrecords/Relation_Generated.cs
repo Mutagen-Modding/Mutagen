@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -650,10 +651,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Relation_FieldIndex
+    internal enum Relation_FieldIndex
     {
         Faction = 0,
         Modifier = 1,
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Relation_Registration : ILoquiRegistration
+    internal partial class Relation_Registration : ILoquiRegistration
     {
         public static readonly Relation_Registration Instance = new Relation_Registration();
 
@@ -742,7 +743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class RelationSetterCommon
+    internal partial class RelationSetterCommon
     {
         public static readonly RelationSetterCommon Instance = new RelationSetterCommon();
 
@@ -783,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RelationCommon
+    internal partial class RelationCommon
     {
         public static readonly RelationCommon Instance = new RelationCommon();
 
@@ -910,7 +911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RelationSetterTranslationCommon
+    internal partial class RelationSetterTranslationCommon
     {
         public static readonly RelationSetterTranslationCommon Instance = new RelationSetterTranslationCommon();
 
@@ -992,7 +993,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Relation_Registration.Instance;
-        public static Relation_Registration StaticRegistration => Relation_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Relation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RelationCommon.Instance;
         [DebuggerStepThrough]
@@ -1016,7 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RelationBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1062,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class RelationBinaryCreateTranslation
+    internal partial class RelationBinaryCreateTranslation
     {
         public readonly static RelationBinaryCreateTranslation Instance = new RelationBinaryCreateTranslation();
 
@@ -1098,16 +1099,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class RelationBinaryOverlay :
+    internal partial class RelationBinaryOverlay :
         PluginBinaryOverlay,
         IRelationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Relation_Registration.Instance;
-        public static Relation_Registration StaticRegistration => Relation_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Relation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RelationCommon.Instance;
         [DebuggerStepThrough]

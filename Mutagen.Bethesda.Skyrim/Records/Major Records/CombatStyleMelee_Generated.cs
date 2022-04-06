@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -874,10 +875,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CombatStyleMelee_FieldIndex
+    internal enum CombatStyleMelee_FieldIndex
     {
         Versioning = 0,
         AttackStaggeredMult = 1,
@@ -892,7 +893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CombatStyleMelee_Registration : ILoquiRegistration
+    internal partial class CombatStyleMelee_Registration : ILoquiRegistration
     {
         public static readonly CombatStyleMelee_Registration Instance = new CombatStyleMelee_Registration();
 
@@ -973,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CombatStyleMeleeSetterCommon
+    internal partial class CombatStyleMeleeSetterCommon
     {
         public static readonly CombatStyleMeleeSetterCommon Instance = new CombatStyleMeleeSetterCommon();
 
@@ -1020,7 +1021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CombatStyleMeleeCommon
+    internal partial class CombatStyleMeleeCommon
     {
         public static readonly CombatStyleMeleeCommon Instance = new CombatStyleMeleeCommon();
 
@@ -1216,7 +1217,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CombatStyleMeleeSetterTranslationCommon
+    internal partial class CombatStyleMeleeSetterTranslationCommon
     {
         public static readonly CombatStyleMeleeSetterTranslationCommon Instance = new CombatStyleMeleeSetterTranslationCommon();
 
@@ -1327,7 +1328,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleMelee_Registration.Instance;
-        public static CombatStyleMelee_Registration StaticRegistration => CombatStyleMelee_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CombatStyleMelee_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleMeleeCommon.Instance;
         [DebuggerStepThrough]
@@ -1351,7 +1352,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CombatStyleMeleeBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1420,7 +1421,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CombatStyleMeleeBinaryCreateTranslation
+    internal partial class CombatStyleMeleeBinaryCreateTranslation
     {
         public readonly static CombatStyleMeleeBinaryCreateTranslation Instance = new CombatStyleMeleeBinaryCreateTranslation();
 
@@ -1467,16 +1468,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CombatStyleMeleeBinaryOverlay :
+    internal partial class CombatStyleMeleeBinaryOverlay :
         PluginBinaryOverlay,
         ICombatStyleMeleeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleMelee_Registration.Instance;
-        public static CombatStyleMelee_Registration StaticRegistration => CombatStyleMelee_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CombatStyleMelee_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleMeleeCommon.Instance;
         [DebuggerStepThrough]

@@ -3,7 +3,6 @@ using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Generation.Modules;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
-using Noggog;
 using BoolType = Mutagen.Bethesda.Generation.Fields.BoolType;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
 using EnumType = Mutagen.Bethesda.Generation.Fields.EnumType;
@@ -39,7 +38,6 @@ public class RecordGeneratorProvider : IGenerationConstructor
         };
         gen.AddTypicalTypeAssociations();
         gen.Add(gen.MaskModule);
-        gen.Namespaces.Add("Mutagen.Bethesda.Internals");
         gen.MaskModule.AddTypeAssociation<FormLinkType>(MaskModule.TypicalField);
         gen.MaskModule.AddTypeAssociation<GenderedType>(new GenderedItemMaskGeneration());
         gen.GenerationModules.Add(new PluginModule());

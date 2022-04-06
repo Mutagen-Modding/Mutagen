@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -650,10 +651,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ContainerItem_FieldIndex
+    internal enum ContainerItem_FieldIndex
     {
         Item = 0,
         Count = 1,
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ContainerItem_Registration : ILoquiRegistration
+    internal partial class ContainerItem_Registration : ILoquiRegistration
     {
         public static readonly ContainerItem_Registration Instance = new ContainerItem_Registration();
 
@@ -742,7 +743,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ContainerItemSetterCommon
+    internal partial class ContainerItemSetterCommon
     {
         public static readonly ContainerItemSetterCommon Instance = new ContainerItemSetterCommon();
 
@@ -783,7 +784,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ContainerItemCommon
+    internal partial class ContainerItemCommon
     {
         public static readonly ContainerItemCommon Instance = new ContainerItemCommon();
 
@@ -910,7 +911,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ContainerItemSetterTranslationCommon
+    internal partial class ContainerItemSetterTranslationCommon
     {
         public static readonly ContainerItemSetterTranslationCommon Instance = new ContainerItemSetterTranslationCommon();
 
@@ -992,7 +993,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerItem_Registration.Instance;
-        public static ContainerItem_Registration StaticRegistration => ContainerItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ContainerItem_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ContainerItemCommon.Instance;
         [DebuggerStepThrough]
@@ -1016,7 +1017,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ContainerItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1062,7 +1063,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ContainerItemBinaryCreateTranslation
+    internal partial class ContainerItemBinaryCreateTranslation
     {
         public readonly static ContainerItemBinaryCreateTranslation Instance = new ContainerItemBinaryCreateTranslation();
 
@@ -1098,16 +1099,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ContainerItemBinaryOverlay :
+    internal partial class ContainerItemBinaryOverlay :
         PluginBinaryOverlay,
         IContainerItemGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerItem_Registration.Instance;
-        public static ContainerItem_Registration StaticRegistration => ContainerItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ContainerItem_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ContainerItemCommon.Instance;
         [DebuggerStepThrough]

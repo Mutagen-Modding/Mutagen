@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -692,10 +693,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum FaceGenData_FieldIndex
+    internal enum FaceGenData_FieldIndex
     {
         SymmetricGeometry = 0,
         AsymmetricGeometry = 1,
@@ -704,7 +705,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class FaceGenData_Registration : ILoquiRegistration
+    internal partial class FaceGenData_Registration : ILoquiRegistration
     {
         public static readonly FaceGenData_Registration Instance = new FaceGenData_Registration();
 
@@ -787,7 +788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class FaceGenDataSetterCommon
+    internal partial class FaceGenDataSetterCommon
     {
         public static readonly FaceGenDataSetterCommon Instance = new FaceGenDataSetterCommon();
 
@@ -825,7 +826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class FaceGenDataCommon
+    internal partial class FaceGenDataCommon
     {
         public static readonly FaceGenDataCommon Instance = new FaceGenDataCommon();
 
@@ -973,7 +974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class FaceGenDataSetterTranslationCommon
+    internal partial class FaceGenDataSetterTranslationCommon
     {
         public static readonly FaceGenDataSetterTranslationCommon Instance = new FaceGenDataSetterTranslationCommon();
 
@@ -1080,7 +1081,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceGenData_Registration.Instance;
-        public static FaceGenData_Registration StaticRegistration => FaceGenData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FaceGenData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FaceGenDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1104,7 +1105,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class FaceGenDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1153,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class FaceGenDataBinaryCreateTranslation
+    internal partial class FaceGenDataBinaryCreateTranslation
     {
         public readonly static FaceGenDataBinaryCreateTranslation Instance = new FaceGenDataBinaryCreateTranslation();
 
@@ -1225,16 +1226,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class FaceGenDataBinaryOverlay :
+    internal partial class FaceGenDataBinaryOverlay :
         PluginBinaryOverlay,
         IFaceGenDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceGenData_Registration.Instance;
-        public static FaceGenData_Registration StaticRegistration => FaceGenData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FaceGenData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FaceGenDataCommon.Instance;
         [DebuggerStepThrough]

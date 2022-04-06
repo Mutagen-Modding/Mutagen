@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -741,10 +742,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ScriptFragments_FieldIndex
+    internal enum ScriptFragments_FieldIndex
     {
         Unknown = 0,
         FileName = 1,
@@ -754,7 +755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ScriptFragments_Registration : ILoquiRegistration
+    internal partial class ScriptFragments_Registration : ILoquiRegistration
     {
         public static readonly ScriptFragments_Registration Instance = new ScriptFragments_Registration();
 
@@ -828,7 +829,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ScriptFragmentsSetterCommon
+    internal partial class ScriptFragmentsSetterCommon
     {
         public static readonly ScriptFragmentsSetterCommon Instance = new ScriptFragmentsSetterCommon();
 
@@ -866,7 +867,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ScriptFragmentsCommon
+    internal partial class ScriptFragmentsCommon
     {
         public static readonly ScriptFragmentsCommon Instance = new ScriptFragmentsCommon();
 
@@ -1036,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ScriptFragmentsSetterTranslationCommon
+    internal partial class ScriptFragmentsSetterTranslationCommon
     {
         public static readonly ScriptFragmentsSetterTranslationCommon Instance = new ScriptFragmentsSetterTranslationCommon();
 
@@ -1170,7 +1171,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptFragments_Registration.Instance;
-        public static ScriptFragments_Registration StaticRegistration => ScriptFragments_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]
@@ -1194,7 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ScriptFragmentsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1246,7 +1247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ScriptFragmentsBinaryCreateTranslation
+    internal partial class ScriptFragmentsBinaryCreateTranslation
     {
         public readonly static ScriptFragmentsBinaryCreateTranslation Instance = new ScriptFragmentsBinaryCreateTranslation();
 
@@ -1288,16 +1289,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ScriptFragmentsBinaryOverlay :
+    internal partial class ScriptFragmentsBinaryOverlay :
         PluginBinaryOverlay,
         IScriptFragmentsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptFragments_Registration.Instance;
-        public static ScriptFragments_Registration StaticRegistration => ScriptFragments_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]

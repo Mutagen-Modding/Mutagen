@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -546,16 +547,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ANpcLevel_FieldIndex
+    internal enum ANpcLevel_FieldIndex
     {
     }
     #endregion
 
     #region Registration
-    public partial class ANpcLevel_Registration : ILoquiRegistration
+    internal partial class ANpcLevel_Registration : ILoquiRegistration
     {
         public static readonly ANpcLevel_Registration Instance = new ANpcLevel_Registration();
 
@@ -629,7 +630,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ANpcLevelSetterCommon
+    internal partial class ANpcLevelSetterCommon
     {
         public static readonly ANpcLevelSetterCommon Instance = new ANpcLevelSetterCommon();
 
@@ -658,7 +659,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ANpcLevelCommon
+    internal partial class ANpcLevelCommon
     {
         public static readonly ANpcLevelCommon Instance = new ANpcLevelCommon();
 
@@ -764,7 +765,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ANpcLevelSetterTranslationCommon
+    internal partial class ANpcLevelSetterTranslationCommon
     {
         public static readonly ANpcLevelSetterTranslationCommon Instance = new ANpcLevelSetterTranslationCommon();
 
@@ -838,7 +839,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANpcLevel_Registration.Instance;
-        public static ANpcLevel_Registration StaticRegistration => ANpcLevel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ANpcLevel_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ANpcLevelCommon.Instance;
         [DebuggerStepThrough]
@@ -862,7 +863,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ANpcLevelBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -888,7 +889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ANpcLevelBinaryCreateTranslation
+    internal partial class ANpcLevelBinaryCreateTranslation
     {
         public readonly static ANpcLevelBinaryCreateTranslation Instance = new ANpcLevelBinaryCreateTranslation();
 
@@ -916,16 +917,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public abstract partial class ANpcLevelBinaryOverlay :
+    internal abstract partial class ANpcLevelBinaryOverlay :
         PluginBinaryOverlay,
         IANpcLevelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANpcLevel_Registration.Instance;
-        public static ANpcLevel_Registration StaticRegistration => ANpcLevel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ANpcLevel_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ANpcLevelCommon.Instance;
         [DebuggerStepThrough]

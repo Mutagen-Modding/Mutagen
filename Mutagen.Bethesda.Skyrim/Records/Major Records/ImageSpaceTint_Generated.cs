@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -636,10 +637,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ImageSpaceTint_FieldIndex
+    internal enum ImageSpaceTint_FieldIndex
     {
         Amount = 0,
         Color = 1,
@@ -647,7 +648,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ImageSpaceTint_Registration : ILoquiRegistration
+    internal partial class ImageSpaceTint_Registration : ILoquiRegistration
     {
         public static readonly ImageSpaceTint_Registration Instance = new ImageSpaceTint_Registration();
 
@@ -728,7 +729,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ImageSpaceTintSetterCommon
+    internal partial class ImageSpaceTintSetterCommon
     {
         public static readonly ImageSpaceTintSetterCommon Instance = new ImageSpaceTintSetterCommon();
 
@@ -768,7 +769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImageSpaceTintCommon
+    internal partial class ImageSpaceTintCommon
     {
         public static readonly ImageSpaceTintCommon Instance = new ImageSpaceTintCommon();
 
@@ -894,7 +895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImageSpaceTintSetterTranslationCommon
+    internal partial class ImageSpaceTintSetterTranslationCommon
     {
         public static readonly ImageSpaceTintSetterTranslationCommon Instance = new ImageSpaceTintSetterTranslationCommon();
 
@@ -976,7 +977,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceTint_Registration.Instance;
-        public static ImageSpaceTint_Registration StaticRegistration => ImageSpaceTint_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ImageSpaceTint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImageSpaceTintCommon.Instance;
         [DebuggerStepThrough]
@@ -1000,7 +1001,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImageSpaceTintBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1049,7 +1050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ImageSpaceTintBinaryCreateTranslation
+    internal partial class ImageSpaceTintBinaryCreateTranslation
     {
         public readonly static ImageSpaceTintBinaryCreateTranslation Instance = new ImageSpaceTintBinaryCreateTranslation();
 
@@ -1085,16 +1086,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ImageSpaceTintBinaryOverlay :
+    internal partial class ImageSpaceTintBinaryOverlay :
         PluginBinaryOverlay,
         IImageSpaceTintGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceTint_Registration.Instance;
-        public static ImageSpaceTint_Registration StaticRegistration => ImageSpaceTint_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ImageSpaceTint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImageSpaceTintCommon.Instance;
         [DebuggerStepThrough]

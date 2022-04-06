@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -816,10 +817,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum TintGroup_FieldIndex
+    internal enum TintGroup_FieldIndex
     {
         Name = 0,
         Options = 1,
@@ -828,7 +829,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class TintGroup_Registration : ILoquiRegistration
+    internal partial class TintGroup_Registration : ILoquiRegistration
     {
         public static readonly TintGroup_Registration Instance = new TintGroup_Registration();
 
@@ -923,7 +924,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class TintGroupSetterCommon
+    internal partial class TintGroupSetterCommon
     {
         public static readonly TintGroupSetterCommon Instance = new TintGroupSetterCommon();
 
@@ -962,7 +963,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TintGroupCommon
+    internal partial class TintGroupCommon
     {
         public static readonly TintGroupCommon Instance = new TintGroupCommon();
 
@@ -1128,7 +1129,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TintGroupSetterTranslationCommon
+    internal partial class TintGroupSetterTranslationCommon
     {
         public static readonly TintGroupSetterTranslationCommon Instance = new TintGroupSetterTranslationCommon();
 
@@ -1234,7 +1235,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintGroup_Registration.Instance;
-        public static TintGroup_Registration StaticRegistration => TintGroup_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TintGroup_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintGroupCommon.Instance;
         [DebuggerStepThrough]
@@ -1258,7 +1259,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TintGroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1316,7 +1317,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class TintGroupBinaryCreateTranslation
+    internal partial class TintGroupBinaryCreateTranslation
     {
         public readonly static TintGroupBinaryCreateTranslation Instance = new TintGroupBinaryCreateTranslation();
 
@@ -1395,16 +1396,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class TintGroupBinaryOverlay :
+    internal partial class TintGroupBinaryOverlay :
         PluginBinaryOverlay,
         ITintGroupGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintGroup_Registration.Instance;
-        public static TintGroup_Registration StaticRegistration => TintGroup_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TintGroup_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintGroupCommon.Instance;
         [DebuggerStepThrough]

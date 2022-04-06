@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1790,10 +1791,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Scroll_FieldIndex
+    internal enum Scroll_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1829,7 +1830,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Scroll_Registration : ILoquiRegistration
+    internal partial class Scroll_Registration : ILoquiRegistration
     {
         public static readonly Scroll_Registration Instance = new Scroll_Registration();
 
@@ -1932,7 +1933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ScrollSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ScrollSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ScrollSetterCommon Instance = new ScrollSetterCommon();
 
@@ -2034,7 +2035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ScrollCommon : SkyrimMajorRecordCommon
+    internal partial class ScrollCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ScrollCommon Instance = new ScrollCommon();
 
@@ -2609,7 +2610,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ScrollSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ScrollSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ScrollSetterTranslationCommon Instance = new ScrollSetterTranslationCommon();
 
@@ -2965,7 +2966,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Scroll_Registration.Instance;
-        public new static Scroll_Registration StaticRegistration => Scroll_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Scroll_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScrollCommon.Instance;
         [DebuggerStepThrough]
@@ -2983,7 +2984,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ScrollBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -3183,7 +3184,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ScrollBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ScrollBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ScrollBinaryCreateTranslation Instance = new ScrollBinaryCreateTranslation();
 
@@ -3352,16 +3353,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ScrollBinaryOverlay :
+    internal partial class ScrollBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IScrollGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Scroll_Registration.Instance;
-        public new static Scroll_Registration StaticRegistration => Scroll_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Scroll_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScrollCommon.Instance;
         [DebuggerStepThrough]

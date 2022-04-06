@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -650,10 +651,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum TerminalHolotapeEntry_FieldIndex
+    internal enum TerminalHolotapeEntry_FieldIndex
     {
         Holotape = 0,
         Count = 1,
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class TerminalHolotapeEntry_Registration : ILoquiRegistration
+    internal partial class TerminalHolotapeEntry_Registration : ILoquiRegistration
     {
         public static readonly TerminalHolotapeEntry_Registration Instance = new TerminalHolotapeEntry_Registration();
 
@@ -742,7 +743,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class TerminalHolotapeEntrySetterCommon
+    internal partial class TerminalHolotapeEntrySetterCommon
     {
         public static readonly TerminalHolotapeEntrySetterCommon Instance = new TerminalHolotapeEntrySetterCommon();
 
@@ -783,7 +784,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TerminalHolotapeEntryCommon
+    internal partial class TerminalHolotapeEntryCommon
     {
         public static readonly TerminalHolotapeEntryCommon Instance = new TerminalHolotapeEntryCommon();
 
@@ -910,7 +911,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TerminalHolotapeEntrySetterTranslationCommon
+    internal partial class TerminalHolotapeEntrySetterTranslationCommon
     {
         public static readonly TerminalHolotapeEntrySetterTranslationCommon Instance = new TerminalHolotapeEntrySetterTranslationCommon();
 
@@ -992,7 +993,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TerminalHolotapeEntry_Registration.Instance;
-        public static TerminalHolotapeEntry_Registration StaticRegistration => TerminalHolotapeEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TerminalHolotapeEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TerminalHolotapeEntryCommon.Instance;
         [DebuggerStepThrough]
@@ -1016,7 +1017,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TerminalHolotapeEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1062,7 +1063,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class TerminalHolotapeEntryBinaryCreateTranslation
+    internal partial class TerminalHolotapeEntryBinaryCreateTranslation
     {
         public readonly static TerminalHolotapeEntryBinaryCreateTranslation Instance = new TerminalHolotapeEntryBinaryCreateTranslation();
 
@@ -1098,16 +1099,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class TerminalHolotapeEntryBinaryOverlay :
+    internal partial class TerminalHolotapeEntryBinaryOverlay :
         PluginBinaryOverlay,
         ITerminalHolotapeEntryGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TerminalHolotapeEntry_Registration.Instance;
-        public static TerminalHolotapeEntry_Registration StaticRegistration => TerminalHolotapeEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TerminalHolotapeEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TerminalHolotapeEntryCommon.Instance;
         [DebuggerStepThrough]

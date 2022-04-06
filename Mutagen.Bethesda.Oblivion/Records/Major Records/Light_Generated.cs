@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -933,10 +934,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Light_FieldIndex
+    internal enum Light_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -954,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Light_Registration : ILoquiRegistration
+    internal partial class Light_Registration : ILoquiRegistration
     {
         public static readonly Light_Registration Instance = new Light_Registration();
 
@@ -1044,7 +1045,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LightSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class LightSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly LightSetterCommon Instance = new LightSetterCommon();
 
@@ -1122,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LightCommon : OblivionMajorRecordCommon
+    internal partial class LightCommon : OblivionMajorRecordCommon
     {
         public new static readonly LightCommon Instance = new LightCommon();
 
@@ -1456,7 +1457,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LightSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class LightSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly LightSetterTranslationCommon Instance = new LightSetterTranslationCommon();
 
@@ -1683,7 +1684,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Light_Registration.Instance;
-        public new static Light_Registration StaticRegistration => Light_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Light_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LightCommon.Instance;
         [DebuggerStepThrough]
@@ -1701,7 +1702,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LightBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1819,7 +1820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LightBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class LightBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static LightBinaryCreateTranslation Instance = new LightBinaryCreateTranslation();
 
@@ -1915,16 +1916,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LightBinaryOverlay :
+    internal partial class LightBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         ILightGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Light_Registration.Instance;
-        public new static Light_Registration StaticRegistration => Light_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Light_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LightCommon.Instance;
         [DebuggerStepThrough]

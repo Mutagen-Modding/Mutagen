@@ -27,11 +27,8 @@ namespace Mutagen.Bethesda.Fallout4
         protected override ushort? FormVersionAbstract => this.FormVersion;
     }
 
-    namespace Internals
+    internal partial class Fallout4MajorRecordBinaryOverlay
     {
-        public partial class Fallout4MajorRecordBinaryOverlay
-        {
-            protected override ushort? FormVersionAbstract => this.FormVersion;
-        }
+        protected override ushort? FormVersionAbstract => this.FormVersion;
     }
 }

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1031,10 +1032,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum PlacedNpc_FieldIndex
+    internal enum PlacedNpc_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1055,7 +1056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class PlacedNpc_Registration : ILoquiRegistration
+    internal partial class PlacedNpc_Registration : ILoquiRegistration
     {
         public static readonly PlacedNpc_Registration Instance = new PlacedNpc_Registration();
 
@@ -1148,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class PlacedNpcSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class PlacedNpcSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly PlacedNpcSetterCommon Instance = new PlacedNpcSetterCommon();
 
@@ -1231,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class PlacedNpcCommon : OblivionMajorRecordCommon
+    internal partial class PlacedNpcCommon : OblivionMajorRecordCommon
     {
         public new static readonly PlacedNpcCommon Instance = new PlacedNpcCommon();
 
@@ -1622,7 +1623,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class PlacedNpcSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class PlacedNpcSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly PlacedNpcSetterTranslationCommon Instance = new PlacedNpcSetterTranslationCommon();
 
@@ -1904,7 +1905,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedNpc_Registration.Instance;
-        public new static PlacedNpc_Registration StaticRegistration => PlacedNpc_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedNpc_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedNpcCommon.Instance;
         [DebuggerStepThrough]
@@ -1922,7 +1923,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class PlacedNpcBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -2056,7 +2057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class PlacedNpcBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class PlacedNpcBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static PlacedNpcBinaryCreateTranslation Instance = new PlacedNpcBinaryCreateTranslation();
 
@@ -2164,16 +2165,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class PlacedNpcBinaryOverlay :
+    internal partial class PlacedNpcBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IPlacedNpcGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedNpc_Registration.Instance;
-        public new static PlacedNpc_Registration StaticRegistration => PlacedNpc_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedNpc_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedNpcCommon.Instance;
         [DebuggerStepThrough]

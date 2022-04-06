@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -719,10 +720,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum MapMarker_FieldIndex
+    internal enum MapMarker_FieldIndex
     {
         Flags = 0,
         Name = 1,
@@ -731,7 +732,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class MapMarker_Registration : ILoquiRegistration
+    internal partial class MapMarker_Registration : ILoquiRegistration
     {
         public static readonly MapMarker_Registration Instance = new MapMarker_Registration();
 
@@ -816,7 +817,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MapMarkerSetterCommon
+    internal partial class MapMarkerSetterCommon
     {
         public static readonly MapMarkerSetterCommon Instance = new MapMarkerSetterCommon();
 
@@ -854,7 +855,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MapMarkerCommon
+    internal partial class MapMarkerCommon
     {
         public static readonly MapMarkerCommon Instance = new MapMarkerCommon();
 
@@ -994,7 +995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MapMarkerSetterTranslationCommon
+    internal partial class MapMarkerSetterTranslationCommon
     {
         public static readonly MapMarkerSetterTranslationCommon Instance = new MapMarkerSetterTranslationCommon();
 
@@ -1080,7 +1081,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
-        public static MapMarker_Registration StaticRegistration => MapMarker_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MapMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MapMarkerCommon.Instance;
         [DebuggerStepThrough]
@@ -1104,7 +1105,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MapMarkerBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1157,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class MapMarkerBinaryCreateTranslation
+    internal partial class MapMarkerBinaryCreateTranslation
     {
         public readonly static MapMarkerBinaryCreateTranslation Instance = new MapMarkerBinaryCreateTranslation();
 
@@ -1234,16 +1235,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MapMarkerBinaryOverlay :
+    internal partial class MapMarkerBinaryOverlay :
         PluginBinaryOverlay,
         IMapMarkerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
-        public static MapMarker_Registration StaticRegistration => MapMarker_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MapMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MapMarkerCommon.Instance;
         [DebuggerStepThrough]

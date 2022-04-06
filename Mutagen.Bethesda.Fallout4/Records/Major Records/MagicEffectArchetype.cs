@@ -65,15 +65,12 @@ namespace Mutagen.Bethesda.Fallout4
         }
     }
 
-    namespace Internals
+    internal partial class MagicEffectArchetypeBinaryOverlay
     {
-        public partial class MagicEffectArchetypeBinaryOverlay
-        {
-            public MagicEffectArchetype.TypeEnum Type => throw new NotImplementedException();
+        public MagicEffectArchetype.TypeEnum Type => throw new NotImplementedException();
 
-            public FormKey AssociationKey => throw new NotImplementedException();
+        public FormKey AssociationKey => throw new NotImplementedException();
 
-            public IFormLinkGetter<IActorValueInformationGetter> ActorValue => throw new NotImplementedException();
-        }
+        public IFormLinkGetter<IActorValueInformationGetter> ActorValue => throw new NotImplementedException();
     }
 }

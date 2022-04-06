@@ -9,7 +9,7 @@ using Mutagen.Bethesda.Plugins.Internals;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay;
 
-public abstract class BinaryOverlayList
+internal abstract class BinaryOverlayList
 {
     public static IReadOnlyList<T> FactoryByArray<T>(
         ReadOnlyMemorySlice<byte> mem,

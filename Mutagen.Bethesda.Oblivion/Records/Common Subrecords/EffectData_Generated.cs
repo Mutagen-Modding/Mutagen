@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -782,10 +783,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum EffectData_FieldIndex
+    internal enum EffectData_FieldIndex
     {
         MagicEffect = 0,
         Magnitude = 1,
@@ -797,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class EffectData_Registration : ILoquiRegistration
+    internal partial class EffectData_Registration : ILoquiRegistration
     {
         public static readonly EffectData_Registration Instance = new EffectData_Registration();
 
@@ -878,7 +879,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class EffectDataSetterCommon
+    internal partial class EffectDataSetterCommon
     {
         public static readonly EffectDataSetterCommon Instance = new EffectDataSetterCommon();
 
@@ -922,7 +923,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class EffectDataCommon
+    internal partial class EffectDataCommon
     {
         public static readonly EffectDataCommon Instance = new EffectDataCommon();
 
@@ -1088,7 +1089,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class EffectDataSetterTranslationCommon
+    internal partial class EffectDataSetterTranslationCommon
     {
         public static readonly EffectDataSetterTranslationCommon Instance = new EffectDataSetterTranslationCommon();
 
@@ -1186,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectData_Registration.Instance;
-        public static EffectData_Registration StaticRegistration => EffectData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EffectData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EffectDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1210,7 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class EffectDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1266,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class EffectDataBinaryCreateTranslation
+    internal partial class EffectDataBinaryCreateTranslation
     {
         public readonly static EffectDataBinaryCreateTranslation Instance = new EffectDataBinaryCreateTranslation();
 
@@ -1310,16 +1311,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class EffectDataBinaryOverlay :
+    internal partial class EffectDataBinaryOverlay :
         PluginBinaryOverlay,
         IEffectDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectData_Registration.Instance;
-        public static EffectData_Registration StaticRegistration => EffectData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EffectData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EffectDataCommon.Instance;
         [DebuggerStepThrough]

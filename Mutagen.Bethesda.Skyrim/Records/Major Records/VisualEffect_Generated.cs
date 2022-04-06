@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -776,10 +777,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum VisualEffect_FieldIndex
+    internal enum VisualEffect_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -795,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class VisualEffect_Registration : ILoquiRegistration
+    internal partial class VisualEffect_Registration : ILoquiRegistration
     {
         public static readonly VisualEffect_Registration Instance = new VisualEffect_Registration();
 
@@ -879,7 +880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class VisualEffectSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class VisualEffectSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly VisualEffectSetterCommon Instance = new VisualEffectSetterCommon();
 
@@ -954,7 +955,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class VisualEffectCommon : SkyrimMajorRecordCommon
+    internal partial class VisualEffectCommon : SkyrimMajorRecordCommon
     {
         public new static readonly VisualEffectCommon Instance = new VisualEffectCommon();
 
@@ -1218,7 +1219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class VisualEffectSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class VisualEffectSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly VisualEffectSetterTranslationCommon Instance = new VisualEffectSetterTranslationCommon();
 
@@ -1389,7 +1390,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VisualEffect_Registration.Instance;
-        public new static VisualEffect_Registration StaticRegistration => VisualEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => VisualEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VisualEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1407,7 +1408,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class VisualEffectBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1511,7 +1512,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class VisualEffectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class VisualEffectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static VisualEffectBinaryCreateTranslation Instance = new VisualEffectBinaryCreateTranslation();
 
@@ -1572,16 +1573,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class VisualEffectBinaryOverlay :
+    internal partial class VisualEffectBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IVisualEffectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VisualEffect_Registration.Instance;
-        public new static VisualEffect_Registration StaticRegistration => VisualEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => VisualEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VisualEffectCommon.Instance;
         [DebuggerStepThrough]

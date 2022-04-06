@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -652,10 +653,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Ownership_FieldIndex
+    internal enum Ownership_FieldIndex
     {
         Owner = 0,
         FactionRank = 1,
@@ -663,7 +664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Ownership_Registration : ILoquiRegistration
+    internal partial class Ownership_Registration : ILoquiRegistration
     {
         public static readonly Ownership_Registration Instance = new Ownership_Registration();
 
@@ -745,7 +746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class OwnershipSetterCommon
+    internal partial class OwnershipSetterCommon
     {
         public static readonly OwnershipSetterCommon Instance = new OwnershipSetterCommon();
 
@@ -783,7 +784,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class OwnershipCommon
+    internal partial class OwnershipCommon
     {
         public static readonly OwnershipCommon Instance = new OwnershipCommon();
 
@@ -917,7 +918,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class OwnershipSetterTranslationCommon
+    internal partial class OwnershipSetterTranslationCommon
     {
         public static readonly OwnershipSetterTranslationCommon Instance = new OwnershipSetterTranslationCommon();
 
@@ -999,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ownership_Registration.Instance;
-        public static Ownership_Registration StaticRegistration => Ownership_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Ownership_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => OwnershipCommon.Instance;
         [DebuggerStepThrough]
@@ -1023,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class OwnershipBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1068,7 +1069,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class OwnershipBinaryCreateTranslation
+    internal partial class OwnershipBinaryCreateTranslation
     {
         public readonly static OwnershipBinaryCreateTranslation Instance = new OwnershipBinaryCreateTranslation();
 
@@ -1133,16 +1134,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class OwnershipBinaryOverlay :
+    internal partial class OwnershipBinaryOverlay :
         PluginBinaryOverlay,
         IOwnershipGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ownership_Registration.Instance;
-        public static Ownership_Registration StaticRegistration => Ownership_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Ownership_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => OwnershipCommon.Instance;
         [DebuggerStepThrough]

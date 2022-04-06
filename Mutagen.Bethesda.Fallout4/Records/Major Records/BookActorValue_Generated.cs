@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -568,17 +569,17 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum BookActorValue_FieldIndex
+    internal enum BookActorValue_FieldIndex
     {
         ActorValue = 0,
     }
     #endregion
 
     #region Registration
-    public partial class BookActorValue_Registration : ILoquiRegistration
+    internal partial class BookActorValue_Registration : ILoquiRegistration
     {
         public static readonly BookActorValue_Registration Instance = new BookActorValue_Registration();
 
@@ -652,7 +653,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class BookActorValueSetterCommon : BookTeachTargetSetterCommon
+    internal partial class BookActorValueSetterCommon : BookTeachTargetSetterCommon
     {
         public new static readonly BookActorValueSetterCommon Instance = new BookActorValueSetterCommon();
 
@@ -706,7 +707,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class BookActorValueCommon : BookTeachTargetCommon
+    internal partial class BookActorValueCommon : BookTeachTargetCommon
     {
         public new static readonly BookActorValueCommon Instance = new BookActorValueCommon();
 
@@ -859,7 +860,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class BookActorValueSetterTranslationCommon : BookTeachTargetSetterTranslationCommon
+    internal partial class BookActorValueSetterTranslationCommon : BookTeachTargetSetterTranslationCommon
     {
         public new static readonly BookActorValueSetterTranslationCommon Instance = new BookActorValueSetterTranslationCommon();
 
@@ -959,7 +960,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookActorValue_Registration.Instance;
-        public new static BookActorValue_Registration StaticRegistration => BookActorValue_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => BookActorValue_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookActorValueCommon.Instance;
         [DebuggerStepThrough]
@@ -977,7 +978,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class BookActorValueBinaryWriteTranslation :
         BookTeachTargetBinaryWriteTranslation,
@@ -1028,7 +1029,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class BookActorValueBinaryCreateTranslation : BookTeachTargetBinaryCreateTranslation
+    internal partial class BookActorValueBinaryCreateTranslation : BookTeachTargetBinaryCreateTranslation
     {
         public new readonly static BookActorValueBinaryCreateTranslation Instance = new BookActorValueBinaryCreateTranslation();
 
@@ -1052,16 +1053,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class BookActorValueBinaryOverlay :
+    internal partial class BookActorValueBinaryOverlay :
         BookTeachTargetBinaryOverlay,
         IBookActorValueGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookActorValue_Registration.Instance;
-        public new static BookActorValue_Registration StaticRegistration => BookActorValue_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => BookActorValue_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookActorValueCommon.Instance;
         [DebuggerStepThrough]

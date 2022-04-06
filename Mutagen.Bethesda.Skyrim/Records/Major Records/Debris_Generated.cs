@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -740,10 +741,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Debris_FieldIndex
+    internal enum Debris_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -756,7 +757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Debris_Registration : ILoquiRegistration
+    internal partial class Debris_Registration : ILoquiRegistration
     {
         public static readonly Debris_Registration Instance = new Debris_Registration();
 
@@ -841,7 +842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class DebrisSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class DebrisSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly DebrisSetterCommon Instance = new DebrisSetterCommon();
 
@@ -911,7 +912,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DebrisCommon : SkyrimMajorRecordCommon
+    internal partial class DebrisCommon : SkyrimMajorRecordCommon
     {
         public new static readonly DebrisCommon Instance = new DebrisCommon();
 
@@ -1160,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DebrisSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class DebrisSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly DebrisSetterTranslationCommon Instance = new DebrisSetterTranslationCommon();
 
@@ -1339,7 +1340,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Debris_Registration.Instance;
-        public new static Debris_Registration StaticRegistration => Debris_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Debris_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DebrisCommon.Instance;
         [DebuggerStepThrough]
@@ -1357,7 +1358,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DebrisBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1450,7 +1451,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class DebrisBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class DebrisBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static DebrisBinaryCreateTranslation Instance = new DebrisBinaryCreateTranslation();
 
@@ -1510,16 +1511,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class DebrisBinaryOverlay :
+    internal partial class DebrisBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IDebrisGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Debris_Registration.Instance;
-        public new static Debris_Registration StaticRegistration => Debris_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Debris_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DebrisCommon.Instance;
         [DebuggerStepThrough]

@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -602,10 +603,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum FormList_FieldIndex
+    internal enum FormList_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -617,7 +618,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class FormList_Registration : ILoquiRegistration
+    internal partial class FormList_Registration : ILoquiRegistration
     {
         public static readonly FormList_Registration Instance = new FormList_Registration();
 
@@ -698,7 +699,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class FormListSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class FormListSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly FormListSetterCommon Instance = new FormListSetterCommon();
 
@@ -767,7 +768,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class FormListCommon : Fallout4MajorRecordCommon
+    internal partial class FormListCommon : Fallout4MajorRecordCommon
     {
         public new static readonly FormListCommon Instance = new FormListCommon();
 
@@ -989,7 +990,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class FormListSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class FormListSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly FormListSetterTranslationCommon Instance = new FormListSetterTranslationCommon();
 
@@ -1144,7 +1145,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FormList_Registration.Instance;
-        public new static FormList_Registration StaticRegistration => FormList_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => FormList_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FormListCommon.Instance;
         [DebuggerStepThrough]
@@ -1162,7 +1163,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class FormListBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -1231,7 +1232,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class FormListBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class FormListBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static FormListBinaryCreateTranslation Instance = new FormListBinaryCreateTranslation();
 
@@ -1258,16 +1259,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class FormListBinaryOverlay :
+    internal partial class FormListBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IFormListGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FormList_Registration.Instance;
-        public new static FormList_Registration StaticRegistration => FormList_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => FormList_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FormListCommon.Instance;
         [DebuggerStepThrough]

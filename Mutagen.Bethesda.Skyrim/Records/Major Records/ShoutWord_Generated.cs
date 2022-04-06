@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -690,10 +691,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ShoutWord_FieldIndex
+    internal enum ShoutWord_FieldIndex
     {
         Word = 0,
         Spell = 1,
@@ -702,7 +703,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ShoutWord_Registration : ILoquiRegistration
+    internal partial class ShoutWord_Registration : ILoquiRegistration
     {
         public static readonly ShoutWord_Registration Instance = new ShoutWord_Registration();
 
@@ -783,7 +784,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ShoutWordSetterCommon
+    internal partial class ShoutWordSetterCommon
     {
         public static readonly ShoutWordSetterCommon Instance = new ShoutWordSetterCommon();
 
@@ -826,7 +827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ShoutWordCommon
+    internal partial class ShoutWordCommon
     {
         public static readonly ShoutWordCommon Instance = new ShoutWordCommon();
 
@@ -964,7 +965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ShoutWordSetterTranslationCommon
+    internal partial class ShoutWordSetterTranslationCommon
     {
         public static readonly ShoutWordSetterTranslationCommon Instance = new ShoutWordSetterTranslationCommon();
 
@@ -1050,7 +1051,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ShoutWord_Registration.Instance;
-        public static ShoutWord_Registration StaticRegistration => ShoutWord_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ShoutWord_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ShoutWordCommon.Instance;
         [DebuggerStepThrough]
@@ -1074,7 +1075,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ShoutWordBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1125,7 +1126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ShoutWordBinaryCreateTranslation
+    internal partial class ShoutWordBinaryCreateTranslation
     {
         public readonly static ShoutWordBinaryCreateTranslation Instance = new ShoutWordBinaryCreateTranslation();
 
@@ -1162,16 +1163,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ShoutWordBinaryOverlay :
+    internal partial class ShoutWordBinaryOverlay :
         PluginBinaryOverlay,
         IShoutWordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ShoutWord_Registration.Instance;
-        public static ShoutWord_Registration StaticRegistration => ShoutWord_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ShoutWord_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ShoutWordCommon.Instance;
         [DebuggerStepThrough]

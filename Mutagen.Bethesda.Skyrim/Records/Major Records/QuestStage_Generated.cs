@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -833,10 +834,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum QuestStage_FieldIndex
+    internal enum QuestStage_FieldIndex
     {
         Index = 0,
         Flags = 1,
@@ -847,7 +848,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class QuestStage_Registration : ILoquiRegistration
+    internal partial class QuestStage_Registration : ILoquiRegistration
     {
         public static readonly QuestStage_Registration Instance = new QuestStage_Registration();
 
@@ -939,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class QuestStageSetterCommon
+    internal partial class QuestStageSetterCommon
     {
         public static readonly QuestStageSetterCommon Instance = new QuestStageSetterCommon();
 
@@ -980,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class QuestStageCommon
+    internal partial class QuestStageCommon
     {
         public static readonly QuestStageCommon Instance = new QuestStageCommon();
 
@@ -1157,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class QuestStageSetterTranslationCommon
+    internal partial class QuestStageSetterTranslationCommon
     {
         public static readonly QuestStageSetterTranslationCommon Instance = new QuestStageSetterTranslationCommon();
 
@@ -1271,7 +1272,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestStage_Registration.Instance;
-        public static QuestStage_Registration StaticRegistration => QuestStage_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => QuestStage_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestStageCommon.Instance;
         [DebuggerStepThrough]
@@ -1295,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class QuestStageBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1361,7 +1362,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class QuestStageBinaryCreateTranslation
+    internal partial class QuestStageBinaryCreateTranslation
     {
         public readonly static QuestStageBinaryCreateTranslation Instance = new QuestStageBinaryCreateTranslation();
 
@@ -1440,16 +1441,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class QuestStageBinaryOverlay :
+    internal partial class QuestStageBinaryOverlay :
         PluginBinaryOverlay,
         IQuestStageGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestStage_Registration.Instance;
-        public static QuestStage_Registration StaticRegistration => QuestStage_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => QuestStage_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestStageCommon.Instance;
         [DebuggerStepThrough]

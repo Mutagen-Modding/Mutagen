@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -771,10 +772,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CloudLayer_FieldIndex
+    internal enum CloudLayer_FieldIndex
     {
         Enabled = 0,
         XSpeed = 1,
@@ -785,7 +786,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CloudLayer_Registration : ILoquiRegistration
+    internal partial class CloudLayer_Registration : ILoquiRegistration
     {
         public static readonly CloudLayer_Registration Instance = new CloudLayer_Registration();
 
@@ -859,7 +860,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CloudLayerSetterCommon
+    internal partial class CloudLayerSetterCommon
     {
         public static readonly CloudLayerSetterCommon Instance = new CloudLayerSetterCommon();
 
@@ -898,7 +899,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CloudLayerCommon
+    internal partial class CloudLayerCommon
     {
         public static readonly CloudLayerCommon Instance = new CloudLayerCommon();
 
@@ -1090,7 +1091,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CloudLayerSetterTranslationCommon
+    internal partial class CloudLayerSetterTranslationCommon
     {
         public static readonly CloudLayerSetterTranslationCommon Instance = new CloudLayerSetterTranslationCommon();
 
@@ -1228,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CloudLayer_Registration.Instance;
-        public static CloudLayer_Registration StaticRegistration => CloudLayer_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CloudLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CloudLayerCommon.Instance;
         [DebuggerStepThrough]
@@ -1252,7 +1253,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CloudLayerBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1287,7 +1288,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CloudLayerBinaryCreateTranslation
+    internal partial class CloudLayerBinaryCreateTranslation
     {
         public readonly static CloudLayerBinaryCreateTranslation Instance = new CloudLayerBinaryCreateTranslation();
 
@@ -1321,16 +1322,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CloudLayerBinaryOverlay :
+    internal partial class CloudLayerBinaryOverlay :
         PluginBinaryOverlay,
         ICloudLayerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CloudLayer_Registration.Instance;
-        public static CloudLayer_Registration StaticRegistration => CloudLayer_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CloudLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CloudLayerCommon.Instance;
         [DebuggerStepThrough]

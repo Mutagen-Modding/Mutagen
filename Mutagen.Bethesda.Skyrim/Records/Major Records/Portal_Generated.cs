@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -657,10 +658,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Portal_FieldIndex
+    internal enum Portal_FieldIndex
     {
         Origin = 0,
         Destination = 1,
@@ -668,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Portal_Registration : ILoquiRegistration
+    internal partial class Portal_Registration : ILoquiRegistration
     {
         public static readonly Portal_Registration Instance = new Portal_Registration();
 
@@ -742,7 +743,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PortalSetterCommon
+    internal partial class PortalSetterCommon
     {
         public static readonly PortalSetterCommon Instance = new PortalSetterCommon();
 
@@ -780,7 +781,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PortalCommon
+    internal partial class PortalCommon
     {
         public static readonly PortalCommon Instance = new PortalCommon();
 
@@ -908,7 +909,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PortalSetterTranslationCommon
+    internal partial class PortalSetterTranslationCommon
     {
         public static readonly PortalSetterTranslationCommon Instance = new PortalSetterTranslationCommon();
 
@@ -990,7 +991,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Portal_Registration.Instance;
-        public static Portal_Registration StaticRegistration => Portal_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Portal_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PortalCommon.Instance;
         [DebuggerStepThrough]
@@ -1014,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PortalBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1055,7 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PortalBinaryCreateTranslation
+    internal partial class PortalBinaryCreateTranslation
     {
         public readonly static PortalBinaryCreateTranslation Instance = new PortalBinaryCreateTranslation();
 
@@ -1091,16 +1092,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PortalBinaryOverlay :
+    internal partial class PortalBinaryOverlay :
         PluginBinaryOverlay,
         IPortalGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Portal_Registration.Instance;
-        public static Portal_Registration StaticRegistration => Portal_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Portal_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PortalCommon.Instance;
         [DebuggerStepThrough]

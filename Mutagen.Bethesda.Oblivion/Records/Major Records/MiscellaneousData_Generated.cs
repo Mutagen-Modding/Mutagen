@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -635,10 +636,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum MiscellaneousData_FieldIndex
+    internal enum MiscellaneousData_FieldIndex
     {
         Value = 0,
         Weight = 1,
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class MiscellaneousData_Registration : ILoquiRegistration
+    internal partial class MiscellaneousData_Registration : ILoquiRegistration
     {
         public static readonly MiscellaneousData_Registration Instance = new MiscellaneousData_Registration();
 
@@ -727,7 +728,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class MiscellaneousDataSetterCommon
+    internal partial class MiscellaneousDataSetterCommon
     {
         public static readonly MiscellaneousDataSetterCommon Instance = new MiscellaneousDataSetterCommon();
 
@@ -767,7 +768,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class MiscellaneousDataCommon
+    internal partial class MiscellaneousDataCommon
     {
         public static readonly MiscellaneousDataCommon Instance = new MiscellaneousDataCommon();
 
@@ -893,7 +894,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class MiscellaneousDataSetterTranslationCommon
+    internal partial class MiscellaneousDataSetterTranslationCommon
     {
         public static readonly MiscellaneousDataSetterTranslationCommon Instance = new MiscellaneousDataSetterTranslationCommon();
 
@@ -975,7 +976,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MiscellaneousData_Registration.Instance;
-        public static MiscellaneousData_Registration StaticRegistration => MiscellaneousData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MiscellaneousData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MiscellaneousDataCommon.Instance;
         [DebuggerStepThrough]
@@ -999,7 +1000,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class MiscellaneousDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1045,7 +1046,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class MiscellaneousDataBinaryCreateTranslation
+    internal partial class MiscellaneousDataBinaryCreateTranslation
     {
         public readonly static MiscellaneousDataBinaryCreateTranslation Instance = new MiscellaneousDataBinaryCreateTranslation();
 
@@ -1081,16 +1082,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class MiscellaneousDataBinaryOverlay :
+    internal partial class MiscellaneousDataBinaryOverlay :
         PluginBinaryOverlay,
         IMiscellaneousDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MiscellaneousData_Registration.Instance;
-        public static MiscellaneousData_Registration StaticRegistration => MiscellaneousData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MiscellaneousData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MiscellaneousDataCommon.Instance;
         [DebuggerStepThrough]

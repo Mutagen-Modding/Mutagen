@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -780,10 +781,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PackageScriptFragments_FieldIndex
+    internal enum PackageScriptFragments_FieldIndex
     {
         Unknown = 0,
         FileName = 1,
@@ -794,7 +795,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PackageScriptFragments_Registration : ILoquiRegistration
+    internal partial class PackageScriptFragments_Registration : ILoquiRegistration
     {
         public static readonly PackageScriptFragments_Registration Instance = new PackageScriptFragments_Registration();
 
@@ -868,7 +869,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PackageScriptFragmentsSetterCommon
+    internal partial class PackageScriptFragmentsSetterCommon
     {
         public static readonly PackageScriptFragmentsSetterCommon Instance = new PackageScriptFragmentsSetterCommon();
 
@@ -907,7 +908,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageScriptFragmentsCommon
+    internal partial class PackageScriptFragmentsCommon
     {
         public static readonly PackageScriptFragmentsCommon Instance = new PackageScriptFragmentsCommon();
 
@@ -1099,7 +1100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageScriptFragmentsSetterTranslationCommon
+    internal partial class PackageScriptFragmentsSetterTranslationCommon
     {
         public static readonly PackageScriptFragmentsSetterTranslationCommon Instance = new PackageScriptFragmentsSetterTranslationCommon();
 
@@ -1259,7 +1260,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageScriptFragments_Registration.Instance;
-        public static PackageScriptFragments_Registration StaticRegistration => PackageScriptFragments_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PackageScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]
@@ -1283,7 +1284,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageScriptFragmentsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1335,7 +1336,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PackageScriptFragmentsBinaryCreateTranslation
+    internal partial class PackageScriptFragmentsBinaryCreateTranslation
     {
         public readonly static PackageScriptFragmentsBinaryCreateTranslation Instance = new PackageScriptFragmentsBinaryCreateTranslation();
 
@@ -1377,16 +1378,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageScriptFragmentsBinaryOverlay :
+    internal partial class PackageScriptFragmentsBinaryOverlay :
         PluginBinaryOverlay,
         IPackageScriptFragmentsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageScriptFragments_Registration.Instance;
-        public static PackageScriptFragments_Registration StaticRegistration => PackageScriptFragments_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PackageScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]

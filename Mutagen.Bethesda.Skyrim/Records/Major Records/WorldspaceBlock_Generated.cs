@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1114,10 +1115,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WorldspaceBlock_FieldIndex
+    internal enum WorldspaceBlock_FieldIndex
     {
         BlockNumberY = 0,
         BlockNumberX = 1,
@@ -1129,7 +1130,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WorldspaceBlock_Registration : ILoquiRegistration
+    internal partial class WorldspaceBlock_Registration : ILoquiRegistration
     {
         public static readonly WorldspaceBlock_Registration Instance = new WorldspaceBlock_Registration();
 
@@ -1204,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WorldspaceBlockSetterCommon
+    internal partial class WorldspaceBlockSetterCommon
     {
         public static readonly WorldspaceBlockSetterCommon Instance = new WorldspaceBlockSetterCommon();
 
@@ -1470,7 +1471,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceBlockCommon
+    internal partial class WorldspaceBlockCommon
     {
         public static readonly WorldspaceBlockCommon Instance = new WorldspaceBlockCommon();
 
@@ -1804,7 +1805,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceBlockSetterTranslationCommon
+    internal partial class WorldspaceBlockSetterTranslationCommon
     {
         public static readonly WorldspaceBlockSetterTranslationCommon Instance = new WorldspaceBlockSetterTranslationCommon();
 
@@ -1922,7 +1923,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceBlock_Registration.Instance;
-        public static WorldspaceBlock_Registration StaticRegistration => WorldspaceBlock_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceBlockCommon.Instance;
         [DebuggerStepThrough]
@@ -1946,7 +1947,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceBlockBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -2016,7 +2017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WorldspaceBlockBinaryCreateTranslation
+    internal partial class WorldspaceBlockBinaryCreateTranslation
     {
         public readonly static WorldspaceBlockBinaryCreateTranslation Instance = new WorldspaceBlockBinaryCreateTranslation();
 
@@ -2085,16 +2086,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WorldspaceBlockBinaryOverlay :
+    internal partial class WorldspaceBlockBinaryOverlay :
         PluginBinaryOverlay,
         IWorldspaceBlockGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceBlock_Registration.Instance;
-        public static WorldspaceBlock_Registration StaticRegistration => WorldspaceBlock_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceBlockCommon.Instance;
         [DebuggerStepThrough]

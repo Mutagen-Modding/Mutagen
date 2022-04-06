@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1859,10 +1860,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Activator_FieldIndex
+    internal enum Activator_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1895,7 +1896,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Activator_Registration : ILoquiRegistration
+    internal partial class Activator_Registration : ILoquiRegistration
     {
         public static readonly Activator_Registration Instance = new Activator_Registration();
 
@@ -2007,7 +2008,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ActivatorSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class ActivatorSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly ActivatorSetterCommon Instance = new ActivatorSetterCommon();
 
@@ -2113,7 +2114,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ActivatorCommon : Fallout4MajorRecordCommon
+    internal partial class ActivatorCommon : Fallout4MajorRecordCommon
     {
         public new static readonly ActivatorCommon Instance = new ActivatorCommon();
 
@@ -2768,7 +2769,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ActivatorSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class ActivatorSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly ActivatorSetterTranslationCommon Instance = new ActivatorSetterTranslationCommon();
 
@@ -3214,7 +3215,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Activator_Registration.Instance;
-        public new static Activator_Registration StaticRegistration => Activator_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Activator_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActivatorCommon.Instance;
         [DebuggerStepThrough]
@@ -3232,7 +3233,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ActivatorBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -3444,7 +3445,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ActivatorBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class ActivatorBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static ActivatorBinaryCreateTranslation Instance = new ActivatorBinaryCreateTranslation();
 
@@ -3649,16 +3650,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ActivatorBinaryOverlay :
+    internal partial class ActivatorBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IActivatorGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Activator_Registration.Instance;
-        public new static Activator_Registration StaticRegistration => Activator_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Activator_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActivatorCommon.Instance;
         [DebuggerStepThrough]

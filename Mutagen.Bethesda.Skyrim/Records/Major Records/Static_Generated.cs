@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1021,10 +1022,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Static_FieldIndex
+    internal enum Static_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1044,7 +1045,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Static_Registration : ILoquiRegistration
+    internal partial class Static_Registration : ILoquiRegistration
     {
         public static readonly Static_Registration Instance = new Static_Registration();
 
@@ -1131,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class StaticSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class StaticSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly StaticSetterCommon Instance = new StaticSetterCommon();
 
@@ -1210,7 +1211,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class StaticCommon : SkyrimMajorRecordCommon
+    internal partial class StaticCommon : SkyrimMajorRecordCommon
     {
         public new static readonly StaticCommon Instance = new StaticCommon();
 
@@ -1548,7 +1549,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class StaticSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class StaticSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly StaticSetterTranslationCommon Instance = new StaticSetterTranslationCommon();
 
@@ -1797,7 +1798,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Static_Registration.Instance;
-        public new static Static_Registration StaticRegistration => Static_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Static_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => StaticCommon.Instance;
         [DebuggerStepThrough]
@@ -1815,7 +1816,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class StaticBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1944,7 +1945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class StaticBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class StaticBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static StaticBinaryCreateTranslation Instance = new StaticBinaryCreateTranslation();
 
@@ -2028,16 +2029,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class StaticBinaryOverlay :
+    internal partial class StaticBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IStaticGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Static_Registration.Instance;
-        public new static Static_Registration StaticRegistration => Static_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Static_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => StaticCommon.Instance;
         [DebuggerStepThrough]

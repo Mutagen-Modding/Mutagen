@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -776,10 +777,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum DialogBranch_FieldIndex
+    internal enum DialogBranch_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -795,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class DialogBranch_Registration : ILoquiRegistration
+    internal partial class DialogBranch_Registration : ILoquiRegistration
     {
         public static readonly DialogBranch_Registration Instance = new DialogBranch_Registration();
 
@@ -882,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class DialogBranchSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class DialogBranchSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly DialogBranchSetterCommon Instance = new DialogBranchSetterCommon();
 
@@ -957,7 +958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DialogBranchCommon : SkyrimMajorRecordCommon
+    internal partial class DialogBranchCommon : SkyrimMajorRecordCommon
     {
         public new static readonly DialogBranchCommon Instance = new DialogBranchCommon();
 
@@ -1232,7 +1233,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DialogBranchSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class DialogBranchSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly DialogBranchSetterTranslationCommon Instance = new DialogBranchSetterTranslationCommon();
 
@@ -1403,7 +1404,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogBranch_Registration.Instance;
-        public new static DialogBranch_Registration StaticRegistration => DialogBranch_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => DialogBranch_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogBranchCommon.Instance;
         [DebuggerStepThrough]
@@ -1421,7 +1422,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DialogBranchBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1520,7 +1521,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class DialogBranchBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class DialogBranchBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static DialogBranchBinaryCreateTranslation Instance = new DialogBranchBinaryCreateTranslation();
 
@@ -1596,16 +1597,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class DialogBranchBinaryOverlay :
+    internal partial class DialogBranchBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IDialogBranchGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogBranch_Registration.Instance;
-        public new static DialogBranch_Registration StaticRegistration => DialogBranch_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => DialogBranch_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogBranchCommon.Instance;
         [DebuggerStepThrough]

@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1193,10 +1194,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum MusicTrack_FieldIndex
+    internal enum MusicTrack_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1217,7 +1218,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class MusicTrack_Registration : ILoquiRegistration
+    internal partial class MusicTrack_Registration : ILoquiRegistration
     {
         public static readonly MusicTrack_Registration Instance = new MusicTrack_Registration();
 
@@ -1312,7 +1313,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class MusicTrackSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class MusicTrackSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly MusicTrackSetterCommon Instance = new MusicTrackSetterCommon();
 
@@ -1392,7 +1393,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MusicTrackCommon : Fallout4MajorRecordCommon
+    internal partial class MusicTrackCommon : Fallout4MajorRecordCommon
     {
         public new static readonly MusicTrackCommon Instance = new MusicTrackCommon();
 
@@ -1801,7 +1802,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MusicTrackSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class MusicTrackSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly MusicTrackSetterTranslationCommon Instance = new MusicTrackSetterTranslationCommon();
 
@@ -2087,7 +2088,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MusicTrack_Registration.Instance;
-        public new static MusicTrack_Registration StaticRegistration => MusicTrack_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MusicTrack_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MusicTrackCommon.Instance;
         [DebuggerStepThrough]
@@ -2105,7 +2106,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MusicTrackBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -2245,7 +2246,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class MusicTrackBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class MusicTrackBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static MusicTrackBinaryCreateTranslation Instance = new MusicTrackBinaryCreateTranslation();
 
@@ -2370,16 +2371,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class MusicTrackBinaryOverlay :
+    internal partial class MusicTrackBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IMusicTrackGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MusicTrack_Registration.Instance;
-        public new static MusicTrack_Registration StaticRegistration => MusicTrack_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MusicTrack_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MusicTrackCommon.Instance;
         [DebuggerStepThrough]

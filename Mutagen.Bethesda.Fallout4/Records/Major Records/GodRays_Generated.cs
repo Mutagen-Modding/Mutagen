@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -600,10 +601,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum GodRays_FieldIndex
+    internal enum GodRays_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -615,7 +616,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class GodRays_Registration : ILoquiRegistration
+    internal partial class GodRays_Registration : ILoquiRegistration
     {
         public static readonly GodRays_Registration Instance = new GodRays_Registration();
 
@@ -696,7 +697,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class GodRaysSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class GodRaysSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly GodRaysSetterCommon Instance = new GodRaysSetterCommon();
 
@@ -765,7 +766,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class GodRaysCommon : Fallout4MajorRecordCommon
+    internal partial class GodRaysCommon : Fallout4MajorRecordCommon
     {
         public new static readonly GodRaysCommon Instance = new GodRaysCommon();
 
@@ -987,7 +988,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class GodRaysSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class GodRaysSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly GodRaysSetterTranslationCommon Instance = new GodRaysSetterTranslationCommon();
 
@@ -1142,7 +1143,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GodRays_Registration.Instance;
-        public new static GodRays_Registration StaticRegistration => GodRays_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GodRays_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GodRaysCommon.Instance;
         [DebuggerStepThrough]
@@ -1160,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class GodRaysBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -1229,7 +1230,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class GodRaysBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class GodRaysBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static GodRaysBinaryCreateTranslation Instance = new GodRaysBinaryCreateTranslation();
 
@@ -1256,16 +1257,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class GodRaysBinaryOverlay :
+    internal partial class GodRaysBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IGodRaysGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GodRays_Registration.Instance;
-        public new static GodRays_Registration StaticRegistration => GodRays_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GodRays_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GodRaysCommon.Instance;
         [DebuggerStepThrough]

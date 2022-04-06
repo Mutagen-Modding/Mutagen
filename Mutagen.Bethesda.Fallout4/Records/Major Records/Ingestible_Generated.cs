@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1745,10 +1746,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Ingestible_FieldIndex
+    internal enum Ingestible_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1781,7 +1782,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Ingestible_Registration : ILoquiRegistration
+    internal partial class Ingestible_Registration : ILoquiRegistration
     {
         public static readonly Ingestible_Registration Instance = new Ingestible_Registration();
 
@@ -1890,7 +1891,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class IngestibleSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class IngestibleSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly IngestibleSetterCommon Instance = new IngestibleSetterCommon();
 
@@ -1991,7 +1992,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class IngestibleCommon : Fallout4MajorRecordCommon
+    internal partial class IngestibleCommon : Fallout4MajorRecordCommon
     {
         public new static readonly IngestibleCommon Instance = new IngestibleCommon();
 
@@ -2557,7 +2558,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class IngestibleSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class IngestibleSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly IngestibleSetterTranslationCommon Instance = new IngestibleSetterTranslationCommon();
 
@@ -2923,7 +2924,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ingestible_Registration.Instance;
-        public new static Ingestible_Registration StaticRegistration => Ingestible_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Ingestible_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IngestibleCommon.Instance;
         [DebuggerStepThrough]
@@ -2941,7 +2942,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class IngestibleBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -3140,7 +3141,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class IngestibleBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class IngestibleBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static IngestibleBinaryCreateTranslation Instance = new IngestibleBinaryCreateTranslation();
 
@@ -3322,16 +3323,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class IngestibleBinaryOverlay :
+    internal partial class IngestibleBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IIngestibleGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ingestible_Registration.Instance;
-        public new static Ingestible_Registration StaticRegistration => Ingestible_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Ingestible_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IngestibleCommon.Instance;
         [DebuggerStepThrough]

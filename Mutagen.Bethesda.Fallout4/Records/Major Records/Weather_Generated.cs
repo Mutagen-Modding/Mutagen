@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -600,10 +601,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Weather_FieldIndex
+    internal enum Weather_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -615,7 +616,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Weather_Registration : ILoquiRegistration
+    internal partial class Weather_Registration : ILoquiRegistration
     {
         public static readonly Weather_Registration Instance = new Weather_Registration();
 
@@ -696,7 +697,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class WeatherSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class WeatherSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly WeatherSetterCommon Instance = new WeatherSetterCommon();
 
@@ -765,7 +766,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class WeatherCommon : Fallout4MajorRecordCommon
+    internal partial class WeatherCommon : Fallout4MajorRecordCommon
     {
         public new static readonly WeatherCommon Instance = new WeatherCommon();
 
@@ -987,7 +988,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class WeatherSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class WeatherSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly WeatherSetterTranslationCommon Instance = new WeatherSetterTranslationCommon();
 
@@ -1142,7 +1143,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weather_Registration.Instance;
-        public new static Weather_Registration StaticRegistration => Weather_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Weather_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WeatherCommon.Instance;
         [DebuggerStepThrough]
@@ -1160,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class WeatherBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -1229,7 +1230,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class WeatherBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class WeatherBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static WeatherBinaryCreateTranslation Instance = new WeatherBinaryCreateTranslation();
 
@@ -1256,16 +1257,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class WeatherBinaryOverlay :
+    internal partial class WeatherBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IWeatherGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weather_Registration.Instance;
-        public new static Weather_Registration StaticRegistration => Weather_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Weather_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WeatherCommon.Instance;
         [DebuggerStepThrough]

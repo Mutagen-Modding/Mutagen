@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -750,10 +751,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SoundOutputAttenuation_FieldIndex
+    internal enum SoundOutputAttenuation_FieldIndex
     {
         Unknown = 0,
         MinDistance = 1,
@@ -764,7 +765,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SoundOutputAttenuation_Registration : ILoquiRegistration
+    internal partial class SoundOutputAttenuation_Registration : ILoquiRegistration
     {
         public static readonly SoundOutputAttenuation_Registration Instance = new SoundOutputAttenuation_Registration();
 
@@ -845,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SoundOutputAttenuationSetterCommon
+    internal partial class SoundOutputAttenuationSetterCommon
     {
         public static readonly SoundOutputAttenuationSetterCommon Instance = new SoundOutputAttenuationSetterCommon();
 
@@ -888,7 +889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SoundOutputAttenuationCommon
+    internal partial class SoundOutputAttenuationCommon
     {
         public static readonly SoundOutputAttenuationCommon Instance = new SoundOutputAttenuationCommon();
 
@@ -1044,7 +1045,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SoundOutputAttenuationSetterTranslationCommon
+    internal partial class SoundOutputAttenuationSetterTranslationCommon
     {
         public static readonly SoundOutputAttenuationSetterTranslationCommon Instance = new SoundOutputAttenuationSetterTranslationCommon();
 
@@ -1138,7 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundOutputAttenuation_Registration.Instance;
-        public static SoundOutputAttenuation_Registration StaticRegistration => SoundOutputAttenuation_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SoundOutputAttenuation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundOutputAttenuationCommon.Instance;
         [DebuggerStepThrough]
@@ -1162,7 +1163,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SoundOutputAttenuationBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1217,7 +1218,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SoundOutputAttenuationBinaryCreateTranslation
+    internal partial class SoundOutputAttenuationBinaryCreateTranslation
     {
         public readonly static SoundOutputAttenuationBinaryCreateTranslation Instance = new SoundOutputAttenuationBinaryCreateTranslation();
 
@@ -1256,16 +1257,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SoundOutputAttenuationBinaryOverlay :
+    internal partial class SoundOutputAttenuationBinaryOverlay :
         PluginBinaryOverlay,
         ISoundOutputAttenuationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundOutputAttenuation_Registration.Instance;
-        public static SoundOutputAttenuation_Registration StaticRegistration => SoundOutputAttenuation_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SoundOutputAttenuation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundOutputAttenuationCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -3105,10 +3106,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Water_FieldIndex
+    internal enum Water_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -3188,7 +3189,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Water_Registration : ILoquiRegistration
+    internal partial class Water_Registration : ILoquiRegistration
     {
         public static readonly Water_Registration Instance = new Water_Registration();
 
@@ -3289,7 +3290,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WaterSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class WaterSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly WaterSetterCommon Instance = new WaterSetterCommon();
 
@@ -3430,7 +3431,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WaterCommon : SkyrimMajorRecordCommon
+    internal partial class WaterCommon : SkyrimMajorRecordCommon
     {
         public new static readonly WaterCommon Instance = new WaterCommon();
 
@@ -4409,7 +4410,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WaterSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class WaterSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly WaterSetterTranslationCommon Instance = new WaterSetterTranslationCommon();
 
@@ -4863,7 +4864,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
-        public new static Water_Registration StaticRegistration => Water_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Water_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WaterCommon.Instance;
         [DebuggerStepThrough]
@@ -4881,7 +4882,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WaterBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -5196,7 +5197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WaterBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class WaterBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static WaterBinaryCreateTranslation Instance = new WaterBinaryCreateTranslation();
 
@@ -5425,16 +5426,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WaterBinaryOverlay :
+    internal partial class WaterBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IWaterGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
-        public new static Water_Registration StaticRegistration => Water_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Water_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WaterCommon.Instance;
         [DebuggerStepThrough]

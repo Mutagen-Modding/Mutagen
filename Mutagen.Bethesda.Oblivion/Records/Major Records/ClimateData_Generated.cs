@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -801,10 +802,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum ClimateData_FieldIndex
+    internal enum ClimateData_FieldIndex
     {
         SunriseBegin = 0,
         SunriseEnd = 1,
@@ -817,7 +818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class ClimateData_Registration : ILoquiRegistration
+    internal partial class ClimateData_Registration : ILoquiRegistration
     {
         public static readonly ClimateData_Registration Instance = new ClimateData_Registration();
 
@@ -898,7 +899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ClimateDataSetterCommon
+    internal partial class ClimateDataSetterCommon
     {
         public static readonly ClimateDataSetterCommon Instance = new ClimateDataSetterCommon();
 
@@ -943,7 +944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ClimateDataCommon
+    internal partial class ClimateDataCommon
     {
         public static readonly ClimateDataCommon Instance = new ClimateDataCommon();
 
@@ -1119,7 +1120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ClimateDataSetterTranslationCommon
+    internal partial class ClimateDataSetterTranslationCommon
     {
         public static readonly ClimateDataSetterTranslationCommon Instance = new ClimateDataSetterTranslationCommon();
 
@@ -1221,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClimateData_Registration.Instance;
-        public static ClimateData_Registration StaticRegistration => ClimateData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ClimateData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ClimateDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1245,7 +1246,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ClimateDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1384,7 +1385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ClimateDataBinaryCreateTranslation
+    internal partial class ClimateDataBinaryCreateTranslation
     {
         public readonly static ClimateDataBinaryCreateTranslation Instance = new ClimateDataBinaryCreateTranslation();
 
@@ -1461,16 +1462,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ClimateDataBinaryOverlay :
+    internal partial class ClimateDataBinaryOverlay :
         PluginBinaryOverlay,
         IClimateDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClimateData_Registration.Instance;
-        public static ClimateData_Registration StaticRegistration => ClimateData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ClimateData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ClimateDataCommon.Instance;
         [DebuggerStepThrough]

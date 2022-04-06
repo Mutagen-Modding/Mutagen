@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -651,10 +652,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ScriptFloatListProperty_FieldIndex
+    internal enum ScriptFloatListProperty_FieldIndex
     {
         Name = 0,
         Flags = 1,
@@ -663,7 +664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ScriptFloatListProperty_Registration : ILoquiRegistration
+    internal partial class ScriptFloatListProperty_Registration : ILoquiRegistration
     {
         public static readonly ScriptFloatListProperty_Registration Instance = new ScriptFloatListProperty_Registration();
 
@@ -737,7 +738,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ScriptFloatListPropertySetterCommon : ScriptPropertySetterCommon
+    internal partial class ScriptFloatListPropertySetterCommon : ScriptPropertySetterCommon
     {
         public new static readonly ScriptFloatListPropertySetterCommon Instance = new ScriptFloatListPropertySetterCommon();
 
@@ -790,7 +791,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ScriptFloatListPropertyCommon : ScriptPropertyCommon
+    internal partial class ScriptFloatListPropertyCommon : ScriptPropertyCommon
     {
         public new static readonly ScriptFloatListPropertyCommon Instance = new ScriptFloatListPropertyCommon();
 
@@ -963,7 +964,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ScriptFloatListPropertySetterTranslationCommon : ScriptPropertySetterTranslationCommon
+    internal partial class ScriptFloatListPropertySetterTranslationCommon : ScriptPropertySetterTranslationCommon
     {
         public new static readonly ScriptFloatListPropertySetterTranslationCommon Instance = new ScriptFloatListPropertySetterTranslationCommon();
 
@@ -1076,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptFloatListProperty_Registration.Instance;
-        public new static ScriptFloatListProperty_Registration StaticRegistration => ScriptFloatListProperty_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ScriptFloatListProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptFloatListPropertyCommon.Instance;
         [DebuggerStepThrough]
@@ -1094,7 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ScriptFloatListPropertyBinaryWriteTranslation :
         ScriptPropertyBinaryWriteTranslation,
@@ -1150,7 +1151,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ScriptFloatListPropertyBinaryCreateTranslation : ScriptPropertyBinaryCreateTranslation
+    internal partial class ScriptFloatListPropertyBinaryCreateTranslation : ScriptPropertyBinaryCreateTranslation
     {
         public new readonly static ScriptFloatListPropertyBinaryCreateTranslation Instance = new ScriptFloatListPropertyBinaryCreateTranslation();
 
@@ -1181,16 +1182,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ScriptFloatListPropertyBinaryOverlay :
+    internal partial class ScriptFloatListPropertyBinaryOverlay :
         ScriptPropertyBinaryOverlay,
         IScriptFloatListPropertyGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptFloatListProperty_Registration.Instance;
-        public new static ScriptFloatListProperty_Registration StaticRegistration => ScriptFloatListProperty_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ScriptFloatListProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptFloatListPropertyCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -650,10 +651,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum NavmeshNode_FieldIndex
+    internal enum NavmeshNode_FieldIndex
     {
         NavMesh = 0,
         NodeIndex = 1,
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class NavmeshNode_Registration : ILoquiRegistration
+    internal partial class NavmeshNode_Registration : ILoquiRegistration
     {
         public static readonly NavmeshNode_Registration Instance = new NavmeshNode_Registration();
 
@@ -735,7 +736,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NavmeshNodeSetterCommon
+    internal partial class NavmeshNodeSetterCommon
     {
         public static readonly NavmeshNodeSetterCommon Instance = new NavmeshNodeSetterCommon();
 
@@ -772,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NavmeshNodeCommon
+    internal partial class NavmeshNodeCommon
     {
         public static readonly NavmeshNodeCommon Instance = new NavmeshNodeCommon();
 
@@ -899,7 +900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NavmeshNodeSetterTranslationCommon
+    internal partial class NavmeshNodeSetterTranslationCommon
     {
         public static readonly NavmeshNodeSetterTranslationCommon Instance = new NavmeshNodeSetterTranslationCommon();
 
@@ -981,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavmeshNode_Registration.Instance;
-        public static NavmeshNode_Registration StaticRegistration => NavmeshNode_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavmeshNode_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavmeshNodeCommon.Instance;
         [DebuggerStepThrough]
@@ -1005,7 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NavmeshNodeBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1044,7 +1045,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NavmeshNodeBinaryCreateTranslation
+    internal partial class NavmeshNodeBinaryCreateTranslation
     {
         public readonly static NavmeshNodeBinaryCreateTranslation Instance = new NavmeshNodeBinaryCreateTranslation();
 
@@ -1080,16 +1081,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NavmeshNodeBinaryOverlay :
+    internal partial class NavmeshNodeBinaryOverlay :
         PluginBinaryOverlay,
         INavmeshNodeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavmeshNode_Registration.Instance;
-        public static NavmeshNode_Registration StaticRegistration => NavmeshNode_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavmeshNode_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavmeshNodeCommon.Instance;
         [DebuggerStepThrough]

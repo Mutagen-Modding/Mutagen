@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -933,10 +934,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Decal_FieldIndex
+    internal enum Decal_FieldIndex
     {
         MinWidth = 0,
         MaxWidth = 1,
@@ -953,7 +954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Decal_Registration : ILoquiRegistration
+    internal partial class Decal_Registration : ILoquiRegistration
     {
         public static readonly Decal_Registration Instance = new Decal_Registration();
 
@@ -1034,7 +1035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class DecalSetterCommon
+    internal partial class DecalSetterCommon
     {
         public static readonly DecalSetterCommon Instance = new DecalSetterCommon();
 
@@ -1083,7 +1084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DecalCommon
+    internal partial class DecalCommon
     {
         public static readonly DecalCommon Instance = new DecalCommon();
 
@@ -1299,7 +1300,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DecalSetterTranslationCommon
+    internal partial class DecalSetterTranslationCommon
     {
         public static readonly DecalSetterTranslationCommon Instance = new DecalSetterTranslationCommon();
 
@@ -1417,7 +1418,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Decal_Registration.Instance;
-        public static Decal_Registration StaticRegistration => Decal_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Decal_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DecalCommon.Instance;
         [DebuggerStepThrough]
@@ -1441,7 +1442,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DecalBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1513,7 +1514,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class DecalBinaryCreateTranslation
+    internal partial class DecalBinaryCreateTranslation
     {
         public readonly static DecalBinaryCreateTranslation Instance = new DecalBinaryCreateTranslation();
 
@@ -1560,16 +1561,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class DecalBinaryOverlay :
+    internal partial class DecalBinaryOverlay :
         PluginBinaryOverlay,
         IDecalGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Decal_Registration.Instance;
-        public static Decal_Registration StaticRegistration => Decal_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Decal_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DecalCommon.Instance;
         [DebuggerStepThrough]

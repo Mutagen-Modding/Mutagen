@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -638,10 +639,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum KeyData_FieldIndex
+    internal enum KeyData_FieldIndex
     {
         Value = 0,
         Weight = 1,
@@ -649,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class KeyData_Registration : ILoquiRegistration
+    internal partial class KeyData_Registration : ILoquiRegistration
     {
         public static readonly KeyData_Registration Instance = new KeyData_Registration();
 
@@ -730,7 +731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class KeyDataSetterCommon
+    internal partial class KeyDataSetterCommon
     {
         public static readonly KeyDataSetterCommon Instance = new KeyDataSetterCommon();
 
@@ -770,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class KeyDataCommon
+    internal partial class KeyDataCommon
     {
         public static readonly KeyDataCommon Instance = new KeyDataCommon();
 
@@ -896,7 +897,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class KeyDataSetterTranslationCommon
+    internal partial class KeyDataSetterTranslationCommon
     {
         public static readonly KeyDataSetterTranslationCommon Instance = new KeyDataSetterTranslationCommon();
 
@@ -978,7 +979,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => KeyData_Registration.Instance;
-        public static KeyData_Registration StaticRegistration => KeyData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => KeyData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => KeyDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1002,7 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class KeyDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1048,7 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class KeyDataBinaryCreateTranslation
+    internal partial class KeyDataBinaryCreateTranslation
     {
         public readonly static KeyDataBinaryCreateTranslation Instance = new KeyDataBinaryCreateTranslation();
 
@@ -1084,16 +1085,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class KeyDataBinaryOverlay :
+    internal partial class KeyDataBinaryOverlay :
         PluginBinaryOverlay,
         IKeyDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => KeyData_Registration.Instance;
-        public static KeyData_Registration StaticRegistration => KeyData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => KeyData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => KeyDataCommon.Instance;
         [DebuggerStepThrough]

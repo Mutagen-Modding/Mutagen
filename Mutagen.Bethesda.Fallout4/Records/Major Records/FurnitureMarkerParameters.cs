@@ -1,12 +1,8 @@
 using System;
 
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Fallout4;
+
+partial class FurnitureMarkerParametersBinaryOverlay
 {
-    namespace Internals
-    {
-        partial class FurnitureMarkerParametersBinaryOverlay
-        {
-            public bool Enabled => throw new NotImplementedException();
-        }
-    }
+    public bool Enabled => throw new NotImplementedException();
 }

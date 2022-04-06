@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -737,10 +738,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum AmmunitionData_FieldIndex
+    internal enum AmmunitionData_FieldIndex
     {
         Speed = 0,
         Flags = 1,
@@ -751,7 +752,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class AmmunitionData_Registration : ILoquiRegistration
+    internal partial class AmmunitionData_Registration : ILoquiRegistration
     {
         public static readonly AmmunitionData_Registration Instance = new AmmunitionData_Registration();
 
@@ -832,7 +833,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class AmmunitionDataSetterCommon
+    internal partial class AmmunitionDataSetterCommon
     {
         public static readonly AmmunitionDataSetterCommon Instance = new AmmunitionDataSetterCommon();
 
@@ -875,7 +876,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AmmunitionDataCommon
+    internal partial class AmmunitionDataCommon
     {
         public static readonly AmmunitionDataCommon Instance = new AmmunitionDataCommon();
 
@@ -1031,7 +1032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AmmunitionDataSetterTranslationCommon
+    internal partial class AmmunitionDataSetterTranslationCommon
     {
         public static readonly AmmunitionDataSetterTranslationCommon Instance = new AmmunitionDataSetterTranslationCommon();
 
@@ -1125,7 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AmmunitionData_Registration.Instance;
-        public static AmmunitionData_Registration StaticRegistration => AmmunitionData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AmmunitionData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AmmunitionDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1149,7 +1150,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AmmunitionDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1203,7 +1204,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class AmmunitionDataBinaryCreateTranslation
+    internal partial class AmmunitionDataBinaryCreateTranslation
     {
         public readonly static AmmunitionDataBinaryCreateTranslation Instance = new AmmunitionDataBinaryCreateTranslation();
 
@@ -1244,16 +1245,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class AmmunitionDataBinaryOverlay :
+    internal partial class AmmunitionDataBinaryOverlay :
         PluginBinaryOverlay,
         IAmmunitionDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AmmunitionData_Registration.Instance;
-        public static AmmunitionData_Registration StaticRegistration => AmmunitionData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AmmunitionData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AmmunitionDataCommon.Instance;
         [DebuggerStepThrough]

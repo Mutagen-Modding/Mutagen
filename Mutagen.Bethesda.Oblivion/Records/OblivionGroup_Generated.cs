@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Oblivion.Records;
 using Mutagen.Bethesda.Plugins;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -666,10 +667,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum OblivionGroup_FieldIndex
+    internal enum OblivionGroup_FieldIndex
     {
         Type = 0,
         LastModified = 1,
@@ -678,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class OblivionGroup_Registration : ILoquiRegistration
+    internal partial class OblivionGroup_Registration : ILoquiRegistration
     {
         public static readonly OblivionGroup_Registration Instance = new OblivionGroup_Registration();
 
@@ -751,7 +752,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class OblivionGroup_Registration<T> : OblivionGroup_Registration
+    internal class OblivionGroup_Registration<T> : OblivionGroup_Registration
         where T : OblivionMajorRecord, IBinaryItem
     {
         public static readonly OblivionGroup_Registration<T> GenericInstance = new OblivionGroup_Registration<T>();
@@ -760,7 +761,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class OblivionGroupSetterCommon<T>
+    internal partial class OblivionGroupSetterCommon<T>
         where T : class, IOblivionMajorRecordInternal, IBinaryItem
     {
         public static readonly OblivionGroupSetterCommon<T> Instance = new OblivionGroupSetterCommon<T>();
@@ -865,7 +866,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class OblivionGroupCommon<T>
+    internal partial class OblivionGroupCommon<T>
         where T : class, IOblivionMajorRecordGetter, IBinaryItem
     {
         public static readonly OblivionGroupCommon<T> Instance = new OblivionGroupCommon<T>();
@@ -1096,7 +1097,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class OblivionGroupSetterTranslationCommon
+    internal partial class OblivionGroupSetterTranslationCommon
     {
         public static readonly OblivionGroupSetterTranslationCommon Instance = new OblivionGroupSetterTranslationCommon();
 
@@ -1211,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionGroup_Registration.Instance;
-        public static OblivionGroup_Registration StaticRegistration => OblivionGroup_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => OblivionGroup_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(OblivionGroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
@@ -1235,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class OblivionGroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1321,7 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class OblivionGroupBinaryCreateTranslation<T>
+    internal partial class OblivionGroupBinaryCreateTranslation<T>
         where T : class, IOblivionMajorRecordInternal, IBinaryItem
     {
         public readonly static OblivionGroupBinaryCreateTranslation<T> Instance = new OblivionGroupBinaryCreateTranslation<T>();
@@ -1395,15 +1396,15 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class OblivionGroupBinaryOverlay<T> : IOblivionGroupGetter<T>
+    internal partial class OblivionGroupBinaryOverlay<T> : IOblivionGroupGetter<T>
         where T : class, IOblivionMajorRecordGetter, IBinaryItem
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionGroup_Registration.Instance;
-        public static OblivionGroup_Registration StaticRegistration => OblivionGroup_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => OblivionGroup_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(OblivionGroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]

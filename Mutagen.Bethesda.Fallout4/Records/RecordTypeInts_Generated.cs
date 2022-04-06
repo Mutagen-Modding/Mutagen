@@ -105,6 +105,7 @@ public partial class RecordTypeInts
     public const int DUAL = 0x4C415544;
     public const int EAMT = 0x544D4145;
     public const int ECOR = 0x524F4345;
+    public const int EDID = 0x44494445;
     public const int EFID = 0x44494645;
     public const int EFIT = 0x54494645;
     public const int EFSH = 0x48534645;

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1031,10 +1032,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum HDRData_FieldIndex
+    internal enum HDRData_FieldIndex
     {
         EyeAdaptSpeed = 0,
         BlurRadius = 1,
@@ -1054,7 +1055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class HDRData_Registration : ILoquiRegistration
+    internal partial class HDRData_Registration : ILoquiRegistration
     {
         public static readonly HDRData_Registration Instance = new HDRData_Registration();
 
@@ -1135,7 +1136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class HDRDataSetterCommon
+    internal partial class HDRDataSetterCommon
     {
         public static readonly HDRDataSetterCommon Instance = new HDRDataSetterCommon();
 
@@ -1187,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class HDRDataCommon
+    internal partial class HDRDataCommon
     {
         public static readonly HDRDataCommon Instance = new HDRDataCommon();
 
@@ -1433,7 +1434,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class HDRDataSetterTranslationCommon
+    internal partial class HDRDataSetterTranslationCommon
     {
         public static readonly HDRDataSetterTranslationCommon Instance = new HDRDataSetterTranslationCommon();
 
@@ -1563,7 +1564,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HDRData_Registration.Instance;
-        public static HDRData_Registration StaticRegistration => HDRData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => HDRData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HDRDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1587,7 +1588,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class HDRDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1671,7 +1672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class HDRDataBinaryCreateTranslation
+    internal partial class HDRDataBinaryCreateTranslation
     {
         public readonly static HDRDataBinaryCreateTranslation Instance = new HDRDataBinaryCreateTranslation();
 
@@ -1719,16 +1720,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class HDRDataBinaryOverlay :
+    internal partial class HDRDataBinaryOverlay :
         PluginBinaryOverlay,
         IHDRDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HDRData_Registration.Instance;
-        public static HDRData_Registration StaticRegistration => HDRData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => HDRData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HDRDataCommon.Instance;
         [DebuggerStepThrough]

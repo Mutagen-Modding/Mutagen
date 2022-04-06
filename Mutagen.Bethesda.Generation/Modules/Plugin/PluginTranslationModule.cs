@@ -1233,7 +1233,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
         public override async Task GenerateInVoid(ObjectGeneration obj, FileGeneration fg)
         {
             await base.GenerateInVoid(obj, fg);
-            using (new NamespaceWrapper(fg, obj.InternalNamespace, fileScoped: false))
+            using (new NamespaceWrapper(fg, obj.Namespace, fileScoped: false))
             {
                 await GenerateImportWrapper(obj, fg);
             }
@@ -1813,6 +1813,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
             using (var args = new ClassWrapper(fg, $"{BinaryOverlayClass(obj)}"))
             {
+                args.Public = PermissionLevel.@internal;
                 args.Abstract = obj.Abstract;
                 args.Partial = true;
                 var block = obj.GetObjectType() == ObjectType.Mod

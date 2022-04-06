@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -749,10 +750,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum LeveledItemEntryData_FieldIndex
+    internal enum LeveledItemEntryData_FieldIndex
     {
         Level = 0,
         Unknown = 1,
@@ -763,7 +764,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class LeveledItemEntryData_Registration : ILoquiRegistration
+    internal partial class LeveledItemEntryData_Registration : ILoquiRegistration
     {
         public static readonly LeveledItemEntryData_Registration Instance = new LeveledItemEntryData_Registration();
 
@@ -844,7 +845,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class LeveledItemEntryDataSetterCommon
+    internal partial class LeveledItemEntryDataSetterCommon
     {
         public static readonly LeveledItemEntryDataSetterCommon Instance = new LeveledItemEntryDataSetterCommon();
 
@@ -888,7 +889,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LeveledItemEntryDataCommon
+    internal partial class LeveledItemEntryDataCommon
     {
         public static readonly LeveledItemEntryDataCommon Instance = new LeveledItemEntryDataCommon();
 
@@ -1045,7 +1046,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LeveledItemEntryDataSetterTranslationCommon
+    internal partial class LeveledItemEntryDataSetterTranslationCommon
     {
         public static readonly LeveledItemEntryDataSetterTranslationCommon Instance = new LeveledItemEntryDataSetterTranslationCommon();
 
@@ -1139,7 +1140,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledItemEntryData_Registration.Instance;
-        public static LeveledItemEntryData_Registration StaticRegistration => LeveledItemEntryData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LeveledItemEntryData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LeveledItemEntryDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1163,7 +1164,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LeveledItemEntryDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1212,7 +1213,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class LeveledItemEntryDataBinaryCreateTranslation
+    internal partial class LeveledItemEntryDataBinaryCreateTranslation
     {
         public readonly static LeveledItemEntryDataBinaryCreateTranslation Instance = new LeveledItemEntryDataBinaryCreateTranslation();
 
@@ -1251,16 +1252,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class LeveledItemEntryDataBinaryOverlay :
+    internal partial class LeveledItemEntryDataBinaryOverlay :
         PluginBinaryOverlay,
         ILeveledItemEntryDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledItemEntryData_Registration.Instance;
-        public static LeveledItemEntryData_Registration StaticRegistration => LeveledItemEntryData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LeveledItemEntryData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LeveledItemEntryDataCommon.Instance;
         [DebuggerStepThrough]

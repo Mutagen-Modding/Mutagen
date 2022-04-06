@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -858,10 +859,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Miscellaneous_FieldIndex
+    internal enum Miscellaneous_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -877,7 +878,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Miscellaneous_Registration : ILoquiRegistration
+    internal partial class Miscellaneous_Registration : ILoquiRegistration
     {
         public static readonly Miscellaneous_Registration Instance = new Miscellaneous_Registration();
 
@@ -965,7 +966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class MiscellaneousSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class MiscellaneousSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly MiscellaneousSetterCommon Instance = new MiscellaneousSetterCommon();
 
@@ -1040,7 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class MiscellaneousCommon : OblivionMajorRecordCommon
+    internal partial class MiscellaneousCommon : OblivionMajorRecordCommon
     {
         public new static readonly MiscellaneousCommon Instance = new MiscellaneousCommon();
 
@@ -1346,7 +1347,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class MiscellaneousSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class MiscellaneousSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly MiscellaneousSetterTranslationCommon Instance = new MiscellaneousSetterTranslationCommon();
 
@@ -1565,7 +1566,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Miscellaneous_Registration.Instance;
-        public new static Miscellaneous_Registration StaticRegistration => Miscellaneous_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Miscellaneous_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MiscellaneousCommon.Instance;
         [DebuggerStepThrough]
@@ -1583,7 +1584,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class MiscellaneousBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1693,7 +1694,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class MiscellaneousBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class MiscellaneousBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static MiscellaneousBinaryCreateTranslation Instance = new MiscellaneousBinaryCreateTranslation();
 
@@ -1777,16 +1778,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class MiscellaneousBinaryOverlay :
+    internal partial class MiscellaneousBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IMiscellaneousGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Miscellaneous_Registration.Instance;
-        public new static Miscellaneous_Registration StaticRegistration => Miscellaneous_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Miscellaneous_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MiscellaneousCommon.Instance;
         [DebuggerStepThrough]

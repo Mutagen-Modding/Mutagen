@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1252,10 +1253,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum TalkingActivator_FieldIndex
+    internal enum TalkingActivator_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1277,7 +1278,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class TalkingActivator_Registration : ILoquiRegistration
+    internal partial class TalkingActivator_Registration : ILoquiRegistration
     {
         public static readonly TalkingActivator_Registration Instance = new TalkingActivator_Registration();
 
@@ -1373,7 +1374,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class TalkingActivatorSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class TalkingActivatorSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly TalkingActivatorSetterCommon Instance = new TalkingActivatorSetterCommon();
 
@@ -1458,7 +1459,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TalkingActivatorCommon : SkyrimMajorRecordCommon
+    internal partial class TalkingActivatorCommon : SkyrimMajorRecordCommon
     {
         public new static readonly TalkingActivatorCommon Instance = new TalkingActivatorCommon();
 
@@ -1886,7 +1887,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TalkingActivatorSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class TalkingActivatorSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly TalkingActivatorSetterTranslationCommon Instance = new TalkingActivatorSetterTranslationCommon();
 
@@ -2188,7 +2189,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TalkingActivator_Registration.Instance;
-        public new static TalkingActivator_Registration StaticRegistration => TalkingActivator_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => TalkingActivator_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TalkingActivatorCommon.Instance;
         [DebuggerStepThrough]
@@ -2206,7 +2207,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class TalkingActivatorBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2348,7 +2349,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class TalkingActivatorBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class TalkingActivatorBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static TalkingActivatorBinaryCreateTranslation Instance = new TalkingActivatorBinaryCreateTranslation();
 
@@ -2470,16 +2471,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class TalkingActivatorBinaryOverlay :
+    internal partial class TalkingActivatorBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ITalkingActivatorGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TalkingActivator_Registration.Instance;
-        public new static TalkingActivator_Registration StaticRegistration => TalkingActivator_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => TalkingActivator_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TalkingActivatorCommon.Instance;
         [DebuggerStepThrough]

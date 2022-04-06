@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -693,10 +694,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum MagicEffectArchetype_FieldIndex
+    internal enum MagicEffectArchetype_FieldIndex
     {
         Type = 0,
         AssociationKey = 1,
@@ -705,7 +706,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class MagicEffectArchetype_Registration : ILoquiRegistration
+    internal partial class MagicEffectArchetype_Registration : ILoquiRegistration
     {
         public static readonly MagicEffectArchetype_Registration Instance = new MagicEffectArchetype_Registration();
 
@@ -779,7 +780,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class MagicEffectArchetypeSetterCommon
+    internal partial class MagicEffectArchetypeSetterCommon
     {
         public static readonly MagicEffectArchetypeSetterCommon Instance = new MagicEffectArchetypeSetterCommon();
 
@@ -817,7 +818,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MagicEffectArchetypeCommon
+    internal partial class MagicEffectArchetypeCommon
     {
         public static readonly MagicEffectArchetypeCommon Instance = new MagicEffectArchetypeCommon();
 
@@ -955,7 +956,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MagicEffectArchetypeSetterTranslationCommon
+    internal partial class MagicEffectArchetypeSetterTranslationCommon
     {
         public static readonly MagicEffectArchetypeSetterTranslationCommon Instance = new MagicEffectArchetypeSetterTranslationCommon();
 
@@ -1056,7 +1057,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectArchetype_Registration.Instance;
-        public static MagicEffectArchetype_Registration StaticRegistration => MagicEffectArchetype_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MagicEffectArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => MagicEffectArchetypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1080,7 +1081,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MagicEffectArchetypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1115,7 +1116,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class MagicEffectArchetypeBinaryCreateTranslation
+    internal partial class MagicEffectArchetypeBinaryCreateTranslation
     {
         public readonly static MagicEffectArchetypeBinaryCreateTranslation Instance = new MagicEffectArchetypeBinaryCreateTranslation();
 
@@ -1149,16 +1150,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class MagicEffectArchetypeBinaryOverlay :
+    internal partial class MagicEffectArchetypeBinaryOverlay :
         PluginBinaryOverlay,
         IMagicEffectArchetypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectArchetype_Registration.Instance;
-        public static MagicEffectArchetype_Registration StaticRegistration => MagicEffectArchetype_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MagicEffectArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => MagicEffectArchetypeCommon.Instance;
         [DebuggerStepThrough]

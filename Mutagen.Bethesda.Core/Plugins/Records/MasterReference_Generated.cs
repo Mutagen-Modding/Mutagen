@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -18,6 +17,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Plugins.Records.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Plugins.Records.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -634,10 +635,10 @@ namespace Mutagen.Bethesda.Plugins.Records
 
 }
 
-namespace Mutagen.Bethesda.Plugins.Records.Internals
+namespace Mutagen.Bethesda.Plugins.Records
 {
     #region Field Index
-    public enum MasterReference_FieldIndex
+    internal enum MasterReference_FieldIndex
     {
         Master = 0,
         FileSize = 1,
@@ -645,7 +646,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
     #endregion
 
     #region Registration
-    public partial class MasterReference_Registration : ILoquiRegistration
+    internal partial class MasterReference_Registration : ILoquiRegistration
     {
         public static readonly MasterReference_Registration Instance = new MasterReference_Registration();
 
@@ -729,7 +730,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
     #endregion
 
     #region Common
-    public partial class MasterReferenceSetterCommon
+    internal partial class MasterReferenceSetterCommon
     {
         public static readonly MasterReferenceSetterCommon Instance = new MasterReferenceSetterCommon();
 
@@ -766,7 +767,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         #endregion
         
     }
-    public partial class MasterReferenceCommon
+    internal partial class MasterReferenceCommon
     {
         public static readonly MasterReferenceCommon Instance = new MasterReferenceCommon();
 
@@ -892,7 +893,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         #endregion
         
     }
-    public partial class MasterReferenceSetterTranslationCommon
+    internal partial class MasterReferenceSetterTranslationCommon
     {
         public static readonly MasterReferenceSetterTranslationCommon Instance = new MasterReferenceSetterTranslationCommon();
 
@@ -974,7 +975,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
-        public static MasterReference_Registration StaticRegistration => MasterReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MasterReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MasterReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -998,7 +999,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Plugins.Records.Internals
+namespace Mutagen.Bethesda.Plugins.Records
 {
     public partial class MasterReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1043,7 +1044,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
 
     }
 
-    public partial class MasterReferenceBinaryCreateTranslation
+    internal partial class MasterReferenceBinaryCreateTranslation
     {
         public readonly static MasterReferenceBinaryCreateTranslation Instance = new MasterReferenceBinaryCreateTranslation();
 
@@ -1107,16 +1108,16 @@ namespace Mutagen.Bethesda.Plugins.Records
 
 
 }
-namespace Mutagen.Bethesda.Plugins.Records.Internals
+namespace Mutagen.Bethesda.Plugins.Records
 {
-    public partial class MasterReferenceBinaryOverlay :
+    internal partial class MasterReferenceBinaryOverlay :
         PluginBinaryOverlay,
         IMasterReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
-        public static MasterReference_Registration StaticRegistration => MasterReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MasterReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MasterReferenceCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -637,10 +638,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Icons_FieldIndex
+    internal enum Icons_FieldIndex
     {
         LargeIconFilename = 0,
         SmallIconFilename = 1,
@@ -648,7 +649,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Icons_Registration : ILoquiRegistration
+    internal partial class Icons_Registration : ILoquiRegistration
     {
         public static readonly Icons_Registration Instance = new Icons_Registration();
 
@@ -732,7 +733,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class IconsSetterCommon
+    internal partial class IconsSetterCommon
     {
         public static readonly IconsSetterCommon Instance = new IconsSetterCommon();
 
@@ -769,7 +770,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class IconsCommon
+    internal partial class IconsCommon
     {
         public static readonly IconsCommon Instance = new IconsCommon();
 
@@ -899,7 +900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class IconsSetterTranslationCommon
+    internal partial class IconsSetterTranslationCommon
     {
         public static readonly IconsSetterTranslationCommon Instance = new IconsSetterTranslationCommon();
 
@@ -981,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Icons_Registration.Instance;
-        public static Icons_Registration StaticRegistration => Icons_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Icons_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => IconsCommon.Instance;
         [DebuggerStepThrough]
@@ -1005,7 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class IconsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1052,7 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class IconsBinaryCreateTranslation
+    internal partial class IconsBinaryCreateTranslation
     {
         public readonly static IconsBinaryCreateTranslation Instance = new IconsBinaryCreateTranslation();
 
@@ -1120,16 +1121,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class IconsBinaryOverlay :
+    internal partial class IconsBinaryOverlay :
         PluginBinaryOverlay,
         IIconsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Icons_Registration.Instance;
-        public static Icons_Registration StaticRegistration => Icons_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Icons_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => IconsCommon.Instance;
         [DebuggerStepThrough]

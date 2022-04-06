@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -554,16 +555,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ANavmeshParent_FieldIndex
+    internal enum ANavmeshParent_FieldIndex
     {
     }
     #endregion
 
     #region Registration
-    public partial class ANavmeshParent_Registration : ILoquiRegistration
+    internal partial class ANavmeshParent_Registration : ILoquiRegistration
     {
         public static readonly ANavmeshParent_Registration Instance = new ANavmeshParent_Registration();
 
@@ -637,7 +638,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ANavmeshParentSetterCommon
+    internal partial class ANavmeshParentSetterCommon
     {
         public static readonly ANavmeshParentSetterCommon Instance = new ANavmeshParentSetterCommon();
 
@@ -666,7 +667,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ANavmeshParentCommon
+    internal partial class ANavmeshParentCommon
     {
         public static readonly ANavmeshParentCommon Instance = new ANavmeshParentCommon();
 
@@ -772,7 +773,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ANavmeshParentSetterTranslationCommon
+    internal partial class ANavmeshParentSetterTranslationCommon
     {
         public static readonly ANavmeshParentSetterTranslationCommon Instance = new ANavmeshParentSetterTranslationCommon();
 
@@ -846,7 +847,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANavmeshParent_Registration.Instance;
-        public static ANavmeshParent_Registration StaticRegistration => ANavmeshParent_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ANavmeshParent_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ANavmeshParentCommon.Instance;
         [DebuggerStepThrough]
@@ -870,7 +871,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ANavmeshParentBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -896,7 +897,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ANavmeshParentBinaryCreateTranslation
+    internal partial class ANavmeshParentBinaryCreateTranslation
     {
         public readonly static ANavmeshParentBinaryCreateTranslation Instance = new ANavmeshParentBinaryCreateTranslation();
 
@@ -924,16 +925,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public abstract partial class ANavmeshParentBinaryOverlay :
+    internal abstract partial class ANavmeshParentBinaryOverlay :
         PluginBinaryOverlay,
         IANavmeshParentGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANavmeshParent_Registration.Instance;
-        public static ANavmeshParent_Registration StaticRegistration => ANavmeshParent_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ANavmeshParent_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ANavmeshParentCommon.Instance;
         [DebuggerStepThrough]

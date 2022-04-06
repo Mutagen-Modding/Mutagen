@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -740,10 +741,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum StoryManagerEventNode_FieldIndex
+    internal enum StoryManagerEventNode_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -761,7 +762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class StoryManagerEventNode_Registration : ILoquiRegistration
+    internal partial class StoryManagerEventNode_Registration : ILoquiRegistration
     {
         public static readonly StoryManagerEventNode_Registration Instance = new StoryManagerEventNode_Registration();
 
@@ -847,7 +848,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class StoryManagerEventNodeSetterCommon : AStoryManagerNodeSetterCommon
+    internal partial class StoryManagerEventNodeSetterCommon : AStoryManagerNodeSetterCommon
     {
         public new static readonly StoryManagerEventNodeSetterCommon Instance = new StoryManagerEventNodeSetterCommon();
 
@@ -935,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class StoryManagerEventNodeCommon : AStoryManagerNodeCommon
+    internal partial class StoryManagerEventNodeCommon : AStoryManagerNodeCommon
     {
         public new static readonly StoryManagerEventNodeCommon Instance = new StoryManagerEventNodeCommon();
 
@@ -1253,7 +1254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class StoryManagerEventNodeSetterTranslationCommon : AStoryManagerNodeSetterTranslationCommon
+    internal partial class StoryManagerEventNodeSetterTranslationCommon : AStoryManagerNodeSetterTranslationCommon
     {
         public new static readonly StoryManagerEventNodeSetterTranslationCommon Instance = new StoryManagerEventNodeSetterTranslationCommon();
 
@@ -1457,7 +1458,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => StoryManagerEventNode_Registration.Instance;
-        public new static StoryManagerEventNode_Registration StaticRegistration => StoryManagerEventNode_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => StoryManagerEventNode_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => StoryManagerEventNodeCommon.Instance;
         [DebuggerStepThrough]
@@ -1475,7 +1476,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class StoryManagerEventNodeBinaryWriteTranslation :
         AStoryManagerNodeBinaryWriteTranslation,
@@ -1581,7 +1582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class StoryManagerEventNodeBinaryCreateTranslation : AStoryManagerNodeBinaryCreateTranslation
+    internal partial class StoryManagerEventNodeBinaryCreateTranslation : AStoryManagerNodeBinaryCreateTranslation
     {
         public new readonly static StoryManagerEventNodeBinaryCreateTranslation Instance = new StoryManagerEventNodeBinaryCreateTranslation();
 
@@ -1651,16 +1652,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class StoryManagerEventNodeBinaryOverlay :
+    internal partial class StoryManagerEventNodeBinaryOverlay :
         AStoryManagerNodeBinaryOverlay,
         IStoryManagerEventNodeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => StoryManagerEventNode_Registration.Instance;
-        public new static StoryManagerEventNode_Registration StaticRegistration => StoryManagerEventNode_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => StoryManagerEventNode_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => StoryManagerEventNodeCommon.Instance;
         [DebuggerStepThrough]

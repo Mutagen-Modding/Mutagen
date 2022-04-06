@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -671,10 +672,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Keyword_FieldIndex
+    internal enum Keyword_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -687,7 +688,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Keyword_Registration : ILoquiRegistration
+    internal partial class Keyword_Registration : ILoquiRegistration
     {
         public static readonly Keyword_Registration Instance = new Keyword_Registration();
 
@@ -771,7 +772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class KeywordSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class KeywordSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly KeywordSetterCommon Instance = new KeywordSetterCommon();
 
@@ -841,7 +842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class KeywordCommon : SkyrimMajorRecordCommon
+    internal partial class KeywordCommon : SkyrimMajorRecordCommon
     {
         public new static readonly KeywordCommon Instance = new KeywordCommon();
 
@@ -1077,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class KeywordSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class KeywordSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly KeywordSetterTranslationCommon Instance = new KeywordSetterTranslationCommon();
 
@@ -1236,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Keyword_Registration.Instance;
-        public new static Keyword_Registration StaticRegistration => Keyword_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Keyword_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => KeywordCommon.Instance;
         [DebuggerStepThrough]
@@ -1254,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class KeywordBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1340,7 +1341,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class KeywordBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class KeywordBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static KeywordBinaryCreateTranslation Instance = new KeywordBinaryCreateTranslation();
 
@@ -1396,16 +1397,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class KeywordBinaryOverlay :
+    internal partial class KeywordBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IKeywordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Keyword_Registration.Instance;
-        public new static Keyword_Registration StaticRegistration => Keyword_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Keyword_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => KeywordCommon.Instance;
         [DebuggerStepThrough]

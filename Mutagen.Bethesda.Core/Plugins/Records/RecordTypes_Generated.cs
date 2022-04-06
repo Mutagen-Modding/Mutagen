@@ -67,6 +67,7 @@ public partial class RecordTypes
     public static readonly RecordType GLOB = new(0x424F4C47);
     public static readonly RecordType GMST = new(0x54534D47);
     public static readonly RecordType GRAS = new(0x53415247);
+    public static readonly RecordType GRUP = new(0x50555247);
     public static readonly RecordType HAIR = new(0x52494148);
     public static readonly RecordType HAZD = new(0x445A4148);
     public static readonly RecordType HDPT = new(0x54504448);
@@ -182,5 +183,6 @@ public partial class RecordTypes
     public static readonly RecordType XPWR = new(0x52575058);
     public static readonly RecordType XRNK = new(0x4B4E5258);
     public static readonly RecordType XSCL = new(0x4C435358);
+    public static readonly RecordType XXXX = new(0x58585858);
     public static readonly RecordType ZOOM = new(0x4D4F4F5A);
 }

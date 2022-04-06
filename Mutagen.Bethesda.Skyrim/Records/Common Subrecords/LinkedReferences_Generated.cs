@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -695,10 +696,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LinkedReferences_FieldIndex
+    internal enum LinkedReferences_FieldIndex
     {
         Versioning = 0,
         KeywordOrReference = 1,
@@ -707,7 +708,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LinkedReferences_Registration : ILoquiRegistration
+    internal partial class LinkedReferences_Registration : ILoquiRegistration
     {
         public static readonly LinkedReferences_Registration Instance = new LinkedReferences_Registration();
 
@@ -788,7 +789,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LinkedReferencesSetterCommon
+    internal partial class LinkedReferencesSetterCommon
     {
         public static readonly LinkedReferencesSetterCommon Instance = new LinkedReferencesSetterCommon();
 
@@ -832,7 +833,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LinkedReferencesCommon
+    internal partial class LinkedReferencesCommon
     {
         public static readonly LinkedReferencesCommon Instance = new LinkedReferencesCommon();
 
@@ -971,7 +972,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LinkedReferencesSetterTranslationCommon
+    internal partial class LinkedReferencesSetterTranslationCommon
     {
         public static readonly LinkedReferencesSetterTranslationCommon Instance = new LinkedReferencesSetterTranslationCommon();
 
@@ -1058,7 +1059,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LinkedReferences_Registration.Instance;
-        public static LinkedReferences_Registration StaticRegistration => LinkedReferences_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LinkedReferences_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LinkedReferencesCommon.Instance;
         [DebuggerStepThrough]
@@ -1082,7 +1083,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LinkedReferencesBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1133,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LinkedReferencesBinaryCreateTranslation
+    internal partial class LinkedReferencesBinaryCreateTranslation
     {
         public readonly static LinkedReferencesBinaryCreateTranslation Instance = new LinkedReferencesBinaryCreateTranslation();
 
@@ -1174,16 +1175,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LinkedReferencesBinaryOverlay :
+    internal partial class LinkedReferencesBinaryOverlay :
         PluginBinaryOverlay,
         ILinkedReferencesGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LinkedReferences_Registration.Instance;
-        public static LinkedReferences_Registration StaticRegistration => LinkedReferences_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LinkedReferences_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LinkedReferencesCommon.Instance;
         [DebuggerStepThrough]

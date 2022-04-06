@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -749,10 +750,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LeveledNpcEntryData_FieldIndex
+    internal enum LeveledNpcEntryData_FieldIndex
     {
         Level = 0,
         Unknown = 1,
@@ -763,7 +764,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LeveledNpcEntryData_Registration : ILoquiRegistration
+    internal partial class LeveledNpcEntryData_Registration : ILoquiRegistration
     {
         public static readonly LeveledNpcEntryData_Registration Instance = new LeveledNpcEntryData_Registration();
 
@@ -844,7 +845,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LeveledNpcEntryDataSetterCommon
+    internal partial class LeveledNpcEntryDataSetterCommon
     {
         public static readonly LeveledNpcEntryDataSetterCommon Instance = new LeveledNpcEntryDataSetterCommon();
 
@@ -888,7 +889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LeveledNpcEntryDataCommon
+    internal partial class LeveledNpcEntryDataCommon
     {
         public static readonly LeveledNpcEntryDataCommon Instance = new LeveledNpcEntryDataCommon();
 
@@ -1045,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LeveledNpcEntryDataSetterTranslationCommon
+    internal partial class LeveledNpcEntryDataSetterTranslationCommon
     {
         public static readonly LeveledNpcEntryDataSetterTranslationCommon Instance = new LeveledNpcEntryDataSetterTranslationCommon();
 
@@ -1139,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledNpcEntryData_Registration.Instance;
-        public static LeveledNpcEntryData_Registration StaticRegistration => LeveledNpcEntryData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LeveledNpcEntryData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LeveledNpcEntryDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1163,7 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LeveledNpcEntryDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1212,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LeveledNpcEntryDataBinaryCreateTranslation
+    internal partial class LeveledNpcEntryDataBinaryCreateTranslation
     {
         public readonly static LeveledNpcEntryDataBinaryCreateTranslation Instance = new LeveledNpcEntryDataBinaryCreateTranslation();
 
@@ -1251,16 +1252,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LeveledNpcEntryDataBinaryOverlay :
+    internal partial class LeveledNpcEntryDataBinaryOverlay :
         PluginBinaryOverlay,
         ILeveledNpcEntryDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledNpcEntryData_Registration.Instance;
-        public static LeveledNpcEntryData_Registration StaticRegistration => LeveledNpcEntryData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LeveledNpcEntryData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LeveledNpcEntryDataCommon.Instance;
         [DebuggerStepThrough]

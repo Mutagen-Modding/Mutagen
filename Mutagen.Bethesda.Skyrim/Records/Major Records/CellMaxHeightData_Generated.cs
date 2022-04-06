@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -719,10 +720,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CellMaxHeightData_FieldIndex
+    internal enum CellMaxHeightData_FieldIndex
     {
         Offset = 0,
         HeightMap = 1,
@@ -730,7 +731,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CellMaxHeightData_Registration : ILoquiRegistration
+    internal partial class CellMaxHeightData_Registration : ILoquiRegistration
     {
         public static readonly CellMaxHeightData_Registration Instance = new CellMaxHeightData_Registration();
 
@@ -811,7 +812,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CellMaxHeightDataSetterCommon
+    internal partial class CellMaxHeightDataSetterCommon
     {
         public static readonly CellMaxHeightDataSetterCommon Instance = new CellMaxHeightDataSetterCommon();
 
@@ -851,7 +852,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CellMaxHeightDataCommon
+    internal partial class CellMaxHeightDataCommon
     {
         public static readonly CellMaxHeightDataCommon Instance = new CellMaxHeightDataCommon();
 
@@ -994,7 +995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CellMaxHeightDataSetterTranslationCommon
+    internal partial class CellMaxHeightDataSetterTranslationCommon
     {
         public static readonly CellMaxHeightDataSetterTranslationCommon Instance = new CellMaxHeightDataSetterTranslationCommon();
 
@@ -1089,7 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellMaxHeightData_Registration.Instance;
-        public static CellMaxHeightData_Registration StaticRegistration => CellMaxHeightData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CellMaxHeightData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellMaxHeightDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1113,7 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CellMaxHeightDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1162,7 +1163,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CellMaxHeightDataBinaryCreateTranslation
+    internal partial class CellMaxHeightDataBinaryCreateTranslation
     {
         public readonly static CellMaxHeightDataBinaryCreateTranslation Instance = new CellMaxHeightDataBinaryCreateTranslation();
 
@@ -1202,16 +1203,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CellMaxHeightDataBinaryOverlay :
+    internal partial class CellMaxHeightDataBinaryOverlay :
         PluginBinaryOverlay,
         ICellMaxHeightDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellMaxHeightData_Registration.Instance;
-        public static CellMaxHeightData_Registration StaticRegistration => CellMaxHeightData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CellMaxHeightData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellMaxHeightDataCommon.Instance;
         [DebuggerStepThrough]

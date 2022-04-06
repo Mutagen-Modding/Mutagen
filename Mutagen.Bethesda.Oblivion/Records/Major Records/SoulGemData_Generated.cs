@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -638,10 +639,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum SoulGemData_FieldIndex
+    internal enum SoulGemData_FieldIndex
     {
         Value = 0,
         Weight = 1,
@@ -649,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class SoulGemData_Registration : ILoquiRegistration
+    internal partial class SoulGemData_Registration : ILoquiRegistration
     {
         public static readonly SoulGemData_Registration Instance = new SoulGemData_Registration();
 
@@ -730,7 +731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class SoulGemDataSetterCommon
+    internal partial class SoulGemDataSetterCommon
     {
         public static readonly SoulGemDataSetterCommon Instance = new SoulGemDataSetterCommon();
 
@@ -770,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SoulGemDataCommon
+    internal partial class SoulGemDataCommon
     {
         public static readonly SoulGemDataCommon Instance = new SoulGemDataCommon();
 
@@ -896,7 +897,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SoulGemDataSetterTranslationCommon
+    internal partial class SoulGemDataSetterTranslationCommon
     {
         public static readonly SoulGemDataSetterTranslationCommon Instance = new SoulGemDataSetterTranslationCommon();
 
@@ -978,7 +979,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoulGemData_Registration.Instance;
-        public static SoulGemData_Registration StaticRegistration => SoulGemData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SoulGemData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoulGemDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1002,7 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SoulGemDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1048,7 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class SoulGemDataBinaryCreateTranslation
+    internal partial class SoulGemDataBinaryCreateTranslation
     {
         public readonly static SoulGemDataBinaryCreateTranslation Instance = new SoulGemDataBinaryCreateTranslation();
 
@@ -1084,16 +1085,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class SoulGemDataBinaryOverlay :
+    internal partial class SoulGemDataBinaryOverlay :
         PluginBinaryOverlay,
         ISoulGemDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoulGemData_Registration.Instance;
-        public static SoulGemData_Registration StaticRegistration => SoulGemData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SoulGemData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoulGemDataCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -568,17 +569,17 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum BookSpell_FieldIndex
+    internal enum BookSpell_FieldIndex
     {
         Spell = 0,
     }
     #endregion
 
     #region Registration
-    public partial class BookSpell_Registration : ILoquiRegistration
+    internal partial class BookSpell_Registration : ILoquiRegistration
     {
         public static readonly BookSpell_Registration Instance = new BookSpell_Registration();
 
@@ -652,7 +653,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class BookSpellSetterCommon : BookTeachTargetSetterCommon
+    internal partial class BookSpellSetterCommon : BookTeachTargetSetterCommon
     {
         public new static readonly BookSpellSetterCommon Instance = new BookSpellSetterCommon();
 
@@ -706,7 +707,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class BookSpellCommon : BookTeachTargetCommon
+    internal partial class BookSpellCommon : BookTeachTargetCommon
     {
         public new static readonly BookSpellCommon Instance = new BookSpellCommon();
 
@@ -859,7 +860,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class BookSpellSetterTranslationCommon : BookTeachTargetSetterTranslationCommon
+    internal partial class BookSpellSetterTranslationCommon : BookTeachTargetSetterTranslationCommon
     {
         public new static readonly BookSpellSetterTranslationCommon Instance = new BookSpellSetterTranslationCommon();
 
@@ -959,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookSpell_Registration.Instance;
-        public new static BookSpell_Registration StaticRegistration => BookSpell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => BookSpell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookSpellCommon.Instance;
         [DebuggerStepThrough]
@@ -977,7 +978,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class BookSpellBinaryWriteTranslation :
         BookTeachTargetBinaryWriteTranslation,
@@ -1028,7 +1029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class BookSpellBinaryCreateTranslation : BookTeachTargetBinaryCreateTranslation
+    internal partial class BookSpellBinaryCreateTranslation : BookTeachTargetBinaryCreateTranslation
     {
         public new readonly static BookSpellBinaryCreateTranslation Instance = new BookSpellBinaryCreateTranslation();
 
@@ -1052,16 +1053,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class BookSpellBinaryOverlay :
+    internal partial class BookSpellBinaryOverlay :
         BookTeachTargetBinaryOverlay,
         IBookSpellGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookSpell_Registration.Instance;
-        public new static BookSpell_Registration StaticRegistration => BookSpell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => BookSpell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookSpellCommon.Instance;
         [DebuggerStepThrough]

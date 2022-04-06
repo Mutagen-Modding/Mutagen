@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -561,10 +562,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PackageTargetAlias_FieldIndex
+    internal enum PackageTargetAlias_FieldIndex
     {
         CountOrDistance = 0,
         Alias = 1,
@@ -572,7 +573,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PackageTargetAlias_Registration : ILoquiRegistration
+    internal partial class PackageTargetAlias_Registration : ILoquiRegistration
     {
         public static readonly PackageTargetAlias_Registration Instance = new PackageTargetAlias_Registration();
 
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PackageTargetAliasSetterCommon : APackageTargetSetterCommon
+    internal partial class PackageTargetAliasSetterCommon : APackageTargetSetterCommon
     {
         public new static readonly PackageTargetAliasSetterCommon Instance = new PackageTargetAliasSetterCommon();
 
@@ -699,7 +700,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageTargetAliasCommon : APackageTargetCommon
+    internal partial class PackageTargetAliasCommon : APackageTargetCommon
     {
         public new static readonly PackageTargetAliasCommon Instance = new PackageTargetAliasCommon();
 
@@ -853,7 +854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageTargetAliasSetterTranslationCommon : APackageTargetSetterTranslationCommon
+    internal partial class PackageTargetAliasSetterTranslationCommon : APackageTargetSetterTranslationCommon
     {
         public new static readonly PackageTargetAliasSetterTranslationCommon Instance = new PackageTargetAliasSetterTranslationCommon();
 
@@ -953,7 +954,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageTargetAlias_Registration.Instance;
-        public new static PackageTargetAlias_Registration StaticRegistration => PackageTargetAlias_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageTargetAlias_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageTargetAliasCommon.Instance;
         [DebuggerStepThrough]
@@ -971,7 +972,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageTargetAliasBinaryWriteTranslation :
         APackageTargetBinaryWriteTranslation,
@@ -1023,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PackageTargetAliasBinaryCreateTranslation : APackageTargetBinaryCreateTranslation
+    internal partial class PackageTargetAliasBinaryCreateTranslation : APackageTargetBinaryCreateTranslation
     {
         public new readonly static PackageTargetAliasBinaryCreateTranslation Instance = new PackageTargetAliasBinaryCreateTranslation();
 
@@ -1050,16 +1051,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageTargetAliasBinaryOverlay :
+    internal partial class PackageTargetAliasBinaryOverlay :
         APackageTargetBinaryOverlay,
         IPackageTargetAliasGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageTargetAlias_Registration.Instance;
-        public new static PackageTargetAlias_Registration StaticRegistration => PackageTargetAlias_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageTargetAlias_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageTargetAliasCommon.Instance;
         [DebuggerStepThrough]

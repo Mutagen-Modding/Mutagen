@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -703,10 +704,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PlacedTrap_FieldIndex
+    internal enum PlacedTrap_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -736,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PlacedTrap_Registration : ILoquiRegistration
+    internal partial class PlacedTrap_Registration : ILoquiRegistration
     {
         public static readonly PlacedTrap_Registration Instance = new PlacedTrap_Registration();
 
@@ -817,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PlacedTrapSetterCommon : APlacedTrapSetterCommon
+    internal partial class PlacedTrapSetterCommon : APlacedTrapSetterCommon
     {
         public new static readonly PlacedTrapSetterCommon Instance = new PlacedTrapSetterCommon();
 
@@ -904,7 +905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedTrapCommon : APlacedTrapCommon
+    internal partial class PlacedTrapCommon : APlacedTrapCommon
     {
         public new static readonly PlacedTrapCommon Instance = new PlacedTrapCommon();
 
@@ -1219,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedTrapSetterTranslationCommon : APlacedTrapSetterTranslationCommon
+    internal partial class PlacedTrapSetterTranslationCommon : APlacedTrapSetterTranslationCommon
     {
         public new static readonly PlacedTrapSetterTranslationCommon Instance = new PlacedTrapSetterTranslationCommon();
 
@@ -1408,7 +1409,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedTrap_Registration.Instance;
-        public new static PlacedTrap_Registration StaticRegistration => PlacedTrap_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedTrap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedTrapCommon.Instance;
         [DebuggerStepThrough]
@@ -1426,7 +1427,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PlacedTrapBinaryWriteTranslation :
         APlacedTrapBinaryWriteTranslation,
@@ -1515,7 +1516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PlacedTrapBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
+    internal partial class PlacedTrapBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
     {
         public new readonly static PlacedTrapBinaryCreateTranslation Instance = new PlacedTrapBinaryCreateTranslation();
 
@@ -1542,16 +1543,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PlacedTrapBinaryOverlay :
+    internal partial class PlacedTrapBinaryOverlay :
         APlacedTrapBinaryOverlay,
         IPlacedTrapGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedTrap_Registration.Instance;
-        public new static PlacedTrap_Registration StaticRegistration => PlacedTrap_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedTrap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedTrapCommon.Instance;
         [DebuggerStepThrough]

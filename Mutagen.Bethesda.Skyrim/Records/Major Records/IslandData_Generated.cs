@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -869,10 +870,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum IslandData_FieldIndex
+    internal enum IslandData_FieldIndex
     {
         Min = 0,
         Max = 1,
@@ -882,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class IslandData_Registration : ILoquiRegistration
+    internal partial class IslandData_Registration : ILoquiRegistration
     {
         public static readonly IslandData_Registration Instance = new IslandData_Registration();
 
@@ -956,7 +957,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class IslandDataSetterCommon
+    internal partial class IslandDataSetterCommon
     {
         public static readonly IslandDataSetterCommon Instance = new IslandDataSetterCommon();
 
@@ -994,7 +995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class IslandDataCommon
+    internal partial class IslandDataCommon
     {
         public static readonly IslandDataCommon Instance = new IslandDataCommon();
 
@@ -1174,7 +1175,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class IslandDataSetterTranslationCommon
+    internal partial class IslandDataSetterTranslationCommon
     {
         public static readonly IslandDataSetterTranslationCommon Instance = new IslandDataSetterTranslationCommon();
 
@@ -1290,7 +1291,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IslandData_Registration.Instance;
-        public static IslandData_Registration StaticRegistration => IslandData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => IslandData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => IslandDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1314,7 +1315,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class IslandDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1365,7 +1366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class IslandDataBinaryCreateTranslation
+    internal partial class IslandDataBinaryCreateTranslation
     {
         public readonly static IslandDataBinaryCreateTranslation Instance = new IslandDataBinaryCreateTranslation();
 
@@ -1411,16 +1412,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class IslandDataBinaryOverlay :
+    internal partial class IslandDataBinaryOverlay :
         PluginBinaryOverlay,
         IIslandDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IslandData_Registration.Instance;
-        public static IslandData_Registration StaticRegistration => IslandData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => IslandData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => IslandDataCommon.Instance;
         [DebuggerStepThrough]

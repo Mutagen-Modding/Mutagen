@@ -6,7 +6,6 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda.Pex.Internals;
 using Noggog;
 using System;
 using System.Collections;
@@ -680,10 +679,10 @@ namespace Mutagen.Bethesda.Pex
 
 }
 
-namespace Mutagen.Bethesda.Pex.Internals
+namespace Mutagen.Bethesda.Pex
 {
     #region Field Index
-    public enum DebugPropertyGroup_FieldIndex
+    internal enum DebugPropertyGroup_FieldIndex
     {
         ObjectName = 0,
         GroupName = 1,
@@ -692,7 +691,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Registration
-    public partial class DebugPropertyGroup_Registration : ILoquiRegistration
+    internal partial class DebugPropertyGroup_Registration : ILoquiRegistration
     {
         public static readonly DebugPropertyGroup_Registration Instance = new DebugPropertyGroup_Registration();
 
@@ -765,7 +764,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Common
-    public partial class DebugPropertyGroupSetterCommon
+    internal partial class DebugPropertyGroupSetterCommon
     {
         public static readonly DebugPropertyGroupSetterCommon Instance = new DebugPropertyGroupSetterCommon();
 
@@ -780,7 +779,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class DebugPropertyGroupCommon
+    internal partial class DebugPropertyGroupCommon
     {
         public static readonly DebugPropertyGroupCommon Instance = new DebugPropertyGroupCommon();
 
@@ -925,7 +924,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class DebugPropertyGroupSetterTranslationCommon
+    internal partial class DebugPropertyGroupSetterTranslationCommon
     {
         public static readonly DebugPropertyGroupSetterTranslationCommon Instance = new DebugPropertyGroupSetterTranslationCommon();
 
@@ -1024,7 +1023,7 @@ namespace Mutagen.Bethesda.Pex
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DebugPropertyGroup_Registration.Instance;
-        public static DebugPropertyGroup_Registration StaticRegistration => DebugPropertyGroup_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DebugPropertyGroup_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DebugPropertyGroupCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -688,17 +689,17 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum NavmeshSet_FieldIndex
+    internal enum NavmeshSet_FieldIndex
     {
         Navmeshes = 0,
     }
     #endregion
 
     #region Registration
-    public partial class NavmeshSet_Registration : ILoquiRegistration
+    internal partial class NavmeshSet_Registration : ILoquiRegistration
     {
         public static readonly NavmeshSet_Registration Instance = new NavmeshSet_Registration();
 
@@ -772,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NavmeshSetSetterCommon
+    internal partial class NavmeshSetSetterCommon
     {
         public static readonly NavmeshSetSetterCommon Instance = new NavmeshSetSetterCommon();
 
@@ -808,7 +809,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NavmeshSetCommon
+    internal partial class NavmeshSetCommon
     {
         public static readonly NavmeshSetCommon Instance = new NavmeshSetCommon();
 
@@ -945,7 +946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NavmeshSetSetterTranslationCommon
+    internal partial class NavmeshSetSetterTranslationCommon
     {
         public static readonly NavmeshSetSetterTranslationCommon Instance = new NavmeshSetSetterTranslationCommon();
 
@@ -1038,7 +1039,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavmeshSet_Registration.Instance;
-        public static NavmeshSet_Registration StaticRegistration => NavmeshSet_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavmeshSet_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavmeshSetCommon.Instance;
         [DebuggerStepThrough]
@@ -1062,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NavmeshSetBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1107,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NavmeshSetBinaryCreateTranslation
+    internal partial class NavmeshSetBinaryCreateTranslation
     {
         public readonly static NavmeshSetBinaryCreateTranslation Instance = new NavmeshSetBinaryCreateTranslation();
 
@@ -1146,16 +1147,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NavmeshSetBinaryOverlay :
+    internal partial class NavmeshSetBinaryOverlay :
         PluginBinaryOverlay,
         INavmeshSetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavmeshSet_Registration.Instance;
-        public static NavmeshSet_Registration StaticRegistration => NavmeshSet_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavmeshSet_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavmeshSetCommon.Instance;
         [DebuggerStepThrough]

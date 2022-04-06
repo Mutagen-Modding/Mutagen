@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -716,10 +717,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ObjectTemplateInclude_FieldIndex
+    internal enum ObjectTemplateInclude_FieldIndex
     {
         Mod = 0,
         AttachPointIndex = 1,
@@ -729,7 +730,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ObjectTemplateInclude_Registration : ILoquiRegistration
+    internal partial class ObjectTemplateInclude_Registration : ILoquiRegistration
     {
         public static readonly ObjectTemplateInclude_Registration Instance = new ObjectTemplateInclude_Registration();
 
@@ -803,7 +804,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ObjectTemplateIncludeSetterCommon
+    internal partial class ObjectTemplateIncludeSetterCommon
     {
         public static readonly ObjectTemplateIncludeSetterCommon Instance = new ObjectTemplateIncludeSetterCommon();
 
@@ -842,7 +843,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ObjectTemplateIncludeCommon
+    internal partial class ObjectTemplateIncludeCommon
     {
         public static readonly ObjectTemplateIncludeCommon Instance = new ObjectTemplateIncludeCommon();
 
@@ -989,7 +990,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ObjectTemplateIncludeSetterTranslationCommon
+    internal partial class ObjectTemplateIncludeSetterTranslationCommon
     {
         public static readonly ObjectTemplateIncludeSetterTranslationCommon Instance = new ObjectTemplateIncludeSetterTranslationCommon();
 
@@ -1079,7 +1080,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectTemplateInclude_Registration.Instance;
-        public static ObjectTemplateInclude_Registration StaticRegistration => ObjectTemplateInclude_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ObjectTemplateInclude_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ObjectTemplateIncludeCommon.Instance;
         [DebuggerStepThrough]
@@ -1103,7 +1104,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ObjectTemplateIncludeBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1144,7 +1145,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ObjectTemplateIncludeBinaryCreateTranslation
+    internal partial class ObjectTemplateIncludeBinaryCreateTranslation
     {
         public readonly static ObjectTemplateIncludeBinaryCreateTranslation Instance = new ObjectTemplateIncludeBinaryCreateTranslation();
 
@@ -1182,16 +1183,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ObjectTemplateIncludeBinaryOverlay :
+    internal partial class ObjectTemplateIncludeBinaryOverlay :
         PluginBinaryOverlay,
         IObjectTemplateIncludeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectTemplateInclude_Registration.Instance;
-        public static ObjectTemplateInclude_Registration StaticRegistration => ObjectTemplateInclude_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ObjectTemplateInclude_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ObjectTemplateIncludeCommon.Instance;
         [DebuggerStepThrough]

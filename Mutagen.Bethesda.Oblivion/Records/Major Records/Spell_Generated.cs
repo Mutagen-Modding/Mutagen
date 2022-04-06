@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -648,10 +649,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Spell_FieldIndex
+    internal enum Spell_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -663,7 +664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Spell_Registration : ILoquiRegistration
+    internal partial class Spell_Registration : ILoquiRegistration
     {
         public static readonly Spell_Registration Instance = new Spell_Registration();
 
@@ -746,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class SpellSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class SpellSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly SpellSetterCommon Instance = new SpellSetterCommon();
 
@@ -810,7 +811,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SpellCommon : OblivionMajorRecordCommon
+    internal partial class SpellCommon : OblivionMajorRecordCommon
     {
         public new static readonly SpellCommon Instance = new SpellCommon();
 
@@ -1042,7 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SpellSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class SpellSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly SpellSetterTranslationCommon Instance = new SpellSetterTranslationCommon();
 
@@ -1201,7 +1202,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Spell_Registration.Instance;
-        public new static Spell_Registration StaticRegistration => Spell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Spell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SpellCommon.Instance;
         [DebuggerStepThrough]
@@ -1219,7 +1220,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SpellBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1301,7 +1302,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class SpellBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class SpellBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static SpellBinaryCreateTranslation Instance = new SpellBinaryCreateTranslation();
 
@@ -1350,16 +1351,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public abstract partial class SpellBinaryOverlay :
+    internal abstract partial class SpellBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         ISpellGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Spell_Registration.Instance;
-        public new static Spell_Registration StaticRegistration => Spell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Spell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SpellCommon.Instance;
         [DebuggerStepThrough]

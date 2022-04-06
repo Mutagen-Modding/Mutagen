@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1178,10 +1179,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PackageBranch_FieldIndex
+    internal enum PackageBranch_FieldIndex
     {
         BranchType = 0,
         Conditions = 1,
@@ -1196,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PackageBranch_Registration : ILoquiRegistration
+    internal partial class PackageBranch_Registration : ILoquiRegistration
     {
         public static readonly PackageBranch_Registration Instance = new PackageBranch_Registration();
 
@@ -1289,7 +1290,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PackageBranchSetterCommon
+    internal partial class PackageBranchSetterCommon
     {
         public static readonly PackageBranchSetterCommon Instance = new PackageBranchSetterCommon();
 
@@ -1334,7 +1335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageBranchCommon
+    internal partial class PackageBranchCommon
     {
         public static readonly PackageBranchCommon Instance = new PackageBranchCommon();
 
@@ -1630,7 +1631,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageBranchSetterTranslationCommon
+    internal partial class PackageBranchSetterTranslationCommon
     {
         public static readonly PackageBranchSetterTranslationCommon Instance = new PackageBranchSetterTranslationCommon();
 
@@ -1854,7 +1855,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageBranch_Registration.Instance;
-        public static PackageBranch_Registration StaticRegistration => PackageBranch_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PackageBranch_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageBranchCommon.Instance;
         [DebuggerStepThrough]
@@ -1878,7 +1879,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageBranchBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1979,7 +1980,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PackageBranchBinaryCreateTranslation
+    internal partial class PackageBranchBinaryCreateTranslation
     {
         public readonly static PackageBranchBinaryCreateTranslation Instance = new PackageBranchBinaryCreateTranslation();
 
@@ -2103,16 +2104,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageBranchBinaryOverlay :
+    internal partial class PackageBranchBinaryOverlay :
         PluginBinaryOverlay,
         IPackageBranchGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageBranch_Registration.Instance;
-        public static PackageBranch_Registration StaticRegistration => PackageBranch_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PackageBranch_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageBranchCommon.Instance;
         [DebuggerStepThrough]

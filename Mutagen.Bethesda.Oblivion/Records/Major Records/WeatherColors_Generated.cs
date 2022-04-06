@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -702,10 +703,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum WeatherColors_FieldIndex
+    internal enum WeatherColors_FieldIndex
     {
         Sunrise = 0,
         Day = 1,
@@ -715,7 +716,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class WeatherColors_Registration : ILoquiRegistration
+    internal partial class WeatherColors_Registration : ILoquiRegistration
     {
         public static readonly WeatherColors_Registration Instance = new WeatherColors_Registration();
 
@@ -789,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class WeatherColorsSetterCommon
+    internal partial class WeatherColorsSetterCommon
     {
         public static readonly WeatherColorsSetterCommon Instance = new WeatherColorsSetterCommon();
 
@@ -827,7 +828,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WeatherColorsCommon
+    internal partial class WeatherColorsCommon
     {
         public static readonly WeatherColorsCommon Instance = new WeatherColorsCommon();
 
@@ -973,7 +974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WeatherColorsSetterTranslationCommon
+    internal partial class WeatherColorsSetterTranslationCommon
     {
         public static readonly WeatherColorsSetterTranslationCommon Instance = new WeatherColorsSetterTranslationCommon();
 
@@ -1063,7 +1064,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherColors_Registration.Instance;
-        public static WeatherColors_Registration StaticRegistration => WeatherColors_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherColors_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherColorsCommon.Instance;
         [DebuggerStepThrough]
@@ -1087,7 +1088,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class WeatherColorsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1134,7 +1135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class WeatherColorsBinaryCreateTranslation
+    internal partial class WeatherColorsBinaryCreateTranslation
     {
         public readonly static WeatherColorsBinaryCreateTranslation Instance = new WeatherColorsBinaryCreateTranslation();
 
@@ -1172,16 +1173,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class WeatherColorsBinaryOverlay :
+    internal partial class WeatherColorsBinaryOverlay :
         PluginBinaryOverlay,
         IWeatherColorsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherColors_Registration.Instance;
-        public static WeatherColors_Registration StaticRegistration => WeatherColors_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherColors_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherColorsCommon.Instance;
         [DebuggerStepThrough]

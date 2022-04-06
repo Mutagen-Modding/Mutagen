@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -667,10 +668,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Condition_FieldIndex
+    internal enum Condition_FieldIndex
     {
         CompareOperator = 0,
         Flags = 1,
@@ -679,7 +680,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Condition_Registration : ILoquiRegistration
+    internal partial class Condition_Registration : ILoquiRegistration
     {
         public static readonly Condition_Registration Instance = new Condition_Registration();
 
@@ -764,7 +765,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ConditionSetterCommon
+    internal partial class ConditionSetterCommon
     {
         public static readonly ConditionSetterCommon Instance = new ConditionSetterCommon();
 
@@ -796,7 +797,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ConditionCommon
+    internal partial class ConditionCommon
     {
         public static readonly ConditionCommon Instance = new ConditionCommon();
 
@@ -932,7 +933,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ConditionSetterTranslationCommon
+    internal partial class ConditionSetterTranslationCommon
     {
         public static readonly ConditionSetterTranslationCommon Instance = new ConditionSetterTranslationCommon();
 
@@ -1018,7 +1019,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Condition_Registration.Instance;
-        public static Condition_Registration StaticRegistration => Condition_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Condition_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ConditionCommon.Instance;
         [DebuggerStepThrough]
@@ -1042,7 +1043,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ConditionBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1103,7 +1104,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ConditionBinaryCreateTranslation
+    internal partial class ConditionBinaryCreateTranslation
     {
         public readonly static ConditionBinaryCreateTranslation Instance = new ConditionBinaryCreateTranslation();
 
@@ -1145,16 +1146,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public abstract partial class ConditionBinaryOverlay :
+    internal abstract partial class ConditionBinaryOverlay :
         PluginBinaryOverlay,
         IConditionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Condition_Registration.Instance;
-        public static Condition_Registration StaticRegistration => Condition_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Condition_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ConditionCommon.Instance;
         [DebuggerStepThrough]

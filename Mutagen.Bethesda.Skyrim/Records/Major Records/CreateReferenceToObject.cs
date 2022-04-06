@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Skyrim
+public partial class CreateReferenceToObject
 {
-    public partial class CreateReferenceToObject
+    public enum CreateEnum
     {
-        public enum CreateEnum
-        {
-            At = 0,
-            In = 0x8000
-        }
+        At = 0,
+        In = 0x8000
     }
 }

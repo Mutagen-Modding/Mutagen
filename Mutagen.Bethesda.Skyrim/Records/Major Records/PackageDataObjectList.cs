@@ -2,16 +2,12 @@ using System;
 using System.Diagnostics;
 using Mutagen.Bethesda.Plugins.Aspects;
 
-namespace Mutagen.Bethesda.Skyrim
-{
-    namespace Internals
-    {
-        public partial class PackageDataObjectListBinaryOverlay
-        {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+namespace Mutagen.Bethesda.Skyrim;
 
-            public float? Data => throw new NotImplementedException();
-        }
-    }
+partial class PackageDataObjectListBinaryOverlay
+{
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+
+    public float? Data => throw new NotImplementedException();
 }

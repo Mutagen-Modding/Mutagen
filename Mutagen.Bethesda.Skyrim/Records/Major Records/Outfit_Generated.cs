@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -743,10 +744,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Outfit_FieldIndex
+    internal enum Outfit_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -759,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Outfit_Registration : ILoquiRegistration
+    internal partial class Outfit_Registration : ILoquiRegistration
     {
         public static readonly Outfit_Registration Instance = new Outfit_Registration();
 
@@ -843,7 +844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class OutfitSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class OutfitSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly OutfitSetterCommon Instance = new OutfitSetterCommon();
 
@@ -914,7 +915,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class OutfitCommon : SkyrimMajorRecordCommon
+    internal partial class OutfitCommon : SkyrimMajorRecordCommon
     {
         public new static readonly OutfitCommon Instance = new OutfitCommon();
 
@@ -1171,7 +1172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class OutfitSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class OutfitSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly OutfitSetterTranslationCommon Instance = new OutfitSetterTranslationCommon();
 
@@ -1353,7 +1354,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Outfit_Registration.Instance;
-        public new static Outfit_Registration StaticRegistration => Outfit_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Outfit_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => OutfitCommon.Instance;
         [DebuggerStepThrough]
@@ -1371,7 +1372,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class OutfitBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1463,7 +1464,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class OutfitBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class OutfitBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static OutfitBinaryCreateTranslation Instance = new OutfitBinaryCreateTranslation();
 
@@ -1523,16 +1524,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class OutfitBinaryOverlay :
+    internal partial class OutfitBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IOutfitGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Outfit_Registration.Instance;
-        public new static Outfit_Registration StaticRegistration => Outfit_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Outfit_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => OutfitCommon.Instance;
         [DebuggerStepThrough]

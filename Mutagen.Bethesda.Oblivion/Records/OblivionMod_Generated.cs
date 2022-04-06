@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -29,6 +28,8 @@ using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -4073,10 +4074,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum OblivionMod_FieldIndex
+    internal enum OblivionMod_FieldIndex
     {
         ModHeader = 0,
         GameSettings = 1,
@@ -4139,7 +4140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class OblivionMod_Registration : ILoquiRegistration
+    internal partial class OblivionMod_Registration : ILoquiRegistration
     {
         public static readonly OblivionMod_Registration Instance = new OblivionMod_Registration();
 
@@ -4214,7 +4215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class OblivionModSetterCommon
+    internal partial class OblivionModSetterCommon
     {
         public static readonly OblivionModSetterCommon Instance = new OblivionModSetterCommon();
 
@@ -5058,7 +5059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class OblivionModCommon
+    internal partial class OblivionModCommon
     {
         public static readonly OblivionModCommon Instance = new OblivionModCommon();
 
@@ -8990,7 +8991,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class OblivionModSetterTranslationCommon
+    internal partial class OblivionModSetterTranslationCommon
     {
         public static readonly OblivionModSetterTranslationCommon Instance = new OblivionModSetterTranslationCommon();
 
@@ -10204,7 +10205,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
-        public static OblivionMod_Registration StaticRegistration => OblivionMod_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => OblivionMod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => OblivionModCommon.Instance;
         [DebuggerStepThrough]
@@ -10357,9 +10358,9 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class OblivionMod_Registration : IModRegistration
+    internal partial class OblivionMod_Registration : IModRegistration
     {
         public GameCategory GameCategory => GameCategory.Oblivion;
     }
@@ -10368,7 +10369,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 #endregion
 
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class OblivionModBinaryWriteTranslation
     {
@@ -11034,7 +11035,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class OblivionModBinaryCreateTranslation
+    internal partial class OblivionModBinaryCreateTranslation
     {
         public readonly static OblivionModBinaryCreateTranslation Instance = new OblivionModBinaryCreateTranslation();
 
@@ -11937,15 +11938,15 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     [DebuggerDisplay("{GameRelease} {ModKey.ToString()}")]
-    public partial class OblivionModBinaryOverlay : IOblivionModDisposableGetter
+    internal partial class OblivionModBinaryOverlay : IOblivionModDisposableGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
-        public static OblivionMod_Registration StaticRegistration => OblivionMod_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => OblivionMod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => OblivionModCommon.Instance;
         [DebuggerStepThrough]

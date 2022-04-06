@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1081,10 +1082,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CellSubBlock_FieldIndex
+    internal enum CellSubBlock_FieldIndex
     {
         BlockNumber = 0,
         GroupType = 1,
@@ -1095,7 +1096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CellSubBlock_Registration : ILoquiRegistration
+    internal partial class CellSubBlock_Registration : ILoquiRegistration
     {
         public static readonly CellSubBlock_Registration Instance = new CellSubBlock_Registration();
 
@@ -1170,7 +1171,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CellSubBlockSetterCommon
+    internal partial class CellSubBlockSetterCommon
     {
         public static readonly CellSubBlockSetterCommon Instance = new CellSubBlockSetterCommon();
 
@@ -1420,7 +1421,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CellSubBlockCommon
+    internal partial class CellSubBlockCommon
     {
         public static readonly CellSubBlockCommon Instance = new CellSubBlockCommon();
 
@@ -1758,7 +1759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CellSubBlockSetterTranslationCommon
+    internal partial class CellSubBlockSetterTranslationCommon
     {
         public static readonly CellSubBlockSetterTranslationCommon Instance = new CellSubBlockSetterTranslationCommon();
 
@@ -1872,7 +1873,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellSubBlock_Registration.Instance;
-        public static CellSubBlock_Registration StaticRegistration => CellSubBlock_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CellSubBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellSubBlockCommon.Instance;
         [DebuggerStepThrough]
@@ -1896,7 +1897,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CellSubBlockBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1972,7 +1973,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CellSubBlockBinaryCreateTranslation
+    internal partial class CellSubBlockBinaryCreateTranslation
     {
         public readonly static CellSubBlockBinaryCreateTranslation Instance = new CellSubBlockBinaryCreateTranslation();
 
@@ -2039,16 +2040,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CellSubBlockBinaryOverlay :
+    internal partial class CellSubBlockBinaryOverlay :
         PluginBinaryOverlay,
         ICellSubBlockGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellSubBlock_Registration.Instance;
-        public static CellSubBlock_Registration StaticRegistration => CellSubBlock_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CellSubBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellSubBlockCommon.Instance;
         [DebuggerStepThrough]

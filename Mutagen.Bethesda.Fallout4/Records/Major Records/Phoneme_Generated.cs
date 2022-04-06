@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -2035,10 +2036,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Phoneme_FieldIndex
+    internal enum Phoneme_FieldIndex
     {
         Name = 0,
         IY = 1,
@@ -2088,7 +2089,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Phoneme_Registration : ILoquiRegistration
+    internal partial class Phoneme_Registration : ILoquiRegistration
     {
         public static readonly Phoneme_Registration Instance = new Phoneme_Registration();
 
@@ -2162,7 +2163,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class PhonemeSetterCommon
+    internal partial class PhonemeSetterCommon
     {
         public static readonly PhonemeSetterCommon Instance = new PhonemeSetterCommon();
 
@@ -2240,7 +2241,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class PhonemeCommon
+    internal partial class PhonemeCommon
     {
         public static readonly PhonemeCommon Instance = new PhonemeCommon();
 
@@ -2786,7 +2787,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class PhonemeSetterTranslationCommon
+    internal partial class PhonemeSetterTranslationCommon
     {
         public static readonly PhonemeSetterTranslationCommon Instance = new PhonemeSetterTranslationCommon();
 
@@ -3036,7 +3037,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Phoneme_Registration.Instance;
-        public static Phoneme_Registration StaticRegistration => Phoneme_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Phoneme_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PhonemeCommon.Instance;
         [DebuggerStepThrough]
@@ -3060,7 +3061,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PhonemeBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -3095,7 +3096,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class PhonemeBinaryCreateTranslation
+    internal partial class PhonemeBinaryCreateTranslation
     {
         public readonly static PhonemeBinaryCreateTranslation Instance = new PhonemeBinaryCreateTranslation();
 
@@ -3129,16 +3130,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class PhonemeBinaryOverlay :
+    internal partial class PhonemeBinaryOverlay :
         PluginBinaryOverlay,
         IPhonemeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Phoneme_Registration.Instance;
-        public static Phoneme_Registration StaticRegistration => Phoneme_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Phoneme_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PhonemeCommon.Instance;
         [DebuggerStepThrough]

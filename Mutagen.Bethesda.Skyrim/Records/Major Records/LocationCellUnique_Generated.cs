@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -697,10 +698,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LocationCellUnique_FieldIndex
+    internal enum LocationCellUnique_FieldIndex
     {
         Actor = 0,
         Ref = 1,
@@ -709,7 +710,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LocationCellUnique_Registration : ILoquiRegistration
+    internal partial class LocationCellUnique_Registration : ILoquiRegistration
     {
         public static readonly LocationCellUnique_Registration Instance = new LocationCellUnique_Registration();
 
@@ -783,7 +784,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LocationCellUniqueSetterCommon
+    internal partial class LocationCellUniqueSetterCommon
     {
         public static readonly LocationCellUniqueSetterCommon Instance = new LocationCellUniqueSetterCommon();
 
@@ -823,7 +824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationCellUniqueCommon
+    internal partial class LocationCellUniqueCommon
     {
         public static readonly LocationCellUniqueCommon Instance = new LocationCellUniqueCommon();
 
@@ -962,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationCellUniqueSetterTranslationCommon
+    internal partial class LocationCellUniqueSetterTranslationCommon
     {
         public static readonly LocationCellUniqueSetterTranslationCommon Instance = new LocationCellUniqueSetterTranslationCommon();
 
@@ -1048,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCellUnique_Registration.Instance;
-        public static LocationCellUnique_Registration StaticRegistration => LocationCellUnique_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocationCellUnique_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCellUniqueCommon.Instance;
         [DebuggerStepThrough]
@@ -1072,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LocationCellUniqueBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1116,7 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LocationCellUniqueBinaryCreateTranslation
+    internal partial class LocationCellUniqueBinaryCreateTranslation
     {
         public readonly static LocationCellUniqueBinaryCreateTranslation Instance = new LocationCellUniqueBinaryCreateTranslation();
 
@@ -1153,16 +1154,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LocationCellUniqueBinaryOverlay :
+    internal partial class LocationCellUniqueBinaryOverlay :
         PluginBinaryOverlay,
         ILocationCellUniqueGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCellUnique_Registration.Instance;
-        public static LocationCellUnique_Registration StaticRegistration => LocationCellUnique_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocationCellUnique_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCellUniqueCommon.Instance;
         [DebuggerStepThrough]

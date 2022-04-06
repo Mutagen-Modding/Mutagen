@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -650,10 +651,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WorldspaceReference_FieldIndex
+    internal enum WorldspaceReference_FieldIndex
     {
         Reference = 0,
         Position = 1,
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WorldspaceReference_Registration : ILoquiRegistration
+    internal partial class WorldspaceReference_Registration : ILoquiRegistration
     {
         public static readonly WorldspaceReference_Registration Instance = new WorldspaceReference_Registration();
 
@@ -735,7 +736,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WorldspaceReferenceSetterCommon
+    internal partial class WorldspaceReferenceSetterCommon
     {
         public static readonly WorldspaceReferenceSetterCommon Instance = new WorldspaceReferenceSetterCommon();
 
@@ -772,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceReferenceCommon
+    internal partial class WorldspaceReferenceCommon
     {
         public static readonly WorldspaceReferenceCommon Instance = new WorldspaceReferenceCommon();
 
@@ -899,7 +900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceReferenceSetterTranslationCommon
+    internal partial class WorldspaceReferenceSetterTranslationCommon
     {
         public static readonly WorldspaceReferenceSetterTranslationCommon Instance = new WorldspaceReferenceSetterTranslationCommon();
 
@@ -981,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceReference_Registration.Instance;
-        public static WorldspaceReference_Registration StaticRegistration => WorldspaceReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1005,7 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1046,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WorldspaceReferenceBinaryCreateTranslation
+    internal partial class WorldspaceReferenceBinaryCreateTranslation
     {
         public readonly static WorldspaceReferenceBinaryCreateTranslation Instance = new WorldspaceReferenceBinaryCreateTranslation();
 
@@ -1082,16 +1083,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WorldspaceReferenceBinaryOverlay :
+    internal partial class WorldspaceReferenceBinaryOverlay :
         PluginBinaryOverlay,
         IWorldspaceReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceReference_Registration.Instance;
-        public static WorldspaceReference_Registration StaticRegistration => WorldspaceReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceReferenceCommon.Instance;
         [DebuggerStepThrough]

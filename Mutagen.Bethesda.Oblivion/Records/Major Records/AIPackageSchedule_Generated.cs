@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -734,10 +735,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum AIPackageSchedule_FieldIndex
+    internal enum AIPackageSchedule_FieldIndex
     {
         Month = 0,
         DayOfWeek = 1,
@@ -748,7 +749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class AIPackageSchedule_Registration : ILoquiRegistration
+    internal partial class AIPackageSchedule_Registration : ILoquiRegistration
     {
         public static readonly AIPackageSchedule_Registration Instance = new AIPackageSchedule_Registration();
 
@@ -829,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class AIPackageScheduleSetterCommon
+    internal partial class AIPackageScheduleSetterCommon
     {
         public static readonly AIPackageScheduleSetterCommon Instance = new AIPackageScheduleSetterCommon();
 
@@ -872,7 +873,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AIPackageScheduleCommon
+    internal partial class AIPackageScheduleCommon
     {
         public static readonly AIPackageScheduleCommon Instance = new AIPackageScheduleCommon();
 
@@ -1028,7 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AIPackageScheduleSetterTranslationCommon
+    internal partial class AIPackageScheduleSetterTranslationCommon
     {
         public static readonly AIPackageScheduleSetterTranslationCommon Instance = new AIPackageScheduleSetterTranslationCommon();
 
@@ -1122,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageSchedule_Registration.Instance;
-        public static AIPackageSchedule_Registration StaticRegistration => AIPackageSchedule_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AIPackageSchedule_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageScheduleCommon.Instance;
         [DebuggerStepThrough]
@@ -1146,7 +1147,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AIPackageScheduleBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1199,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class AIPackageScheduleBinaryCreateTranslation
+    internal partial class AIPackageScheduleBinaryCreateTranslation
     {
         public readonly static AIPackageScheduleBinaryCreateTranslation Instance = new AIPackageScheduleBinaryCreateTranslation();
 
@@ -1242,16 +1243,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class AIPackageScheduleBinaryOverlay :
+    internal partial class AIPackageScheduleBinaryOverlay :
         PluginBinaryOverlay,
         IAIPackageScheduleGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageSchedule_Registration.Instance;
-        public static AIPackageSchedule_Registration StaticRegistration => AIPackageSchedule_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AIPackageSchedule_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageScheduleCommon.Instance;
         [DebuggerStepThrough]

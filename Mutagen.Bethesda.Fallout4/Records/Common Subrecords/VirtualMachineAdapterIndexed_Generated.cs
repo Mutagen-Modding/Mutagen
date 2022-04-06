@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -589,10 +590,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum VirtualMachineAdapterIndexed_FieldIndex
+    internal enum VirtualMachineAdapterIndexed_FieldIndex
     {
         Version = 0,
         ObjectFormat = 1,
@@ -602,7 +603,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class VirtualMachineAdapterIndexed_Registration : ILoquiRegistration
+    internal partial class VirtualMachineAdapterIndexed_Registration : ILoquiRegistration
     {
         public static readonly VirtualMachineAdapterIndexed_Registration Instance = new VirtualMachineAdapterIndexed_Registration();
 
@@ -683,7 +684,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class VirtualMachineAdapterIndexedSetterCommon : AVirtualMachineAdapterSetterCommon
+    internal partial class VirtualMachineAdapterIndexedSetterCommon : AVirtualMachineAdapterSetterCommon
     {
         public new static readonly VirtualMachineAdapterIndexedSetterCommon Instance = new VirtualMachineAdapterIndexedSetterCommon();
 
@@ -741,7 +742,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class VirtualMachineAdapterIndexedCommon : AVirtualMachineAdapterCommon
+    internal partial class VirtualMachineAdapterIndexedCommon : AVirtualMachineAdapterCommon
     {
         public new static readonly VirtualMachineAdapterIndexedCommon Instance = new VirtualMachineAdapterIndexedCommon();
 
@@ -918,7 +919,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class VirtualMachineAdapterIndexedSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
+    internal partial class VirtualMachineAdapterIndexedSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
     {
         public new static readonly VirtualMachineAdapterIndexedSetterTranslationCommon Instance = new VirtualMachineAdapterIndexedSetterTranslationCommon();
 
@@ -1040,7 +1041,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VirtualMachineAdapterIndexed_Registration.Instance;
-        public new static VirtualMachineAdapterIndexed_Registration StaticRegistration => VirtualMachineAdapterIndexed_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => VirtualMachineAdapterIndexed_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VirtualMachineAdapterIndexedCommon.Instance;
         [DebuggerStepThrough]
@@ -1058,7 +1059,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class VirtualMachineAdapterIndexedBinaryWriteTranslation :
         AVirtualMachineAdapterBinaryWriteTranslation,
@@ -1132,7 +1133,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class VirtualMachineAdapterIndexedBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
+    internal partial class VirtualMachineAdapterIndexedBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
     {
         public new readonly static VirtualMachineAdapterIndexedBinaryCreateTranslation Instance = new VirtualMachineAdapterIndexedBinaryCreateTranslation();
 
@@ -1166,16 +1167,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class VirtualMachineAdapterIndexedBinaryOverlay :
+    internal partial class VirtualMachineAdapterIndexedBinaryOverlay :
         AVirtualMachineAdapterBinaryOverlay,
         IVirtualMachineAdapterIndexedGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VirtualMachineAdapterIndexed_Registration.Instance;
-        public new static VirtualMachineAdapterIndexed_Registration StaticRegistration => VirtualMachineAdapterIndexed_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => VirtualMachineAdapterIndexed_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VirtualMachineAdapterIndexedCommon.Instance;
         [DebuggerStepThrough]

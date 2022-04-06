@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -877,10 +878,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum AcousticSpace_FieldIndex
+    internal enum AcousticSpace_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -898,7 +899,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class AcousticSpace_Registration : ILoquiRegistration
+    internal partial class AcousticSpace_Registration : ILoquiRegistration
     {
         public static readonly AcousticSpace_Registration Instance = new AcousticSpace_Registration();
 
@@ -987,7 +988,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class AcousticSpaceSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class AcousticSpaceSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly AcousticSpaceSetterCommon Instance = new AcousticSpaceSetterCommon();
 
@@ -1065,7 +1066,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class AcousticSpaceCommon : Fallout4MajorRecordCommon
+    internal partial class AcousticSpaceCommon : Fallout4MajorRecordCommon
     {
         public new static readonly AcousticSpaceCommon Instance = new AcousticSpaceCommon();
 
@@ -1371,7 +1372,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class AcousticSpaceSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class AcousticSpaceSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly AcousticSpaceSetterTranslationCommon Instance = new AcousticSpaceSetterTranslationCommon();
 
@@ -1568,7 +1569,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AcousticSpace_Registration.Instance;
-        public new static AcousticSpace_Registration StaticRegistration => AcousticSpace_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AcousticSpace_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AcousticSpaceCommon.Instance;
         [DebuggerStepThrough]
@@ -1586,7 +1587,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AcousticSpaceBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -1695,7 +1696,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class AcousticSpaceBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class AcousticSpaceBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static AcousticSpaceBinaryCreateTranslation Instance = new AcousticSpaceBinaryCreateTranslation();
 
@@ -1783,16 +1784,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class AcousticSpaceBinaryOverlay :
+    internal partial class AcousticSpaceBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IAcousticSpaceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AcousticSpace_Registration.Instance;
-        public new static AcousticSpace_Registration StaticRegistration => AcousticSpace_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AcousticSpace_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AcousticSpaceCommon.Instance;
         [DebuggerStepThrough]

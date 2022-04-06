@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -692,10 +693,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum DestructionStage_FieldIndex
+    internal enum DestructionStage_FieldIndex
     {
         Data = 0,
         Model = 1,
@@ -703,7 +704,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class DestructionStage_Registration : ILoquiRegistration
+    internal partial class DestructionStage_Registration : ILoquiRegistration
     {
         public static readonly DestructionStage_Registration Instance = new DestructionStage_Registration();
 
@@ -801,7 +802,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class DestructionStageSetterCommon
+    internal partial class DestructionStageSetterCommon
     {
         public static readonly DestructionStageSetterCommon Instance = new DestructionStageSetterCommon();
 
@@ -840,7 +841,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DestructionStageCommon
+    internal partial class DestructionStageCommon
     {
         public static readonly DestructionStageCommon Instance = new DestructionStageCommon();
 
@@ -1004,7 +1005,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DestructionStageSetterTranslationCommon
+    internal partial class DestructionStageSetterTranslationCommon
     {
         public static readonly DestructionStageSetterTranslationCommon Instance = new DestructionStageSetterTranslationCommon();
 
@@ -1130,7 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DestructionStage_Registration.Instance;
-        public static DestructionStage_Registration StaticRegistration => DestructionStage_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DestructionStage_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DestructionStageCommon.Instance;
         [DebuggerStepThrough]
@@ -1154,7 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DestructionStageBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1206,7 +1207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class DestructionStageBinaryCreateTranslation
+    internal partial class DestructionStageBinaryCreateTranslation
     {
         public readonly static DestructionStageBinaryCreateTranslation Instance = new DestructionStageBinaryCreateTranslation();
 
@@ -1276,16 +1277,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class DestructionStageBinaryOverlay :
+    internal partial class DestructionStageBinaryOverlay :
         PluginBinaryOverlay,
         IDestructionStageGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DestructionStage_Registration.Instance;
-        public static DestructionStage_Registration StaticRegistration => DestructionStage_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DestructionStage_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DestructionStageCommon.Instance;
         [DebuggerStepThrough]

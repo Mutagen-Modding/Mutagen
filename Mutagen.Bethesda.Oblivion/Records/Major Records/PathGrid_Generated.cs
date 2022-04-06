@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1005,10 +1006,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum PathGrid_FieldIndex
+    internal enum PathGrid_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1023,7 +1024,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class PathGrid_Registration : ILoquiRegistration
+    internal partial class PathGrid_Registration : ILoquiRegistration
     {
         public static readonly PathGrid_Registration Instance = new PathGrid_Registration();
 
@@ -1110,7 +1111,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class PathGridSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class PathGridSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly PathGridSetterCommon Instance = new PathGridSetterCommon();
 
@@ -1184,7 +1185,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class PathGridCommon : OblivionMajorRecordCommon
+    internal partial class PathGridCommon : OblivionMajorRecordCommon
     {
         public new static readonly PathGridCommon Instance = new PathGridCommon();
 
@@ -1505,7 +1506,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class PathGridSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class PathGridSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly PathGridSetterTranslationCommon Instance = new PathGridSetterTranslationCommon();
 
@@ -1759,7 +1760,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGrid_Registration.Instance;
-        public new static PathGrid_Registration StaticRegistration => PathGrid_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PathGrid_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PathGridCommon.Instance;
         [DebuggerStepThrough]
@@ -1777,7 +1778,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class PathGridBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1898,7 +1899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class PathGridBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class PathGridBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static PathGridBinaryCreateTranslation Instance = new PathGridBinaryCreateTranslation();
 
@@ -1979,16 +1980,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class PathGridBinaryOverlay :
+    internal partial class PathGridBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IPathGridGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGrid_Registration.Instance;
-        public new static PathGrid_Registration StaticRegistration => PathGrid_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PathGrid_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PathGridCommon.Instance;
         [DebuggerStepThrough]

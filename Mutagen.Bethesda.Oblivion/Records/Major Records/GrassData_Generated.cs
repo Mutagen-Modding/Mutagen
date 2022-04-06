@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -965,10 +966,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum GrassData_FieldIndex
+    internal enum GrassData_FieldIndex
     {
         Density = 0,
         MinSlope = 1,
@@ -986,7 +987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class GrassData_Registration : ILoquiRegistration
+    internal partial class GrassData_Registration : ILoquiRegistration
     {
         public static readonly GrassData_Registration Instance = new GrassData_Registration();
 
@@ -1067,7 +1068,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class GrassDataSetterCommon
+    internal partial class GrassDataSetterCommon
     {
         public static readonly GrassDataSetterCommon Instance = new GrassDataSetterCommon();
 
@@ -1117,7 +1118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class GrassDataCommon
+    internal partial class GrassDataCommon
     {
         public static readonly GrassDataCommon Instance = new GrassDataCommon();
 
@@ -1343,7 +1344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class GrassDataSetterTranslationCommon
+    internal partial class GrassDataSetterTranslationCommon
     {
         public static readonly GrassDataSetterTranslationCommon Instance = new GrassDataSetterTranslationCommon();
 
@@ -1465,7 +1466,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GrassData_Registration.Instance;
-        public static GrassData_Registration StaticRegistration => GrassData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => GrassData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => GrassDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1489,7 +1490,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class GrassDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1557,7 +1558,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class GrassDataBinaryCreateTranslation
+    internal partial class GrassDataBinaryCreateTranslation
     {
         public readonly static GrassDataBinaryCreateTranslation Instance = new GrassDataBinaryCreateTranslation();
 
@@ -1607,16 +1608,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class GrassDataBinaryOverlay :
+    internal partial class GrassDataBinaryOverlay :
         PluginBinaryOverlay,
         IGrassDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GrassData_Registration.Instance;
-        public static GrassData_Registration StaticRegistration => GrassData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => GrassData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => GrassDataCommon.Instance;
         [DebuggerStepThrough]

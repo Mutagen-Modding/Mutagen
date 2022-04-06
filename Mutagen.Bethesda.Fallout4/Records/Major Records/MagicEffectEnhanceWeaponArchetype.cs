@@ -25,11 +25,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IObjectEffectGetter> Association { get; }
     }
 
-    namespace Internals
+    internal partial class MagicEffectEnhanceWeaponArchetypeBinaryOverlay
     {
-        public partial class MagicEffectEnhanceWeaponArchetypeBinaryOverlay
-        {
-            public IFormLinkGetter<IObjectEffectGetter> Association => this.AssociationKey.AsLink<IObjectEffectGetter>();
-        }
+        public IFormLinkGetter<IObjectEffectGetter> Association => this.AssociationKey.AsLink<IObjectEffectGetter>();
     }
 }

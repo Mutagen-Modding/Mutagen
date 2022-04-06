@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -986,10 +987,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum ClassData_FieldIndex
+    internal enum ClassData_FieldIndex
     {
         Versioning = 0,
         PrimaryAttributes = 1,
@@ -1002,7 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class ClassData_Registration : ILoquiRegistration
+    internal partial class ClassData_Registration : ILoquiRegistration
     {
         public static readonly ClassData_Registration Instance = new ClassData_Registration();
 
@@ -1083,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ClassDataSetterCommon
+    internal partial class ClassDataSetterCommon
     {
         public static readonly ClassDataSetterCommon Instance = new ClassDataSetterCommon();
 
@@ -1128,7 +1129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ClassDataCommon
+    internal partial class ClassDataCommon
     {
         public static readonly ClassDataCommon Instance = new ClassDataCommon();
 
@@ -1342,7 +1343,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ClassDataSetterTranslationCommon
+    internal partial class ClassDataSetterTranslationCommon
     {
         public static readonly ClassDataSetterTranslationCommon Instance = new ClassDataSetterTranslationCommon();
 
@@ -1463,7 +1464,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClassData_Registration.Instance;
-        public static ClassData_Registration StaticRegistration => ClassData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ClassData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ClassDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1487,7 +1488,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ClassDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1568,7 +1569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ClassDataBinaryCreateTranslation
+    internal partial class ClassDataBinaryCreateTranslation
     {
         public readonly static ClassDataBinaryCreateTranslation Instance = new ClassDataBinaryCreateTranslation();
 
@@ -1637,16 +1638,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ClassDataBinaryOverlay :
+    internal partial class ClassDataBinaryOverlay :
         PluginBinaryOverlay,
         IClassDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClassData_Registration.Instance;
-        public static ClassData_Registration StaticRegistration => ClassData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ClassData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ClassDataCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -3361,10 +3362,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Weather_FieldIndex
+    internal enum Weather_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -3439,7 +3440,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Weather_Registration : ILoquiRegistration
+    internal partial class Weather_Registration : ILoquiRegistration
     {
         public static readonly Weather_Registration Instance = new Weather_Registration();
 
@@ -3547,7 +3548,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WeatherSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class WeatherSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly WeatherSetterCommon Instance = new WeatherSetterCommon();
 
@@ -3687,7 +3688,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeatherCommon : SkyrimMajorRecordCommon
+    internal partial class WeatherCommon : SkyrimMajorRecordCommon
     {
         public new static readonly WeatherCommon Instance = new WeatherCommon();
 
@@ -4793,7 +4794,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeatherSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class WeatherSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly WeatherSetterTranslationCommon Instance = new WeatherSetterTranslationCommon();
 
@@ -5692,7 +5693,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weather_Registration.Instance;
-        public new static Weather_Registration StaticRegistration => Weather_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Weather_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WeatherCommon.Instance;
         [DebuggerStepThrough]
@@ -5710,7 +5711,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeatherBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -6193,7 +6194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WeatherBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class WeatherBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static WeatherBinaryCreateTranslation Instance = new WeatherBinaryCreateTranslation();
 
@@ -6518,16 +6519,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WeatherBinaryOverlay :
+    internal partial class WeatherBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IWeatherGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weather_Registration.Instance;
-        public new static Weather_Registration StaticRegistration => Weather_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Weather_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WeatherCommon.Instance;
         [DebuggerStepThrough]

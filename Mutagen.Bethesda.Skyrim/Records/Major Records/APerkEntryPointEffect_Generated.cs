@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -592,10 +593,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum APerkEntryPointEffect_FieldIndex
+    internal enum APerkEntryPointEffect_FieldIndex
     {
         Rank = 0,
         Priority = 1,
@@ -607,7 +608,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class APerkEntryPointEffect_Registration : ILoquiRegistration
+    internal partial class APerkEntryPointEffect_Registration : ILoquiRegistration
     {
         public static readonly APerkEntryPointEffect_Registration Instance = new APerkEntryPointEffect_Registration();
 
@@ -691,7 +692,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class APerkEntryPointEffectSetterCommon : APerkEffectSetterCommon
+    internal partial class APerkEntryPointEffectSetterCommon : APerkEffectSetterCommon
     {
         public new static readonly APerkEntryPointEffectSetterCommon Instance = new APerkEntryPointEffectSetterCommon();
 
@@ -740,7 +741,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class APerkEntryPointEffectCommon : APerkEffectCommon
+    internal partial class APerkEntryPointEffectCommon : APerkEffectCommon
     {
         public new static readonly APerkEntryPointEffectCommon Instance = new APerkEntryPointEffectCommon();
 
@@ -910,7 +911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class APerkEntryPointEffectSetterTranslationCommon : APerkEffectSetterTranslationCommon
+    internal partial class APerkEntryPointEffectSetterTranslationCommon : APerkEffectSetterTranslationCommon
     {
         public new static readonly APerkEntryPointEffectSetterTranslationCommon Instance = new APerkEntryPointEffectSetterTranslationCommon();
 
@@ -1014,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APerkEntryPointEffect_Registration.Instance;
-        public new static APerkEntryPointEffect_Registration StaticRegistration => APerkEntryPointEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => APerkEntryPointEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => APerkEntryPointEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1032,7 +1033,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class APerkEntryPointEffectBinaryWriteTranslation :
         APerkEffectBinaryWriteTranslation,
@@ -1119,7 +1120,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class APerkEntryPointEffectBinaryCreateTranslation : APerkEffectBinaryCreateTranslation
+    internal partial class APerkEntryPointEffectBinaryCreateTranslation : APerkEffectBinaryCreateTranslation
     {
         public new readonly static APerkEntryPointEffectBinaryCreateTranslation Instance = new APerkEntryPointEffectBinaryCreateTranslation();
 
@@ -1184,16 +1185,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public abstract partial class APerkEntryPointEffectBinaryOverlay :
+    internal abstract partial class APerkEntryPointEffectBinaryOverlay :
         APerkEffectBinaryOverlay,
         IAPerkEntryPointEffectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APerkEntryPointEffect_Registration.Instance;
-        public new static APerkEntryPointEffect_Registration StaticRegistration => APerkEntryPointEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => APerkEntryPointEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => APerkEntryPointEffectCommon.Instance;
         [DebuggerStepThrough]

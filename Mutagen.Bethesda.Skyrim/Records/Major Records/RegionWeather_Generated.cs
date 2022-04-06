@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -661,10 +662,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum RegionWeather_FieldIndex
+    internal enum RegionWeather_FieldIndex
     {
         Header = 0,
         Icons = 1,
@@ -673,7 +674,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class RegionWeather_Registration : ILoquiRegistration
+    internal partial class RegionWeather_Registration : ILoquiRegistration
     {
         public static readonly RegionWeather_Registration Instance = new RegionWeather_Registration();
 
@@ -759,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class RegionWeatherSetterCommon : RegionDataSetterCommon
+    internal partial class RegionWeatherSetterCommon : RegionDataSetterCommon
     {
         public new static readonly RegionWeatherSetterCommon Instance = new RegionWeatherSetterCommon();
 
@@ -814,7 +815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class RegionWeatherCommon : RegionDataCommon
+    internal partial class RegionWeatherCommon : RegionDataCommon
     {
         public new static readonly RegionWeatherCommon Instance = new RegionWeatherCommon();
 
@@ -995,7 +996,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class RegionWeatherSetterTranslationCommon : RegionDataSetterTranslationCommon
+    internal partial class RegionWeatherSetterTranslationCommon : RegionDataSetterTranslationCommon
     {
         public new static readonly RegionWeatherSetterTranslationCommon Instance = new RegionWeatherSetterTranslationCommon();
 
@@ -1123,7 +1124,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionWeather_Registration.Instance;
-        public new static RegionWeather_Registration StaticRegistration => RegionWeather_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => RegionWeather_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionWeatherCommon.Instance;
         [DebuggerStepThrough]
@@ -1141,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class RegionWeatherBinaryWriteTranslation :
         RegionDataBinaryWriteTranslation,
@@ -1207,7 +1208,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class RegionWeatherBinaryCreateTranslation : RegionDataBinaryCreateTranslation
+    internal partial class RegionWeatherBinaryCreateTranslation : RegionDataBinaryCreateTranslation
     {
         public new readonly static RegionWeatherBinaryCreateTranslation Instance = new RegionWeatherBinaryCreateTranslation();
 
@@ -1263,16 +1264,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class RegionWeatherBinaryOverlay :
+    internal partial class RegionWeatherBinaryOverlay :
         RegionDataBinaryOverlay,
         IRegionWeatherGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionWeather_Registration.Instance;
-        public new static RegionWeather_Registration StaticRegistration => RegionWeather_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => RegionWeather_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionWeatherCommon.Instance;
         [DebuggerStepThrough]

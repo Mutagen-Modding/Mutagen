@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -752,10 +753,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LandscapeVertexHeightMap_FieldIndex
+    internal enum LandscapeVertexHeightMap_FieldIndex
     {
         Offset = 0,
         HeightMap = 1,
@@ -764,7 +765,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LandscapeVertexHeightMap_Registration : ILoquiRegistration
+    internal partial class LandscapeVertexHeightMap_Registration : ILoquiRegistration
     {
         public static readonly LandscapeVertexHeightMap_Registration Instance = new LandscapeVertexHeightMap_Registration();
 
@@ -845,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LandscapeVertexHeightMapSetterCommon
+    internal partial class LandscapeVertexHeightMapSetterCommon
     {
         public static readonly LandscapeVertexHeightMapSetterCommon Instance = new LandscapeVertexHeightMapSetterCommon();
 
@@ -886,7 +887,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LandscapeVertexHeightMapCommon
+    internal partial class LandscapeVertexHeightMapCommon
     {
         public static readonly LandscapeVertexHeightMapCommon Instance = new LandscapeVertexHeightMapCommon();
 
@@ -1039,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LandscapeVertexHeightMapSetterTranslationCommon
+    internal partial class LandscapeVertexHeightMapSetterTranslationCommon
     {
         public static readonly LandscapeVertexHeightMapSetterTranslationCommon Instance = new LandscapeVertexHeightMapSetterTranslationCommon();
 
@@ -1138,7 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LandscapeVertexHeightMap_Registration.Instance;
-        public static LandscapeVertexHeightMap_Registration StaticRegistration => LandscapeVertexHeightMap_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LandscapeVertexHeightMap_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LandscapeVertexHeightMapCommon.Instance;
         [DebuggerStepThrough]
@@ -1162,7 +1163,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LandscapeVertexHeightMapBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1214,7 +1215,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LandscapeVertexHeightMapBinaryCreateTranslation
+    internal partial class LandscapeVertexHeightMapBinaryCreateTranslation
     {
         public readonly static LandscapeVertexHeightMapBinaryCreateTranslation Instance = new LandscapeVertexHeightMapBinaryCreateTranslation();
 
@@ -1255,16 +1256,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LandscapeVertexHeightMapBinaryOverlay :
+    internal partial class LandscapeVertexHeightMapBinaryOverlay :
         PluginBinaryOverlay,
         ILandscapeVertexHeightMapGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LandscapeVertexHeightMap_Registration.Instance;
-        public static LandscapeVertexHeightMap_Registration StaticRegistration => LandscapeVertexHeightMap_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LandscapeVertexHeightMap_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LandscapeVertexHeightMapCommon.Instance;
         [DebuggerStepThrough]

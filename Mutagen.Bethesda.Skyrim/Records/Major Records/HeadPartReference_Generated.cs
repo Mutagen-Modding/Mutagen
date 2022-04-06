@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -652,10 +653,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum HeadPartReference_FieldIndex
+    internal enum HeadPartReference_FieldIndex
     {
         Number = 0,
         Head = 1,
@@ -663,7 +664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class HeadPartReference_Registration : ILoquiRegistration
+    internal partial class HeadPartReference_Registration : ILoquiRegistration
     {
         public static readonly HeadPartReference_Registration Instance = new HeadPartReference_Registration();
 
@@ -745,7 +746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class HeadPartReferenceSetterCommon
+    internal partial class HeadPartReferenceSetterCommon
     {
         public static readonly HeadPartReferenceSetterCommon Instance = new HeadPartReferenceSetterCommon();
 
@@ -783,7 +784,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class HeadPartReferenceCommon
+    internal partial class HeadPartReferenceCommon
     {
         public static readonly HeadPartReferenceCommon Instance = new HeadPartReferenceCommon();
 
@@ -917,7 +918,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class HeadPartReferenceSetterTranslationCommon
+    internal partial class HeadPartReferenceSetterTranslationCommon
     {
         public static readonly HeadPartReferenceSetterTranslationCommon Instance = new HeadPartReferenceSetterTranslationCommon();
 
@@ -999,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HeadPartReference_Registration.Instance;
-        public static HeadPartReference_Registration StaticRegistration => HeadPartReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => HeadPartReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HeadPartReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1023,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class HeadPartReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1068,7 +1069,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class HeadPartReferenceBinaryCreateTranslation
+    internal partial class HeadPartReferenceBinaryCreateTranslation
     {
         public readonly static HeadPartReferenceBinaryCreateTranslation Instance = new HeadPartReferenceBinaryCreateTranslation();
 
@@ -1133,16 +1134,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class HeadPartReferenceBinaryOverlay :
+    internal partial class HeadPartReferenceBinaryOverlay :
         PluginBinaryOverlay,
         IHeadPartReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HeadPartReference_Registration.Instance;
-        public static HeadPartReference_Registration StaticRegistration => HeadPartReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => HeadPartReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HeadPartReferenceCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -650,10 +651,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WorldspaceParent_FieldIndex
+    internal enum WorldspaceParent_FieldIndex
     {
         Worldspace = 0,
         Flags = 1,
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WorldspaceParent_Registration : ILoquiRegistration
+    internal partial class WorldspaceParent_Registration : ILoquiRegistration
     {
         public static readonly WorldspaceParent_Registration Instance = new WorldspaceParent_Registration();
 
@@ -745,7 +746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WorldspaceParentSetterCommon
+    internal partial class WorldspaceParentSetterCommon
     {
         public static readonly WorldspaceParentSetterCommon Instance = new WorldspaceParentSetterCommon();
 
@@ -783,7 +784,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceParentCommon
+    internal partial class WorldspaceParentCommon
     {
         public static readonly WorldspaceParentCommon Instance = new WorldspaceParentCommon();
 
@@ -910,7 +911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceParentSetterTranslationCommon
+    internal partial class WorldspaceParentSetterTranslationCommon
     {
         public static readonly WorldspaceParentSetterTranslationCommon Instance = new WorldspaceParentSetterTranslationCommon();
 
@@ -992,7 +993,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceParent_Registration.Instance;
-        public static WorldspaceParent_Registration StaticRegistration => WorldspaceParent_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceParent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceParentCommon.Instance;
         [DebuggerStepThrough]
@@ -1016,7 +1017,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceParentBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1062,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WorldspaceParentBinaryCreateTranslation
+    internal partial class WorldspaceParentBinaryCreateTranslation
     {
         public readonly static WorldspaceParentBinaryCreateTranslation Instance = new WorldspaceParentBinaryCreateTranslation();
 
@@ -1128,16 +1129,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WorldspaceParentBinaryOverlay :
+    internal partial class WorldspaceParentBinaryOverlay :
         PluginBinaryOverlay,
         IWorldspaceParentGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceParent_Registration.Instance;
-        public static WorldspaceParent_Registration StaticRegistration => WorldspaceParent_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceParent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceParentCommon.Instance;
         [DebuggerStepThrough]

@@ -6,7 +6,6 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda.Pex.Internals;
 using Noggog;
 using System;
 using System.Collections;
@@ -670,10 +669,10 @@ namespace Mutagen.Bethesda.Pex
 
 }
 
-namespace Mutagen.Bethesda.Pex.Internals
+namespace Mutagen.Bethesda.Pex
 {
     #region Field Index
-    public enum PexObjectVariableData_FieldIndex
+    internal enum PexObjectVariableData_FieldIndex
     {
         VariableType = 0,
         StringValue = 1,
@@ -684,7 +683,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Registration
-    public partial class PexObjectVariableData_Registration : ILoquiRegistration
+    internal partial class PexObjectVariableData_Registration : ILoquiRegistration
     {
         public static readonly PexObjectVariableData_Registration Instance = new PexObjectVariableData_Registration();
 
@@ -757,7 +756,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Common
-    public partial class PexObjectVariableDataSetterCommon
+    internal partial class PexObjectVariableDataSetterCommon
     {
         public static readonly PexObjectVariableDataSetterCommon Instance = new PexObjectVariableDataSetterCommon();
 
@@ -774,7 +773,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class PexObjectVariableDataCommon
+    internal partial class PexObjectVariableDataCommon
     {
         public static readonly PexObjectVariableDataCommon Instance = new PexObjectVariableDataCommon();
 
@@ -938,7 +937,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class PexObjectVariableDataSetterTranslationCommon
+    internal partial class PexObjectVariableDataSetterTranslationCommon
     {
         public static readonly PexObjectVariableDataSetterTranslationCommon Instance = new PexObjectVariableDataSetterTranslationCommon();
 
@@ -1032,7 +1031,7 @@ namespace Mutagen.Bethesda.Pex
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PexObjectVariableData_Registration.Instance;
-        public static PexObjectVariableData_Registration StaticRegistration => PexObjectVariableData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PexObjectVariableData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PexObjectVariableDataCommon.Instance;
         [DebuggerStepThrough]

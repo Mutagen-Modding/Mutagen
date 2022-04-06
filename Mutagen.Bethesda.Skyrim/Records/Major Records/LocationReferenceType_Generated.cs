@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -659,10 +660,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LocationReferenceType_FieldIndex
+    internal enum LocationReferenceType_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -675,7 +676,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LocationReferenceType_Registration : ILoquiRegistration
+    internal partial class LocationReferenceType_Registration : ILoquiRegistration
     {
         public static readonly LocationReferenceType_Registration Instance = new LocationReferenceType_Registration();
 
@@ -759,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LocationReferenceTypeSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class LocationReferenceTypeSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly LocationReferenceTypeSetterCommon Instance = new LocationReferenceTypeSetterCommon();
 
@@ -829,7 +830,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationReferenceTypeCommon : SkyrimMajorRecordCommon
+    internal partial class LocationReferenceTypeCommon : SkyrimMajorRecordCommon
     {
         public new static readonly LocationReferenceTypeCommon Instance = new LocationReferenceTypeCommon();
 
@@ -1065,7 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationReferenceTypeSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class LocationReferenceTypeSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly LocationReferenceTypeSetterTranslationCommon Instance = new LocationReferenceTypeSetterTranslationCommon();
 
@@ -1224,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationReferenceType_Registration.Instance;
-        public new static LocationReferenceType_Registration StaticRegistration => LocationReferenceType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationReferenceType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationReferenceTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1242,7 +1243,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LocationReferenceTypeBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1328,7 +1329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LocationReferenceTypeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class LocationReferenceTypeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static LocationReferenceTypeBinaryCreateTranslation Instance = new LocationReferenceTypeBinaryCreateTranslation();
 
@@ -1384,16 +1385,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LocationReferenceTypeBinaryOverlay :
+    internal partial class LocationReferenceTypeBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ILocationReferenceTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationReferenceType_Registration.Instance;
-        public new static LocationReferenceType_Registration StaticRegistration => LocationReferenceType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationReferenceType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationReferenceTypeCommon.Instance;
         [DebuggerStepThrough]

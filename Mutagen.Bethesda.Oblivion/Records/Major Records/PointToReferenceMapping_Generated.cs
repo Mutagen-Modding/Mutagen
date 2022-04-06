@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -734,10 +735,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum PointToReferenceMapping_FieldIndex
+    internal enum PointToReferenceMapping_FieldIndex
     {
         Reference = 0,
         Points = 1,
@@ -745,7 +746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class PointToReferenceMapping_Registration : ILoquiRegistration
+    internal partial class PointToReferenceMapping_Registration : ILoquiRegistration
     {
         public static readonly PointToReferenceMapping_Registration Instance = new PointToReferenceMapping_Registration();
 
@@ -826,7 +827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class PointToReferenceMappingSetterCommon
+    internal partial class PointToReferenceMappingSetterCommon
     {
         public static readonly PointToReferenceMappingSetterCommon Instance = new PointToReferenceMappingSetterCommon();
 
@@ -867,7 +868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class PointToReferenceMappingCommon
+    internal partial class PointToReferenceMappingCommon
     {
         public static readonly PointToReferenceMappingCommon Instance = new PointToReferenceMappingCommon();
 
@@ -1011,7 +1012,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class PointToReferenceMappingSetterTranslationCommon
+    internal partial class PointToReferenceMappingSetterTranslationCommon
     {
         public static readonly PointToReferenceMappingSetterTranslationCommon Instance = new PointToReferenceMappingSetterTranslationCommon();
 
@@ -1106,7 +1107,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PointToReferenceMapping_Registration.Instance;
-        public static PointToReferenceMapping_Registration StaticRegistration => PointToReferenceMapping_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PointToReferenceMapping_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PointToReferenceMappingCommon.Instance;
         [DebuggerStepThrough]
@@ -1130,7 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class PointToReferenceMappingBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1179,7 +1180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class PointToReferenceMappingBinaryCreateTranslation
+    internal partial class PointToReferenceMappingBinaryCreateTranslation
     {
         public readonly static PointToReferenceMappingBinaryCreateTranslation Instance = new PointToReferenceMappingBinaryCreateTranslation();
 
@@ -1218,16 +1219,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class PointToReferenceMappingBinaryOverlay :
+    internal partial class PointToReferenceMappingBinaryOverlay :
         PluginBinaryOverlay,
         IPointToReferenceMappingGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PointToReferenceMapping_Registration.Instance;
-        public static PointToReferenceMapping_Registration StaticRegistration => PointToReferenceMapping_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PointToReferenceMapping_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PointToReferenceMappingCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -683,10 +684,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum AIPackageLocation_FieldIndex
+    internal enum AIPackageLocation_FieldIndex
     {
         Type = 0,
         LocationReference = 1,
@@ -695,7 +696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class AIPackageLocation_Registration : ILoquiRegistration
+    internal partial class AIPackageLocation_Registration : ILoquiRegistration
     {
         public static readonly AIPackageLocation_Registration Instance = new AIPackageLocation_Registration();
 
@@ -776,7 +777,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class AIPackageLocationSetterCommon
+    internal partial class AIPackageLocationSetterCommon
     {
         public static readonly AIPackageLocationSetterCommon Instance = new AIPackageLocationSetterCommon();
 
@@ -818,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AIPackageLocationCommon
+    internal partial class AIPackageLocationCommon
     {
         public static readonly AIPackageLocationCommon Instance = new AIPackageLocationCommon();
 
@@ -955,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AIPackageLocationSetterTranslationCommon
+    internal partial class AIPackageLocationSetterTranslationCommon
     {
         public static readonly AIPackageLocationSetterTranslationCommon Instance = new AIPackageLocationSetterTranslationCommon();
 
@@ -1041,7 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageLocation_Registration.Instance;
-        public static AIPackageLocation_Registration StaticRegistration => AIPackageLocation_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AIPackageLocation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageLocationCommon.Instance;
         [DebuggerStepThrough]
@@ -1065,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AIPackageLocationBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1117,7 +1118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class AIPackageLocationBinaryCreateTranslation
+    internal partial class AIPackageLocationBinaryCreateTranslation
     {
         public readonly static AIPackageLocationBinaryCreateTranslation Instance = new AIPackageLocationBinaryCreateTranslation();
 
@@ -1156,16 +1157,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class AIPackageLocationBinaryOverlay :
+    internal partial class AIPackageLocationBinaryOverlay :
         PluginBinaryOverlay,
         IAIPackageLocationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageLocation_Registration.Instance;
-        public static AIPackageLocation_Registration StaticRegistration => AIPackageLocation_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AIPackageLocation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageLocationCommon.Instance;
         [DebuggerStepThrough]

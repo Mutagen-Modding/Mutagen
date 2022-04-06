@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -661,10 +662,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum RegionObjects_FieldIndex
+    internal enum RegionObjects_FieldIndex
     {
         Header = 0,
         Icons = 1,
@@ -673,7 +674,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class RegionObjects_Registration : ILoquiRegistration
+    internal partial class RegionObjects_Registration : ILoquiRegistration
     {
         public static readonly RegionObjects_Registration Instance = new RegionObjects_Registration();
 
@@ -759,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class RegionObjectsSetterCommon : RegionDataSetterCommon
+    internal partial class RegionObjectsSetterCommon : RegionDataSetterCommon
     {
         public new static readonly RegionObjectsSetterCommon Instance = new RegionObjectsSetterCommon();
 
@@ -814,7 +815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class RegionObjectsCommon : RegionDataCommon
+    internal partial class RegionObjectsCommon : RegionDataCommon
     {
         public new static readonly RegionObjectsCommon Instance = new RegionObjectsCommon();
 
@@ -995,7 +996,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class RegionObjectsSetterTranslationCommon : RegionDataSetterTranslationCommon
+    internal partial class RegionObjectsSetterTranslationCommon : RegionDataSetterTranslationCommon
     {
         public new static readonly RegionObjectsSetterTranslationCommon Instance = new RegionObjectsSetterTranslationCommon();
 
@@ -1123,7 +1124,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionObjects_Registration.Instance;
-        public new static RegionObjects_Registration StaticRegistration => RegionObjects_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => RegionObjects_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionObjectsCommon.Instance;
         [DebuggerStepThrough]
@@ -1141,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class RegionObjectsBinaryWriteTranslation :
         RegionDataBinaryWriteTranslation,
@@ -1207,7 +1208,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class RegionObjectsBinaryCreateTranslation : RegionDataBinaryCreateTranslation
+    internal partial class RegionObjectsBinaryCreateTranslation : RegionDataBinaryCreateTranslation
     {
         public new readonly static RegionObjectsBinaryCreateTranslation Instance = new RegionObjectsBinaryCreateTranslation();
 
@@ -1263,16 +1264,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class RegionObjectsBinaryOverlay :
+    internal partial class RegionObjectsBinaryOverlay :
         RegionDataBinaryOverlay,
         IRegionObjectsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionObjects_Registration.Instance;
-        public new static RegionObjects_Registration StaticRegistration => RegionObjects_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => RegionObjects_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionObjectsCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -923,10 +924,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SoundOutputModel_FieldIndex
+    internal enum SoundOutputModel_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -945,7 +946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SoundOutputModel_Registration : ILoquiRegistration
+    internal partial class SoundOutputModel_Registration : ILoquiRegistration
     {
         public static readonly SoundOutputModel_Registration Instance = new SoundOutputModel_Registration();
 
@@ -1035,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SoundOutputModelSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class SoundOutputModelSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly SoundOutputModelSetterCommon Instance = new SoundOutputModelSetterCommon();
 
@@ -1111,7 +1112,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SoundOutputModelCommon : SkyrimMajorRecordCommon
+    internal partial class SoundOutputModelCommon : SkyrimMajorRecordCommon
     {
         public new static readonly SoundOutputModelCommon Instance = new SoundOutputModelCommon();
 
@@ -1455,7 +1456,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SoundOutputModelSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class SoundOutputModelSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly SoundOutputModelSetterTranslationCommon Instance = new SoundOutputModelSetterTranslationCommon();
 
@@ -1725,7 +1726,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundOutputModel_Registration.Instance;
-        public new static SoundOutputModel_Registration StaticRegistration => SoundOutputModel_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SoundOutputModel_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundOutputModelCommon.Instance;
         [DebuggerStepThrough]
@@ -1743,7 +1744,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SoundOutputModelBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1863,7 +1864,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SoundOutputModelBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class SoundOutputModelBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static SoundOutputModelBinaryCreateTranslation Instance = new SoundOutputModelBinaryCreateTranslation();
 
@@ -1954,16 +1955,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SoundOutputModelBinaryOverlay :
+    internal partial class SoundOutputModelBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ISoundOutputModelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundOutputModel_Registration.Instance;
-        public new static SoundOutputModel_Registration StaticRegistration => SoundOutputModel_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SoundOutputModel_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundOutputModelCommon.Instance;
         [DebuggerStepThrough]

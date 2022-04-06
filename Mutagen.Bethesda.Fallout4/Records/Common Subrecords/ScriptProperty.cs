@@ -32,13 +32,10 @@ namespace Mutagen.Bethesda.Fallout4
         }
     }
 
-    namespace Internals
+    internal partial class ScriptPropertyBinaryOverlay
     {
-        public partial class ScriptPropertyBinaryOverlay
-        {
-            public string Name => throw new NotImplementedException();
+        public string Name => throw new NotImplementedException();
 
-            public ScriptProperty.Flag Flags => throw new NotImplementedException();
-        }
+        public ScriptProperty.Flag Flags => throw new NotImplementedException();
     }
 }

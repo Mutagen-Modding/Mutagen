@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -704,10 +705,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PackageDataTopic_FieldIndex
+    internal enum PackageDataTopic_FieldIndex
     {
         Name = 0,
         Flags = 1,
@@ -717,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PackageDataTopic_Registration : ILoquiRegistration
+    internal partial class PackageDataTopic_Registration : ILoquiRegistration
     {
         public static readonly PackageDataTopic_Registration Instance = new PackageDataTopic_Registration();
 
@@ -804,7 +805,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PackageDataTopicSetterCommon : APackageDataSetterCommon
+    internal partial class PackageDataTopicSetterCommon : APackageDataSetterCommon
     {
         public new static readonly PackageDataTopicSetterCommon Instance = new PackageDataTopicSetterCommon();
 
@@ -860,7 +861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageDataTopicCommon : APackageDataCommon
+    internal partial class PackageDataTopicCommon : APackageDataCommon
     {
         public new static readonly PackageDataTopicCommon Instance = new PackageDataTopicCommon();
 
@@ -1052,7 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageDataTopicSetterTranslationCommon : APackageDataSetterTranslationCommon
+    internal partial class PackageDataTopicSetterTranslationCommon : APackageDataSetterTranslationCommon
     {
         public new static readonly PackageDataTopicSetterTranslationCommon Instance = new PackageDataTopicSetterTranslationCommon();
 
@@ -1183,7 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataTopic_Registration.Instance;
-        public new static PackageDataTopic_Registration StaticRegistration => PackageDataTopic_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageDataTopic_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataTopicCommon.Instance;
         [DebuggerStepThrough]
@@ -1201,7 +1202,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageDataTopicBinaryWriteTranslation :
         APackageDataBinaryWriteTranslation,
@@ -1255,7 +1256,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PackageDataTopicBinaryCreateTranslation : APackageDataBinaryCreateTranslation
+    internal partial class PackageDataTopicBinaryCreateTranslation : APackageDataBinaryCreateTranslation
     {
         public new readonly static PackageDataTopicBinaryCreateTranslation Instance = new PackageDataTopicBinaryCreateTranslation();
 
@@ -1295,16 +1296,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageDataTopicBinaryOverlay :
+    internal partial class PackageDataTopicBinaryOverlay :
         APackageDataBinaryOverlay,
         IPackageDataTopicGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataTopic_Registration.Instance;
-        public new static PackageDataTopic_Registration StaticRegistration => PackageDataTopic_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageDataTopic_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataTopicCommon.Instance;
         [DebuggerStepThrough]

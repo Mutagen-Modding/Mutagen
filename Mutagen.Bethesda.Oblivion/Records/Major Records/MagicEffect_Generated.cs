@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -968,10 +969,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum MagicEffect_FieldIndex
+    internal enum MagicEffect_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -988,7 +989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class MagicEffect_Registration : ILoquiRegistration
+    internal partial class MagicEffect_Registration : ILoquiRegistration
     {
         public static readonly MagicEffect_Registration Instance = new MagicEffect_Registration();
 
@@ -1077,7 +1078,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class MagicEffectSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class MagicEffectSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly MagicEffectSetterCommon Instance = new MagicEffectSetterCommon();
 
@@ -1153,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class MagicEffectCommon : OblivionMajorRecordCommon
+    internal partial class MagicEffectCommon : OblivionMajorRecordCommon
     {
         public new static readonly MagicEffectCommon Instance = new MagicEffectCommon();
 
@@ -1494,7 +1495,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class MagicEffectSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class MagicEffectSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly MagicEffectSetterTranslationCommon Instance = new MagicEffectSetterTranslationCommon();
 
@@ -1740,7 +1741,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffect_Registration.Instance;
-        public new static MagicEffect_Registration StaticRegistration => MagicEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MagicEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1758,7 +1759,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class MagicEffectBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1879,7 +1880,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class MagicEffectBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class MagicEffectBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static MagicEffectBinaryCreateTranslation Instance = new MagicEffectBinaryCreateTranslation();
 
@@ -1975,16 +1976,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class MagicEffectBinaryOverlay :
+    internal partial class MagicEffectBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IMagicEffectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffect_Registration.Instance;
-        public new static MagicEffect_Registration StaticRegistration => MagicEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MagicEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectCommon.Instance;
         [DebuggerStepThrough]

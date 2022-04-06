@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -933,10 +934,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Weapon_FieldIndex
+    internal enum Weapon_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -954,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Weapon_Registration : ILoquiRegistration
+    internal partial class Weapon_Registration : ILoquiRegistration
     {
         public static readonly Weapon_Registration Instance = new Weapon_Registration();
 
@@ -1044,7 +1045,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class WeaponSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class WeaponSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly WeaponSetterCommon Instance = new WeaponSetterCommon();
 
@@ -1122,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WeaponCommon : OblivionMajorRecordCommon
+    internal partial class WeaponCommon : OblivionMajorRecordCommon
     {
         public new static readonly WeaponCommon Instance = new WeaponCommon();
 
@@ -1456,7 +1457,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WeaponSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class WeaponSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly WeaponSetterTranslationCommon Instance = new WeaponSetterTranslationCommon();
 
@@ -1683,7 +1684,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weapon_Registration.Instance;
-        public new static Weapon_Registration StaticRegistration => Weapon_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Weapon_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WeaponCommon.Instance;
         [DebuggerStepThrough]
@@ -1701,7 +1702,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class WeaponBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1819,7 +1820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class WeaponBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class WeaponBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static WeaponBinaryCreateTranslation Instance = new WeaponBinaryCreateTranslation();
 
@@ -1915,16 +1916,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class WeaponBinaryOverlay :
+    internal partial class WeaponBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IWeaponGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weapon_Registration.Instance;
-        public new static Weapon_Registration StaticRegistration => Weapon_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Weapon_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WeaponCommon.Instance;
         [DebuggerStepThrough]

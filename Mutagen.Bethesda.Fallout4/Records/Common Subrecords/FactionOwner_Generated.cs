@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -608,10 +609,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum FactionOwner_FieldIndex
+    internal enum FactionOwner_FieldIndex
     {
         Faction = 0,
         RequiredRank = 1,
@@ -619,7 +620,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class FactionOwner_Registration : ILoquiRegistration
+    internal partial class FactionOwner_Registration : ILoquiRegistration
     {
         public static readonly FactionOwner_Registration Instance = new FactionOwner_Registration();
 
@@ -693,7 +694,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class FactionOwnerSetterCommon : OwnerTargetSetterCommon
+    internal partial class FactionOwnerSetterCommon : OwnerTargetSetterCommon
     {
         public new static readonly FactionOwnerSetterCommon Instance = new FactionOwnerSetterCommon();
 
@@ -748,7 +749,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class FactionOwnerCommon : OwnerTargetCommon
+    internal partial class FactionOwnerCommon : OwnerTargetCommon
     {
         public new static readonly FactionOwnerCommon Instance = new FactionOwnerCommon();
 
@@ -911,7 +912,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class FactionOwnerSetterTranslationCommon : OwnerTargetSetterTranslationCommon
+    internal partial class FactionOwnerSetterTranslationCommon : OwnerTargetSetterTranslationCommon
     {
         public new static readonly FactionOwnerSetterTranslationCommon Instance = new FactionOwnerSetterTranslationCommon();
 
@@ -1015,7 +1016,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FactionOwner_Registration.Instance;
-        public new static FactionOwner_Registration StaticRegistration => FactionOwner_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => FactionOwner_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FactionOwnerCommon.Instance;
         [DebuggerStepThrough]
@@ -1033,7 +1034,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class FactionOwnerBinaryWriteTranslation :
         OwnerTargetBinaryWriteTranslation,
@@ -1085,7 +1086,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class FactionOwnerBinaryCreateTranslation : OwnerTargetBinaryCreateTranslation
+    internal partial class FactionOwnerBinaryCreateTranslation : OwnerTargetBinaryCreateTranslation
     {
         public new readonly static FactionOwnerBinaryCreateTranslation Instance = new FactionOwnerBinaryCreateTranslation();
 
@@ -1110,16 +1111,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class FactionOwnerBinaryOverlay :
+    internal partial class FactionOwnerBinaryOverlay :
         OwnerTargetBinaryOverlay,
         IFactionOwnerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FactionOwner_Registration.Instance;
-        public new static FactionOwner_Registration StaticRegistration => FactionOwner_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => FactionOwner_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FactionOwnerCommon.Instance;
         [DebuggerStepThrough]

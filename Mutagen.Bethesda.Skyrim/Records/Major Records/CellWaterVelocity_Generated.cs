@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -709,10 +710,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CellWaterVelocity_FieldIndex
+    internal enum CellWaterVelocity_FieldIndex
     {
         Offset = 0,
         Unknown = 1,
@@ -722,7 +723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CellWaterVelocity_Registration : ILoquiRegistration
+    internal partial class CellWaterVelocity_Registration : ILoquiRegistration
     {
         public static readonly CellWaterVelocity_Registration Instance = new CellWaterVelocity_Registration();
 
@@ -803,7 +804,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CellWaterVelocitySetterCommon
+    internal partial class CellWaterVelocitySetterCommon
     {
         public static readonly CellWaterVelocitySetterCommon Instance = new CellWaterVelocitySetterCommon();
 
@@ -845,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CellWaterVelocityCommon
+    internal partial class CellWaterVelocityCommon
     {
         public static readonly CellWaterVelocityCommon Instance = new CellWaterVelocityCommon();
 
@@ -991,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CellWaterVelocitySetterTranslationCommon
+    internal partial class CellWaterVelocitySetterTranslationCommon
     {
         public static readonly CellWaterVelocitySetterTranslationCommon Instance = new CellWaterVelocitySetterTranslationCommon();
 
@@ -1081,7 +1082,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellWaterVelocity_Registration.Instance;
-        public static CellWaterVelocity_Registration StaticRegistration => CellWaterVelocity_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CellWaterVelocity_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellWaterVelocityCommon.Instance;
         [DebuggerStepThrough]
@@ -1105,7 +1106,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CellWaterVelocityBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1157,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CellWaterVelocityBinaryCreateTranslation
+    internal partial class CellWaterVelocityBinaryCreateTranslation
     {
         public readonly static CellWaterVelocityBinaryCreateTranslation Instance = new CellWaterVelocityBinaryCreateTranslation();
 
@@ -1195,16 +1196,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CellWaterVelocityBinaryOverlay :
+    internal partial class CellWaterVelocityBinaryOverlay :
         PluginBinaryOverlay,
         ICellWaterVelocityGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellWaterVelocity_Registration.Instance;
-        public static CellWaterVelocity_Registration StaticRegistration => CellWaterVelocity_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CellWaterVelocity_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellWaterVelocityCommon.Instance;
         [DebuggerStepThrough]

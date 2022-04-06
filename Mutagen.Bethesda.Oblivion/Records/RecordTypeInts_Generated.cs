@@ -43,6 +43,7 @@ public partial class RecordTypeInts
     public const int DIAL = 0x4C414944;
     public const int DNAM = 0x4D414E44;
     public const int DOOR = 0x524F4F44;
+    public const int EDID = 0x44494445;
     public const int EFID = 0x44494645;
     public const int EFIT = 0x54494645;
     public const int EFSH = 0x48534645;

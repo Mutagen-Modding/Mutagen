@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -684,10 +685,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum RegionSound_FieldIndex
+    internal enum RegionSound_FieldIndex
     {
         Sound = 0,
         Flags = 1,
@@ -696,7 +697,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class RegionSound_Registration : ILoquiRegistration
+    internal partial class RegionSound_Registration : ILoquiRegistration
     {
         public static readonly RegionSound_Registration Instance = new RegionSound_Registration();
 
@@ -770,7 +771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class RegionSoundSetterCommon
+    internal partial class RegionSoundSetterCommon
     {
         public static readonly RegionSoundSetterCommon Instance = new RegionSoundSetterCommon();
 
@@ -808,7 +809,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class RegionSoundCommon
+    internal partial class RegionSoundCommon
     {
         public static readonly RegionSoundCommon Instance = new RegionSoundCommon();
 
@@ -945,7 +946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class RegionSoundSetterTranslationCommon
+    internal partial class RegionSoundSetterTranslationCommon
     {
         public static readonly RegionSoundSetterTranslationCommon Instance = new RegionSoundSetterTranslationCommon();
 
@@ -1031,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionSound_Registration.Instance;
-        public static RegionSound_Registration StaticRegistration => RegionSound_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RegionSound_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RegionSoundCommon.Instance;
         [DebuggerStepThrough]
@@ -1055,7 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class RegionSoundBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1100,7 +1101,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class RegionSoundBinaryCreateTranslation
+    internal partial class RegionSoundBinaryCreateTranslation
     {
         public readonly static RegionSoundBinaryCreateTranslation Instance = new RegionSoundBinaryCreateTranslation();
 
@@ -1139,16 +1140,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class RegionSoundBinaryOverlay :
+    internal partial class RegionSoundBinaryOverlay :
         PluginBinaryOverlay,
         IRegionSoundGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionSound_Registration.Instance;
-        public static RegionSound_Registration StaticRegistration => RegionSound_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RegionSound_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RegionSoundCommon.Instance;
         [DebuggerStepThrough]

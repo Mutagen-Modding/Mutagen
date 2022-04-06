@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -600,10 +601,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum SoundDescriptor_FieldIndex
+    internal enum SoundDescriptor_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -615,7 +616,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class SoundDescriptor_Registration : ILoquiRegistration
+    internal partial class SoundDescriptor_Registration : ILoquiRegistration
     {
         public static readonly SoundDescriptor_Registration Instance = new SoundDescriptor_Registration();
 
@@ -696,7 +697,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class SoundDescriptorSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class SoundDescriptorSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly SoundDescriptorSetterCommon Instance = new SoundDescriptorSetterCommon();
 
@@ -765,7 +766,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class SoundDescriptorCommon : Fallout4MajorRecordCommon
+    internal partial class SoundDescriptorCommon : Fallout4MajorRecordCommon
     {
         public new static readonly SoundDescriptorCommon Instance = new SoundDescriptorCommon();
 
@@ -987,7 +988,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class SoundDescriptorSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class SoundDescriptorSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly SoundDescriptorSetterTranslationCommon Instance = new SoundDescriptorSetterTranslationCommon();
 
@@ -1142,7 +1143,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundDescriptor_Registration.Instance;
-        public new static SoundDescriptor_Registration StaticRegistration => SoundDescriptor_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SoundDescriptor_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundDescriptorCommon.Instance;
         [DebuggerStepThrough]
@@ -1160,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SoundDescriptorBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -1229,7 +1230,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class SoundDescriptorBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class SoundDescriptorBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static SoundDescriptorBinaryCreateTranslation Instance = new SoundDescriptorBinaryCreateTranslation();
 
@@ -1256,16 +1257,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class SoundDescriptorBinaryOverlay :
+    internal partial class SoundDescriptorBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         ISoundDescriptorGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundDescriptor_Registration.Instance;
-        public new static SoundDescriptor_Registration StaticRegistration => SoundDescriptor_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SoundDescriptor_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundDescriptorCommon.Instance;
         [DebuggerStepThrough]

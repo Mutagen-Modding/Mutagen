@@ -26,6 +26,7 @@
       <RefList name="MenuItems" refName="TerminalMenuItem" counterRecType="ISIZ" allowNoCounter="false" />
     </Fields>
     <LinkInterface>IStaticObject</LinkInterface>
+    <AdditionalContainedRecordType>MNAM</AdditionalContainedRecordType>
   </Object>
   <Object name="TerminalHolotapeEntry" objType="Subrecord" recordType="CNTO" GUID="75a1eb63-312c-4870-b12e-a3530123d3d9" ID="431">
     <Fields>

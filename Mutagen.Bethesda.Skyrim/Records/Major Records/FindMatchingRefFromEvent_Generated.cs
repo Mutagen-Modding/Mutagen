@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -645,10 +646,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum FindMatchingRefFromEvent_FieldIndex
+    internal enum FindMatchingRefFromEvent_FieldIndex
     {
         FromEvent = 0,
         EventData = 1,
@@ -656,7 +657,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class FindMatchingRefFromEvent_Registration : ILoquiRegistration
+    internal partial class FindMatchingRefFromEvent_Registration : ILoquiRegistration
     {
         public static readonly FindMatchingRefFromEvent_Registration Instance = new FindMatchingRefFromEvent_Registration();
 
@@ -738,7 +739,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class FindMatchingRefFromEventSetterCommon
+    internal partial class FindMatchingRefFromEventSetterCommon
     {
         public static readonly FindMatchingRefFromEventSetterCommon Instance = new FindMatchingRefFromEventSetterCommon();
 
@@ -775,7 +776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FindMatchingRefFromEventCommon
+    internal partial class FindMatchingRefFromEventCommon
     {
         public static readonly FindMatchingRefFromEventCommon Instance = new FindMatchingRefFromEventCommon();
 
@@ -909,7 +910,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FindMatchingRefFromEventSetterTranslationCommon
+    internal partial class FindMatchingRefFromEventSetterTranslationCommon
     {
         public static readonly FindMatchingRefFromEventSetterTranslationCommon Instance = new FindMatchingRefFromEventSetterTranslationCommon();
 
@@ -998,7 +999,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FindMatchingRefFromEvent_Registration.Instance;
-        public static FindMatchingRefFromEvent_Registration StaticRegistration => FindMatchingRefFromEvent_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FindMatchingRefFromEvent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FindMatchingRefFromEventCommon.Instance;
         [DebuggerStepThrough]
@@ -1022,7 +1023,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class FindMatchingRefFromEventBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1067,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class FindMatchingRefFromEventBinaryCreateTranslation
+    internal partial class FindMatchingRefFromEventBinaryCreateTranslation
     {
         public readonly static FindMatchingRefFromEventBinaryCreateTranslation Instance = new FindMatchingRefFromEventBinaryCreateTranslation();
 
@@ -1132,16 +1133,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class FindMatchingRefFromEventBinaryOverlay :
+    internal partial class FindMatchingRefFromEventBinaryOverlay :
         PluginBinaryOverlay,
         IFindMatchingRefFromEventGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FindMatchingRefFromEvent_Registration.Instance;
-        public static FindMatchingRefFromEvent_Registration StaticRegistration => FindMatchingRefFromEvent_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FindMatchingRefFromEvent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FindMatchingRefFromEventCommon.Instance;
         [DebuggerStepThrough]

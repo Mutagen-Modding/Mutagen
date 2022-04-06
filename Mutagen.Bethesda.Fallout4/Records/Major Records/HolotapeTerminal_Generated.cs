@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -568,17 +569,17 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum HolotapeTerminal_FieldIndex
+    internal enum HolotapeTerminal_FieldIndex
     {
         Terminal = 0,
     }
     #endregion
 
     #region Registration
-    public partial class HolotapeTerminal_Registration : ILoquiRegistration
+    internal partial class HolotapeTerminal_Registration : ILoquiRegistration
     {
         public static readonly HolotapeTerminal_Registration Instance = new HolotapeTerminal_Registration();
 
@@ -652,7 +653,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class HolotapeTerminalSetterCommon : AHolotapeDataSetterCommon
+    internal partial class HolotapeTerminalSetterCommon : AHolotapeDataSetterCommon
     {
         public new static readonly HolotapeTerminalSetterCommon Instance = new HolotapeTerminalSetterCommon();
 
@@ -706,7 +707,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class HolotapeTerminalCommon : AHolotapeDataCommon
+    internal partial class HolotapeTerminalCommon : AHolotapeDataCommon
     {
         public new static readonly HolotapeTerminalCommon Instance = new HolotapeTerminalCommon();
 
@@ -859,7 +860,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class HolotapeTerminalSetterTranslationCommon : AHolotapeDataSetterTranslationCommon
+    internal partial class HolotapeTerminalSetterTranslationCommon : AHolotapeDataSetterTranslationCommon
     {
         public new static readonly HolotapeTerminalSetterTranslationCommon Instance = new HolotapeTerminalSetterTranslationCommon();
 
@@ -959,7 +960,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HolotapeTerminal_Registration.Instance;
-        public new static HolotapeTerminal_Registration StaticRegistration => HolotapeTerminal_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => HolotapeTerminal_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HolotapeTerminalCommon.Instance;
         [DebuggerStepThrough]
@@ -977,7 +978,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class HolotapeTerminalBinaryWriteTranslation :
         AHolotapeDataBinaryWriteTranslation,
@@ -1028,7 +1029,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class HolotapeTerminalBinaryCreateTranslation : AHolotapeDataBinaryCreateTranslation
+    internal partial class HolotapeTerminalBinaryCreateTranslation : AHolotapeDataBinaryCreateTranslation
     {
         public new readonly static HolotapeTerminalBinaryCreateTranslation Instance = new HolotapeTerminalBinaryCreateTranslation();
 
@@ -1052,16 +1053,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class HolotapeTerminalBinaryOverlay :
+    internal partial class HolotapeTerminalBinaryOverlay :
         AHolotapeDataBinaryOverlay,
         IHolotapeTerminalGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HolotapeTerminal_Registration.Instance;
-        public new static HolotapeTerminal_Registration StaticRegistration => HolotapeTerminal_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => HolotapeTerminal_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HolotapeTerminalCommon.Instance;
         [DebuggerStepThrough]

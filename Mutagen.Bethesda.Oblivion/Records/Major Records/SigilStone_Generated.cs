@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -977,10 +978,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum SigilStone_FieldIndex
+    internal enum SigilStone_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -997,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class SigilStone_Registration : ILoquiRegistration
+    internal partial class SigilStone_Registration : ILoquiRegistration
     {
         public static readonly SigilStone_Registration Instance = new SigilStone_Registration();
 
@@ -1088,7 +1089,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class SigilStoneSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class SigilStoneSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly SigilStoneSetterCommon Instance = new SigilStoneSetterCommon();
 
@@ -1165,7 +1166,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SigilStoneCommon : OblivionMajorRecordCommon
+    internal partial class SigilStoneCommon : OblivionMajorRecordCommon
     {
         public new static readonly SigilStoneCommon Instance = new SigilStoneCommon();
 
@@ -1502,7 +1503,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SigilStoneSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class SigilStoneSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly SigilStoneSetterTranslationCommon Instance = new SigilStoneSetterTranslationCommon();
 
@@ -1745,7 +1746,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SigilStone_Registration.Instance;
-        public new static SigilStone_Registration StaticRegistration => SigilStone_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SigilStone_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SigilStoneCommon.Instance;
         [DebuggerStepThrough]
@@ -1763,7 +1764,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SigilStoneBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1884,7 +1885,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class SigilStoneBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class SigilStoneBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static SigilStoneBinaryCreateTranslation Instance = new SigilStoneBinaryCreateTranslation();
 
@@ -1979,16 +1980,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class SigilStoneBinaryOverlay :
+    internal partial class SigilStoneBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         ISigilStoneGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SigilStone_Registration.Instance;
-        public new static SigilStone_Registration StaticRegistration => SigilStone_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SigilStone_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SigilStoneCommon.Instance;
         [DebuggerStepThrough]

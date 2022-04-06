@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1814,10 +1815,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum CombatStyleData_FieldIndex
+    internal enum CombatStyleData_FieldIndex
     {
         Versioning = 0,
         DodgePercentChance = 1,
@@ -1860,7 +1861,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class CombatStyleData_Registration : ILoquiRegistration
+    internal partial class CombatStyleData_Registration : ILoquiRegistration
     {
         public static readonly CombatStyleData_Registration Instance = new CombatStyleData_Registration();
 
@@ -1941,7 +1942,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class CombatStyleDataSetterCommon
+    internal partial class CombatStyleDataSetterCommon
     {
         public static readonly CombatStyleDataSetterCommon Instance = new CombatStyleDataSetterCommon();
 
@@ -2016,7 +2017,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CombatStyleDataCommon
+    internal partial class CombatStyleDataCommon
     {
         public static readonly CombatStyleDataCommon Instance = new CombatStyleDataCommon();
 
@@ -2492,7 +2493,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CombatStyleDataSetterTranslationCommon
+    internal partial class CombatStyleDataSetterTranslationCommon
     {
         public static readonly CombatStyleDataSetterTranslationCommon Instance = new CombatStyleDataSetterTranslationCommon();
 
@@ -2719,7 +2720,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleData_Registration.Instance;
-        public static CombatStyleData_Registration StaticRegistration => CombatStyleData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CombatStyleData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleDataCommon.Instance;
         [DebuggerStepThrough]
@@ -2743,7 +2744,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CombatStyleDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -2907,7 +2908,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class CombatStyleDataBinaryCreateTranslation
+    internal partial class CombatStyleDataBinaryCreateTranslation
     {
         public readonly static CombatStyleDataBinaryCreateTranslation Instance = new CombatStyleDataBinaryCreateTranslation();
 
@@ -3017,16 +3018,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class CombatStyleDataBinaryOverlay :
+    internal partial class CombatStyleDataBinaryOverlay :
         PluginBinaryOverlay,
         ICombatStyleDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleData_Registration.Instance;
-        public static CombatStyleData_Registration StaticRegistration => CombatStyleData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CombatStyleData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleDataCommon.Instance;
         [DebuggerStepThrough]

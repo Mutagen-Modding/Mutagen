@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -635,10 +636,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PerkScriptFlag_FieldIndex
+    internal enum PerkScriptFlag_FieldIndex
     {
         Flags = 0,
         FragmentIndex = 1,
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PerkScriptFlag_Registration : ILoquiRegistration
+    internal partial class PerkScriptFlag_Registration : ILoquiRegistration
     {
         public static readonly PerkScriptFlag_Registration Instance = new PerkScriptFlag_Registration();
 
@@ -727,7 +728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PerkScriptFlagSetterCommon
+    internal partial class PerkScriptFlagSetterCommon
     {
         public static readonly PerkScriptFlagSetterCommon Instance = new PerkScriptFlagSetterCommon();
 
@@ -767,7 +768,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkScriptFlagCommon
+    internal partial class PerkScriptFlagCommon
     {
         public static readonly PerkScriptFlagCommon Instance = new PerkScriptFlagCommon();
 
@@ -893,7 +894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkScriptFlagSetterTranslationCommon
+    internal partial class PerkScriptFlagSetterTranslationCommon
     {
         public static readonly PerkScriptFlagSetterTranslationCommon Instance = new PerkScriptFlagSetterTranslationCommon();
 
@@ -975,7 +976,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkScriptFlag_Registration.Instance;
-        public static PerkScriptFlag_Registration StaticRegistration => PerkScriptFlag_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PerkScriptFlag_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PerkScriptFlagCommon.Instance;
         [DebuggerStepThrough]
@@ -999,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkScriptFlagBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1046,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PerkScriptFlagBinaryCreateTranslation
+    internal partial class PerkScriptFlagBinaryCreateTranslation
     {
         public readonly static PerkScriptFlagBinaryCreateTranslation Instance = new PerkScriptFlagBinaryCreateTranslation();
 
@@ -1084,16 +1085,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PerkScriptFlagBinaryOverlay :
+    internal partial class PerkScriptFlagBinaryOverlay :
         PluginBinaryOverlay,
         IPerkScriptFlagGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkScriptFlag_Registration.Instance;
-        public static PerkScriptFlag_Registration StaticRegistration => PerkScriptFlag_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PerkScriptFlag_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PerkScriptFlagCommon.Instance;
         [DebuggerStepThrough]

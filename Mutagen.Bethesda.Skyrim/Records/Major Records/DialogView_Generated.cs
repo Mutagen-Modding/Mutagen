@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -982,10 +983,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum DialogView_FieldIndex
+    internal enum DialogView_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1002,7 +1003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class DialogView_Registration : ILoquiRegistration
+    internal partial class DialogView_Registration : ILoquiRegistration
     {
         public static readonly DialogView_Registration Instance = new DialogView_Registration();
 
@@ -1090,7 +1091,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class DialogViewSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class DialogViewSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly DialogViewSetterCommon Instance = new DialogViewSetterCommon();
 
@@ -1166,7 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DialogViewCommon : SkyrimMajorRecordCommon
+    internal partial class DialogViewCommon : SkyrimMajorRecordCommon
     {
         public new static readonly DialogViewCommon Instance = new DialogViewCommon();
 
@@ -1485,7 +1486,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DialogViewSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class DialogViewSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly DialogViewSetterTranslationCommon Instance = new DialogViewSetterTranslationCommon();
 
@@ -1704,7 +1705,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogView_Registration.Instance;
-        public new static DialogView_Registration StaticRegistration => DialogView_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => DialogView_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogViewCommon.Instance;
         [DebuggerStepThrough]
@@ -1722,7 +1723,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DialogViewBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1831,7 +1832,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class DialogViewBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class DialogViewBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static DialogViewBinaryCreateTranslation Instance = new DialogViewBinaryCreateTranslation();
 
@@ -1917,16 +1918,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class DialogViewBinaryOverlay :
+    internal partial class DialogViewBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IDialogViewGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogView_Registration.Instance;
-        public new static DialogView_Registration StaticRegistration => DialogView_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => DialogView_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogViewCommon.Instance;
         [DebuggerStepThrough]

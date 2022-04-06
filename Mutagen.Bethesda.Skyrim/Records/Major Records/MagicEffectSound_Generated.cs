@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -650,10 +651,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum MagicEffectSound_FieldIndex
+    internal enum MagicEffectSound_FieldIndex
     {
         Type = 0,
         Sound = 1,
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class MagicEffectSound_Registration : ILoquiRegistration
+    internal partial class MagicEffectSound_Registration : ILoquiRegistration
     {
         public static readonly MagicEffectSound_Registration Instance = new MagicEffectSound_Registration();
 
@@ -735,7 +736,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MagicEffectSoundSetterCommon
+    internal partial class MagicEffectSoundSetterCommon
     {
         public static readonly MagicEffectSoundSetterCommon Instance = new MagicEffectSoundSetterCommon();
 
@@ -772,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectSoundCommon
+    internal partial class MagicEffectSoundCommon
     {
         public static readonly MagicEffectSoundCommon Instance = new MagicEffectSoundCommon();
 
@@ -899,7 +900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectSoundSetterTranslationCommon
+    internal partial class MagicEffectSoundSetterTranslationCommon
     {
         public static readonly MagicEffectSoundSetterTranslationCommon Instance = new MagicEffectSoundSetterTranslationCommon();
 
@@ -981,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSound_Registration.Instance;
-        public static MagicEffectSound_Registration StaticRegistration => MagicEffectSound_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MagicEffectSound_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MagicEffectSoundCommon.Instance;
         [DebuggerStepThrough]
@@ -1005,7 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MagicEffectSoundBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1047,7 +1048,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class MagicEffectSoundBinaryCreateTranslation
+    internal partial class MagicEffectSoundBinaryCreateTranslation
     {
         public readonly static MagicEffectSoundBinaryCreateTranslation Instance = new MagicEffectSoundBinaryCreateTranslation();
 
@@ -1085,16 +1086,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MagicEffectSoundBinaryOverlay :
+    internal partial class MagicEffectSoundBinaryOverlay :
         PluginBinaryOverlay,
         IMagicEffectSoundGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSound_Registration.Instance;
-        public static MagicEffectSound_Registration StaticRegistration => MagicEffectSound_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MagicEffectSound_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MagicEffectSoundCommon.Instance;
         [DebuggerStepThrough]

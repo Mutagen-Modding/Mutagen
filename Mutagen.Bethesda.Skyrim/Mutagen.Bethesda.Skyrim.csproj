@@ -106,6 +106,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="InternalsPermissions.cs" />
     <Compile Include="Plugins\Cache\Internals\OverrideMaskRegistration.cs" />
     <Compile Include="Records\Common Subrecords\ActivateParents.cs">
       <DependentUpon>ActivateParents.xml</DependentUpon>
@@ -167,7 +168,6 @@
     <Compile Include="Records\Major Records\Landscape.cs">
       <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\RecordTypes.cs" />
     <Compile Include="Records\SkyrimGroupWrapper.cs">
       <DependentUpon>SkyrimGroup.xml</DependentUpon>
     </Compile>
@@ -1980,8 +1980,6 @@
     <Compile Include="Records\Major Records\SoundOutputData_Generated.cs">
       <DependentUpon>SoundOutputModel.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\RecordTypes_Generated.cs" />
-    <Compile Include="Records\RecordTypeInts_Generated.cs" />
     <Compile Include="Records\Common Subrecords\Placement_Generated.cs">
       <DependentUpon>Placement.xml</DependentUpon>
     </Compile>
@@ -2129,6 +2127,8 @@
     <Compile Include="Interfaces\Link\ISound_Generated.cs" />
     <Compile Include="Interfaces\Link\LinkInterfaceMapping_Generated.cs" />
     <Compile Include="Interfaces\Aspect\AspectInterfaceMapping_Generated.cs" />
+    <Compile Include="Records\RecordTypes_Generated.cs" />
+    <Compile Include="Records\RecordTypeInts_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

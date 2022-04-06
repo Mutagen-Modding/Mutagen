@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -635,10 +636,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum NpcMorph_FieldIndex
+    internal enum NpcMorph_FieldIndex
     {
         Key = 0,
         Value = 1,
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class NpcMorph_Registration : ILoquiRegistration
+    internal partial class NpcMorph_Registration : ILoquiRegistration
     {
         public static readonly NpcMorph_Registration Instance = new NpcMorph_Registration();
 
@@ -720,7 +721,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class NpcMorphSetterCommon
+    internal partial class NpcMorphSetterCommon
     {
         public static readonly NpcMorphSetterCommon Instance = new NpcMorphSetterCommon();
 
@@ -756,7 +757,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class NpcMorphCommon
+    internal partial class NpcMorphCommon
     {
         public static readonly NpcMorphCommon Instance = new NpcMorphCommon();
 
@@ -882,7 +883,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class NpcMorphSetterTranslationCommon
+    internal partial class NpcMorphSetterTranslationCommon
     {
         public static readonly NpcMorphSetterTranslationCommon Instance = new NpcMorphSetterTranslationCommon();
 
@@ -964,7 +965,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcMorph_Registration.Instance;
-        public static NpcMorph_Registration StaticRegistration => NpcMorph_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcMorph_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcMorphCommon.Instance;
         [DebuggerStepThrough]
@@ -988,7 +989,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NpcMorphBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1027,7 +1028,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class NpcMorphBinaryCreateTranslation
+    internal partial class NpcMorphBinaryCreateTranslation
     {
         public readonly static NpcMorphBinaryCreateTranslation Instance = new NpcMorphBinaryCreateTranslation();
 
@@ -1063,16 +1064,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class NpcMorphBinaryOverlay :
+    internal partial class NpcMorphBinaryOverlay :
         PluginBinaryOverlay,
         INpcMorphGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcMorph_Registration.Instance;
-        public static NpcMorph_Registration StaticRegistration => NpcMorph_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcMorph_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcMorphCommon.Instance;
         [DebuggerStepThrough]

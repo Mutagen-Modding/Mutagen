@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -576,10 +577,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PackageTargetSpecificReference_FieldIndex
+    internal enum PackageTargetSpecificReference_FieldIndex
     {
         CountOrDistance = 0,
         Reference = 1,
@@ -587,7 +588,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PackageTargetSpecificReference_Registration : ILoquiRegistration
+    internal partial class PackageTargetSpecificReference_Registration : ILoquiRegistration
     {
         public static readonly PackageTargetSpecificReference_Registration Instance = new PackageTargetSpecificReference_Registration();
 
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PackageTargetSpecificReferenceSetterCommon : APackageTargetSetterCommon
+    internal partial class PackageTargetSpecificReferenceSetterCommon : APackageTargetSetterCommon
     {
         public new static readonly PackageTargetSpecificReferenceSetterCommon Instance = new PackageTargetSpecificReferenceSetterCommon();
 
@@ -715,7 +716,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageTargetSpecificReferenceCommon : APackageTargetCommon
+    internal partial class PackageTargetSpecificReferenceCommon : APackageTargetCommon
     {
         public new static readonly PackageTargetSpecificReferenceCommon Instance = new PackageTargetSpecificReferenceCommon();
 
@@ -870,7 +871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageTargetSpecificReferenceSetterTranslationCommon : APackageTargetSetterTranslationCommon
+    internal partial class PackageTargetSpecificReferenceSetterTranslationCommon : APackageTargetSetterTranslationCommon
     {
         public new static readonly PackageTargetSpecificReferenceSetterTranslationCommon Instance = new PackageTargetSpecificReferenceSetterTranslationCommon();
 
@@ -970,7 +971,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageTargetSpecificReference_Registration.Instance;
-        public new static PackageTargetSpecificReference_Registration StaticRegistration => PackageTargetSpecificReference_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageTargetSpecificReference_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageTargetSpecificReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -988,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageTargetSpecificReferenceBinaryWriteTranslation :
         APackageTargetBinaryWriteTranslation,
@@ -1042,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PackageTargetSpecificReferenceBinaryCreateTranslation : APackageTargetBinaryCreateTranslation
+    internal partial class PackageTargetSpecificReferenceBinaryCreateTranslation : APackageTargetBinaryCreateTranslation
     {
         public new readonly static PackageTargetSpecificReferenceBinaryCreateTranslation Instance = new PackageTargetSpecificReferenceBinaryCreateTranslation();
 
@@ -1069,16 +1070,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageTargetSpecificReferenceBinaryOverlay :
+    internal partial class PackageTargetSpecificReferenceBinaryOverlay :
         APackageTargetBinaryOverlay,
         IPackageTargetSpecificReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageTargetSpecificReference_Registration.Instance;
-        public new static PackageTargetSpecificReference_Registration StaticRegistration => PackageTargetSpecificReference_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageTargetSpecificReference_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageTargetSpecificReferenceCommon.Instance;
         [DebuggerStepThrough]

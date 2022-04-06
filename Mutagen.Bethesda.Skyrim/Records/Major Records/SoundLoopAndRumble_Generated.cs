@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -701,10 +702,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SoundLoopAndRumble_FieldIndex
+    internal enum SoundLoopAndRumble_FieldIndex
     {
         Unknown = 0,
         Loop = 1,
@@ -714,7 +715,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SoundLoopAndRumble_Registration : ILoquiRegistration
+    internal partial class SoundLoopAndRumble_Registration : ILoquiRegistration
     {
         public static readonly SoundLoopAndRumble_Registration Instance = new SoundLoopAndRumble_Registration();
 
@@ -795,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SoundLoopAndRumbleSetterCommon
+    internal partial class SoundLoopAndRumbleSetterCommon
     {
         public static readonly SoundLoopAndRumbleSetterCommon Instance = new SoundLoopAndRumbleSetterCommon();
 
@@ -837,7 +838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SoundLoopAndRumbleCommon
+    internal partial class SoundLoopAndRumbleCommon
     {
         public static readonly SoundLoopAndRumbleCommon Instance = new SoundLoopAndRumbleCommon();
 
@@ -983,7 +984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SoundLoopAndRumbleSetterTranslationCommon
+    internal partial class SoundLoopAndRumbleSetterTranslationCommon
     {
         public static readonly SoundLoopAndRumbleSetterTranslationCommon Instance = new SoundLoopAndRumbleSetterTranslationCommon();
 
@@ -1073,7 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundLoopAndRumble_Registration.Instance;
-        public static SoundLoopAndRumble_Registration StaticRegistration => SoundLoopAndRumble_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SoundLoopAndRumble_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundLoopAndRumbleCommon.Instance;
         [DebuggerStepThrough]
@@ -1097,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SoundLoopAndRumbleBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1146,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SoundLoopAndRumbleBinaryCreateTranslation
+    internal partial class SoundLoopAndRumbleBinaryCreateTranslation
     {
         public readonly static SoundLoopAndRumbleBinaryCreateTranslation Instance = new SoundLoopAndRumbleBinaryCreateTranslation();
 
@@ -1186,16 +1187,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SoundLoopAndRumbleBinaryOverlay :
+    internal partial class SoundLoopAndRumbleBinaryOverlay :
         PluginBinaryOverlay,
         ISoundLoopAndRumbleGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundLoopAndRumble_Registration.Instance;
-        public static SoundLoopAndRumble_Registration StaticRegistration => SoundLoopAndRumble_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SoundLoopAndRumble_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundLoopAndRumbleCommon.Instance;
         [DebuggerStepThrough]

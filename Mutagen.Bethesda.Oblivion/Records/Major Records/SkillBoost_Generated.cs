@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -635,10 +636,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum SkillBoost_FieldIndex
+    internal enum SkillBoost_FieldIndex
     {
         Skill = 0,
         Boost = 1,
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class SkillBoost_Registration : ILoquiRegistration
+    internal partial class SkillBoost_Registration : ILoquiRegistration
     {
         public static readonly SkillBoost_Registration Instance = new SkillBoost_Registration();
 
@@ -720,7 +721,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class SkillBoostSetterCommon
+    internal partial class SkillBoostSetterCommon
     {
         public static readonly SkillBoostSetterCommon Instance = new SkillBoostSetterCommon();
 
@@ -756,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SkillBoostCommon
+    internal partial class SkillBoostCommon
     {
         public static readonly SkillBoostCommon Instance = new SkillBoostCommon();
 
@@ -882,7 +883,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SkillBoostSetterTranslationCommon
+    internal partial class SkillBoostSetterTranslationCommon
     {
         public static readonly SkillBoostSetterTranslationCommon Instance = new SkillBoostSetterTranslationCommon();
 
@@ -964,7 +965,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillBoost_Registration.Instance;
-        public static SkillBoost_Registration StaticRegistration => SkillBoost_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SkillBoost_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SkillBoostCommon.Instance;
         [DebuggerStepThrough]
@@ -988,7 +989,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SkillBoostBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1028,7 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class SkillBoostBinaryCreateTranslation
+    internal partial class SkillBoostBinaryCreateTranslation
     {
         public readonly static SkillBoostBinaryCreateTranslation Instance = new SkillBoostBinaryCreateTranslation();
 
@@ -1066,16 +1067,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class SkillBoostBinaryOverlay :
+    internal partial class SkillBoostBinaryOverlay :
         PluginBinaryOverlay,
         ISkillBoostGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillBoost_Registration.Instance;
-        public static SkillBoost_Registration StaticRegistration => SkillBoost_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SkillBoost_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SkillBoostCommon.Instance;
         [DebuggerStepThrough]

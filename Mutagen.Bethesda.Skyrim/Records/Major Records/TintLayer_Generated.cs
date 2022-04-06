@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -710,10 +711,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum TintLayer_FieldIndex
+    internal enum TintLayer_FieldIndex
     {
         Index = 0,
         Color = 1,
@@ -723,7 +724,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class TintLayer_Registration : ILoquiRegistration
+    internal partial class TintLayer_Registration : ILoquiRegistration
     {
         public static readonly TintLayer_Registration Instance = new TintLayer_Registration();
 
@@ -807,7 +808,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class TintLayerSetterCommon
+    internal partial class TintLayerSetterCommon
     {
         public static readonly TintLayerSetterCommon Instance = new TintLayerSetterCommon();
 
@@ -846,7 +847,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TintLayerCommon
+    internal partial class TintLayerCommon
     {
         public static readonly TintLayerCommon Instance = new TintLayerCommon();
 
@@ -1008,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TintLayerSetterTranslationCommon
+    internal partial class TintLayerSetterTranslationCommon
     {
         public static readonly TintLayerSetterTranslationCommon Instance = new TintLayerSetterTranslationCommon();
 
@@ -1098,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintLayer_Registration.Instance;
-        public static TintLayer_Registration StaticRegistration => TintLayer_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TintLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintLayerCommon.Instance;
         [DebuggerStepThrough]
@@ -1122,7 +1123,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class TintLayerBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1177,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class TintLayerBinaryCreateTranslation
+    internal partial class TintLayerBinaryCreateTranslation
     {
         public readonly static TintLayerBinaryCreateTranslation Instance = new TintLayerBinaryCreateTranslation();
 
@@ -1259,16 +1260,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class TintLayerBinaryOverlay :
+    internal partial class TintLayerBinaryOverlay :
         PluginBinaryOverlay,
         ITintLayerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintLayer_Registration.Instance;
-        public static TintLayer_Registration StaticRegistration => TintLayer_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TintLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintLayerCommon.Instance;
         [DebuggerStepThrough]

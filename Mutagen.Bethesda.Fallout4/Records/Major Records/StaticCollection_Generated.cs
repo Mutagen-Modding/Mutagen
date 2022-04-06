@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1107,10 +1108,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum StaticCollection_FieldIndex
+    internal enum StaticCollection_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1129,7 +1130,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class StaticCollection_Registration : ILoquiRegistration
+    internal partial class StaticCollection_Registration : ILoquiRegistration
     {
         public static readonly StaticCollection_Registration Instance = new StaticCollection_Registration();
 
@@ -1220,7 +1221,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class StaticCollectionSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class StaticCollectionSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly StaticCollectionSetterCommon Instance = new StaticCollectionSetterCommon();
 
@@ -1300,7 +1301,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class StaticCollectionCommon : Fallout4MajorRecordCommon
+    internal partial class StaticCollectionCommon : Fallout4MajorRecordCommon
     {
         public new static readonly StaticCollectionCommon Instance = new StaticCollectionCommon();
 
@@ -1667,7 +1668,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class StaticCollectionSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class StaticCollectionSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly StaticCollectionSetterTranslationCommon Instance = new StaticCollectionSetterTranslationCommon();
 
@@ -1932,7 +1933,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => StaticCollection_Registration.Instance;
-        public new static StaticCollection_Registration StaticRegistration => StaticCollection_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => StaticCollection_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => StaticCollectionCommon.Instance;
         [DebuggerStepThrough]
@@ -1950,7 +1951,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class StaticCollectionBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -2077,7 +2078,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class StaticCollectionBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class StaticCollectionBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static StaticCollectionBinaryCreateTranslation Instance = new StaticCollectionBinaryCreateTranslation();
 
@@ -2178,16 +2179,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class StaticCollectionBinaryOverlay :
+    internal partial class StaticCollectionBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IStaticCollectionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => StaticCollection_Registration.Instance;
-        public new static StaticCollection_Registration StaticRegistration => StaticCollection_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => StaticCollection_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => StaticCollectionCommon.Instance;
         [DebuggerStepThrough]

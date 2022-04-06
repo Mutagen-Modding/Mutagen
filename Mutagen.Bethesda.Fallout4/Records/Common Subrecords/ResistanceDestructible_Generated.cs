@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -650,10 +651,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ResistanceDestructible_FieldIndex
+    internal enum ResistanceDestructible_FieldIndex
     {
         DamageType = 0,
         Value = 1,
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ResistanceDestructible_Registration : ILoquiRegistration
+    internal partial class ResistanceDestructible_Registration : ILoquiRegistration
     {
         public static readonly ResistanceDestructible_Registration Instance = new ResistanceDestructible_Registration();
 
@@ -735,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ResistanceDestructibleSetterCommon
+    internal partial class ResistanceDestructibleSetterCommon
     {
         public static readonly ResistanceDestructibleSetterCommon Instance = new ResistanceDestructibleSetterCommon();
 
@@ -772,7 +773,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ResistanceDestructibleCommon
+    internal partial class ResistanceDestructibleCommon
     {
         public static readonly ResistanceDestructibleCommon Instance = new ResistanceDestructibleCommon();
 
@@ -899,7 +900,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ResistanceDestructibleSetterTranslationCommon
+    internal partial class ResistanceDestructibleSetterTranslationCommon
     {
         public static readonly ResistanceDestructibleSetterTranslationCommon Instance = new ResistanceDestructibleSetterTranslationCommon();
 
@@ -981,7 +982,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ResistanceDestructible_Registration.Instance;
-        public static ResistanceDestructible_Registration StaticRegistration => ResistanceDestructible_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ResistanceDestructible_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ResistanceDestructibleCommon.Instance;
         [DebuggerStepThrough]
@@ -1005,7 +1006,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ResistanceDestructibleBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1044,7 +1045,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ResistanceDestructibleBinaryCreateTranslation
+    internal partial class ResistanceDestructibleBinaryCreateTranslation
     {
         public readonly static ResistanceDestructibleBinaryCreateTranslation Instance = new ResistanceDestructibleBinaryCreateTranslation();
 
@@ -1080,16 +1081,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ResistanceDestructibleBinaryOverlay :
+    internal partial class ResistanceDestructibleBinaryOverlay :
         PluginBinaryOverlay,
         IResistanceDestructibleGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ResistanceDestructible_Registration.Instance;
-        public static ResistanceDestructible_Registration StaticRegistration => ResistanceDestructible_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ResistanceDestructible_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ResistanceDestructibleCommon.Instance;
         [DebuggerStepThrough]

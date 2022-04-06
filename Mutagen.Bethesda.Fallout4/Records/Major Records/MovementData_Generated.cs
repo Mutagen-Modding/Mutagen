@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -905,10 +906,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum MovementData_FieldIndex
+    internal enum MovementData_FieldIndex
     {
         Left = 0,
         Right = 1,
@@ -922,7 +923,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class MovementData_Registration : ILoquiRegistration
+    internal partial class MovementData_Registration : ILoquiRegistration
     {
         public static readonly MovementData_Registration Instance = new MovementData_Registration();
 
@@ -996,7 +997,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class MovementDataSetterCommon
+    internal partial class MovementDataSetterCommon
     {
         public static readonly MovementDataSetterCommon Instance = new MovementDataSetterCommon();
 
@@ -1038,7 +1039,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MovementDataCommon
+    internal partial class MovementDataCommon
     {
         public static readonly MovementDataCommon Instance = new MovementDataCommon();
 
@@ -1252,7 +1253,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MovementDataSetterTranslationCommon
+    internal partial class MovementDataSetterTranslationCommon
     {
         public static readonly MovementDataSetterTranslationCommon Instance = new MovementDataSetterTranslationCommon();
 
@@ -1484,7 +1485,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MovementData_Registration.Instance;
-        public static MovementData_Registration StaticRegistration => MovementData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MovementData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MovementDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1508,7 +1509,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MovementDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1574,7 +1575,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class MovementDataBinaryCreateTranslation
+    internal partial class MovementDataBinaryCreateTranslation
     {
         public readonly static MovementDataBinaryCreateTranslation Instance = new MovementDataBinaryCreateTranslation();
 
@@ -1616,16 +1617,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class MovementDataBinaryOverlay :
+    internal partial class MovementDataBinaryOverlay :
         PluginBinaryOverlay,
         IMovementDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MovementData_Registration.Instance;
-        public static MovementData_Registration StaticRegistration => MovementData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MovementData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MovementDataCommon.Instance;
         [DebuggerStepThrough]

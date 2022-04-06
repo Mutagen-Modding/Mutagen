@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1491,10 +1492,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Spell_FieldIndex
+    internal enum Spell_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1523,7 +1524,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Spell_Registration : ILoquiRegistration
+    internal partial class Spell_Registration : ILoquiRegistration
     {
         public static readonly Spell_Registration Instance = new Spell_Registration();
 
@@ -1619,7 +1620,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SpellSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class SpellSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly SpellSetterCommon Instance = new SpellSetterCommon();
 
@@ -1710,7 +1711,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SpellCommon : SkyrimMajorRecordCommon
+    internal partial class SpellCommon : SkyrimMajorRecordCommon
     {
         public new static readonly SpellCommon Instance = new SpellCommon();
 
@@ -2165,7 +2166,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SpellSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class SpellSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly SpellSetterTranslationCommon Instance = new SpellSetterTranslationCommon();
 
@@ -2449,7 +2450,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Spell_Registration.Instance;
-        public new static Spell_Registration StaticRegistration => Spell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Spell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SpellCommon.Instance;
         [DebuggerStepThrough]
@@ -2467,7 +2468,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SpellBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2638,7 +2639,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SpellBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class SpellBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static SpellBinaryCreateTranslation Instance = new SpellBinaryCreateTranslation();
 
@@ -2771,16 +2772,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SpellBinaryOverlay :
+    internal partial class SpellBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ISpellGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Spell_Registration.Instance;
-        public new static Spell_Registration StaticRegistration => Spell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Spell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SpellCommon.Instance;
         [DebuggerStepThrough]

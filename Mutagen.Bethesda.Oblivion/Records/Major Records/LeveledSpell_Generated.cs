@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -798,10 +799,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum LeveledSpell_FieldIndex
+    internal enum LeveledSpell_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -815,7 +816,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class LeveledSpell_Registration : ILoquiRegistration
+    internal partial class LeveledSpell_Registration : ILoquiRegistration
     {
         public static readonly LeveledSpell_Registration Instance = new LeveledSpell_Registration();
 
@@ -901,7 +902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LeveledSpellSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class LeveledSpellSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly LeveledSpellSetterCommon Instance = new LeveledSpellSetterCommon();
 
@@ -974,7 +975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LeveledSpellCommon : OblivionMajorRecordCommon
+    internal partial class LeveledSpellCommon : OblivionMajorRecordCommon
     {
         public new static readonly LeveledSpellCommon Instance = new LeveledSpellCommon();
 
@@ -1253,7 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LeveledSpellSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class LeveledSpellSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly LeveledSpellSetterTranslationCommon Instance = new LeveledSpellSetterTranslationCommon();
 
@@ -1440,7 +1441,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledSpell_Registration.Instance;
-        public new static LeveledSpell_Registration StaticRegistration => LeveledSpell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LeveledSpell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledSpellCommon.Instance;
         [DebuggerStepThrough]
@@ -1458,7 +1459,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LeveledSpellBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1560,7 +1561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LeveledSpellBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class LeveledSpellBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static LeveledSpellBinaryCreateTranslation Instance = new LeveledSpellBinaryCreateTranslation();
 
@@ -1634,16 +1635,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LeveledSpellBinaryOverlay :
+    internal partial class LeveledSpellBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         ILeveledSpellGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledSpell_Registration.Instance;
-        public new static LeveledSpell_Registration StaticRegistration => LeveledSpell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LeveledSpell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledSpellCommon.Instance;
         [DebuggerStepThrough]

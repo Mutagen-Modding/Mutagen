@@ -25,11 +25,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IHazardGetter> Association { get; }
     }
 
-    namespace Internals
+    internal partial class MagicEffectGuideArchetypeBinaryOverlay
     {
-        public partial class MagicEffectGuideArchetypeBinaryOverlay
-        {
-            public IFormLinkGetter<IHazardGetter> Association => this.AssociationKey.AsLink<IHazardGetter>();
-        }
+        public IFormLinkGetter<IHazardGetter> Association => this.AssociationKey.AsLink<IHazardGetter>();
     }
 }

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -760,10 +761,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PackageIdles_FieldIndex
+    internal enum PackageIdles_FieldIndex
     {
         Type = 0,
         TimerSetting = 1,
@@ -772,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PackageIdles_Registration : ILoquiRegistration
+    internal partial class PackageIdles_Registration : ILoquiRegistration
     {
         public static readonly PackageIdles_Registration Instance = new PackageIdles_Registration();
 
@@ -858,7 +859,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PackageIdlesSetterCommon
+    internal partial class PackageIdlesSetterCommon
     {
         public static readonly PackageIdlesSetterCommon Instance = new PackageIdlesSetterCommon();
 
@@ -897,7 +898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageIdlesCommon
+    internal partial class PackageIdlesCommon
     {
         public static readonly PackageIdlesCommon Instance = new PackageIdlesCommon();
 
@@ -1054,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageIdlesSetterTranslationCommon
+    internal partial class PackageIdlesSetterTranslationCommon
     {
         public static readonly PackageIdlesSetterTranslationCommon Instance = new PackageIdlesSetterTranslationCommon();
 
@@ -1155,7 +1156,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageIdles_Registration.Instance;
-        public static PackageIdles_Registration StaticRegistration => PackageIdles_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PackageIdles_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageIdlesCommon.Instance;
         [DebuggerStepThrough]
@@ -1179,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageIdlesBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1253,7 +1254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PackageIdlesBinaryCreateTranslation
+    internal partial class PackageIdlesBinaryCreateTranslation
     {
         public readonly static PackageIdlesBinaryCreateTranslation Instance = new PackageIdlesBinaryCreateTranslation();
 
@@ -1336,16 +1337,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageIdlesBinaryOverlay :
+    internal partial class PackageIdlesBinaryOverlay :
         PluginBinaryOverlay,
         IPackageIdlesGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageIdles_Registration.Instance;
-        public static PackageIdles_Registration StaticRegistration => PackageIdles_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PackageIdles_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageIdlesCommon.Instance;
         [DebuggerStepThrough]

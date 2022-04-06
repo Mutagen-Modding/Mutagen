@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1720,10 +1721,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Container_FieldIndex
+    internal enum Container_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1753,7 +1754,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Container_Registration : ILoquiRegistration
+    internal partial class Container_Registration : ILoquiRegistration
     {
         public static readonly Container_Registration Instance = new Container_Registration();
 
@@ -1859,7 +1860,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ContainerSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class ContainerSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly ContainerSetterCommon Instance = new ContainerSetterCommon();
 
@@ -1959,7 +1960,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ContainerCommon : Fallout4MajorRecordCommon
+    internal partial class ContainerCommon : Fallout4MajorRecordCommon
     {
         public new static readonly ContainerCommon Instance = new ContainerCommon();
 
@@ -2530,7 +2531,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ContainerSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class ContainerSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly ContainerSetterTranslationCommon Instance = new ContainerSetterTranslationCommon();
 
@@ -2920,7 +2921,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Container_Registration.Instance;
-        public new static Container_Registration StaticRegistration => Container_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Container_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ContainerCommon.Instance;
         [DebuggerStepThrough]
@@ -2938,7 +2939,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ContainerBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -3136,7 +3137,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ContainerBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class ContainerBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static ContainerBinaryCreateTranslation Instance = new ContainerBinaryCreateTranslation();
 
@@ -3312,16 +3313,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ContainerBinaryOverlay :
+    internal partial class ContainerBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IContainerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Container_Registration.Instance;
-        public new static Container_Registration StaticRegistration => Container_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Container_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ContainerCommon.Instance;
         [DebuggerStepThrough]

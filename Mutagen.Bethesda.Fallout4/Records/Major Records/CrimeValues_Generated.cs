@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -941,10 +942,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum CrimeValues_FieldIndex
+    internal enum CrimeValues_FieldIndex
     {
         Versioning = 0,
         Arrest = 1,
@@ -961,7 +962,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class CrimeValues_Registration : ILoquiRegistration
+    internal partial class CrimeValues_Registration : ILoquiRegistration
     {
         public static readonly CrimeValues_Registration Instance = new CrimeValues_Registration();
 
@@ -1042,7 +1043,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class CrimeValuesSetterCommon
+    internal partial class CrimeValuesSetterCommon
     {
         public static readonly CrimeValuesSetterCommon Instance = new CrimeValuesSetterCommon();
 
@@ -1091,7 +1092,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class CrimeValuesCommon
+    internal partial class CrimeValuesCommon
     {
         public static readonly CrimeValuesCommon Instance = new CrimeValuesCommon();
 
@@ -1307,7 +1308,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class CrimeValuesSetterTranslationCommon
+    internal partial class CrimeValuesSetterTranslationCommon
     {
         public static readonly CrimeValuesSetterTranslationCommon Instance = new CrimeValuesSetterTranslationCommon();
 
@@ -1427,7 +1428,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CrimeValues_Registration.Instance;
-        public static CrimeValues_Registration StaticRegistration => CrimeValues_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CrimeValues_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CrimeValuesCommon.Instance;
         [DebuggerStepThrough]
@@ -1451,7 +1452,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class CrimeValuesBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1511,7 +1512,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class CrimeValuesBinaryCreateTranslation
+    internal partial class CrimeValuesBinaryCreateTranslation
     {
         public readonly static CrimeValuesBinaryCreateTranslation Instance = new CrimeValuesBinaryCreateTranslation();
 
@@ -1565,16 +1566,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class CrimeValuesBinaryOverlay :
+    internal partial class CrimeValuesBinaryOverlay :
         PluginBinaryOverlay,
         ICrimeValuesGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CrimeValues_Registration.Instance;
-        public static CrimeValues_Registration StaticRegistration => CrimeValues_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CrimeValues_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CrimeValuesCommon.Instance;
         [DebuggerStepThrough]

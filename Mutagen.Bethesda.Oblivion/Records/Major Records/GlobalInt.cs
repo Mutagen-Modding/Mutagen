@@ -2,69 +2,65 @@ using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
-using System;
+using Mutagen.Bethesda.Oblivion.Internals;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Oblivion;
+
+public partial class GlobalInt
 {
-    public partial class GlobalInt
-    {
-        public const char TRIGGER_CHAR = 'l';
-        public override char TypeChar => TRIGGER_CHAR;
+    public const char TRIGGER_CHAR = 'l';
+    public override char TypeChar => TRIGGER_CHAR;
 
-        public override float? RawFloat
+    public override float? RawFloat
+    {
+        get => this.Data is {} data ? (float)data : default;
+        set
         {
-            get => this.Data is {} data ? (float)data : default;
-            set
+            if (value.HasValue)
             {
-                if (value.HasValue)
-                {
-                    this.Data = (int)value.Value;
-                }
-                else
-                {
-                    this.Data = default;
-                }
+                this.Data = (int)value.Value;
+            }
+            else
+            {
+                this.Data = default;
             }
         }
     }
+}
 
-    namespace Internals
+partial class GlobalIntBinaryCreateTranslation
+{
+    public static partial void FillBinaryDataCustom(MutagenFrame frame, IGlobalIntInternal item)
     {
-        public partial class GlobalIntBinaryCreateTranslation
-        {
-            public static partial void FillBinaryDataCustom(MutagenFrame frame, IGlobalIntInternal item)
-            {
-            }
-        }
+    }
+}
 
-        public partial class GlobalIntBinaryWriteTranslation
+partial class GlobalIntBinaryWriteTranslation
+{
+    public static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalIntGetter item)
+    {
+        if (item.Data is not { } data) return;
+        using (HeaderExport.Subrecord(writer, RecordTypes.FLTV))
         {
-            public static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalIntGetter item)
-            {
-                if (item.Data is not { } data) return;
-                using (HeaderExport.Subrecord(writer, RecordTypes.FLTV))
-                {
-                    writer.Write((float)data);
-                }
-            }
+            writer.Write((float)data);
         }
+    }
+}
 
-        public partial class GlobalIntBinaryOverlay
-        {
-            public override char TypeChar => GlobalInt.TRIGGER_CHAR;
-            public override float? RawFloat => this.Data is {} data ? (float)data : default;
+partial class GlobalIntBinaryOverlay
+{
+    public override char TypeChar => GlobalInt.TRIGGER_CHAR;
+    public override float? RawFloat => this.Data is {} data ? (float)data : default;
 
-            private int? _DataLocation;
-            public bool GetDataIsSetCustom() => _DataLocation.HasValue;
-            public partial int? GetDataCustom()
-            {
-                if (!_DataLocation.HasValue) return default;
-                return (int)HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants).Float();
-            }
-            partial void DataCustomParse(OverlayStream stream, long finalPos, int offset)
-            {
-                _DataLocation = (ushort)(stream.Position - offset);
-            }
-        }
+    private int? _DataLocation;
+    public bool GetDataIsSetCustom() => _DataLocation.HasValue;
+    public partial int? GetDataCustom()
+    {
+        if (!_DataLocation.HasValue) return default;
+        return (int)HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants).Float();
+    }
+    partial void DataCustomParse(OverlayStream stream, long finalPos, int offset)
+    {
+        _DataLocation = (ushort)(stream.Position - offset);
     }
 }

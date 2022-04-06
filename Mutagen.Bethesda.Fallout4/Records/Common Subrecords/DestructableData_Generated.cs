@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -701,10 +702,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum DestructableData_FieldIndex
+    internal enum DestructableData_FieldIndex
     {
         Health = 0,
         DESTCount = 1,
@@ -714,7 +715,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class DestructableData_Registration : ILoquiRegistration
+    internal partial class DestructableData_Registration : ILoquiRegistration
     {
         public static readonly DestructableData_Registration Instance = new DestructableData_Registration();
 
@@ -795,7 +796,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class DestructableDataSetterCommon
+    internal partial class DestructableDataSetterCommon
     {
         public static readonly DestructableDataSetterCommon Instance = new DestructableDataSetterCommon();
 
@@ -837,7 +838,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class DestructableDataCommon
+    internal partial class DestructableDataCommon
     {
         public static readonly DestructableDataCommon Instance = new DestructableDataCommon();
 
@@ -983,7 +984,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class DestructableDataSetterTranslationCommon
+    internal partial class DestructableDataSetterTranslationCommon
     {
         public static readonly DestructableDataSetterTranslationCommon Instance = new DestructableDataSetterTranslationCommon();
 
@@ -1073,7 +1074,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DestructableData_Registration.Instance;
-        public static DestructableData_Registration StaticRegistration => DestructableData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DestructableData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DestructableDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1097,7 +1098,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class DestructableDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1146,7 +1147,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class DestructableDataBinaryCreateTranslation
+    internal partial class DestructableDataBinaryCreateTranslation
     {
         public readonly static DestructableDataBinaryCreateTranslation Instance = new DestructableDataBinaryCreateTranslation();
 
@@ -1186,16 +1187,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class DestructableDataBinaryOverlay :
+    internal partial class DestructableDataBinaryOverlay :
         PluginBinaryOverlay,
         IDestructableDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DestructableData_Registration.Instance;
-        public static DestructableData_Registration StaticRegistration => DestructableData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DestructableData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DestructableDataCommon.Instance;
         [DebuggerStepThrough]

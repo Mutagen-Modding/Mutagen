@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -793,10 +794,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum PathGridPoint_FieldIndex
+    internal enum PathGridPoint_FieldIndex
     {
         Point = 0,
         NumConnections = 1,
@@ -806,7 +807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class PathGridPoint_Registration : ILoquiRegistration
+    internal partial class PathGridPoint_Registration : ILoquiRegistration
     {
         public static readonly PathGridPoint_Registration Instance = new PathGridPoint_Registration();
 
@@ -880,7 +881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class PathGridPointSetterCommon
+    internal partial class PathGridPointSetterCommon
     {
         public static readonly PathGridPointSetterCommon Instance = new PathGridPointSetterCommon();
 
@@ -918,7 +919,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class PathGridPointCommon
+    internal partial class PathGridPointCommon
     {
         public static readonly PathGridPointCommon Instance = new PathGridPointCommon();
 
@@ -1081,7 +1082,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class PathGridPointSetterTranslationCommon
+    internal partial class PathGridPointSetterTranslationCommon
     {
         public static readonly PathGridPointSetterTranslationCommon Instance = new PathGridPointSetterTranslationCommon();
 
@@ -1184,7 +1185,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGridPoint_Registration.Instance;
-        public static PathGridPoint_Registration StaticRegistration => PathGridPoint_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PathGridPoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PathGridPointCommon.Instance;
         [DebuggerStepThrough]
@@ -1208,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class PathGridPointBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1250,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class PathGridPointBinaryCreateTranslation
+    internal partial class PathGridPointBinaryCreateTranslation
     {
         public readonly static PathGridPointBinaryCreateTranslation Instance = new PathGridPointBinaryCreateTranslation();
 
@@ -1287,16 +1288,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class PathGridPointBinaryOverlay :
+    internal partial class PathGridPointBinaryOverlay :
         PluginBinaryOverlay,
         IPathGridPointGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGridPoint_Registration.Instance;
-        public static PathGridPoint_Registration StaticRegistration => PathGridPoint_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PathGridPoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PathGridPointCommon.Instance;
         [DebuggerStepThrough]

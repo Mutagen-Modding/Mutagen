@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -652,10 +653,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum EquipmentSlot_FieldIndex
+    internal enum EquipmentSlot_FieldIndex
     {
         Slot = 0,
         Node = 1,
@@ -663,7 +664,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class EquipmentSlot_Registration : ILoquiRegistration
+    internal partial class EquipmentSlot_Registration : ILoquiRegistration
     {
         public static readonly EquipmentSlot_Registration Instance = new EquipmentSlot_Registration();
 
@@ -745,7 +746,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class EquipmentSlotSetterCommon
+    internal partial class EquipmentSlotSetterCommon
     {
         public static readonly EquipmentSlotSetterCommon Instance = new EquipmentSlotSetterCommon();
 
@@ -783,7 +784,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class EquipmentSlotCommon
+    internal partial class EquipmentSlotCommon
     {
         public static readonly EquipmentSlotCommon Instance = new EquipmentSlotCommon();
 
@@ -917,7 +918,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class EquipmentSlotSetterTranslationCommon
+    internal partial class EquipmentSlotSetterTranslationCommon
     {
         public static readonly EquipmentSlotSetterTranslationCommon Instance = new EquipmentSlotSetterTranslationCommon();
 
@@ -999,7 +1000,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EquipmentSlot_Registration.Instance;
-        public static EquipmentSlot_Registration StaticRegistration => EquipmentSlot_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EquipmentSlot_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EquipmentSlotCommon.Instance;
         [DebuggerStepThrough]
@@ -1023,7 +1024,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class EquipmentSlotBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1069,7 +1070,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class EquipmentSlotBinaryCreateTranslation
+    internal partial class EquipmentSlotBinaryCreateTranslation
     {
         public readonly static EquipmentSlotBinaryCreateTranslation Instance = new EquipmentSlotBinaryCreateTranslation();
 
@@ -1136,16 +1137,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class EquipmentSlotBinaryOverlay :
+    internal partial class EquipmentSlotBinaryOverlay :
         PluginBinaryOverlay,
         IEquipmentSlotGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EquipmentSlot_Registration.Instance;
-        public static EquipmentSlot_Registration StaticRegistration => EquipmentSlot_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EquipmentSlot_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EquipmentSlotCommon.Instance;
         [DebuggerStepThrough]

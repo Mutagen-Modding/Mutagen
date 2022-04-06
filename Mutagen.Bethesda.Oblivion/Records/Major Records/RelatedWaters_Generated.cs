@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -697,10 +698,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum RelatedWaters_FieldIndex
+    internal enum RelatedWaters_FieldIndex
     {
         RelatedWaterDaytime = 0,
         RelatedWaterNighttime = 1,
@@ -709,7 +710,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class RelatedWaters_Registration : ILoquiRegistration
+    internal partial class RelatedWaters_Registration : ILoquiRegistration
     {
         public static readonly RelatedWaters_Registration Instance = new RelatedWaters_Registration();
 
@@ -790,7 +791,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class RelatedWatersSetterCommon
+    internal partial class RelatedWatersSetterCommon
     {
         public static readonly RelatedWatersSetterCommon Instance = new RelatedWatersSetterCommon();
 
@@ -834,7 +835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RelatedWatersCommon
+    internal partial class RelatedWatersCommon
     {
         public static readonly RelatedWatersCommon Instance = new RelatedWatersCommon();
 
@@ -973,7 +974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RelatedWatersSetterTranslationCommon
+    internal partial class RelatedWatersSetterTranslationCommon
     {
         public static readonly RelatedWatersSetterTranslationCommon Instance = new RelatedWatersSetterTranslationCommon();
 
@@ -1059,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RelatedWaters_Registration.Instance;
-        public static RelatedWaters_Registration StaticRegistration => RelatedWaters_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RelatedWaters_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RelatedWatersCommon.Instance;
         [DebuggerStepThrough]
@@ -1083,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RelatedWatersBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1134,7 +1135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class RelatedWatersBinaryCreateTranslation
+    internal partial class RelatedWatersBinaryCreateTranslation
     {
         public readonly static RelatedWatersBinaryCreateTranslation Instance = new RelatedWatersBinaryCreateTranslation();
 
@@ -1171,16 +1172,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class RelatedWatersBinaryOverlay :
+    internal partial class RelatedWatersBinaryOverlay :
         PluginBinaryOverlay,
         IRelatedWatersGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RelatedWaters_Registration.Instance;
-        public static RelatedWaters_Registration StaticRegistration => RelatedWaters_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RelatedWaters_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RelatedWatersCommon.Instance;
         [DebuggerStepThrough]

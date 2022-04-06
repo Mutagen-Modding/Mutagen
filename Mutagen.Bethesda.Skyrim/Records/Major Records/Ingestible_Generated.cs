@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1635,10 +1636,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Ingestible_FieldIndex
+    internal enum Ingestible_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1668,7 +1669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Ingestible_Registration : ILoquiRegistration
+    internal partial class Ingestible_Registration : ILoquiRegistration
     {
         public static readonly Ingestible_Registration Instance = new Ingestible_Registration();
 
@@ -1771,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class IngestibleSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class IngestibleSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly IngestibleSetterCommon Instance = new IngestibleSetterCommon();
 
@@ -1867,7 +1868,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class IngestibleCommon : SkyrimMajorRecordCommon
+    internal partial class IngestibleCommon : SkyrimMajorRecordCommon
     {
         public new static readonly IngestibleCommon Instance = new IngestibleCommon();
 
@@ -2391,7 +2392,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class IngestibleSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class IngestibleSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly IngestibleSetterTranslationCommon Instance = new IngestibleSetterTranslationCommon();
 
@@ -2745,7 +2746,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ingestible_Registration.Instance;
-        public new static Ingestible_Registration StaticRegistration => Ingestible_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Ingestible_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IngestibleCommon.Instance;
         [DebuggerStepThrough]
@@ -2763,7 +2764,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class IngestibleBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2948,7 +2949,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class IngestibleBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class IngestibleBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static IngestibleBinaryCreateTranslation Instance = new IngestibleBinaryCreateTranslation();
 
@@ -3106,16 +3107,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class IngestibleBinaryOverlay :
+    internal partial class IngestibleBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IIngestibleGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ingestible_Registration.Instance;
-        public new static Ingestible_Registration StaticRegistration => Ingestible_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Ingestible_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IngestibleCommon.Instance;
         [DebuggerStepThrough]

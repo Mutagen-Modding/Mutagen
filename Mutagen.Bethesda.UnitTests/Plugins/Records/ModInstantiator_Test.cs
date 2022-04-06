@@ -12,14 +12,14 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records;
 
-public class NoReleaseModInstantiatorTest : AModInstantiatorTest<OblivionMod, IOblivionMod, IOblivionModGetter, OblivionModBinaryOverlay>
+internal class NoReleaseModInstantiatorTest : AModInstantiatorTest<OblivionMod, IOblivionMod, IOblivionModGetter, OblivionModBinaryOverlay>
 {
     public override ModPath ModPath => TestDataPathing.OblivionTestMod;
     public override GameRelease Release => GameRelease.Oblivion;
     public override ILoquiRegistration Registration => OblivionMod_Registration.Instance;
 }
 
-public class ReleaseModInstantiatorTest : AModInstantiatorTest<SkyrimMod, ISkyrimMod, ISkyrimModGetter, SkyrimModBinaryOverlay>
+internal class ReleaseModInstantiatorTest : AModInstantiatorTest<SkyrimMod, ISkyrimMod, ISkyrimModGetter, SkyrimModBinaryOverlay>
 {
     public override ModPath ModPath => TestDataPathing.SkyrimTestMod;
     public override GameRelease Release => GameRelease.SkyrimSE;

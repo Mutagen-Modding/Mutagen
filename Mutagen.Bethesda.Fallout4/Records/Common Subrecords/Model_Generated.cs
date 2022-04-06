@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -581,10 +582,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Model_FieldIndex
+    internal enum Model_FieldIndex
     {
         File = 0,
         ColorRemappingIndex = 1,
@@ -595,7 +596,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Model_Registration : ILoquiRegistration
+    internal partial class Model_Registration : ILoquiRegistration
     {
         public static readonly Model_Registration Instance = new Model_Registration();
 
@@ -679,7 +680,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ModelSetterCommon : SimpleModelSetterCommon
+    internal partial class ModelSetterCommon : SimpleModelSetterCommon
     {
         public new static readonly ModelSetterCommon Instance = new ModelSetterCommon();
 
@@ -733,7 +734,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ModelCommon : SimpleModelCommon
+    internal partial class ModelCommon : SimpleModelCommon
     {
         public new static readonly ModelCommon Instance = new ModelCommon();
 
@@ -897,7 +898,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ModelSetterTranslationCommon : SimpleModelSetterTranslationCommon
+    internal partial class ModelSetterTranslationCommon : SimpleModelSetterTranslationCommon
     {
         public new static readonly ModelSetterTranslationCommon Instance = new ModelSetterTranslationCommon();
 
@@ -1004,7 +1005,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
-        public new static Model_Registration StaticRegistration => Model_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Model_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ModelCommon.Instance;
         [DebuggerStepThrough]
@@ -1022,7 +1023,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ModelBinaryWriteTranslation :
         SimpleModelBinaryWriteTranslation,
@@ -1080,7 +1081,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ModelBinaryCreateTranslation : SimpleModelBinaryCreateTranslation
+    internal partial class ModelBinaryCreateTranslation : SimpleModelBinaryCreateTranslation
     {
         public new readonly static ModelBinaryCreateTranslation Instance = new ModelBinaryCreateTranslation();
 
@@ -1126,16 +1127,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ModelBinaryOverlay :
+    internal partial class ModelBinaryOverlay :
         SimpleModelBinaryOverlay,
         IModelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
-        public new static Model_Registration StaticRegistration => Model_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Model_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ModelCommon.Instance;
         [DebuggerStepThrough]

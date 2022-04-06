@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -29,6 +28,8 @@ using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -7054,10 +7055,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SkyrimMod_FieldIndex
+    internal enum SkyrimMod_FieldIndex
     {
         ModHeader = 0,
         GameSettings = 1,
@@ -7177,7 +7178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SkyrimMod_Registration : ILoquiRegistration
+    internal partial class SkyrimMod_Registration : ILoquiRegistration
     {
         public static readonly SkyrimMod_Registration Instance = new SkyrimMod_Registration();
 
@@ -7252,7 +7253,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SkyrimModSetterCommon
+    internal partial class SkyrimModSetterCommon
     {
         public static readonly SkyrimModSetterCommon Instance = new SkyrimModSetterCommon();
 
@@ -8921,7 +8922,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SkyrimModCommon
+    internal partial class SkyrimModCommon
     {
         public static readonly SkyrimModCommon Instance = new SkyrimModCommon();
 
@@ -16209,7 +16210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SkyrimModSetterTranslationCommon
+    internal partial class SkyrimModSetterTranslationCommon
     {
         public static readonly SkyrimModSetterTranslationCommon Instance = new SkyrimModSetterTranslationCommon();
 
@@ -18563,7 +18564,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMod_Registration.Instance;
-        public static SkyrimMod_Registration StaticRegistration => SkyrimMod_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SkyrimMod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SkyrimModCommon.Instance;
         [DebuggerStepThrough]
@@ -18870,9 +18871,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
     }
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SkyrimMod_Registration : IModRegistration
+    internal partial class SkyrimMod_Registration : IModRegistration
     {
         public GameCategory GameCategory => GameCategory.Skyrim;
     }
@@ -18881,7 +18882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 #endregion
 
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SkyrimModBinaryWriteTranslation
     {
@@ -20174,7 +20175,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SkyrimModBinaryCreateTranslation
+    internal partial class SkyrimModBinaryCreateTranslation
     {
         public readonly static SkyrimModBinaryCreateTranslation Instance = new SkyrimModBinaryCreateTranslation();
 
@@ -21882,15 +21883,15 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     [DebuggerDisplay("{GameRelease} {ModKey.ToString()}")]
-    public partial class SkyrimModBinaryOverlay : ISkyrimModDisposableGetter
+    internal partial class SkyrimModBinaryOverlay : ISkyrimModDisposableGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMod_Registration.Instance;
-        public static SkyrimMod_Registration StaticRegistration => SkyrimMod_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SkyrimMod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SkyrimModCommon.Instance;
         [DebuggerStepThrough]

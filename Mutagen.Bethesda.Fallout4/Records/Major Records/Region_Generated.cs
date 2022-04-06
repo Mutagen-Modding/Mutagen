@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1187,10 +1188,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Region_FieldIndex
+    internal enum Region_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1213,7 +1214,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Region_Registration : ILoquiRegistration
+    internal partial class Region_Registration : ILoquiRegistration
     {
         public static readonly Region_Registration Instance = new Region_Registration();
 
@@ -1305,7 +1306,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class RegionSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class RegionSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly RegionSetterCommon Instance = new RegionSetterCommon();
 
@@ -1390,7 +1391,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class RegionCommon : Fallout4MajorRecordCommon
+    internal partial class RegionCommon : Fallout4MajorRecordCommon
     {
         public new static readonly RegionCommon Instance = new RegionCommon();
 
@@ -1855,7 +1856,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class RegionSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class RegionSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly RegionSetterTranslationCommon Instance = new RegionSetterTranslationCommon();
 
@@ -2206,7 +2207,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
-        public new static Region_Registration StaticRegistration => Region_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Region_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionCommon.Instance;
         [DebuggerStepThrough]
@@ -2224,7 +2225,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class RegionBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -2349,7 +2350,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class RegionBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class RegionBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static RegionBinaryCreateTranslation Instance = new RegionBinaryCreateTranslation();
 
@@ -2443,16 +2444,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class RegionBinaryOverlay :
+    internal partial class RegionBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IRegionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
-        public new static Region_Registration StaticRegistration => Region_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Region_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionCommon.Instance;
         [DebuggerStepThrough]

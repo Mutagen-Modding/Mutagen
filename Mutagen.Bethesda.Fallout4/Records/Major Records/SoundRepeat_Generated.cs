@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -709,10 +710,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum SoundRepeat_FieldIndex
+    internal enum SoundRepeat_FieldIndex
     {
         Versioning = 0,
         MinTime = 1,
@@ -722,7 +723,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class SoundRepeat_Registration : ILoquiRegistration
+    internal partial class SoundRepeat_Registration : ILoquiRegistration
     {
         public static readonly SoundRepeat_Registration Instance = new SoundRepeat_Registration();
 
@@ -803,7 +804,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class SoundRepeatSetterCommon
+    internal partial class SoundRepeatSetterCommon
     {
         public static readonly SoundRepeatSetterCommon Instance = new SoundRepeatSetterCommon();
 
@@ -845,7 +846,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class SoundRepeatCommon
+    internal partial class SoundRepeatCommon
     {
         public static readonly SoundRepeatCommon Instance = new SoundRepeatCommon();
 
@@ -991,7 +992,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class SoundRepeatSetterTranslationCommon
+    internal partial class SoundRepeatSetterTranslationCommon
     {
         public static readonly SoundRepeatSetterTranslationCommon Instance = new SoundRepeatSetterTranslationCommon();
 
@@ -1082,7 +1083,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundRepeat_Registration.Instance;
-        public static SoundRepeat_Registration StaticRegistration => SoundRepeat_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SoundRepeat_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundRepeatCommon.Instance;
         [DebuggerStepThrough]
@@ -1106,7 +1107,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SoundRepeatBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1158,7 +1159,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class SoundRepeatBinaryCreateTranslation
+    internal partial class SoundRepeatBinaryCreateTranslation
     {
         public readonly static SoundRepeatBinaryCreateTranslation Instance = new SoundRepeatBinaryCreateTranslation();
 
@@ -1200,16 +1201,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class SoundRepeatBinaryOverlay :
+    internal partial class SoundRepeatBinaryOverlay :
         PluginBinaryOverlay,
         ISoundRepeatGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundRepeat_Registration.Instance;
-        public static SoundRepeat_Registration StaticRegistration => SoundRepeat_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SoundRepeat_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundRepeatCommon.Instance;
         [DebuggerStepThrough]

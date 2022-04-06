@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -703,10 +704,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PlacedFlame_FieldIndex
+    internal enum PlacedFlame_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -736,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PlacedFlame_Registration : ILoquiRegistration
+    internal partial class PlacedFlame_Registration : ILoquiRegistration
     {
         public static readonly PlacedFlame_Registration Instance = new PlacedFlame_Registration();
 
@@ -817,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PlacedFlameSetterCommon : APlacedTrapSetterCommon
+    internal partial class PlacedFlameSetterCommon : APlacedTrapSetterCommon
     {
         public new static readonly PlacedFlameSetterCommon Instance = new PlacedFlameSetterCommon();
 
@@ -904,7 +905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedFlameCommon : APlacedTrapCommon
+    internal partial class PlacedFlameCommon : APlacedTrapCommon
     {
         public new static readonly PlacedFlameCommon Instance = new PlacedFlameCommon();
 
@@ -1219,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedFlameSetterTranslationCommon : APlacedTrapSetterTranslationCommon
+    internal partial class PlacedFlameSetterTranslationCommon : APlacedTrapSetterTranslationCommon
     {
         public new static readonly PlacedFlameSetterTranslationCommon Instance = new PlacedFlameSetterTranslationCommon();
 
@@ -1408,7 +1409,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedFlame_Registration.Instance;
-        public new static PlacedFlame_Registration StaticRegistration => PlacedFlame_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedFlame_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedFlameCommon.Instance;
         [DebuggerStepThrough]
@@ -1426,7 +1427,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PlacedFlameBinaryWriteTranslation :
         APlacedTrapBinaryWriteTranslation,
@@ -1515,7 +1516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PlacedFlameBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
+    internal partial class PlacedFlameBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
     {
         public new readonly static PlacedFlameBinaryCreateTranslation Instance = new PlacedFlameBinaryCreateTranslation();
 
@@ -1542,16 +1543,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PlacedFlameBinaryOverlay :
+    internal partial class PlacedFlameBinaryOverlay :
         APlacedTrapBinaryOverlay,
         IPlacedFlameGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedFlame_Registration.Instance;
-        public new static PlacedFlame_Registration StaticRegistration => PlacedFlame_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedFlame_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedFlameCommon.Instance;
         [DebuggerStepThrough]

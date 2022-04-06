@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -583,10 +584,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PerkAbilityEffect_FieldIndex
+    internal enum PerkAbilityEffect_FieldIndex
     {
         Rank = 0,
         Priority = 1,
@@ -597,7 +598,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PerkAbilityEffect_Registration : ILoquiRegistration
+    internal partial class PerkAbilityEffect_Registration : ILoquiRegistration
     {
         public static readonly PerkAbilityEffect_Registration Instance = new PerkAbilityEffect_Registration();
 
@@ -678,7 +679,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PerkAbilityEffectSetterCommon : APerkEffectSetterCommon
+    internal partial class PerkAbilityEffectSetterCommon : APerkEffectSetterCommon
     {
         public new static readonly PerkAbilityEffectSetterCommon Instance = new PerkAbilityEffectSetterCommon();
 
@@ -733,7 +734,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkAbilityEffectCommon : APerkEffectCommon
+    internal partial class PerkAbilityEffectCommon : APerkEffectCommon
     {
         public new static readonly PerkAbilityEffectCommon Instance = new PerkAbilityEffectCommon();
 
@@ -894,7 +895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkAbilityEffectSetterTranslationCommon : APerkEffectSetterTranslationCommon
+    internal partial class PerkAbilityEffectSetterTranslationCommon : APerkEffectSetterTranslationCommon
     {
         public new static readonly PerkAbilityEffectSetterTranslationCommon Instance = new PerkAbilityEffectSetterTranslationCommon();
 
@@ -994,7 +995,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkAbilityEffect_Registration.Instance;
-        public new static PerkAbilityEffect_Registration StaticRegistration => PerkAbilityEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkAbilityEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkAbilityEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1012,7 +1013,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkAbilityEffectBinaryWriteTranslation :
         APerkEffectBinaryWriteTranslation,
@@ -1070,7 +1071,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PerkAbilityEffectBinaryCreateTranslation : APerkEffectBinaryCreateTranslation
+    internal partial class PerkAbilityEffectBinaryCreateTranslation : APerkEffectBinaryCreateTranslation
     {
         public new readonly static PerkAbilityEffectBinaryCreateTranslation Instance = new PerkAbilityEffectBinaryCreateTranslation();
 
@@ -1097,16 +1098,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PerkAbilityEffectBinaryOverlay :
+    internal partial class PerkAbilityEffectBinaryOverlay :
         APerkEffectBinaryOverlay,
         IPerkAbilityEffectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkAbilityEffect_Registration.Instance;
-        public new static PerkAbilityEffect_Registration StaticRegistration => PerkAbilityEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkAbilityEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkAbilityEffectCommon.Instance;
         [DebuggerStepThrough]

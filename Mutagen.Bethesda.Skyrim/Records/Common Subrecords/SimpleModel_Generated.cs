@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -660,10 +661,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SimpleModel_FieldIndex
+    internal enum SimpleModel_FieldIndex
     {
         File = 0,
         Data = 1,
@@ -671,7 +672,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SimpleModel_Registration : ILoquiRegistration
+    internal partial class SimpleModel_Registration : ILoquiRegistration
     {
         public static readonly SimpleModel_Registration Instance = new SimpleModel_Registration();
 
@@ -755,7 +756,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SimpleModelSetterCommon
+    internal partial class SimpleModelSetterCommon
     {
         public static readonly SimpleModelSetterCommon Instance = new SimpleModelSetterCommon();
 
@@ -792,7 +793,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SimpleModelCommon
+    internal partial class SimpleModelCommon
     {
         public static readonly SimpleModelCommon Instance = new SimpleModelCommon();
 
@@ -922,7 +923,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SimpleModelSetterTranslationCommon
+    internal partial class SimpleModelSetterTranslationCommon
     {
         public static readonly SimpleModelSetterTranslationCommon Instance = new SimpleModelSetterTranslationCommon();
 
@@ -1011,7 +1012,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SimpleModel_Registration.Instance;
-        public static SimpleModel_Registration StaticRegistration => SimpleModel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SimpleModel_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => SimpleModelCommon.Instance;
         [DebuggerStepThrough]
@@ -1035,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SimpleModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1081,7 +1082,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SimpleModelBinaryCreateTranslation
+    internal partial class SimpleModelBinaryCreateTranslation
     {
         public readonly static SimpleModelBinaryCreateTranslation Instance = new SimpleModelBinaryCreateTranslation();
 
@@ -1147,16 +1148,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SimpleModelBinaryOverlay :
+    internal partial class SimpleModelBinaryOverlay :
         PluginBinaryOverlay,
         ISimpleModelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SimpleModel_Registration.Instance;
-        public static SimpleModel_Registration StaticRegistration => SimpleModel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SimpleModel_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => SimpleModelCommon.Instance;
         [DebuggerStepThrough]

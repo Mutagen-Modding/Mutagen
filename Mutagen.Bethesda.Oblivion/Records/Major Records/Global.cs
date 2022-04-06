@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Translations.Binary;
 using System;
+using Mutagen.Bethesda.Oblivion.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -43,64 +44,61 @@ namespace Mutagen.Bethesda.Oblivion
         }
     }
 
-    namespace Internals
+    partial class GlobalBinaryWriteTranslation
     {
-        public partial class GlobalBinaryWriteTranslation
+        public static partial void WriteBinaryTypeCharCustom(
+            MutagenWriter writer,
+            IGlobalGetter item)
         {
-            public static partial void WriteBinaryTypeCharCustom(
-                MutagenWriter writer,
-                IGlobalGetter item)
+            CharBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.TypeChar,
+                header: RecordTypes.FNAM);
+        }
+    }
+
+    partial class GlobalBinaryCreateTranslation
+    {
+        public static partial ParseResult FillBinaryTypeCharCustom(MutagenFrame frame, IGlobalInternal item)
+        {
+            return null;
+        }
+    }
+
+    abstract partial class GlobalBinaryOverlay
+    {
+        public abstract float? RawFloat { get; }
+        public abstract char TypeChar { get; }
+
+        public static GlobalBinaryOverlay GlobalFactory(
+            OverlayStream stream,
+            BinaryOverlayFactoryPackage package,
+            TypedParseParams? translationParams)
+        {
+            var majorFrame = package.MetaData.Constants.MajorRecordFrame(stream.RemainingMemory);
+            var globalChar = GlobalCustomParsing.GetGlobalChar(majorFrame);
+            switch (globalChar)
             {
-                CharBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.TypeChar,
-                    header: RecordTypes.FNAM);
+                case GlobalInt.TRIGGER_CHAR:
+                    return GlobalIntBinaryOverlay.GlobalIntFactory(
+                        stream,
+                        package);
+                case GlobalShort.TRIGGER_CHAR:
+                    return GlobalShortBinaryOverlay.GlobalShortFactory(
+                        stream,
+                        package);
+                case GlobalFloat.TRIGGER_CHAR:
+                    return GlobalFloatBinaryOverlay.GlobalFloatFactory(
+                        stream,
+                        package);
+                default:
+                    throw new ArgumentException($"Unknown trigger char: {globalChar}");
             }
         }
 
-        public partial class GlobalBinaryCreateTranslation
+        public partial ParseResult TypeCharCustomParse(OverlayStream stream, int offset)
         {
-            public static partial ParseResult FillBinaryTypeCharCustom(MutagenFrame frame, IGlobalInternal item)
-            {
-                return null;
-            }
-        }
-
-        public abstract partial class GlobalBinaryOverlay
-        {
-            public abstract float? RawFloat { get; }
-            public abstract char TypeChar { get; }
-
-            public static GlobalBinaryOverlay GlobalFactory(
-                OverlayStream stream,
-                BinaryOverlayFactoryPackage package,
-                TypedParseParams? translationParams)
-            {
-                var majorFrame = package.MetaData.Constants.MajorRecordFrame(stream.RemainingMemory);
-                var globalChar = GlobalCustomParsing.GetGlobalChar(majorFrame);
-                switch (globalChar)
-                {
-                    case GlobalInt.TRIGGER_CHAR:
-                        return GlobalIntBinaryOverlay.GlobalIntFactory(
-                            stream,
-                            package);
-                    case GlobalShort.TRIGGER_CHAR:
-                        return GlobalShortBinaryOverlay.GlobalShortFactory(
-                            stream,
-                            package);
-                    case GlobalFloat.TRIGGER_CHAR:
-                        return GlobalFloatBinaryOverlay.GlobalFloatFactory(
-                            stream,
-                            package);
-                    default:
-                        throw new ArgumentException($"Unknown trigger char: {globalChar}");
-                }
-            }
-
-            public partial ParseResult TypeCharCustomParse(OverlayStream stream, int offset)
-            {
-                return null;
-            }
+            return null;
         }
     }
 }

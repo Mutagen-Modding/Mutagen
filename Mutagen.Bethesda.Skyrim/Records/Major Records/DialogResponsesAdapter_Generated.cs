@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -586,10 +587,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum DialogResponsesAdapter_FieldIndex
+    internal enum DialogResponsesAdapter_FieldIndex
     {
         Version = 0,
         ObjectFormat = 1,
@@ -599,7 +600,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class DialogResponsesAdapter_Registration : ILoquiRegistration
+    internal partial class DialogResponsesAdapter_Registration : ILoquiRegistration
     {
         public static readonly DialogResponsesAdapter_Registration Instance = new DialogResponsesAdapter_Registration();
 
@@ -680,7 +681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class DialogResponsesAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
+    internal partial class DialogResponsesAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
     {
         public new static readonly DialogResponsesAdapterSetterCommon Instance = new DialogResponsesAdapterSetterCommon();
 
@@ -737,7 +738,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DialogResponsesAdapterCommon : AVirtualMachineAdapterCommon
+    internal partial class DialogResponsesAdapterCommon : AVirtualMachineAdapterCommon
     {
         public new static readonly DialogResponsesAdapterCommon Instance = new DialogResponsesAdapterCommon();
 
@@ -907,7 +908,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DialogResponsesAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
+    internal partial class DialogResponsesAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
     {
         public new static readonly DialogResponsesAdapterSetterTranslationCommon Instance = new DialogResponsesAdapterSetterTranslationCommon();
 
@@ -1029,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponsesAdapter_Registration.Instance;
-        public new static DialogResponsesAdapter_Registration StaticRegistration => DialogResponsesAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => DialogResponsesAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogResponsesAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -1047,7 +1048,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DialogResponsesAdapterBinaryWriteTranslation :
         AVirtualMachineAdapterBinaryWriteTranslation,
@@ -1121,7 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class DialogResponsesAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
+    internal partial class DialogResponsesAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
     {
         public new readonly static DialogResponsesAdapterBinaryCreateTranslation Instance = new DialogResponsesAdapterBinaryCreateTranslation();
 
@@ -1155,16 +1156,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class DialogResponsesAdapterBinaryOverlay :
+    internal partial class DialogResponsesAdapterBinaryOverlay :
         AVirtualMachineAdapterBinaryOverlay,
         IDialogResponsesAdapterGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponsesAdapter_Registration.Instance;
-        public new static DialogResponsesAdapter_Registration StaticRegistration => DialogResponsesAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => DialogResponsesAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogResponsesAdapterCommon.Instance;
         [DebuggerStepThrough]

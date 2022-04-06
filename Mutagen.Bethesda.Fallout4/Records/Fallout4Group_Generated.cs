@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Fallout4.Records;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -671,10 +672,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Fallout4Group_FieldIndex
+    internal enum Fallout4Group_FieldIndex
     {
         Type = 0,
         LastModified = 1,
@@ -684,7 +685,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Fallout4Group_Registration : ILoquiRegistration
+    internal partial class Fallout4Group_Registration : ILoquiRegistration
     {
         public static readonly Fallout4Group_Registration Instance = new Fallout4Group_Registration();
 
@@ -757,7 +758,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public class Fallout4Group_Registration<T> : Fallout4Group_Registration
+    internal class Fallout4Group_Registration<T> : Fallout4Group_Registration
         where T : Fallout4MajorRecord, IBinaryItem
     {
         public static readonly Fallout4Group_Registration<T> GenericInstance = new Fallout4Group_Registration<T>();
@@ -766,7 +767,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class Fallout4GroupSetterCommon<T>
+    internal partial class Fallout4GroupSetterCommon<T>
         where T : class, IFallout4MajorRecordInternal, IBinaryItem
     {
         public static readonly Fallout4GroupSetterCommon<T> Instance = new Fallout4GroupSetterCommon<T>();
@@ -872,7 +873,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class Fallout4GroupCommon<T>
+    internal partial class Fallout4GroupCommon<T>
         where T : class, IFallout4MajorRecordGetter, IBinaryItem
     {
         public static readonly Fallout4GroupCommon<T> Instance = new Fallout4GroupCommon<T>();
@@ -1113,7 +1114,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class Fallout4GroupSetterTranslationCommon
+    internal partial class Fallout4GroupSetterTranslationCommon
     {
         public static readonly Fallout4GroupSetterTranslationCommon Instance = new Fallout4GroupSetterTranslationCommon();
 
@@ -1232,7 +1233,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4Group_Registration.Instance;
-        public static Fallout4Group_Registration StaticRegistration => Fallout4Group_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Fallout4Group_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(Fallout4GroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
@@ -1256,7 +1257,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class Fallout4GroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1343,7 +1344,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class Fallout4GroupBinaryCreateTranslation<T>
+    internal partial class Fallout4GroupBinaryCreateTranslation<T>
         where T : class, IFallout4MajorRecordInternal, IBinaryItem
     {
         public readonly static Fallout4GroupBinaryCreateTranslation<T> Instance = new Fallout4GroupBinaryCreateTranslation<T>();
@@ -1418,15 +1419,15 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class Fallout4GroupBinaryOverlay<T> : IFallout4GroupGetter<T>
+    internal partial class Fallout4GroupBinaryOverlay<T> : IFallout4GroupGetter<T>
         where T : class, IFallout4MajorRecordGetter, IBinaryItem
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4Group_Registration.Instance;
-        public static Fallout4Group_Registration StaticRegistration => Fallout4Group_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Fallout4Group_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(Fallout4GroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]

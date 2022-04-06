@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -724,10 +725,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum LockInformation_FieldIndex
+    internal enum LockInformation_FieldIndex
     {
         LockLevel = 0,
         Unused = 1,
@@ -737,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class LockInformation_Registration : ILoquiRegistration
+    internal partial class LockInformation_Registration : ILoquiRegistration
     {
         public static readonly LockInformation_Registration Instance = new LockInformation_Registration();
 
@@ -818,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LockInformationSetterCommon
+    internal partial class LockInformationSetterCommon
     {
         public static readonly LockInformationSetterCommon Instance = new LockInformationSetterCommon();
 
@@ -861,7 +862,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LockInformationCommon
+    internal partial class LockInformationCommon
     {
         public static readonly LockInformationCommon Instance = new LockInformationCommon();
 
@@ -1008,7 +1009,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LockInformationSetterTranslationCommon
+    internal partial class LockInformationSetterTranslationCommon
     {
         public static readonly LockInformationSetterTranslationCommon Instance = new LockInformationSetterTranslationCommon();
 
@@ -1098,7 +1099,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LockInformation_Registration.Instance;
-        public static LockInformation_Registration StaticRegistration => LockInformation_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LockInformation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LockInformationCommon.Instance;
         [DebuggerStepThrough]
@@ -1122,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LockInformationBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1175,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LockInformationBinaryCreateTranslation
+    internal partial class LockInformationBinaryCreateTranslation
     {
         public readonly static LockInformationBinaryCreateTranslation Instance = new LockInformationBinaryCreateTranslation();
 
@@ -1215,16 +1216,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LockInformationBinaryOverlay :
+    internal partial class LockInformationBinaryOverlay :
         PluginBinaryOverlay,
         ILockInformationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LockInformation_Registration.Instance;
-        public static LockInformation_Registration StaticRegistration => LockInformation_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LockInformation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LockInformationCommon.Instance;
         [DebuggerStepThrough]

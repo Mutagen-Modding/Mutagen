@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -730,10 +731,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LocationCellStaticReference_FieldIndex
+    internal enum LocationCellStaticReference_FieldIndex
     {
         LocationRefType = 0,
         Marker = 1,
@@ -743,7 +744,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LocationCellStaticReference_Registration : ILoquiRegistration
+    internal partial class LocationCellStaticReference_Registration : ILoquiRegistration
     {
         public static readonly LocationCellStaticReference_Registration Instance = new LocationCellStaticReference_Registration();
 
@@ -817,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LocationCellStaticReferenceSetterCommon
+    internal partial class LocationCellStaticReferenceSetterCommon
     {
         public static readonly LocationCellStaticReferenceSetterCommon Instance = new LocationCellStaticReferenceSetterCommon();
 
@@ -858,7 +859,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationCellStaticReferenceCommon
+    internal partial class LocationCellStaticReferenceCommon
     {
         public static readonly LocationCellStaticReferenceCommon Instance = new LocationCellStaticReferenceCommon();
 
@@ -1007,7 +1008,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationCellStaticReferenceSetterTranslationCommon
+    internal partial class LocationCellStaticReferenceSetterTranslationCommon
     {
         public static readonly LocationCellStaticReferenceSetterTranslationCommon Instance = new LocationCellStaticReferenceSetterTranslationCommon();
 
@@ -1097,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCellStaticReference_Registration.Instance;
-        public static LocationCellStaticReference_Registration StaticRegistration => LocationCellStaticReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocationCellStaticReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCellStaticReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1121,7 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LocationCellStaticReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1169,7 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LocationCellStaticReferenceBinaryCreateTranslation
+    internal partial class LocationCellStaticReferenceBinaryCreateTranslation
     {
         public readonly static LocationCellStaticReferenceBinaryCreateTranslation Instance = new LocationCellStaticReferenceBinaryCreateTranslation();
 
@@ -1209,16 +1210,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LocationCellStaticReferenceBinaryOverlay :
+    internal partial class LocationCellStaticReferenceBinaryOverlay :
         PluginBinaryOverlay,
         ILocationCellStaticReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCellStaticReference_Registration.Instance;
-        public static LocationCellStaticReference_Registration StaticRegistration => LocationCellStaticReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocationCellStaticReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCellStaticReferenceCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1545,10 +1546,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LightingTemplate_FieldIndex
+    internal enum LightingTemplate_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1585,7 +1586,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LightingTemplate_Registration : ILoquiRegistration
+    internal partial class LightingTemplate_Registration : ILoquiRegistration
     {
         public static readonly LightingTemplate_Registration Instance = new LightingTemplate_Registration();
 
@@ -1670,7 +1671,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LightingTemplateSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class LightingTemplateSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly LightingTemplateSetterCommon Instance = new LightingTemplateSetterCommon();
 
@@ -1764,7 +1765,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LightingTemplateCommon : SkyrimMajorRecordCommon
+    internal partial class LightingTemplateCommon : SkyrimMajorRecordCommon
     {
         public new static readonly LightingTemplateCommon Instance = new LightingTemplateCommon();
 
@@ -2248,7 +2249,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LightingTemplateSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class LightingTemplateSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly LightingTemplateSetterTranslationCommon Instance = new LightingTemplateSetterTranslationCommon();
 
@@ -2525,7 +2526,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LightingTemplate_Registration.Instance;
-        public new static LightingTemplate_Registration StaticRegistration => LightingTemplate_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LightingTemplate_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LightingTemplateCommon.Instance;
         [DebuggerStepThrough]
@@ -2543,7 +2544,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LightingTemplateBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2716,7 +2717,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LightingTemplateBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class LightingTemplateBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static LightingTemplateBinaryCreateTranslation Instance = new LightingTemplateBinaryCreateTranslation();
 
@@ -2811,16 +2812,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LightingTemplateBinaryOverlay :
+    internal partial class LightingTemplateBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ILightingTemplateGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LightingTemplate_Registration.Instance;
-        public new static LightingTemplate_Registration StaticRegistration => LightingTemplate_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LightingTemplate_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LightingTemplateCommon.Instance;
         [DebuggerStepThrough]

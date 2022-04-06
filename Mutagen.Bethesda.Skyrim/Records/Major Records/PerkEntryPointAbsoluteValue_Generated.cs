@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -577,10 +578,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PerkEntryPointAbsoluteValue_FieldIndex
+    internal enum PerkEntryPointAbsoluteValue_FieldIndex
     {
         Rank = 0,
         Priority = 1,
@@ -593,7 +594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PerkEntryPointAbsoluteValue_Registration : ILoquiRegistration
+    internal partial class PerkEntryPointAbsoluteValue_Registration : ILoquiRegistration
     {
         public static readonly PerkEntryPointAbsoluteValue_Registration Instance = new PerkEntryPointAbsoluteValue_Registration();
 
@@ -674,7 +675,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PerkEntryPointAbsoluteValueSetterCommon : APerkEntryPointEffectSetterCommon
+    internal partial class PerkEntryPointAbsoluteValueSetterCommon : APerkEntryPointEffectSetterCommon
     {
         public new static readonly PerkEntryPointAbsoluteValueSetterCommon Instance = new PerkEntryPointAbsoluteValueSetterCommon();
 
@@ -744,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkEntryPointAbsoluteValueCommon : APerkEntryPointEffectCommon
+    internal partial class PerkEntryPointAbsoluteValueCommon : APerkEntryPointEffectCommon
     {
         public new static readonly PerkEntryPointAbsoluteValueCommon Instance = new PerkEntryPointAbsoluteValueCommon();
 
@@ -941,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkEntryPointAbsoluteValueSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon
+    internal partial class PerkEntryPointAbsoluteValueSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon
     {
         public new static readonly PerkEntryPointAbsoluteValueSetterTranslationCommon Instance = new PerkEntryPointAbsoluteValueSetterTranslationCommon();
 
@@ -1057,7 +1058,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointAbsoluteValue_Registration.Instance;
-        public new static PerkEntryPointAbsoluteValue_Registration StaticRegistration => PerkEntryPointAbsoluteValue_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkEntryPointAbsoluteValue_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointAbsoluteValueCommon.Instance;
         [DebuggerStepThrough]
@@ -1075,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkEntryPointAbsoluteValueBinaryWriteTranslation :
         APerkEntryPointEffectBinaryWriteTranslation,
@@ -1142,7 +1143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PerkEntryPointAbsoluteValueBinaryCreateTranslation : APerkEntryPointEffectBinaryCreateTranslation
+    internal partial class PerkEntryPointAbsoluteValueBinaryCreateTranslation : APerkEntryPointEffectBinaryCreateTranslation
     {
         public new readonly static PerkEntryPointAbsoluteValueBinaryCreateTranslation Instance = new PerkEntryPointAbsoluteValueBinaryCreateTranslation();
 
@@ -1169,16 +1170,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PerkEntryPointAbsoluteValueBinaryOverlay :
+    internal partial class PerkEntryPointAbsoluteValueBinaryOverlay :
         APerkEntryPointEffectBinaryOverlay,
         IPerkEntryPointAbsoluteValueGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointAbsoluteValue_Registration.Instance;
-        public new static PerkEntryPointAbsoluteValue_Registration StaticRegistration => PerkEntryPointAbsoluteValue_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkEntryPointAbsoluteValue_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointAbsoluteValueCommon.Instance;
         [DebuggerStepThrough]

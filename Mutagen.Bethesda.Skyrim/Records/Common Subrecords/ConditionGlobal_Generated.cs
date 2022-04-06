@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -618,10 +619,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ConditionGlobal_FieldIndex
+    internal enum ConditionGlobal_FieldIndex
     {
         CompareOperator = 0,
         Flags = 1,
@@ -632,7 +633,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ConditionGlobal_Registration : ILoquiRegistration
+    internal partial class ConditionGlobal_Registration : ILoquiRegistration
     {
         public static readonly ConditionGlobal_Registration Instance = new ConditionGlobal_Registration();
 
@@ -713,7 +714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ConditionGlobalSetterCommon : ConditionSetterCommon
+    internal partial class ConditionGlobalSetterCommon : ConditionSetterCommon
     {
         public new static readonly ConditionGlobalSetterCommon Instance = new ConditionGlobalSetterCommon();
 
@@ -776,7 +777,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ConditionGlobalCommon : ConditionCommon
+    internal partial class ConditionGlobalCommon : ConditionCommon
     {
         public new static readonly ConditionGlobalCommon Instance = new ConditionGlobalCommon();
 
@@ -953,7 +954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ConditionGlobalSetterTranslationCommon : ConditionSetterTranslationCommon
+    internal partial class ConditionGlobalSetterTranslationCommon : ConditionSetterTranslationCommon
     {
         public new static readonly ConditionGlobalSetterTranslationCommon Instance = new ConditionGlobalSetterTranslationCommon();
 
@@ -1075,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConditionGlobal_Registration.Instance;
-        public new static ConditionGlobal_Registration StaticRegistration => ConditionGlobal_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ConditionGlobal_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ConditionGlobalCommon.Instance;
         [DebuggerStepThrough]
@@ -1093,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ConditionGlobalBinaryWriteTranslation :
         ConditionBinaryWriteTranslation,
@@ -1184,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ConditionGlobalBinaryCreateTranslation : ConditionBinaryCreateTranslation
+    internal partial class ConditionGlobalBinaryCreateTranslation : ConditionBinaryCreateTranslation
     {
         public new readonly static ConditionGlobalBinaryCreateTranslation Instance = new ConditionGlobalBinaryCreateTranslation();
 
@@ -1229,16 +1230,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ConditionGlobalBinaryOverlay :
+    internal partial class ConditionGlobalBinaryOverlay :
         ConditionBinaryOverlay,
         IConditionGlobalGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConditionGlobal_Registration.Instance;
-        public new static ConditionGlobal_Registration StaticRegistration => ConditionGlobal_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ConditionGlobal_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ConditionGlobalCommon.Instance;
         [DebuggerStepThrough]

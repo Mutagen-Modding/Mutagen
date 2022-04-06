@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -664,10 +665,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum BipedObjectData_FieldIndex
+    internal enum BipedObjectData_FieldIndex
     {
         Name = 0,
         Conditions = 1,
@@ -675,7 +676,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class BipedObjectData_Registration : ILoquiRegistration
+    internal partial class BipedObjectData_Registration : ILoquiRegistration
     {
         public static readonly BipedObjectData_Registration Instance = new BipedObjectData_Registration();
 
@@ -749,7 +750,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class BipedObjectDataSetterCommon
+    internal partial class BipedObjectDataSetterCommon
     {
         public static readonly BipedObjectDataSetterCommon Instance = new BipedObjectDataSetterCommon();
 
@@ -786,7 +787,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class BipedObjectDataCommon
+    internal partial class BipedObjectDataCommon
     {
         public static readonly BipedObjectDataCommon Instance = new BipedObjectDataCommon();
 
@@ -913,7 +914,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class BipedObjectDataSetterTranslationCommon
+    internal partial class BipedObjectDataSetterTranslationCommon
     {
         public static readonly BipedObjectDataSetterTranslationCommon Instance = new BipedObjectDataSetterTranslationCommon();
 
@@ -995,7 +996,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BipedObjectData_Registration.Instance;
-        public static BipedObjectData_Registration StaticRegistration => BipedObjectData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BipedObjectData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BipedObjectDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1019,7 +1020,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class BipedObjectDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1054,7 +1055,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class BipedObjectDataBinaryCreateTranslation
+    internal partial class BipedObjectDataBinaryCreateTranslation
     {
         public readonly static BipedObjectDataBinaryCreateTranslation Instance = new BipedObjectDataBinaryCreateTranslation();
 
@@ -1088,16 +1089,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class BipedObjectDataBinaryOverlay :
+    internal partial class BipedObjectDataBinaryOverlay :
         PluginBinaryOverlay,
         IBipedObjectDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BipedObjectData_Registration.Instance;
-        public static BipedObjectData_Registration StaticRegistration => BipedObjectData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BipedObjectData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BipedObjectDataCommon.Instance;
         [DebuggerStepThrough]

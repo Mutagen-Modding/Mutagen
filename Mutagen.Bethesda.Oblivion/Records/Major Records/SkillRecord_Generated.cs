@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -895,10 +896,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum SkillRecord_FieldIndex
+    internal enum SkillRecord_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -917,7 +918,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class SkillRecord_Registration : ILoquiRegistration
+    internal partial class SkillRecord_Registration : ILoquiRegistration
     {
         public static readonly SkillRecord_Registration Instance = new SkillRecord_Registration();
 
@@ -1008,7 +1009,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class SkillRecordSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class SkillRecordSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly SkillRecordSetterCommon Instance = new SkillRecordSetterCommon();
 
@@ -1085,7 +1086,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SkillRecordCommon : OblivionMajorRecordCommon
+    internal partial class SkillRecordCommon : OblivionMajorRecordCommon
     {
         public new static readonly SkillRecordCommon Instance = new SkillRecordCommon();
 
@@ -1425,7 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SkillRecordSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class SkillRecordSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly SkillRecordSetterTranslationCommon Instance = new SkillRecordSetterTranslationCommon();
 
@@ -1634,7 +1635,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillRecord_Registration.Instance;
-        public new static SkillRecord_Registration StaticRegistration => SkillRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SkillRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SkillRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1652,7 +1653,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SkillRecordBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1776,7 +1777,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class SkillRecordBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class SkillRecordBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static SkillRecordBinaryCreateTranslation Instance = new SkillRecordBinaryCreateTranslation();
 
@@ -1887,16 +1888,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class SkillRecordBinaryOverlay :
+    internal partial class SkillRecordBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         ISkillRecordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillRecord_Registration.Instance;
-        public new static SkillRecord_Registration StaticRegistration => SkillRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SkillRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SkillRecordCommon.Instance;
         [DebuggerStepThrough]

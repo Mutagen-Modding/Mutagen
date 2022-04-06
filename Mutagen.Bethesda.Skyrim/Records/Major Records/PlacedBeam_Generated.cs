@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -703,10 +704,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PlacedBeam_FieldIndex
+    internal enum PlacedBeam_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -736,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PlacedBeam_Registration : ILoquiRegistration
+    internal partial class PlacedBeam_Registration : ILoquiRegistration
     {
         public static readonly PlacedBeam_Registration Instance = new PlacedBeam_Registration();
 
@@ -817,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PlacedBeamSetterCommon : APlacedTrapSetterCommon
+    internal partial class PlacedBeamSetterCommon : APlacedTrapSetterCommon
     {
         public new static readonly PlacedBeamSetterCommon Instance = new PlacedBeamSetterCommon();
 
@@ -904,7 +905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedBeamCommon : APlacedTrapCommon
+    internal partial class PlacedBeamCommon : APlacedTrapCommon
     {
         public new static readonly PlacedBeamCommon Instance = new PlacedBeamCommon();
 
@@ -1219,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedBeamSetterTranslationCommon : APlacedTrapSetterTranslationCommon
+    internal partial class PlacedBeamSetterTranslationCommon : APlacedTrapSetterTranslationCommon
     {
         public new static readonly PlacedBeamSetterTranslationCommon Instance = new PlacedBeamSetterTranslationCommon();
 
@@ -1408,7 +1409,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedBeam_Registration.Instance;
-        public new static PlacedBeam_Registration StaticRegistration => PlacedBeam_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedBeam_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedBeamCommon.Instance;
         [DebuggerStepThrough]
@@ -1426,7 +1427,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PlacedBeamBinaryWriteTranslation :
         APlacedTrapBinaryWriteTranslation,
@@ -1515,7 +1516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PlacedBeamBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
+    internal partial class PlacedBeamBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
     {
         public new readonly static PlacedBeamBinaryCreateTranslation Instance = new PlacedBeamBinaryCreateTranslation();
 
@@ -1542,16 +1543,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PlacedBeamBinaryOverlay :
+    internal partial class PlacedBeamBinaryOverlay :
         APlacedTrapBinaryOverlay,
         IPlacedBeamGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedBeam_Registration.Instance;
-        public new static PlacedBeam_Registration StaticRegistration => PlacedBeam_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedBeam_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedBeamCommon.Instance;
         [DebuggerStepThrough]

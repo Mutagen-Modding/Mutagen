@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -739,10 +740,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum QuestTarget_FieldIndex
+    internal enum QuestTarget_FieldIndex
     {
         Data = 0,
         Conditions = 1,
@@ -750,7 +751,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class QuestTarget_Registration : ILoquiRegistration
+    internal partial class QuestTarget_Registration : ILoquiRegistration
     {
         public static readonly QuestTarget_Registration Instance = new QuestTarget_Registration();
 
@@ -835,7 +836,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class QuestTargetSetterCommon
+    internal partial class QuestTargetSetterCommon
     {
         public static readonly QuestTargetSetterCommon Instance = new QuestTargetSetterCommon();
 
@@ -873,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class QuestTargetCommon
+    internal partial class QuestTargetCommon
     {
         public static readonly QuestTargetCommon Instance = new QuestTargetCommon();
 
@@ -1024,7 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class QuestTargetSetterTranslationCommon
+    internal partial class QuestTargetSetterTranslationCommon
     {
         public static readonly QuestTargetSetterTranslationCommon Instance = new QuestTargetSetterTranslationCommon();
 
@@ -1144,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestTarget_Registration.Instance;
-        public static QuestTarget_Registration StaticRegistration => QuestTarget_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => QuestTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -1168,7 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class QuestTargetBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1221,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class QuestTargetBinaryCreateTranslation
+    internal partial class QuestTargetBinaryCreateTranslation
     {
         public readonly static QuestTargetBinaryCreateTranslation Instance = new QuestTargetBinaryCreateTranslation();
 
@@ -1289,16 +1290,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class QuestTargetBinaryOverlay :
+    internal partial class QuestTargetBinaryOverlay :
         PluginBinaryOverlay,
         IQuestTargetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestTarget_Registration.Instance;
-        public static QuestTarget_Registration StaticRegistration => QuestTarget_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => QuestTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestTargetCommon.Instance;
         [DebuggerStepThrough]

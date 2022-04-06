@@ -5,148 +5,144 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 
-namespace Mutagen.Bethesda.Skyrim
-{
-    public partial class Book
-    {
-        [Flags]
-        public enum Flag
-        {
-            CantBeTaken = 0x02
-        }
+namespace Mutagen.Bethesda.Skyrim;
 
-        public enum BookType : byte
-        {
-            BookOrTome = 0,
-            NoteOrScroll = 255
-        }
+public partial class Book
+{
+    [Flags]
+    public enum Flag
+    {
+        CantBeTaken = 0x02
     }
 
-    namespace Internals
+    public enum BookType : byte
     {
-        public partial class BookBinaryCreateTranslation
+        BookOrTome = 0,
+        NoteOrScroll = 255
+    }
+}
+
+partial class BookBinaryCreateTranslation
+{
+    public const byte SkillFlag = 0x01;
+    public const byte SpellFlag = 0x04;
+
+    public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IBookInternal item)
+    {
+        item.Flags = (Book.Flag)frame.ReadUInt8();
+    }
+
+    public static partial void FillBinaryTeachesCustom(MutagenFrame frame, IBookInternal item)
+    {
+        if ((((int)item.Flags) & SpellFlag) > 0)
         {
-            public const byte SkillFlag = 0x01;
-            public const byte SpellFlag = 0x04;
-
-            public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IBookInternal item)
+            item.Teaches = new BookSpell()
             {
-                item.Flags = (Book.Flag)frame.ReadUInt8();
-            }
-
-            public static partial void FillBinaryTeachesCustom(MutagenFrame frame, IBookInternal item)
+                Spell = new FormLink<ISpellGetter>(FormLinkBinaryTranslation.Instance.Parse(frame))
+            };
+        }
+        else if ((((int)item.Flags) & SkillFlag) > 0)
+        {
+            item.Teaches = new BookSkill
             {
-                if ((((int)item.Flags) & SpellFlag) > 0)
+                Skill = (Skill)frame.ReadInt32()
+            };
+        }
+        else
+        {
+            item.Teaches = new BookTeachesNothing()
+            {
+                RawContent = frame.ReadUInt32()
+            };
+        }
+    }
+}
+
+partial class BookBinaryWriteTranslation
+{
+    public static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IBookGetter item)
+    {
+        byte flags = (byte)item.Flags;
+        switch (item.Teaches)
+        {
+            case BookSpell _:
+                flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SkillFlag, false);
+                flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SpellFlag, true);
+                break;
+            case BookSkill _:
+                flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SkillFlag, true);
+                flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SpellFlag, false);
+                break;
+            case BookTeachesNothing _:
+                flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SkillFlag, false);
+                flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SpellFlag, false);
+                break;
+            default:
+                break;
+        }
+        writer.Write(flags);
+    }
+
+    public static partial void WriteBinaryTeachesCustom(MutagenWriter writer, IBookGetter item)
+    {
+        switch (item.Teaches)
+        {
+            case IBookSpellGetter spell:
+                FormLinkBinaryTranslation.Instance.Write(writer, spell.Spell);
+                break;
+            case IBookSkillGetter skill:
+                var skillVal = skill.Skill;
+                if (skillVal == null)
                 {
-                    item.Teaches = new BookSpell()
-                    {
-                        Spell = new FormLink<ISpellGetter>(FormLinkBinaryTranslation.Instance.Parse(frame))
-                    };
-                }
-                else if ((((int)item.Flags) & SkillFlag) > 0)
-                {
-                    item.Teaches = new BookSkill
-                    {
-                        Skill = (Skill)frame.ReadInt32()
-                    };
+                    writer.Write(-1);
                 }
                 else
                 {
-                    item.Teaches = new BookTeachesNothing()
-                    {
-                        RawContent = frame.ReadUInt32()
-                    };
+                    writer.Write((int)skillVal);
                 }
-            }
+                break;
+            case IBookTeachesNothingGetter nothing:
+                writer.Write(nothing.RawContent);
+                break;
+            default:
+                writer.WriteZeros(4);
+                break;
         }
+    }
+}
 
-        public partial class BookBinaryWriteTranslation
+partial class BookBinaryOverlay
+{
+    public partial Book.Flag GetFlagsCustom()
+    {
+        if (!_DATALocation.HasValue) return default;
+        return (Book.Flag)_data[_FlagsLocation];
+    }
+
+    public partial IBookTeachTargetGetter? GetTeachesCustom()
+    {
+        if (!_DATALocation.HasValue) return default;
+        int flags = (int)this.Flags;
+        if ((flags & BookBinaryCreateTranslation.SpellFlag) > 0)
         {
-            public static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IBookGetter item)
+            return new BookSpell()
             {
-                byte flags = (byte)item.Flags;
-                switch (item.Teaches)
-                {
-                    case BookSpell _:
-                        flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SkillFlag, false);
-                        flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SpellFlag, true);
-                        break;
-                    case BookSkill _:
-                        flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SkillFlag, true);
-                        flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SpellFlag, false);
-                        break;
-                    case BookTeachesNothing _:
-                        flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SkillFlag, false);
-                        flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SpellFlag, false);
-                        break;
-                    default:
-                        break;
-                }
-                writer.Write(flags);
-            }
-
-            public static partial void WriteBinaryTeachesCustom(MutagenWriter writer, IBookGetter item)
-            {
-                switch (item.Teaches)
-                {
-                    case IBookSpellGetter spell:
-                        FormLinkBinaryTranslation.Instance.Write(writer, spell.Spell);
-                        break;
-                    case IBookSkillGetter skill:
-                        var skillVal = skill.Skill;
-                        if (skillVal == null)
-                        {
-                            writer.Write(-1);
-                        }
-                        else
-                        {
-                            writer.Write((int)skillVal);
-                        }
-                        break;
-                    case IBookTeachesNothingGetter nothing:
-                        writer.Write(nothing.RawContent);
-                        break;
-                    default:
-                        writer.WriteZeros(4);
-                        break;
-                }
-            }
+                Spell = new FormLink<ISpellGetter>(FormKeyBinaryTranslation.Instance.Parse(_data.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences!))
+            };
         }
-
-        public partial class BookBinaryOverlay
+        else if ((flags & BookBinaryCreateTranslation.SkillFlag) > 0)
         {
-            public partial Book.Flag GetFlagsCustom()
+            return new BookSkill
             {
-                if (!_DATALocation.HasValue) return default;
-                return (Book.Flag)_data[_FlagsLocation];
-            }
-
-            public partial IBookTeachTargetGetter? GetTeachesCustom()
+                Skill = (Skill)BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_TeachesLocation, 4))
+            };
+        }
+        else
+        {
+            return new BookTeachesNothing()
             {
-                if (!_DATALocation.HasValue) return default;
-                int flags = (int)this.Flags;
-                if ((flags & BookBinaryCreateTranslation.SpellFlag) > 0)
-                {
-                    return new BookSpell()
-                    {
-                        Spell = new FormLink<ISpellGetter>(FormKeyBinaryTranslation.Instance.Parse(_data.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences!))
-                    };
-                }
-                else if ((flags & BookBinaryCreateTranslation.SkillFlag) > 0)
-                {
-                    return new BookSkill
-                    {
-                        Skill = (Skill)BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_TeachesLocation, 4))
-                    };
-                }
-                else
-                {
-                    return new BookTeachesNothing()
-                    {
-                        RawContent = BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_TeachesLocation, 4))
-                    };
-                }
-            }
+                RawContent = BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_TeachesLocation, 4))
+            };
         }
     }
 }

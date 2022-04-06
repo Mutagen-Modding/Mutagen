@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -706,10 +707,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum FacePart_FieldIndex
+    internal enum FacePart_FieldIndex
     {
         Index = 0,
         Model = 1,
@@ -718,7 +719,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class FacePart_Registration : ILoquiRegistration
+    internal partial class FacePart_Registration : ILoquiRegistration
     {
         public static readonly FacePart_Registration Instance = new FacePart_Registration();
 
@@ -801,7 +802,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class FacePartSetterCommon
+    internal partial class FacePartSetterCommon
     {
         public static readonly FacePartSetterCommon Instance = new FacePartSetterCommon();
 
@@ -839,7 +840,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class FacePartCommon
+    internal partial class FacePartCommon
     {
         public static readonly FacePartCommon Instance = new FacePartCommon();
 
@@ -995,7 +996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class FacePartSetterTranslationCommon
+    internal partial class FacePartSetterTranslationCommon
     {
         public static readonly FacePartSetterTranslationCommon Instance = new FacePartSetterTranslationCommon();
 
@@ -1103,7 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FacePart_Registration.Instance;
-        public static FacePart_Registration StaticRegistration => FacePart_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FacePart_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FacePartCommon.Instance;
         [DebuggerStepThrough]
@@ -1127,7 +1128,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class FacePartBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1181,7 +1182,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class FacePartBinaryCreateTranslation
+    internal partial class FacePartBinaryCreateTranslation
     {
         public readonly static FacePartBinaryCreateTranslation Instance = new FacePartBinaryCreateTranslation();
 
@@ -1258,16 +1259,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class FacePartBinaryOverlay :
+    internal partial class FacePartBinaryOverlay :
         PluginBinaryOverlay,
         IFacePartGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FacePart_Registration.Instance;
-        public static FacePart_Registration StaticRegistration => FacePart_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FacePart_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FacePartCommon.Instance;
         [DebuggerStepThrough]

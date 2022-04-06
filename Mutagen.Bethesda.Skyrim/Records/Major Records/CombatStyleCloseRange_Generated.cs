@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -742,10 +743,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CombatStyleCloseRange_FieldIndex
+    internal enum CombatStyleCloseRange_FieldIndex
     {
         Versioning = 0,
         CircleMult = 1,
@@ -756,7 +757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CombatStyleCloseRange_Registration : ILoquiRegistration
+    internal partial class CombatStyleCloseRange_Registration : ILoquiRegistration
     {
         public static readonly CombatStyleCloseRange_Registration Instance = new CombatStyleCloseRange_Registration();
 
@@ -837,7 +838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CombatStyleCloseRangeSetterCommon
+    internal partial class CombatStyleCloseRangeSetterCommon
     {
         public static readonly CombatStyleCloseRangeSetterCommon Instance = new CombatStyleCloseRangeSetterCommon();
 
@@ -880,7 +881,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CombatStyleCloseRangeCommon
+    internal partial class CombatStyleCloseRangeCommon
     {
         public static readonly CombatStyleCloseRangeCommon Instance = new CombatStyleCloseRangeCommon();
 
@@ -1036,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CombatStyleCloseRangeSetterTranslationCommon
+    internal partial class CombatStyleCloseRangeSetterTranslationCommon
     {
         public static readonly CombatStyleCloseRangeSetterTranslationCommon Instance = new CombatStyleCloseRangeSetterTranslationCommon();
 
@@ -1131,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleCloseRange_Registration.Instance;
-        public static CombatStyleCloseRange_Registration StaticRegistration => CombatStyleCloseRange_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CombatStyleCloseRange_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleCloseRangeCommon.Instance;
         [DebuggerStepThrough]
@@ -1155,7 +1156,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CombatStyleCloseRangeBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1212,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CombatStyleCloseRangeBinaryCreateTranslation
+    internal partial class CombatStyleCloseRangeBinaryCreateTranslation
     {
         public readonly static CombatStyleCloseRangeBinaryCreateTranslation Instance = new CombatStyleCloseRangeBinaryCreateTranslation();
 
@@ -1255,16 +1256,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CombatStyleCloseRangeBinaryOverlay :
+    internal partial class CombatStyleCloseRangeBinaryOverlay :
         PluginBinaryOverlay,
         ICombatStyleCloseRangeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleCloseRange_Registration.Instance;
-        public static CombatStyleCloseRange_Registration StaticRegistration => CombatStyleCloseRange_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CombatStyleCloseRange_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleCloseRangeCommon.Instance;
         [DebuggerStepThrough]

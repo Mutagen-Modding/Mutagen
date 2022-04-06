@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -833,10 +834,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum NpcFaceTintingLayer_FieldIndex
+    internal enum NpcFaceTintingLayer_FieldIndex
     {
         DataType = 0,
         Index = 1,
@@ -849,7 +850,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class NpcFaceTintingLayer_Registration : ILoquiRegistration
+    internal partial class NpcFaceTintingLayer_Registration : ILoquiRegistration
     {
         public static readonly NpcFaceTintingLayer_Registration Instance = new NpcFaceTintingLayer_Registration();
 
@@ -933,7 +934,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class NpcFaceTintingLayerSetterCommon
+    internal partial class NpcFaceTintingLayerSetterCommon
     {
         public static readonly NpcFaceTintingLayerSetterCommon Instance = new NpcFaceTintingLayerSetterCommon();
 
@@ -975,7 +976,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class NpcFaceTintingLayerCommon
+    internal partial class NpcFaceTintingLayerCommon
     {
         public static readonly NpcFaceTintingLayerCommon Instance = new NpcFaceTintingLayerCommon();
 
@@ -1151,7 +1152,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class NpcFaceTintingLayerSetterTranslationCommon
+    internal partial class NpcFaceTintingLayerSetterTranslationCommon
     {
         public static readonly NpcFaceTintingLayerSetterTranslationCommon Instance = new NpcFaceTintingLayerSetterTranslationCommon();
 
@@ -1253,7 +1254,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcFaceTintingLayer_Registration.Instance;
-        public static NpcFaceTintingLayer_Registration StaticRegistration => NpcFaceTintingLayer_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcFaceTintingLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcFaceTintingLayerCommon.Instance;
         [DebuggerStepThrough]
@@ -1277,7 +1278,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NpcFaceTintingLayerBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1346,7 +1347,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class NpcFaceTintingLayerBinaryCreateTranslation
+    internal partial class NpcFaceTintingLayerBinaryCreateTranslation
     {
         public readonly static NpcFaceTintingLayerBinaryCreateTranslation Instance = new NpcFaceTintingLayerBinaryCreateTranslation();
 
@@ -1425,16 +1426,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class NpcFaceTintingLayerBinaryOverlay :
+    internal partial class NpcFaceTintingLayerBinaryOverlay :
         PluginBinaryOverlay,
         INpcFaceTintingLayerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcFaceTintingLayer_Registration.Instance;
-        public static NpcFaceTintingLayer_Registration StaticRegistration => NpcFaceTintingLayer_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcFaceTintingLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcFaceTintingLayerCommon.Instance;
         [DebuggerStepThrough]

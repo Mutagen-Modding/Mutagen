@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -668,10 +669,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum HavokData_FieldIndex
+    internal enum HavokData_FieldIndex
     {
         Material = 0,
         Friction = 1,
@@ -680,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class HavokData_Registration : ILoquiRegistration
+    internal partial class HavokData_Registration : ILoquiRegistration
     {
         public static readonly HavokData_Registration Instance = new HavokData_Registration();
 
@@ -761,7 +762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class HavokDataSetterCommon
+    internal partial class HavokDataSetterCommon
     {
         public static readonly HavokDataSetterCommon Instance = new HavokDataSetterCommon();
 
@@ -802,7 +803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class HavokDataCommon
+    internal partial class HavokDataCommon
     {
         public static readonly HavokDataCommon Instance = new HavokDataCommon();
 
@@ -938,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class HavokDataSetterTranslationCommon
+    internal partial class HavokDataSetterTranslationCommon
     {
         public static readonly HavokDataSetterTranslationCommon Instance = new HavokDataSetterTranslationCommon();
 
@@ -1024,7 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HavokData_Registration.Instance;
-        public static HavokData_Registration StaticRegistration => HavokData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => HavokData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HavokDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1048,7 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class HavokDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1096,7 +1097,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class HavokDataBinaryCreateTranslation
+    internal partial class HavokDataBinaryCreateTranslation
     {
         public readonly static HavokDataBinaryCreateTranslation Instance = new HavokDataBinaryCreateTranslation();
 
@@ -1135,16 +1136,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class HavokDataBinaryOverlay :
+    internal partial class HavokDataBinaryOverlay :
         PluginBinaryOverlay,
         IHavokDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HavokData_Registration.Instance;
-        public static HavokData_Registration StaticRegistration => HavokData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => HavokData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HavokDataCommon.Instance;
         [DebuggerStepThrough]

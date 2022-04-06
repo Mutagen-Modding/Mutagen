@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -701,10 +702,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum EnchantmentData_FieldIndex
+    internal enum EnchantmentData_FieldIndex
     {
         Type = 0,
         ChargeAmount = 1,
@@ -714,7 +715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class EnchantmentData_Registration : ILoquiRegistration
+    internal partial class EnchantmentData_Registration : ILoquiRegistration
     {
         public static readonly EnchantmentData_Registration Instance = new EnchantmentData_Registration();
 
@@ -795,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class EnchantmentDataSetterCommon
+    internal partial class EnchantmentDataSetterCommon
     {
         public static readonly EnchantmentDataSetterCommon Instance = new EnchantmentDataSetterCommon();
 
@@ -837,7 +838,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class EnchantmentDataCommon
+    internal partial class EnchantmentDataCommon
     {
         public static readonly EnchantmentDataCommon Instance = new EnchantmentDataCommon();
 
@@ -983,7 +984,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class EnchantmentDataSetterTranslationCommon
+    internal partial class EnchantmentDataSetterTranslationCommon
     {
         public static readonly EnchantmentDataSetterTranslationCommon Instance = new EnchantmentDataSetterTranslationCommon();
 
@@ -1073,7 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EnchantmentData_Registration.Instance;
-        public static EnchantmentData_Registration StaticRegistration => EnchantmentData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EnchantmentData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EnchantmentDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1097,7 +1098,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class EnchantmentDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1149,7 +1150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class EnchantmentDataBinaryCreateTranslation
+    internal partial class EnchantmentDataBinaryCreateTranslation
     {
         public readonly static EnchantmentDataBinaryCreateTranslation Instance = new EnchantmentDataBinaryCreateTranslation();
 
@@ -1191,16 +1192,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class EnchantmentDataBinaryOverlay :
+    internal partial class EnchantmentDataBinaryOverlay :
         PluginBinaryOverlay,
         IEnchantmentDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EnchantmentData_Registration.Instance;
-        public static EnchantmentData_Registration StaticRegistration => EnchantmentData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EnchantmentData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EnchantmentDataCommon.Instance;
         [DebuggerStepThrough]

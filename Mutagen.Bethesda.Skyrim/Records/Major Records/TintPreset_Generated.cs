@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -687,10 +688,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum TintPreset_FieldIndex
+    internal enum TintPreset_FieldIndex
     {
         Color = 0,
         DefaultValue = 1,
@@ -699,7 +700,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class TintPreset_Registration : ILoquiRegistration
+    internal partial class TintPreset_Registration : ILoquiRegistration
     {
         public static readonly TintPreset_Registration Instance = new TintPreset_Registration();
 
@@ -782,7 +783,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class TintPresetSetterCommon
+    internal partial class TintPresetSetterCommon
     {
         public static readonly TintPresetSetterCommon Instance = new TintPresetSetterCommon();
 
@@ -821,7 +822,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TintPresetCommon
+    internal partial class TintPresetCommon
     {
         public static readonly TintPresetCommon Instance = new TintPresetCommon();
 
@@ -969,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TintPresetSetterTranslationCommon
+    internal partial class TintPresetSetterTranslationCommon
     {
         public static readonly TintPresetSetterTranslationCommon Instance = new TintPresetSetterTranslationCommon();
 
@@ -1055,7 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintPreset_Registration.Instance;
-        public static TintPreset_Registration StaticRegistration => TintPreset_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TintPreset_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintPresetCommon.Instance;
         [DebuggerStepThrough]
@@ -1079,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class TintPresetBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1128,7 +1129,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class TintPresetBinaryCreateTranslation
+    internal partial class TintPresetBinaryCreateTranslation
     {
         public readonly static TintPresetBinaryCreateTranslation Instance = new TintPresetBinaryCreateTranslation();
 
@@ -1200,16 +1201,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class TintPresetBinaryOverlay :
+    internal partial class TintPresetBinaryOverlay :
         PluginBinaryOverlay,
         ITintPresetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintPreset_Registration.Instance;
-        public static TintPreset_Registration StaticRegistration => TintPreset_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TintPreset_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintPresetCommon.Instance;
         [DebuggerStepThrough]

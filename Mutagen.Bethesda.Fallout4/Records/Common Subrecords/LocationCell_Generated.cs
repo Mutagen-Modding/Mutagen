@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -568,17 +569,17 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum LocationCell_FieldIndex
+    internal enum LocationCell_FieldIndex
     {
         Link = 0,
     }
     #endregion
 
     #region Registration
-    public partial class LocationCell_Registration : ILoquiRegistration
+    internal partial class LocationCell_Registration : ILoquiRegistration
     {
         public static readonly LocationCell_Registration Instance = new LocationCell_Registration();
 
@@ -652,7 +653,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class LocationCellSetterCommon : ALocationTargetSetterCommon
+    internal partial class LocationCellSetterCommon : ALocationTargetSetterCommon
     {
         public new static readonly LocationCellSetterCommon Instance = new LocationCellSetterCommon();
 
@@ -706,7 +707,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LocationCellCommon : ALocationTargetCommon
+    internal partial class LocationCellCommon : ALocationTargetCommon
     {
         public new static readonly LocationCellCommon Instance = new LocationCellCommon();
 
@@ -859,7 +860,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LocationCellSetterTranslationCommon : ALocationTargetSetterTranslationCommon
+    internal partial class LocationCellSetterTranslationCommon : ALocationTargetSetterTranslationCommon
     {
         public new static readonly LocationCellSetterTranslationCommon Instance = new LocationCellSetterTranslationCommon();
 
@@ -959,7 +960,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCell_Registration.Instance;
-        public new static LocationCell_Registration StaticRegistration => LocationCell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationCell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationCellCommon.Instance;
         [DebuggerStepThrough]
@@ -977,7 +978,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LocationCellBinaryWriteTranslation :
         ALocationTargetBinaryWriteTranslation,
@@ -1028,7 +1029,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class LocationCellBinaryCreateTranslation : ALocationTargetBinaryCreateTranslation
+    internal partial class LocationCellBinaryCreateTranslation : ALocationTargetBinaryCreateTranslation
     {
         public new readonly static LocationCellBinaryCreateTranslation Instance = new LocationCellBinaryCreateTranslation();
 
@@ -1052,16 +1053,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class LocationCellBinaryOverlay :
+    internal partial class LocationCellBinaryOverlay :
         ALocationTargetBinaryOverlay,
         ILocationCellGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCell_Registration.Instance;
-        public new static LocationCell_Registration StaticRegistration => LocationCell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationCell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationCellCommon.Instance;
         [DebuggerStepThrough]

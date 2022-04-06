@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -999,10 +1000,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum WeatherData_FieldIndex
+    internal enum WeatherData_FieldIndex
     {
         WindSpeed = 0,
         CloudSpeedLower = 1,
@@ -1021,7 +1022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class WeatherData_Registration : ILoquiRegistration
+    internal partial class WeatherData_Registration : ILoquiRegistration
     {
         public static readonly WeatherData_Registration Instance = new WeatherData_Registration();
 
@@ -1102,7 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class WeatherDataSetterCommon
+    internal partial class WeatherDataSetterCommon
     {
         public static readonly WeatherDataSetterCommon Instance = new WeatherDataSetterCommon();
 
@@ -1153,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WeatherDataCommon
+    internal partial class WeatherDataCommon
     {
         public static readonly WeatherDataCommon Instance = new WeatherDataCommon();
 
@@ -1389,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WeatherDataSetterTranslationCommon
+    internal partial class WeatherDataSetterTranslationCommon
     {
         public static readonly WeatherDataSetterTranslationCommon Instance = new WeatherDataSetterTranslationCommon();
 
@@ -1515,7 +1516,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherData_Registration.Instance;
-        public static WeatherData_Registration StaticRegistration => WeatherData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1539,7 +1540,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class WeatherDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1600,7 +1601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class WeatherDataBinaryCreateTranslation
+    internal partial class WeatherDataBinaryCreateTranslation
     {
         public readonly static WeatherDataBinaryCreateTranslation Instance = new WeatherDataBinaryCreateTranslation();
 
@@ -1649,16 +1650,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class WeatherDataBinaryOverlay :
+    internal partial class WeatherDataBinaryOverlay :
         PluginBinaryOverlay,
         IWeatherDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherData_Registration.Instance;
-        public static WeatherData_Registration StaticRegistration => WeatherData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherDataCommon.Instance;
         [DebuggerStepThrough]

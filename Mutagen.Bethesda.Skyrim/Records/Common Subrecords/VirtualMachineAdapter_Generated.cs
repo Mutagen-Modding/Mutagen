@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -524,10 +525,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum VirtualMachineAdapter_FieldIndex
+    internal enum VirtualMachineAdapter_FieldIndex
     {
         Version = 0,
         ObjectFormat = 1,
@@ -536,7 +537,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class VirtualMachineAdapter_Registration : ILoquiRegistration
+    internal partial class VirtualMachineAdapter_Registration : ILoquiRegistration
     {
         public static readonly VirtualMachineAdapter_Registration Instance = new VirtualMachineAdapter_Registration();
 
@@ -617,7 +618,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class VirtualMachineAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
+    internal partial class VirtualMachineAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
     {
         public new static readonly VirtualMachineAdapterSetterCommon Instance = new VirtualMachineAdapterSetterCommon();
 
@@ -673,7 +674,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class VirtualMachineAdapterCommon : AVirtualMachineAdapterCommon
+    internal partial class VirtualMachineAdapterCommon : AVirtualMachineAdapterCommon
     {
         public new static readonly VirtualMachineAdapterCommon Instance = new VirtualMachineAdapterCommon();
 
@@ -821,7 +822,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class VirtualMachineAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
+    internal partial class VirtualMachineAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
     {
         public new static readonly VirtualMachineAdapterSetterTranslationCommon Instance = new VirtualMachineAdapterSetterTranslationCommon();
 
@@ -917,7 +918,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VirtualMachineAdapter_Registration.Instance;
-        public new static VirtualMachineAdapter_Registration StaticRegistration => VirtualMachineAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => VirtualMachineAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VirtualMachineAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -935,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class VirtualMachineAdapterBinaryWriteTranslation :
         AVirtualMachineAdapterBinaryWriteTranslation,
@@ -984,7 +985,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class VirtualMachineAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
+    internal partial class VirtualMachineAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
     {
         public new readonly static VirtualMachineAdapterBinaryCreateTranslation Instance = new VirtualMachineAdapterBinaryCreateTranslation();
 
@@ -1010,16 +1011,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class VirtualMachineAdapterBinaryOverlay :
+    internal partial class VirtualMachineAdapterBinaryOverlay :
         AVirtualMachineAdapterBinaryOverlay,
         IVirtualMachineAdapterGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VirtualMachineAdapter_Registration.Instance;
-        public new static VirtualMachineAdapter_Registration StaticRegistration => VirtualMachineAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => VirtualMachineAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VirtualMachineAdapterCommon.Instance;
         [DebuggerStepThrough]

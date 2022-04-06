@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -652,10 +653,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum SoundItem_FieldIndex
+    internal enum SoundItem_FieldIndex
     {
         Sound = 0,
         Chance = 1,
@@ -663,7 +664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class SoundItem_Registration : ILoquiRegistration
+    internal partial class SoundItem_Registration : ILoquiRegistration
     {
         public static readonly SoundItem_Registration Instance = new SoundItem_Registration();
 
@@ -745,7 +746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class SoundItemSetterCommon
+    internal partial class SoundItemSetterCommon
     {
         public static readonly SoundItemSetterCommon Instance = new SoundItemSetterCommon();
 
@@ -783,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SoundItemCommon
+    internal partial class SoundItemCommon
     {
         public static readonly SoundItemCommon Instance = new SoundItemCommon();
 
@@ -917,7 +918,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SoundItemSetterTranslationCommon
+    internal partial class SoundItemSetterTranslationCommon
     {
         public static readonly SoundItemSetterTranslationCommon Instance = new SoundItemSetterTranslationCommon();
 
@@ -999,7 +1000,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundItem_Registration.Instance;
-        public static SoundItem_Registration StaticRegistration => SoundItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SoundItem_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundItemCommon.Instance;
         [DebuggerStepThrough]
@@ -1023,7 +1024,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SoundItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1068,7 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class SoundItemBinaryCreateTranslation
+    internal partial class SoundItemBinaryCreateTranslation
     {
         public readonly static SoundItemBinaryCreateTranslation Instance = new SoundItemBinaryCreateTranslation();
 
@@ -1133,16 +1134,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class SoundItemBinaryOverlay :
+    internal partial class SoundItemBinaryOverlay :
         PluginBinaryOverlay,
         ISoundItemGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundItem_Registration.Instance;
-        public static SoundItem_Registration StaticRegistration => SoundItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SoundItem_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundItemCommon.Instance;
         [DebuggerStepThrough]

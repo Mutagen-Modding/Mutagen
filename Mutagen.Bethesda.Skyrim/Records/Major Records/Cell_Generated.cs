@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -2599,10 +2600,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Cell_FieldIndex
+    internal enum Cell_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -2648,7 +2649,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Cell_Registration : ILoquiRegistration
+    internal partial class Cell_Registration : ILoquiRegistration
     {
         public static readonly Cell_Registration Instance = new Cell_Registration();
 
@@ -2780,7 +2781,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CellSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class CellSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly CellSetterCommon Instance = new CellSetterCommon();
 
@@ -3054,7 +3055,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CellCommon : SkyrimMajorRecordCommon
+    internal partial class CellCommon : SkyrimMajorRecordCommon
     {
         public new static readonly CellCommon Instance = new CellCommon();
 
@@ -4503,7 +4504,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CellSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class CellSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly CellSetterTranslationCommon Instance = new CellSetterTranslationCommon();
 
@@ -5033,7 +5034,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
-        public new static Cell_Registration StaticRegistration => Cell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Cell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CellCommon.Instance;
         [DebuggerStepThrough]
@@ -5051,7 +5052,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CellBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -5278,7 +5279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CellBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class CellBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static CellBinaryCreateTranslation Instance = new CellBinaryCreateTranslation();
 
@@ -5494,16 +5495,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CellBinaryOverlay :
+    internal partial class CellBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ICellGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
-        public new static Cell_Registration StaticRegistration => Cell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Cell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CellCommon.Instance;
         [DebuggerStepThrough]

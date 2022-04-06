@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -635,10 +636,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WorldspaceMapOffset_FieldIndex
+    internal enum WorldspaceMapOffset_FieldIndex
     {
         Scale = 0,
         CellOffset = 1,
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WorldspaceMapOffset_Registration : ILoquiRegistration
+    internal partial class WorldspaceMapOffset_Registration : ILoquiRegistration
     {
         public static readonly WorldspaceMapOffset_Registration Instance = new WorldspaceMapOffset_Registration();
 
@@ -727,7 +728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WorldspaceMapOffsetSetterCommon
+    internal partial class WorldspaceMapOffsetSetterCommon
     {
         public static readonly WorldspaceMapOffsetSetterCommon Instance = new WorldspaceMapOffsetSetterCommon();
 
@@ -767,7 +768,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceMapOffsetCommon
+    internal partial class WorldspaceMapOffsetCommon
     {
         public static readonly WorldspaceMapOffsetCommon Instance = new WorldspaceMapOffsetCommon();
 
@@ -893,7 +894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceMapOffsetSetterTranslationCommon
+    internal partial class WorldspaceMapOffsetSetterTranslationCommon
     {
         public static readonly WorldspaceMapOffsetSetterTranslationCommon Instance = new WorldspaceMapOffsetSetterTranslationCommon();
 
@@ -975,7 +976,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceMapOffset_Registration.Instance;
-        public static WorldspaceMapOffset_Registration StaticRegistration => WorldspaceMapOffset_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceMapOffset_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceMapOffsetCommon.Instance;
         [DebuggerStepThrough]
@@ -999,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceMapOffsetBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1047,7 +1048,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WorldspaceMapOffsetBinaryCreateTranslation
+    internal partial class WorldspaceMapOffsetBinaryCreateTranslation
     {
         public readonly static WorldspaceMapOffsetBinaryCreateTranslation Instance = new WorldspaceMapOffsetBinaryCreateTranslation();
 
@@ -1083,16 +1084,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WorldspaceMapOffsetBinaryOverlay :
+    internal partial class WorldspaceMapOffsetBinaryOverlay :
         PluginBinaryOverlay,
         IWorldspaceMapOffsetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceMapOffset_Registration.Instance;
-        public static WorldspaceMapOffset_Registration StaticRegistration => WorldspaceMapOffset_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceMapOffset_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceMapOffsetCommon.Instance;
         [DebuggerStepThrough]

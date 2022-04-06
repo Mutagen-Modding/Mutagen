@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -611,17 +612,17 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum InstanceNaming_FieldIndex
+    internal enum InstanceNaming_FieldIndex
     {
         InstanceNamingRules = 0,
     }
     #endregion
 
     #region Registration
-    public partial class InstanceNaming_Registration : ILoquiRegistration
+    internal partial class InstanceNaming_Registration : ILoquiRegistration
     {
         public static readonly InstanceNaming_Registration Instance = new InstanceNaming_Registration();
 
@@ -702,7 +703,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class InstanceNamingSetterCommon
+    internal partial class InstanceNamingSetterCommon
     {
         public static readonly InstanceNamingSetterCommon Instance = new InstanceNamingSetterCommon();
 
@@ -742,7 +743,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class InstanceNamingCommon
+    internal partial class InstanceNamingCommon
     {
         public static readonly InstanceNamingCommon Instance = new InstanceNamingCommon();
 
@@ -862,7 +863,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class InstanceNamingSetterTranslationCommon
+    internal partial class InstanceNamingSetterTranslationCommon
     {
         public static readonly InstanceNamingSetterTranslationCommon Instance = new InstanceNamingSetterTranslationCommon();
 
@@ -940,7 +941,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => InstanceNaming_Registration.Instance;
-        public static InstanceNaming_Registration StaticRegistration => InstanceNaming_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => InstanceNaming_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => InstanceNamingCommon.Instance;
         [DebuggerStepThrough]
@@ -964,7 +965,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class InstanceNamingBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1009,7 +1010,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class InstanceNamingBinaryCreateTranslation
+    internal partial class InstanceNamingBinaryCreateTranslation
     {
         public readonly static InstanceNamingBinaryCreateTranslation Instance = new InstanceNamingBinaryCreateTranslation();
 
@@ -1045,16 +1046,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class InstanceNamingBinaryOverlay :
+    internal partial class InstanceNamingBinaryOverlay :
         PluginBinaryOverlay,
         IInstanceNamingGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => InstanceNaming_Registration.Instance;
-        public static InstanceNaming_Registration StaticRegistration => InstanceNaming_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => InstanceNaming_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => InstanceNamingCommon.Instance;
         [DebuggerStepThrough]

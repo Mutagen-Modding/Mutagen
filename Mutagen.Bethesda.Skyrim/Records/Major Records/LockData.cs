@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+public partial class LockData
 {
-    public partial class LockData
+    [Flags]
+    public enum Flag
     {
-        [Flags]
-        public enum Flag
-        {
-            LeveledLock = 0x1
-        }
+        LeveledLock = 0x1
     }
 }

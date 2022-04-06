@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -635,10 +636,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CellGrid_FieldIndex
+    internal enum CellGrid_FieldIndex
     {
         Point = 0,
         Flags = 1,
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CellGrid_Registration : ILoquiRegistration
+    internal partial class CellGrid_Registration : ILoquiRegistration
     {
         public static readonly CellGrid_Registration Instance = new CellGrid_Registration();
 
@@ -727,7 +728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CellGridSetterCommon
+    internal partial class CellGridSetterCommon
     {
         public static readonly CellGridSetterCommon Instance = new CellGridSetterCommon();
 
@@ -767,7 +768,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CellGridCommon
+    internal partial class CellGridCommon
     {
         public static readonly CellGridCommon Instance = new CellGridCommon();
 
@@ -893,7 +894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CellGridSetterTranslationCommon
+    internal partial class CellGridSetterTranslationCommon
     {
         public static readonly CellGridSetterTranslationCommon Instance = new CellGridSetterTranslationCommon();
 
@@ -975,7 +976,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellGrid_Registration.Instance;
-        public static CellGrid_Registration StaticRegistration => CellGrid_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CellGrid_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellGridCommon.Instance;
         [DebuggerStepThrough]
@@ -999,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CellGridBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1048,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CellGridBinaryCreateTranslation
+    internal partial class CellGridBinaryCreateTranslation
     {
         public readonly static CellGridBinaryCreateTranslation Instance = new CellGridBinaryCreateTranslation();
 
@@ -1086,16 +1087,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CellGridBinaryOverlay :
+    internal partial class CellGridBinaryOverlay :
         PluginBinaryOverlay,
         ICellGridGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellGrid_Registration.Instance;
-        public static CellGrid_Registration StaticRegistration => CellGrid_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CellGrid_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellGridCommon.Instance;
         [DebuggerStepThrough]

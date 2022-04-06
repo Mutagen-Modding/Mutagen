@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -727,10 +728,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum TransientType_FieldIndex
+    internal enum TransientType_FieldIndex
     {
         FormType = 0,
         Links = 1,
@@ -738,7 +739,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class TransientType_Registration : ILoquiRegistration
+    internal partial class TransientType_Registration : ILoquiRegistration
     {
         public static readonly TransientType_Registration Instance = new TransientType_Registration();
 
@@ -819,7 +820,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class TransientTypeSetterCommon
+    internal partial class TransientTypeSetterCommon
     {
         public static readonly TransientTypeSetterCommon Instance = new TransientTypeSetterCommon();
 
@@ -860,7 +861,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TransientTypeCommon
+    internal partial class TransientTypeCommon
     {
         public static readonly TransientTypeCommon Instance = new TransientTypeCommon();
 
@@ -1007,7 +1008,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TransientTypeSetterTranslationCommon
+    internal partial class TransientTypeSetterTranslationCommon
     {
         public static readonly TransientTypeSetterTranslationCommon Instance = new TransientTypeSetterTranslationCommon();
 
@@ -1104,7 +1105,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TransientType_Registration.Instance;
-        public static TransientType_Registration StaticRegistration => TransientType_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TransientType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TransientTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1128,7 +1129,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TransientTypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1180,7 +1181,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class TransientTypeBinaryCreateTranslation
+    internal partial class TransientTypeBinaryCreateTranslation
     {
         public readonly static TransientTypeBinaryCreateTranslation Instance = new TransientTypeBinaryCreateTranslation();
 
@@ -1219,16 +1220,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class TransientTypeBinaryOverlay :
+    internal partial class TransientTypeBinaryOverlay :
         PluginBinaryOverlay,
         ITransientTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TransientType_Registration.Instance;
-        public static TransientType_Registration StaticRegistration => TransientType_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TransientType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TransientTypeCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -705,10 +706,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum AlchemicalApparatusData_FieldIndex
+    internal enum AlchemicalApparatusData_FieldIndex
     {
         Type = 0,
         Value = 1,
@@ -718,7 +719,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class AlchemicalApparatusData_Registration : ILoquiRegistration
+    internal partial class AlchemicalApparatusData_Registration : ILoquiRegistration
     {
         public static readonly AlchemicalApparatusData_Registration Instance = new AlchemicalApparatusData_Registration();
 
@@ -799,7 +800,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class AlchemicalApparatusDataSetterCommon
+    internal partial class AlchemicalApparatusDataSetterCommon
     {
         public static readonly AlchemicalApparatusDataSetterCommon Instance = new AlchemicalApparatusDataSetterCommon();
 
@@ -841,7 +842,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AlchemicalApparatusDataCommon
+    internal partial class AlchemicalApparatusDataCommon
     {
         public static readonly AlchemicalApparatusDataCommon Instance = new AlchemicalApparatusDataCommon();
 
@@ -987,7 +988,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AlchemicalApparatusDataSetterTranslationCommon
+    internal partial class AlchemicalApparatusDataSetterTranslationCommon
     {
         public static readonly AlchemicalApparatusDataSetterTranslationCommon Instance = new AlchemicalApparatusDataSetterTranslationCommon();
 
@@ -1077,7 +1078,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatusData_Registration.Instance;
-        public static AlchemicalApparatusData_Registration StaticRegistration => AlchemicalApparatusData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AlchemicalApparatusData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AlchemicalApparatusDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1101,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AlchemicalApparatusDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1154,7 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class AlchemicalApparatusDataBinaryCreateTranslation
+    internal partial class AlchemicalApparatusDataBinaryCreateTranslation
     {
         public readonly static AlchemicalApparatusDataBinaryCreateTranslation Instance = new AlchemicalApparatusDataBinaryCreateTranslation();
 
@@ -1194,16 +1195,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class AlchemicalApparatusDataBinaryOverlay :
+    internal partial class AlchemicalApparatusDataBinaryOverlay :
         PluginBinaryOverlay,
         IAlchemicalApparatusDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatusData_Registration.Instance;
-        public static AlchemicalApparatusData_Registration StaticRegistration => AlchemicalApparatusData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AlchemicalApparatusData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AlchemicalApparatusDataCommon.Instance;
         [DebuggerStepThrough]

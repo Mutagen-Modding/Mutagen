@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -561,10 +562,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PackageTargetUnknown_FieldIndex
+    internal enum PackageTargetUnknown_FieldIndex
     {
         CountOrDistance = 0,
         Data = 1,
@@ -572,7 +573,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PackageTargetUnknown_Registration : ILoquiRegistration
+    internal partial class PackageTargetUnknown_Registration : ILoquiRegistration
     {
         public static readonly PackageTargetUnknown_Registration Instance = new PackageTargetUnknown_Registration();
 
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PackageTargetUnknownSetterCommon : APackageTargetSetterCommon
+    internal partial class PackageTargetUnknownSetterCommon : APackageTargetSetterCommon
     {
         public new static readonly PackageTargetUnknownSetterCommon Instance = new PackageTargetUnknownSetterCommon();
 
@@ -699,7 +700,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageTargetUnknownCommon : APackageTargetCommon
+    internal partial class PackageTargetUnknownCommon : APackageTargetCommon
     {
         public new static readonly PackageTargetUnknownCommon Instance = new PackageTargetUnknownCommon();
 
@@ -853,7 +854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageTargetUnknownSetterTranslationCommon : APackageTargetSetterTranslationCommon
+    internal partial class PackageTargetUnknownSetterTranslationCommon : APackageTargetSetterTranslationCommon
     {
         public new static readonly PackageTargetUnknownSetterTranslationCommon Instance = new PackageTargetUnknownSetterTranslationCommon();
 
@@ -953,7 +954,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageTargetUnknown_Registration.Instance;
-        public new static PackageTargetUnknown_Registration StaticRegistration => PackageTargetUnknown_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageTargetUnknown_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageTargetUnknownCommon.Instance;
         [DebuggerStepThrough]
@@ -971,7 +972,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageTargetUnknownBinaryWriteTranslation :
         APackageTargetBinaryWriteTranslation,
@@ -1023,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PackageTargetUnknownBinaryCreateTranslation : APackageTargetBinaryCreateTranslation
+    internal partial class PackageTargetUnknownBinaryCreateTranslation : APackageTargetBinaryCreateTranslation
     {
         public new readonly static PackageTargetUnknownBinaryCreateTranslation Instance = new PackageTargetUnknownBinaryCreateTranslation();
 
@@ -1050,16 +1051,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageTargetUnknownBinaryOverlay :
+    internal partial class PackageTargetUnknownBinaryOverlay :
         APackageTargetBinaryOverlay,
         IPackageTargetUnknownGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageTargetUnknown_Registration.Instance;
-        public new static PackageTargetUnknown_Registration StaticRegistration => PackageTargetUnknown_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageTargetUnknown_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageTargetUnknownCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -794,10 +795,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ArtObject_FieldIndex
+    internal enum ArtObject_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -812,7 +813,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ArtObject_Registration : ILoquiRegistration
+    internal partial class ArtObject_Registration : ILoquiRegistration
     {
         public static readonly ArtObject_Registration Instance = new ArtObject_Registration();
 
@@ -898,7 +899,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ArtObjectSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ArtObjectSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ArtObjectSetterCommon Instance = new ArtObjectSetterCommon();
 
@@ -971,7 +972,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ArtObjectCommon : SkyrimMajorRecordCommon
+    internal partial class ArtObjectCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ArtObjectCommon Instance = new ArtObjectCommon();
 
@@ -1250,7 +1251,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ArtObjectSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ArtObjectSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ArtObjectSetterTranslationCommon Instance = new ArtObjectSetterTranslationCommon();
 
@@ -1457,7 +1458,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArtObject_Registration.Instance;
-        public new static ArtObject_Registration StaticRegistration => ArtObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ArtObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArtObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -1475,7 +1476,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ArtObjectBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1574,7 +1575,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ArtObjectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ArtObjectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ArtObjectBinaryCreateTranslation Instance = new ArtObjectBinaryCreateTranslation();
 
@@ -1644,16 +1645,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ArtObjectBinaryOverlay :
+    internal partial class ArtObjectBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IArtObjectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArtObject_Registration.Instance;
-        public new static ArtObject_Registration StaticRegistration => ArtObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ArtObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArtObjectCommon.Instance;
         [DebuggerStepThrough]

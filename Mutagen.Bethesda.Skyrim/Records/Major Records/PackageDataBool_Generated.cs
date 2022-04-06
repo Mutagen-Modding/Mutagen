@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -569,10 +570,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PackageDataBool_FieldIndex
+    internal enum PackageDataBool_FieldIndex
     {
         Name = 0,
         Flags = 1,
@@ -581,7 +582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PackageDataBool_Registration : ILoquiRegistration
+    internal partial class PackageDataBool_Registration : ILoquiRegistration
     {
         public static readonly PackageDataBool_Registration Instance = new PackageDataBool_Registration();
 
@@ -663,7 +664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PackageDataBoolSetterCommon : APackageDataSetterCommon
+    internal partial class PackageDataBoolSetterCommon : APackageDataSetterCommon
     {
         public new static readonly PackageDataBoolSetterCommon Instance = new PackageDataBoolSetterCommon();
 
@@ -717,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageDataBoolCommon : APackageDataCommon
+    internal partial class PackageDataBoolCommon : APackageDataCommon
     {
         public new static readonly PackageDataBoolCommon Instance = new PackageDataBoolCommon();
 
@@ -873,7 +874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageDataBoolSetterTranslationCommon : APackageDataSetterTranslationCommon
+    internal partial class PackageDataBoolSetterTranslationCommon : APackageDataSetterTranslationCommon
     {
         public new static readonly PackageDataBoolSetterTranslationCommon Instance = new PackageDataBoolSetterTranslationCommon();
 
@@ -973,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataBool_Registration.Instance;
-        public new static PackageDataBool_Registration StaticRegistration => PackageDataBool_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageDataBool_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataBoolCommon.Instance;
         [DebuggerStepThrough]
@@ -991,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageDataBoolBinaryWriteTranslation :
         APackageDataBinaryWriteTranslation,
@@ -1043,7 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PackageDataBoolBinaryCreateTranslation : APackageDataBinaryCreateTranslation
+    internal partial class PackageDataBoolBinaryCreateTranslation : APackageDataBinaryCreateTranslation
     {
         public new readonly static PackageDataBoolBinaryCreateTranslation Instance = new PackageDataBoolBinaryCreateTranslation();
 
@@ -1066,16 +1067,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageDataBoolBinaryOverlay :
+    internal partial class PackageDataBoolBinaryOverlay :
         APackageDataBinaryOverlay,
         IPackageDataBoolGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataBool_Registration.Instance;
-        public new static PackageDataBool_Registration StaticRegistration => PackageDataBool_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageDataBool_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataBoolCommon.Instance;
         [DebuggerStepThrough]

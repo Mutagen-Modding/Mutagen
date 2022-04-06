@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -910,10 +911,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Climate_FieldIndex
+    internal enum Climate_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -929,7 +930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Climate_Registration : ILoquiRegistration
+    internal partial class Climate_Registration : ILoquiRegistration
     {
         public static readonly Climate_Registration Instance = new Climate_Registration();
 
@@ -1017,7 +1018,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ClimateSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class ClimateSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly ClimateSetterCommon Instance = new ClimateSetterCommon();
 
@@ -1092,7 +1093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ClimateCommon : OblivionMajorRecordCommon
+    internal partial class ClimateCommon : OblivionMajorRecordCommon
     {
         public new static readonly ClimateCommon Instance = new ClimateCommon();
 
@@ -1419,7 +1420,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ClimateSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class ClimateSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly ClimateSetterTranslationCommon Instance = new ClimateSetterTranslationCommon();
 
@@ -1666,7 +1667,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Climate_Registration.Instance;
-        public new static Climate_Registration StaticRegistration => Climate_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Climate_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ClimateCommon.Instance;
         [DebuggerStepThrough]
@@ -1684,7 +1685,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ClimateBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1802,7 +1803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ClimateBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class ClimateBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static ClimateBinaryCreateTranslation Instance = new ClimateBinaryCreateTranslation();
 
@@ -1890,16 +1891,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ClimateBinaryOverlay :
+    internal partial class ClimateBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IClimateGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Climate_Registration.Instance;
-        public new static Climate_Registration StaticRegistration => Climate_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Climate_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ClimateCommon.Instance;
         [DebuggerStepThrough]

@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -639,10 +640,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Part_FieldIndex
+    internal enum Part_FieldIndex
     {
         PartType = 0,
         FileName = 1,
@@ -650,7 +651,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Part_Registration : ILoquiRegistration
+    internal partial class Part_Registration : ILoquiRegistration
     {
         public static readonly Part_Registration Instance = new Part_Registration();
 
@@ -732,7 +733,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class PartSetterCommon
+    internal partial class PartSetterCommon
     {
         public static readonly PartSetterCommon Instance = new PartSetterCommon();
 
@@ -769,7 +770,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class PartCommon
+    internal partial class PartCommon
     {
         public static readonly PartCommon Instance = new PartCommon();
 
@@ -903,7 +904,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class PartSetterTranslationCommon
+    internal partial class PartSetterTranslationCommon
     {
         public static readonly PartSetterTranslationCommon Instance = new PartSetterTranslationCommon();
 
@@ -985,7 +986,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Part_Registration.Instance;
-        public static Part_Registration StaticRegistration => Part_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Part_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PartCommon.Instance;
         [DebuggerStepThrough]
@@ -1009,7 +1010,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PartBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1056,7 +1057,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class PartBinaryCreateTranslation
+    internal partial class PartBinaryCreateTranslation
     {
         public readonly static PartBinaryCreateTranslation Instance = new PartBinaryCreateTranslation();
 
@@ -1125,16 +1126,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class PartBinaryOverlay :
+    internal partial class PartBinaryOverlay :
         PluginBinaryOverlay,
         IPartGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Part_Registration.Instance;
-        public static Part_Registration StaticRegistration => Part_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Part_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PartCommon.Instance;
         [DebuggerStepThrough]

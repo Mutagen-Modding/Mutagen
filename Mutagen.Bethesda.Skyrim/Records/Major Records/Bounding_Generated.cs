@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -800,10 +801,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Bounding_FieldIndex
+    internal enum Bounding_FieldIndex
     {
         Width = 0,
         Height = 1,
@@ -816,7 +817,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Bounding_Registration : ILoquiRegistration
+    internal partial class Bounding_Registration : ILoquiRegistration
     {
         public static readonly Bounding_Registration Instance = new Bounding_Registration();
 
@@ -890,7 +891,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class BoundingSetterCommon
+    internal partial class BoundingSetterCommon
     {
         public static readonly BoundingSetterCommon Instance = new BoundingSetterCommon();
 
@@ -931,7 +932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class BoundingCommon
+    internal partial class BoundingCommon
     {
         public static readonly BoundingCommon Instance = new BoundingCommon();
 
@@ -1107,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class BoundingSetterTranslationCommon
+    internal partial class BoundingSetterTranslationCommon
     {
         public static readonly BoundingSetterTranslationCommon Instance = new BoundingSetterTranslationCommon();
 
@@ -1209,7 +1210,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Bounding_Registration.Instance;
-        public static Bounding_Registration StaticRegistration => Bounding_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Bounding_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BoundingCommon.Instance;
         [DebuggerStepThrough]
@@ -1233,7 +1234,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class BoundingBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1289,7 +1290,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class BoundingBinaryCreateTranslation
+    internal partial class BoundingBinaryCreateTranslation
     {
         public readonly static BoundingBinaryCreateTranslation Instance = new BoundingBinaryCreateTranslation();
 
@@ -1330,16 +1331,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class BoundingBinaryOverlay :
+    internal partial class BoundingBinaryOverlay :
         PluginBinaryOverlay,
         IBoundingGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Bounding_Registration.Instance;
-        public static Bounding_Registration StaticRegistration => Bounding_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Bounding_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BoundingCommon.Instance;
         [DebuggerStepThrough]

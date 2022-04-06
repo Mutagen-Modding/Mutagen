@@ -7,69 +7,65 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+public partial class SkyrimGroup<T> : AGroup<T>
 {
-    public partial class SkyrimGroup<T> : AGroup<T>
-    {
-        public SkyrimGroup(IModGetter getter) : base(getter)
-        {
-        }
-
-        public SkyrimGroup(IMod mod) : base(mod)
-        {
-        }
-
-        protected override ICache<T, FormKey> ProtectedCache => this.RecordCache;
-    }
-
-    public partial interface ISkyrimGroup<T> : IGroup<T>
-        where T : class, ISkyrimMajorRecordInternal, IBinaryItem
+    public SkyrimGroup(IModGetter getter) : base(getter)
     {
     }
 
-    public partial interface ISkyrimGroupGetter<out T> : IGroupGetter<T>
+    public SkyrimGroup(IMod mod) : base(mod)
+    {
+    }
+
+    protected override ICache<T, FormKey> ProtectedCache => this.RecordCache;
+}
+
+public partial interface ISkyrimGroup<T> : IGroup<T>
+    where T : class, ISkyrimMajorRecordInternal, IBinaryItem
+{
+}
+
+public partial interface ISkyrimGroupGetter<out T> : IGroupGetter<T>
+    where T : class, ISkyrimMajorRecordGetter, IBinaryItem
+{
+}
+
+partial class SkyrimGroupBinaryWriteTranslation
+{
+    public static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
+        MutagenWriter writer,
+        ISkyrimGroupGetter<T> item)
         where T : class, ISkyrimMajorRecordGetter, IBinaryItem
     {
+        Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            writer,
+            GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE.TypeInt);
     }
+}
 
-    namespace Internals
+partial class SkyrimGroupBinaryCreateTranslation<T>
+{
+    public static partial void FillBinaryContainedRecordTypeParseCustom(
+        MutagenFrame frame,
+        ISkyrimGroup<T> item)
     {
-        public partial class SkyrimGroupBinaryWriteTranslation
-        {
-            public static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
-                MutagenWriter writer,
-                ISkyrimGroupGetter<T> item)
-                where T : class, ISkyrimMajorRecordGetter, IBinaryItem
-            {
-                Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE.TypeInt);
-            }
-        }
+        frame.Reader.Position += 4;
+    }
+}
 
-        public partial class SkyrimGroupBinaryCreateTranslation<T>
-        {
-            public static partial void FillBinaryContainedRecordTypeParseCustom(
-                MutagenFrame frame,
-                ISkyrimGroup<T> item)
-            {
-                frame.Reader.Position += 4;
-            }
-        }
-
-        public partial class SkyrimGroupBinaryOverlay<T> : AGroupBinaryOverlay<T>
-        {
-            partial void CustomFactoryEnd(
-                OverlayStream stream,
-                int finalPos,
-                int offset)
-            {
-                _recordCache = GroupMajorRecordCacheWrapper<T>.Factory(
-                    stream,
-                    _data,
-                    _package,
-                    offset);
-            }
-        }
+partial class SkyrimGroupBinaryOverlay<T> : AGroupBinaryOverlay<T>
+{
+    partial void CustomFactoryEnd(
+        OverlayStream stream,
+        int finalPos,
+        int offset)
+    {
+        _recordCache = GroupMajorRecordCacheWrapper<T>.Factory(
+            stream,
+            _data,
+            _package,
+            offset);
     }
 }

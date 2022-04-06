@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -668,10 +669,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ContainerEntry_FieldIndex
+    internal enum ContainerEntry_FieldIndex
     {
         Item = 0,
         Data = 1,
@@ -679,7 +680,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ContainerEntry_Registration : ILoquiRegistration
+    internal partial class ContainerEntry_Registration : ILoquiRegistration
     {
         public static readonly ContainerEntry_Registration Instance = new ContainerEntry_Registration();
 
@@ -763,7 +764,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ContainerEntrySetterCommon
+    internal partial class ContainerEntrySetterCommon
     {
         public static readonly ContainerEntrySetterCommon Instance = new ContainerEntrySetterCommon();
 
@@ -802,7 +803,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ContainerEntryCommon
+    internal partial class ContainerEntryCommon
     {
         public static readonly ContainerEntryCommon Instance = new ContainerEntryCommon();
 
@@ -955,7 +956,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ContainerEntrySetterTranslationCommon
+    internal partial class ContainerEntrySetterTranslationCommon
     {
         public static readonly ContainerEntrySetterTranslationCommon Instance = new ContainerEntrySetterTranslationCommon();
 
@@ -1077,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerEntry_Registration.Instance;
-        public static ContainerEntry_Registration StaticRegistration => ContainerEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ContainerEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ContainerEntryCommon.Instance;
         [DebuggerStepThrough]
@@ -1101,7 +1102,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ContainerEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1150,7 +1151,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ContainerEntryBinaryCreateTranslation
+    internal partial class ContainerEntryBinaryCreateTranslation
     {
         public readonly static ContainerEntryBinaryCreateTranslation Instance = new ContainerEntryBinaryCreateTranslation();
 
@@ -1212,16 +1213,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ContainerEntryBinaryOverlay :
+    internal partial class ContainerEntryBinaryOverlay :
         PluginBinaryOverlay,
         IContainerEntryGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerEntry_Registration.Instance;
-        public static ContainerEntry_Registration StaticRegistration => ContainerEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ContainerEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ContainerEntryCommon.Instance;
         [DebuggerStepThrough]

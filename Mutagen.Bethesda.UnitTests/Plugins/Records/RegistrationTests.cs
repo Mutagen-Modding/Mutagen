@@ -1,5 +1,5 @@
 using Loqui;
-using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Oblivion;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records;
@@ -10,6 +10,6 @@ public class RegistrationTests
     public void RegistrationTest()
     {
         Assert.True(LoquiRegistration.TryLocateRegistration(typeof(Mutagen.Bethesda.Oblivion.INpcGetter), out var regis));
-        Assert.Same(Npc_Registration.Instance, regis);
+        Assert.Same(Npc.StaticRegistration, regis);
     }
 }

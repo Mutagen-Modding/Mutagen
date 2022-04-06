@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -762,10 +763,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum AvailableMorphs_FieldIndex
+    internal enum AvailableMorphs_FieldIndex
     {
         Nose = 0,
         Brow = 1,
@@ -775,7 +776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class AvailableMorphs_Registration : ILoquiRegistration
+    internal partial class AvailableMorphs_Registration : ILoquiRegistration
     {
         public static readonly AvailableMorphs_Registration Instance = new AvailableMorphs_Registration();
 
@@ -856,7 +857,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class AvailableMorphsSetterCommon
+    internal partial class AvailableMorphsSetterCommon
     {
         public static readonly AvailableMorphsSetterCommon Instance = new AvailableMorphsSetterCommon();
 
@@ -895,7 +896,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AvailableMorphsCommon
+    internal partial class AvailableMorphsCommon
     {
         public static readonly AvailableMorphsCommon Instance = new AvailableMorphsCommon();
 
@@ -1089,7 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AvailableMorphsSetterTranslationCommon
+    internal partial class AvailableMorphsSetterTranslationCommon
     {
         public static readonly AvailableMorphsSetterTranslationCommon Instance = new AvailableMorphsSetterTranslationCommon();
 
@@ -1267,7 +1268,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AvailableMorphs_Registration.Instance;
-        public static AvailableMorphs_Registration StaticRegistration => AvailableMorphs_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AvailableMorphs_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AvailableMorphsCommon.Instance;
         [DebuggerStepThrough]
@@ -1291,7 +1292,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AvailableMorphsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1353,7 +1354,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class AvailableMorphsBinaryCreateTranslation
+    internal partial class AvailableMorphsBinaryCreateTranslation
     {
         public readonly static AvailableMorphsBinaryCreateTranslation Instance = new AvailableMorphsBinaryCreateTranslation();
 
@@ -1417,16 +1418,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class AvailableMorphsBinaryOverlay :
+    internal partial class AvailableMorphsBinaryOverlay :
         PluginBinaryOverlay,
         IAvailableMorphsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AvailableMorphs_Registration.Instance;
-        public static AvailableMorphs_Registration StaticRegistration => AvailableMorphs_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AvailableMorphs_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AvailableMorphsCommon.Instance;
         [DebuggerStepThrough]

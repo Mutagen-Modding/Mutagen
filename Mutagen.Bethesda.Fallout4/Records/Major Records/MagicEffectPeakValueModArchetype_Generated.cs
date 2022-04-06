@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -523,10 +524,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum MagicEffectPeakValueModArchetype_FieldIndex
+    internal enum MagicEffectPeakValueModArchetype_FieldIndex
     {
         Type = 0,
         AssociationKey = 1,
@@ -535,7 +536,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class MagicEffectPeakValueModArchetype_Registration : ILoquiRegistration
+    internal partial class MagicEffectPeakValueModArchetype_Registration : ILoquiRegistration
     {
         public static readonly MagicEffectPeakValueModArchetype_Registration Instance = new MagicEffectPeakValueModArchetype_Registration();
 
@@ -609,7 +610,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class MagicEffectPeakValueModArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
+    internal partial class MagicEffectPeakValueModArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
     {
         public new static readonly MagicEffectPeakValueModArchetypeSetterCommon Instance = new MagicEffectPeakValueModArchetypeSetterCommon();
 
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MagicEffectPeakValueModArchetypeCommon : MagicEffectArchetypeCommon
+    internal partial class MagicEffectPeakValueModArchetypeCommon : MagicEffectArchetypeCommon
     {
         public new static readonly MagicEffectPeakValueModArchetypeCommon Instance = new MagicEffectPeakValueModArchetypeCommon();
 
@@ -809,7 +810,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MagicEffectPeakValueModArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
+    internal partial class MagicEffectPeakValueModArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
     {
         public new static readonly MagicEffectPeakValueModArchetypeSetterTranslationCommon Instance = new MagicEffectPeakValueModArchetypeSetterTranslationCommon();
 
@@ -934,7 +935,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectPeakValueModArchetype_Registration.Instance;
-        public new static MagicEffectPeakValueModArchetype_Registration StaticRegistration => MagicEffectPeakValueModArchetype_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MagicEffectPeakValueModArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectPeakValueModArchetypeCommon.Instance;
         [DebuggerStepThrough]
@@ -952,7 +953,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MagicEffectPeakValueModArchetypeBinaryWriteTranslation :
         MagicEffectArchetypeBinaryWriteTranslation,
@@ -994,7 +995,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class MagicEffectPeakValueModArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
+    internal partial class MagicEffectPeakValueModArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
     {
         public new readonly static MagicEffectPeakValueModArchetypeBinaryCreateTranslation Instance = new MagicEffectPeakValueModArchetypeBinaryCreateTranslation();
 
@@ -1011,16 +1012,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class MagicEffectPeakValueModArchetypeBinaryOverlay :
+    internal partial class MagicEffectPeakValueModArchetypeBinaryOverlay :
         MagicEffectArchetypeBinaryOverlay,
         IMagicEffectPeakValueModArchetypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectPeakValueModArchetype_Registration.Instance;
-        public new static MagicEffectPeakValueModArchetype_Registration StaticRegistration => MagicEffectPeakValueModArchetype_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MagicEffectPeakValueModArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectPeakValueModArchetypeCommon.Instance;
         [DebuggerStepThrough]

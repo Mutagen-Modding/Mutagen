@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -745,10 +746,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ImpactDataSet_FieldIndex
+    internal enum ImpactDataSet_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -761,7 +762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ImpactDataSet_Registration : ILoquiRegistration
+    internal partial class ImpactDataSet_Registration : ILoquiRegistration
     {
         public static readonly ImpactDataSet_Registration Instance = new ImpactDataSet_Registration();
 
@@ -845,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ImpactDataSetSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ImpactDataSetSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ImpactDataSetSetterCommon Instance = new ImpactDataSetSetterCommon();
 
@@ -916,7 +917,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImpactDataSetCommon : SkyrimMajorRecordCommon
+    internal partial class ImpactDataSetCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ImpactDataSetCommon Instance = new ImpactDataSetCommon();
 
@@ -1169,7 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImpactDataSetSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ImpactDataSetSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ImpactDataSetSetterTranslationCommon Instance = new ImpactDataSetSetterTranslationCommon();
 
@@ -1348,7 +1349,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImpactDataSet_Registration.Instance;
-        public new static ImpactDataSet_Registration StaticRegistration => ImpactDataSet_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ImpactDataSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImpactDataSetCommon.Instance;
         [DebuggerStepThrough]
@@ -1366,7 +1367,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImpactDataSetBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1459,7 +1460,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ImpactDataSetBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ImpactDataSetBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ImpactDataSetBinaryCreateTranslation Instance = new ImpactDataSetBinaryCreateTranslation();
 
@@ -1519,16 +1520,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ImpactDataSetBinaryOverlay :
+    internal partial class ImpactDataSetBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IImpactDataSetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImpactDataSet_Registration.Instance;
-        public new static ImpactDataSet_Registration StaticRegistration => ImpactDataSet_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ImpactDataSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImpactDataSetCommon.Instance;
         [DebuggerStepThrough]

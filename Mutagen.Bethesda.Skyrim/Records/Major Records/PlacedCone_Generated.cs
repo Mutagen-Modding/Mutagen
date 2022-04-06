@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -703,10 +704,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PlacedCone_FieldIndex
+    internal enum PlacedCone_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -736,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PlacedCone_Registration : ILoquiRegistration
+    internal partial class PlacedCone_Registration : ILoquiRegistration
     {
         public static readonly PlacedCone_Registration Instance = new PlacedCone_Registration();
 
@@ -817,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PlacedConeSetterCommon : APlacedTrapSetterCommon
+    internal partial class PlacedConeSetterCommon : APlacedTrapSetterCommon
     {
         public new static readonly PlacedConeSetterCommon Instance = new PlacedConeSetterCommon();
 
@@ -904,7 +905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedConeCommon : APlacedTrapCommon
+    internal partial class PlacedConeCommon : APlacedTrapCommon
     {
         public new static readonly PlacedConeCommon Instance = new PlacedConeCommon();
 
@@ -1219,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedConeSetterTranslationCommon : APlacedTrapSetterTranslationCommon
+    internal partial class PlacedConeSetterTranslationCommon : APlacedTrapSetterTranslationCommon
     {
         public new static readonly PlacedConeSetterTranslationCommon Instance = new PlacedConeSetterTranslationCommon();
 
@@ -1408,7 +1409,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedCone_Registration.Instance;
-        public new static PlacedCone_Registration StaticRegistration => PlacedCone_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedCone_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedConeCommon.Instance;
         [DebuggerStepThrough]
@@ -1426,7 +1427,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PlacedConeBinaryWriteTranslation :
         APlacedTrapBinaryWriteTranslation,
@@ -1515,7 +1516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PlacedConeBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
+    internal partial class PlacedConeBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
     {
         public new readonly static PlacedConeBinaryCreateTranslation Instance = new PlacedConeBinaryCreateTranslation();
 
@@ -1542,16 +1543,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PlacedConeBinaryOverlay :
+    internal partial class PlacedConeBinaryOverlay :
         APlacedTrapBinaryOverlay,
         IPlacedConeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedCone_Registration.Instance;
-        public new static PlacedCone_Registration StaticRegistration => PlacedCone_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedCone_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedConeCommon.Instance;
         [DebuggerStepThrough]

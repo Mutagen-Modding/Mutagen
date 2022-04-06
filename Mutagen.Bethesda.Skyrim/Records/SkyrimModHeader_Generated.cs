@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1244,10 +1245,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SkyrimModHeader_FieldIndex
+    internal enum SkyrimModHeader_FieldIndex
     {
         Flags = 0,
         FormID = 1,
@@ -1267,7 +1268,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SkyrimModHeader_Registration : ILoquiRegistration
+    internal partial class SkyrimModHeader_Registration : ILoquiRegistration
     {
         public static readonly SkyrimModHeader_Registration Instance = new SkyrimModHeader_Registration();
 
@@ -1361,7 +1362,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SkyrimModHeaderSetterCommon
+    internal partial class SkyrimModHeaderSetterCommon
     {
         public static readonly SkyrimModHeaderSetterCommon Instance = new SkyrimModHeaderSetterCommon();
 
@@ -1414,7 +1415,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SkyrimModHeaderCommon
+    internal partial class SkyrimModHeaderCommon
     {
         public static readonly SkyrimModHeaderCommon Instance = new SkyrimModHeaderCommon();
 
@@ -1730,7 +1731,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SkyrimModHeaderSetterTranslationCommon
+    internal partial class SkyrimModHeaderSetterTranslationCommon
     {
         public static readonly SkyrimModHeaderSetterTranslationCommon Instance = new SkyrimModHeaderSetterTranslationCommon();
 
@@ -1935,7 +1936,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimModHeader_Registration.Instance;
-        public static SkyrimModHeader_Registration StaticRegistration => SkyrimModHeader_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SkyrimModHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SkyrimModHeaderCommon.Instance;
         [DebuggerStepThrough]
@@ -1959,7 +1960,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SkyrimModHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -2076,7 +2077,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SkyrimModHeaderBinaryCreateTranslation
+    internal partial class SkyrimModHeaderBinaryCreateTranslation
     {
         public readonly static SkyrimModHeaderBinaryCreateTranslation Instance = new SkyrimModHeaderBinaryCreateTranslation();
 
@@ -2206,16 +2207,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SkyrimModHeaderBinaryOverlay :
+    internal partial class SkyrimModHeaderBinaryOverlay :
         PluginBinaryOverlay,
         ISkyrimModHeaderGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimModHeader_Registration.Instance;
-        public static SkyrimModHeader_Registration StaticRegistration => SkyrimModHeader_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SkyrimModHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SkyrimModHeaderCommon.Instance;
         [DebuggerStepThrough]

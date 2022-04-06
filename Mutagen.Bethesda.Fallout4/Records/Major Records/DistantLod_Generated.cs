@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -643,10 +644,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum DistantLod_FieldIndex
+    internal enum DistantLod_FieldIndex
     {
         Mesh = 0,
         Data = 1,
@@ -654,7 +655,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class DistantLod_Registration : ILoquiRegistration
+    internal partial class DistantLod_Registration : ILoquiRegistration
     {
         public static readonly DistantLod_Registration Instance = new DistantLod_Registration();
 
@@ -728,7 +729,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class DistantLodSetterCommon
+    internal partial class DistantLodSetterCommon
     {
         public static readonly DistantLodSetterCommon Instance = new DistantLodSetterCommon();
 
@@ -764,7 +765,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class DistantLodCommon
+    internal partial class DistantLodCommon
     {
         public static readonly DistantLodCommon Instance = new DistantLodCommon();
 
@@ -890,7 +891,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class DistantLodSetterTranslationCommon
+    internal partial class DistantLodSetterTranslationCommon
     {
         public static readonly DistantLodSetterTranslationCommon Instance = new DistantLodSetterTranslationCommon();
 
@@ -972,7 +973,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DistantLod_Registration.Instance;
-        public static DistantLod_Registration StaticRegistration => DistantLod_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DistantLod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DistantLodCommon.Instance;
         [DebuggerStepThrough]
@@ -996,7 +997,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class DistantLodBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1038,7 +1039,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class DistantLodBinaryCreateTranslation
+    internal partial class DistantLodBinaryCreateTranslation
     {
         public readonly static DistantLodBinaryCreateTranslation Instance = new DistantLodBinaryCreateTranslation();
 
@@ -1077,16 +1078,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class DistantLodBinaryOverlay :
+    internal partial class DistantLodBinaryOverlay :
         PluginBinaryOverlay,
         IDistantLodGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DistantLod_Registration.Instance;
-        public static DistantLod_Registration StaticRegistration => DistantLod_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DistantLod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DistantLodCommon.Instance;
         [DebuggerStepThrough]

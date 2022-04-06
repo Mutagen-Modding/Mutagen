@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -615,10 +616,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum NpcOwner_FieldIndex
+    internal enum NpcOwner_FieldIndex
     {
         Npc = 0,
         Global = 1,
@@ -626,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class NpcOwner_Registration : ILoquiRegistration
+    internal partial class NpcOwner_Registration : ILoquiRegistration
     {
         public static readonly NpcOwner_Registration Instance = new NpcOwner_Registration();
 
@@ -700,7 +701,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NpcOwnerSetterCommon : OwnerTargetSetterCommon
+    internal partial class NpcOwnerSetterCommon : OwnerTargetSetterCommon
     {
         public new static readonly NpcOwnerSetterCommon Instance = new NpcOwnerSetterCommon();
 
@@ -756,7 +757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcOwnerCommon : OwnerTargetCommon
+    internal partial class NpcOwnerCommon : OwnerTargetCommon
     {
         public new static readonly NpcOwnerCommon Instance = new NpcOwnerCommon();
 
@@ -920,7 +921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcOwnerSetterTranslationCommon : OwnerTargetSetterTranslationCommon
+    internal partial class NpcOwnerSetterTranslationCommon : OwnerTargetSetterTranslationCommon
     {
         public new static readonly NpcOwnerSetterTranslationCommon Instance = new NpcOwnerSetterTranslationCommon();
 
@@ -1024,7 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcOwner_Registration.Instance;
-        public new static NpcOwner_Registration StaticRegistration => NpcOwner_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => NpcOwner_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcOwnerCommon.Instance;
         [DebuggerStepThrough]
@@ -1042,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NpcOwnerBinaryWriteTranslation :
         OwnerTargetBinaryWriteTranslation,
@@ -1096,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NpcOwnerBinaryCreateTranslation : OwnerTargetBinaryCreateTranslation
+    internal partial class NpcOwnerBinaryCreateTranslation : OwnerTargetBinaryCreateTranslation
     {
         public new readonly static NpcOwnerBinaryCreateTranslation Instance = new NpcOwnerBinaryCreateTranslation();
 
@@ -1121,16 +1122,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NpcOwnerBinaryOverlay :
+    internal partial class NpcOwnerBinaryOverlay :
         OwnerTargetBinaryOverlay,
         INpcOwnerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcOwner_Registration.Instance;
-        public new static NpcOwner_Registration StaticRegistration => NpcOwner_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => NpcOwner_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcOwnerCommon.Instance;
         [DebuggerStepThrough]

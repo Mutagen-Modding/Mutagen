@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1148,10 +1149,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum LeveledItem_FieldIndex
+    internal enum LeveledItem_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1172,7 +1173,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class LeveledItem_Registration : ILoquiRegistration
+    internal partial class LeveledItem_Registration : ILoquiRegistration
     {
         public static readonly LeveledItem_Registration Instance = new LeveledItem_Registration();
 
@@ -1266,7 +1267,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class LeveledItemSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class LeveledItemSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly LeveledItemSetterCommon Instance = new LeveledItemSetterCommon();
 
@@ -1348,7 +1349,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LeveledItemCommon : Fallout4MajorRecordCommon
+    internal partial class LeveledItemCommon : Fallout4MajorRecordCommon
     {
         public new static readonly LeveledItemCommon Instance = new LeveledItemCommon();
 
@@ -1731,7 +1732,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LeveledItemSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class LeveledItemSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly LeveledItemSetterTranslationCommon Instance = new LeveledItemSetterTranslationCommon();
 
@@ -1996,7 +1997,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledItem_Registration.Instance;
-        public new static LeveledItem_Registration StaticRegistration => LeveledItem_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LeveledItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledItemCommon.Instance;
         [DebuggerStepThrough]
@@ -2014,7 +2015,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LeveledItemBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -2153,7 +2154,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class LeveledItemBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class LeveledItemBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static LeveledItemBinaryCreateTranslation Instance = new LeveledItemBinaryCreateTranslation();
 
@@ -2274,16 +2275,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class LeveledItemBinaryOverlay :
+    internal partial class LeveledItemBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         ILeveledItemGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledItem_Registration.Instance;
-        public new static LeveledItem_Registration StaticRegistration => LeveledItem_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LeveledItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledItemCommon.Instance;
         [DebuggerStepThrough]

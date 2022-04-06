@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1191,10 +1192,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum MaterialObject_FieldIndex
+    internal enum MaterialObject_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1218,7 +1219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class MaterialObject_Registration : ILoquiRegistration
+    internal partial class MaterialObject_Registration : ILoquiRegistration
     {
         public static readonly MaterialObject_Registration Instance = new MaterialObject_Registration();
 
@@ -1304,7 +1305,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MaterialObjectSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class MaterialObjectSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly MaterialObjectSetterCommon Instance = new MaterialObjectSetterCommon();
 
@@ -1386,7 +1387,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MaterialObjectCommon : SkyrimMajorRecordCommon
+    internal partial class MaterialObjectCommon : SkyrimMajorRecordCommon
     {
         public new static readonly MaterialObjectCommon Instance = new MaterialObjectCommon();
 
@@ -1764,7 +1765,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MaterialObjectSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class MaterialObjectSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly MaterialObjectSetterTranslationCommon Instance = new MaterialObjectSetterTranslationCommon();
 
@@ -2004,7 +2005,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MaterialObject_Registration.Instance;
-        public new static MaterialObject_Registration StaticRegistration => MaterialObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MaterialObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MaterialObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -2022,7 +2023,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MaterialObjectBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2164,7 +2165,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class MaterialObjectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class MaterialObjectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static MaterialObjectBinaryCreateTranslation Instance = new MaterialObjectBinaryCreateTranslation();
 
@@ -2264,16 +2265,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MaterialObjectBinaryOverlay :
+    internal partial class MaterialObjectBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IMaterialObjectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MaterialObject_Registration.Instance;
-        public new static MaterialObject_Registration StaticRegistration => MaterialObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MaterialObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MaterialObjectCommon.Instance;
         [DebuggerStepThrough]

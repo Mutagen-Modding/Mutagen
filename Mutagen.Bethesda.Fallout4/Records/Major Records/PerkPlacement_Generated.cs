@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -650,10 +651,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum PerkPlacement_FieldIndex
+    internal enum PerkPlacement_FieldIndex
     {
         Perk = 0,
         Rank = 1,
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class PerkPlacement_Registration : ILoquiRegistration
+    internal partial class PerkPlacement_Registration : ILoquiRegistration
     {
         public static readonly PerkPlacement_Registration Instance = new PerkPlacement_Registration();
 
@@ -742,7 +743,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class PerkPlacementSetterCommon
+    internal partial class PerkPlacementSetterCommon
     {
         public static readonly PerkPlacementSetterCommon Instance = new PerkPlacementSetterCommon();
 
@@ -783,7 +784,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class PerkPlacementCommon
+    internal partial class PerkPlacementCommon
     {
         public static readonly PerkPlacementCommon Instance = new PerkPlacementCommon();
 
@@ -910,7 +911,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class PerkPlacementSetterTranslationCommon
+    internal partial class PerkPlacementSetterTranslationCommon
     {
         public static readonly PerkPlacementSetterTranslationCommon Instance = new PerkPlacementSetterTranslationCommon();
 
@@ -992,7 +993,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkPlacement_Registration.Instance;
-        public static PerkPlacement_Registration StaticRegistration => PerkPlacement_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PerkPlacement_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PerkPlacementCommon.Instance;
         [DebuggerStepThrough]
@@ -1016,7 +1017,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PerkPlacementBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1062,7 +1063,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class PerkPlacementBinaryCreateTranslation
+    internal partial class PerkPlacementBinaryCreateTranslation
     {
         public readonly static PerkPlacementBinaryCreateTranslation Instance = new PerkPlacementBinaryCreateTranslation();
 
@@ -1098,16 +1099,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class PerkPlacementBinaryOverlay :
+    internal partial class PerkPlacementBinaryOverlay :
         PluginBinaryOverlay,
         IPerkPlacementGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkPlacement_Registration.Instance;
-        public static PerkPlacement_Registration StaticRegistration => PerkPlacement_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PerkPlacement_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PerkPlacementCommon.Instance;
         [DebuggerStepThrough]

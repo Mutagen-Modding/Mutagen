@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -555,17 +556,17 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum BookSkill_FieldIndex
+    internal enum BookSkill_FieldIndex
     {
         Skill = 0,
     }
     #endregion
 
     #region Registration
-    public partial class BookSkill_Registration : ILoquiRegistration
+    internal partial class BookSkill_Registration : ILoquiRegistration
     {
         public static readonly BookSkill_Registration Instance = new BookSkill_Registration();
 
@@ -639,7 +640,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class BookSkillSetterCommon : BookTeachTargetSetterCommon
+    internal partial class BookSkillSetterCommon : BookTeachTargetSetterCommon
     {
         public new static readonly BookSkillSetterCommon Instance = new BookSkillSetterCommon();
 
@@ -692,7 +693,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class BookSkillCommon : BookTeachTargetCommon
+    internal partial class BookSkillCommon : BookTeachTargetCommon
     {
         public new static readonly BookSkillCommon Instance = new BookSkillCommon();
 
@@ -848,7 +849,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class BookSkillSetterTranslationCommon : BookTeachTargetSetterTranslationCommon
+    internal partial class BookSkillSetterTranslationCommon : BookTeachTargetSetterTranslationCommon
     {
         public new static readonly BookSkillSetterTranslationCommon Instance = new BookSkillSetterTranslationCommon();
 
@@ -948,7 +949,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookSkill_Registration.Instance;
-        public new static BookSkill_Registration StaticRegistration => BookSkill_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => BookSkill_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookSkillCommon.Instance;
         [DebuggerStepThrough]
@@ -966,7 +967,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class BookSkillBinaryWriteTranslation :
         BookTeachTargetBinaryWriteTranslation,
@@ -1018,7 +1019,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class BookSkillBinaryCreateTranslation : BookTeachTargetBinaryCreateTranslation
+    internal partial class BookSkillBinaryCreateTranslation : BookTeachTargetBinaryCreateTranslation
     {
         public new readonly static BookSkillBinaryCreateTranslation Instance = new BookSkillBinaryCreateTranslation();
 
@@ -1045,16 +1046,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class BookSkillBinaryOverlay :
+    internal partial class BookSkillBinaryOverlay :
         BookTeachTargetBinaryOverlay,
         IBookSkillGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookSkill_Registration.Instance;
-        public new static BookSkill_Registration StaticRegistration => BookSkill_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => BookSkill_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookSkillCommon.Instance;
         [DebuggerStepThrough]

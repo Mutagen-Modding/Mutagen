@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1012,10 +1013,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Ingredient_FieldIndex
+    internal enum Ingredient_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1033,7 +1034,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Ingredient_Registration : ILoquiRegistration
+    internal partial class Ingredient_Registration : ILoquiRegistration
     {
         public static readonly Ingredient_Registration Instance = new Ingredient_Registration();
 
@@ -1125,7 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class IngredientSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class IngredientSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly IngredientSetterCommon Instance = new IngredientSetterCommon();
 
@@ -1203,7 +1204,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class IngredientCommon : OblivionMajorRecordCommon
+    internal partial class IngredientCommon : OblivionMajorRecordCommon
     {
         public new static readonly IngredientCommon Instance = new IngredientCommon();
 
@@ -1554,7 +1555,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class IngredientSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class IngredientSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly IngredientSetterTranslationCommon Instance = new IngredientSetterTranslationCommon();
 
@@ -1801,7 +1802,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ingredient_Registration.Instance;
-        public new static Ingredient_Registration StaticRegistration => Ingredient_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Ingredient_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IngredientCommon.Instance;
         [DebuggerStepThrough]
@@ -1819,7 +1820,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class IngredientBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1944,7 +1945,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class IngredientBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class IngredientBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static IngredientBinaryCreateTranslation Instance = new IngredientBinaryCreateTranslation();
 
@@ -2045,16 +2046,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class IngredientBinaryOverlay :
+    internal partial class IngredientBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IIngredientGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ingredient_Registration.Instance;
-        public new static Ingredient_Registration StaticRegistration => Ingredient_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Ingredient_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IngredientCommon.Instance;
         [DebuggerStepThrough]

@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -592,10 +593,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Global_FieldIndex
+    internal enum Global_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -607,7 +608,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Global_Registration : ILoquiRegistration
+    internal partial class Global_Registration : ILoquiRegistration
     {
         public static readonly Global_Registration Instance = new Global_Registration();
 
@@ -691,7 +692,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class GlobalSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class GlobalSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly GlobalSetterCommon Instance = new GlobalSetterCommon();
 
@@ -754,7 +755,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class GlobalCommon : Fallout4MajorRecordCommon
+    internal partial class GlobalCommon : Fallout4MajorRecordCommon
     {
         public new static readonly GlobalCommon Instance = new GlobalCommon();
 
@@ -974,7 +975,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class GlobalSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class GlobalSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly GlobalSetterTranslationCommon Instance = new GlobalSetterTranslationCommon();
 
@@ -1129,7 +1130,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Global_Registration.Instance;
-        public new static Global_Registration StaticRegistration => Global_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Global_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalCommon.Instance;
         [DebuggerStepThrough]
@@ -1147,7 +1148,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class GlobalBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -1245,7 +1246,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class GlobalBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class GlobalBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static GlobalBinaryCreateTranslation Instance = new GlobalBinaryCreateTranslation();
 
@@ -1296,16 +1297,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public abstract partial class GlobalBinaryOverlay :
+    internal abstract partial class GlobalBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IGlobalGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Global_Registration.Instance;
-        public new static Global_Registration StaticRegistration => Global_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Global_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -650,10 +651,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ActivateParent_FieldIndex
+    internal enum ActivateParent_FieldIndex
     {
         Reference = 0,
         Delay = 1,
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ActivateParent_Registration : ILoquiRegistration
+    internal partial class ActivateParent_Registration : ILoquiRegistration
     {
         public static readonly ActivateParent_Registration Instance = new ActivateParent_Registration();
 
@@ -742,7 +743,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ActivateParentSetterCommon
+    internal partial class ActivateParentSetterCommon
     {
         public static readonly ActivateParentSetterCommon Instance = new ActivateParentSetterCommon();
 
@@ -783,7 +784,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ActivateParentCommon
+    internal partial class ActivateParentCommon
     {
         public static readonly ActivateParentCommon Instance = new ActivateParentCommon();
 
@@ -910,7 +911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ActivateParentSetterTranslationCommon
+    internal partial class ActivateParentSetterTranslationCommon
     {
         public static readonly ActivateParentSetterTranslationCommon Instance = new ActivateParentSetterTranslationCommon();
 
@@ -992,7 +993,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActivateParent_Registration.Instance;
-        public static ActivateParent_Registration StaticRegistration => ActivateParent_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ActivateParent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ActivateParentCommon.Instance;
         [DebuggerStepThrough]
@@ -1016,7 +1017,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ActivateParentBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1064,7 +1065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ActivateParentBinaryCreateTranslation
+    internal partial class ActivateParentBinaryCreateTranslation
     {
         public readonly static ActivateParentBinaryCreateTranslation Instance = new ActivateParentBinaryCreateTranslation();
 
@@ -1100,16 +1101,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ActivateParentBinaryOverlay :
+    internal partial class ActivateParentBinaryOverlay :
         PluginBinaryOverlay,
         IActivateParentGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActivateParent_Registration.Instance;
-        public static ActivateParent_Registration StaticRegistration => ActivateParent_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ActivateParent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ActivateParentCommon.Instance;
         [DebuggerStepThrough]

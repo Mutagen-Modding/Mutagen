@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -648,10 +649,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ExtraData_FieldIndex
+    internal enum ExtraData_FieldIndex
     {
         Owner = 0,
         ItemCondition = 1,
@@ -659,7 +660,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ExtraData_Registration : ILoquiRegistration
+    internal partial class ExtraData_Registration : ILoquiRegistration
     {
         public static readonly ExtraData_Registration Instance = new ExtraData_Registration();
 
@@ -740,7 +741,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ExtraDataSetterCommon
+    internal partial class ExtraDataSetterCommon
     {
         public static readonly ExtraDataSetterCommon Instance = new ExtraDataSetterCommon();
 
@@ -781,7 +782,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ExtraDataCommon
+    internal partial class ExtraDataCommon
     {
         public static readonly ExtraDataCommon Instance = new ExtraDataCommon();
 
@@ -918,7 +919,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ExtraDataSetterTranslationCommon
+    internal partial class ExtraDataSetterTranslationCommon
     {
         public static readonly ExtraDataSetterTranslationCommon Instance = new ExtraDataSetterTranslationCommon();
 
@@ -1018,7 +1019,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ExtraData_Registration.Instance;
-        public static ExtraData_Registration StaticRegistration => ExtraData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ExtraData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ExtraDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1042,7 +1043,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ExtraDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1103,7 +1104,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ExtraDataBinaryCreateTranslation
+    internal partial class ExtraDataBinaryCreateTranslation
     {
         public readonly static ExtraDataBinaryCreateTranslation Instance = new ExtraDataBinaryCreateTranslation();
 
@@ -1145,16 +1146,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ExtraDataBinaryOverlay :
+    internal partial class ExtraDataBinaryOverlay :
         PluginBinaryOverlay,
         IExtraDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ExtraData_Registration.Instance;
-        public static ExtraData_Registration StaticRegistration => ExtraData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ExtraData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ExtraDataCommon.Instance;
         [DebuggerStepThrough]

@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -829,10 +830,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum FurnitureMarkerParameters_FieldIndex
+    internal enum FurnitureMarkerParameters_FieldIndex
     {
         Versioning = 0,
         Offset = 1,
@@ -845,7 +846,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class FurnitureMarkerParameters_Registration : ILoquiRegistration
+    internal partial class FurnitureMarkerParameters_Registration : ILoquiRegistration
     {
         public static readonly FurnitureMarkerParameters_Registration Instance = new FurnitureMarkerParameters_Registration();
 
@@ -919,7 +920,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class FurnitureMarkerParametersSetterCommon
+    internal partial class FurnitureMarkerParametersSetterCommon
     {
         public static readonly FurnitureMarkerParametersSetterCommon Instance = new FurnitureMarkerParametersSetterCommon();
 
@@ -961,7 +962,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class FurnitureMarkerParametersCommon
+    internal partial class FurnitureMarkerParametersCommon
     {
         public static readonly FurnitureMarkerParametersCommon Instance = new FurnitureMarkerParametersCommon();
 
@@ -1138,7 +1139,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class FurnitureMarkerParametersSetterTranslationCommon
+    internal partial class FurnitureMarkerParametersSetterTranslationCommon
     {
         public static readonly FurnitureMarkerParametersSetterTranslationCommon Instance = new FurnitureMarkerParametersSetterTranslationCommon();
 
@@ -1242,7 +1243,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FurnitureMarkerParameters_Registration.Instance;
-        public static FurnitureMarkerParameters_Registration StaticRegistration => FurnitureMarkerParameters_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FurnitureMarkerParameters_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FurnitureMarkerParametersCommon.Instance;
         [DebuggerStepThrough]
@@ -1266,7 +1267,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class FurnitureMarkerParametersBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1324,7 +1325,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class FurnitureMarkerParametersBinaryCreateTranslation
+    internal partial class FurnitureMarkerParametersBinaryCreateTranslation
     {
         public readonly static FurnitureMarkerParametersBinaryCreateTranslation Instance = new FurnitureMarkerParametersBinaryCreateTranslation();
 
@@ -1377,16 +1378,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class FurnitureMarkerParametersBinaryOverlay :
+    internal partial class FurnitureMarkerParametersBinaryOverlay :
         PluginBinaryOverlay,
         IFurnitureMarkerParametersGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FurnitureMarkerParameters_Registration.Instance;
-        public static FurnitureMarkerParameters_Registration StaticRegistration => FurnitureMarkerParameters_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FurnitureMarkerParameters_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FurnitureMarkerParametersCommon.Instance;
         [DebuggerStepThrough]

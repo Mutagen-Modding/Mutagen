@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -727,10 +728,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum AnimatedObject_FieldIndex
+    internal enum AnimatedObject_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -744,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class AnimatedObject_Registration : ILoquiRegistration
+    internal partial class AnimatedObject_Registration : ILoquiRegistration
     {
         public static readonly AnimatedObject_Registration Instance = new AnimatedObject_Registration();
 
@@ -829,7 +830,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class AnimatedObjectSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class AnimatedObjectSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly AnimatedObjectSetterCommon Instance = new AnimatedObjectSetterCommon();
 
@@ -901,7 +902,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AnimatedObjectCommon : SkyrimMajorRecordCommon
+    internal partial class AnimatedObjectCommon : SkyrimMajorRecordCommon
     {
         public new static readonly AnimatedObjectCommon Instance = new AnimatedObjectCommon();
 
@@ -1166,7 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AnimatedObjectSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class AnimatedObjectSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly AnimatedObjectSetterTranslationCommon Instance = new AnimatedObjectSetterTranslationCommon();
 
@@ -1351,7 +1352,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimatedObject_Registration.Instance;
-        public new static AnimatedObject_Registration StaticRegistration => AnimatedObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AnimatedObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AnimatedObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -1369,7 +1370,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AnimatedObjectBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1463,7 +1464,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class AnimatedObjectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class AnimatedObjectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static AnimatedObjectBinaryCreateTranslation Instance = new AnimatedObjectBinaryCreateTranslation();
 
@@ -1528,16 +1529,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class AnimatedObjectBinaryOverlay :
+    internal partial class AnimatedObjectBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IAnimatedObjectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimatedObject_Registration.Instance;
-        public new static AnimatedObject_Registration StaticRegistration => AnimatedObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AnimatedObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AnimatedObjectCommon.Instance;
         [DebuggerStepThrough]

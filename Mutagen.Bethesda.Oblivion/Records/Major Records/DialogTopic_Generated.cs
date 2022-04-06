@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1220,10 +1221,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum DialogTopic_FieldIndex
+    internal enum DialogTopic_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1239,7 +1240,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class DialogTopic_Registration : ILoquiRegistration
+    internal partial class DialogTopic_Registration : ILoquiRegistration
     {
         public static readonly DialogTopic_Registration Instance = new DialogTopic_Registration();
 
@@ -1337,7 +1338,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class DialogTopicSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class DialogTopicSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly DialogTopicSetterCommon Instance = new DialogTopicSetterCommon();
 
@@ -1486,7 +1487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class DialogTopicCommon : OblivionMajorRecordCommon
+    internal partial class DialogTopicCommon : OblivionMajorRecordCommon
     {
         public new static readonly DialogTopicCommon Instance = new DialogTopicCommon();
 
@@ -2028,7 +2029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class DialogTopicSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class DialogTopicSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly DialogTopicSetterTranslationCommon Instance = new DialogTopicSetterTranslationCommon();
 
@@ -2238,7 +2239,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogTopic_Registration.Instance;
-        public new static DialogTopic_Registration StaticRegistration => DialogTopic_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => DialogTopic_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogTopicCommon.Instance;
         [DebuggerStepThrough]
@@ -2256,7 +2257,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class DialogTopicBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -2381,7 +2382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class DialogTopicBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class DialogTopicBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static DialogTopicBinaryCreateTranslation Instance = new DialogTopicBinaryCreateTranslation();
 
@@ -2467,16 +2468,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class DialogTopicBinaryOverlay :
+    internal partial class DialogTopicBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IDialogTopicGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogTopic_Registration.Instance;
-        public new static DialogTopic_Registration StaticRegistration => DialogTopic_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => DialogTopic_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogTopicCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1064,10 +1065,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum CreatureData_FieldIndex
+    internal enum CreatureData_FieldIndex
     {
         Type = 0,
         CombatSkill = 1,
@@ -1088,7 +1089,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class CreatureData_Registration : ILoquiRegistration
+    internal partial class CreatureData_Registration : ILoquiRegistration
     {
         public static readonly CreatureData_Registration Instance = new CreatureData_Registration();
 
@@ -1169,7 +1170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class CreatureDataSetterCommon
+    internal partial class CreatureDataSetterCommon
     {
         public static readonly CreatureDataSetterCommon Instance = new CreatureDataSetterCommon();
 
@@ -1222,7 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CreatureDataCommon
+    internal partial class CreatureDataCommon
     {
         public static readonly CreatureDataCommon Instance = new CreatureDataCommon();
 
@@ -1478,7 +1479,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CreatureDataSetterTranslationCommon
+    internal partial class CreatureDataSetterTranslationCommon
     {
         public static readonly CreatureDataSetterTranslationCommon Instance = new CreatureDataSetterTranslationCommon();
 
@@ -1612,7 +1613,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureData_Registration.Instance;
-        public static CreatureData_Registration StaticRegistration => CreatureData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CreatureData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreatureDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1636,7 +1637,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CreatureDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1699,7 +1700,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class CreatureDataBinaryCreateTranslation
+    internal partial class CreatureDataBinaryCreateTranslation
     {
         public readonly static CreatureDataBinaryCreateTranslation Instance = new CreatureDataBinaryCreateTranslation();
 
@@ -1752,16 +1753,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class CreatureDataBinaryOverlay :
+    internal partial class CreatureDataBinaryOverlay :
         PluginBinaryOverlay,
         ICreatureDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureData_Registration.Instance;
-        public static CreatureData_Registration StaticRegistration => CreatureData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CreatureData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreatureDataCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -730,10 +731,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PerkCondition_FieldIndex
+    internal enum PerkCondition_FieldIndex
     {
         RunOnTabIndex = 0,
         Conditions = 1,
@@ -741,7 +742,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PerkCondition_Registration : ILoquiRegistration
+    internal partial class PerkCondition_Registration : ILoquiRegistration
     {
         public static readonly PerkCondition_Registration Instance = new PerkCondition_Registration();
 
@@ -827,7 +828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PerkConditionSetterCommon
+    internal partial class PerkConditionSetterCommon
     {
         public static readonly PerkConditionSetterCommon Instance = new PerkConditionSetterCommon();
 
@@ -865,7 +866,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkConditionCommon
+    internal partial class PerkConditionCommon
     {
         public static readonly PerkConditionCommon Instance = new PerkConditionCommon();
 
@@ -1013,7 +1014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkConditionSetterTranslationCommon
+    internal partial class PerkConditionSetterTranslationCommon
     {
         public static readonly PerkConditionSetterTranslationCommon Instance = new PerkConditionSetterTranslationCommon();
 
@@ -1115,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkCondition_Registration.Instance;
-        public static PerkCondition_Registration StaticRegistration => PerkCondition_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PerkCondition_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PerkConditionCommon.Instance;
         [DebuggerStepThrough]
@@ -1139,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkConditionBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1191,7 +1192,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PerkConditionBinaryCreateTranslation
+    internal partial class PerkConditionBinaryCreateTranslation
     {
         public readonly static PerkConditionBinaryCreateTranslation Instance = new PerkConditionBinaryCreateTranslation();
 
@@ -1259,16 +1260,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PerkConditionBinaryOverlay :
+    internal partial class PerkConditionBinaryOverlay :
         PluginBinaryOverlay,
         IPerkConditionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkCondition_Registration.Instance;
-        public static PerkCondition_Registration StaticRegistration => PerkCondition_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PerkCondition_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PerkConditionCommon.Instance;
         [DebuggerStepThrough]

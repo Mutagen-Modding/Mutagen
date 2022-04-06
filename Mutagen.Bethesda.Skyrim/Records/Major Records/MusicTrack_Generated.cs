@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1200,10 +1201,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum MusicTrack_FieldIndex
+    internal enum MusicTrack_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1224,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class MusicTrack_Registration : ILoquiRegistration
+    internal partial class MusicTrack_Registration : ILoquiRegistration
     {
         public static readonly MusicTrack_Registration Instance = new MusicTrack_Registration();
 
@@ -1319,7 +1320,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MusicTrackSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class MusicTrackSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly MusicTrackSetterCommon Instance = new MusicTrackSetterCommon();
 
@@ -1399,7 +1400,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MusicTrackCommon : SkyrimMajorRecordCommon
+    internal partial class MusicTrackCommon : SkyrimMajorRecordCommon
     {
         public new static readonly MusicTrackCommon Instance = new MusicTrackCommon();
 
@@ -1808,7 +1809,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MusicTrackSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class MusicTrackSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly MusicTrackSetterTranslationCommon Instance = new MusicTrackSetterTranslationCommon();
 
@@ -2094,7 +2095,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MusicTrack_Registration.Instance;
-        public new static MusicTrack_Registration StaticRegistration => MusicTrack_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MusicTrack_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MusicTrackCommon.Instance;
         [DebuggerStepThrough]
@@ -2112,7 +2113,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MusicTrackBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2252,7 +2253,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class MusicTrackBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class MusicTrackBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static MusicTrackBinaryCreateTranslation Instance = new MusicTrackBinaryCreateTranslation();
 
@@ -2377,16 +2378,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MusicTrackBinaryOverlay :
+    internal partial class MusicTrackBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IMusicTrackGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MusicTrack_Registration.Instance;
-        public new static MusicTrack_Registration StaticRegistration => MusicTrack_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MusicTrack_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MusicTrackCommon.Instance;
         [DebuggerStepThrough]

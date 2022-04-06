@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1472,10 +1473,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum WaterData_FieldIndex
+    internal enum WaterData_FieldIndex
     {
         Versioning = 0,
         WindVelocity = 1,
@@ -1508,7 +1509,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class WaterData_Registration : ILoquiRegistration
+    internal partial class WaterData_Registration : ILoquiRegistration
     {
         public static readonly WaterData_Registration Instance = new WaterData_Registration();
 
@@ -1589,7 +1590,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class WaterDataSetterCommon
+    internal partial class WaterDataSetterCommon
     {
         public static readonly WaterDataSetterCommon Instance = new WaterDataSetterCommon();
 
@@ -1654,7 +1655,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WaterDataCommon
+    internal partial class WaterDataCommon
     {
         public static readonly WaterDataCommon Instance = new WaterDataCommon();
 
@@ -2030,7 +2031,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WaterDataSetterTranslationCommon
+    internal partial class WaterDataSetterTranslationCommon
     {
         public static readonly WaterDataSetterTranslationCommon Instance = new WaterDataSetterTranslationCommon();
 
@@ -2216,7 +2217,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WaterData_Registration.Instance;
-        public static WaterData_Registration StaticRegistration => WaterData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WaterData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WaterDataCommon.Instance;
         [DebuggerStepThrough]
@@ -2240,7 +2241,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class WaterDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -2417,7 +2418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class WaterDataBinaryCreateTranslation
+    internal partial class WaterDataBinaryCreateTranslation
     {
         public readonly static WaterDataBinaryCreateTranslation Instance = new WaterDataBinaryCreateTranslation();
 
@@ -2519,7 +2520,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
 }
 #endregion

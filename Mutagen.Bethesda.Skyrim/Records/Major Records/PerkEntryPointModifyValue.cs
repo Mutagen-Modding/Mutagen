@@ -1,16 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Skyrim
+public partial class PerkEntryPointModifyValue
 {
-    public partial class PerkEntryPointModifyValue
+    public enum ModificationType
     {
-        public enum ModificationType
-        {
-            Set,
-            Add,
-            Multiply,
-        }
+        Set,
+        Add,
+        Multiply,
     }
 }

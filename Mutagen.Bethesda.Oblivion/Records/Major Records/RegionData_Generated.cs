@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -603,17 +604,17 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum RegionData_FieldIndex
+    internal enum RegionData_FieldIndex
     {
         Header = 0,
     }
     #endregion
 
     #region Registration
-    public partial class RegionData_Registration : ILoquiRegistration
+    internal partial class RegionData_Registration : ILoquiRegistration
     {
         public static readonly RegionData_Registration Instance = new RegionData_Registration();
 
@@ -694,7 +695,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class RegionDataSetterCommon
+    internal partial class RegionDataSetterCommon
     {
         public static readonly RegionDataSetterCommon Instance = new RegionDataSetterCommon();
 
@@ -724,7 +725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RegionDataCommon
+    internal partial class RegionDataCommon
     {
         public static readonly RegionDataCommon Instance = new RegionDataCommon();
 
@@ -852,7 +853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RegionDataSetterTranslationCommon
+    internal partial class RegionDataSetterTranslationCommon
     {
         public static readonly RegionDataSetterTranslationCommon Instance = new RegionDataSetterTranslationCommon();
 
@@ -952,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionData_Registration.Instance;
-        public static RegionData_Registration StaticRegistration => RegionData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RegionData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => RegionDataCommon.Instance;
         [DebuggerStepThrough]
@@ -976,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RegionDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1027,7 +1028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class RegionDataBinaryCreateTranslation
+    internal partial class RegionDataBinaryCreateTranslation
     {
         public readonly static RegionDataBinaryCreateTranslation Instance = new RegionDataBinaryCreateTranslation();
 
@@ -1077,16 +1078,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public abstract partial class RegionDataBinaryOverlay :
+    internal abstract partial class RegionDataBinaryOverlay :
         PluginBinaryOverlay,
         IRegionDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionData_Registration.Instance;
-        public static RegionData_Registration StaticRegistration => RegionData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RegionData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => RegionDataCommon.Instance;
         [DebuggerStepThrough]

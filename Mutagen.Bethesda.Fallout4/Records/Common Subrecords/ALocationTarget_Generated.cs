@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -554,16 +555,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ALocationTarget_FieldIndex
+    internal enum ALocationTarget_FieldIndex
     {
     }
     #endregion
 
     #region Registration
-    public partial class ALocationTarget_Registration : ILoquiRegistration
+    internal partial class ALocationTarget_Registration : ILoquiRegistration
     {
         public static readonly ALocationTarget_Registration Instance = new ALocationTarget_Registration();
 
@@ -637,7 +638,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ALocationTargetSetterCommon
+    internal partial class ALocationTargetSetterCommon
     {
         public static readonly ALocationTargetSetterCommon Instance = new ALocationTargetSetterCommon();
 
@@ -666,7 +667,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ALocationTargetCommon
+    internal partial class ALocationTargetCommon
     {
         public static readonly ALocationTargetCommon Instance = new ALocationTargetCommon();
 
@@ -772,7 +773,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ALocationTargetSetterTranslationCommon
+    internal partial class ALocationTargetSetterTranslationCommon
     {
         public static readonly ALocationTargetSetterTranslationCommon Instance = new ALocationTargetSetterTranslationCommon();
 
@@ -846,7 +847,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ALocationTarget_Registration.Instance;
-        public static ALocationTarget_Registration StaticRegistration => ALocationTarget_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ALocationTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ALocationTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -870,7 +871,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ALocationTargetBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -896,7 +897,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ALocationTargetBinaryCreateTranslation
+    internal partial class ALocationTargetBinaryCreateTranslation
     {
         public readonly static ALocationTargetBinaryCreateTranslation Instance = new ALocationTargetBinaryCreateTranslation();
 
@@ -924,16 +925,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public abstract partial class ALocationTargetBinaryOverlay :
+    internal abstract partial class ALocationTargetBinaryOverlay :
         PluginBinaryOverlay,
         IALocationTargetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ALocationTarget_Registration.Instance;
-        public static ALocationTarget_Registration StaticRegistration => ALocationTarget_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ALocationTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ALocationTargetCommon.Instance;
         [DebuggerStepThrough]

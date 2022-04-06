@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -800,10 +801,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum NavmeshTriangle_FieldIndex
+    internal enum NavmeshTriangle_FieldIndex
     {
         Vertices = 0,
         EdgeLink_0_1 = 1,
@@ -816,7 +817,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class NavmeshTriangle_Registration : ILoquiRegistration
+    internal partial class NavmeshTriangle_Registration : ILoquiRegistration
     {
         public static readonly NavmeshTriangle_Registration Instance = new NavmeshTriangle_Registration();
 
@@ -890,7 +891,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NavmeshTriangleSetterCommon
+    internal partial class NavmeshTriangleSetterCommon
     {
         public static readonly NavmeshTriangleSetterCommon Instance = new NavmeshTriangleSetterCommon();
 
@@ -931,7 +932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NavmeshTriangleCommon
+    internal partial class NavmeshTriangleCommon
     {
         public static readonly NavmeshTriangleCommon Instance = new NavmeshTriangleCommon();
 
@@ -1107,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NavmeshTriangleSetterTranslationCommon
+    internal partial class NavmeshTriangleSetterTranslationCommon
     {
         public static readonly NavmeshTriangleSetterTranslationCommon Instance = new NavmeshTriangleSetterTranslationCommon();
 
@@ -1209,7 +1210,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavmeshTriangle_Registration.Instance;
-        public static NavmeshTriangle_Registration StaticRegistration => NavmeshTriangle_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavmeshTriangle_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavmeshTriangleCommon.Instance;
         [DebuggerStepThrough]
@@ -1233,7 +1234,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NavmeshTriangleBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1279,7 +1280,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NavmeshTriangleBinaryCreateTranslation
+    internal partial class NavmeshTriangleBinaryCreateTranslation
     {
         public readonly static NavmeshTriangleBinaryCreateTranslation Instance = new NavmeshTriangleBinaryCreateTranslation();
 
@@ -1321,16 +1322,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NavmeshTriangleBinaryOverlay :
+    internal partial class NavmeshTriangleBinaryOverlay :
         PluginBinaryOverlay,
         INavmeshTriangleGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavmeshTriangle_Registration.Instance;
-        public static NavmeshTriangle_Registration StaticRegistration => NavmeshTriangle_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavmeshTriangle_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavmeshTriangleCommon.Instance;
         [DebuggerStepThrough]

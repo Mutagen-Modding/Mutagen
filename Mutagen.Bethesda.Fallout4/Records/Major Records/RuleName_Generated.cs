@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -919,10 +920,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum RuleName_FieldIndex
+    internal enum RuleName_FieldIndex
     {
         Text = 0,
         Keywords = 1,
@@ -935,7 +936,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class RuleName_Registration : ILoquiRegistration
+    internal partial class RuleName_Registration : ILoquiRegistration
     {
         public static readonly RuleName_Registration Instance = new RuleName_Registration();
 
@@ -1025,7 +1026,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class RuleNameSetterCommon
+    internal partial class RuleNameSetterCommon
     {
         public static readonly RuleNameSetterCommon Instance = new RuleNameSetterCommon();
 
@@ -1068,7 +1069,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class RuleNameCommon
+    internal partial class RuleNameCommon
     {
         public static readonly RuleNameCommon Instance = new RuleNameCommon();
 
@@ -1277,7 +1278,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class RuleNameSetterTranslationCommon
+    internal partial class RuleNameSetterTranslationCommon
     {
         public static readonly RuleNameSetterTranslationCommon Instance = new RuleNameSetterTranslationCommon();
 
@@ -1402,7 +1403,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RuleName_Registration.Instance;
-        public static RuleName_Registration StaticRegistration => RuleName_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RuleName_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RuleNameCommon.Instance;
         [DebuggerStepThrough]
@@ -1426,7 +1427,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class RuleNameBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1508,7 +1509,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class RuleNameBinaryCreateTranslation
+    internal partial class RuleNameBinaryCreateTranslation
     {
         public readonly static RuleNameBinaryCreateTranslation Instance = new RuleNameBinaryCreateTranslation();
 
@@ -1603,16 +1604,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class RuleNameBinaryOverlay :
+    internal partial class RuleNameBinaryOverlay :
         PluginBinaryOverlay,
         IRuleNameGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RuleName_Registration.Instance;
-        public static RuleName_Registration StaticRegistration => RuleName_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RuleName_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RuleNameCommon.Instance;
         [DebuggerStepThrough]

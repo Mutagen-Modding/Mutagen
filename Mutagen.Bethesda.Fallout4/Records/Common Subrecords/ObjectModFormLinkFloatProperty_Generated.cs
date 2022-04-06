@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -343,10 +344,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ObjectModFormLinkFloatProperty_FieldIndex
+    internal enum ObjectModFormLinkFloatProperty_FieldIndex
     {
         Property = 0,
         Step = 1,
@@ -357,7 +358,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ObjectModFormLinkFloatProperty_Registration : ILoquiRegistration
+    internal partial class ObjectModFormLinkFloatProperty_Registration : ILoquiRegistration
     {
         public static readonly ObjectModFormLinkFloatProperty_Registration Instance = new ObjectModFormLinkFloatProperty_Registration();
 
@@ -429,7 +430,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public class ObjectModFormLinkFloatProperty_Registration<T> : ObjectModFormLinkFloatProperty_Registration
+    internal class ObjectModFormLinkFloatProperty_Registration<T> : ObjectModFormLinkFloatProperty_Registration
         where T : struct, Enum
     {
         public static readonly ObjectModFormLinkFloatProperty_Registration<T> GenericInstance = new ObjectModFormLinkFloatProperty_Registration<T>();
@@ -438,7 +439,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ObjectModFormLinkFloatPropertySetterCommon<T> : AObjectModPropertySetterCommon<T>
+    internal partial class ObjectModFormLinkFloatPropertySetterCommon<T> : AObjectModPropertySetterCommon<T>
         where T : struct, Enum
     {
         public new static readonly ObjectModFormLinkFloatPropertySetterCommon<T> Instance = new ObjectModFormLinkFloatPropertySetterCommon<T>();
@@ -495,7 +496,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ObjectModFormLinkFloatPropertyCommon<T> : AObjectModPropertyCommon<T>
+    internal partial class ObjectModFormLinkFloatPropertyCommon<T> : AObjectModPropertyCommon<T>
         where T : struct, Enum
     {
         public new static readonly ObjectModFormLinkFloatPropertyCommon<T> Instance = new ObjectModFormLinkFloatPropertyCommon<T>();
@@ -673,7 +674,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ObjectModFormLinkFloatPropertySetterTranslationCommon : AObjectModPropertySetterTranslationCommon
+    internal partial class ObjectModFormLinkFloatPropertySetterTranslationCommon : AObjectModPropertySetterTranslationCommon
     {
         public new static readonly ObjectModFormLinkFloatPropertySetterTranslationCommon Instance = new ObjectModFormLinkFloatPropertySetterTranslationCommon();
 
@@ -785,7 +786,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectModFormLinkFloatProperty_Registration.Instance;
-        public new static ObjectModFormLinkFloatProperty_Registration StaticRegistration => ObjectModFormLinkFloatProperty_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ObjectModFormLinkFloatProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(ObjectModFormLinkFloatPropertyCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
@@ -803,7 +804,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ObjectModFormLinkFloatPropertyBinaryWriteTranslation :
         AObjectModPropertyBinaryWriteTranslation,
@@ -863,7 +864,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ObjectModFormLinkFloatPropertyBinaryCreateTranslation<T> : AObjectModPropertyBinaryCreateTranslation<T>
+    internal partial class ObjectModFormLinkFloatPropertyBinaryCreateTranslation<T> : AObjectModPropertyBinaryCreateTranslation<T>
         where T : struct, Enum
     {
         public new readonly static ObjectModFormLinkFloatPropertyBinaryCreateTranslation<T> Instance = new ObjectModFormLinkFloatPropertyBinaryCreateTranslation<T>();
@@ -895,9 +896,9 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ObjectModFormLinkFloatPropertyBinaryOverlay<T> :
+    internal partial class ObjectModFormLinkFloatPropertyBinaryOverlay<T> :
         AObjectModPropertyBinaryOverlay<T>,
         IObjectModFormLinkFloatPropertyGetter<T>
         where T : struct, Enum
@@ -905,7 +906,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectModFormLinkFloatProperty_Registration.Instance;
-        public new static ObjectModFormLinkFloatProperty_Registration StaticRegistration => ObjectModFormLinkFloatProperty_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ObjectModFormLinkFloatProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(ObjectModFormLinkFloatPropertyCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]

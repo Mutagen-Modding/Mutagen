@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -600,10 +601,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum VisualEffect_FieldIndex
+    internal enum VisualEffect_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -615,7 +616,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class VisualEffect_Registration : ILoquiRegistration
+    internal partial class VisualEffect_Registration : ILoquiRegistration
     {
         public static readonly VisualEffect_Registration Instance = new VisualEffect_Registration();
 
@@ -696,7 +697,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class VisualEffectSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class VisualEffectSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly VisualEffectSetterCommon Instance = new VisualEffectSetterCommon();
 
@@ -765,7 +766,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class VisualEffectCommon : Fallout4MajorRecordCommon
+    internal partial class VisualEffectCommon : Fallout4MajorRecordCommon
     {
         public new static readonly VisualEffectCommon Instance = new VisualEffectCommon();
 
@@ -987,7 +988,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class VisualEffectSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class VisualEffectSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly VisualEffectSetterTranslationCommon Instance = new VisualEffectSetterTranslationCommon();
 
@@ -1142,7 +1143,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VisualEffect_Registration.Instance;
-        public new static VisualEffect_Registration StaticRegistration => VisualEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => VisualEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VisualEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1160,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class VisualEffectBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -1229,7 +1230,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class VisualEffectBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class VisualEffectBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static VisualEffectBinaryCreateTranslation Instance = new VisualEffectBinaryCreateTranslation();
 
@@ -1256,16 +1257,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class VisualEffectBinaryOverlay :
+    internal partial class VisualEffectBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IVisualEffectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VisualEffect_Registration.Instance;
-        public new static VisualEffect_Registration StaticRegistration => VisualEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => VisualEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VisualEffectCommon.Instance;
         [DebuggerStepThrough]

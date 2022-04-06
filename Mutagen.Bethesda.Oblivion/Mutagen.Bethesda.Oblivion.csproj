@@ -56,6 +56,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="InternalsPermissions.cs" />
     <Compile Include="Plugins\Cache\Internals\OverrideMaskRegistration.cs" />
     <Compile Include="Records\Common Subrecords\Condition.cs">
       <DependentUpon>Condition.xml</DependentUpon>
@@ -861,8 +862,6 @@
     </Compile>
     <Compile Include="WarmupOblivion.cs" />
     <Compile Include="WarmupOblivion_Generated.cs" />
-    <Compile Include="Records\RecordTypes_Generated.cs" />
-    <Compile Include="Records\RecordTypeInts_Generated.cs" />
     <Compile Include="Records\OblivionModHeader_Generated.cs">
       <DependentUpon>OblivionModHeader.xml</DependentUpon>
     </Compile>
@@ -896,6 +895,8 @@
     <Compile Include="Interfaces\Link\ISpellRecord_Generated.cs" />
     <Compile Include="Interfaces\Link\LinkInterfaceMapping_Generated.cs" />
     <Compile Include="Interfaces\Aspect\AspectInterfaceMapping_Generated.cs" />
+    <Compile Include="Records\RecordTypes_Generated.cs" />
+    <Compile Include="Records\RecordTypeInts_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

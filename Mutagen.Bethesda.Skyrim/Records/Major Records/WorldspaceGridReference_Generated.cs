@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -730,10 +731,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WorldspaceGridReference_FieldIndex
+    internal enum WorldspaceGridReference_FieldIndex
     {
         GridPosition = 0,
         References = 1,
@@ -741,7 +742,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WorldspaceGridReference_Registration : ILoquiRegistration
+    internal partial class WorldspaceGridReference_Registration : ILoquiRegistration
     {
         public static readonly WorldspaceGridReference_Registration Instance = new WorldspaceGridReference_Registration();
 
@@ -822,7 +823,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WorldspaceGridReferenceSetterCommon
+    internal partial class WorldspaceGridReferenceSetterCommon
     {
         public static readonly WorldspaceGridReferenceSetterCommon Instance = new WorldspaceGridReferenceSetterCommon();
 
@@ -863,7 +864,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceGridReferenceCommon
+    internal partial class WorldspaceGridReferenceCommon
     {
         public static readonly WorldspaceGridReferenceCommon Instance = new WorldspaceGridReferenceCommon();
 
@@ -1010,7 +1011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceGridReferenceSetterTranslationCommon
+    internal partial class WorldspaceGridReferenceSetterTranslationCommon
     {
         public static readonly WorldspaceGridReferenceSetterTranslationCommon Instance = new WorldspaceGridReferenceSetterTranslationCommon();
 
@@ -1112,7 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceGridReference_Registration.Instance;
-        public static WorldspaceGridReference_Registration StaticRegistration => WorldspaceGridReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceGridReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceGridReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1136,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceGridReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1193,7 +1194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WorldspaceGridReferenceBinaryCreateTranslation
+    internal partial class WorldspaceGridReferenceBinaryCreateTranslation
     {
         public readonly static WorldspaceGridReferenceBinaryCreateTranslation Instance = new WorldspaceGridReferenceBinaryCreateTranslation();
 
@@ -1233,16 +1234,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WorldspaceGridReferenceBinaryOverlay :
+    internal partial class WorldspaceGridReferenceBinaryOverlay :
         PluginBinaryOverlay,
         IWorldspaceGridReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceGridReference_Registration.Instance;
-        public static WorldspaceGridReference_Registration StaticRegistration => WorldspaceGridReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceGridReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceGridReferenceCommon.Instance;
         [DebuggerStepThrough]

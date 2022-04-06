@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -732,10 +733,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum TerminalBodyText_FieldIndex
+    internal enum TerminalBodyText_FieldIndex
     {
         Text = 0,
         Conditions = 1,
@@ -743,7 +744,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class TerminalBodyText_Registration : ILoquiRegistration
+    internal partial class TerminalBodyText_Registration : ILoquiRegistration
     {
         public static readonly TerminalBodyText_Registration Instance = new TerminalBodyText_Registration();
 
@@ -829,7 +830,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class TerminalBodyTextSetterCommon
+    internal partial class TerminalBodyTextSetterCommon
     {
         public static readonly TerminalBodyTextSetterCommon Instance = new TerminalBodyTextSetterCommon();
 
@@ -867,7 +868,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TerminalBodyTextCommon
+    internal partial class TerminalBodyTextCommon
     {
         public static readonly TerminalBodyTextCommon Instance = new TerminalBodyTextCommon();
 
@@ -1015,7 +1016,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TerminalBodyTextSetterTranslationCommon
+    internal partial class TerminalBodyTextSetterTranslationCommon
     {
         public static readonly TerminalBodyTextSetterTranslationCommon Instance = new TerminalBodyTextSetterTranslationCommon();
 
@@ -1117,7 +1118,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TerminalBodyText_Registration.Instance;
-        public static TerminalBodyText_Registration StaticRegistration => TerminalBodyText_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TerminalBodyText_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TerminalBodyTextCommon.Instance;
         [DebuggerStepThrough]
@@ -1141,7 +1142,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TerminalBodyTextBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1195,7 +1196,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class TerminalBodyTextBinaryCreateTranslation
+    internal partial class TerminalBodyTextBinaryCreateTranslation
     {
         public readonly static TerminalBodyTextBinaryCreateTranslation Instance = new TerminalBodyTextBinaryCreateTranslation();
 
@@ -1266,16 +1267,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class TerminalBodyTextBinaryOverlay :
+    internal partial class TerminalBodyTextBinaryOverlay :
         PluginBinaryOverlay,
         ITerminalBodyTextGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TerminalBodyText_Registration.Instance;
-        public static TerminalBodyText_Registration StaticRegistration => TerminalBodyText_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TerminalBodyText_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TerminalBodyTextCommon.Instance;
         [DebuggerStepThrough]

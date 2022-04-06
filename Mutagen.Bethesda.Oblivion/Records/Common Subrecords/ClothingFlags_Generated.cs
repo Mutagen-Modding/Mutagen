@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -635,10 +636,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum ClothingFlags_FieldIndex
+    internal enum ClothingFlags_FieldIndex
     {
         BipedFlags = 0,
         GeneralFlags = 1,
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class ClothingFlags_Registration : ILoquiRegistration
+    internal partial class ClothingFlags_Registration : ILoquiRegistration
     {
         public static readonly ClothingFlags_Registration Instance = new ClothingFlags_Registration();
 
@@ -727,7 +728,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ClothingFlagsSetterCommon
+    internal partial class ClothingFlagsSetterCommon
     {
         public static readonly ClothingFlagsSetterCommon Instance = new ClothingFlagsSetterCommon();
 
@@ -767,7 +768,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ClothingFlagsCommon
+    internal partial class ClothingFlagsCommon
     {
         public static readonly ClothingFlagsCommon Instance = new ClothingFlagsCommon();
 
@@ -893,7 +894,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ClothingFlagsSetterTranslationCommon
+    internal partial class ClothingFlagsSetterTranslationCommon
     {
         public static readonly ClothingFlagsSetterTranslationCommon Instance = new ClothingFlagsSetterTranslationCommon();
 
@@ -975,7 +976,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClothingFlags_Registration.Instance;
-        public static ClothingFlags_Registration StaticRegistration => ClothingFlags_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ClothingFlags_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ClothingFlagsCommon.Instance;
         [DebuggerStepThrough]
@@ -999,7 +1000,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ClothingFlagsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1049,7 +1050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ClothingFlagsBinaryCreateTranslation
+    internal partial class ClothingFlagsBinaryCreateTranslation
     {
         public readonly static ClothingFlagsBinaryCreateTranslation Instance = new ClothingFlagsBinaryCreateTranslation();
 
@@ -1089,16 +1090,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ClothingFlagsBinaryOverlay :
+    internal partial class ClothingFlagsBinaryOverlay :
         PluginBinaryOverlay,
         IClothingFlagsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClothingFlags_Registration.Instance;
-        public static ClothingFlags_Registration StaticRegistration => ClothingFlags_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ClothingFlags_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ClothingFlagsCommon.Instance;
         [DebuggerStepThrough]

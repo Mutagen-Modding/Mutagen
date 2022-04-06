@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -604,17 +605,17 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Morph_FieldIndex
+    internal enum Morph_FieldIndex
     {
         Data = 0,
     }
     #endregion
 
     #region Registration
-    public partial class Morph_Registration : ILoquiRegistration
+    internal partial class Morph_Registration : ILoquiRegistration
     {
         public static readonly Morph_Registration Instance = new Morph_Registration();
 
@@ -688,7 +689,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MorphSetterCommon
+    internal partial class MorphSetterCommon
     {
         public static readonly MorphSetterCommon Instance = new MorphSetterCommon();
 
@@ -723,7 +724,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MorphCommon
+    internal partial class MorphCommon
     {
         public static readonly MorphCommon Instance = new MorphCommon();
 
@@ -839,7 +840,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MorphSetterTranslationCommon
+    internal partial class MorphSetterTranslationCommon
     {
         public static readonly MorphSetterTranslationCommon Instance = new MorphSetterTranslationCommon();
 
@@ -917,7 +918,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Morph_Registration.Instance;
-        public static Morph_Registration StaticRegistration => Morph_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Morph_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MorphCommon.Instance;
         [DebuggerStepThrough]
@@ -941,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MorphBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -979,7 +980,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class MorphBinaryCreateTranslation
+    internal partial class MorphBinaryCreateTranslation
     {
         public readonly static MorphBinaryCreateTranslation Instance = new MorphBinaryCreateTranslation();
 
@@ -1014,16 +1015,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MorphBinaryOverlay :
+    internal partial class MorphBinaryOverlay :
         PluginBinaryOverlay,
         IMorphGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Morph_Registration.Instance;
-        public static Morph_Registration StaticRegistration => Morph_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Morph_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MorphCommon.Instance;
         [DebuggerStepThrough]

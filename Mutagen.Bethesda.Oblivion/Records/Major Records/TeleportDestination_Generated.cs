@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -683,10 +684,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum TeleportDestination_FieldIndex
+    internal enum TeleportDestination_FieldIndex
     {
         Destination = 0,
         Position = 1,
@@ -695,7 +696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class TeleportDestination_Registration : ILoquiRegistration
+    internal partial class TeleportDestination_Registration : ILoquiRegistration
     {
         public static readonly TeleportDestination_Registration Instance = new TeleportDestination_Registration();
 
@@ -776,7 +777,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class TeleportDestinationSetterCommon
+    internal partial class TeleportDestinationSetterCommon
     {
         public static readonly TeleportDestinationSetterCommon Instance = new TeleportDestinationSetterCommon();
 
@@ -818,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class TeleportDestinationCommon
+    internal partial class TeleportDestinationCommon
     {
         public static readonly TeleportDestinationCommon Instance = new TeleportDestinationCommon();
 
@@ -955,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class TeleportDestinationSetterTranslationCommon
+    internal partial class TeleportDestinationSetterTranslationCommon
     {
         public static readonly TeleportDestinationSetterTranslationCommon Instance = new TeleportDestinationSetterTranslationCommon();
 
@@ -1041,7 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
-        public static TeleportDestination_Registration StaticRegistration => TeleportDestination_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TeleportDestination_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TeleportDestinationCommon.Instance;
         [DebuggerStepThrough]
@@ -1065,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class TeleportDestinationBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1116,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class TeleportDestinationBinaryCreateTranslation
+    internal partial class TeleportDestinationBinaryCreateTranslation
     {
         public readonly static TeleportDestinationBinaryCreateTranslation Instance = new TeleportDestinationBinaryCreateTranslation();
 
@@ -1153,16 +1154,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class TeleportDestinationBinaryOverlay :
+    internal partial class TeleportDestinationBinaryOverlay :
         PluginBinaryOverlay,
         ITeleportDestinationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
-        public static TeleportDestination_Registration StaticRegistration => TeleportDestination_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TeleportDestination_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TeleportDestinationCommon.Instance;
         [DebuggerStepThrough]

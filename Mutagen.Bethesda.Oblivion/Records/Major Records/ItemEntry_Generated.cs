@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -652,10 +653,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum ItemEntry_FieldIndex
+    internal enum ItemEntry_FieldIndex
     {
         Item = 0,
         Count = 1,
@@ -663,7 +664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class ItemEntry_Registration : ILoquiRegistration
+    internal partial class ItemEntry_Registration : ILoquiRegistration
     {
         public static readonly ItemEntry_Registration Instance = new ItemEntry_Registration();
 
@@ -744,7 +745,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ItemEntrySetterCommon
+    internal partial class ItemEntrySetterCommon
     {
         public static readonly ItemEntrySetterCommon Instance = new ItemEntrySetterCommon();
 
@@ -785,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ItemEntryCommon
+    internal partial class ItemEntryCommon
     {
         public static readonly ItemEntryCommon Instance = new ItemEntryCommon();
 
@@ -916,7 +917,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ItemEntrySetterTranslationCommon
+    internal partial class ItemEntrySetterTranslationCommon
     {
         public static readonly ItemEntrySetterTranslationCommon Instance = new ItemEntrySetterTranslationCommon();
 
@@ -998,7 +999,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ItemEntry_Registration.Instance;
-        public static ItemEntry_Registration StaticRegistration => ItemEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ItemEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ItemEntryCommon.Instance;
         [DebuggerStepThrough]
@@ -1022,7 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ItemEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1068,7 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ItemEntryBinaryCreateTranslation
+    internal partial class ItemEntryBinaryCreateTranslation
     {
         public readonly static ItemEntryBinaryCreateTranslation Instance = new ItemEntryBinaryCreateTranslation();
 
@@ -1105,16 +1106,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ItemEntryBinaryOverlay :
+    internal partial class ItemEntryBinaryOverlay :
         PluginBinaryOverlay,
         IItemEntryGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ItemEntry_Registration.Instance;
-        public static ItemEntry_Registration StaticRegistration => ItemEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ItemEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ItemEntryCommon.Instance;
         [DebuggerStepThrough]

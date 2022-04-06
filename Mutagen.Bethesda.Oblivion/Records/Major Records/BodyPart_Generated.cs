@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -639,10 +640,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum BodyPart_FieldIndex
+    internal enum BodyPart_FieldIndex
     {
         Index = 0,
         Icon = 1,
@@ -650,7 +651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class BodyPart_Registration : ILoquiRegistration
+    internal partial class BodyPart_Registration : ILoquiRegistration
     {
         public static readonly BodyPart_Registration Instance = new BodyPart_Registration();
 
@@ -732,7 +733,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class BodyPartSetterCommon
+    internal partial class BodyPartSetterCommon
     {
         public static readonly BodyPartSetterCommon Instance = new BodyPartSetterCommon();
 
@@ -769,7 +770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class BodyPartCommon
+    internal partial class BodyPartCommon
     {
         public static readonly BodyPartCommon Instance = new BodyPartCommon();
 
@@ -903,7 +904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class BodyPartSetterTranslationCommon
+    internal partial class BodyPartSetterTranslationCommon
     {
         public static readonly BodyPartSetterTranslationCommon Instance = new BodyPartSetterTranslationCommon();
 
@@ -985,7 +986,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyPart_Registration.Instance;
-        public static BodyPart_Registration StaticRegistration => BodyPart_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BodyPart_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BodyPartCommon.Instance;
         [DebuggerStepThrough]
@@ -1009,7 +1010,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class BodyPartBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1056,7 +1057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class BodyPartBinaryCreateTranslation
+    internal partial class BodyPartBinaryCreateTranslation
     {
         public readonly static BodyPartBinaryCreateTranslation Instance = new BodyPartBinaryCreateTranslation();
 
@@ -1125,16 +1126,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class BodyPartBinaryOverlay :
+    internal partial class BodyPartBinaryOverlay :
         PluginBinaryOverlay,
         IBodyPartGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyPart_Registration.Instance;
-        public static BodyPart_Registration StaticRegistration => BodyPart_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BodyPart_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BodyPartCommon.Instance;
         [DebuggerStepThrough]

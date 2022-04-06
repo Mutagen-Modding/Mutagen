@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -687,10 +688,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum ScriptEffect_FieldIndex
+    internal enum ScriptEffect_FieldIndex
     {
         Data = 0,
         Name = 1,
@@ -698,7 +699,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class ScriptEffect_Registration : ILoquiRegistration
+    internal partial class ScriptEffect_Registration : ILoquiRegistration
     {
         public static readonly ScriptEffect_Registration Instance = new ScriptEffect_Registration();
 
@@ -780,7 +781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ScriptEffectSetterCommon
+    internal partial class ScriptEffectSetterCommon
     {
         public static readonly ScriptEffectSetterCommon Instance = new ScriptEffectSetterCommon();
 
@@ -818,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ScriptEffectCommon
+    internal partial class ScriptEffectCommon
     {
         public static readonly ScriptEffectCommon Instance = new ScriptEffectCommon();
 
@@ -967,7 +968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ScriptEffectSetterTranslationCommon
+    internal partial class ScriptEffectSetterTranslationCommon
     {
         public static readonly ScriptEffectSetterTranslationCommon Instance = new ScriptEffectSetterTranslationCommon();
 
@@ -1071,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptEffect_Registration.Instance;
-        public static ScriptEffect_Registration StaticRegistration => ScriptEffect_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScriptEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1095,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ScriptEffectBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1144,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ScriptEffectBinaryCreateTranslation
+    internal partial class ScriptEffectBinaryCreateTranslation
     {
         public readonly static ScriptEffectBinaryCreateTranslation Instance = new ScriptEffectBinaryCreateTranslation();
 
@@ -1210,16 +1211,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ScriptEffectBinaryOverlay :
+    internal partial class ScriptEffectBinaryOverlay :
         PluginBinaryOverlay,
         IScriptEffectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptEffect_Registration.Instance;
-        public static ScriptEffect_Registration StaticRegistration => ScriptEffect_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScriptEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptEffectCommon.Instance;
         [DebuggerStepThrough]

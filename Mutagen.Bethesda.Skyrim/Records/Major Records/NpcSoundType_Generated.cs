@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -732,10 +733,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum NpcSoundType_FieldIndex
+    internal enum NpcSoundType_FieldIndex
     {
         Type = 0,
         Sounds = 1,
@@ -743,7 +744,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class NpcSoundType_Registration : ILoquiRegistration
+    internal partial class NpcSoundType_Registration : ILoquiRegistration
     {
         public static readonly NpcSoundType_Registration Instance = new NpcSoundType_Registration();
 
@@ -826,7 +827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NpcSoundTypeSetterCommon
+    internal partial class NpcSoundTypeSetterCommon
     {
         public static readonly NpcSoundTypeSetterCommon Instance = new NpcSoundTypeSetterCommon();
 
@@ -864,7 +865,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcSoundTypeCommon
+    internal partial class NpcSoundTypeCommon
     {
         public static readonly NpcSoundTypeCommon Instance = new NpcSoundTypeCommon();
 
@@ -1015,7 +1016,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcSoundTypeSetterTranslationCommon
+    internal partial class NpcSoundTypeSetterTranslationCommon
     {
         public static readonly NpcSoundTypeSetterTranslationCommon Instance = new NpcSoundTypeSetterTranslationCommon();
 
@@ -1117,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcSoundType_Registration.Instance;
-        public static NpcSoundType_Registration StaticRegistration => NpcSoundType_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcSoundType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcSoundTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1141,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NpcSoundTypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1194,7 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NpcSoundTypeBinaryCreateTranslation
+    internal partial class NpcSoundTypeBinaryCreateTranslation
     {
         public readonly static NpcSoundTypeBinaryCreateTranslation Instance = new NpcSoundTypeBinaryCreateTranslation();
 
@@ -1266,16 +1267,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NpcSoundTypeBinaryOverlay :
+    internal partial class NpcSoundTypeBinaryOverlay :
         PluginBinaryOverlay,
         INpcSoundTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcSoundType_Registration.Instance;
-        public static NpcSoundType_Registration StaticRegistration => NpcSoundType_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcSoundType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcSoundTypeCommon.Instance;
         [DebuggerStepThrough]

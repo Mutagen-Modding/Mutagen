@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -808,10 +809,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WorldspaceMap_FieldIndex
+    internal enum WorldspaceMap_FieldIndex
     {
         Versioning = 0,
         UsableDimensions = 1,
@@ -824,7 +825,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WorldspaceMap_Registration : ILoquiRegistration
+    internal partial class WorldspaceMap_Registration : ILoquiRegistration
     {
         public static readonly WorldspaceMap_Registration Instance = new WorldspaceMap_Registration();
 
@@ -905,7 +906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WorldspaceMapSetterCommon
+    internal partial class WorldspaceMapSetterCommon
     {
         public static readonly WorldspaceMapSetterCommon Instance = new WorldspaceMapSetterCommon();
 
@@ -950,7 +951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceMapCommon
+    internal partial class WorldspaceMapCommon
     {
         public static readonly WorldspaceMapCommon Instance = new WorldspaceMapCommon();
 
@@ -1126,7 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceMapSetterTranslationCommon
+    internal partial class WorldspaceMapSetterTranslationCommon
     {
         public static readonly WorldspaceMapSetterTranslationCommon Instance = new WorldspaceMapSetterTranslationCommon();
 
@@ -1229,7 +1230,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceMap_Registration.Instance;
-        public static WorldspaceMap_Registration StaticRegistration => WorldspaceMap_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceMap_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceMapCommon.Instance;
         [DebuggerStepThrough]
@@ -1253,7 +1254,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceMapBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1316,7 +1317,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WorldspaceMapBinaryCreateTranslation
+    internal partial class WorldspaceMapBinaryCreateTranslation
     {
         public readonly static WorldspaceMapBinaryCreateTranslation Instance = new WorldspaceMapBinaryCreateTranslation();
 
@@ -1361,16 +1362,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WorldspaceMapBinaryOverlay :
+    internal partial class WorldspaceMapBinaryOverlay :
         PluginBinaryOverlay,
         IWorldspaceMapGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceMap_Registration.Instance;
-        public static WorldspaceMap_Registration StaticRegistration => WorldspaceMap_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceMap_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceMapCommon.Instance;
         [DebuggerStepThrough]

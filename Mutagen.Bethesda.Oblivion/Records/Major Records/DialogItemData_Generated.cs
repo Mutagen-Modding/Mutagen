@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -676,10 +677,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum DialogItemData_FieldIndex
+    internal enum DialogItemData_FieldIndex
     {
         Versioning = 0,
         DialogType = 1,
@@ -688,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class DialogItemData_Registration : ILoquiRegistration
+    internal partial class DialogItemData_Registration : ILoquiRegistration
     {
         public static readonly DialogItemData_Registration Instance = new DialogItemData_Registration();
 
@@ -769,7 +770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class DialogItemDataSetterCommon
+    internal partial class DialogItemDataSetterCommon
     {
         public static readonly DialogItemDataSetterCommon Instance = new DialogItemDataSetterCommon();
 
@@ -810,7 +811,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class DialogItemDataCommon
+    internal partial class DialogItemDataCommon
     {
         public static readonly DialogItemDataCommon Instance = new DialogItemDataCommon();
 
@@ -946,7 +947,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class DialogItemDataSetterTranslationCommon
+    internal partial class DialogItemDataSetterTranslationCommon
     {
         public static readonly DialogItemDataSetterTranslationCommon Instance = new DialogItemDataSetterTranslationCommon();
 
@@ -1033,7 +1034,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogItemData_Registration.Instance;
-        public static DialogItemData_Registration StaticRegistration => DialogItemData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DialogItemData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogItemDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1057,7 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class DialogItemDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1110,7 +1111,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class DialogItemDataBinaryCreateTranslation
+    internal partial class DialogItemDataBinaryCreateTranslation
     {
         public readonly static DialogItemDataBinaryCreateTranslation Instance = new DialogItemDataBinaryCreateTranslation();
 
@@ -1155,16 +1156,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class DialogItemDataBinaryOverlay :
+    internal partial class DialogItemDataBinaryOverlay :
         PluginBinaryOverlay,
         IDialogItemDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogItemData_Registration.Instance;
-        public static DialogItemData_Registration StaticRegistration => DialogItemData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DialogItemData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogItemDataCommon.Instance;
         [DebuggerStepThrough]

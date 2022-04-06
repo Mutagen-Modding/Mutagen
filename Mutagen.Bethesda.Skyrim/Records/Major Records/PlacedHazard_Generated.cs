@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -703,10 +704,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PlacedHazard_FieldIndex
+    internal enum PlacedHazard_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -736,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PlacedHazard_Registration : ILoquiRegistration
+    internal partial class PlacedHazard_Registration : ILoquiRegistration
     {
         public static readonly PlacedHazard_Registration Instance = new PlacedHazard_Registration();
 
@@ -817,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PlacedHazardSetterCommon : APlacedTrapSetterCommon
+    internal partial class PlacedHazardSetterCommon : APlacedTrapSetterCommon
     {
         public new static readonly PlacedHazardSetterCommon Instance = new PlacedHazardSetterCommon();
 
@@ -904,7 +905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedHazardCommon : APlacedTrapCommon
+    internal partial class PlacedHazardCommon : APlacedTrapCommon
     {
         public new static readonly PlacedHazardCommon Instance = new PlacedHazardCommon();
 
@@ -1219,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedHazardSetterTranslationCommon : APlacedTrapSetterTranslationCommon
+    internal partial class PlacedHazardSetterTranslationCommon : APlacedTrapSetterTranslationCommon
     {
         public new static readonly PlacedHazardSetterTranslationCommon Instance = new PlacedHazardSetterTranslationCommon();
 
@@ -1408,7 +1409,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedHazard_Registration.Instance;
-        public new static PlacedHazard_Registration StaticRegistration => PlacedHazard_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedHazard_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedHazardCommon.Instance;
         [DebuggerStepThrough]
@@ -1426,7 +1427,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PlacedHazardBinaryWriteTranslation :
         APlacedTrapBinaryWriteTranslation,
@@ -1515,7 +1516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PlacedHazardBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
+    internal partial class PlacedHazardBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
     {
         public new readonly static PlacedHazardBinaryCreateTranslation Instance = new PlacedHazardBinaryCreateTranslation();
 
@@ -1542,16 +1543,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PlacedHazardBinaryOverlay :
+    internal partial class PlacedHazardBinaryOverlay :
         APlacedTrapBinaryOverlay,
         IPlacedHazardGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedHazard_Registration.Instance;
-        public new static PlacedHazard_Registration StaticRegistration => PlacedHazard_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedHazard_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedHazardCommon.Instance;
         [DebuggerStepThrough]

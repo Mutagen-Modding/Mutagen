@@ -9,8 +9,8 @@ namespace Loqui
         void IProtocolRegistration.Register() => Register();
         public static void Register()
         {
-            LoquiRegistration.Register(Mutagen.Bethesda.Plugins.Records.Internals.MajorRecord_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Bethesda.Plugins.Records.Internals.MasterReference_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Plugins.Records.MajorRecord_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Plugins.Records.MasterReference_Registration.Instance);
         }
     }
 }

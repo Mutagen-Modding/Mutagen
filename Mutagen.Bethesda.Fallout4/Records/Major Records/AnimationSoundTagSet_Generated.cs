@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -600,10 +601,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum AnimationSoundTagSet_FieldIndex
+    internal enum AnimationSoundTagSet_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -615,7 +616,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class AnimationSoundTagSet_Registration : ILoquiRegistration
+    internal partial class AnimationSoundTagSet_Registration : ILoquiRegistration
     {
         public static readonly AnimationSoundTagSet_Registration Instance = new AnimationSoundTagSet_Registration();
 
@@ -696,7 +697,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class AnimationSoundTagSetSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class AnimationSoundTagSetSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly AnimationSoundTagSetSetterCommon Instance = new AnimationSoundTagSetSetterCommon();
 
@@ -765,7 +766,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class AnimationSoundTagSetCommon : Fallout4MajorRecordCommon
+    internal partial class AnimationSoundTagSetCommon : Fallout4MajorRecordCommon
     {
         public new static readonly AnimationSoundTagSetCommon Instance = new AnimationSoundTagSetCommon();
 
@@ -987,7 +988,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class AnimationSoundTagSetSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class AnimationSoundTagSetSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly AnimationSoundTagSetSetterTranslationCommon Instance = new AnimationSoundTagSetSetterTranslationCommon();
 
@@ -1142,7 +1143,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimationSoundTagSet_Registration.Instance;
-        public new static AnimationSoundTagSet_Registration StaticRegistration => AnimationSoundTagSet_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AnimationSoundTagSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AnimationSoundTagSetCommon.Instance;
         [DebuggerStepThrough]
@@ -1160,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AnimationSoundTagSetBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -1229,7 +1230,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class AnimationSoundTagSetBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class AnimationSoundTagSetBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static AnimationSoundTagSetBinaryCreateTranslation Instance = new AnimationSoundTagSetBinaryCreateTranslation();
 
@@ -1256,16 +1257,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class AnimationSoundTagSetBinaryOverlay :
+    internal partial class AnimationSoundTagSetBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IAnimationSoundTagSetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimationSoundTagSet_Registration.Instance;
-        public new static AnimationSoundTagSet_Registration StaticRegistration => AnimationSoundTagSet_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AnimationSoundTagSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AnimationSoundTagSetCommon.Instance;
         [DebuggerStepThrough]

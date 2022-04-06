@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -798,10 +799,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Hair_FieldIndex
+    internal enum Hair_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -816,7 +817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Hair_Registration : ILoquiRegistration
+    internal partial class Hair_Registration : ILoquiRegistration
     {
         public static readonly Hair_Registration Instance = new Hair_Registration();
 
@@ -903,7 +904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class HairSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class HairSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly HairSetterCommon Instance = new HairSetterCommon();
 
@@ -976,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class HairCommon : OblivionMajorRecordCommon
+    internal partial class HairCommon : OblivionMajorRecordCommon
     {
         public new static readonly HairCommon Instance = new HairCommon();
 
@@ -1260,7 +1261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class HairSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class HairSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly HairSetterTranslationCommon Instance = new HairSetterTranslationCommon();
 
@@ -1453,7 +1454,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Hair_Registration.Instance;
-        public new static Hair_Registration StaticRegistration => Hair_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Hair_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HairCommon.Instance;
         [DebuggerStepThrough]
@@ -1471,7 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class HairBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1575,7 +1576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class HairBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class HairBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static HairBinaryCreateTranslation Instance = new HairBinaryCreateTranslation();
 
@@ -1656,16 +1657,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class HairBinaryOverlay :
+    internal partial class HairBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IHairGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Hair_Registration.Instance;
-        public new static Hair_Registration StaticRegistration => Hair_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Hair_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HairCommon.Instance;
         [DebuggerStepThrough]

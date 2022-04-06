@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -635,10 +636,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ObjectBounds_FieldIndex
+    internal enum ObjectBounds_FieldIndex
     {
         First = 0,
         Second = 1,
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ObjectBounds_Registration : ILoquiRegistration
+    internal partial class ObjectBounds_Registration : ILoquiRegistration
     {
         public static readonly ObjectBounds_Registration Instance = new ObjectBounds_Registration();
 
@@ -727,7 +728,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ObjectBoundsSetterCommon
+    internal partial class ObjectBoundsSetterCommon
     {
         public static readonly ObjectBoundsSetterCommon Instance = new ObjectBoundsSetterCommon();
 
@@ -767,7 +768,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ObjectBoundsCommon
+    internal partial class ObjectBoundsCommon
     {
         public static readonly ObjectBoundsCommon Instance = new ObjectBoundsCommon();
 
@@ -893,7 +894,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ObjectBoundsSetterTranslationCommon
+    internal partial class ObjectBoundsSetterTranslationCommon
     {
         public static readonly ObjectBoundsSetterTranslationCommon Instance = new ObjectBoundsSetterTranslationCommon();
 
@@ -975,7 +976,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectBounds_Registration.Instance;
-        public static ObjectBounds_Registration StaticRegistration => ObjectBounds_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ObjectBounds_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ObjectBoundsCommon.Instance;
         [DebuggerStepThrough]
@@ -999,7 +1000,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ObjectBoundsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1047,7 +1048,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ObjectBoundsBinaryCreateTranslation
+    internal partial class ObjectBoundsBinaryCreateTranslation
     {
         public readonly static ObjectBoundsBinaryCreateTranslation Instance = new ObjectBoundsBinaryCreateTranslation();
 
@@ -1083,16 +1084,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ObjectBoundsBinaryOverlay :
+    internal partial class ObjectBoundsBinaryOverlay :
         PluginBinaryOverlay,
         IObjectBoundsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectBounds_Registration.Instance;
-        public static ObjectBounds_Registration StaticRegistration => ObjectBounds_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ObjectBounds_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ObjectBoundsCommon.Instance;
         [DebuggerStepThrough]

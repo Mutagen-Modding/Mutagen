@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -737,10 +738,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum StaticPart_FieldIndex
+    internal enum StaticPart_FieldIndex
     {
         Static = 0,
         Placements = 1,
@@ -748,7 +749,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class StaticPart_Registration : ILoquiRegistration
+    internal partial class StaticPart_Registration : ILoquiRegistration
     {
         public static readonly StaticPart_Registration Instance = new StaticPart_Registration();
 
@@ -830,7 +831,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class StaticPartSetterCommon
+    internal partial class StaticPartSetterCommon
     {
         public static readonly StaticPartSetterCommon Instance = new StaticPartSetterCommon();
 
@@ -868,7 +869,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class StaticPartCommon
+    internal partial class StaticPartCommon
     {
         public static readonly StaticPartCommon Instance = new StaticPartCommon();
 
@@ -1016,7 +1017,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class StaticPartSetterTranslationCommon
+    internal partial class StaticPartSetterTranslationCommon
     {
         public static readonly StaticPartSetterTranslationCommon Instance = new StaticPartSetterTranslationCommon();
 
@@ -1126,7 +1127,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => StaticPart_Registration.Instance;
-        public static StaticPart_Registration StaticRegistration => StaticPart_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => StaticPart_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => StaticPartCommon.Instance;
         [DebuggerStepThrough]
@@ -1150,7 +1151,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class StaticPartBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1203,7 +1204,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class StaticPartBinaryCreateTranslation
+    internal partial class StaticPartBinaryCreateTranslation
     {
         public readonly static StaticPartBinaryCreateTranslation Instance = new StaticPartBinaryCreateTranslation();
 
@@ -1272,16 +1273,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class StaticPartBinaryOverlay :
+    internal partial class StaticPartBinaryOverlay :
         PluginBinaryOverlay,
         IStaticPartGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => StaticPart_Registration.Instance;
-        public static StaticPart_Registration StaticRegistration => StaticPart_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => StaticPart_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => StaticPartCommon.Instance;
         [DebuggerStepThrough]

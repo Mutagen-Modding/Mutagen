@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -657,10 +658,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PerkQuestEffect_FieldIndex
+    internal enum PerkQuestEffect_FieldIndex
     {
         Rank = 0,
         Priority = 1,
@@ -673,7 +674,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PerkQuestEffect_Registration : ILoquiRegistration
+    internal partial class PerkQuestEffect_Registration : ILoquiRegistration
     {
         public static readonly PerkQuestEffect_Registration Instance = new PerkQuestEffect_Registration();
 
@@ -754,7 +755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PerkQuestEffectSetterCommon : APerkEffectSetterCommon
+    internal partial class PerkQuestEffectSetterCommon : APerkEffectSetterCommon
     {
         public new static readonly PerkQuestEffectSetterCommon Instance = new PerkQuestEffectSetterCommon();
 
@@ -811,7 +812,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkQuestEffectCommon : APerkEffectCommon
+    internal partial class PerkQuestEffectCommon : APerkEffectCommon
     {
         public new static readonly PerkQuestEffectCommon Instance = new PerkQuestEffectCommon();
 
@@ -992,7 +993,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkQuestEffectSetterTranslationCommon : APerkEffectSetterTranslationCommon
+    internal partial class PerkQuestEffectSetterTranslationCommon : APerkEffectSetterTranslationCommon
     {
         public new static readonly PerkQuestEffectSetterTranslationCommon Instance = new PerkQuestEffectSetterTranslationCommon();
 
@@ -1100,7 +1101,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkQuestEffect_Registration.Instance;
-        public new static PerkQuestEffect_Registration StaticRegistration => PerkQuestEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkQuestEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkQuestEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1118,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkQuestEffectBinaryWriteTranslation :
         APerkEffectBinaryWriteTranslation,
@@ -1180,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PerkQuestEffectBinaryCreateTranslation : APerkEffectBinaryCreateTranslation
+    internal partial class PerkQuestEffectBinaryCreateTranslation : APerkEffectBinaryCreateTranslation
     {
         public new readonly static PerkQuestEffectBinaryCreateTranslation Instance = new PerkQuestEffectBinaryCreateTranslation();
 
@@ -1209,16 +1210,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PerkQuestEffectBinaryOverlay :
+    internal partial class PerkQuestEffectBinaryOverlay :
         APerkEffectBinaryOverlay,
         IPerkQuestEffectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkQuestEffect_Registration.Instance;
-        public new static PerkQuestEffect_Registration StaticRegistration => PerkQuestEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkQuestEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkQuestEffectCommon.Instance;
         [DebuggerStepThrough]

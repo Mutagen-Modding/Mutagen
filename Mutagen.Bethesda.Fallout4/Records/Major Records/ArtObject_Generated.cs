@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -787,10 +788,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ArtObject_FieldIndex
+    internal enum ArtObject_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -805,7 +806,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ArtObject_Registration : ILoquiRegistration
+    internal partial class ArtObject_Registration : ILoquiRegistration
     {
         public static readonly ArtObject_Registration Instance = new ArtObject_Registration();
 
@@ -891,7 +892,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ArtObjectSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class ArtObjectSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly ArtObjectSetterCommon Instance = new ArtObjectSetterCommon();
 
@@ -964,7 +965,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ArtObjectCommon : Fallout4MajorRecordCommon
+    internal partial class ArtObjectCommon : Fallout4MajorRecordCommon
     {
         public new static readonly ArtObjectCommon Instance = new ArtObjectCommon();
 
@@ -1243,7 +1244,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ArtObjectSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class ArtObjectSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly ArtObjectSetterTranslationCommon Instance = new ArtObjectSetterTranslationCommon();
 
@@ -1450,7 +1451,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArtObject_Registration.Instance;
-        public new static ArtObject_Registration StaticRegistration => ArtObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ArtObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArtObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -1468,7 +1469,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ArtObjectBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -1567,7 +1568,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ArtObjectBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class ArtObjectBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static ArtObjectBinaryCreateTranslation Instance = new ArtObjectBinaryCreateTranslation();
 
@@ -1637,16 +1638,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ArtObjectBinaryOverlay :
+    internal partial class ArtObjectBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IArtObjectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArtObject_Registration.Instance;
-        public new static ArtObject_Registration StaticRegistration => ArtObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ArtObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArtObjectCommon.Instance;
         [DebuggerStepThrough]

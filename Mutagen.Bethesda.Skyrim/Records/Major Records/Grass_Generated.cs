@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1233,10 +1234,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Grass_FieldIndex
+    internal enum Grass_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1264,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Grass_Registration : ILoquiRegistration
+    internal partial class Grass_Registration : ILoquiRegistration
     {
         public static readonly Grass_Registration Instance = new Grass_Registration();
 
@@ -1350,7 +1351,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class GrassSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class GrassSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly GrassSetterCommon Instance = new GrassSetterCommon();
 
@@ -1436,7 +1437,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class GrassCommon : SkyrimMajorRecordCommon
+    internal partial class GrassCommon : SkyrimMajorRecordCommon
     {
         public new static readonly GrassCommon Instance = new GrassCommon();
 
@@ -1841,7 +1842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class GrassSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class GrassSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly GrassSetterTranslationCommon Instance = new GrassSetterTranslationCommon();
 
@@ -2100,7 +2101,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Grass_Registration.Instance;
-        public new static Grass_Registration StaticRegistration => Grass_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Grass_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GrassCommon.Instance;
         [DebuggerStepThrough]
@@ -2118,7 +2119,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class GrassBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2253,7 +2254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class GrassBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class GrassBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static GrassBinaryCreateTranslation Instance = new GrassBinaryCreateTranslation();
 
@@ -2338,16 +2339,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class GrassBinaryOverlay :
+    internal partial class GrassBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IGrassGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Grass_Registration.Instance;
-        public new static Grass_Registration StaticRegistration => Grass_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Grass_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GrassCommon.Instance;
         [DebuggerStepThrough]

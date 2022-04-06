@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -925,10 +926,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Component_FieldIndex
+    internal enum Component_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -946,7 +947,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Component_Registration : ILoquiRegistration
+    internal partial class Component_Registration : ILoquiRegistration
     {
         public static readonly Component_Registration Instance = new Component_Registration();
 
@@ -1035,7 +1036,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ComponentSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class ComponentSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly ComponentSetterCommon Instance = new ComponentSetterCommon();
 
@@ -1113,7 +1114,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ComponentCommon : Fallout4MajorRecordCommon
+    internal partial class ComponentCommon : Fallout4MajorRecordCommon
     {
         public new static readonly ComponentCommon Instance = new ComponentCommon();
 
@@ -1419,7 +1420,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ComponentSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class ComponentSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly ComponentSetterTranslationCommon Instance = new ComponentSetterTranslationCommon();
 
@@ -1616,7 +1617,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Component_Registration.Instance;
-        public new static Component_Registration StaticRegistration => Component_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Component_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ComponentCommon.Instance;
         [DebuggerStepThrough]
@@ -1634,7 +1635,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ComponentBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -1743,7 +1744,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ComponentBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class ComponentBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static ComponentBinaryCreateTranslation Instance = new ComponentBinaryCreateTranslation();
 
@@ -1831,16 +1832,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ComponentBinaryOverlay :
+    internal partial class ComponentBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IComponentGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Component_Registration.Instance;
-        public new static Component_Registration StaticRegistration => Component_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Component_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ComponentCommon.Instance;
         [DebuggerStepThrough]

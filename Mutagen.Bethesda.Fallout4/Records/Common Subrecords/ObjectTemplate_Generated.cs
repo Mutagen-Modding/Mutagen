@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -516,10 +517,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ObjectTemplate_FieldIndex
+    internal enum ObjectTemplate_FieldIndex
     {
         EditorOnly = 0,
         Name = 1,
@@ -536,7 +537,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ObjectTemplate_Registration : ILoquiRegistration
+    internal partial class ObjectTemplate_Registration : ILoquiRegistration
     {
         public static readonly ObjectTemplate_Registration Instance = new ObjectTemplate_Registration();
 
@@ -617,7 +618,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public class ObjectTemplate_Registration<T> : ObjectTemplate_Registration
+    internal class ObjectTemplate_Registration<T> : ObjectTemplate_Registration
         where T : struct, Enum
     {
         public static readonly ObjectTemplate_Registration<T> GenericInstance = new ObjectTemplate_Registration<T>();
@@ -626,7 +627,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ObjectTemplateSetterCommon<T>
+    internal partial class ObjectTemplateSetterCommon<T>
         where T : struct, Enum
     {
         public static readonly ObjectTemplateSetterCommon<T> Instance = new ObjectTemplateSetterCommon<T>();
@@ -676,7 +677,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ObjectTemplateCommon<T>
+    internal partial class ObjectTemplateCommon<T>
         where T : struct, Enum
     {
         public static readonly ObjectTemplateCommon<T> Instance = new ObjectTemplateCommon<T>();
@@ -962,7 +963,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ObjectTemplateSetterTranslationCommon
+    internal partial class ObjectTemplateSetterTranslationCommon
     {
         public static readonly ObjectTemplateSetterTranslationCommon Instance = new ObjectTemplateSetterTranslationCommon();
 
@@ -1139,7 +1140,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectTemplate_Registration.Instance;
-        public static ObjectTemplate_Registration StaticRegistration => ObjectTemplate_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ObjectTemplate_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(ObjectTemplateCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
@@ -1163,7 +1164,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ObjectTemplateBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1237,7 +1238,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ObjectTemplateBinaryCreateTranslation<T>
+    internal partial class ObjectTemplateBinaryCreateTranslation<T>
         where T : struct, Enum
     {
         public readonly static ObjectTemplateBinaryCreateTranslation<T> Instance = new ObjectTemplateBinaryCreateTranslation<T>();
@@ -1319,9 +1320,9 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ObjectTemplateBinaryOverlay<T> :
+    internal partial class ObjectTemplateBinaryOverlay<T> :
         PluginBinaryOverlay,
         IObjectTemplateGetter<T>
         where T : struct, Enum
@@ -1329,7 +1330,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectTemplate_Registration.Instance;
-        public static ObjectTemplate_Registration StaticRegistration => ObjectTemplate_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ObjectTemplate_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(ObjectTemplateCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]

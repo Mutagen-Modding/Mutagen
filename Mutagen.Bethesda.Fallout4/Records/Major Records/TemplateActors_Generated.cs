@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1097,10 +1098,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum TemplateActors_FieldIndex
+    internal enum TemplateActors_FieldIndex
     {
         TraitTemplate = 0,
         StatsTemplate = 1,
@@ -1119,7 +1120,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class TemplateActors_Registration : ILoquiRegistration
+    internal partial class TemplateActors_Registration : ILoquiRegistration
     {
         public static readonly TemplateActors_Registration Instance = new TemplateActors_Registration();
 
@@ -1200,7 +1201,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class TemplateActorsSetterCommon
+    internal partial class TemplateActorsSetterCommon
     {
         public static readonly TemplateActorsSetterCommon Instance = new TemplateActorsSetterCommon();
 
@@ -1264,7 +1265,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TemplateActorsCommon
+    internal partial class TemplateActorsCommon
     {
         public static readonly TemplateActorsCommon Instance = new TemplateActorsCommon();
 
@@ -1513,7 +1514,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TemplateActorsSetterTranslationCommon
+    internal partial class TemplateActorsSetterTranslationCommon
     {
         public static readonly TemplateActorsSetterTranslationCommon Instance = new TemplateActorsSetterTranslationCommon();
 
@@ -1639,7 +1640,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TemplateActors_Registration.Instance;
-        public static TemplateActors_Registration StaticRegistration => TemplateActors_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TemplateActors_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TemplateActorsCommon.Instance;
         [DebuggerStepThrough]
@@ -1663,7 +1664,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TemplateActorsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1744,7 +1745,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class TemplateActorsBinaryCreateTranslation
+    internal partial class TemplateActorsBinaryCreateTranslation
     {
         public readonly static TemplateActorsBinaryCreateTranslation Instance = new TemplateActorsBinaryCreateTranslation();
 
@@ -1791,16 +1792,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class TemplateActorsBinaryOverlay :
+    internal partial class TemplateActorsBinaryOverlay :
         PluginBinaryOverlay,
         ITemplateActorsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TemplateActors_Registration.Instance;
-        public static TemplateActors_Registration StaticRegistration => TemplateActors_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TemplateActors_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TemplateActorsCommon.Instance;
         [DebuggerStepThrough]

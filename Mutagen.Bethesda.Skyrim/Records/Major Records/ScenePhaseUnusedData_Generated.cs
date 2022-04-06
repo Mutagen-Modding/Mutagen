@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -774,10 +775,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ScenePhaseUnusedData_FieldIndex
+    internal enum ScenePhaseUnusedData_FieldIndex
     {
         SCHR = 0,
         SCDA = 1,
@@ -788,7 +789,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ScenePhaseUnusedData_Registration : ILoquiRegistration
+    internal partial class ScenePhaseUnusedData_Registration : ILoquiRegistration
     {
         public static readonly ScenePhaseUnusedData_Registration Instance = new ScenePhaseUnusedData_Registration();
 
@@ -873,7 +874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ScenePhaseUnusedDataSetterCommon
+    internal partial class ScenePhaseUnusedDataSetterCommon
     {
         public static readonly ScenePhaseUnusedDataSetterCommon Instance = new ScenePhaseUnusedDataSetterCommon();
 
@@ -913,7 +914,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ScenePhaseUnusedDataCommon
+    internal partial class ScenePhaseUnusedDataCommon
     {
         public static readonly ScenePhaseUnusedDataCommon Instance = new ScenePhaseUnusedDataCommon();
 
@@ -1089,7 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ScenePhaseUnusedDataSetterTranslationCommon
+    internal partial class ScenePhaseUnusedDataSetterTranslationCommon
     {
         public static readonly ScenePhaseUnusedDataSetterTranslationCommon Instance = new ScenePhaseUnusedDataSetterTranslationCommon();
 
@@ -1218,7 +1219,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScenePhaseUnusedData_Registration.Instance;
-        public static ScenePhaseUnusedData_Registration StaticRegistration => ScenePhaseUnusedData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScenePhaseUnusedData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScenePhaseUnusedDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1242,7 +1243,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ScenePhaseUnusedDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1299,7 +1300,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ScenePhaseUnusedDataBinaryCreateTranslation
+    internal partial class ScenePhaseUnusedDataBinaryCreateTranslation
     {
         public readonly static ScenePhaseUnusedDataBinaryCreateTranslation Instance = new ScenePhaseUnusedDataBinaryCreateTranslation();
 
@@ -1385,16 +1386,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ScenePhaseUnusedDataBinaryOverlay :
+    internal partial class ScenePhaseUnusedDataBinaryOverlay :
         PluginBinaryOverlay,
         IScenePhaseUnusedDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScenePhaseUnusedData_Registration.Instance;
-        public static ScenePhaseUnusedData_Registration StaticRegistration => ScenePhaseUnusedData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScenePhaseUnusedData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScenePhaseUnusedDataCommon.Instance;
         [DebuggerStepThrough]

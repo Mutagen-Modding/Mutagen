@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -637,10 +638,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum GameSettingString_FieldIndex
+    internal enum GameSettingString_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -652,7 +653,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class GameSettingString_Registration : ILoquiRegistration
+    internal partial class GameSettingString_Registration : ILoquiRegistration
     {
         public static readonly GameSettingString_Registration Instance = new GameSettingString_Registration();
 
@@ -736,7 +737,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class GameSettingStringSetterCommon : GameSettingSetterCommon
+    internal partial class GameSettingStringSetterCommon : GameSettingSetterCommon
     {
         public new static readonly GameSettingStringSetterCommon Instance = new GameSettingStringSetterCommon();
 
@@ -822,7 +823,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class GameSettingStringCommon : GameSettingCommon
+    internal partial class GameSettingStringCommon : GameSettingCommon
     {
         public new static readonly GameSettingStringCommon Instance = new GameSettingStringCommon();
 
@@ -1102,7 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class GameSettingStringSetterTranslationCommon : GameSettingSetterTranslationCommon
+    internal partial class GameSettingStringSetterTranslationCommon : GameSettingSetterTranslationCommon
     {
         public new static readonly GameSettingStringSetterTranslationCommon Instance = new GameSettingStringSetterTranslationCommon();
 
@@ -1291,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingString_Registration.Instance;
-        public new static GameSettingString_Registration StaticRegistration => GameSettingString_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GameSettingString_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingStringCommon.Instance;
         [DebuggerStepThrough]
@@ -1309,7 +1310,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class GameSettingStringBinaryWriteTranslation :
         GameSettingBinaryWriteTranslation,
@@ -1407,7 +1408,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class GameSettingStringBinaryCreateTranslation : GameSettingBinaryCreateTranslation
+    internal partial class GameSettingStringBinaryCreateTranslation : GameSettingBinaryCreateTranslation
     {
         public new readonly static GameSettingStringBinaryCreateTranslation Instance = new GameSettingStringBinaryCreateTranslation();
 
@@ -1465,16 +1466,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class GameSettingStringBinaryOverlay :
+    internal partial class GameSettingStringBinaryOverlay :
         GameSettingBinaryOverlay,
         IGameSettingStringGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingString_Registration.Instance;
-        public new static GameSettingString_Registration StaticRegistration => GameSettingString_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GameSettingString_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingStringCommon.Instance;
         [DebuggerStepThrough]

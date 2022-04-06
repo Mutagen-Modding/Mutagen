@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -702,10 +703,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PlacedPrimitive_FieldIndex
+    internal enum PlacedPrimitive_FieldIndex
     {
         Bounds = 0,
         Color = 1,
@@ -715,7 +716,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PlacedPrimitive_Registration : ILoquiRegistration
+    internal partial class PlacedPrimitive_Registration : ILoquiRegistration
     {
         public static readonly PlacedPrimitive_Registration Instance = new PlacedPrimitive_Registration();
 
@@ -796,7 +797,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PlacedPrimitiveSetterCommon
+    internal partial class PlacedPrimitiveSetterCommon
     {
         public static readonly PlacedPrimitiveSetterCommon Instance = new PlacedPrimitiveSetterCommon();
 
@@ -838,7 +839,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedPrimitiveCommon
+    internal partial class PlacedPrimitiveCommon
     {
         public static readonly PlacedPrimitiveCommon Instance = new PlacedPrimitiveCommon();
 
@@ -984,7 +985,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedPrimitiveSetterTranslationCommon
+    internal partial class PlacedPrimitiveSetterTranslationCommon
     {
         public static readonly PlacedPrimitiveSetterTranslationCommon Instance = new PlacedPrimitiveSetterTranslationCommon();
 
@@ -1074,7 +1075,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedPrimitive_Registration.Instance;
-        public static PlacedPrimitive_Registration StaticRegistration => PlacedPrimitive_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PlacedPrimitive_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PlacedPrimitiveCommon.Instance;
         [DebuggerStepThrough]
@@ -1098,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PlacedPrimitiveBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1167,7 +1168,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PlacedPrimitiveBinaryCreateTranslation
+    internal partial class PlacedPrimitiveBinaryCreateTranslation
     {
         public readonly static PlacedPrimitiveBinaryCreateTranslation Instance = new PlacedPrimitiveBinaryCreateTranslation();
 
@@ -1213,16 +1214,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PlacedPrimitiveBinaryOverlay :
+    internal partial class PlacedPrimitiveBinaryOverlay :
         PluginBinaryOverlay,
         IPlacedPrimitiveGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedPrimitive_Registration.Instance;
-        public static PlacedPrimitive_Registration StaticRegistration => PlacedPrimitive_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PlacedPrimitive_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PlacedPrimitiveCommon.Instance;
         [DebuggerStepThrough]

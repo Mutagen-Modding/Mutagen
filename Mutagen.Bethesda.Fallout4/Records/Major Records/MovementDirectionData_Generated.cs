@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -701,10 +702,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum MovementDirectionData_FieldIndex
+    internal enum MovementDirectionData_FieldIndex
     {
         Unused1 = 0,
         Walk = 1,
@@ -714,7 +715,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class MovementDirectionData_Registration : ILoquiRegistration
+    internal partial class MovementDirectionData_Registration : ILoquiRegistration
     {
         public static readonly MovementDirectionData_Registration Instance = new MovementDirectionData_Registration();
 
@@ -788,7 +789,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class MovementDirectionDataSetterCommon
+    internal partial class MovementDirectionDataSetterCommon
     {
         public static readonly MovementDirectionDataSetterCommon Instance = new MovementDirectionDataSetterCommon();
 
@@ -826,7 +827,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MovementDirectionDataCommon
+    internal partial class MovementDirectionDataCommon
     {
         public static readonly MovementDirectionDataCommon Instance = new MovementDirectionDataCommon();
 
@@ -972,7 +973,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MovementDirectionDataSetterTranslationCommon
+    internal partial class MovementDirectionDataSetterTranslationCommon
     {
         public static readonly MovementDirectionDataSetterTranslationCommon Instance = new MovementDirectionDataSetterTranslationCommon();
 
@@ -1062,7 +1063,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MovementDirectionData_Registration.Instance;
-        public static MovementDirectionData_Registration StaticRegistration => MovementDirectionData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MovementDirectionData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MovementDirectionDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1086,7 +1087,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MovementDirectionDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1129,7 +1130,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class MovementDirectionDataBinaryCreateTranslation
+    internal partial class MovementDirectionDataBinaryCreateTranslation
     {
         public readonly static MovementDirectionDataBinaryCreateTranslation Instance = new MovementDirectionDataBinaryCreateTranslation();
 
@@ -1167,16 +1168,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class MovementDirectionDataBinaryOverlay :
+    internal partial class MovementDirectionDataBinaryOverlay :
         PluginBinaryOverlay,
         IMovementDirectionDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MovementDirectionData_Registration.Instance;
-        public static MovementDirectionData_Registration StaticRegistration => MovementDirectionData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MovementDirectionData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MovementDirectionDataCommon.Instance;
         [DebuggerStepThrough]

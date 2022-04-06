@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -554,16 +555,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum AHolotapeData_FieldIndex
+    internal enum AHolotapeData_FieldIndex
     {
     }
     #endregion
 
     #region Registration
-    public partial class AHolotapeData_Registration : ILoquiRegistration
+    internal partial class AHolotapeData_Registration : ILoquiRegistration
     {
         public static readonly AHolotapeData_Registration Instance = new AHolotapeData_Registration();
 
@@ -637,7 +638,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class AHolotapeDataSetterCommon
+    internal partial class AHolotapeDataSetterCommon
     {
         public static readonly AHolotapeDataSetterCommon Instance = new AHolotapeDataSetterCommon();
 
@@ -666,7 +667,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class AHolotapeDataCommon
+    internal partial class AHolotapeDataCommon
     {
         public static readonly AHolotapeDataCommon Instance = new AHolotapeDataCommon();
 
@@ -772,7 +773,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class AHolotapeDataSetterTranslationCommon
+    internal partial class AHolotapeDataSetterTranslationCommon
     {
         public static readonly AHolotapeDataSetterTranslationCommon Instance = new AHolotapeDataSetterTranslationCommon();
 
@@ -846,7 +847,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AHolotapeData_Registration.Instance;
-        public static AHolotapeData_Registration StaticRegistration => AHolotapeData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AHolotapeData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => AHolotapeDataCommon.Instance;
         [DebuggerStepThrough]
@@ -870,7 +871,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AHolotapeDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -896,7 +897,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class AHolotapeDataBinaryCreateTranslation
+    internal partial class AHolotapeDataBinaryCreateTranslation
     {
         public readonly static AHolotapeDataBinaryCreateTranslation Instance = new AHolotapeDataBinaryCreateTranslation();
 
@@ -924,16 +925,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public abstract partial class AHolotapeDataBinaryOverlay :
+    internal abstract partial class AHolotapeDataBinaryOverlay :
         PluginBinaryOverlay,
         IAHolotapeDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AHolotapeData_Registration.Instance;
-        public static AHolotapeData_Registration StaticRegistration => AHolotapeData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AHolotapeData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => AHolotapeDataCommon.Instance;
         [DebuggerStepThrough]

@@ -4,29 +4,25 @@ using Noggog;
 using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+public partial class SoundDescriptor
 {
-    public partial class SoundDescriptor
+    public enum LoopType
     {
-        public enum LoopType
-        {
-            None = 0,
-            Loop = 0x08,
-            EnvelopeFast = 0x10,
-            EnvelopeSlow = 0x20,
-        }
+        None = 0,
+        Loop = 0x08,
+        EnvelopeFast = 0x10,
+        EnvelopeSlow = 0x20,
     }
+}
 
-    namespace Internals
+partial class SoundDescriptorBinaryOverlay
+{
+    public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<IConditionGetter>();
+
+    partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
-        public partial class SoundDescriptorBinaryOverlay
-        {
-            public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<IConditionGetter>();
-
-            partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
-            {
-                Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
-            }
-        }
+        Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
     }
 }

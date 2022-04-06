@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -584,10 +585,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ADamageType_FieldIndex
+    internal enum ADamageType_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -599,7 +600,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ADamageType_Registration : ILoquiRegistration
+    internal partial class ADamageType_Registration : ILoquiRegistration
     {
         public static readonly ADamageType_Registration Instance = new ADamageType_Registration();
 
@@ -680,7 +681,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ADamageTypeSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class ADamageTypeSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly ADamageTypeSetterCommon Instance = new ADamageTypeSetterCommon();
 
@@ -743,7 +744,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ADamageTypeCommon : Fallout4MajorRecordCommon
+    internal partial class ADamageTypeCommon : Fallout4MajorRecordCommon
     {
         public new static readonly ADamageTypeCommon Instance = new ADamageTypeCommon();
 
@@ -963,7 +964,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ADamageTypeSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class ADamageTypeSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly ADamageTypeSetterTranslationCommon Instance = new ADamageTypeSetterTranslationCommon();
 
@@ -1118,7 +1119,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ADamageType_Registration.Instance;
-        public new static ADamageType_Registration StaticRegistration => ADamageType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ADamageType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ADamageTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1136,7 +1137,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ADamageTypeBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -1218,7 +1219,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ADamageTypeBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class ADamageTypeBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static ADamageTypeBinaryCreateTranslation Instance = new ADamageTypeBinaryCreateTranslation();
 
@@ -1240,16 +1241,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public abstract partial class ADamageTypeBinaryOverlay :
+    internal abstract partial class ADamageTypeBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IADamageTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ADamageType_Registration.Instance;
-        public new static ADamageType_Registration StaticRegistration => ADamageType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ADamageType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ADamageTypeCommon.Instance;
         [DebuggerStepThrough]

@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1324,10 +1325,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum HeadPart_FieldIndex
+    internal enum HeadPart_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1349,7 +1350,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class HeadPart_Registration : ILoquiRegistration
+    internal partial class HeadPart_Registration : ILoquiRegistration
     {
         public static readonly HeadPart_Registration Instance = new HeadPart_Registration();
 
@@ -1445,7 +1446,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class HeadPartSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class HeadPartSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly HeadPartSetterCommon Instance = new HeadPartSetterCommon();
 
@@ -1530,7 +1531,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class HeadPartCommon : Fallout4MajorRecordCommon
+    internal partial class HeadPartCommon : Fallout4MajorRecordCommon
     {
         public new static readonly HeadPartCommon Instance = new HeadPartCommon();
 
@@ -1951,7 +1952,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class HeadPartSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class HeadPartSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly HeadPartSetterTranslationCommon Instance = new HeadPartSetterTranslationCommon();
 
@@ -2223,7 +2224,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HeadPart_Registration.Instance;
-        public new static HeadPart_Registration StaticRegistration => HeadPart_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => HeadPart_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HeadPartCommon.Instance;
         [DebuggerStepThrough]
@@ -2241,7 +2242,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class HeadPartBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -2390,7 +2391,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class HeadPartBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class HeadPartBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static HeadPartBinaryCreateTranslation Instance = new HeadPartBinaryCreateTranslation();
 
@@ -2520,16 +2521,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class HeadPartBinaryOverlay :
+    internal partial class HeadPartBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IHeadPartGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HeadPart_Registration.Instance;
-        public new static HeadPart_Registration StaticRegistration => HeadPart_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => HeadPart_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HeadPartCommon.Instance;
         [DebuggerStepThrough]

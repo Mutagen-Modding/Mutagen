@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1211,10 +1212,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum FootstepSet_FieldIndex
+    internal enum FootstepSet_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1231,7 +1232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class FootstepSet_Registration : ILoquiRegistration
+    internal partial class FootstepSet_Registration : ILoquiRegistration
     {
         public static readonly FootstepSet_Registration Instance = new FootstepSet_Registration();
 
@@ -1315,7 +1316,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class FootstepSetSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class FootstepSetSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly FootstepSetSetterCommon Instance = new FootstepSetSetterCommon();
 
@@ -1394,7 +1395,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FootstepSetCommon : SkyrimMajorRecordCommon
+    internal partial class FootstepSetCommon : SkyrimMajorRecordCommon
     {
         public new static readonly FootstepSetCommon Instance = new FootstepSetCommon();
 
@@ -1771,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FootstepSetSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class FootstepSetSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly FootstepSetSetterTranslationCommon Instance = new FootstepSetSetterTranslationCommon();
 
@@ -2021,7 +2022,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FootstepSet_Registration.Instance;
-        public new static FootstepSet_Registration StaticRegistration => FootstepSet_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => FootstepSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FootstepSetCommon.Instance;
         [DebuggerStepThrough]
@@ -2039,7 +2040,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class FootstepSetBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2146,7 +2147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class FootstepSetBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class FootstepSetBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static FootstepSetBinaryCreateTranslation Instance = new FootstepSetBinaryCreateTranslation();
 
@@ -2206,16 +2207,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class FootstepSetBinaryOverlay :
+    internal partial class FootstepSetBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IFootstepSetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FootstepSet_Registration.Instance;
-        public new static FootstepSet_Registration StaticRegistration => FootstepSet_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => FootstepSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FootstepSetCommon.Instance;
         [DebuggerStepThrough]

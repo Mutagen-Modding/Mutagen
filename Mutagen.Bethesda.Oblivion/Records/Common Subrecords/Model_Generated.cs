@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -676,10 +677,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Model_FieldIndex
+    internal enum Model_FieldIndex
     {
         File = 0,
         BoundRadius = 1,
@@ -688,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Model_Registration : ILoquiRegistration
+    internal partial class Model_Registration : ILoquiRegistration
     {
         public static readonly Model_Registration Instance = new Model_Registration();
 
@@ -773,7 +774,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ModelSetterCommon
+    internal partial class ModelSetterCommon
     {
         public static readonly ModelSetterCommon Instance = new ModelSetterCommon();
 
@@ -811,7 +812,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ModelCommon
+    internal partial class ModelCommon
     {
         public static readonly ModelCommon Instance = new ModelCommon();
 
@@ -951,7 +952,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ModelSetterTranslationCommon
+    internal partial class ModelSetterTranslationCommon
     {
         public static readonly ModelSetterTranslationCommon Instance = new ModelSetterTranslationCommon();
 
@@ -1044,7 +1045,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
-        public static Model_Registration StaticRegistration => Model_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Model_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ModelCommon.Instance;
         [DebuggerStepThrough]
@@ -1068,7 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1118,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ModelBinaryCreateTranslation
+    internal partial class ModelBinaryCreateTranslation
     {
         public readonly static ModelBinaryCreateTranslation Instance = new ModelBinaryCreateTranslation();
 
@@ -1190,16 +1191,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ModelBinaryOverlay :
+    internal partial class ModelBinaryOverlay :
         PluginBinaryOverlay,
         IModelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
-        public static Model_Registration StaticRegistration => Model_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Model_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ModelCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -753,10 +754,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum LeveledSpellEntry_FieldIndex
+    internal enum LeveledSpellEntry_FieldIndex
     {
         Level = 0,
         Unknown = 1,
@@ -767,7 +768,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class LeveledSpellEntry_Registration : ILoquiRegistration
+    internal partial class LeveledSpellEntry_Registration : ILoquiRegistration
     {
         public static readonly LeveledSpellEntry_Registration Instance = new LeveledSpellEntry_Registration();
 
@@ -848,7 +849,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LeveledSpellEntrySetterCommon
+    internal partial class LeveledSpellEntrySetterCommon
     {
         public static readonly LeveledSpellEntrySetterCommon Instance = new LeveledSpellEntrySetterCommon();
 
@@ -892,7 +893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LeveledSpellEntryCommon
+    internal partial class LeveledSpellEntryCommon
     {
         public static readonly LeveledSpellEntryCommon Instance = new LeveledSpellEntryCommon();
 
@@ -1057,7 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LeveledSpellEntrySetterTranslationCommon
+    internal partial class LeveledSpellEntrySetterTranslationCommon
     {
         public static readonly LeveledSpellEntrySetterTranslationCommon Instance = new LeveledSpellEntrySetterTranslationCommon();
 
@@ -1151,7 +1152,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledSpellEntry_Registration.Instance;
-        public static LeveledSpellEntry_Registration StaticRegistration => LeveledSpellEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LeveledSpellEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LeveledSpellEntryCommon.Instance;
         [DebuggerStepThrough]
@@ -1175,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LeveledSpellEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1224,7 +1225,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LeveledSpellEntryBinaryCreateTranslation
+    internal partial class LeveledSpellEntryBinaryCreateTranslation
     {
         public readonly static LeveledSpellEntryBinaryCreateTranslation Instance = new LeveledSpellEntryBinaryCreateTranslation();
 
@@ -1265,16 +1266,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LeveledSpellEntryBinaryOverlay :
+    internal partial class LeveledSpellEntryBinaryOverlay :
         PluginBinaryOverlay,
         ILeveledSpellEntryGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledSpellEntry_Registration.Instance;
-        public static LeveledSpellEntry_Registration StaticRegistration => LeveledSpellEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LeveledSpellEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LeveledSpellEntryCommon.Instance;
         [DebuggerStepThrough]

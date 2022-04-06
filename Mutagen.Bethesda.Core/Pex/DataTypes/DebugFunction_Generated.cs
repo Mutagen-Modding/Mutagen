@@ -6,7 +6,6 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda.Pex.Internals;
 using Noggog;
 using System;
 using System.Collections;
@@ -746,10 +745,10 @@ namespace Mutagen.Bethesda.Pex
 
 }
 
-namespace Mutagen.Bethesda.Pex.Internals
+namespace Mutagen.Bethesda.Pex
 {
     #region Field Index
-    public enum DebugFunction_FieldIndex
+    internal enum DebugFunction_FieldIndex
     {
         ObjectName = 0,
         StateName = 1,
@@ -760,7 +759,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Registration
-    public partial class DebugFunction_Registration : ILoquiRegistration
+    internal partial class DebugFunction_Registration : ILoquiRegistration
     {
         public static readonly DebugFunction_Registration Instance = new DebugFunction_Registration();
 
@@ -833,7 +832,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Common
-    public partial class DebugFunctionSetterCommon
+    internal partial class DebugFunctionSetterCommon
     {
         public static readonly DebugFunctionSetterCommon Instance = new DebugFunctionSetterCommon();
 
@@ -850,7 +849,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class DebugFunctionCommon
+    internal partial class DebugFunctionCommon
     {
         public static readonly DebugFunctionCommon Instance = new DebugFunctionCommon();
 
@@ -1015,7 +1014,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class DebugFunctionSetterTranslationCommon
+    internal partial class DebugFunctionSetterTranslationCommon
     {
         public static readonly DebugFunctionSetterTranslationCommon Instance = new DebugFunctionSetterTranslationCommon();
 
@@ -1122,7 +1121,7 @@ namespace Mutagen.Bethesda.Pex
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DebugFunction_Registration.Instance;
-        public static DebugFunction_Registration StaticRegistration => DebugFunction_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DebugFunction_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DebugFunctionCommon.Instance;
         [DebuggerStepThrough]

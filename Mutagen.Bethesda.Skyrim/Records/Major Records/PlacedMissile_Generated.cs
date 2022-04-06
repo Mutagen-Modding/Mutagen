@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -703,10 +704,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PlacedMissile_FieldIndex
+    internal enum PlacedMissile_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -736,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PlacedMissile_Registration : ILoquiRegistration
+    internal partial class PlacedMissile_Registration : ILoquiRegistration
     {
         public static readonly PlacedMissile_Registration Instance = new PlacedMissile_Registration();
 
@@ -817,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PlacedMissileSetterCommon : APlacedTrapSetterCommon
+    internal partial class PlacedMissileSetterCommon : APlacedTrapSetterCommon
     {
         public new static readonly PlacedMissileSetterCommon Instance = new PlacedMissileSetterCommon();
 
@@ -904,7 +905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedMissileCommon : APlacedTrapCommon
+    internal partial class PlacedMissileCommon : APlacedTrapCommon
     {
         public new static readonly PlacedMissileCommon Instance = new PlacedMissileCommon();
 
@@ -1219,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedMissileSetterTranslationCommon : APlacedTrapSetterTranslationCommon
+    internal partial class PlacedMissileSetterTranslationCommon : APlacedTrapSetterTranslationCommon
     {
         public new static readonly PlacedMissileSetterTranslationCommon Instance = new PlacedMissileSetterTranslationCommon();
 
@@ -1408,7 +1409,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedMissile_Registration.Instance;
-        public new static PlacedMissile_Registration StaticRegistration => PlacedMissile_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedMissile_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedMissileCommon.Instance;
         [DebuggerStepThrough]
@@ -1426,7 +1427,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PlacedMissileBinaryWriteTranslation :
         APlacedTrapBinaryWriteTranslation,
@@ -1515,7 +1516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PlacedMissileBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
+    internal partial class PlacedMissileBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
     {
         public new readonly static PlacedMissileBinaryCreateTranslation Instance = new PlacedMissileBinaryCreateTranslation();
 
@@ -1542,16 +1543,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PlacedMissileBinaryOverlay :
+    internal partial class PlacedMissileBinaryOverlay :
         APlacedTrapBinaryOverlay,
         IPlacedMissileGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedMissile_Registration.Instance;
-        public new static PlacedMissile_Registration StaticRegistration => PlacedMissile_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedMissile_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedMissileCommon.Instance;
         [DebuggerStepThrough]

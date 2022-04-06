@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -652,10 +653,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ExternalAliasReference_FieldIndex
+    internal enum ExternalAliasReference_FieldIndex
     {
         Quest = 0,
         AliasIndex = 1,
@@ -663,7 +664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ExternalAliasReference_Registration : ILoquiRegistration
+    internal partial class ExternalAliasReference_Registration : ILoquiRegistration
     {
         public static readonly ExternalAliasReference_Registration Instance = new ExternalAliasReference_Registration();
 
@@ -745,7 +746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ExternalAliasReferenceSetterCommon
+    internal partial class ExternalAliasReferenceSetterCommon
     {
         public static readonly ExternalAliasReferenceSetterCommon Instance = new ExternalAliasReferenceSetterCommon();
 
@@ -783,7 +784,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ExternalAliasReferenceCommon
+    internal partial class ExternalAliasReferenceCommon
     {
         public static readonly ExternalAliasReferenceCommon Instance = new ExternalAliasReferenceCommon();
 
@@ -917,7 +918,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ExternalAliasReferenceSetterTranslationCommon
+    internal partial class ExternalAliasReferenceSetterTranslationCommon
     {
         public static readonly ExternalAliasReferenceSetterTranslationCommon Instance = new ExternalAliasReferenceSetterTranslationCommon();
 
@@ -999,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ExternalAliasReference_Registration.Instance;
-        public static ExternalAliasReference_Registration StaticRegistration => ExternalAliasReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ExternalAliasReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ExternalAliasReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1023,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ExternalAliasReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1068,7 +1069,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ExternalAliasReferenceBinaryCreateTranslation
+    internal partial class ExternalAliasReferenceBinaryCreateTranslation
     {
         public readonly static ExternalAliasReferenceBinaryCreateTranslation Instance = new ExternalAliasReferenceBinaryCreateTranslation();
 
@@ -1133,16 +1134,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ExternalAliasReferenceBinaryOverlay :
+    internal partial class ExternalAliasReferenceBinaryOverlay :
         PluginBinaryOverlay,
         IExternalAliasReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ExternalAliasReference_Registration.Instance;
-        public static ExternalAliasReference_Registration StaticRegistration => ExternalAliasReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ExternalAliasReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ExternalAliasReferenceCommon.Instance;
         [DebuggerStepThrough]

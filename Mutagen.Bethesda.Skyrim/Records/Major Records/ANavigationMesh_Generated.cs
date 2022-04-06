@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -741,10 +742,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ANavigationMesh_FieldIndex
+    internal enum ANavigationMesh_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -759,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ANavigationMesh_Registration : ILoquiRegistration
+    internal partial class ANavigationMesh_Registration : ILoquiRegistration
     {
         public static readonly ANavigationMesh_Registration Instance = new ANavigationMesh_Registration();
 
@@ -847,7 +848,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ANavigationMeshSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ANavigationMeshSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ANavigationMeshSetterCommon Instance = new ANavigationMeshSetterCommon();
 
@@ -913,7 +914,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ANavigationMeshCommon : SkyrimMajorRecordCommon
+    internal partial class ANavigationMeshCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ANavigationMeshCommon Instance = new ANavigationMeshCommon();
 
@@ -1175,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ANavigationMeshSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ANavigationMeshSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ANavigationMeshSetterTranslationCommon Instance = new ANavigationMeshSetterTranslationCommon();
 
@@ -1363,7 +1364,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANavigationMesh_Registration.Instance;
-        public new static ANavigationMesh_Registration StaticRegistration => ANavigationMesh_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ANavigationMesh_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ANavigationMeshCommon.Instance;
         [DebuggerStepThrough]
@@ -1381,7 +1382,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ANavigationMeshBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1507,7 +1508,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ANavigationMeshBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ANavigationMeshBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ANavigationMeshBinaryCreateTranslation Instance = new ANavigationMeshBinaryCreateTranslation();
 
@@ -1586,16 +1587,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public abstract partial class ANavigationMeshBinaryOverlay :
+    internal abstract partial class ANavigationMeshBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IANavigationMeshGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANavigationMesh_Registration.Instance;
-        public new static ANavigationMesh_Registration StaticRegistration => ANavigationMesh_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ANavigationMesh_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ANavigationMeshCommon.Instance;
         [DebuggerStepThrough]

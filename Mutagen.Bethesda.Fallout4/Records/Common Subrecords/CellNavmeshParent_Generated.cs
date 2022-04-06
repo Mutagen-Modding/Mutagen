@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -615,10 +616,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum CellNavmeshParent_FieldIndex
+    internal enum CellNavmeshParent_FieldIndex
     {
         UnusedWorldspaceParent = 0,
         Parent = 1,
@@ -626,7 +627,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class CellNavmeshParent_Registration : ILoquiRegistration
+    internal partial class CellNavmeshParent_Registration : ILoquiRegistration
     {
         public static readonly CellNavmeshParent_Registration Instance = new CellNavmeshParent_Registration();
 
@@ -700,7 +701,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class CellNavmeshParentSetterCommon : ANavmeshParentSetterCommon
+    internal partial class CellNavmeshParentSetterCommon : ANavmeshParentSetterCommon
     {
         public new static readonly CellNavmeshParentSetterCommon Instance = new CellNavmeshParentSetterCommon();
 
@@ -756,7 +757,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class CellNavmeshParentCommon : ANavmeshParentCommon
+    internal partial class CellNavmeshParentCommon : ANavmeshParentCommon
     {
         public new static readonly CellNavmeshParentCommon Instance = new CellNavmeshParentCommon();
 
@@ -920,7 +921,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class CellNavmeshParentSetterTranslationCommon : ANavmeshParentSetterTranslationCommon
+    internal partial class CellNavmeshParentSetterTranslationCommon : ANavmeshParentSetterTranslationCommon
     {
         public new static readonly CellNavmeshParentSetterTranslationCommon Instance = new CellNavmeshParentSetterTranslationCommon();
 
@@ -1024,7 +1025,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellNavmeshParent_Registration.Instance;
-        public new static CellNavmeshParent_Registration StaticRegistration => CellNavmeshParent_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CellNavmeshParent_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CellNavmeshParentCommon.Instance;
         [DebuggerStepThrough]
@@ -1042,7 +1043,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class CellNavmeshParentBinaryWriteTranslation :
         ANavmeshParentBinaryWriteTranslation,
@@ -1096,7 +1097,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class CellNavmeshParentBinaryCreateTranslation : ANavmeshParentBinaryCreateTranslation
+    internal partial class CellNavmeshParentBinaryCreateTranslation : ANavmeshParentBinaryCreateTranslation
     {
         public new readonly static CellNavmeshParentBinaryCreateTranslation Instance = new CellNavmeshParentBinaryCreateTranslation();
 
@@ -1121,16 +1122,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class CellNavmeshParentBinaryOverlay :
+    internal partial class CellNavmeshParentBinaryOverlay :
         ANavmeshParentBinaryOverlay,
         ICellNavmeshParentGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellNavmeshParent_Registration.Instance;
-        public new static CellNavmeshParent_Registration StaticRegistration => CellNavmeshParent_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CellNavmeshParent_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CellNavmeshParentCommon.Instance;
         [DebuggerStepThrough]

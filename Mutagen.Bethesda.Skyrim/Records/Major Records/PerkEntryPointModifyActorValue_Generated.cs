@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -643,10 +644,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PerkEntryPointModifyActorValue_FieldIndex
+    internal enum PerkEntryPointModifyActorValue_FieldIndex
     {
         Rank = 0,
         Priority = 1,
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PerkEntryPointModifyActorValue_Registration : ILoquiRegistration
+    internal partial class PerkEntryPointModifyActorValue_Registration : ILoquiRegistration
     {
         public static readonly PerkEntryPointModifyActorValue_Registration Instance = new PerkEntryPointModifyActorValue_Registration();
 
@@ -742,7 +743,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PerkEntryPointModifyActorValueSetterCommon : APerkEntryPointEffectSetterCommon
+    internal partial class PerkEntryPointModifyActorValueSetterCommon : APerkEntryPointEffectSetterCommon
     {
         public new static readonly PerkEntryPointModifyActorValueSetterCommon Instance = new PerkEntryPointModifyActorValueSetterCommon();
 
@@ -814,7 +815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkEntryPointModifyActorValueCommon : APerkEntryPointEffectCommon
+    internal partial class PerkEntryPointModifyActorValueCommon : APerkEntryPointEffectCommon
     {
         public new static readonly PerkEntryPointModifyActorValueCommon Instance = new PerkEntryPointModifyActorValueCommon();
 
@@ -1031,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkEntryPointModifyActorValueSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon
+    internal partial class PerkEntryPointModifyActorValueSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon
     {
         public new static readonly PerkEntryPointModifyActorValueSetterTranslationCommon Instance = new PerkEntryPointModifyActorValueSetterTranslationCommon();
 
@@ -1155,7 +1156,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointModifyActorValue_Registration.Instance;
-        public new static PerkEntryPointModifyActorValue_Registration StaticRegistration => PerkEntryPointModifyActorValue_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkEntryPointModifyActorValue_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointModifyActorValueCommon.Instance;
         [DebuggerStepThrough]
@@ -1173,7 +1174,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkEntryPointModifyActorValueBinaryWriteTranslation :
         APerkEntryPointEffectBinaryWriteTranslation,
@@ -1250,7 +1251,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PerkEntryPointModifyActorValueBinaryCreateTranslation : APerkEntryPointEffectBinaryCreateTranslation
+    internal partial class PerkEntryPointModifyActorValueBinaryCreateTranslation : APerkEntryPointEffectBinaryCreateTranslation
     {
         public new readonly static PerkEntryPointModifyActorValueBinaryCreateTranslation Instance = new PerkEntryPointModifyActorValueBinaryCreateTranslation();
 
@@ -1283,16 +1284,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PerkEntryPointModifyActorValueBinaryOverlay :
+    internal partial class PerkEntryPointModifyActorValueBinaryOverlay :
         APerkEntryPointEffectBinaryOverlay,
         IPerkEntryPointModifyActorValueGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointModifyActorValue_Registration.Instance;
-        public new static PerkEntryPointModifyActorValue_Registration StaticRegistration => PerkEntryPointModifyActorValue_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkEntryPointModifyActorValue_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointModifyActorValueCommon.Instance;
         [DebuggerStepThrough]

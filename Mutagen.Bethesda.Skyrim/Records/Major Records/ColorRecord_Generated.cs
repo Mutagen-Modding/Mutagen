@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -772,10 +773,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ColorRecord_FieldIndex
+    internal enum ColorRecord_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -790,7 +791,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ColorRecord_Registration : ILoquiRegistration
+    internal partial class ColorRecord_Registration : ILoquiRegistration
     {
         public static readonly ColorRecord_Registration Instance = new ColorRecord_Registration();
 
@@ -876,7 +877,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ColorRecordSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ColorRecordSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ColorRecordSetterCommon Instance = new ColorRecordSetterCommon();
 
@@ -948,7 +949,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ColorRecordCommon : SkyrimMajorRecordCommon
+    internal partial class ColorRecordCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ColorRecordCommon Instance = new ColorRecordCommon();
 
@@ -1204,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ColorRecordSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ColorRecordSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ColorRecordSetterTranslationCommon Instance = new ColorRecordSetterTranslationCommon();
 
@@ -1371,7 +1372,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ColorRecord_Registration.Instance;
-        public new static ColorRecord_Registration StaticRegistration => ColorRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ColorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ColorRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1389,7 +1390,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ColorRecordBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1486,7 +1487,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ColorRecordBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ColorRecordBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ColorRecordBinaryCreateTranslation Instance = new ColorRecordBinaryCreateTranslation();
 
@@ -1559,16 +1560,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ColorRecordBinaryOverlay :
+    internal partial class ColorRecordBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IColorRecordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ColorRecord_Registration.Instance;
-        public new static ColorRecord_Registration StaticRegistration => ColorRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ColorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ColorRecordCommon.Instance;
         [DebuggerStepThrough]

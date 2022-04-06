@@ -107,6 +107,7 @@ public partial class RecordTypes
     public static readonly RecordType DUAL = new(0x4C415544);
     public static readonly RecordType EAMT = new(0x544D4145);
     public static readonly RecordType ECOR = new(0x524F4345);
+    public static readonly RecordType EDID = new(0x44494445);
     public static readonly RecordType EFID = new(0x44494645);
     public static readonly RecordType EFIT = new(0x54494645);
     public static readonly RecordType EFSH = new(0x48534645);

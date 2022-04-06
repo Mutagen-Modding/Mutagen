@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -690,10 +691,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum LoadScreenLocation_FieldIndex
+    internal enum LoadScreenLocation_FieldIndex
     {
         Direct = 0,
         Indirect = 1,
@@ -702,7 +703,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class LoadScreenLocation_Registration : ILoquiRegistration
+    internal partial class LoadScreenLocation_Registration : ILoquiRegistration
     {
         public static readonly LoadScreenLocation_Registration Instance = new LoadScreenLocation_Registration();
 
@@ -783,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LoadScreenLocationSetterCommon
+    internal partial class LoadScreenLocationSetterCommon
     {
         public static readonly LoadScreenLocationSetterCommon Instance = new LoadScreenLocationSetterCommon();
 
@@ -826,7 +827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LoadScreenLocationCommon
+    internal partial class LoadScreenLocationCommon
     {
         public static readonly LoadScreenLocationCommon Instance = new LoadScreenLocationCommon();
 
@@ -964,7 +965,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LoadScreenLocationSetterTranslationCommon
+    internal partial class LoadScreenLocationSetterTranslationCommon
     {
         public static readonly LoadScreenLocationSetterTranslationCommon Instance = new LoadScreenLocationSetterTranslationCommon();
 
@@ -1050,7 +1051,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreenLocation_Registration.Instance;
-        public static LoadScreenLocation_Registration StaticRegistration => LoadScreenLocation_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LoadScreenLocation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LoadScreenLocationCommon.Instance;
         [DebuggerStepThrough]
@@ -1074,7 +1075,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LoadScreenLocationBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1125,7 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LoadScreenLocationBinaryCreateTranslation
+    internal partial class LoadScreenLocationBinaryCreateTranslation
     {
         public readonly static LoadScreenLocationBinaryCreateTranslation Instance = new LoadScreenLocationBinaryCreateTranslation();
 
@@ -1162,16 +1163,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LoadScreenLocationBinaryOverlay :
+    internal partial class LoadScreenLocationBinaryOverlay :
         PluginBinaryOverlay,
         ILoadScreenLocationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreenLocation_Registration.Instance;
-        public static LoadScreenLocation_Registration StaticRegistration => LoadScreenLocation_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LoadScreenLocation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LoadScreenLocationCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -2098,10 +2099,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum QuestAlias_FieldIndex
+    internal enum QuestAlias_FieldIndex
     {
         ID = 0,
         Type = 1,
@@ -2132,7 +2133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class QuestAlias_Registration : ILoquiRegistration
+    internal partial class QuestAlias_Registration : ILoquiRegistration
     {
         public static readonly QuestAlias_Registration Instance = new QuestAlias_Registration();
 
@@ -2251,7 +2252,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class QuestAliasSetterCommon
+    internal partial class QuestAliasSetterCommon
     {
         public static readonly QuestAliasSetterCommon Instance = new QuestAliasSetterCommon();
 
@@ -2329,7 +2330,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class QuestAliasCommon
+    internal partial class QuestAliasCommon
     {
         public static readonly QuestAliasCommon Instance = new QuestAliasCommon();
 
@@ -2950,7 +2951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class QuestAliasSetterTranslationCommon
+    internal partial class QuestAliasSetterTranslationCommon
     {
         public static readonly QuestAliasSetterTranslationCommon Instance = new QuestAliasSetterTranslationCommon();
 
@@ -3350,7 +3351,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestAlias_Registration.Instance;
-        public static QuestAlias_Registration StaticRegistration => QuestAlias_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => QuestAlias_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestAliasCommon.Instance;
         [DebuggerStepThrough]
@@ -3374,7 +3375,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class QuestAliasBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -3603,7 +3604,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class QuestAliasBinaryCreateTranslation
+    internal partial class QuestAliasBinaryCreateTranslation
     {
         public readonly static QuestAliasBinaryCreateTranslation Instance = new QuestAliasBinaryCreateTranslation();
 
@@ -3860,16 +3861,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class QuestAliasBinaryOverlay :
+    internal partial class QuestAliasBinaryOverlay :
         PluginBinaryOverlay,
         IQuestAliasGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestAlias_Registration.Instance;
-        public static QuestAlias_Registration StaticRegistration => QuestAlias_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => QuestAlias_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestAliasCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -734,10 +735,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum SkillData_FieldIndex
+    internal enum SkillData_FieldIndex
     {
         Action = 0,
         Attribute = 1,
@@ -748,7 +749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class SkillData_Registration : ILoquiRegistration
+    internal partial class SkillData_Registration : ILoquiRegistration
     {
         public static readonly SkillData_Registration Instance = new SkillData_Registration();
 
@@ -829,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class SkillDataSetterCommon
+    internal partial class SkillDataSetterCommon
     {
         public static readonly SkillDataSetterCommon Instance = new SkillDataSetterCommon();
 
@@ -872,7 +873,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SkillDataCommon
+    internal partial class SkillDataCommon
     {
         public static readonly SkillDataCommon Instance = new SkillDataCommon();
 
@@ -1028,7 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SkillDataSetterTranslationCommon
+    internal partial class SkillDataSetterTranslationCommon
     {
         public static readonly SkillDataSetterTranslationCommon Instance = new SkillDataSetterTranslationCommon();
 
@@ -1122,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillData_Registration.Instance;
-        public static SkillData_Registration StaticRegistration => SkillData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SkillData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SkillDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1146,7 +1147,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SkillDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1206,7 +1207,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class SkillDataBinaryCreateTranslation
+    internal partial class SkillDataBinaryCreateTranslation
     {
         public readonly static SkillDataBinaryCreateTranslation Instance = new SkillDataBinaryCreateTranslation();
 
@@ -1251,16 +1252,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class SkillDataBinaryOverlay :
+    internal partial class SkillDataBinaryOverlay :
         PluginBinaryOverlay,
         ISkillDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillData_Registration.Instance;
-        public static SkillData_Registration StaticRegistration => SkillData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SkillData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SkillDataCommon.Instance;
         [DebuggerStepThrough]

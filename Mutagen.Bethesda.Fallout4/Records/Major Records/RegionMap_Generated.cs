@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -617,10 +618,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum RegionMap_FieldIndex
+    internal enum RegionMap_FieldIndex
     {
         Header = 0,
         Icons = 1,
@@ -629,7 +630,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class RegionMap_Registration : ILoquiRegistration
+    internal partial class RegionMap_Registration : ILoquiRegistration
     {
         public static readonly RegionMap_Registration Instance = new RegionMap_Registration();
 
@@ -717,7 +718,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class RegionMapSetterCommon : RegionDataSetterCommon
+    internal partial class RegionMapSetterCommon : RegionDataSetterCommon
     {
         public new static readonly RegionMapSetterCommon Instance = new RegionMapSetterCommon();
 
@@ -771,7 +772,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class RegionMapCommon : RegionDataCommon
+    internal partial class RegionMapCommon : RegionDataCommon
     {
         public new static readonly RegionMapCommon Instance = new RegionMapCommon();
 
@@ -931,7 +932,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class RegionMapSetterTranslationCommon : RegionDataSetterTranslationCommon
+    internal partial class RegionMapSetterTranslationCommon : RegionDataSetterTranslationCommon
     {
         public new static readonly RegionMapSetterTranslationCommon Instance = new RegionMapSetterTranslationCommon();
 
@@ -1031,7 +1032,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionMap_Registration.Instance;
-        public new static RegionMap_Registration StaticRegistration => RegionMap_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => RegionMap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionMapCommon.Instance;
         [DebuggerStepThrough]
@@ -1049,7 +1050,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class RegionMapBinaryWriteTranslation :
         RegionDataBinaryWriteTranslation,
@@ -1109,7 +1110,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class RegionMapBinaryCreateTranslation : RegionDataBinaryCreateTranslation
+    internal partial class RegionMapBinaryCreateTranslation : RegionDataBinaryCreateTranslation
     {
         public new readonly static RegionMapBinaryCreateTranslation Instance = new RegionMapBinaryCreateTranslation();
 
@@ -1164,16 +1165,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class RegionMapBinaryOverlay :
+    internal partial class RegionMapBinaryOverlay :
         RegionDataBinaryOverlay,
         IRegionMapGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionMap_Registration.Instance;
-        public new static RegionMap_Registration StaticRegistration => RegionMap_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => RegionMap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionMapCommon.Instance;
         [DebuggerStepThrough]

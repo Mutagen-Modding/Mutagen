@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -635,10 +636,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Location_FieldIndex
+    internal enum Location_FieldIndex
     {
         Position = 0,
         Rotation = 1,
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Location_Registration : ILoquiRegistration
+    internal partial class Location_Registration : ILoquiRegistration
     {
         public static readonly Location_Registration Instance = new Location_Registration();
 
@@ -720,7 +721,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LocationSetterCommon
+    internal partial class LocationSetterCommon
     {
         public static readonly LocationSetterCommon Instance = new LocationSetterCommon();
 
@@ -756,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LocationCommon
+    internal partial class LocationCommon
     {
         public static readonly LocationCommon Instance = new LocationCommon();
 
@@ -882,7 +883,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LocationSetterTranslationCommon
+    internal partial class LocationSetterTranslationCommon
     {
         public static readonly LocationSetterTranslationCommon Instance = new LocationSetterTranslationCommon();
 
@@ -964,7 +965,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Location_Registration.Instance;
-        public static Location_Registration StaticRegistration => Location_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Location_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCommon.Instance;
         [DebuggerStepThrough]
@@ -988,7 +989,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LocationBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1029,7 +1030,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LocationBinaryCreateTranslation
+    internal partial class LocationBinaryCreateTranslation
     {
         public readonly static LocationBinaryCreateTranslation Instance = new LocationBinaryCreateTranslation();
 
@@ -1065,16 +1066,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LocationBinaryOverlay :
+    internal partial class LocationBinaryOverlay :
         PluginBinaryOverlay,
         ILocationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Location_Registration.Instance;
-        public static Location_Registration StaticRegistration => Location_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Location_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCommon.Instance;
         [DebuggerStepThrough]

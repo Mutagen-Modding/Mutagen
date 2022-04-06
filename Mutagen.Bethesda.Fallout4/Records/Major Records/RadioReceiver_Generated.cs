@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -787,10 +788,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum RadioReceiver_FieldIndex
+    internal enum RadioReceiver_FieldIndex
     {
         Versioning = 0,
         SoundModel = 1,
@@ -802,7 +803,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class RadioReceiver_Registration : ILoquiRegistration
+    internal partial class RadioReceiver_Registration : ILoquiRegistration
     {
         public static readonly RadioReceiver_Registration Instance = new RadioReceiver_Registration();
 
@@ -883,7 +884,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class RadioReceiverSetterCommon
+    internal partial class RadioReceiverSetterCommon
     {
         public static readonly RadioReceiverSetterCommon Instance = new RadioReceiverSetterCommon();
 
@@ -928,7 +929,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class RadioReceiverCommon
+    internal partial class RadioReceiverCommon
     {
         public static readonly RadioReceiverCommon Instance = new RadioReceiverCommon();
 
@@ -1095,7 +1096,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class RadioReceiverSetterTranslationCommon
+    internal partial class RadioReceiverSetterTranslationCommon
     {
         public static readonly RadioReceiverSetterTranslationCommon Instance = new RadioReceiverSetterTranslationCommon();
 
@@ -1194,7 +1195,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RadioReceiver_Registration.Instance;
-        public static RadioReceiver_Registration StaticRegistration => RadioReceiver_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RadioReceiver_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RadioReceiverCommon.Instance;
         [DebuggerStepThrough]
@@ -1218,7 +1219,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class RadioReceiverBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1274,7 +1275,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class RadioReceiverBinaryCreateTranslation
+    internal partial class RadioReceiverBinaryCreateTranslation
     {
         public readonly static RadioReceiverBinaryCreateTranslation Instance = new RadioReceiverBinaryCreateTranslation();
 
@@ -1318,16 +1319,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class RadioReceiverBinaryOverlay :
+    internal partial class RadioReceiverBinaryOverlay :
         PluginBinaryOverlay,
         IRadioReceiverGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RadioReceiver_Registration.Instance;
-        public static RadioReceiver_Registration StaticRegistration => RadioReceiver_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RadioReceiver_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RadioReceiverCommon.Instance;
         [DebuggerStepThrough]

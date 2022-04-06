@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -866,10 +867,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ImageSpaceHdr_FieldIndex
+    internal enum ImageSpaceHdr_FieldIndex
     {
         EyeAdaptSpeed = 0,
         BloomBlurRadius = 1,
@@ -884,7 +885,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ImageSpaceHdr_Registration : ILoquiRegistration
+    internal partial class ImageSpaceHdr_Registration : ILoquiRegistration
     {
         public static readonly ImageSpaceHdr_Registration Instance = new ImageSpaceHdr_Registration();
 
@@ -965,7 +966,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ImageSpaceHdrSetterCommon
+    internal partial class ImageSpaceHdrSetterCommon
     {
         public static readonly ImageSpaceHdrSetterCommon Instance = new ImageSpaceHdrSetterCommon();
 
@@ -1012,7 +1013,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImageSpaceHdrCommon
+    internal partial class ImageSpaceHdrCommon
     {
         public static readonly ImageSpaceHdrCommon Instance = new ImageSpaceHdrCommon();
 
@@ -1208,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImageSpaceHdrSetterTranslationCommon
+    internal partial class ImageSpaceHdrSetterTranslationCommon
     {
         public static readonly ImageSpaceHdrSetterTranslationCommon Instance = new ImageSpaceHdrSetterTranslationCommon();
 
@@ -1318,7 +1319,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceHdr_Registration.Instance;
-        public static ImageSpaceHdr_Registration StaticRegistration => ImageSpaceHdr_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ImageSpaceHdr_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImageSpaceHdrCommon.Instance;
         [DebuggerStepThrough]
@@ -1342,7 +1343,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImageSpaceHdrBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1411,7 +1412,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ImageSpaceHdrBinaryCreateTranslation
+    internal partial class ImageSpaceHdrBinaryCreateTranslation
     {
         public readonly static ImageSpaceHdrBinaryCreateTranslation Instance = new ImageSpaceHdrBinaryCreateTranslation();
 
@@ -1454,16 +1455,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ImageSpaceHdrBinaryOverlay :
+    internal partial class ImageSpaceHdrBinaryOverlay :
         PluginBinaryOverlay,
         IImageSpaceHdrGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceHdr_Registration.Instance;
-        public static ImageSpaceHdr_Registration StaticRegistration => ImageSpaceHdr_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ImageSpaceHdr_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImageSpaceHdrCommon.Instance;
         [DebuggerStepThrough]

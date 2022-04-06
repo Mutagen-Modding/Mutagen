@@ -535,7 +535,7 @@
     <Compile Include="Plugins\FormKey.cs" />
     <Compile Include="Plugins\ModIndex.cs" />
     <Compile Include="Plugins\RecordType.cs" />
-    <Compile Include="TestingPermissions.cs" />
+    <Compile Include="InternalsPermissions.cs" />
     <Compile Include="Plugins\Records\IFormVersionGetter.cs" />
     <Compile Include="Plugins\Binary\Overlay\FormVersionGetter.cs" />
     <Compile Include="Plugins\Binary\Overlay\OverlayStream.cs" />

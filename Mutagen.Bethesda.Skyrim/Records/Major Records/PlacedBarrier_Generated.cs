@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -703,10 +704,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PlacedBarrier_FieldIndex
+    internal enum PlacedBarrier_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -736,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PlacedBarrier_Registration : ILoquiRegistration
+    internal partial class PlacedBarrier_Registration : ILoquiRegistration
     {
         public static readonly PlacedBarrier_Registration Instance = new PlacedBarrier_Registration();
 
@@ -817,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PlacedBarrierSetterCommon : APlacedTrapSetterCommon
+    internal partial class PlacedBarrierSetterCommon : APlacedTrapSetterCommon
     {
         public new static readonly PlacedBarrierSetterCommon Instance = new PlacedBarrierSetterCommon();
 
@@ -904,7 +905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedBarrierCommon : APlacedTrapCommon
+    internal partial class PlacedBarrierCommon : APlacedTrapCommon
     {
         public new static readonly PlacedBarrierCommon Instance = new PlacedBarrierCommon();
 
@@ -1219,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedBarrierSetterTranslationCommon : APlacedTrapSetterTranslationCommon
+    internal partial class PlacedBarrierSetterTranslationCommon : APlacedTrapSetterTranslationCommon
     {
         public new static readonly PlacedBarrierSetterTranslationCommon Instance = new PlacedBarrierSetterTranslationCommon();
 
@@ -1408,7 +1409,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedBarrier_Registration.Instance;
-        public new static PlacedBarrier_Registration StaticRegistration => PlacedBarrier_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedBarrier_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedBarrierCommon.Instance;
         [DebuggerStepThrough]
@@ -1426,7 +1427,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PlacedBarrierBinaryWriteTranslation :
         APlacedTrapBinaryWriteTranslation,
@@ -1515,7 +1516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PlacedBarrierBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
+    internal partial class PlacedBarrierBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
     {
         public new readonly static PlacedBarrierBinaryCreateTranslation Instance = new PlacedBarrierBinaryCreateTranslation();
 
@@ -1542,16 +1543,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PlacedBarrierBinaryOverlay :
+    internal partial class PlacedBarrierBinaryOverlay :
         APlacedTrapBinaryOverlay,
         IPlacedBarrierGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedBarrier_Registration.Instance;
-        public new static PlacedBarrier_Registration StaticRegistration => PlacedBarrier_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedBarrier_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedBarrierCommon.Instance;
         [DebuggerStepThrough]

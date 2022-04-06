@@ -65,6 +65,7 @@ public partial class RecordTypeInts
     public const int GLOB = 0x424F4C47;
     public const int GMST = 0x54534D47;
     public const int GRAS = 0x53415247;
+    public const int GRUP = 0x50555247;
     public const int HAIR = 0x52494148;
     public const int HAZD = 0x445A4148;
     public const int HDPT = 0x54504448;
@@ -180,5 +181,6 @@ public partial class RecordTypeInts
     public const int XPWR = 0x52575058;
     public const int XRNK = 0x4B4E5258;
     public const int XSCL = 0x4C435358;
+    public const int XXXX = 0x58585858;
     public const int ZOOM = 0x4D4F4F5A;
 }

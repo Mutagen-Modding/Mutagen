@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1020,10 +1021,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Container_FieldIndex
+    internal enum Container_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1041,7 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Container_Registration : ILoquiRegistration
+    internal partial class Container_Registration : ILoquiRegistration
     {
         public static readonly Container_Registration Instance = new Container_Registration();
 
@@ -1131,7 +1132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ContainerSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class ContainerSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly ContainerSetterCommon Instance = new ContainerSetterCommon();
 
@@ -1211,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ContainerCommon : OblivionMajorRecordCommon
+    internal partial class ContainerCommon : OblivionMajorRecordCommon
     {
         public new static readonly ContainerCommon Instance = new ContainerCommon();
 
@@ -1562,7 +1563,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ContainerSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class ContainerSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly ContainerSetterTranslationCommon Instance = new ContainerSetterTranslationCommon();
 
@@ -1809,7 +1810,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Container_Registration.Instance;
-        public new static Container_Registration StaticRegistration => Container_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Container_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ContainerCommon.Instance;
         [DebuggerStepThrough]
@@ -1827,7 +1828,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ContainerBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1951,7 +1952,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ContainerBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class ContainerBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static ContainerBinaryCreateTranslation Instance = new ContainerBinaryCreateTranslation();
 
@@ -2049,16 +2050,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ContainerBinaryOverlay :
+    internal partial class ContainerBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IContainerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Container_Registration.Instance;
-        public new static Container_Registration StaticRegistration => Container_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Container_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ContainerCommon.Instance;
         [DebuggerStepThrough]

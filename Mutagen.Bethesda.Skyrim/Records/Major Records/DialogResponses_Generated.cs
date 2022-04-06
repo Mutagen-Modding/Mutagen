@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1563,10 +1564,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum DialogResponses_FieldIndex
+    internal enum DialogResponses_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1593,7 +1594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class DialogResponses_Registration : ILoquiRegistration
+    internal partial class DialogResponses_Registration : ILoquiRegistration
     {
         public static readonly DialogResponses_Registration Instance = new DialogResponses_Registration();
 
@@ -1700,7 +1701,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class DialogResponsesSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class DialogResponsesSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly DialogResponsesSetterCommon Instance = new DialogResponsesSetterCommon();
 
@@ -1795,7 +1796,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DialogResponsesCommon : SkyrimMajorRecordCommon
+    internal partial class DialogResponsesCommon : SkyrimMajorRecordCommon
     {
         public new static readonly DialogResponsesCommon Instance = new DialogResponsesCommon();
 
@@ -2319,7 +2320,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DialogResponsesSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class DialogResponsesSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly DialogResponsesSetterTranslationCommon Instance = new DialogResponsesSetterTranslationCommon();
 
@@ -2660,7 +2661,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponses_Registration.Instance;
-        public new static DialogResponses_Registration StaticRegistration => DialogResponses_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => DialogResponses_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogResponsesCommon.Instance;
         [DebuggerStepThrough]
@@ -2678,7 +2679,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DialogResponsesBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2856,7 +2857,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class DialogResponsesBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class DialogResponsesBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static DialogResponsesBinaryCreateTranslation Instance = new DialogResponsesBinaryCreateTranslation();
 
@@ -3016,16 +3017,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class DialogResponsesBinaryOverlay :
+    internal partial class DialogResponsesBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IDialogResponsesGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponses_Registration.Instance;
-        public new static DialogResponses_Registration StaticRegistration => DialogResponses_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => DialogResponses_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogResponsesCommon.Instance;
         [DebuggerStepThrough]

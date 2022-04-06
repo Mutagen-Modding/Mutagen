@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -2026,10 +2027,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Package_FieldIndex
+    internal enum Package_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -2071,7 +2072,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Package_Registration : ILoquiRegistration
+    internal partial class Package_Registration : ILoquiRegistration
     {
         public static readonly Package_Registration Instance = new Package_Registration();
 
@@ -2178,7 +2179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PackageSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class PackageSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly PackageSetterCommon Instance = new PackageSetterCommon();
 
@@ -2287,7 +2288,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageCommon : SkyrimMajorRecordCommon
+    internal partial class PackageCommon : SkyrimMajorRecordCommon
     {
         public new static readonly PackageCommon Instance = new PackageCommon();
 
@@ -2985,7 +2986,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class PackageSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly PackageSetterTranslationCommon Instance = new PackageSetterTranslationCommon();
 
@@ -3418,7 +3419,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Package_Registration.Instance;
-        public new static Package_Registration StaticRegistration => Package_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Package_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageCommon.Instance;
         [DebuggerStepThrough]
@@ -3436,7 +3437,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -3660,7 +3661,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PackageBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class PackageBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static PackageBinaryCreateTranslation Instance = new PackageBinaryCreateTranslation();
 
@@ -3834,16 +3835,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageBinaryOverlay :
+    internal partial class PackageBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IPackageGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Package_Registration.Instance;
-        public new static Package_Registration StaticRegistration => Package_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Package_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageCommon.Instance;
         [DebuggerStepThrough]

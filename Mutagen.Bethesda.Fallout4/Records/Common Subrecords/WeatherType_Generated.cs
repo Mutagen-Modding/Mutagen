@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -690,10 +691,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum WeatherType_FieldIndex
+    internal enum WeatherType_FieldIndex
     {
         Weather = 0,
         Chance = 1,
@@ -702,7 +703,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class WeatherType_Registration : ILoquiRegistration
+    internal partial class WeatherType_Registration : ILoquiRegistration
     {
         public static readonly WeatherType_Registration Instance = new WeatherType_Registration();
 
@@ -776,7 +777,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class WeatherTypeSetterCommon
+    internal partial class WeatherTypeSetterCommon
     {
         public static readonly WeatherTypeSetterCommon Instance = new WeatherTypeSetterCommon();
 
@@ -815,7 +816,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class WeatherTypeCommon
+    internal partial class WeatherTypeCommon
     {
         public static readonly WeatherTypeCommon Instance = new WeatherTypeCommon();
 
@@ -953,7 +954,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class WeatherTypeSetterTranslationCommon
+    internal partial class WeatherTypeSetterTranslationCommon
     {
         public static readonly WeatherTypeSetterTranslationCommon Instance = new WeatherTypeSetterTranslationCommon();
 
@@ -1039,7 +1040,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherType_Registration.Instance;
-        public static WeatherType_Registration StaticRegistration => WeatherType_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1063,7 +1064,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class WeatherTypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1105,7 +1106,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class WeatherTypeBinaryCreateTranslation
+    internal partial class WeatherTypeBinaryCreateTranslation
     {
         public readonly static WeatherTypeBinaryCreateTranslation Instance = new WeatherTypeBinaryCreateTranslation();
 
@@ -1142,16 +1143,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class WeatherTypeBinaryOverlay :
+    internal partial class WeatherTypeBinaryOverlay :
         PluginBinaryOverlay,
         IWeatherTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherType_Registration.Instance;
-        public static WeatherType_Registration StaticRegistration => WeatherType_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherTypeCommon.Instance;
         [DebuggerStepThrough]

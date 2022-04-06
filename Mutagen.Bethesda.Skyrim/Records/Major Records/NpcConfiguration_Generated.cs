@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -937,10 +938,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum NpcConfiguration_FieldIndex
+    internal enum NpcConfiguration_FieldIndex
     {
         Flags = 0,
         MagickaOffset = 1,
@@ -957,7 +958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class NpcConfiguration_Registration : ILoquiRegistration
+    internal partial class NpcConfiguration_Registration : ILoquiRegistration
     {
         public static readonly NpcConfiguration_Registration Instance = new NpcConfiguration_Registration();
 
@@ -1038,7 +1039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NpcConfigurationSetterCommon
+    internal partial class NpcConfigurationSetterCommon
     {
         public static readonly NpcConfigurationSetterCommon Instance = new NpcConfigurationSetterCommon();
 
@@ -1087,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcConfigurationCommon
+    internal partial class NpcConfigurationCommon
     {
         public static readonly NpcConfigurationCommon Instance = new NpcConfigurationCommon();
 
@@ -1307,7 +1308,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcConfigurationSetterTranslationCommon
+    internal partial class NpcConfigurationSetterTranslationCommon
     {
         public static readonly NpcConfigurationSetterTranslationCommon Instance = new NpcConfigurationSetterTranslationCommon();
 
@@ -1443,7 +1444,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcConfiguration_Registration.Instance;
-        public static NpcConfiguration_Registration StaticRegistration => NpcConfiguration_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcConfiguration_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcConfigurationCommon.Instance;
         [DebuggerStepThrough]
@@ -1467,7 +1468,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NpcConfigurationBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1553,7 +1554,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NpcConfigurationBinaryCreateTranslation
+    internal partial class NpcConfigurationBinaryCreateTranslation
     {
         public readonly static NpcConfigurationBinaryCreateTranslation Instance = new NpcConfigurationBinaryCreateTranslation();
 
@@ -1612,16 +1613,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NpcConfigurationBinaryOverlay :
+    internal partial class NpcConfigurationBinaryOverlay :
         PluginBinaryOverlay,
         INpcConfigurationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcConfiguration_Registration.Instance;
-        public static NpcConfiguration_Registration StaticRegistration => NpcConfiguration_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcConfiguration_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcConfigurationCommon.Instance;
         [DebuggerStepThrough]

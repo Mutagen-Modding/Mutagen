@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -523,10 +524,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum MagicEffectEnhanceWeaponArchetype_FieldIndex
+    internal enum MagicEffectEnhanceWeaponArchetype_FieldIndex
     {
         Type = 0,
         AssociationKey = 1,
@@ -535,7 +536,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class MagicEffectEnhanceWeaponArchetype_Registration : ILoquiRegistration
+    internal partial class MagicEffectEnhanceWeaponArchetype_Registration : ILoquiRegistration
     {
         public static readonly MagicEffectEnhanceWeaponArchetype_Registration Instance = new MagicEffectEnhanceWeaponArchetype_Registration();
 
@@ -609,7 +610,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class MagicEffectEnhanceWeaponArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
+    internal partial class MagicEffectEnhanceWeaponArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
     {
         public new static readonly MagicEffectEnhanceWeaponArchetypeSetterCommon Instance = new MagicEffectEnhanceWeaponArchetypeSetterCommon();
 
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MagicEffectEnhanceWeaponArchetypeCommon : MagicEffectArchetypeCommon
+    internal partial class MagicEffectEnhanceWeaponArchetypeCommon : MagicEffectArchetypeCommon
     {
         public new static readonly MagicEffectEnhanceWeaponArchetypeCommon Instance = new MagicEffectEnhanceWeaponArchetypeCommon();
 
@@ -809,7 +810,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
+    internal partial class MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
     {
         public new static readonly MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon Instance = new MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon();
 
@@ -934,7 +935,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectEnhanceWeaponArchetype_Registration.Instance;
-        public new static MagicEffectEnhanceWeaponArchetype_Registration StaticRegistration => MagicEffectEnhanceWeaponArchetype_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MagicEffectEnhanceWeaponArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectEnhanceWeaponArchetypeCommon.Instance;
         [DebuggerStepThrough]
@@ -952,7 +953,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation :
         MagicEffectArchetypeBinaryWriteTranslation,
@@ -994,7 +995,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class MagicEffectEnhanceWeaponArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
+    internal partial class MagicEffectEnhanceWeaponArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
     {
         public new readonly static MagicEffectEnhanceWeaponArchetypeBinaryCreateTranslation Instance = new MagicEffectEnhanceWeaponArchetypeBinaryCreateTranslation();
 
@@ -1011,16 +1012,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class MagicEffectEnhanceWeaponArchetypeBinaryOverlay :
+    internal partial class MagicEffectEnhanceWeaponArchetypeBinaryOverlay :
         MagicEffectArchetypeBinaryOverlay,
         IMagicEffectEnhanceWeaponArchetypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectEnhanceWeaponArchetype_Registration.Instance;
-        public new static MagicEffectEnhanceWeaponArchetype_Registration StaticRegistration => MagicEffectEnhanceWeaponArchetype_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MagicEffectEnhanceWeaponArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectEnhanceWeaponArchetypeCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -996,10 +997,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LandscapeTexture_FieldIndex
+    internal enum LandscapeTexture_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1019,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LandscapeTexture_Registration : ILoquiRegistration
+    internal partial class LandscapeTexture_Registration : ILoquiRegistration
     {
         public static readonly LandscapeTexture_Registration Instance = new LandscapeTexture_Registration();
 
@@ -1108,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LandscapeTextureSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class LandscapeTextureSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly LandscapeTextureSetterCommon Instance = new LandscapeTextureSetterCommon();
 
@@ -1188,7 +1189,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LandscapeTextureCommon : SkyrimMajorRecordCommon
+    internal partial class LandscapeTextureCommon : SkyrimMajorRecordCommon
     {
         public new static readonly LandscapeTextureCommon Instance = new LandscapeTextureCommon();
 
@@ -1520,7 +1521,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LandscapeTextureSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class LandscapeTextureSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly LandscapeTextureSetterTranslationCommon Instance = new LandscapeTextureSetterTranslationCommon();
 
@@ -1722,7 +1723,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LandscapeTexture_Registration.Instance;
-        public new static LandscapeTexture_Registration StaticRegistration => LandscapeTexture_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LandscapeTexture_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LandscapeTextureCommon.Instance;
         [DebuggerStepThrough]
@@ -1740,7 +1741,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LandscapeTextureBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1866,7 +1867,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LandscapeTextureBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class LandscapeTextureBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static LandscapeTextureBinaryCreateTranslation Instance = new LandscapeTextureBinaryCreateTranslation();
 
@@ -1962,16 +1963,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LandscapeTextureBinaryOverlay :
+    internal partial class LandscapeTextureBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ILandscapeTextureGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LandscapeTexture_Registration.Instance;
-        public new static LandscapeTexture_Registration StaticRegistration => LandscapeTexture_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LandscapeTexture_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LandscapeTextureCommon.Instance;
         [DebuggerStepThrough]

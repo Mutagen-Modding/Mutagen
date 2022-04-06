@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -659,10 +660,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ActionRecord_FieldIndex
+    internal enum ActionRecord_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -675,7 +676,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ActionRecord_Registration : ILoquiRegistration
+    internal partial class ActionRecord_Registration : ILoquiRegistration
     {
         public static readonly ActionRecord_Registration Instance = new ActionRecord_Registration();
 
@@ -759,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ActionRecordSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ActionRecordSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ActionRecordSetterCommon Instance = new ActionRecordSetterCommon();
 
@@ -829,7 +830,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ActionRecordCommon : SkyrimMajorRecordCommon
+    internal partial class ActionRecordCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ActionRecordCommon Instance = new ActionRecordCommon();
 
@@ -1065,7 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ActionRecordSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ActionRecordSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ActionRecordSetterTranslationCommon Instance = new ActionRecordSetterTranslationCommon();
 
@@ -1224,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActionRecord_Registration.Instance;
-        public new static ActionRecord_Registration StaticRegistration => ActionRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ActionRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActionRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1242,7 +1243,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ActionRecordBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1328,7 +1329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ActionRecordBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ActionRecordBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ActionRecordBinaryCreateTranslation Instance = new ActionRecordBinaryCreateTranslation();
 
@@ -1384,16 +1385,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ActionRecordBinaryOverlay :
+    internal partial class ActionRecordBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IActionRecordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActionRecord_Registration.Instance;
-        public new static ActionRecord_Registration StaticRegistration => ActionRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ActionRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActionRecordCommon.Instance;
         [DebuggerStepThrough]

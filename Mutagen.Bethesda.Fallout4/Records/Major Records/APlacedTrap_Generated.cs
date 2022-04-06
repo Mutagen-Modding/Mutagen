@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -571,10 +572,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum APlacedTrap_FieldIndex
+    internal enum APlacedTrap_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -586,7 +587,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class APlacedTrap_Registration : ILoquiRegistration
+    internal partial class APlacedTrap_Registration : ILoquiRegistration
     {
         public static readonly APlacedTrap_Registration Instance = new APlacedTrap_Registration();
 
@@ -660,7 +661,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class APlacedTrapSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class APlacedTrapSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly APlacedTrapSetterCommon Instance = new APlacedTrapSetterCommon();
 
@@ -723,7 +724,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class APlacedTrapCommon : Fallout4MajorRecordCommon
+    internal partial class APlacedTrapCommon : Fallout4MajorRecordCommon
     {
         public new static readonly APlacedTrapCommon Instance = new APlacedTrapCommon();
 
@@ -943,7 +944,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class APlacedTrapSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class APlacedTrapSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly APlacedTrapSetterTranslationCommon Instance = new APlacedTrapSetterTranslationCommon();
 
@@ -1098,7 +1099,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APlacedTrap_Registration.Instance;
-        public new static APlacedTrap_Registration StaticRegistration => APlacedTrap_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => APlacedTrap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => APlacedTrapCommon.Instance;
         [DebuggerStepThrough]
@@ -1116,7 +1117,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class APlacedTrapBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -1180,7 +1181,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class APlacedTrapBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class APlacedTrapBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static APlacedTrapBinaryCreateTranslation Instance = new APlacedTrapBinaryCreateTranslation();
 
@@ -1198,16 +1199,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public abstract partial class APlacedTrapBinaryOverlay :
+    internal abstract partial class APlacedTrapBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IAPlacedTrapGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APlacedTrap_Registration.Instance;
-        public new static APlacedTrap_Registration StaticRegistration => APlacedTrap_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => APlacedTrap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => APlacedTrapCommon.Instance;
         [DebuggerStepThrough]

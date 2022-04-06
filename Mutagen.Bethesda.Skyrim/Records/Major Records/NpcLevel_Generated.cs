@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -553,17 +554,17 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum NpcLevel_FieldIndex
+    internal enum NpcLevel_FieldIndex
     {
         Level = 0,
     }
     #endregion
 
     #region Registration
-    public partial class NpcLevel_Registration : ILoquiRegistration
+    internal partial class NpcLevel_Registration : ILoquiRegistration
     {
         public static readonly NpcLevel_Registration Instance = new NpcLevel_Registration();
 
@@ -637,7 +638,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NpcLevelSetterCommon : ANpcLevelSetterCommon
+    internal partial class NpcLevelSetterCommon : ANpcLevelSetterCommon
     {
         public new static readonly NpcLevelSetterCommon Instance = new NpcLevelSetterCommon();
 
@@ -689,7 +690,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcLevelCommon : ANpcLevelCommon
+    internal partial class NpcLevelCommon : ANpcLevelCommon
     {
         public new static readonly NpcLevelCommon Instance = new NpcLevelCommon();
 
@@ -837,7 +838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcLevelSetterTranslationCommon : ANpcLevelSetterTranslationCommon
+    internal partial class NpcLevelSetterTranslationCommon : ANpcLevelSetterTranslationCommon
     {
         public new static readonly NpcLevelSetterTranslationCommon Instance = new NpcLevelSetterTranslationCommon();
 
@@ -937,7 +938,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcLevel_Registration.Instance;
-        public new static NpcLevel_Registration StaticRegistration => NpcLevel_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => NpcLevel_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcLevelCommon.Instance;
         [DebuggerStepThrough]
@@ -955,7 +956,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NpcLevelBinaryWriteTranslation :
         ANpcLevelBinaryWriteTranslation,
@@ -1004,7 +1005,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NpcLevelBinaryCreateTranslation : ANpcLevelBinaryCreateTranslation
+    internal partial class NpcLevelBinaryCreateTranslation : ANpcLevelBinaryCreateTranslation
     {
         public new readonly static NpcLevelBinaryCreateTranslation Instance = new NpcLevelBinaryCreateTranslation();
 
@@ -1028,16 +1029,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NpcLevelBinaryOverlay :
+    internal partial class NpcLevelBinaryOverlay :
         ANpcLevelBinaryOverlay,
         INpcLevelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcLevel_Registration.Instance;
-        public new static NpcLevel_Registration StaticRegistration => NpcLevel_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => NpcLevel_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcLevelCommon.Instance;
         [DebuggerStepThrough]

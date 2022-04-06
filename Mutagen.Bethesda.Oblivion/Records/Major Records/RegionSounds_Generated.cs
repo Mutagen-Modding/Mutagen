@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -690,10 +691,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum RegionSounds_FieldIndex
+    internal enum RegionSounds_FieldIndex
     {
         Header = 0,
         MusicType = 1,
@@ -702,7 +703,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class RegionSounds_Registration : ILoquiRegistration
+    internal partial class RegionSounds_Registration : ILoquiRegistration
     {
         public static readonly RegionSounds_Registration Instance = new RegionSounds_Registration();
 
@@ -787,7 +788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class RegionSoundsSetterCommon : RegionDataSetterCommon
+    internal partial class RegionSoundsSetterCommon : RegionDataSetterCommon
     {
         public new static readonly RegionSoundsSetterCommon Instance = new RegionSoundsSetterCommon();
 
@@ -843,7 +844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RegionSoundsCommon : RegionDataCommon
+    internal partial class RegionSoundsCommon : RegionDataCommon
     {
         public new static readonly RegionSoundsCommon Instance = new RegionSoundsCommon();
 
@@ -1036,7 +1037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RegionSoundsSetterTranslationCommon : RegionDataSetterTranslationCommon
+    internal partial class RegionSoundsSetterTranslationCommon : RegionDataSetterTranslationCommon
     {
         public new static readonly RegionSoundsSetterTranslationCommon Instance = new RegionSoundsSetterTranslationCommon();
 
@@ -1168,7 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionSounds_Registration.Instance;
-        public new static RegionSounds_Registration StaticRegistration => RegionSounds_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => RegionSounds_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionSoundsCommon.Instance;
         [DebuggerStepThrough]
@@ -1186,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RegionSoundsBinaryWriteTranslation :
         RegionDataBinaryWriteTranslation,
@@ -1257,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class RegionSoundsBinaryCreateTranslation : RegionDataBinaryCreateTranslation
+    internal partial class RegionSoundsBinaryCreateTranslation : RegionDataBinaryCreateTranslation
     {
         public new readonly static RegionSoundsBinaryCreateTranslation Instance = new RegionSoundsBinaryCreateTranslation();
 
@@ -1321,16 +1322,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class RegionSoundsBinaryOverlay :
+    internal partial class RegionSoundsBinaryOverlay :
         RegionDataBinaryOverlay,
         IRegionSoundsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionSounds_Registration.Instance;
-        public new static RegionSounds_Registration StaticRegistration => RegionSounds_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => RegionSounds_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionSoundsCommon.Instance;
         [DebuggerStepThrough]

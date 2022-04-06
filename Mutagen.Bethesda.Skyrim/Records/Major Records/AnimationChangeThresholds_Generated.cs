@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -668,10 +669,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum AnimationChangeThresholds_FieldIndex
+    internal enum AnimationChangeThresholds_FieldIndex
     {
         Directional = 0,
         MovementSpeed = 1,
@@ -680,7 +681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class AnimationChangeThresholds_Registration : ILoquiRegistration
+    internal partial class AnimationChangeThresholds_Registration : ILoquiRegistration
     {
         public static readonly AnimationChangeThresholds_Registration Instance = new AnimationChangeThresholds_Registration();
 
@@ -761,7 +762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class AnimationChangeThresholdsSetterCommon
+    internal partial class AnimationChangeThresholdsSetterCommon
     {
         public static readonly AnimationChangeThresholdsSetterCommon Instance = new AnimationChangeThresholdsSetterCommon();
 
@@ -802,7 +803,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AnimationChangeThresholdsCommon
+    internal partial class AnimationChangeThresholdsCommon
     {
         public static readonly AnimationChangeThresholdsCommon Instance = new AnimationChangeThresholdsCommon();
 
@@ -938,7 +939,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AnimationChangeThresholdsSetterTranslationCommon
+    internal partial class AnimationChangeThresholdsSetterTranslationCommon
     {
         public static readonly AnimationChangeThresholdsSetterTranslationCommon Instance = new AnimationChangeThresholdsSetterTranslationCommon();
 
@@ -1024,7 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimationChangeThresholds_Registration.Instance;
-        public static AnimationChangeThresholds_Registration StaticRegistration => AnimationChangeThresholds_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AnimationChangeThresholds_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AnimationChangeThresholdsCommon.Instance;
         [DebuggerStepThrough]
@@ -1048,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AnimationChangeThresholdsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1099,7 +1100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class AnimationChangeThresholdsBinaryCreateTranslation
+    internal partial class AnimationChangeThresholdsBinaryCreateTranslation
     {
         public readonly static AnimationChangeThresholdsBinaryCreateTranslation Instance = new AnimationChangeThresholdsBinaryCreateTranslation();
 
@@ -1136,16 +1137,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class AnimationChangeThresholdsBinaryOverlay :
+    internal partial class AnimationChangeThresholdsBinaryOverlay :
         PluginBinaryOverlay,
         IAnimationChangeThresholdsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimationChangeThresholds_Registration.Instance;
-        public static AnimationChangeThresholds_Registration StaticRegistration => AnimationChangeThresholds_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AnimationChangeThresholds_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AnimationChangeThresholdsCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -990,10 +991,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ActorValuePerkNode_FieldIndex
+    internal enum ActorValuePerkNode_FieldIndex
     {
         Perk = 0,
         FNAM = 1,
@@ -1008,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ActorValuePerkNode_Registration : ILoquiRegistration
+    internal partial class ActorValuePerkNode_Registration : ILoquiRegistration
     {
         public static readonly ActorValuePerkNode_Registration Instance = new ActorValuePerkNode_Registration();
 
@@ -1099,7 +1100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ActorValuePerkNodeSetterCommon
+    internal partial class ActorValuePerkNodeSetterCommon
     {
         public static readonly ActorValuePerkNodeSetterCommon Instance = new ActorValuePerkNodeSetterCommon();
 
@@ -1145,7 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ActorValuePerkNodeCommon
+    internal partial class ActorValuePerkNodeCommon
     {
         public static readonly ActorValuePerkNodeCommon Instance = new ActorValuePerkNodeCommon();
 
@@ -1387,7 +1388,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ActorValuePerkNodeSetterTranslationCommon
+    internal partial class ActorValuePerkNodeSetterTranslationCommon
     {
         public static readonly ActorValuePerkNodeSetterTranslationCommon Instance = new ActorValuePerkNodeSetterTranslationCommon();
 
@@ -1517,7 +1518,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValuePerkNode_Registration.Instance;
-        public static ActorValuePerkNode_Registration StaticRegistration => ActorValuePerkNode_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ActorValuePerkNode_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ActorValuePerkNodeCommon.Instance;
         [DebuggerStepThrough]
@@ -1541,7 +1542,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ActorValuePerkNodeBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1615,7 +1616,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ActorValuePerkNodeBinaryCreateTranslation
+    internal partial class ActorValuePerkNodeBinaryCreateTranslation
     {
         public readonly static ActorValuePerkNodeBinaryCreateTranslation Instance = new ActorValuePerkNodeBinaryCreateTranslation();
 
@@ -1724,16 +1725,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ActorValuePerkNodeBinaryOverlay :
+    internal partial class ActorValuePerkNodeBinaryOverlay :
         PluginBinaryOverlay,
         IActorValuePerkNodeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValuePerkNode_Registration.Instance;
-        public static ActorValuePerkNode_Registration StaticRegistration => ActorValuePerkNode_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ActorValuePerkNode_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ActorValuePerkNodeCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -635,10 +636,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Int16MinMax_FieldIndex
+    internal enum Int16MinMax_FieldIndex
     {
         Min = 0,
         Max = 1,
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Int16MinMax_Registration : ILoquiRegistration
+    internal partial class Int16MinMax_Registration : ILoquiRegistration
     {
         public static readonly Int16MinMax_Registration Instance = new Int16MinMax_Registration();
 
@@ -720,7 +721,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class Int16MinMaxSetterCommon
+    internal partial class Int16MinMaxSetterCommon
     {
         public static readonly Int16MinMaxSetterCommon Instance = new Int16MinMaxSetterCommon();
 
@@ -756,7 +757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class Int16MinMaxCommon
+    internal partial class Int16MinMaxCommon
     {
         public static readonly Int16MinMaxCommon Instance = new Int16MinMaxCommon();
 
@@ -882,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class Int16MinMaxSetterTranslationCommon
+    internal partial class Int16MinMaxSetterTranslationCommon
     {
         public static readonly Int16MinMaxSetterTranslationCommon Instance = new Int16MinMaxSetterTranslationCommon();
 
@@ -964,7 +965,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Int16MinMax_Registration.Instance;
-        public static Int16MinMax_Registration StaticRegistration => Int16MinMax_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Int16MinMax_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => Int16MinMaxCommon.Instance;
         [DebuggerStepThrough]
@@ -988,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class Int16MinMaxBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1025,7 +1026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class Int16MinMaxBinaryCreateTranslation
+    internal partial class Int16MinMaxBinaryCreateTranslation
     {
         public readonly static Int16MinMaxBinaryCreateTranslation Instance = new Int16MinMaxBinaryCreateTranslation();
 
@@ -1061,16 +1062,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class Int16MinMaxBinaryOverlay :
+    internal partial class Int16MinMaxBinaryOverlay :
         PluginBinaryOverlay,
         IInt16MinMaxGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Int16MinMax_Registration.Instance;
-        public static Int16MinMax_Registration StaticRegistration => Int16MinMax_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Int16MinMax_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => Int16MinMaxCommon.Instance;
         [DebuggerStepThrough]

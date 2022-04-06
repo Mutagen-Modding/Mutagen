@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -775,10 +776,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LightData_FieldIndex
+    internal enum LightData_FieldIndex
     {
         Versioning = 0,
         FovOffset = 1,
@@ -790,7 +791,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LightData_Registration : ILoquiRegistration
+    internal partial class LightData_Registration : ILoquiRegistration
     {
         public static readonly LightData_Registration Instance = new LightData_Registration();
 
@@ -871,7 +872,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LightDataSetterCommon
+    internal partial class LightDataSetterCommon
     {
         public static readonly LightDataSetterCommon Instance = new LightDataSetterCommon();
 
@@ -915,7 +916,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LightDataCommon
+    internal partial class LightDataCommon
     {
         public static readonly LightDataCommon Instance = new LightDataCommon();
 
@@ -1081,7 +1082,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LightDataSetterTranslationCommon
+    internal partial class LightDataSetterTranslationCommon
     {
         public static readonly LightDataSetterTranslationCommon Instance = new LightDataSetterTranslationCommon();
 
@@ -1180,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LightData_Registration.Instance;
-        public static LightData_Registration StaticRegistration => LightData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LightData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LightDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1204,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LightDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1262,7 +1263,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LightDataBinaryCreateTranslation
+    internal partial class LightDataBinaryCreateTranslation
     {
         public readonly static LightDataBinaryCreateTranslation Instance = new LightDataBinaryCreateTranslation();
 
@@ -1306,16 +1307,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LightDataBinaryOverlay :
+    internal partial class LightDataBinaryOverlay :
         PluginBinaryOverlay,
         ILightDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LightData_Registration.Instance;
-        public static LightData_Registration StaticRegistration => LightData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LightData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LightDataCommon.Instance;
         [DebuggerStepThrough]

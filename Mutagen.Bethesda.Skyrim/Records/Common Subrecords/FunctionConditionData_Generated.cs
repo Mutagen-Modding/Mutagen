@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -823,10 +824,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum FunctionConditionData_FieldIndex
+    internal enum FunctionConditionData_FieldIndex
     {
         RunOnType = 0,
         Reference = 1,
@@ -843,7 +844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class FunctionConditionData_Registration : ILoquiRegistration
+    internal partial class FunctionConditionData_Registration : ILoquiRegistration
     {
         public static readonly FunctionConditionData_Registration Instance = new FunctionConditionData_Registration();
 
@@ -917,7 +918,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class FunctionConditionDataSetterCommon : ConditionDataSetterCommon
+    internal partial class FunctionConditionDataSetterCommon : ConditionDataSetterCommon
     {
         public new static readonly FunctionConditionDataSetterCommon Instance = new FunctionConditionDataSetterCommon();
 
@@ -979,7 +980,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FunctionConditionDataCommon : ConditionDataCommon
+    internal partial class FunctionConditionDataCommon : ConditionDataCommon
     {
         public new static readonly FunctionConditionDataCommon Instance = new FunctionConditionDataCommon();
 
@@ -1217,7 +1218,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FunctionConditionDataSetterTranslationCommon : ConditionDataSetterTranslationCommon
+    internal partial class FunctionConditionDataSetterTranslationCommon : ConditionDataSetterTranslationCommon
     {
         public new static readonly FunctionConditionDataSetterTranslationCommon Instance = new FunctionConditionDataSetterTranslationCommon();
 
@@ -1345,7 +1346,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FunctionConditionData_Registration.Instance;
-        public new static FunctionConditionData_Registration StaticRegistration => FunctionConditionData_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => FunctionConditionData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FunctionConditionDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1363,7 +1364,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class FunctionConditionDataBinaryWriteTranslation :
         ConditionDataBinaryWriteTranslation,
@@ -1435,7 +1436,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class FunctionConditionDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
+    internal partial class FunctionConditionDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
     {
         public new readonly static FunctionConditionDataBinaryCreateTranslation Instance = new FunctionConditionDataBinaryCreateTranslation();
 
@@ -1472,16 +1473,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class FunctionConditionDataBinaryOverlay :
+    internal partial class FunctionConditionDataBinaryOverlay :
         ConditionDataBinaryOverlay,
         IFunctionConditionDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FunctionConditionData_Registration.Instance;
-        public new static FunctionConditionData_Registration StaticRegistration => FunctionConditionData_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => FunctionConditionData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FunctionConditionDataCommon.Instance;
         [DebuggerStepThrough]

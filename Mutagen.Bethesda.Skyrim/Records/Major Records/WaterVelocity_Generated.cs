@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -709,10 +710,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WaterVelocity_FieldIndex
+    internal enum WaterVelocity_FieldIndex
     {
         Offset = 0,
         Unknown = 1,
@@ -722,7 +723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WaterVelocity_Registration : ILoquiRegistration
+    internal partial class WaterVelocity_Registration : ILoquiRegistration
     {
         public static readonly WaterVelocity_Registration Instance = new WaterVelocity_Registration();
 
@@ -803,7 +804,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WaterVelocitySetterCommon
+    internal partial class WaterVelocitySetterCommon
     {
         public static readonly WaterVelocitySetterCommon Instance = new WaterVelocitySetterCommon();
 
@@ -845,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WaterVelocityCommon
+    internal partial class WaterVelocityCommon
     {
         public static readonly WaterVelocityCommon Instance = new WaterVelocityCommon();
 
@@ -991,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WaterVelocitySetterTranslationCommon
+    internal partial class WaterVelocitySetterTranslationCommon
     {
         public static readonly WaterVelocitySetterTranslationCommon Instance = new WaterVelocitySetterTranslationCommon();
 
@@ -1081,7 +1082,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WaterVelocity_Registration.Instance;
-        public static WaterVelocity_Registration StaticRegistration => WaterVelocity_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WaterVelocity_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WaterVelocityCommon.Instance;
         [DebuggerStepThrough]
@@ -1105,7 +1106,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WaterVelocityBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1157,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WaterVelocityBinaryCreateTranslation
+    internal partial class WaterVelocityBinaryCreateTranslation
     {
         public readonly static WaterVelocityBinaryCreateTranslation Instance = new WaterVelocityBinaryCreateTranslation();
 
@@ -1195,16 +1196,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WaterVelocityBinaryOverlay :
+    internal partial class WaterVelocityBinaryOverlay :
         PluginBinaryOverlay,
         IWaterVelocityGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WaterVelocity_Registration.Instance;
-        public static WaterVelocity_Registration StaticRegistration => WaterVelocity_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WaterVelocity_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WaterVelocityCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -865,10 +866,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Lod_FieldIndex
+    internal enum Lod_FieldIndex
     {
         Level0 = 0,
         Level0Extra = 1,
@@ -882,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Lod_Registration : ILoquiRegistration
+    internal partial class Lod_Registration : ILoquiRegistration
     {
         public static readonly Lod_Registration Instance = new Lod_Registration();
 
@@ -963,7 +964,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LodSetterCommon
+    internal partial class LodSetterCommon
     {
         public static readonly LodSetterCommon Instance = new LodSetterCommon();
 
@@ -1009,7 +1010,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LodCommon
+    internal partial class LodCommon
     {
         public static readonly LodCommon Instance = new LodCommon();
 
@@ -1211,7 +1212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LodSetterTranslationCommon
+    internal partial class LodSetterTranslationCommon
     {
         public static readonly LodSetterTranslationCommon Instance = new LodSetterTranslationCommon();
 
@@ -1345,7 +1346,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Lod_Registration.Instance;
-        public static Lod_Registration StaticRegistration => Lod_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Lod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LodCommon.Instance;
         [DebuggerStepThrough]
@@ -1369,7 +1370,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LodBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1427,7 +1428,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LodBinaryCreateTranslation
+    internal partial class LodBinaryCreateTranslation
     {
         public readonly static LodBinaryCreateTranslation Instance = new LodBinaryCreateTranslation();
 
@@ -1468,16 +1469,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LodBinaryOverlay :
+    internal partial class LodBinaryOverlay :
         PluginBinaryOverlay,
         ILodGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Lod_Registration.Instance;
-        public static Lod_Registration StaticRegistration => Lod_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Lod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LodCommon.Instance;
         [DebuggerStepThrough]

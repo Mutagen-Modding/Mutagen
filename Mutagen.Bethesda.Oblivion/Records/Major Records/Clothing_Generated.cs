@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1143,10 +1144,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Clothing_FieldIndex
+    internal enum Clothing_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1169,7 +1170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Clothing_Registration : ILoquiRegistration
+    internal partial class Clothing_Registration : ILoquiRegistration
     {
         public static readonly Clothing_Registration Instance = new Clothing_Registration();
 
@@ -1300,7 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ClothingSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class ClothingSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly ClothingSetterCommon Instance = new ClothingSetterCommon();
 
@@ -1383,7 +1384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ClothingCommon : OblivionMajorRecordCommon
+    internal partial class ClothingCommon : OblivionMajorRecordCommon
     {
         public new static readonly ClothingCommon Instance = new ClothingCommon();
 
@@ -1819,7 +1820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ClothingSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class ClothingSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly ClothingSetterTranslationCommon Instance = new ClothingSetterTranslationCommon();
 
@@ -2154,7 +2155,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Clothing_Registration.Instance;
-        public new static Clothing_Registration StaticRegistration => Clothing_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Clothing_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ClothingCommon.Instance;
         [DebuggerStepThrough]
@@ -2172,7 +2173,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ClothingBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -2323,7 +2324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ClothingBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class ClothingBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static ClothingBinaryCreateTranslation Instance = new ClothingBinaryCreateTranslation();
 
@@ -2453,16 +2454,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ClothingBinaryOverlay :
+    internal partial class ClothingBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IClothingGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Clothing_Registration.Instance;
-        public new static Clothing_Registration StaticRegistration => Clothing_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Clothing_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ClothingCommon.Instance;
         [DebuggerStepThrough]

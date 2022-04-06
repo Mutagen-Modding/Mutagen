@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -650,10 +651,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum RegionGrass_FieldIndex
+    internal enum RegionGrass_FieldIndex
     {
         Grass = 0,
         Unknown = 1,
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class RegionGrass_Registration : ILoquiRegistration
+    internal partial class RegionGrass_Registration : ILoquiRegistration
     {
         public static readonly RegionGrass_Registration Instance = new RegionGrass_Registration();
 
@@ -735,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class RegionGrassSetterCommon
+    internal partial class RegionGrassSetterCommon
     {
         public static readonly RegionGrassSetterCommon Instance = new RegionGrassSetterCommon();
 
@@ -772,7 +773,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class RegionGrassCommon
+    internal partial class RegionGrassCommon
     {
         public static readonly RegionGrassCommon Instance = new RegionGrassCommon();
 
@@ -899,7 +900,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class RegionGrassSetterTranslationCommon
+    internal partial class RegionGrassSetterTranslationCommon
     {
         public static readonly RegionGrassSetterTranslationCommon Instance = new RegionGrassSetterTranslationCommon();
 
@@ -981,7 +982,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionGrass_Registration.Instance;
-        public static RegionGrass_Registration StaticRegistration => RegionGrass_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RegionGrass_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RegionGrassCommon.Instance;
         [DebuggerStepThrough]
@@ -1005,7 +1006,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class RegionGrassBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1044,7 +1045,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class RegionGrassBinaryCreateTranslation
+    internal partial class RegionGrassBinaryCreateTranslation
     {
         public readonly static RegionGrassBinaryCreateTranslation Instance = new RegionGrassBinaryCreateTranslation();
 
@@ -1080,16 +1081,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class RegionGrassBinaryOverlay :
+    internal partial class RegionGrassBinaryOverlay :
         PluginBinaryOverlay,
         IRegionGrassGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionGrass_Registration.Instance;
-        public static RegionGrass_Registration StaticRegistration => RegionGrass_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RegionGrass_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RegionGrassCommon.Instance;
         [DebuggerStepThrough]

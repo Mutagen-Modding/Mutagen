@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -669,10 +670,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum ClassTraining_FieldIndex
+    internal enum ClassTraining_FieldIndex
     {
         TrainedSkill = 0,
         MaximumTrainingLevel = 1,
@@ -681,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class ClassTraining_Registration : ILoquiRegistration
+    internal partial class ClassTraining_Registration : ILoquiRegistration
     {
         public static readonly ClassTraining_Registration Instance = new ClassTraining_Registration();
 
@@ -755,7 +756,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ClassTrainingSetterCommon
+    internal partial class ClassTrainingSetterCommon
     {
         public static readonly ClassTrainingSetterCommon Instance = new ClassTrainingSetterCommon();
 
@@ -792,7 +793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ClassTrainingCommon
+    internal partial class ClassTrainingCommon
     {
         public static readonly ClassTrainingCommon Instance = new ClassTrainingCommon();
 
@@ -928,7 +929,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ClassTrainingSetterTranslationCommon
+    internal partial class ClassTrainingSetterTranslationCommon
     {
         public static readonly ClassTrainingSetterTranslationCommon Instance = new ClassTrainingSetterTranslationCommon();
 
@@ -1014,7 +1015,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClassTraining_Registration.Instance;
-        public static ClassTraining_Registration StaticRegistration => ClassTraining_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ClassTraining_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ClassTrainingCommon.Instance;
         [DebuggerStepThrough]
@@ -1038,7 +1039,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ClassTrainingBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1079,7 +1080,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ClassTrainingBinaryCreateTranslation
+    internal partial class ClassTrainingBinaryCreateTranslation
     {
         public readonly static ClassTrainingBinaryCreateTranslation Instance = new ClassTrainingBinaryCreateTranslation();
 
@@ -1118,16 +1119,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ClassTrainingBinaryOverlay :
+    internal partial class ClassTrainingBinaryOverlay :
         PluginBinaryOverlay,
         IClassTrainingGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClassTraining_Registration.Instance;
-        public static ClassTraining_Registration StaticRegistration => ClassTraining_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ClassTraining_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ClassTrainingCommon.Instance;
         [DebuggerStepThrough]

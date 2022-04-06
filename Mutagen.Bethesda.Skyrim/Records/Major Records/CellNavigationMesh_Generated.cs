@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -680,10 +681,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CellNavigationMesh_FieldIndex
+    internal enum CellNavigationMesh_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -699,7 +700,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CellNavigationMesh_Registration : ILoquiRegistration
+    internal partial class CellNavigationMesh_Registration : ILoquiRegistration
     {
         public static readonly CellNavigationMesh_Registration Instance = new CellNavigationMesh_Registration();
 
@@ -780,7 +781,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CellNavigationMeshSetterCommon : ANavigationMeshSetterCommon
+    internal partial class CellNavigationMeshSetterCommon : ANavigationMeshSetterCommon
     {
         public new static readonly CellNavigationMeshSetterCommon Instance = new CellNavigationMeshSetterCommon();
 
@@ -867,7 +868,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CellNavigationMeshCommon : ANavigationMeshCommon
+    internal partial class CellNavigationMeshCommon : ANavigationMeshCommon
     {
         public new static readonly CellNavigationMeshCommon Instance = new CellNavigationMeshCommon();
 
@@ -1172,7 +1173,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CellNavigationMeshSetterTranslationCommon : ANavigationMeshSetterTranslationCommon
+    internal partial class CellNavigationMeshSetterTranslationCommon : ANavigationMeshSetterTranslationCommon
     {
         public new static readonly CellNavigationMeshSetterTranslationCommon Instance = new CellNavigationMeshSetterTranslationCommon();
 
@@ -1383,7 +1384,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellNavigationMesh_Registration.Instance;
-        public new static CellNavigationMesh_Registration StaticRegistration => CellNavigationMesh_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CellNavigationMesh_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CellNavigationMeshCommon.Instance;
         [DebuggerStepThrough]
@@ -1401,7 +1402,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CellNavigationMeshBinaryWriteTranslation :
         ANavigationMeshBinaryWriteTranslation,
@@ -1490,7 +1491,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CellNavigationMeshBinaryCreateTranslation : ANavigationMeshBinaryCreateTranslation
+    internal partial class CellNavigationMeshBinaryCreateTranslation : ANavigationMeshBinaryCreateTranslation
     {
         public new readonly static CellNavigationMeshBinaryCreateTranslation Instance = new CellNavigationMeshBinaryCreateTranslation();
 
@@ -1517,16 +1518,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CellNavigationMeshBinaryOverlay :
+    internal partial class CellNavigationMeshBinaryOverlay :
         ANavigationMeshBinaryOverlay,
         ICellNavigationMeshGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellNavigationMesh_Registration.Instance;
-        public new static CellNavigationMesh_Registration StaticRegistration => CellNavigationMesh_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CellNavigationMesh_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CellNavigationMeshCommon.Instance;
         [DebuggerStepThrough]

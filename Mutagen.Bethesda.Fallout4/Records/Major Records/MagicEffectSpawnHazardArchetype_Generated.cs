@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -523,10 +524,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum MagicEffectSpawnHazardArchetype_FieldIndex
+    internal enum MagicEffectSpawnHazardArchetype_FieldIndex
     {
         Type = 0,
         AssociationKey = 1,
@@ -535,7 +536,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class MagicEffectSpawnHazardArchetype_Registration : ILoquiRegistration
+    internal partial class MagicEffectSpawnHazardArchetype_Registration : ILoquiRegistration
     {
         public static readonly MagicEffectSpawnHazardArchetype_Registration Instance = new MagicEffectSpawnHazardArchetype_Registration();
 
@@ -609,7 +610,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class MagicEffectSpawnHazardArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
+    internal partial class MagicEffectSpawnHazardArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
     {
         public new static readonly MagicEffectSpawnHazardArchetypeSetterCommon Instance = new MagicEffectSpawnHazardArchetypeSetterCommon();
 
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MagicEffectSpawnHazardArchetypeCommon : MagicEffectArchetypeCommon
+    internal partial class MagicEffectSpawnHazardArchetypeCommon : MagicEffectArchetypeCommon
     {
         public new static readonly MagicEffectSpawnHazardArchetypeCommon Instance = new MagicEffectSpawnHazardArchetypeCommon();
 
@@ -809,7 +810,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MagicEffectSpawnHazardArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
+    internal partial class MagicEffectSpawnHazardArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
     {
         public new static readonly MagicEffectSpawnHazardArchetypeSetterTranslationCommon Instance = new MagicEffectSpawnHazardArchetypeSetterTranslationCommon();
 
@@ -934,7 +935,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSpawnHazardArchetype_Registration.Instance;
-        public new static MagicEffectSpawnHazardArchetype_Registration StaticRegistration => MagicEffectSpawnHazardArchetype_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MagicEffectSpawnHazardArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectSpawnHazardArchetypeCommon.Instance;
         [DebuggerStepThrough]
@@ -952,7 +953,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MagicEffectSpawnHazardArchetypeBinaryWriteTranslation :
         MagicEffectArchetypeBinaryWriteTranslation,
@@ -994,7 +995,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class MagicEffectSpawnHazardArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
+    internal partial class MagicEffectSpawnHazardArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
     {
         public new readonly static MagicEffectSpawnHazardArchetypeBinaryCreateTranslation Instance = new MagicEffectSpawnHazardArchetypeBinaryCreateTranslation();
 
@@ -1011,16 +1012,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class MagicEffectSpawnHazardArchetypeBinaryOverlay :
+    internal partial class MagicEffectSpawnHazardArchetypeBinaryOverlay :
         MagicEffectArchetypeBinaryOverlay,
         IMagicEffectSpawnHazardArchetypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSpawnHazardArchetype_Registration.Instance;
-        public new static MagicEffectSpawnHazardArchetype_Registration StaticRegistration => MagicEffectSpawnHazardArchetype_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MagicEffectSpawnHazardArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectSpawnHazardArchetypeCommon.Instance;
         [DebuggerStepThrough]

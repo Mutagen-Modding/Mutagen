@@ -15,7 +15,7 @@ using Mutagen.Bethesda.Plugins.Internals;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, MutagenFrame, T>
+internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, MutagenFrame, T>
 {
     public static readonly ListBinaryTranslation<T> Instance = new();
 

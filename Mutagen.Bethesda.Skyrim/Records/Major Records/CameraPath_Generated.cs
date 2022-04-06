@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1045,10 +1046,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CameraPath_FieldIndex
+    internal enum CameraPath_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1065,7 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CameraPath_Registration : ILoquiRegistration
+    internal partial class CameraPath_Registration : ILoquiRegistration
     {
         public static readonly CameraPath_Registration Instance = new CameraPath_Registration();
 
@@ -1154,7 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CameraPathSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class CameraPathSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly CameraPathSetterCommon Instance = new CameraPathSetterCommon();
 
@@ -1231,7 +1232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CameraPathCommon : SkyrimMajorRecordCommon
+    internal partial class CameraPathCommon : SkyrimMajorRecordCommon
     {
         public new static readonly CameraPathCommon Instance = new CameraPathCommon();
 
@@ -1567,7 +1568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CameraPathSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class CameraPathSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly CameraPathSetterTranslationCommon Instance = new CameraPathSetterTranslationCommon();
 
@@ -1792,7 +1793,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CameraPath_Registration.Instance;
-        public new static CameraPath_Registration StaticRegistration => CameraPath_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CameraPath_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CameraPathCommon.Instance;
         [DebuggerStepThrough]
@@ -1810,7 +1811,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CameraPathBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1948,7 +1949,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CameraPathBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class CameraPathBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static CameraPathBinaryCreateTranslation Instance = new CameraPathBinaryCreateTranslation();
 
@@ -2037,16 +2038,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CameraPathBinaryOverlay :
+    internal partial class CameraPathBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ICameraPathGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CameraPath_Registration.Instance;
-        public new static CameraPath_Registration StaticRegistration => CameraPath_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CameraPath_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CameraPathCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -635,10 +636,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Alpha_FieldIndex
+    internal enum Alpha_FieldIndex
     {
         Cutoff = 0,
         Base = 1,
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Alpha_Registration : ILoquiRegistration
+    internal partial class Alpha_Registration : ILoquiRegistration
     {
         public static readonly Alpha_Registration Instance = new Alpha_Registration();
 
@@ -727,7 +728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class AlphaSetterCommon
+    internal partial class AlphaSetterCommon
     {
         public static readonly AlphaSetterCommon Instance = new AlphaSetterCommon();
 
@@ -767,7 +768,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AlphaCommon
+    internal partial class AlphaCommon
     {
         public static readonly AlphaCommon Instance = new AlphaCommon();
 
@@ -893,7 +894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AlphaSetterTranslationCommon
+    internal partial class AlphaSetterTranslationCommon
     {
         public static readonly AlphaSetterTranslationCommon Instance = new AlphaSetterTranslationCommon();
 
@@ -975,7 +976,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Alpha_Registration.Instance;
-        public static Alpha_Registration StaticRegistration => Alpha_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Alpha_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AlphaCommon.Instance;
         [DebuggerStepThrough]
@@ -999,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AlphaBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1043,7 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class AlphaBinaryCreateTranslation
+    internal partial class AlphaBinaryCreateTranslation
     {
         public readonly static AlphaBinaryCreateTranslation Instance = new AlphaBinaryCreateTranslation();
 
@@ -1079,16 +1080,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class AlphaBinaryOverlay :
+    internal partial class AlphaBinaryOverlay :
         PluginBinaryOverlay,
         IAlphaGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Alpha_Registration.Instance;
-        public static Alpha_Registration StaticRegistration => Alpha_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Alpha_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AlphaCommon.Instance;
         [DebuggerStepThrough]

@@ -122,6 +122,8 @@ public class TriggeringRecordModule : GenerationModule
     {
         yield return $"{obj.ProtoGen.DefaultNamespace}.Internals";
         yield return $"Mutagen.Bethesda.Plugins.Internals";
+        yield return $"RecordTypeInts = {obj.ProtoGen.DefaultNamespace}.Internals.RecordTypeInts";
+        yield return $"RecordTypes = {obj.ProtoGen.DefaultNamespace}.Internals.RecordTypes";
     }
 
     public async IAsyncEnumerable<RecordType> GetAllRecordTypes(ObjectGeneration obj)
@@ -809,6 +811,11 @@ public class TriggeringRecordModule : GenerationModule
         {
             recordTypes.Add(GetAllRecordTypes(obj).ToEnumerable());
         }
+
+        recordTypes.Add("GRUP");
+        recordTypes.Add("EDID");
+        recordTypes.Add("XXXX");
+        
         FileGeneration fg = new FileGeneration();
         fg.AppendLine("using Mutagen.Bethesda.Plugins;");
         fg.AppendLine();

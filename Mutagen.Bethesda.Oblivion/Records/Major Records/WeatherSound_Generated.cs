@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -650,10 +651,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum WeatherSound_FieldIndex
+    internal enum WeatherSound_FieldIndex
     {
         Sound = 0,
         Type = 1,
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class WeatherSound_Registration : ILoquiRegistration
+    internal partial class WeatherSound_Registration : ILoquiRegistration
     {
         public static readonly WeatherSound_Registration Instance = new WeatherSound_Registration();
 
@@ -742,7 +743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class WeatherSoundSetterCommon
+    internal partial class WeatherSoundSetterCommon
     {
         public static readonly WeatherSoundSetterCommon Instance = new WeatherSoundSetterCommon();
 
@@ -783,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WeatherSoundCommon
+    internal partial class WeatherSoundCommon
     {
         public static readonly WeatherSoundCommon Instance = new WeatherSoundCommon();
 
@@ -910,7 +911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WeatherSoundSetterTranslationCommon
+    internal partial class WeatherSoundSetterTranslationCommon
     {
         public static readonly WeatherSoundSetterTranslationCommon Instance = new WeatherSoundSetterTranslationCommon();
 
@@ -992,7 +993,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherSound_Registration.Instance;
-        public static WeatherSound_Registration StaticRegistration => WeatherSound_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherSound_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherSoundCommon.Instance;
         [DebuggerStepThrough]
@@ -1016,7 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class WeatherSoundBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1065,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class WeatherSoundBinaryCreateTranslation
+    internal partial class WeatherSoundBinaryCreateTranslation
     {
         public readonly static WeatherSoundBinaryCreateTranslation Instance = new WeatherSoundBinaryCreateTranslation();
 
@@ -1103,16 +1104,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class WeatherSoundBinaryOverlay :
+    internal partial class WeatherSoundBinaryOverlay :
         PluginBinaryOverlay,
         IWeatherSoundGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherSound_Registration.Instance;
-        public static WeatherSound_Registration StaticRegistration => WeatherSound_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherSound_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherSoundCommon.Instance;
         [DebuggerStepThrough]

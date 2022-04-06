@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -586,10 +587,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PackageDataLocation_FieldIndex
+    internal enum PackageDataLocation_FieldIndex
     {
         Name = 0,
         Flags = 1,
@@ -598,7 +599,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PackageDataLocation_Registration : ILoquiRegistration
+    internal partial class PackageDataLocation_Registration : ILoquiRegistration
     {
         public static readonly PackageDataLocation_Registration Instance = new PackageDataLocation_Registration();
 
@@ -684,7 +685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PackageDataLocationSetterCommon : APackageDataSetterCommon
+    internal partial class PackageDataLocationSetterCommon : APackageDataSetterCommon
     {
         public new static readonly PackageDataLocationSetterCommon Instance = new PackageDataLocationSetterCommon();
 
@@ -739,7 +740,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageDataLocationCommon : APackageDataCommon
+    internal partial class PackageDataLocationCommon : APackageDataCommon
     {
         public new static readonly PackageDataLocationCommon Instance = new PackageDataLocationCommon();
 
@@ -906,7 +907,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageDataLocationSetterTranslationCommon : APackageDataSetterTranslationCommon
+    internal partial class PackageDataLocationSetterTranslationCommon : APackageDataSetterTranslationCommon
     {
         public new static readonly PackageDataLocationSetterTranslationCommon Instance = new PackageDataLocationSetterTranslationCommon();
 
@@ -1024,7 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataLocation_Registration.Instance;
-        public new static PackageDataLocation_Registration StaticRegistration => PackageDataLocation_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageDataLocation_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataLocationCommon.Instance;
         [DebuggerStepThrough]
@@ -1042,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageDataLocationBinaryWriteTranslation :
         APackageDataBinaryWriteTranslation,
@@ -1096,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PackageDataLocationBinaryCreateTranslation : APackageDataBinaryCreateTranslation
+    internal partial class PackageDataLocationBinaryCreateTranslation : APackageDataBinaryCreateTranslation
     {
         public new readonly static PackageDataLocationBinaryCreateTranslation Instance = new PackageDataLocationBinaryCreateTranslation();
 
@@ -1136,16 +1137,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageDataLocationBinaryOverlay :
+    internal partial class PackageDataLocationBinaryOverlay :
         APackageDataBinaryOverlay,
         IPackageDataLocationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataLocation_Registration.Instance;
-        public new static PackageDataLocation_Registration StaticRegistration => PackageDataLocation_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageDataLocation_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataLocationCommon.Instance;
         [DebuggerStepThrough]

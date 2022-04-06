@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1326,10 +1327,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ArmorAddon_FieldIndex
+    internal enum ArmorAddon_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1357,7 +1358,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ArmorAddon_Registration : ILoquiRegistration
+    internal partial class ArmorAddon_Registration : ILoquiRegistration
     {
         public static readonly ArmorAddon_Registration Instance = new ArmorAddon_Registration();
 
@@ -1503,7 +1504,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ArmorAddonSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ArmorAddonSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ArmorAddonSetterCommon Instance = new ArmorAddonSetterCommon();
 
@@ -1598,7 +1599,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ArmorAddonCommon : SkyrimMajorRecordCommon
+    internal partial class ArmorAddonCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ArmorAddonCommon Instance = new ArmorAddonCommon();
 
@@ -2089,7 +2090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ArmorAddonSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ArmorAddonSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ArmorAddonSetterTranslationCommon Instance = new ArmorAddonSetterTranslationCommon();
 
@@ -2375,7 +2376,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorAddon_Registration.Instance;
-        public new static ArmorAddon_Registration StaticRegistration => ArmorAddon_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ArmorAddon_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArmorAddonCommon.Instance;
         [DebuggerStepThrough]
@@ -2393,7 +2394,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ArmorAddonBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2603,7 +2604,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ArmorAddonBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ArmorAddonBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ArmorAddonBinaryCreateTranslation Instance = new ArmorAddonBinaryCreateTranslation();
 
@@ -2756,16 +2757,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ArmorAddonBinaryOverlay :
+    internal partial class ArmorAddonBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IArmorAddonGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorAddon_Registration.Instance;
-        public new static ArmorAddon_Registration StaticRegistration => ArmorAddon_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ArmorAddon_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArmorAddonCommon.Instance;
         [DebuggerStepThrough]

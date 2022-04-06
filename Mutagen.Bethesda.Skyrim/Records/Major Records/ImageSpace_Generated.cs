@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -854,10 +855,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ImageSpace_FieldIndex
+    internal enum ImageSpace_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -874,7 +875,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ImageSpace_Registration : ILoquiRegistration
+    internal partial class ImageSpace_Registration : ILoquiRegistration
     {
         public static readonly ImageSpace_Registration Instance = new ImageSpace_Registration();
 
@@ -962,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ImageSpaceSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ImageSpaceSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ImageSpaceSetterCommon Instance = new ImageSpaceSetterCommon();
 
@@ -1036,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImageSpaceCommon : SkyrimMajorRecordCommon
+    internal partial class ImageSpaceCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ImageSpaceCommon Instance = new ImageSpaceCommon();
 
@@ -1360,7 +1361,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImageSpaceSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ImageSpaceSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ImageSpaceSetterTranslationCommon Instance = new ImageSpaceSetterTranslationCommon();
 
@@ -1630,7 +1631,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpace_Registration.Instance;
-        public new static ImageSpace_Registration StaticRegistration => ImageSpace_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ImageSpace_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImageSpaceCommon.Instance;
         [DebuggerStepThrough]
@@ -1648,7 +1649,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImageSpaceBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1762,7 +1763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ImageSpaceBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ImageSpaceBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ImageSpaceBinaryCreateTranslation Instance = new ImageSpaceBinaryCreateTranslation();
 
@@ -1838,16 +1839,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ImageSpaceBinaryOverlay :
+    internal partial class ImageSpaceBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IImageSpaceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpace_Registration.Instance;
-        public new static ImageSpace_Registration StaticRegistration => ImageSpace_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ImageSpace_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImageSpaceCommon.Instance;
         [DebuggerStepThrough]

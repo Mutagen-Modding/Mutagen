@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -855,10 +856,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SoundCategory_FieldIndex
+    internal enum SoundCategory_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -875,7 +876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SoundCategory_Registration : ILoquiRegistration
+    internal partial class SoundCategory_Registration : ILoquiRegistration
     {
         public static readonly SoundCategory_Registration Instance = new SoundCategory_Registration();
 
@@ -963,7 +964,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SoundCategorySetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class SoundCategorySetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly SoundCategorySetterCommon Instance = new SoundCategorySetterCommon();
 
@@ -1038,7 +1039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SoundCategoryCommon : SkyrimMajorRecordCommon
+    internal partial class SoundCategoryCommon : SkyrimMajorRecordCommon
     {
         public new static readonly SoundCategoryCommon Instance = new SoundCategoryCommon();
 
@@ -1330,7 +1331,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SoundCategorySetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class SoundCategorySetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly SoundCategorySetterTranslationCommon Instance = new SoundCategorySetterTranslationCommon();
 
@@ -1505,7 +1506,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundCategory_Registration.Instance;
-        public new static SoundCategory_Registration StaticRegistration => SoundCategory_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SoundCategory_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundCategoryCommon.Instance;
         [DebuggerStepThrough]
@@ -1523,7 +1524,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SoundCategoryBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1632,7 +1633,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SoundCategoryBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class SoundCategoryBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static SoundCategoryBinaryCreateTranslation Instance = new SoundCategoryBinaryCreateTranslation();
 
@@ -1723,16 +1724,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SoundCategoryBinaryOverlay :
+    internal partial class SoundCategoryBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ISoundCategoryGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundCategory_Registration.Instance;
-        public new static SoundCategory_Registration StaticRegistration => SoundCategory_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SoundCategory_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundCategoryCommon.Instance;
         [DebuggerStepThrough]

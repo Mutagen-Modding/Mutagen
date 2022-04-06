@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -943,10 +944,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum TerminalMenuItem_FieldIndex
+    internal enum TerminalMenuItem_FieldIndex
     {
         ItemText = 0,
         ResponseText = 1,
@@ -960,7 +961,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class TerminalMenuItem_Registration : ILoquiRegistration
+    internal partial class TerminalMenuItem_Registration : ILoquiRegistration
     {
         public static readonly TerminalMenuItem_Registration Instance = new TerminalMenuItem_Registration();
 
@@ -1052,7 +1053,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class TerminalMenuItemSetterCommon
+    internal partial class TerminalMenuItemSetterCommon
     {
         public static readonly TerminalMenuItemSetterCommon Instance = new TerminalMenuItemSetterCommon();
 
@@ -1097,7 +1098,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TerminalMenuItemCommon
+    internal partial class TerminalMenuItemCommon
     {
         public static readonly TerminalMenuItemCommon Instance = new TerminalMenuItemCommon();
 
@@ -1321,7 +1322,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TerminalMenuItemSetterTranslationCommon
+    internal partial class TerminalMenuItemSetterTranslationCommon
     {
         public static readonly TerminalMenuItemSetterTranslationCommon Instance = new TerminalMenuItemSetterTranslationCommon();
 
@@ -1447,7 +1448,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TerminalMenuItem_Registration.Instance;
-        public static TerminalMenuItem_Registration StaticRegistration => TerminalMenuItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TerminalMenuItem_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TerminalMenuItemCommon.Instance;
         [DebuggerStepThrough]
@@ -1471,7 +1472,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TerminalMenuItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1555,7 +1556,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class TerminalMenuItemBinaryCreateTranslation
+    internal partial class TerminalMenuItemBinaryCreateTranslation
     {
         public readonly static TerminalMenuItemBinaryCreateTranslation Instance = new TerminalMenuItemBinaryCreateTranslation();
 
@@ -1672,16 +1673,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class TerminalMenuItemBinaryOverlay :
+    internal partial class TerminalMenuItemBinaryOverlay :
         PluginBinaryOverlay,
         ITerminalMenuItemGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TerminalMenuItem_Registration.Instance;
-        public static TerminalMenuItem_Registration StaticRegistration => TerminalMenuItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TerminalMenuItem_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TerminalMenuItemCommon.Instance;
         [DebuggerStepThrough]

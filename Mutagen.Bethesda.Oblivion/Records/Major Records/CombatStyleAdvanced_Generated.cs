@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1262,10 +1263,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum CombatStyleAdvanced_FieldIndex
+    internal enum CombatStyleAdvanced_FieldIndex
     {
         DodgeFatigueModMult = 0,
         DodgeFatigueModBase = 1,
@@ -1292,7 +1293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class CombatStyleAdvanced_Registration : ILoquiRegistration
+    internal partial class CombatStyleAdvanced_Registration : ILoquiRegistration
     {
         public static readonly CombatStyleAdvanced_Registration Instance = new CombatStyleAdvanced_Registration();
 
@@ -1373,7 +1374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class CombatStyleAdvancedSetterCommon
+    internal partial class CombatStyleAdvancedSetterCommon
     {
         public static readonly CombatStyleAdvancedSetterCommon Instance = new CombatStyleAdvancedSetterCommon();
 
@@ -1432,7 +1433,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CombatStyleAdvancedCommon
+    internal partial class CombatStyleAdvancedCommon
     {
         public static readonly CombatStyleAdvancedCommon Instance = new CombatStyleAdvancedCommon();
 
@@ -1748,7 +1749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CombatStyleAdvancedSetterTranslationCommon
+    internal partial class CombatStyleAdvancedSetterTranslationCommon
     {
         public static readonly CombatStyleAdvancedSetterTranslationCommon Instance = new CombatStyleAdvancedSetterTranslationCommon();
 
@@ -1906,7 +1907,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleAdvanced_Registration.Instance;
-        public static CombatStyleAdvanced_Registration StaticRegistration => CombatStyleAdvanced_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CombatStyleAdvanced_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleAdvancedCommon.Instance;
         [DebuggerStepThrough]
@@ -1930,7 +1931,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CombatStyleAdvancedBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -2035,7 +2036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class CombatStyleAdvancedBinaryCreateTranslation
+    internal partial class CombatStyleAdvancedBinaryCreateTranslation
     {
         public readonly static CombatStyleAdvancedBinaryCreateTranslation Instance = new CombatStyleAdvancedBinaryCreateTranslation();
 
@@ -2090,16 +2091,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class CombatStyleAdvancedBinaryOverlay :
+    internal partial class CombatStyleAdvancedBinaryOverlay :
         PluginBinaryOverlay,
         ICombatStyleAdvancedGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleAdvanced_Registration.Instance;
-        public static CombatStyleAdvanced_Registration StaticRegistration => CombatStyleAdvanced_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CombatStyleAdvanced_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleAdvancedCommon.Instance;
         [DebuggerStepThrough]

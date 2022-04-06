@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -842,10 +843,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum TintAssets_FieldIndex
+    internal enum TintAssets_FieldIndex
     {
         Index = 0,
         FileName = 1,
@@ -856,7 +857,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class TintAssets_Registration : ILoquiRegistration
+    internal partial class TintAssets_Registration : ILoquiRegistration
     {
         public static readonly TintAssets_Registration Instance = new TintAssets_Registration();
 
@@ -943,7 +944,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class TintAssetsSetterCommon
+    internal partial class TintAssetsSetterCommon
     {
         public static readonly TintAssetsSetterCommon Instance = new TintAssetsSetterCommon();
 
@@ -985,7 +986,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TintAssetsCommon
+    internal partial class TintAssetsCommon
     {
         public static readonly TintAssetsCommon Instance = new TintAssetsCommon();
 
@@ -1178,7 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TintAssetsSetterTranslationCommon
+    internal partial class TintAssetsSetterTranslationCommon
     {
         public static readonly TintAssetsSetterTranslationCommon Instance = new TintAssetsSetterTranslationCommon();
 
@@ -1292,7 +1293,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintAssets_Registration.Instance;
-        public static TintAssets_Registration StaticRegistration => TintAssets_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TintAssets_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintAssetsCommon.Instance;
         [DebuggerStepThrough]
@@ -1316,7 +1317,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class TintAssetsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1382,7 +1383,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class TintAssetsBinaryCreateTranslation
+    internal partial class TintAssetsBinaryCreateTranslation
     {
         public readonly static TintAssetsBinaryCreateTranslation Instance = new TintAssetsBinaryCreateTranslation();
 
@@ -1478,16 +1479,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class TintAssetsBinaryOverlay :
+    internal partial class TintAssetsBinaryOverlay :
         PluginBinaryOverlay,
         ITintAssetsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintAssets_Registration.Instance;
-        public static TintAssets_Registration StaticRegistration => TintAssets_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TintAssets_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintAssetsCommon.Instance;
         [DebuggerStepThrough]

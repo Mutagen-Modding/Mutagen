@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -869,10 +870,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum NavigationMeshInfoMap_FieldIndex
+    internal enum NavigationMeshInfoMap_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -888,7 +889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class NavigationMeshInfoMap_Registration : ILoquiRegistration
+    internal partial class NavigationMeshInfoMap_Registration : ILoquiRegistration
     {
         public static readonly NavigationMeshInfoMap_Registration Instance = new NavigationMeshInfoMap_Registration();
 
@@ -975,7 +976,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NavigationMeshInfoMapSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class NavigationMeshInfoMapSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly NavigationMeshInfoMapSetterCommon Instance = new NavigationMeshInfoMapSetterCommon();
 
@@ -1050,7 +1051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NavigationMeshInfoMapCommon : SkyrimMajorRecordCommon
+    internal partial class NavigationMeshInfoMapCommon : SkyrimMajorRecordCommon
     {
         public new static readonly NavigationMeshInfoMapCommon Instance = new NavigationMeshInfoMapCommon();
 
@@ -1360,7 +1361,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NavigationMeshInfoMapSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class NavigationMeshInfoMapSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly NavigationMeshInfoMapSetterTranslationCommon Instance = new NavigationMeshInfoMapSetterTranslationCommon();
 
@@ -1580,7 +1581,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavigationMeshInfoMap_Registration.Instance;
-        public new static NavigationMeshInfoMap_Registration StaticRegistration => NavigationMeshInfoMap_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => NavigationMeshInfoMap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NavigationMeshInfoMapCommon.Instance;
         [DebuggerStepThrough]
@@ -1598,7 +1599,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NavigationMeshInfoMapBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1706,7 +1707,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NavigationMeshInfoMapBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class NavigationMeshInfoMapBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static NavigationMeshInfoMapBinaryCreateTranslation Instance = new NavigationMeshInfoMapBinaryCreateTranslation();
 
@@ -1783,16 +1784,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NavigationMeshInfoMapBinaryOverlay :
+    internal partial class NavigationMeshInfoMapBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         INavigationMeshInfoMapGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavigationMeshInfoMap_Registration.Instance;
-        public new static NavigationMeshInfoMap_Registration StaticRegistration => NavigationMeshInfoMap_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => NavigationMeshInfoMap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NavigationMeshInfoMapCommon.Instance;
         [DebuggerStepThrough]

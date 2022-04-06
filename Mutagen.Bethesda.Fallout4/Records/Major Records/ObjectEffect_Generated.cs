@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1240,10 +1241,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ObjectEffect_FieldIndex
+    internal enum ObjectEffect_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1268,7 +1269,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ObjectEffect_Registration : ILoquiRegistration
+    internal partial class ObjectEffect_Registration : ILoquiRegistration
     {
         public static readonly ObjectEffect_Registration Instance = new ObjectEffect_Registration();
 
@@ -1359,7 +1360,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ObjectEffectSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class ObjectEffectSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly ObjectEffectSetterCommon Instance = new ObjectEffectSetterCommon();
 
@@ -1444,7 +1445,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ObjectEffectCommon : Fallout4MajorRecordCommon
+    internal partial class ObjectEffectCommon : Fallout4MajorRecordCommon
     {
         public new static readonly ObjectEffectCommon Instance = new ObjectEffectCommon();
 
@@ -1827,7 +1828,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ObjectEffectSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class ObjectEffectSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly ObjectEffectSetterTranslationCommon Instance = new ObjectEffectSetterTranslationCommon();
 
@@ -2072,7 +2073,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectEffect_Registration.Instance;
-        public new static ObjectEffect_Registration StaticRegistration => ObjectEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ObjectEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ObjectEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -2090,7 +2091,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ObjectEffectBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -2236,7 +2237,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ObjectEffectBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class ObjectEffectBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static ObjectEffectBinaryCreateTranslation Instance = new ObjectEffectBinaryCreateTranslation();
 
@@ -2340,16 +2341,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ObjectEffectBinaryOverlay :
+    internal partial class ObjectEffectBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IObjectEffectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectEffect_Registration.Instance;
-        public new static ObjectEffect_Registration StaticRegistration => ObjectEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ObjectEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ObjectEffectCommon.Instance;
         [DebuggerStepThrough]

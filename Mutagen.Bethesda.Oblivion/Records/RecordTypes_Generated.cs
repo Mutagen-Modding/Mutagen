@@ -45,6 +45,7 @@ public partial class RecordTypes
     public static readonly RecordType DIAL = new(0x4C414944);
     public static readonly RecordType DNAM = new(0x4D414E44);
     public static readonly RecordType DOOR = new(0x524F4F44);
+    public static readonly RecordType EDID = new(0x44494445);
     public static readonly RecordType EFID = new(0x44494645);
     public static readonly RecordType EFIT = new(0x54494645);
     public static readonly RecordType EFSH = new(0x48534645);

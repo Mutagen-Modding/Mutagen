@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -554,16 +555,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ANpcSoundDefinition_FieldIndex
+    internal enum ANpcSoundDefinition_FieldIndex
     {
     }
     #endregion
 
     #region Registration
-    public partial class ANpcSoundDefinition_Registration : ILoquiRegistration
+    internal partial class ANpcSoundDefinition_Registration : ILoquiRegistration
     {
         public static readonly ANpcSoundDefinition_Registration Instance = new ANpcSoundDefinition_Registration();
 
@@ -647,7 +648,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ANpcSoundDefinitionSetterCommon
+    internal partial class ANpcSoundDefinitionSetterCommon
     {
         public static readonly ANpcSoundDefinitionSetterCommon Instance = new ANpcSoundDefinitionSetterCommon();
 
@@ -676,7 +677,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ANpcSoundDefinitionCommon
+    internal partial class ANpcSoundDefinitionCommon
     {
         public static readonly ANpcSoundDefinitionCommon Instance = new ANpcSoundDefinitionCommon();
 
@@ -782,7 +783,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ANpcSoundDefinitionSetterTranslationCommon
+    internal partial class ANpcSoundDefinitionSetterTranslationCommon
     {
         public static readonly ANpcSoundDefinitionSetterTranslationCommon Instance = new ANpcSoundDefinitionSetterTranslationCommon();
 
@@ -856,7 +857,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANpcSoundDefinition_Registration.Instance;
-        public static ANpcSoundDefinition_Registration StaticRegistration => ANpcSoundDefinition_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ANpcSoundDefinition_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ANpcSoundDefinitionCommon.Instance;
         [DebuggerStepThrough]
@@ -880,7 +881,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ANpcSoundDefinitionBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -906,7 +907,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ANpcSoundDefinitionBinaryCreateTranslation
+    internal partial class ANpcSoundDefinitionBinaryCreateTranslation
     {
         public readonly static ANpcSoundDefinitionBinaryCreateTranslation Instance = new ANpcSoundDefinitionBinaryCreateTranslation();
 
@@ -934,16 +935,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public abstract partial class ANpcSoundDefinitionBinaryOverlay :
+    internal abstract partial class ANpcSoundDefinitionBinaryOverlay :
         PluginBinaryOverlay,
         IANpcSoundDefinitionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANpcSoundDefinition_Registration.Instance;
-        public static ANpcSoundDefinition_Registration StaticRegistration => ANpcSoundDefinition_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ANpcSoundDefinition_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ANpcSoundDefinitionCommon.Instance;
         [DebuggerStepThrough]

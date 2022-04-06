@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -586,10 +587,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SceneAdapter_FieldIndex
+    internal enum SceneAdapter_FieldIndex
     {
         Version = 0,
         ObjectFormat = 1,
@@ -599,7 +600,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SceneAdapter_Registration : ILoquiRegistration
+    internal partial class SceneAdapter_Registration : ILoquiRegistration
     {
         public static readonly SceneAdapter_Registration Instance = new SceneAdapter_Registration();
 
@@ -680,7 +681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SceneAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
+    internal partial class SceneAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
     {
         public new static readonly SceneAdapterSetterCommon Instance = new SceneAdapterSetterCommon();
 
@@ -737,7 +738,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SceneAdapterCommon : AVirtualMachineAdapterCommon
+    internal partial class SceneAdapterCommon : AVirtualMachineAdapterCommon
     {
         public new static readonly SceneAdapterCommon Instance = new SceneAdapterCommon();
 
@@ -907,7 +908,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SceneAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
+    internal partial class SceneAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
     {
         public new static readonly SceneAdapterSetterTranslationCommon Instance = new SceneAdapterSetterTranslationCommon();
 
@@ -1029,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SceneAdapter_Registration.Instance;
-        public new static SceneAdapter_Registration StaticRegistration => SceneAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SceneAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SceneAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -1047,7 +1048,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SceneAdapterBinaryWriteTranslation :
         AVirtualMachineAdapterBinaryWriteTranslation,
@@ -1121,7 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SceneAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
+    internal partial class SceneAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
     {
         public new readonly static SceneAdapterBinaryCreateTranslation Instance = new SceneAdapterBinaryCreateTranslation();
 
@@ -1155,16 +1156,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SceneAdapterBinaryOverlay :
+    internal partial class SceneAdapterBinaryOverlay :
         AVirtualMachineAdapterBinaryOverlay,
         ISceneAdapterGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SceneAdapter_Registration.Instance;
-        public new static SceneAdapter_Registration StaticRegistration => SceneAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SceneAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SceneAdapterCommon.Instance;
         [DebuggerStepThrough]

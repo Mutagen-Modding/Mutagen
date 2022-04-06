@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -600,10 +601,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum MaterialSwap_FieldIndex
+    internal enum MaterialSwap_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -615,7 +616,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class MaterialSwap_Registration : ILoquiRegistration
+    internal partial class MaterialSwap_Registration : ILoquiRegistration
     {
         public static readonly MaterialSwap_Registration Instance = new MaterialSwap_Registration();
 
@@ -696,7 +697,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class MaterialSwapSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class MaterialSwapSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly MaterialSwapSetterCommon Instance = new MaterialSwapSetterCommon();
 
@@ -765,7 +766,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MaterialSwapCommon : Fallout4MajorRecordCommon
+    internal partial class MaterialSwapCommon : Fallout4MajorRecordCommon
     {
         public new static readonly MaterialSwapCommon Instance = new MaterialSwapCommon();
 
@@ -987,7 +988,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MaterialSwapSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class MaterialSwapSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly MaterialSwapSetterTranslationCommon Instance = new MaterialSwapSetterTranslationCommon();
 
@@ -1142,7 +1143,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MaterialSwap_Registration.Instance;
-        public new static MaterialSwap_Registration StaticRegistration => MaterialSwap_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MaterialSwap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MaterialSwapCommon.Instance;
         [DebuggerStepThrough]
@@ -1160,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MaterialSwapBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -1229,7 +1230,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class MaterialSwapBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class MaterialSwapBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static MaterialSwapBinaryCreateTranslation Instance = new MaterialSwapBinaryCreateTranslation();
 
@@ -1256,16 +1257,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class MaterialSwapBinaryOverlay :
+    internal partial class MaterialSwapBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IMaterialSwapGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MaterialSwap_Registration.Instance;
-        public new static MaterialSwap_Registration StaticRegistration => MaterialSwap_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MaterialSwap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MaterialSwapCommon.Instance;
         [DebuggerStepThrough]

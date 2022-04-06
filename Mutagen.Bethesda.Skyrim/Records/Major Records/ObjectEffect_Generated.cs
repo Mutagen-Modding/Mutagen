@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1247,10 +1248,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ObjectEffect_FieldIndex
+    internal enum ObjectEffect_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1275,7 +1276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ObjectEffect_Registration : ILoquiRegistration
+    internal partial class ObjectEffect_Registration : ILoquiRegistration
     {
         public static readonly ObjectEffect_Registration Instance = new ObjectEffect_Registration();
 
@@ -1366,7 +1367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ObjectEffectSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ObjectEffectSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ObjectEffectSetterCommon Instance = new ObjectEffectSetterCommon();
 
@@ -1451,7 +1452,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ObjectEffectCommon : SkyrimMajorRecordCommon
+    internal partial class ObjectEffectCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ObjectEffectCommon Instance = new ObjectEffectCommon();
 
@@ -1834,7 +1835,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ObjectEffectSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ObjectEffectSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ObjectEffectSetterTranslationCommon Instance = new ObjectEffectSetterTranslationCommon();
 
@@ -2079,7 +2080,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectEffect_Registration.Instance;
-        public new static ObjectEffect_Registration StaticRegistration => ObjectEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ObjectEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ObjectEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -2097,7 +2098,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ObjectEffectBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2243,7 +2244,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ObjectEffectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ObjectEffectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ObjectEffectBinaryCreateTranslation Instance = new ObjectEffectBinaryCreateTranslation();
 
@@ -2347,16 +2348,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ObjectEffectBinaryOverlay :
+    internal partial class ObjectEffectBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IObjectEffectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectEffect_Registration.Instance;
-        public new static ObjectEffect_Registration StaticRegistration => ObjectEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ObjectEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ObjectEffectCommon.Instance;
         [DebuggerStepThrough]

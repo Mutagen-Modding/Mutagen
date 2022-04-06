@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -650,10 +651,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum EnableParent_FieldIndex
+    internal enum EnableParent_FieldIndex
     {
         Reference = 0,
         Flags = 1,
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class EnableParent_Registration : ILoquiRegistration
+    internal partial class EnableParent_Registration : ILoquiRegistration
     {
         public static readonly EnableParent_Registration Instance = new EnableParent_Registration();
 
@@ -742,7 +743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class EnableParentSetterCommon
+    internal partial class EnableParentSetterCommon
     {
         public static readonly EnableParentSetterCommon Instance = new EnableParentSetterCommon();
 
@@ -783,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class EnableParentCommon
+    internal partial class EnableParentCommon
     {
         public static readonly EnableParentCommon Instance = new EnableParentCommon();
 
@@ -910,7 +911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class EnableParentSetterTranslationCommon
+    internal partial class EnableParentSetterTranslationCommon
     {
         public static readonly EnableParentSetterTranslationCommon Instance = new EnableParentSetterTranslationCommon();
 
@@ -992,7 +993,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EnableParent_Registration.Instance;
-        public static EnableParent_Registration StaticRegistration => EnableParent_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EnableParent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EnableParentCommon.Instance;
         [DebuggerStepThrough]
@@ -1016,7 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class EnableParentBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1065,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class EnableParentBinaryCreateTranslation
+    internal partial class EnableParentBinaryCreateTranslation
     {
         public readonly static EnableParentBinaryCreateTranslation Instance = new EnableParentBinaryCreateTranslation();
 
@@ -1103,16 +1104,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class EnableParentBinaryOverlay :
+    internal partial class EnableParentBinaryOverlay :
         PluginBinaryOverlay,
         IEnableParentGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EnableParent_Registration.Instance;
-        public static EnableParent_Registration StaticRegistration => EnableParent_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EnableParent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EnableParentCommon.Instance;
         [DebuggerStepThrough]

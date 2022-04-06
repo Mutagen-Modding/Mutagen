@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -553,17 +554,17 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PcLevelMult_FieldIndex
+    internal enum PcLevelMult_FieldIndex
     {
         LevelMult = 0,
     }
     #endregion
 
     #region Registration
-    public partial class PcLevelMult_Registration : ILoquiRegistration
+    internal partial class PcLevelMult_Registration : ILoquiRegistration
     {
         public static readonly PcLevelMult_Registration Instance = new PcLevelMult_Registration();
 
@@ -637,7 +638,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PcLevelMultSetterCommon : ANpcLevelSetterCommon
+    internal partial class PcLevelMultSetterCommon : ANpcLevelSetterCommon
     {
         public new static readonly PcLevelMultSetterCommon Instance = new PcLevelMultSetterCommon();
 
@@ -689,7 +690,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PcLevelMultCommon : ANpcLevelCommon
+    internal partial class PcLevelMultCommon : ANpcLevelCommon
     {
         public new static readonly PcLevelMultCommon Instance = new PcLevelMultCommon();
 
@@ -837,7 +838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PcLevelMultSetterTranslationCommon : ANpcLevelSetterTranslationCommon
+    internal partial class PcLevelMultSetterTranslationCommon : ANpcLevelSetterTranslationCommon
     {
         public new static readonly PcLevelMultSetterTranslationCommon Instance = new PcLevelMultSetterTranslationCommon();
 
@@ -937,7 +938,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PcLevelMult_Registration.Instance;
-        public new static PcLevelMult_Registration StaticRegistration => PcLevelMult_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PcLevelMult_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PcLevelMultCommon.Instance;
         [DebuggerStepThrough]
@@ -955,7 +956,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PcLevelMultBinaryWriteTranslation :
         ANpcLevelBinaryWriteTranslation,
@@ -1003,7 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PcLevelMultBinaryCreateTranslation : ANpcLevelBinaryCreateTranslation
+    internal partial class PcLevelMultBinaryCreateTranslation : ANpcLevelBinaryCreateTranslation
     {
         public new readonly static PcLevelMultBinaryCreateTranslation Instance = new PcLevelMultBinaryCreateTranslation();
 
@@ -1026,16 +1027,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PcLevelMultBinaryOverlay :
+    internal partial class PcLevelMultBinaryOverlay :
         ANpcLevelBinaryOverlay,
         IPcLevelMultGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PcLevelMult_Registration.Instance;
-        public new static PcLevelMult_Registration StaticRegistration => PcLevelMult_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PcLevelMult_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PcLevelMultCommon.Instance;
         [DebuggerStepThrough]

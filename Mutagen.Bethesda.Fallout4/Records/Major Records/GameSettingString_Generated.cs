@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -650,10 +651,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum GameSettingString_FieldIndex
+    internal enum GameSettingString_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -666,7 +667,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class GameSettingString_Registration : ILoquiRegistration
+    internal partial class GameSettingString_Registration : ILoquiRegistration
     {
         public static readonly GameSettingString_Registration Instance = new GameSettingString_Registration();
 
@@ -750,7 +751,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class GameSettingStringSetterCommon : GameSettingSetterCommon
+    internal partial class GameSettingStringSetterCommon : GameSettingSetterCommon
     {
         public new static readonly GameSettingStringSetterCommon Instance = new GameSettingStringSetterCommon();
 
@@ -836,7 +837,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class GameSettingStringCommon : GameSettingCommon
+    internal partial class GameSettingStringCommon : GameSettingCommon
     {
         public new static readonly GameSettingStringCommon Instance = new GameSettingStringCommon();
 
@@ -1120,7 +1121,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class GameSettingStringSetterTranslationCommon : GameSettingSetterTranslationCommon
+    internal partial class GameSettingStringSetterTranslationCommon : GameSettingSetterTranslationCommon
     {
         public new static readonly GameSettingStringSetterTranslationCommon Instance = new GameSettingStringSetterTranslationCommon();
 
@@ -1309,7 +1310,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingString_Registration.Instance;
-        public new static GameSettingString_Registration StaticRegistration => GameSettingString_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GameSettingString_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingStringCommon.Instance;
         [DebuggerStepThrough]
@@ -1327,7 +1328,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class GameSettingStringBinaryWriteTranslation :
         GameSettingBinaryWriteTranslation,
@@ -1426,7 +1427,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class GameSettingStringBinaryCreateTranslation : GameSettingBinaryCreateTranslation
+    internal partial class GameSettingStringBinaryCreateTranslation : GameSettingBinaryCreateTranslation
     {
         public new readonly static GameSettingStringBinaryCreateTranslation Instance = new GameSettingStringBinaryCreateTranslation();
 
@@ -1485,16 +1486,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class GameSettingStringBinaryOverlay :
+    internal partial class GameSettingStringBinaryOverlay :
         GameSettingBinaryOverlay,
         IGameSettingStringGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingString_Registration.Instance;
-        public new static GameSettingString_Registration StaticRegistration => GameSettingString_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GameSettingString_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingStringCommon.Instance;
         [DebuggerStepThrough]

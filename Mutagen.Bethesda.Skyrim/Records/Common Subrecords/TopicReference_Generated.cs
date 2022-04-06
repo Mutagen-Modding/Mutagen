@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -568,17 +569,17 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum TopicReference_FieldIndex
+    internal enum TopicReference_FieldIndex
     {
         Reference = 0,
     }
     #endregion
 
     #region Registration
-    public partial class TopicReference_Registration : ILoquiRegistration
+    internal partial class TopicReference_Registration : ILoquiRegistration
     {
         public static readonly TopicReference_Registration Instance = new TopicReference_Registration();
 
@@ -659,7 +660,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class TopicReferenceSetterCommon : ATopicReferenceSetterCommon
+    internal partial class TopicReferenceSetterCommon : ATopicReferenceSetterCommon
     {
         public new static readonly TopicReferenceSetterCommon Instance = new TopicReferenceSetterCommon();
 
@@ -713,7 +714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TopicReferenceCommon : ATopicReferenceCommon
+    internal partial class TopicReferenceCommon : ATopicReferenceCommon
     {
         public new static readonly TopicReferenceCommon Instance = new TopicReferenceCommon();
 
@@ -866,7 +867,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TopicReferenceSetterTranslationCommon : ATopicReferenceSetterTranslationCommon
+    internal partial class TopicReferenceSetterTranslationCommon : ATopicReferenceSetterTranslationCommon
     {
         public new static readonly TopicReferenceSetterTranslationCommon Instance = new TopicReferenceSetterTranslationCommon();
 
@@ -966,7 +967,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TopicReference_Registration.Instance;
-        public new static TopicReference_Registration StaticRegistration => TopicReference_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => TopicReference_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TopicReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -984,7 +985,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class TopicReferenceBinaryWriteTranslation :
         ATopicReferenceBinaryWriteTranslation,
@@ -1035,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class TopicReferenceBinaryCreateTranslation : ATopicReferenceBinaryCreateTranslation
+    internal partial class TopicReferenceBinaryCreateTranslation : ATopicReferenceBinaryCreateTranslation
     {
         public new readonly static TopicReferenceBinaryCreateTranslation Instance = new TopicReferenceBinaryCreateTranslation();
 
@@ -1059,16 +1060,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class TopicReferenceBinaryOverlay :
+    internal partial class TopicReferenceBinaryOverlay :
         ATopicReferenceBinaryOverlay,
         ITopicReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TopicReference_Registration.Instance;
-        public new static TopicReference_Registration StaticRegistration => TopicReference_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => TopicReference_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TopicReferenceCommon.Instance;
         [DebuggerStepThrough]

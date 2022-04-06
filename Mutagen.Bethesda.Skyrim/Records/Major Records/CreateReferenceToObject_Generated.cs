@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -753,10 +754,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CreateReferenceToObject_FieldIndex
+    internal enum CreateReferenceToObject_FieldIndex
     {
         Object = 0,
         AliasIndex = 1,
@@ -767,7 +768,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CreateReferenceToObject_Registration : ILoquiRegistration
+    internal partial class CreateReferenceToObject_Registration : ILoquiRegistration
     {
         public static readonly CreateReferenceToObject_Registration Instance = new CreateReferenceToObject_Registration();
 
@@ -852,7 +853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CreateReferenceToObjectSetterCommon
+    internal partial class CreateReferenceToObjectSetterCommon
     {
         public static readonly CreateReferenceToObjectSetterCommon Instance = new CreateReferenceToObjectSetterCommon();
 
@@ -893,7 +894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CreateReferenceToObjectCommon
+    internal partial class CreateReferenceToObjectCommon
     {
         public static readonly CreateReferenceToObjectCommon Instance = new CreateReferenceToObjectCommon();
 
@@ -1050,7 +1051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CreateReferenceToObjectSetterTranslationCommon
+    internal partial class CreateReferenceToObjectSetterTranslationCommon
     {
         public static readonly CreateReferenceToObjectSetterTranslationCommon Instance = new CreateReferenceToObjectSetterTranslationCommon();
 
@@ -1144,7 +1145,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreateReferenceToObject_Registration.Instance;
-        public static CreateReferenceToObject_Registration StaticRegistration => CreateReferenceToObject_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CreateReferenceToObject_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreateReferenceToObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -1168,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CreateReferenceToObjectBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1231,7 +1232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CreateReferenceToObjectBinaryCreateTranslation
+    internal partial class CreateReferenceToObjectBinaryCreateTranslation
     {
         public readonly static CreateReferenceToObjectBinaryCreateTranslation Instance = new CreateReferenceToObjectBinaryCreateTranslation();
 
@@ -1307,16 +1308,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CreateReferenceToObjectBinaryOverlay :
+    internal partial class CreateReferenceToObjectBinaryOverlay :
         PluginBinaryOverlay,
         ICreateReferenceToObjectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreateReferenceToObject_Registration.Instance;
-        public static CreateReferenceToObject_Registration StaticRegistration => CreateReferenceToObject_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CreateReferenceToObject_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreateReferenceToObjectCommon.Instance;
         [DebuggerStepThrough]

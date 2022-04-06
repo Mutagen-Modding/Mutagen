@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -668,10 +669,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum MusicTrackLoopData_FieldIndex
+    internal enum MusicTrackLoopData_FieldIndex
     {
         Begins = 0,
         Ends = 1,
@@ -680,7 +681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class MusicTrackLoopData_Registration : ILoquiRegistration
+    internal partial class MusicTrackLoopData_Registration : ILoquiRegistration
     {
         public static readonly MusicTrackLoopData_Registration Instance = new MusicTrackLoopData_Registration();
 
@@ -761,7 +762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MusicTrackLoopDataSetterCommon
+    internal partial class MusicTrackLoopDataSetterCommon
     {
         public static readonly MusicTrackLoopDataSetterCommon Instance = new MusicTrackLoopDataSetterCommon();
 
@@ -802,7 +803,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MusicTrackLoopDataCommon
+    internal partial class MusicTrackLoopDataCommon
     {
         public static readonly MusicTrackLoopDataCommon Instance = new MusicTrackLoopDataCommon();
 
@@ -938,7 +939,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MusicTrackLoopDataSetterTranslationCommon
+    internal partial class MusicTrackLoopDataSetterTranslationCommon
     {
         public static readonly MusicTrackLoopDataSetterTranslationCommon Instance = new MusicTrackLoopDataSetterTranslationCommon();
 
@@ -1024,7 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MusicTrackLoopData_Registration.Instance;
-        public static MusicTrackLoopData_Registration StaticRegistration => MusicTrackLoopData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MusicTrackLoopData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MusicTrackLoopDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1048,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MusicTrackLoopDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1097,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class MusicTrackLoopDataBinaryCreateTranslation
+    internal partial class MusicTrackLoopDataBinaryCreateTranslation
     {
         public readonly static MusicTrackLoopDataBinaryCreateTranslation Instance = new MusicTrackLoopDataBinaryCreateTranslation();
 
@@ -1134,16 +1135,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MusicTrackLoopDataBinaryOverlay :
+    internal partial class MusicTrackLoopDataBinaryOverlay :
         PluginBinaryOverlay,
         IMusicTrackLoopDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MusicTrackLoopData_Registration.Instance;
-        public static MusicTrackLoopData_Registration StaticRegistration => MusicTrackLoopData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MusicTrackLoopData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MusicTrackLoopDataCommon.Instance;
         [DebuggerStepThrough]

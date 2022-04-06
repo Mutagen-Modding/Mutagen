@@ -2,5 +2,5 @@
 
 public static partial class RecordTypes
 {
-    public static readonly RecordType XXXX = new("XXXX");
+    public static readonly RecordType MNAM = new("MNAM");
 }

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -733,10 +734,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum ScriptMetaSummary_FieldIndex
+    internal enum ScriptMetaSummary_FieldIndex
     {
         Unknown = 0,
         RefCount = 1,
@@ -747,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class ScriptMetaSummary_Registration : ILoquiRegistration
+    internal partial class ScriptMetaSummary_Registration : ILoquiRegistration
     {
         public static readonly ScriptMetaSummary_Registration Instance = new ScriptMetaSummary_Registration();
 
@@ -828,7 +829,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ScriptMetaSummarySetterCommon
+    internal partial class ScriptMetaSummarySetterCommon
     {
         public static readonly ScriptMetaSummarySetterCommon Instance = new ScriptMetaSummarySetterCommon();
 
@@ -870,7 +871,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ScriptMetaSummaryCommon
+    internal partial class ScriptMetaSummaryCommon
     {
         public static readonly ScriptMetaSummaryCommon Instance = new ScriptMetaSummaryCommon();
 
@@ -1026,7 +1027,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ScriptMetaSummarySetterTranslationCommon
+    internal partial class ScriptMetaSummarySetterTranslationCommon
     {
         public static readonly ScriptMetaSummarySetterTranslationCommon Instance = new ScriptMetaSummarySetterTranslationCommon();
 
@@ -1116,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptMetaSummary_Registration.Instance;
-        public static ScriptMetaSummary_Registration StaticRegistration => ScriptMetaSummary_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScriptMetaSummary_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptMetaSummaryCommon.Instance;
         [DebuggerStepThrough]
@@ -1140,7 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ScriptMetaSummaryBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1205,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ScriptMetaSummaryBinaryCreateTranslation
+    internal partial class ScriptMetaSummaryBinaryCreateTranslation
     {
         public readonly static ScriptMetaSummaryBinaryCreateTranslation Instance = new ScriptMetaSummaryBinaryCreateTranslation();
 
@@ -1252,16 +1253,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ScriptMetaSummaryBinaryOverlay :
+    internal partial class ScriptMetaSummaryBinaryOverlay :
         PluginBinaryOverlay,
         IScriptMetaSummaryGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptMetaSummary_Registration.Instance;
-        public static ScriptMetaSummary_Registration StaticRegistration => ScriptMetaSummary_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScriptMetaSummary_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptMetaSummaryCommon.Instance;
         [DebuggerStepThrough]

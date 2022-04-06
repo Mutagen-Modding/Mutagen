@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -932,10 +933,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SpeedOverrides_FieldIndex
+    internal enum SpeedOverrides_FieldIndex
     {
         LeftWalk = 0,
         LeftRun = 1,
@@ -952,7 +953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SpeedOverrides_Registration : ILoquiRegistration
+    internal partial class SpeedOverrides_Registration : ILoquiRegistration
     {
         public static readonly SpeedOverrides_Registration Instance = new SpeedOverrides_Registration();
 
@@ -1033,7 +1034,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SpeedOverridesSetterCommon
+    internal partial class SpeedOverridesSetterCommon
     {
         public static readonly SpeedOverridesSetterCommon Instance = new SpeedOverridesSetterCommon();
 
@@ -1082,7 +1083,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SpeedOverridesCommon
+    internal partial class SpeedOverridesCommon
     {
         public static readonly SpeedOverridesCommon Instance = new SpeedOverridesCommon();
 
@@ -1298,7 +1299,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SpeedOverridesSetterTranslationCommon
+    internal partial class SpeedOverridesSetterTranslationCommon
     {
         public static readonly SpeedOverridesSetterTranslationCommon Instance = new SpeedOverridesSetterTranslationCommon();
 
@@ -1416,7 +1417,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpeedOverrides_Registration.Instance;
-        public static SpeedOverrides_Registration StaticRegistration => SpeedOverrides_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SpeedOverrides_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SpeedOverridesCommon.Instance;
         [DebuggerStepThrough]
@@ -1440,7 +1441,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SpeedOverridesBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1515,7 +1516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SpeedOverridesBinaryCreateTranslation
+    internal partial class SpeedOverridesBinaryCreateTranslation
     {
         public readonly static SpeedOverridesBinaryCreateTranslation Instance = new SpeedOverridesBinaryCreateTranslation();
 
@@ -1560,16 +1561,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SpeedOverridesBinaryOverlay :
+    internal partial class SpeedOverridesBinaryOverlay :
         PluginBinaryOverlay,
         ISpeedOverridesGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpeedOverrides_Registration.Instance;
-        public static SpeedOverrides_Registration StaticRegistration => SpeedOverrides_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SpeedOverrides_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SpeedOverridesCommon.Instance;
         [DebuggerStepThrough]

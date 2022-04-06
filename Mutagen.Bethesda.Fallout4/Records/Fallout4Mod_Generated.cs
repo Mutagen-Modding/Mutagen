@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -29,6 +28,8 @@ using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -3705,10 +3706,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Fallout4Mod_FieldIndex
+    internal enum Fallout4Mod_FieldIndex
     {
         ModHeader = 0,
         GameSettings = 1,
@@ -3763,7 +3764,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Fallout4Mod_Registration : ILoquiRegistration
+    internal partial class Fallout4Mod_Registration : ILoquiRegistration
     {
         public static readonly Fallout4Mod_Registration Instance = new Fallout4Mod_Registration();
 
@@ -3838,7 +3839,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class Fallout4ModSetterCommon
+    internal partial class Fallout4ModSetterCommon
     {
         public static readonly Fallout4ModSetterCommon Instance = new Fallout4ModSetterCommon();
 
@@ -4648,7 +4649,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class Fallout4ModCommon
+    internal partial class Fallout4ModCommon
     {
         public static readonly Fallout4ModCommon Instance = new Fallout4ModCommon();
 
@@ -7826,7 +7827,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class Fallout4ModSetterTranslationCommon
+    internal partial class Fallout4ModSetterTranslationCommon
     {
         public static readonly Fallout4ModSetterTranslationCommon Instance = new Fallout4ModSetterTranslationCommon();
 
@@ -8880,7 +8881,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4Mod_Registration.Instance;
-        public static Fallout4Mod_Registration StaticRegistration => Fallout4Mod_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Fallout4Mod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => Fallout4ModCommon.Instance;
         [DebuggerStepThrough]
@@ -9017,9 +9018,9 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class Fallout4Mod_Registration : IModRegistration
+    internal partial class Fallout4Mod_Registration : IModRegistration
     {
         public GameCategory GameCategory => GameCategory.Fallout4;
     }
@@ -9028,7 +9029,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 #endregion
 
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class Fallout4ModBinaryWriteTranslation
     {
@@ -9606,7 +9607,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class Fallout4ModBinaryCreateTranslation
+    internal partial class Fallout4ModBinaryCreateTranslation
     {
         public readonly static Fallout4ModBinaryCreateTranslation Instance = new Fallout4ModBinaryCreateTranslation();
 
@@ -10404,15 +10405,15 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     [DebuggerDisplay("{GameRelease} {ModKey.ToString()}")]
-    public partial class Fallout4ModBinaryOverlay : IFallout4ModDisposableGetter
+    internal partial class Fallout4ModBinaryOverlay : IFallout4ModDisposableGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4Mod_Registration.Instance;
-        public static Fallout4Mod_Registration StaticRegistration => Fallout4Mod_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Fallout4Mod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => Fallout4ModCommon.Instance;
         [DebuggerStepThrough]

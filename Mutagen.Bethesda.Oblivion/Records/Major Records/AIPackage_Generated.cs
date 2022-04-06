@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -918,10 +919,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum AIPackage_FieldIndex
+    internal enum AIPackage_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -937,7 +938,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class AIPackage_Registration : ILoquiRegistration
+    internal partial class AIPackage_Registration : ILoquiRegistration
     {
         public static readonly AIPackage_Registration Instance = new AIPackage_Registration();
 
@@ -1026,7 +1027,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class AIPackageSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class AIPackageSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly AIPackageSetterCommon Instance = new AIPackageSetterCommon();
 
@@ -1101,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AIPackageCommon : OblivionMajorRecordCommon
+    internal partial class AIPackageCommon : OblivionMajorRecordCommon
     {
         public new static readonly AIPackageCommon Instance = new AIPackageCommon();
 
@@ -1443,7 +1444,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AIPackageSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class AIPackageSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly AIPackageSetterTranslationCommon Instance = new AIPackageSetterTranslationCommon();
 
@@ -1726,7 +1727,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackage_Registration.Instance;
-        public new static AIPackage_Registration StaticRegistration => AIPackage_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AIPackage_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AIPackageCommon.Instance;
         [DebuggerStepThrough]
@@ -1744,7 +1745,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AIPackageBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1865,7 +1866,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class AIPackageBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class AIPackageBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static AIPackageBinaryCreateTranslation Instance = new AIPackageBinaryCreateTranslation();
 
@@ -1946,16 +1947,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class AIPackageBinaryOverlay :
+    internal partial class AIPackageBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IAIPackageGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackage_Registration.Instance;
-        public new static AIPackage_Registration StaticRegistration => AIPackage_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AIPackage_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AIPackageCommon.Instance;
         [DebuggerStepThrough]

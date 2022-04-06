@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1559,10 +1560,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum NpcData_FieldIndex
+    internal enum NpcData_FieldIndex
     {
         Armorer = 0,
         Athletics = 1,
@@ -1598,7 +1599,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class NpcData_Registration : ILoquiRegistration
+    internal partial class NpcData_Registration : ILoquiRegistration
     {
         public static readonly NpcData_Registration Instance = new NpcData_Registration();
 
@@ -1679,7 +1680,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class NpcDataSetterCommon
+    internal partial class NpcDataSetterCommon
     {
         public static readonly NpcDataSetterCommon Instance = new NpcDataSetterCommon();
 
@@ -1747,7 +1748,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class NpcDataCommon
+    internal partial class NpcDataCommon
     {
         public static readonly NpcDataCommon Instance = new NpcDataCommon();
 
@@ -2153,7 +2154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class NpcDataSetterTranslationCommon
+    internal partial class NpcDataSetterTranslationCommon
     {
         public static readonly NpcDataSetterTranslationCommon Instance = new NpcDataSetterTranslationCommon();
 
@@ -2347,7 +2348,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcData_Registration.Instance;
-        public static NpcData_Registration StaticRegistration => NpcData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcDataCommon.Instance;
         [DebuggerStepThrough]
@@ -2371,7 +2372,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class NpcDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -2443,7 +2444,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class NpcDataBinaryCreateTranslation
+    internal partial class NpcDataBinaryCreateTranslation
     {
         public readonly static NpcDataBinaryCreateTranslation Instance = new NpcDataBinaryCreateTranslation();
 
@@ -2507,16 +2508,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class NpcDataBinaryOverlay :
+    internal partial class NpcDataBinaryOverlay :
         PluginBinaryOverlay,
         INpcDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcData_Registration.Instance;
-        public static NpcData_Registration StaticRegistration => NpcData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcDataCommon.Instance;
         [DebuggerStepThrough]

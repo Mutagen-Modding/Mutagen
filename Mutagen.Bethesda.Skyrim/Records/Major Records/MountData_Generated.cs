@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -668,10 +669,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum MountData_FieldIndex
+    internal enum MountData_FieldIndex
     {
         MountOffset = 0,
         DismountOffset = 1,
@@ -680,7 +681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class MountData_Registration : ILoquiRegistration
+    internal partial class MountData_Registration : ILoquiRegistration
     {
         public static readonly MountData_Registration Instance = new MountData_Registration();
 
@@ -754,7 +755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MountDataSetterCommon
+    internal partial class MountDataSetterCommon
     {
         public static readonly MountDataSetterCommon Instance = new MountDataSetterCommon();
 
@@ -791,7 +792,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MountDataCommon
+    internal partial class MountDataCommon
     {
         public static readonly MountDataCommon Instance = new MountDataCommon();
 
@@ -927,7 +928,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MountDataSetterTranslationCommon
+    internal partial class MountDataSetterTranslationCommon
     {
         public static readonly MountDataSetterTranslationCommon Instance = new MountDataSetterTranslationCommon();
 
@@ -1013,7 +1014,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MountData_Registration.Instance;
-        public static MountData_Registration StaticRegistration => MountData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MountData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MountDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1037,7 +1038,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MountDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1081,7 +1082,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class MountDataBinaryCreateTranslation
+    internal partial class MountDataBinaryCreateTranslation
     {
         public readonly static MountDataBinaryCreateTranslation Instance = new MountDataBinaryCreateTranslation();
 
@@ -1118,16 +1119,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MountDataBinaryOverlay :
+    internal partial class MountDataBinaryOverlay :
         PluginBinaryOverlay,
         IMountDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MountData_Registration.Instance;
-        public static MountData_Registration StaticRegistration => MountData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MountData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MountDataCommon.Instance;
         [DebuggerStepThrough]

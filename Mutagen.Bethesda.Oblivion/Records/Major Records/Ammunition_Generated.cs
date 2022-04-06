@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -893,10 +894,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Ammunition_FieldIndex
+    internal enum Ammunition_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -913,7 +914,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Ammunition_Registration : ILoquiRegistration
+    internal partial class Ammunition_Registration : ILoquiRegistration
     {
         public static readonly Ammunition_Registration Instance = new Ammunition_Registration();
 
@@ -1002,7 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class AmmunitionSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class AmmunitionSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly AmmunitionSetterCommon Instance = new AmmunitionSetterCommon();
 
@@ -1078,7 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AmmunitionCommon : OblivionMajorRecordCommon
+    internal partial class AmmunitionCommon : OblivionMajorRecordCommon
     {
         public new static readonly AmmunitionCommon Instance = new AmmunitionCommon();
 
@@ -1398,7 +1399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AmmunitionSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class AmmunitionSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly AmmunitionSetterTranslationCommon Instance = new AmmunitionSetterTranslationCommon();
 
@@ -1621,7 +1622,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ammunition_Registration.Instance;
-        public new static Ammunition_Registration StaticRegistration => Ammunition_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Ammunition_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AmmunitionCommon.Instance;
         [DebuggerStepThrough]
@@ -1639,7 +1640,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AmmunitionBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1753,7 +1754,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class AmmunitionBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class AmmunitionBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static AmmunitionBinaryCreateTranslation Instance = new AmmunitionBinaryCreateTranslation();
 
@@ -1843,16 +1844,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class AmmunitionBinaryOverlay :
+    internal partial class AmmunitionBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IAmmunitionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ammunition_Registration.Instance;
-        public new static Ammunition_Registration StaticRegistration => Ammunition_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Ammunition_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AmmunitionCommon.Instance;
         [DebuggerStepThrough]

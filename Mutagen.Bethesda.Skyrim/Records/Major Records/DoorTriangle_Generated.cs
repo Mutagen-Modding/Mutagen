@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -683,10 +684,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum DoorTriangle_FieldIndex
+    internal enum DoorTriangle_FieldIndex
     {
         TriangleBeforeDoor = 0,
         Unknown = 1,
@@ -695,7 +696,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class DoorTriangle_Registration : ILoquiRegistration
+    internal partial class DoorTriangle_Registration : ILoquiRegistration
     {
         public static readonly DoorTriangle_Registration Instance = new DoorTriangle_Registration();
 
@@ -769,7 +770,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class DoorTriangleSetterCommon
+    internal partial class DoorTriangleSetterCommon
     {
         public static readonly DoorTriangleSetterCommon Instance = new DoorTriangleSetterCommon();
 
@@ -807,7 +808,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DoorTriangleCommon
+    internal partial class DoorTriangleCommon
     {
         public static readonly DoorTriangleCommon Instance = new DoorTriangleCommon();
 
@@ -944,7 +945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DoorTriangleSetterTranslationCommon
+    internal partial class DoorTriangleSetterTranslationCommon
     {
         public static readonly DoorTriangleSetterTranslationCommon Instance = new DoorTriangleSetterTranslationCommon();
 
@@ -1030,7 +1031,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DoorTriangle_Registration.Instance;
-        public static DoorTriangle_Registration StaticRegistration => DoorTriangle_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DoorTriangle_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DoorTriangleCommon.Instance;
         [DebuggerStepThrough]
@@ -1054,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DoorTriangleBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1094,7 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class DoorTriangleBinaryCreateTranslation
+    internal partial class DoorTriangleBinaryCreateTranslation
     {
         public readonly static DoorTriangleBinaryCreateTranslation Instance = new DoorTriangleBinaryCreateTranslation();
 
@@ -1131,16 +1132,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class DoorTriangleBinaryOverlay :
+    internal partial class DoorTriangleBinaryOverlay :
         PluginBinaryOverlay,
         IDoorTriangleGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DoorTriangle_Registration.Instance;
-        public static DoorTriangle_Registration StaticRegistration => DoorTriangle_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DoorTriangle_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DoorTriangleCommon.Instance;
         [DebuggerStepThrough]

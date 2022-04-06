@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1045,10 +1046,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum VolumetricLighting_FieldIndex
+    internal enum VolumetricLighting_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1072,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class VolumetricLighting_Registration : ILoquiRegistration
+    internal partial class VolumetricLighting_Registration : ILoquiRegistration
     {
         public static readonly VolumetricLighting_Registration Instance = new VolumetricLighting_Registration();
 
@@ -1167,7 +1168,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class VolumetricLightingSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class VolumetricLightingSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly VolumetricLightingSetterCommon Instance = new VolumetricLightingSetterCommon();
 
@@ -1248,7 +1249,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class VolumetricLightingCommon : SkyrimMajorRecordCommon
+    internal partial class VolumetricLightingCommon : SkyrimMajorRecordCommon
     {
         public new static readonly VolumetricLightingCommon Instance = new VolumetricLightingCommon();
 
@@ -1638,7 +1639,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class VolumetricLightingSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class VolumetricLightingSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly VolumetricLightingSetterTranslationCommon Instance = new VolumetricLightingSetterTranslationCommon();
 
@@ -1841,7 +1842,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VolumetricLighting_Registration.Instance;
-        public new static VolumetricLighting_Registration StaticRegistration => VolumetricLighting_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => VolumetricLighting_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VolumetricLightingCommon.Instance;
         [DebuggerStepThrough]
@@ -1859,7 +1860,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class VolumetricLightingBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1989,7 +1990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class VolumetricLightingBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class VolumetricLightingBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static VolumetricLightingBinaryCreateTranslation Instance = new VolumetricLightingBinaryCreateTranslation();
 
@@ -2111,16 +2112,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class VolumetricLightingBinaryOverlay :
+    internal partial class VolumetricLightingBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IVolumetricLightingGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VolumetricLighting_Registration.Instance;
-        public new static VolumetricLighting_Registration StaticRegistration => VolumetricLighting_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => VolumetricLighting_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VolumetricLightingCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -975,10 +976,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum MagicEffectData_FieldIndex
+    internal enum MagicEffectData_FieldIndex
     {
         Versioning = 0,
         Flags = 1,
@@ -995,7 +996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class MagicEffectData_Registration : ILoquiRegistration
+    internal partial class MagicEffectData_Registration : ILoquiRegistration
     {
         public static readonly MagicEffectData_Registration Instance = new MagicEffectData_Registration();
 
@@ -1076,7 +1077,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class MagicEffectDataSetterCommon
+    internal partial class MagicEffectDataSetterCommon
     {
         public static readonly MagicEffectDataSetterCommon Instance = new MagicEffectDataSetterCommon();
 
@@ -1129,7 +1130,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class MagicEffectDataCommon
+    internal partial class MagicEffectDataCommon
     {
         public static readonly MagicEffectDataCommon Instance = new MagicEffectDataCommon();
 
@@ -1367,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class MagicEffectDataSetterTranslationCommon
+    internal partial class MagicEffectDataSetterTranslationCommon
     {
         public static readonly MagicEffectDataSetterTranslationCommon Instance = new MagicEffectDataSetterTranslationCommon();
 
@@ -1508,7 +1509,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectData_Registration.Instance;
-        public static MagicEffectData_Registration StaticRegistration => MagicEffectData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MagicEffectData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MagicEffectDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1532,7 +1533,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class MagicEffectDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1609,7 +1610,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class MagicEffectDataBinaryCreateTranslation
+    internal partial class MagicEffectDataBinaryCreateTranslation
     {
         public readonly static MagicEffectDataBinaryCreateTranslation Instance = new MagicEffectDataBinaryCreateTranslation();
 
@@ -1665,16 +1666,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class MagicEffectDataBinaryOverlay :
+    internal partial class MagicEffectDataBinaryOverlay :
         PluginBinaryOverlay,
         IMagicEffectDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectData_Registration.Instance;
-        public static MagicEffectData_Registration StaticRegistration => MagicEffectData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MagicEffectData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MagicEffectDataCommon.Instance;
         [DebuggerStepThrough]

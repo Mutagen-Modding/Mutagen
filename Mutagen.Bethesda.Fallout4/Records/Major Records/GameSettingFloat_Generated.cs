@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -649,10 +650,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum GameSettingFloat_FieldIndex
+    internal enum GameSettingFloat_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -665,7 +666,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class GameSettingFloat_Registration : ILoquiRegistration
+    internal partial class GameSettingFloat_Registration : ILoquiRegistration
     {
         public static readonly GameSettingFloat_Registration Instance = new GameSettingFloat_Registration();
 
@@ -749,7 +750,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class GameSettingFloatSetterCommon : GameSettingSetterCommon
+    internal partial class GameSettingFloatSetterCommon : GameSettingSetterCommon
     {
         public new static readonly GameSettingFloatSetterCommon Instance = new GameSettingFloatSetterCommon();
 
@@ -835,7 +836,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class GameSettingFloatCommon : GameSettingCommon
+    internal partial class GameSettingFloatCommon : GameSettingCommon
     {
         public new static readonly GameSettingFloatCommon Instance = new GameSettingFloatCommon();
 
@@ -1119,7 +1120,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class GameSettingFloatSetterTranslationCommon : GameSettingSetterTranslationCommon
+    internal partial class GameSettingFloatSetterTranslationCommon : GameSettingSetterTranslationCommon
     {
         public new static readonly GameSettingFloatSetterTranslationCommon Instance = new GameSettingFloatSetterTranslationCommon();
 
@@ -1308,7 +1309,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingFloat_Registration.Instance;
-        public new static GameSettingFloat_Registration StaticRegistration => GameSettingFloat_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GameSettingFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingFloatCommon.Instance;
         [DebuggerStepThrough]
@@ -1326,7 +1327,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class GameSettingFloatBinaryWriteTranslation :
         GameSettingBinaryWriteTranslation,
@@ -1423,7 +1424,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class GameSettingFloatBinaryCreateTranslation : GameSettingBinaryCreateTranslation
+    internal partial class GameSettingFloatBinaryCreateTranslation : GameSettingBinaryCreateTranslation
     {
         public new readonly static GameSettingFloatBinaryCreateTranslation Instance = new GameSettingFloatBinaryCreateTranslation();
 
@@ -1479,16 +1480,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class GameSettingFloatBinaryOverlay :
+    internal partial class GameSettingFloatBinaryOverlay :
         GameSettingBinaryOverlay,
         IGameSettingFloatGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingFloat_Registration.Instance;
-        public new static GameSettingFloat_Registration StaticRegistration => GameSettingFloat_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GameSettingFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingFloatCommon.Instance;
         [DebuggerStepThrough]

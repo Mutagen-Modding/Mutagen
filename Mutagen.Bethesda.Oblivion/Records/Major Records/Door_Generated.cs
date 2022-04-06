@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1045,10 +1046,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Door_FieldIndex
+    internal enum Door_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1067,7 +1068,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Door_Registration : ILoquiRegistration
+    internal partial class Door_Registration : ILoquiRegistration
     {
         public static readonly Door_Registration Instance = new Door_Registration();
 
@@ -1158,7 +1159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class DoorSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class DoorSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly DoorSetterCommon Instance = new DoorSetterCommon();
 
@@ -1240,7 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class DoorCommon : OblivionMajorRecordCommon
+    internal partial class DoorCommon : OblivionMajorRecordCommon
     {
         public new static readonly DoorCommon Instance = new DoorCommon();
 
@@ -1597,7 +1598,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class DoorSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class DoorSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly DoorSetterTranslationCommon Instance = new DoorSetterTranslationCommon();
 
@@ -1821,7 +1822,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
-        public new static Door_Registration StaticRegistration => Door_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Door_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DoorCommon.Instance;
         [DebuggerStepThrough]
@@ -1839,7 +1840,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class DoorBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1964,7 +1965,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class DoorBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class DoorBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static DoorBinaryCreateTranslation Instance = new DoorBinaryCreateTranslation();
 
@@ -2070,16 +2071,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class DoorBinaryOverlay :
+    internal partial class DoorBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IDoorGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
-        public new static Door_Registration StaticRegistration => Door_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Door_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DoorCommon.Instance;
         [DebuggerStepThrough]

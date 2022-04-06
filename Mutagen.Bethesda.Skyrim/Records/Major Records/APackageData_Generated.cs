@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -682,10 +683,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum APackageData_FieldIndex
+    internal enum APackageData_FieldIndex
     {
         Name = 0,
         Flags = 1,
@@ -693,7 +694,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class APackageData_Registration : ILoquiRegistration
+    internal partial class APackageData_Registration : ILoquiRegistration
     {
         public static readonly APackageData_Registration Instance = new APackageData_Registration();
 
@@ -775,7 +776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class APackageDataSetterCommon
+    internal partial class APackageDataSetterCommon
     {
         public static readonly APackageDataSetterCommon Instance = new APackageDataSetterCommon();
 
@@ -812,7 +813,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class APackageDataCommon
+    internal partial class APackageDataCommon
     {
         public static readonly APackageDataCommon Instance = new APackageDataCommon();
 
@@ -946,7 +947,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class APackageDataSetterTranslationCommon
+    internal partial class APackageDataSetterTranslationCommon
     {
         public static readonly APackageDataSetterTranslationCommon Instance = new APackageDataSetterTranslationCommon();
 
@@ -1028,7 +1029,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APackageData_Registration.Instance;
-        public static APackageData_Registration StaticRegistration => APackageData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => APackageData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => APackageDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1052,7 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class APackageDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1089,7 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class APackageDataBinaryCreateTranslation
+    internal partial class APackageDataBinaryCreateTranslation
     {
         public readonly static APackageDataBinaryCreateTranslation Instance = new APackageDataBinaryCreateTranslation();
 
@@ -1140,16 +1141,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class APackageDataBinaryOverlay :
+    internal partial class APackageDataBinaryOverlay :
         PluginBinaryOverlay,
         IAPackageDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APackageData_Registration.Instance;
-        public static APackageData_Registration StaticRegistration => APackageData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => APackageData_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => APackageDataCommon.Instance;
         [DebuggerStepThrough]

@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -650,10 +651,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum WeaponDamageType_FieldIndex
+    internal enum WeaponDamageType_FieldIndex
     {
         DamageType = 0,
         Amount = 1,
@@ -661,7 +662,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class WeaponDamageType_Registration : ILoquiRegistration
+    internal partial class WeaponDamageType_Registration : ILoquiRegistration
     {
         public static readonly WeaponDamageType_Registration Instance = new WeaponDamageType_Registration();
 
@@ -742,7 +743,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class WeaponDamageTypeSetterCommon
+    internal partial class WeaponDamageTypeSetterCommon
     {
         public static readonly WeaponDamageTypeSetterCommon Instance = new WeaponDamageTypeSetterCommon();
 
@@ -783,7 +784,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class WeaponDamageTypeCommon
+    internal partial class WeaponDamageTypeCommon
     {
         public static readonly WeaponDamageTypeCommon Instance = new WeaponDamageTypeCommon();
 
@@ -910,7 +911,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class WeaponDamageTypeSetterTranslationCommon
+    internal partial class WeaponDamageTypeSetterTranslationCommon
     {
         public static readonly WeaponDamageTypeSetterTranslationCommon Instance = new WeaponDamageTypeSetterTranslationCommon();
 
@@ -992,7 +993,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeaponDamageType_Registration.Instance;
-        public static WeaponDamageType_Registration StaticRegistration => WeaponDamageType_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeaponDamageType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeaponDamageTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1016,7 +1017,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class WeaponDamageTypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1062,7 +1063,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class WeaponDamageTypeBinaryCreateTranslation
+    internal partial class WeaponDamageTypeBinaryCreateTranslation
     {
         public readonly static WeaponDamageTypeBinaryCreateTranslation Instance = new WeaponDamageTypeBinaryCreateTranslation();
 
@@ -1098,16 +1099,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class WeaponDamageTypeBinaryOverlay :
+    internal partial class WeaponDamageTypeBinaryOverlay :
         PluginBinaryOverlay,
         IWeaponDamageTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeaponDamageType_Registration.Instance;
-        public static WeaponDamageType_Registration StaticRegistration => WeaponDamageType_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeaponDamageType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeaponDamageTypeCommon.Instance;
         [DebuggerStepThrough]

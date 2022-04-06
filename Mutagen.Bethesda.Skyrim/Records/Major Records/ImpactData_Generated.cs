@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -657,10 +658,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ImpactData_FieldIndex
+    internal enum ImpactData_FieldIndex
     {
         Material = 0,
         Impact = 1,
@@ -668,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ImpactData_Registration : ILoquiRegistration
+    internal partial class ImpactData_Registration : ILoquiRegistration
     {
         public static readonly ImpactData_Registration Instance = new ImpactData_Registration();
 
@@ -749,7 +750,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ImpactDataSetterCommon
+    internal partial class ImpactDataSetterCommon
     {
         public static readonly ImpactDataSetterCommon Instance = new ImpactDataSetterCommon();
 
@@ -791,7 +792,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImpactDataCommon
+    internal partial class ImpactDataCommon
     {
         public static readonly ImpactDataCommon Instance = new ImpactDataCommon();
 
@@ -919,7 +920,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImpactDataSetterTranslationCommon
+    internal partial class ImpactDataSetterTranslationCommon
     {
         public static readonly ImpactDataSetterTranslationCommon Instance = new ImpactDataSetterTranslationCommon();
 
@@ -1001,7 +1002,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImpactData_Registration.Instance;
-        public static ImpactData_Registration StaticRegistration => ImpactData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ImpactData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImpactDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1025,7 +1026,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImpactDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1073,7 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ImpactDataBinaryCreateTranslation
+    internal partial class ImpactDataBinaryCreateTranslation
     {
         public readonly static ImpactDataBinaryCreateTranslation Instance = new ImpactDataBinaryCreateTranslation();
 
@@ -1109,16 +1110,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ImpactDataBinaryOverlay :
+    internal partial class ImpactDataBinaryOverlay :
         PluginBinaryOverlay,
         IImpactDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImpactData_Registration.Instance;
-        public static ImpactData_Registration StaticRegistration => ImpactData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ImpactData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImpactDataCommon.Instance;
         [DebuggerStepThrough]

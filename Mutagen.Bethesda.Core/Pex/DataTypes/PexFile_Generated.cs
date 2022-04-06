@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Pex;
-using Mutagen.Bethesda.Pex.Internals;
 using Noggog;
 using System;
 using System.Collections;
@@ -1013,10 +1012,10 @@ namespace Mutagen.Bethesda.Pex
 
 }
 
-namespace Mutagen.Bethesda.Pex.Internals
+namespace Mutagen.Bethesda.Pex
 {
     #region Field Index
-    public enum PexFile_FieldIndex
+    internal enum PexFile_FieldIndex
     {
         MajorVersion = 0,
         MinorVersion = 1,
@@ -1032,7 +1031,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Registration
-    public partial class PexFile_Registration : ILoquiRegistration
+    internal partial class PexFile_Registration : ILoquiRegistration
     {
         public static readonly PexFile_Registration Instance = new PexFile_Registration();
 
@@ -1105,7 +1104,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Common
-    public partial class PexFileSetterCommon
+    internal partial class PexFileSetterCommon
     {
         public static readonly PexFileSetterCommon Instance = new PexFileSetterCommon();
 
@@ -1127,7 +1126,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class PexFileCommon
+    internal partial class PexFileCommon
     {
         public static readonly PexFileCommon Instance = new PexFileCommon();
 
@@ -1371,7 +1370,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class PexFileSetterTranslationCommon
+    internal partial class PexFileSetterTranslationCommon
     {
         public static readonly PexFileSetterTranslationCommon Instance = new PexFileSetterTranslationCommon();
 
@@ -1527,7 +1526,7 @@ namespace Mutagen.Bethesda.Pex
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PexFile_Registration.Instance;
-        public static PexFile_Registration StaticRegistration => PexFile_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PexFile_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PexFileCommon.Instance;
         [DebuggerStepThrough]

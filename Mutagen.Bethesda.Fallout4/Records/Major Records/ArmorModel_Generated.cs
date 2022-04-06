@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -709,10 +710,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ArmorModel_FieldIndex
+    internal enum ArmorModel_FieldIndex
     {
         Model = 0,
         Icons = 1,
@@ -720,7 +721,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ArmorModel_Registration : ILoquiRegistration
+    internal partial class ArmorModel_Registration : ILoquiRegistration
     {
         public static readonly ArmorModel_Registration Instance = new ArmorModel_Registration();
 
@@ -803,7 +804,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ArmorModelSetterCommon
+    internal partial class ArmorModelSetterCommon
     {
         public static readonly ArmorModelSetterCommon Instance = new ArmorModelSetterCommon();
 
@@ -841,7 +842,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ArmorModelCommon
+    internal partial class ArmorModelCommon
     {
         public static readonly ArmorModelCommon Instance = new ArmorModelCommon();
 
@@ -998,7 +999,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ArmorModelSetterTranslationCommon
+    internal partial class ArmorModelSetterTranslationCommon
     {
         public static readonly ArmorModelSetterTranslationCommon Instance = new ArmorModelSetterTranslationCommon();
 
@@ -1124,7 +1125,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorModel_Registration.Instance;
-        public static ArmorModel_Registration StaticRegistration => ArmorModel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ArmorModel_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ArmorModelCommon.Instance;
         [DebuggerStepThrough]
@@ -1148,7 +1149,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ArmorModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1199,7 +1200,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ArmorModelBinaryCreateTranslation
+    internal partial class ArmorModelBinaryCreateTranslation
     {
         public readonly static ArmorModelBinaryCreateTranslation Instance = new ArmorModelBinaryCreateTranslation();
 
@@ -1267,16 +1268,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ArmorModelBinaryOverlay :
+    internal partial class ArmorModelBinaryOverlay :
         PluginBinaryOverlay,
         IArmorModelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorModel_Registration.Instance;
-        public static ArmorModel_Registration StaticRegistration => ArmorModel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ArmorModel_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ArmorModelCommon.Instance;
         [DebuggerStepThrough]

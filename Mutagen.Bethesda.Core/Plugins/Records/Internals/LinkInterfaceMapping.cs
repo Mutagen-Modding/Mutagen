@@ -76,5 +76,5 @@ public static class LinkInterfaceMapping
 
     public static ILinkInterfaceMapGetter Instance => _mapper.Value;
 
-    public static LinkInterfaceMapper InternalInstance => _mapper.Value;
+    internal static LinkInterfaceMapper InternalInstance => _mapper.Value;
 }

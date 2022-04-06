@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -809,10 +810,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ImageSpaceDepthOfField_FieldIndex
+    internal enum ImageSpaceDepthOfField_FieldIndex
     {
         Versioning = 0,
         Strength = 1,
@@ -825,7 +826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ImageSpaceDepthOfField_Registration : ILoquiRegistration
+    internal partial class ImageSpaceDepthOfField_Registration : ILoquiRegistration
     {
         public static readonly ImageSpaceDepthOfField_Registration Instance = new ImageSpaceDepthOfField_Registration();
 
@@ -906,7 +907,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ImageSpaceDepthOfFieldSetterCommon
+    internal partial class ImageSpaceDepthOfFieldSetterCommon
     {
         public static readonly ImageSpaceDepthOfFieldSetterCommon Instance = new ImageSpaceDepthOfFieldSetterCommon();
 
@@ -951,7 +952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImageSpaceDepthOfFieldCommon
+    internal partial class ImageSpaceDepthOfFieldCommon
     {
         public static readonly ImageSpaceDepthOfFieldCommon Instance = new ImageSpaceDepthOfFieldCommon();
 
@@ -1127,7 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImageSpaceDepthOfFieldSetterTranslationCommon
+    internal partial class ImageSpaceDepthOfFieldSetterTranslationCommon
     {
         public static readonly ImageSpaceDepthOfFieldSetterTranslationCommon Instance = new ImageSpaceDepthOfFieldSetterTranslationCommon();
 
@@ -1230,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceDepthOfField_Registration.Instance;
-        public static ImageSpaceDepthOfField_Registration StaticRegistration => ImageSpaceDepthOfField_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ImageSpaceDepthOfField_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImageSpaceDepthOfFieldCommon.Instance;
         [DebuggerStepThrough]
@@ -1254,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImageSpaceDepthOfFieldBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1341,7 +1342,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ImageSpaceDepthOfFieldBinaryCreateTranslation
+    internal partial class ImageSpaceDepthOfFieldBinaryCreateTranslation
     {
         public readonly static ImageSpaceDepthOfFieldBinaryCreateTranslation Instance = new ImageSpaceDepthOfFieldBinaryCreateTranslation();
 
@@ -1398,16 +1399,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ImageSpaceDepthOfFieldBinaryOverlay :
+    internal partial class ImageSpaceDepthOfFieldBinaryOverlay :
         PluginBinaryOverlay,
         IImageSpaceDepthOfFieldGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceDepthOfField_Registration.Instance;
-        public static ImageSpaceDepthOfField_Registration StaticRegistration => ImageSpaceDepthOfField_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ImageSpaceDepthOfField_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImageSpaceDepthOfFieldCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -720,10 +721,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum EffectShader_FieldIndex
+    internal enum EffectShader_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -737,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class EffectShader_Registration : ILoquiRegistration
+    internal partial class EffectShader_Registration : ILoquiRegistration
     {
         public static readonly EffectShader_Registration Instance = new EffectShader_Registration();
 
@@ -823,7 +824,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class EffectShaderSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class EffectShaderSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly EffectShaderSetterCommon Instance = new EffectShaderSetterCommon();
 
@@ -895,7 +896,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class EffectShaderCommon : OblivionMajorRecordCommon
+    internal partial class EffectShaderCommon : OblivionMajorRecordCommon
     {
         public new static readonly EffectShaderCommon Instance = new EffectShaderCommon();
 
@@ -1165,7 +1166,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class EffectShaderSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class EffectShaderSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly EffectShaderSetterTranslationCommon Instance = new EffectShaderSetterTranslationCommon();
 
@@ -1354,7 +1355,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectShader_Registration.Instance;
-        public new static EffectShader_Registration StaticRegistration => EffectShader_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => EffectShader_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EffectShaderCommon.Instance;
         [DebuggerStepThrough]
@@ -1372,7 +1373,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class EffectShaderBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
@@ -1471,7 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class EffectShaderBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class EffectShaderBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static EffectShaderBinaryCreateTranslation Instance = new EffectShaderBinaryCreateTranslation();
 
@@ -1542,16 +1543,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class EffectShaderBinaryOverlay :
+    internal partial class EffectShaderBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IEffectShaderGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectShader_Registration.Instance;
-        public new static EffectShader_Registration StaticRegistration => EffectShader_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => EffectShader_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EffectShaderCommon.Instance;
         [DebuggerStepThrough]

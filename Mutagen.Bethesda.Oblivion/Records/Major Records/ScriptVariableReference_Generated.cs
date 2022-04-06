@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -553,17 +554,17 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum ScriptVariableReference_FieldIndex
+    internal enum ScriptVariableReference_FieldIndex
     {
         VariableIndex = 0,
     }
     #endregion
 
     #region Registration
-    public partial class ScriptVariableReference_Registration : ILoquiRegistration
+    internal partial class ScriptVariableReference_Registration : ILoquiRegistration
     {
         public static readonly ScriptVariableReference_Registration Instance = new ScriptVariableReference_Registration();
 
@@ -644,7 +645,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ScriptVariableReferenceSetterCommon : AScriptReferenceSetterCommon
+    internal partial class ScriptVariableReferenceSetterCommon : AScriptReferenceSetterCommon
     {
         public new static readonly ScriptVariableReferenceSetterCommon Instance = new ScriptVariableReferenceSetterCommon();
 
@@ -698,7 +699,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ScriptVariableReferenceCommon : AScriptReferenceCommon
+    internal partial class ScriptVariableReferenceCommon : AScriptReferenceCommon
     {
         public new static readonly ScriptVariableReferenceCommon Instance = new ScriptVariableReferenceCommon();
 
@@ -850,7 +851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ScriptVariableReferenceSetterTranslationCommon : AScriptReferenceSetterTranslationCommon
+    internal partial class ScriptVariableReferenceSetterTranslationCommon : AScriptReferenceSetterTranslationCommon
     {
         public new static readonly ScriptVariableReferenceSetterTranslationCommon Instance = new ScriptVariableReferenceSetterTranslationCommon();
 
@@ -950,7 +951,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptVariableReference_Registration.Instance;
-        public new static ScriptVariableReference_Registration StaticRegistration => ScriptVariableReference_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ScriptVariableReference_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptVariableReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -968,7 +969,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ScriptVariableReferenceBinaryWriteTranslation :
         AScriptReferenceBinaryWriteTranslation,
@@ -1022,7 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ScriptVariableReferenceBinaryCreateTranslation : AScriptReferenceBinaryCreateTranslation
+    internal partial class ScriptVariableReferenceBinaryCreateTranslation : AScriptReferenceBinaryCreateTranslation
     {
         public new readonly static ScriptVariableReferenceBinaryCreateTranslation Instance = new ScriptVariableReferenceBinaryCreateTranslation();
 
@@ -1069,16 +1070,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ScriptVariableReferenceBinaryOverlay :
+    internal partial class ScriptVariableReferenceBinaryOverlay :
         AScriptReferenceBinaryOverlay,
         IScriptVariableReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptVariableReference_Registration.Instance;
-        public new static ScriptVariableReference_Registration StaticRegistration => ScriptVariableReference_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ScriptVariableReference_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptVariableReferenceCommon.Instance;
         [DebuggerStepThrough]

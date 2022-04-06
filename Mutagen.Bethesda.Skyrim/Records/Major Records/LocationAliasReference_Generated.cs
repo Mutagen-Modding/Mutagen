@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -692,10 +693,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LocationAliasReference_FieldIndex
+    internal enum LocationAliasReference_FieldIndex
     {
         AliasIndex = 0,
         Keyword = 1,
@@ -704,7 +705,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LocationAliasReference_Registration : ILoquiRegistration
+    internal partial class LocationAliasReference_Registration : ILoquiRegistration
     {
         public static readonly LocationAliasReference_Registration Instance = new LocationAliasReference_Registration();
 
@@ -787,7 +788,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LocationAliasReferenceSetterCommon
+    internal partial class LocationAliasReferenceSetterCommon
     {
         public static readonly LocationAliasReferenceSetterCommon Instance = new LocationAliasReferenceSetterCommon();
 
@@ -827,7 +828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationAliasReferenceCommon
+    internal partial class LocationAliasReferenceCommon
     {
         public static readonly LocationAliasReferenceCommon Instance = new LocationAliasReferenceCommon();
 
@@ -975,7 +976,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationAliasReferenceSetterTranslationCommon
+    internal partial class LocationAliasReferenceSetterTranslationCommon
     {
         public static readonly LocationAliasReferenceSetterTranslationCommon Instance = new LocationAliasReferenceSetterTranslationCommon();
 
@@ -1061,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationAliasReference_Registration.Instance;
-        public static LocationAliasReference_Registration StaticRegistration => LocationAliasReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocationAliasReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationAliasReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1085,7 +1086,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LocationAliasReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1134,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LocationAliasReferenceBinaryCreateTranslation
+    internal partial class LocationAliasReferenceBinaryCreateTranslation
     {
         public readonly static LocationAliasReferenceBinaryCreateTranslation Instance = new LocationAliasReferenceBinaryCreateTranslation();
 
@@ -1206,16 +1207,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LocationAliasReferenceBinaryOverlay :
+    internal partial class LocationAliasReferenceBinaryOverlay :
         PluginBinaryOverlay,
         ILocationAliasReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationAliasReference_Registration.Instance;
-        public static LocationAliasReference_Registration StaticRegistration => LocationAliasReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocationAliasReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationAliasReferenceCommon.Instance;
         [DebuggerStepThrough]

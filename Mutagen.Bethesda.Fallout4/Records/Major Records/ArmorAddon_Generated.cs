@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1332,10 +1333,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ArmorAddon_FieldIndex
+    internal enum ArmorAddon_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1363,7 +1364,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ArmorAddon_Registration : ILoquiRegistration
+    internal partial class ArmorAddon_Registration : ILoquiRegistration
     {
         public static readonly ArmorAddon_Registration Instance = new ArmorAddon_Registration();
 
@@ -1509,7 +1510,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ArmorAddonSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class ArmorAddonSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly ArmorAddonSetterCommon Instance = new ArmorAddonSetterCommon();
 
@@ -1604,7 +1605,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ArmorAddonCommon : Fallout4MajorRecordCommon
+    internal partial class ArmorAddonCommon : Fallout4MajorRecordCommon
     {
         public new static readonly ArmorAddonCommon Instance = new ArmorAddonCommon();
 
@@ -2095,7 +2096,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ArmorAddonSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class ArmorAddonSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly ArmorAddonSetterTranslationCommon Instance = new ArmorAddonSetterTranslationCommon();
 
@@ -2381,7 +2382,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorAddon_Registration.Instance;
-        public new static ArmorAddon_Registration StaticRegistration => ArmorAddon_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ArmorAddon_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArmorAddonCommon.Instance;
         [DebuggerStepThrough]
@@ -2399,7 +2400,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ArmorAddonBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -2609,7 +2610,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ArmorAddonBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class ArmorAddonBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static ArmorAddonBinaryCreateTranslation Instance = new ArmorAddonBinaryCreateTranslation();
 
@@ -2762,16 +2763,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ArmorAddonBinaryOverlay :
+    internal partial class ArmorAddonBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IArmorAddonGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorAddon_Registration.Instance;
-        public new static ArmorAddon_Registration StaticRegistration => ArmorAddon_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ArmorAddon_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArmorAddonCommon.Instance;
         [DebuggerStepThrough]

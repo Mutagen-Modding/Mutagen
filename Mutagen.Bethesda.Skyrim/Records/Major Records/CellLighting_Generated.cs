@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1372,10 +1373,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CellLighting_FieldIndex
+    internal enum CellLighting_FieldIndex
     {
         Versioning = 0,
         AmbientColor = 1,
@@ -1405,7 +1406,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CellLighting_Registration : ILoquiRegistration
+    internal partial class CellLighting_Registration : ILoquiRegistration
     {
         public static readonly CellLighting_Registration Instance = new CellLighting_Registration();
 
@@ -1486,7 +1487,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CellLightingSetterCommon
+    internal partial class CellLightingSetterCommon
     {
         public static readonly CellLightingSetterCommon Instance = new CellLightingSetterCommon();
 
@@ -1548,7 +1549,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CellLightingCommon
+    internal partial class CellLightingCommon
     {
         public static readonly CellLightingCommon Instance = new CellLightingCommon();
 
@@ -1894,7 +1895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CellLightingSetterTranslationCommon
+    internal partial class CellLightingSetterTranslationCommon
     {
         public static readonly CellLightingSetterTranslationCommon Instance = new CellLightingSetterTranslationCommon();
 
@@ -2065,7 +2066,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellLighting_Registration.Instance;
-        public static CellLighting_Registration StaticRegistration => CellLighting_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CellLighting_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellLightingCommon.Instance;
         [DebuggerStepThrough]
@@ -2089,7 +2090,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CellLightingBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -2200,7 +2201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CellLightingBinaryCreateTranslation
+    internal partial class CellLightingBinaryCreateTranslation
     {
         public readonly static CellLightingBinaryCreateTranslation Instance = new CellLightingBinaryCreateTranslation();
 
@@ -2264,16 +2265,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CellLightingBinaryOverlay :
+    internal partial class CellLightingBinaryOverlay :
         PluginBinaryOverlay,
         ICellLightingGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellLighting_Registration.Instance;
-        public static CellLighting_Registration StaticRegistration => CellLighting_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CellLighting_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellLightingCommon.Instance;
         [DebuggerStepThrough]

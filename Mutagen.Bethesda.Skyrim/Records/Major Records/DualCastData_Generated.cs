@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -964,10 +965,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum DualCastData_FieldIndex
+    internal enum DualCastData_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -987,7 +988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class DualCastData_Registration : ILoquiRegistration
+    internal partial class DualCastData_Registration : ILoquiRegistration
     {
         public static readonly DualCastData_Registration Instance = new DualCastData_Registration();
 
@@ -1072,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class DualCastDataSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class DualCastDataSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly DualCastDataSetterCommon Instance = new DualCastDataSetterCommon();
 
@@ -1154,7 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DualCastDataCommon : SkyrimMajorRecordCommon
+    internal partial class DualCastDataCommon : SkyrimMajorRecordCommon
     {
         public new static readonly DualCastDataCommon Instance = new DualCastDataCommon();
 
@@ -1465,7 +1466,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DualCastDataSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class DualCastDataSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly DualCastDataSetterTranslationCommon Instance = new DualCastDataSetterTranslationCommon();
 
@@ -1670,7 +1671,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DualCastData_Registration.Instance;
-        public new static DualCastData_Registration StaticRegistration => DualCastData_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => DualCastData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DualCastDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1688,7 +1689,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DualCastDataBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1806,7 +1807,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class DualCastDataBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class DualCastDataBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static DualCastDataBinaryCreateTranslation Instance = new DualCastDataBinaryCreateTranslation();
 
@@ -1875,16 +1876,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class DualCastDataBinaryOverlay :
+    internal partial class DualCastDataBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IDualCastDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DualCastData_Registration.Instance;
-        public new static DualCastData_Registration StaticRegistration => DualCastData_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => DualCastData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DualCastDataCommon.Instance;
         [DebuggerStepThrough]

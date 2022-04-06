@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -785,10 +786,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Effect_FieldIndex
+    internal enum Effect_FieldIndex
     {
         BaseEffect = 0,
         Data = 1,
@@ -797,7 +798,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Effect_Registration : ILoquiRegistration
+    internal partial class Effect_Registration : ILoquiRegistration
     {
         public static readonly Effect_Registration Instance = new Effect_Registration();
 
@@ -886,7 +887,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class EffectSetterCommon
+    internal partial class EffectSetterCommon
     {
         public static readonly EffectSetterCommon Instance = new EffectSetterCommon();
 
@@ -926,7 +927,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class EffectCommon
+    internal partial class EffectCommon
     {
         public static readonly EffectCommon Instance = new EffectCommon();
 
@@ -1100,7 +1101,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class EffectSetterTranslationCommon
+    internal partial class EffectSetterTranslationCommon
     {
         public static readonly EffectSetterTranslationCommon Instance = new EffectSetterTranslationCommon();
 
@@ -1228,7 +1229,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Effect_Registration.Instance;
-        public static Effect_Registration StaticRegistration => Effect_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Effect_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1252,7 +1253,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class EffectBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1311,7 +1312,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class EffectBinaryCreateTranslation
+    internal partial class EffectBinaryCreateTranslation
     {
         public readonly static EffectBinaryCreateTranslation Instance = new EffectBinaryCreateTranslation();
 
@@ -1386,16 +1387,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class EffectBinaryOverlay :
+    internal partial class EffectBinaryOverlay :
         PluginBinaryOverlay,
         IEffectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Effect_Registration.Instance;
-        public static Effect_Registration StaticRegistration => Effect_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Effect_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EffectCommon.Instance;
         [DebuggerStepThrough]

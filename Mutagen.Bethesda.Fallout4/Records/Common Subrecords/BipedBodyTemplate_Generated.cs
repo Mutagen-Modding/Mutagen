@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -596,17 +597,17 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum BipedBodyTemplate_FieldIndex
+    internal enum BipedBodyTemplate_FieldIndex
     {
         FirstPersonFlags = 0,
     }
     #endregion
 
     #region Registration
-    public partial class BipedBodyTemplate_Registration : ILoquiRegistration
+    internal partial class BipedBodyTemplate_Registration : ILoquiRegistration
     {
         public static readonly BipedBodyTemplate_Registration Instance = new BipedBodyTemplate_Registration();
 
@@ -687,7 +688,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class BipedBodyTemplateSetterCommon
+    internal partial class BipedBodyTemplateSetterCommon
     {
         public static readonly BipedBodyTemplateSetterCommon Instance = new BipedBodyTemplateSetterCommon();
 
@@ -726,7 +727,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class BipedBodyTemplateCommon
+    internal partial class BipedBodyTemplateCommon
     {
         public static readonly BipedBodyTemplateCommon Instance = new BipedBodyTemplateCommon();
 
@@ -842,7 +843,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class BipedBodyTemplateSetterTranslationCommon
+    internal partial class BipedBodyTemplateSetterTranslationCommon
     {
         public static readonly BipedBodyTemplateSetterTranslationCommon Instance = new BipedBodyTemplateSetterTranslationCommon();
 
@@ -920,7 +921,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BipedBodyTemplate_Registration.Instance;
-        public static BipedBodyTemplate_Registration StaticRegistration => BipedBodyTemplate_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BipedBodyTemplate_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BipedBodyTemplateCommon.Instance;
         [DebuggerStepThrough]
@@ -944,7 +945,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class BipedBodyTemplateBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -990,7 +991,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class BipedBodyTemplateBinaryCreateTranslation
+    internal partial class BipedBodyTemplateBinaryCreateTranslation
     {
         public readonly static BipedBodyTemplateBinaryCreateTranslation Instance = new BipedBodyTemplateBinaryCreateTranslation();
 
@@ -1027,16 +1028,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class BipedBodyTemplateBinaryOverlay :
+    internal partial class BipedBodyTemplateBinaryOverlay :
         PluginBinaryOverlay,
         IBipedBodyTemplateGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BipedBodyTemplate_Registration.Instance;
-        public static BipedBodyTemplate_Registration StaticRegistration => BipedBodyTemplate_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BipedBodyTemplate_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BipedBodyTemplateCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -635,10 +636,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum MusicTypeData_FieldIndex
+    internal enum MusicTypeData_FieldIndex
     {
         Priority = 0,
         DuckingDecibel = 1,
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class MusicTypeData_Registration : ILoquiRegistration
+    internal partial class MusicTypeData_Registration : ILoquiRegistration
     {
         public static readonly MusicTypeData_Registration Instance = new MusicTypeData_Registration();
 
@@ -727,7 +728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MusicTypeDataSetterCommon
+    internal partial class MusicTypeDataSetterCommon
     {
         public static readonly MusicTypeDataSetterCommon Instance = new MusicTypeDataSetterCommon();
 
@@ -767,7 +768,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MusicTypeDataCommon
+    internal partial class MusicTypeDataCommon
     {
         public static readonly MusicTypeDataCommon Instance = new MusicTypeDataCommon();
 
@@ -893,7 +894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MusicTypeDataSetterTranslationCommon
+    internal partial class MusicTypeDataSetterTranslationCommon
     {
         public static readonly MusicTypeDataSetterTranslationCommon Instance = new MusicTypeDataSetterTranslationCommon();
 
@@ -975,7 +976,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MusicTypeData_Registration.Instance;
-        public static MusicTypeData_Registration StaticRegistration => MusicTypeData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MusicTypeData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MusicTypeDataCommon.Instance;
         [DebuggerStepThrough]
@@ -999,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MusicTypeDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1047,7 +1048,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class MusicTypeDataBinaryCreateTranslation
+    internal partial class MusicTypeDataBinaryCreateTranslation
     {
         public readonly static MusicTypeDataBinaryCreateTranslation Instance = new MusicTypeDataBinaryCreateTranslation();
 
@@ -1086,16 +1087,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MusicTypeDataBinaryOverlay :
+    internal partial class MusicTypeDataBinaryOverlay :
         PluginBinaryOverlay,
         IMusicTypeDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MusicTypeData_Registration.Instance;
-        public static MusicTypeData_Registration StaticRegistration => MusicTypeData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MusicTypeData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MusicTypeDataCommon.Instance;
         [DebuggerStepThrough]

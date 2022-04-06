@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -649,10 +650,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ScriptObjectProperty_FieldIndex
+    internal enum ScriptObjectProperty_FieldIndex
     {
         Name = 0,
         Flags = 1,
@@ -663,7 +664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ScriptObjectProperty_Registration : ILoquiRegistration
+    internal partial class ScriptObjectProperty_Registration : ILoquiRegistration
     {
         public static readonly ScriptObjectProperty_Registration Instance = new ScriptObjectProperty_Registration();
 
@@ -737,7 +738,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ScriptObjectPropertySetterCommon : ScriptPropertySetterCommon
+    internal partial class ScriptObjectPropertySetterCommon : ScriptPropertySetterCommon
     {
         public new static readonly ScriptObjectPropertySetterCommon Instance = new ScriptObjectPropertySetterCommon();
 
@@ -793,7 +794,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ScriptObjectPropertyCommon : ScriptPropertyCommon
+    internal partial class ScriptObjectPropertyCommon : ScriptPropertyCommon
     {
         public new static readonly ScriptObjectPropertyCommon Instance = new ScriptObjectPropertyCommon();
 
@@ -970,7 +971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ScriptObjectPropertySetterTranslationCommon : ScriptPropertySetterTranslationCommon
+    internal partial class ScriptObjectPropertySetterTranslationCommon : ScriptPropertySetterTranslationCommon
     {
         public new static readonly ScriptObjectPropertySetterTranslationCommon Instance = new ScriptObjectPropertySetterTranslationCommon();
 
@@ -1078,7 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptObjectProperty_Registration.Instance;
-        public new static ScriptObjectProperty_Registration StaticRegistration => ScriptObjectProperty_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ScriptObjectProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptObjectPropertyCommon.Instance;
         [DebuggerStepThrough]
@@ -1096,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ScriptObjectPropertyBinaryWriteTranslation :
         ScriptPropertyBinaryWriteTranslation,
@@ -1152,7 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ScriptObjectPropertyBinaryCreateTranslation : ScriptPropertyBinaryCreateTranslation
+    internal partial class ScriptObjectPropertyBinaryCreateTranslation : ScriptPropertyBinaryCreateTranslation
     {
         public new readonly static ScriptObjectPropertyBinaryCreateTranslation Instance = new ScriptObjectPropertyBinaryCreateTranslation();
 
@@ -1181,16 +1182,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ScriptObjectPropertyBinaryOverlay :
+    internal partial class ScriptObjectPropertyBinaryOverlay :
         ScriptPropertyBinaryOverlay,
         IScriptObjectPropertyGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptObjectProperty_Registration.Instance;
-        public new static ScriptObjectProperty_Registration StaticRegistration => ScriptObjectProperty_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ScriptObjectProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptObjectPropertyCommon.Instance;
         [DebuggerStepThrough]

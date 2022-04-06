@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -518,10 +519,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum MagicEffectLightArchetype_FieldIndex
+    internal enum MagicEffectLightArchetype_FieldIndex
     {
         Type = 0,
         AssociationKey = 1,
@@ -530,7 +531,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class MagicEffectLightArchetype_Registration : ILoquiRegistration
+    internal partial class MagicEffectLightArchetype_Registration : ILoquiRegistration
     {
         public static readonly MagicEffectLightArchetype_Registration Instance = new MagicEffectLightArchetype_Registration();
 
@@ -604,7 +605,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MagicEffectLightArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
+    internal partial class MagicEffectLightArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
     {
         public new static readonly MagicEffectLightArchetypeSetterCommon Instance = new MagicEffectLightArchetypeSetterCommon();
 
@@ -655,7 +656,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectLightArchetypeCommon : MagicEffectArchetypeCommon
+    internal partial class MagicEffectLightArchetypeCommon : MagicEffectArchetypeCommon
     {
         public new static readonly MagicEffectLightArchetypeCommon Instance = new MagicEffectLightArchetypeCommon();
 
@@ -799,7 +800,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectLightArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
+    internal partial class MagicEffectLightArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
     {
         public new static readonly MagicEffectLightArchetypeSetterTranslationCommon Instance = new MagicEffectLightArchetypeSetterTranslationCommon();
 
@@ -924,7 +925,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectLightArchetype_Registration.Instance;
-        public new static MagicEffectLightArchetype_Registration StaticRegistration => MagicEffectLightArchetype_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MagicEffectLightArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectLightArchetypeCommon.Instance;
         [DebuggerStepThrough]
@@ -942,7 +943,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MagicEffectLightArchetypeBinaryWriteTranslation :
         MagicEffectArchetypeBinaryWriteTranslation,
@@ -984,7 +985,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class MagicEffectLightArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
+    internal partial class MagicEffectLightArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
     {
         public new readonly static MagicEffectLightArchetypeBinaryCreateTranslation Instance = new MagicEffectLightArchetypeBinaryCreateTranslation();
 
@@ -1001,16 +1002,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MagicEffectLightArchetypeBinaryOverlay :
+    internal partial class MagicEffectLightArchetypeBinaryOverlay :
         MagicEffectArchetypeBinaryOverlay,
         IMagicEffectLightArchetypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectLightArchetype_Registration.Instance;
-        public new static MagicEffectLightArchetype_Registration StaticRegistration => MagicEffectLightArchetype_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MagicEffectLightArchetype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectLightArchetypeCommon.Instance;
         [DebuggerStepThrough]

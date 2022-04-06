@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1600,10 +1601,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Ingredient_FieldIndex
+    internal enum Ingredient_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1632,7 +1633,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Ingredient_Registration : ILoquiRegistration
+    internal partial class Ingredient_Registration : ILoquiRegistration
     {
         public static readonly Ingredient_Registration Instance = new Ingredient_Registration();
 
@@ -1738,7 +1739,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class IngredientSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class IngredientSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly IngredientSetterCommon Instance = new IngredientSetterCommon();
 
@@ -1832,7 +1833,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class IngredientCommon : Fallout4MajorRecordCommon
+    internal partial class IngredientCommon : Fallout4MajorRecordCommon
     {
         public new static readonly IngredientCommon Instance = new IngredientCommon();
 
@@ -2359,7 +2360,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class IngredientSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class IngredientSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly IngredientSetterTranslationCommon Instance = new IngredientSetterTranslationCommon();
 
@@ -2731,7 +2732,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ingredient_Registration.Instance;
-        public new static Ingredient_Registration StaticRegistration => Ingredient_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Ingredient_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IngredientCommon.Instance;
         [DebuggerStepThrough]
@@ -2749,7 +2750,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class IngredientBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -2929,7 +2930,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class IngredientBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class IngredientBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static IngredientBinaryCreateTranslation Instance = new IngredientBinaryCreateTranslation();
 
@@ -3085,16 +3086,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class IngredientBinaryOverlay :
+    internal partial class IngredientBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IIngredientGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ingredient_Registration.Instance;
-        public new static Ingredient_Registration StaticRegistration => Ingredient_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Ingredient_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IngredientCommon.Instance;
         [DebuggerStepThrough]

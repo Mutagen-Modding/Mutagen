@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -666,10 +667,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum MovementDataOverride_FieldIndex
+    internal enum MovementDataOverride_FieldIndex
     {
         MovementType = 0,
         MovementData = 1,
@@ -677,7 +678,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class MovementDataOverride_Registration : ILoquiRegistration
+    internal partial class MovementDataOverride_Registration : ILoquiRegistration
     {
         public static readonly MovementDataOverride_Registration Instance = new MovementDataOverride_Registration();
 
@@ -759,7 +760,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class MovementDataOverrideSetterCommon
+    internal partial class MovementDataOverrideSetterCommon
     {
         public static readonly MovementDataOverrideSetterCommon Instance = new MovementDataOverrideSetterCommon();
 
@@ -797,7 +798,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MovementDataOverrideCommon
+    internal partial class MovementDataOverrideCommon
     {
         public static readonly MovementDataOverrideCommon Instance = new MovementDataOverrideCommon();
 
@@ -939,7 +940,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MovementDataOverrideSetterTranslationCommon
+    internal partial class MovementDataOverrideSetterTranslationCommon
     {
         public static readonly MovementDataOverrideSetterTranslationCommon Instance = new MovementDataOverrideSetterTranslationCommon();
 
@@ -1043,7 +1044,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MovementDataOverride_Registration.Instance;
-        public static MovementDataOverride_Registration StaticRegistration => MovementDataOverride_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MovementDataOverride_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MovementDataOverrideCommon.Instance;
         [DebuggerStepThrough]
@@ -1067,7 +1068,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MovementDataOverrideBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1118,7 +1119,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class MovementDataOverrideBinaryCreateTranslation
+    internal partial class MovementDataOverrideBinaryCreateTranslation
     {
         public readonly static MovementDataOverrideBinaryCreateTranslation Instance = new MovementDataOverrideBinaryCreateTranslation();
 
@@ -1183,16 +1184,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class MovementDataOverrideBinaryOverlay :
+    internal partial class MovementDataOverrideBinaryOverlay :
         PluginBinaryOverlay,
         IMovementDataOverrideGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MovementDataOverride_Registration.Instance;
-        public static MovementDataOverride_Registration StaticRegistration => MovementDataOverride_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MovementDataOverride_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MovementDataOverrideCommon.Instance;
         [DebuggerStepThrough]

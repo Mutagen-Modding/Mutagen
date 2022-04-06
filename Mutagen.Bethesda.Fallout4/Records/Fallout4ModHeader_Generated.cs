@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1410,10 +1411,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Fallout4ModHeader_FieldIndex
+    internal enum Fallout4ModHeader_FieldIndex
     {
         Flags = 0,
         FormID = 1,
@@ -1435,7 +1436,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Fallout4ModHeader_Registration : ILoquiRegistration
+    internal partial class Fallout4ModHeader_Registration : ILoquiRegistration
     {
         public static readonly Fallout4ModHeader_Registration Instance = new Fallout4ModHeader_Registration();
 
@@ -1531,7 +1532,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class Fallout4ModHeaderSetterCommon
+    internal partial class Fallout4ModHeaderSetterCommon
     {
         public static readonly Fallout4ModHeaderSetterCommon Instance = new Fallout4ModHeaderSetterCommon();
 
@@ -1587,7 +1588,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class Fallout4ModHeaderCommon
+    internal partial class Fallout4ModHeaderCommon
     {
         public static readonly Fallout4ModHeaderCommon Instance = new Fallout4ModHeaderCommon();
 
@@ -1948,7 +1949,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class Fallout4ModHeaderSetterTranslationCommon
+    internal partial class Fallout4ModHeaderSetterTranslationCommon
     {
         public static readonly Fallout4ModHeaderSetterTranslationCommon Instance = new Fallout4ModHeaderSetterTranslationCommon();
 
@@ -2195,7 +2196,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4ModHeader_Registration.Instance;
-        public static Fallout4ModHeader_Registration StaticRegistration => Fallout4ModHeader_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Fallout4ModHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => Fallout4ModHeaderCommon.Instance;
         [DebuggerStepThrough]
@@ -2219,7 +2220,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class Fallout4ModHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -2351,7 +2352,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class Fallout4ModHeaderBinaryCreateTranslation
+    internal partial class Fallout4ModHeaderBinaryCreateTranslation
     {
         public readonly static Fallout4ModHeaderBinaryCreateTranslation Instance = new Fallout4ModHeaderBinaryCreateTranslation();
 
@@ -2497,16 +2498,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class Fallout4ModHeaderBinaryOverlay :
+    internal partial class Fallout4ModHeaderBinaryOverlay :
         PluginBinaryOverlay,
         IFallout4ModHeaderGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4ModHeader_Registration.Instance;
-        public static Fallout4ModHeader_Registration StaticRegistration => Fallout4ModHeader_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Fallout4ModHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => Fallout4ModHeaderCommon.Instance;
         [DebuggerStepThrough]

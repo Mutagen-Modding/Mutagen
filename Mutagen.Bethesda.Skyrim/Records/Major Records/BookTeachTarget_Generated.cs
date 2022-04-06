@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -554,16 +555,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum BookTeachTarget_FieldIndex
+    internal enum BookTeachTarget_FieldIndex
     {
     }
     #endregion
 
     #region Registration
-    public partial class BookTeachTarget_Registration : ILoquiRegistration
+    internal partial class BookTeachTarget_Registration : ILoquiRegistration
     {
         public static readonly BookTeachTarget_Registration Instance = new BookTeachTarget_Registration();
 
@@ -637,7 +638,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class BookTeachTargetSetterCommon
+    internal partial class BookTeachTargetSetterCommon
     {
         public static readonly BookTeachTargetSetterCommon Instance = new BookTeachTargetSetterCommon();
 
@@ -666,7 +667,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class BookTeachTargetCommon
+    internal partial class BookTeachTargetCommon
     {
         public static readonly BookTeachTargetCommon Instance = new BookTeachTargetCommon();
 
@@ -772,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class BookTeachTargetSetterTranslationCommon
+    internal partial class BookTeachTargetSetterTranslationCommon
     {
         public static readonly BookTeachTargetSetterTranslationCommon Instance = new BookTeachTargetSetterTranslationCommon();
 
@@ -846,7 +847,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookTeachTarget_Registration.Instance;
-        public static BookTeachTarget_Registration StaticRegistration => BookTeachTarget_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BookTeachTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => BookTeachTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -870,7 +871,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class BookTeachTargetBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -896,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class BookTeachTargetBinaryCreateTranslation
+    internal partial class BookTeachTargetBinaryCreateTranslation
     {
         public readonly static BookTeachTargetBinaryCreateTranslation Instance = new BookTeachTargetBinaryCreateTranslation();
 
@@ -924,16 +925,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public abstract partial class BookTeachTargetBinaryOverlay :
+    internal abstract partial class BookTeachTargetBinaryOverlay :
         PluginBinaryOverlay,
         IBookTeachTargetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookTeachTarget_Registration.Instance;
-        public static BookTeachTarget_Registration StaticRegistration => BookTeachTarget_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BookTeachTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => BookTeachTargetCommon.Instance;
         [DebuggerStepThrough]

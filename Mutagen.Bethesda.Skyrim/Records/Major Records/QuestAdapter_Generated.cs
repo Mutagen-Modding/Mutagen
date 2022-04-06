@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -883,10 +884,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum QuestAdapter_FieldIndex
+    internal enum QuestAdapter_FieldIndex
     {
         Version = 0,
         ObjectFormat = 1,
@@ -900,7 +901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class QuestAdapter_Registration : ILoquiRegistration
+    internal partial class QuestAdapter_Registration : ILoquiRegistration
     {
         public static readonly QuestAdapter_Registration Instance = new QuestAdapter_Registration();
 
@@ -981,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class QuestAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
+    internal partial class QuestAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
     {
         public new static readonly QuestAdapterSetterCommon Instance = new QuestAdapterSetterCommon();
 
@@ -1043,7 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class QuestAdapterCommon : AVirtualMachineAdapterCommon
+    internal partial class QuestAdapterCommon : AVirtualMachineAdapterCommon
     {
         public new static readonly QuestAdapterCommon Instance = new QuestAdapterCommon();
 
@@ -1280,7 +1281,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class QuestAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
+    internal partial class QuestAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
     {
         public new static readonly QuestAdapterSetterTranslationCommon Instance = new QuestAdapterSetterTranslationCommon();
 
@@ -1437,7 +1438,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestAdapter_Registration.Instance;
-        public new static QuestAdapter_Registration StaticRegistration => QuestAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => QuestAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => QuestAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -1455,7 +1456,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class QuestAdapterBinaryWriteTranslation :
         AVirtualMachineAdapterBinaryWriteTranslation,
@@ -1581,7 +1582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class QuestAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
+    internal partial class QuestAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
     {
         public new readonly static QuestAdapterBinaryCreateTranslation Instance = new QuestAdapterBinaryCreateTranslation();
 
@@ -1641,16 +1642,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class QuestAdapterBinaryOverlay :
+    internal partial class QuestAdapterBinaryOverlay :
         AVirtualMachineAdapterBinaryOverlay,
         IQuestAdapterGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestAdapter_Registration.Instance;
-        public new static QuestAdapter_Registration StaticRegistration => QuestAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => QuestAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => QuestAdapterCommon.Instance;
         [DebuggerStepThrough]

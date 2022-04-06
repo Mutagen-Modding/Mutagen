@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -755,10 +756,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PerkScriptFragments_FieldIndex
+    internal enum PerkScriptFragments_FieldIndex
     {
         Unknown = 0,
         FileName = 1,
@@ -767,7 +768,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PerkScriptFragments_Registration : ILoquiRegistration
+    internal partial class PerkScriptFragments_Registration : ILoquiRegistration
     {
         public static readonly PerkScriptFragments_Registration Instance = new PerkScriptFragments_Registration();
 
@@ -841,7 +842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PerkScriptFragmentsSetterCommon
+    internal partial class PerkScriptFragmentsSetterCommon
     {
         public static readonly PerkScriptFragmentsSetterCommon Instance = new PerkScriptFragmentsSetterCommon();
 
@@ -878,7 +879,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkScriptFragmentsCommon
+    internal partial class PerkScriptFragmentsCommon
     {
         public static readonly PerkScriptFragmentsCommon Instance = new PerkScriptFragmentsCommon();
 
@@ -1031,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkScriptFragmentsSetterTranslationCommon
+    internal partial class PerkScriptFragmentsSetterTranslationCommon
     {
         public static readonly PerkScriptFragmentsSetterTranslationCommon Instance = new PerkScriptFragmentsSetterTranslationCommon();
 
@@ -1137,7 +1138,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkScriptFragments_Registration.Instance;
-        public static PerkScriptFragments_Registration StaticRegistration => PerkScriptFragments_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PerkScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PerkScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]
@@ -1161,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkScriptFragmentsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1213,7 +1214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PerkScriptFragmentsBinaryCreateTranslation
+    internal partial class PerkScriptFragmentsBinaryCreateTranslation
     {
         public readonly static PerkScriptFragmentsBinaryCreateTranslation Instance = new PerkScriptFragmentsBinaryCreateTranslation();
 
@@ -1256,16 +1257,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PerkScriptFragmentsBinaryOverlay :
+    internal partial class PerkScriptFragmentsBinaryOverlay :
         PluginBinaryOverlay,
         IPerkScriptFragmentsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkScriptFragments_Registration.Instance;
-        public static PerkScriptFragments_Registration StaticRegistration => PerkScriptFragments_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PerkScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PerkScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]

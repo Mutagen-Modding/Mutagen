@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1012,10 +1013,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Message_FieldIndex
+    internal enum Message_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1034,7 +1035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Message_Registration : ILoquiRegistration
+    internal partial class Message_Registration : ILoquiRegistration
     {
         public static readonly Message_Registration Instance = new Message_Registration();
 
@@ -1127,7 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MessageSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class MessageSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly MessageSetterCommon Instance = new MessageSetterCommon();
 
@@ -1205,7 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MessageCommon : SkyrimMajorRecordCommon
+    internal partial class MessageCommon : SkyrimMajorRecordCommon
     {
         public new static readonly MessageCommon Instance = new MessageCommon();
 
@@ -1531,7 +1532,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MessageSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class MessageSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly MessageSetterTranslationCommon Instance = new MessageSetterTranslationCommon();
 
@@ -1734,7 +1735,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Message_Registration.Instance;
-        public new static Message_Registration StaticRegistration => Message_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Message_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MessageCommon.Instance;
         [DebuggerStepThrough]
@@ -1752,7 +1753,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MessageBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1874,7 +1875,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class MessageBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class MessageBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static MessageBinaryCreateTranslation Instance = new MessageBinaryCreateTranslation();
 
@@ -1979,16 +1980,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MessageBinaryOverlay :
+    internal partial class MessageBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IMessageGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Message_Registration.Instance;
-        public new static Message_Registration StaticRegistration => Message_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Message_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MessageCommon.Instance;
         [DebuggerStepThrough]

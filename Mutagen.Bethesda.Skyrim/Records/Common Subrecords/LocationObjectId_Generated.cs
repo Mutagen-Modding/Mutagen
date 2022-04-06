@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -568,17 +569,17 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LocationObjectId_FieldIndex
+    internal enum LocationObjectId_FieldIndex
     {
         Link = 0,
     }
     #endregion
 
     #region Registration
-    public partial class LocationObjectId_Registration : ILoquiRegistration
+    internal partial class LocationObjectId_Registration : ILoquiRegistration
     {
         public static readonly LocationObjectId_Registration Instance = new LocationObjectId_Registration();
 
@@ -652,7 +653,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LocationObjectIdSetterCommon : ALocationTargetSetterCommon
+    internal partial class LocationObjectIdSetterCommon : ALocationTargetSetterCommon
     {
         public new static readonly LocationObjectIdSetterCommon Instance = new LocationObjectIdSetterCommon();
 
@@ -706,7 +707,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationObjectIdCommon : ALocationTargetCommon
+    internal partial class LocationObjectIdCommon : ALocationTargetCommon
     {
         public new static readonly LocationObjectIdCommon Instance = new LocationObjectIdCommon();
 
@@ -859,7 +860,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationObjectIdSetterTranslationCommon : ALocationTargetSetterTranslationCommon
+    internal partial class LocationObjectIdSetterTranslationCommon : ALocationTargetSetterTranslationCommon
     {
         public new static readonly LocationObjectIdSetterTranslationCommon Instance = new LocationObjectIdSetterTranslationCommon();
 
@@ -959,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationObjectId_Registration.Instance;
-        public new static LocationObjectId_Registration StaticRegistration => LocationObjectId_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationObjectId_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationObjectIdCommon.Instance;
         [DebuggerStepThrough]
@@ -977,7 +978,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LocationObjectIdBinaryWriteTranslation :
         ALocationTargetBinaryWriteTranslation,
@@ -1028,7 +1029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LocationObjectIdBinaryCreateTranslation : ALocationTargetBinaryCreateTranslation
+    internal partial class LocationObjectIdBinaryCreateTranslation : ALocationTargetBinaryCreateTranslation
     {
         public new readonly static LocationObjectIdBinaryCreateTranslation Instance = new LocationObjectIdBinaryCreateTranslation();
 
@@ -1052,16 +1053,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LocationObjectIdBinaryOverlay :
+    internal partial class LocationObjectIdBinaryOverlay :
         ALocationTargetBinaryOverlay,
         ILocationObjectIdGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationObjectId_Registration.Instance;
-        public new static LocationObjectId_Registration StaticRegistration => LocationObjectId_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationObjectId_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationObjectIdCommon.Instance;
         [DebuggerStepThrough]

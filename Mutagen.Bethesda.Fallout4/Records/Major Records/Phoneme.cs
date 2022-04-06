@@ -292,9 +292,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
     }
 
-    namespace Internals
-    {
-        public partial class PhonemeBinaryOverlay
+        internal partial class PhonemeBinaryOverlay
         {
             public string Name => throw new NotImplementedException();
 
@@ -384,5 +382,4 @@ namespace Mutagen.Bethesda.Fallout4
 
             public float FLAP => throw new NotImplementedException();
         }
-    }
 }

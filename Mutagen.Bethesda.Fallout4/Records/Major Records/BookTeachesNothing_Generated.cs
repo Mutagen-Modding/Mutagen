@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -553,17 +554,17 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum BookTeachesNothing_FieldIndex
+    internal enum BookTeachesNothing_FieldIndex
     {
         RawContent = 0,
     }
     #endregion
 
     #region Registration
-    public partial class BookTeachesNothing_Registration : ILoquiRegistration
+    internal partial class BookTeachesNothing_Registration : ILoquiRegistration
     {
         public static readonly BookTeachesNothing_Registration Instance = new BookTeachesNothing_Registration();
 
@@ -637,7 +638,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class BookTeachesNothingSetterCommon : BookTeachTargetSetterCommon
+    internal partial class BookTeachesNothingSetterCommon : BookTeachTargetSetterCommon
     {
         public new static readonly BookTeachesNothingSetterCommon Instance = new BookTeachesNothingSetterCommon();
 
@@ -690,7 +691,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class BookTeachesNothingCommon : BookTeachTargetCommon
+    internal partial class BookTeachesNothingCommon : BookTeachTargetCommon
     {
         public new static readonly BookTeachesNothingCommon Instance = new BookTeachesNothingCommon();
 
@@ -842,7 +843,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class BookTeachesNothingSetterTranslationCommon : BookTeachTargetSetterTranslationCommon
+    internal partial class BookTeachesNothingSetterTranslationCommon : BookTeachTargetSetterTranslationCommon
     {
         public new static readonly BookTeachesNothingSetterTranslationCommon Instance = new BookTeachesNothingSetterTranslationCommon();
 
@@ -942,7 +943,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookTeachesNothing_Registration.Instance;
-        public new static BookTeachesNothing_Registration StaticRegistration => BookTeachesNothing_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => BookTeachesNothing_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookTeachesNothingCommon.Instance;
         [DebuggerStepThrough]
@@ -960,7 +961,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class BookTeachesNothingBinaryWriteTranslation :
         BookTeachTargetBinaryWriteTranslation,
@@ -1009,7 +1010,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class BookTeachesNothingBinaryCreateTranslation : BookTeachTargetBinaryCreateTranslation
+    internal partial class BookTeachesNothingBinaryCreateTranslation : BookTeachTargetBinaryCreateTranslation
     {
         public new readonly static BookTeachesNothingBinaryCreateTranslation Instance = new BookTeachesNothingBinaryCreateTranslation();
 
@@ -1033,16 +1034,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class BookTeachesNothingBinaryOverlay :
+    internal partial class BookTeachesNothingBinaryOverlay :
         BookTeachTargetBinaryOverlay,
         IBookTeachesNothingGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookTeachesNothing_Registration.Instance;
-        public new static BookTeachesNothing_Registration StaticRegistration => BookTeachesNothing_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => BookTeachesNothing_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookTeachesNothingCommon.Instance;
         [DebuggerStepThrough]

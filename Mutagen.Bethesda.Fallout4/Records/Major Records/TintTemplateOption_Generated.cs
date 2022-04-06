@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1225,10 +1226,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum TintTemplateOption_FieldIndex
+    internal enum TintTemplateOption_FieldIndex
     {
         Slot = 0,
         Index = 1,
@@ -1244,7 +1245,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class TintTemplateOption_Registration : ILoquiRegistration
+    internal partial class TintTemplateOption_Registration : ILoquiRegistration
     {
         public static readonly TintTemplateOption_Registration Instance = new TintTemplateOption_Registration();
 
@@ -1336,7 +1337,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class TintTemplateOptionSetterCommon
+    internal partial class TintTemplateOptionSetterCommon
     {
         public static readonly TintTemplateOptionSetterCommon Instance = new TintTemplateOptionSetterCommon();
 
@@ -1383,7 +1384,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TintTemplateOptionCommon
+    internal partial class TintTemplateOptionCommon
     {
         public static readonly TintTemplateOptionCommon Instance = new TintTemplateOptionCommon();
 
@@ -1669,7 +1670,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TintTemplateOptionSetterTranslationCommon
+    internal partial class TintTemplateOptionSetterTranslationCommon
     {
         public static readonly TintTemplateOptionSetterTranslationCommon Instance = new TintTemplateOptionSetterTranslationCommon();
 
@@ -1844,7 +1845,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintTemplateOption_Registration.Instance;
-        public static TintTemplateOption_Registration StaticRegistration => TintTemplateOption_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TintTemplateOption_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintTemplateOptionCommon.Instance;
         [DebuggerStepThrough]
@@ -1868,7 +1869,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TintTemplateOptionBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1970,7 +1971,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class TintTemplateOptionBinaryCreateTranslation
+    internal partial class TintTemplateOptionBinaryCreateTranslation
     {
         public readonly static TintTemplateOptionBinaryCreateTranslation Instance = new TintTemplateOptionBinaryCreateTranslation();
 
@@ -2092,16 +2093,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class TintTemplateOptionBinaryOverlay :
+    internal partial class TintTemplateOptionBinaryOverlay :
         PluginBinaryOverlay,
         ITintTemplateOptionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintTemplateOption_Registration.Instance;
-        public static TintTemplateOption_Registration StaticRegistration => TintTemplateOption_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TintTemplateOption_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintTemplateOptionCommon.Instance;
         [DebuggerStepThrough]

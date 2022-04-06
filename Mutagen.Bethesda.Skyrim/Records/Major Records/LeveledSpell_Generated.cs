@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -883,10 +884,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LeveledSpell_FieldIndex
+    internal enum LeveledSpell_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -902,7 +903,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LeveledSpell_Registration : ILoquiRegistration
+    internal partial class LeveledSpell_Registration : ILoquiRegistration
     {
         public static readonly LeveledSpell_Registration Instance = new LeveledSpell_Registration();
 
@@ -991,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LeveledSpellSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class LeveledSpellSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly LeveledSpellSetterCommon Instance = new LeveledSpellSetterCommon();
 
@@ -1065,7 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LeveledSpellCommon : SkyrimMajorRecordCommon
+    internal partial class LeveledSpellCommon : SkyrimMajorRecordCommon
     {
         public new static readonly LeveledSpellCommon Instance = new LeveledSpellCommon();
 
@@ -1361,7 +1362,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LeveledSpellSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class LeveledSpellSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly LeveledSpellSetterTranslationCommon Instance = new LeveledSpellSetterTranslationCommon();
 
@@ -1578,7 +1579,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledSpell_Registration.Instance;
-        public new static LeveledSpell_Registration StaticRegistration => LeveledSpell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LeveledSpell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledSpellCommon.Instance;
         [DebuggerStepThrough]
@@ -1596,7 +1597,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LeveledSpellBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1705,7 +1706,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LeveledSpellBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class LeveledSpellBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static LeveledSpellBinaryCreateTranslation Instance = new LeveledSpellBinaryCreateTranslation();
 
@@ -1789,16 +1790,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LeveledSpellBinaryOverlay :
+    internal partial class LeveledSpellBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ILeveledSpellGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledSpell_Registration.Instance;
-        public new static LeveledSpell_Registration StaticRegistration => LeveledSpell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LeveledSpell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledSpellCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -571,10 +572,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PackageDataObjectList_FieldIndex
+    internal enum PackageDataObjectList_FieldIndex
     {
         Name = 0,
         Flags = 1,
@@ -583,7 +584,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PackageDataObjectList_Registration : ILoquiRegistration
+    internal partial class PackageDataObjectList_Registration : ILoquiRegistration
     {
         public static readonly PackageDataObjectList_Registration Instance = new PackageDataObjectList_Registration();
 
@@ -665,7 +666,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PackageDataObjectListSetterCommon : APackageDataSetterCommon
+    internal partial class PackageDataObjectListSetterCommon : APackageDataSetterCommon
     {
         public new static readonly PackageDataObjectListSetterCommon Instance = new PackageDataObjectListSetterCommon();
 
@@ -719,7 +720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageDataObjectListCommon : APackageDataCommon
+    internal partial class PackageDataObjectListCommon : APackageDataCommon
     {
         public new static readonly PackageDataObjectListCommon Instance = new PackageDataObjectListCommon();
 
@@ -879,7 +880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageDataObjectListSetterTranslationCommon : APackageDataSetterTranslationCommon
+    internal partial class PackageDataObjectListSetterTranslationCommon : APackageDataSetterTranslationCommon
     {
         public new static readonly PackageDataObjectListSetterTranslationCommon Instance = new PackageDataObjectListSetterTranslationCommon();
 
@@ -979,7 +980,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataObjectList_Registration.Instance;
-        public new static PackageDataObjectList_Registration StaticRegistration => PackageDataObjectList_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageDataObjectList_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataObjectListCommon.Instance;
         [DebuggerStepThrough]
@@ -997,7 +998,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageDataObjectListBinaryWriteTranslation :
         APackageDataBinaryWriteTranslation,
@@ -1049,7 +1050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PackageDataObjectListBinaryCreateTranslation : APackageDataBinaryCreateTranslation
+    internal partial class PackageDataObjectListBinaryCreateTranslation : APackageDataBinaryCreateTranslation
     {
         public new readonly static PackageDataObjectListBinaryCreateTranslation Instance = new PackageDataObjectListBinaryCreateTranslation();
 
@@ -1072,16 +1073,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageDataObjectListBinaryOverlay :
+    internal partial class PackageDataObjectListBinaryOverlay :
         APackageDataBinaryOverlay,
         IPackageDataObjectListGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataObjectList_Registration.Instance;
-        public new static PackageDataObjectList_Registration StaticRegistration => PackageDataObjectList_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageDataObjectList_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataObjectListCommon.Instance;
         [DebuggerStepThrough]

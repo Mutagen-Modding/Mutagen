@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -668,10 +669,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum RaceWeight_FieldIndex
+    internal enum RaceWeight_FieldIndex
     {
         Thin = 0,
         Muscular = 1,
@@ -680,7 +681,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class RaceWeight_Registration : ILoquiRegistration
+    internal partial class RaceWeight_Registration : ILoquiRegistration
     {
         public static readonly RaceWeight_Registration Instance = new RaceWeight_Registration();
 
@@ -754,7 +755,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class RaceWeightSetterCommon
+    internal partial class RaceWeightSetterCommon
     {
         public static readonly RaceWeightSetterCommon Instance = new RaceWeightSetterCommon();
 
@@ -791,7 +792,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class RaceWeightCommon
+    internal partial class RaceWeightCommon
     {
         public static readonly RaceWeightCommon Instance = new RaceWeightCommon();
 
@@ -927,7 +928,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class RaceWeightSetterTranslationCommon
+    internal partial class RaceWeightSetterTranslationCommon
     {
         public static readonly RaceWeightSetterTranslationCommon Instance = new RaceWeightSetterTranslationCommon();
 
@@ -1013,7 +1014,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceWeight_Registration.Instance;
-        public static RaceWeight_Registration StaticRegistration => RaceWeight_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RaceWeight_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RaceWeightCommon.Instance;
         [DebuggerStepThrough]
@@ -1037,7 +1038,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class RaceWeightBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1081,7 +1082,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class RaceWeightBinaryCreateTranslation
+    internal partial class RaceWeightBinaryCreateTranslation
     {
         public readonly static RaceWeightBinaryCreateTranslation Instance = new RaceWeightBinaryCreateTranslation();
 
@@ -1118,16 +1119,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class RaceWeightBinaryOverlay :
+    internal partial class RaceWeightBinaryOverlay :
         PluginBinaryOverlay,
         IRaceWeightGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceWeight_Registration.Instance;
-        public static RaceWeight_Registration StaticRegistration => RaceWeight_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RaceWeight_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RaceWeightCommon.Instance;
         [DebuggerStepThrough]

@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,6 +20,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -568,17 +569,17 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum BookPerk_FieldIndex
+    internal enum BookPerk_FieldIndex
     {
         Perk = 0,
     }
     #endregion
 
     #region Registration
-    public partial class BookPerk_Registration : ILoquiRegistration
+    internal partial class BookPerk_Registration : ILoquiRegistration
     {
         public static readonly BookPerk_Registration Instance = new BookPerk_Registration();
 
@@ -652,7 +653,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class BookPerkSetterCommon : BookTeachTargetSetterCommon
+    internal partial class BookPerkSetterCommon : BookTeachTargetSetterCommon
     {
         public new static readonly BookPerkSetterCommon Instance = new BookPerkSetterCommon();
 
@@ -706,7 +707,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class BookPerkCommon : BookTeachTargetCommon
+    internal partial class BookPerkCommon : BookTeachTargetCommon
     {
         public new static readonly BookPerkCommon Instance = new BookPerkCommon();
 
@@ -859,7 +860,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class BookPerkSetterTranslationCommon : BookTeachTargetSetterTranslationCommon
+    internal partial class BookPerkSetterTranslationCommon : BookTeachTargetSetterTranslationCommon
     {
         public new static readonly BookPerkSetterTranslationCommon Instance = new BookPerkSetterTranslationCommon();
 
@@ -959,7 +960,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookPerk_Registration.Instance;
-        public new static BookPerk_Registration StaticRegistration => BookPerk_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => BookPerk_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookPerkCommon.Instance;
         [DebuggerStepThrough]
@@ -977,7 +978,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class BookPerkBinaryWriteTranslation :
         BookTeachTargetBinaryWriteTranslation,
@@ -1028,7 +1029,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class BookPerkBinaryCreateTranslation : BookTeachTargetBinaryCreateTranslation
+    internal partial class BookPerkBinaryCreateTranslation : BookTeachTargetBinaryCreateTranslation
     {
         public new readonly static BookPerkBinaryCreateTranslation Instance = new BookPerkBinaryCreateTranslation();
 
@@ -1052,16 +1053,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class BookPerkBinaryOverlay :
+    internal partial class BookPerkBinaryOverlay :
         BookTeachTargetBinaryOverlay,
         IBookPerkGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookPerk_Registration.Instance;
-        public new static BookPerk_Registration StaticRegistration => BookPerk_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => BookPerk_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookPerkCommon.Instance;
         [DebuggerStepThrough]

@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -656,10 +657,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum GlobalFloat_FieldIndex
+    internal enum GlobalFloat_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -672,7 +673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class GlobalFloat_Registration : ILoquiRegistration
+    internal partial class GlobalFloat_Registration : ILoquiRegistration
     {
         public static readonly GlobalFloat_Registration Instance = new GlobalFloat_Registration();
 
@@ -756,7 +757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class GlobalFloatSetterCommon : GlobalSetterCommon
+    internal partial class GlobalFloatSetterCommon : GlobalSetterCommon
     {
         public new static readonly GlobalFloatSetterCommon Instance = new GlobalFloatSetterCommon();
 
@@ -842,7 +843,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class GlobalFloatCommon : GlobalCommon
+    internal partial class GlobalFloatCommon : GlobalCommon
     {
         public new static readonly GlobalFloatCommon Instance = new GlobalFloatCommon();
 
@@ -1126,7 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class GlobalFloatSetterTranslationCommon : GlobalSetterTranslationCommon
+    internal partial class GlobalFloatSetterTranslationCommon : GlobalSetterTranslationCommon
     {
         public new static readonly GlobalFloatSetterTranslationCommon Instance = new GlobalFloatSetterTranslationCommon();
 
@@ -1315,7 +1316,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalFloat_Registration.Instance;
-        public new static GlobalFloat_Registration StaticRegistration => GlobalFloat_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GlobalFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalFloatCommon.Instance;
         [DebuggerStepThrough]
@@ -1333,7 +1334,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class GlobalFloatBinaryWriteTranslation :
         GlobalBinaryWriteTranslation,
@@ -1430,7 +1431,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class GlobalFloatBinaryCreateTranslation : GlobalBinaryCreateTranslation
+    internal partial class GlobalFloatBinaryCreateTranslation : GlobalBinaryCreateTranslation
     {
         public new readonly static GlobalFloatBinaryCreateTranslation Instance = new GlobalFloatBinaryCreateTranslation();
 
@@ -1486,16 +1487,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class GlobalFloatBinaryOverlay :
+    internal partial class GlobalFloatBinaryOverlay :
         GlobalBinaryOverlay,
         IGlobalFloatGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalFloat_Registration.Instance;
-        public new static GlobalFloat_Registration StaticRegistration => GlobalFloat_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GlobalFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalFloatCommon.Instance;
         [DebuggerStepThrough]

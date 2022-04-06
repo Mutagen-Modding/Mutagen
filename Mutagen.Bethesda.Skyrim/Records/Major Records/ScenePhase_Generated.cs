@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1008,10 +1009,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ScenePhase_FieldIndex
+    internal enum ScenePhase_FieldIndex
     {
         Name = 0,
         StartConditions = 1,
@@ -1023,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ScenePhase_Registration : ILoquiRegistration
+    internal partial class ScenePhase_Registration : ILoquiRegistration
     {
         public static readonly ScenePhase_Registration Instance = new ScenePhase_Registration();
 
@@ -1117,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ScenePhaseSetterCommon
+    internal partial class ScenePhaseSetterCommon
     {
         public static readonly ScenePhaseSetterCommon Instance = new ScenePhaseSetterCommon();
 
@@ -1160,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ScenePhaseCommon
+    internal partial class ScenePhaseCommon
     {
         public static readonly ScenePhaseCommon Instance = new ScenePhaseCommon();
 
@@ -1402,7 +1403,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ScenePhaseSetterTranslationCommon
+    internal partial class ScenePhaseSetterTranslationCommon
     {
         public static readonly ScenePhaseSetterTranslationCommon Instance = new ScenePhaseSetterTranslationCommon();
 
@@ -1584,7 +1585,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScenePhase_Registration.Instance;
-        public static ScenePhase_Registration StaticRegistration => ScenePhase_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScenePhase_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScenePhaseCommon.Instance;
         [DebuggerStepThrough]
@@ -1608,7 +1609,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ScenePhaseBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1703,7 +1704,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ScenePhaseBinaryCreateTranslation
+    internal partial class ScenePhaseBinaryCreateTranslation
     {
         public readonly static ScenePhaseBinaryCreateTranslation Instance = new ScenePhaseBinaryCreateTranslation();
 
@@ -1827,16 +1828,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ScenePhaseBinaryOverlay :
+    internal partial class ScenePhaseBinaryOverlay :
         PluginBinaryOverlay,
         IScenePhaseGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScenePhase_Registration.Instance;
-        public static ScenePhase_Registration StaticRegistration => ScenePhase_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScenePhase_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScenePhaseCommon.Instance;
         [DebuggerStepThrough]

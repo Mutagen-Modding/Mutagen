@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1241,10 +1242,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Impact_FieldIndex
+    internal enum Impact_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1272,7 +1273,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Impact_Registration : ILoquiRegistration
+    internal partial class Impact_Registration : ILoquiRegistration
     {
         public static readonly Impact_Registration Instance = new Impact_Registration();
 
@@ -1363,7 +1364,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ImpactSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ImpactSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ImpactSetterCommon Instance = new ImpactSetterCommon();
 
@@ -1454,7 +1455,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImpactCommon : SkyrimMajorRecordCommon
+    internal partial class ImpactCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ImpactCommon Instance = new ImpactCommon();
 
@@ -1887,7 +1888,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImpactSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ImpactSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ImpactSetterTranslationCommon Instance = new ImpactSetterTranslationCommon();
 
@@ -2150,7 +2151,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Impact_Registration.Instance;
-        public new static Impact_Registration StaticRegistration => Impact_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Impact_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImpactCommon.Instance;
         [DebuggerStepThrough]
@@ -2168,7 +2169,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImpactBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -2322,7 +2323,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ImpactBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ImpactBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ImpactBinaryCreateTranslation Instance = new ImpactBinaryCreateTranslation();
 
@@ -2436,16 +2437,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ImpactBinaryOverlay :
+    internal partial class ImpactBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IImpactGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Impact_Registration.Instance;
-        public new static Impact_Registration StaticRegistration => Impact_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Impact_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImpactCommon.Instance;
         [DebuggerStepThrough]

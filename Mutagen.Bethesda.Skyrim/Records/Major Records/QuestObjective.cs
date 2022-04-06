@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+public partial class QuestObjective
 {
-    public partial class QuestObjective
+    [Flags]
+    public enum Flag
     {
-        [Flags]
-        public enum Flag
-        {
-            OrWithPrevious = 0x1,
-        }
+        OrWithPrevious = 0x1,
     }
 }

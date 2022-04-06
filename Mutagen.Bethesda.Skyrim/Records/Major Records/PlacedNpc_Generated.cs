@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -1954,10 +1955,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PlacedNpc_FieldIndex
+    internal enum PlacedNpc_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1997,7 +1998,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PlacedNpc_Registration : ILoquiRegistration
+    internal partial class PlacedNpc_Registration : ILoquiRegistration
     {
         public static readonly PlacedNpc_Registration Instance = new PlacedNpc_Registration();
 
@@ -2109,7 +2110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PlacedNpcSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class PlacedNpcSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly PlacedNpcSetterCommon Instance = new PlacedNpcSetterCommon();
 
@@ -2221,7 +2222,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedNpcCommon : SkyrimMajorRecordCommon
+    internal partial class PlacedNpcCommon : SkyrimMajorRecordCommon
     {
         public new static readonly PlacedNpcCommon Instance = new PlacedNpcCommon();
 
@@ -2956,7 +2957,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedNpcSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class PlacedNpcSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly PlacedNpcSetterTranslationCommon Instance = new PlacedNpcSetterTranslationCommon();
 
@@ -3434,7 +3435,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedNpc_Registration.Instance;
-        public new static PlacedNpc_Registration StaticRegistration => PlacedNpc_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedNpc_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedNpcCommon.Instance;
         [DebuggerStepThrough]
@@ -3452,7 +3453,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PlacedNpcBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -3681,7 +3682,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PlacedNpcBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class PlacedNpcBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static PlacedNpcBinaryCreateTranslation Instance = new PlacedNpcBinaryCreateTranslation();
 
@@ -3907,16 +3908,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PlacedNpcBinaryOverlay :
+    internal partial class PlacedNpcBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IPlacedNpcGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedNpc_Registration.Instance;
-        public new static PlacedNpc_Registration StaticRegistration => PlacedNpc_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedNpc_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedNpcCommon.Instance;
         [DebuggerStepThrough]

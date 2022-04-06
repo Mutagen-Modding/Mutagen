@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -836,10 +837,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum WeaponData_FieldIndex
+    internal enum WeaponData_FieldIndex
     {
         Type = 0,
         Speed = 1,
@@ -853,7 +854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class WeaponData_Registration : ILoquiRegistration
+    internal partial class WeaponData_Registration : ILoquiRegistration
     {
         public static readonly WeaponData_Registration Instance = new WeaponData_Registration();
 
@@ -934,7 +935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class WeaponDataSetterCommon
+    internal partial class WeaponDataSetterCommon
     {
         public static readonly WeaponDataSetterCommon Instance = new WeaponDataSetterCommon();
 
@@ -980,7 +981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WeaponDataCommon
+    internal partial class WeaponDataCommon
     {
         public static readonly WeaponDataCommon Instance = new WeaponDataCommon();
 
@@ -1166,7 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WeaponDataSetterTranslationCommon
+    internal partial class WeaponDataSetterTranslationCommon
     {
         public static readonly WeaponDataSetterTranslationCommon Instance = new WeaponDataSetterTranslationCommon();
 
@@ -1272,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeaponData_Registration.Instance;
-        public static WeaponData_Registration StaticRegistration => WeaponData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeaponData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeaponDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1296,7 +1297,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class WeaponDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1358,7 +1359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class WeaponDataBinaryCreateTranslation
+    internal partial class WeaponDataBinaryCreateTranslation
     {
         public readonly static WeaponDataBinaryCreateTranslation Instance = new WeaponDataBinaryCreateTranslation();
 
@@ -1404,16 +1405,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class WeaponDataBinaryOverlay :
+    internal partial class WeaponDataBinaryOverlay :
         PluginBinaryOverlay,
         IWeaponDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeaponData_Registration.Instance;
-        public static WeaponData_Registration StaticRegistration => WeaponData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeaponData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeaponDataCommon.Instance;
         [DebuggerStepThrough]

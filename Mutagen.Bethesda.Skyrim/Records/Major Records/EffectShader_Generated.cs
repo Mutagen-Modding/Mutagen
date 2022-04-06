@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,6 +22,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -4422,10 +4423,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum EffectShader_FieldIndex
+    internal enum EffectShader_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -4543,7 +4544,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class EffectShader_Registration : ILoquiRegistration
+    internal partial class EffectShader_Registration : ILoquiRegistration
     {
         public static readonly EffectShader_Registration Instance = new EffectShader_Registration();
 
@@ -4632,7 +4633,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class EffectShaderSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class EffectShaderSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly EffectShaderSetterCommon Instance = new EffectShaderSetterCommon();
 
@@ -4809,7 +4810,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class EffectShaderCommon : SkyrimMajorRecordCommon
+    internal partial class EffectShaderCommon : SkyrimMajorRecordCommon
     {
         public new static readonly EffectShaderCommon Instance = new EffectShaderCommon();
 
@@ -6113,7 +6114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class EffectShaderSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class EffectShaderSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly EffectShaderSetterTranslationCommon Instance = new EffectShaderSetterTranslationCommon();
 
@@ -6692,7 +6693,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectShader_Registration.Instance;
-        public new static EffectShader_Registration StaticRegistration => EffectShader_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => EffectShader_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EffectShaderCommon.Instance;
         [DebuggerStepThrough]
@@ -6710,7 +6711,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class EffectShaderBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -7128,7 +7129,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class EffectShaderBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class EffectShaderBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static EffectShaderBinaryCreateTranslation Instance = new EffectShaderBinaryCreateTranslation();
 
@@ -7362,16 +7363,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class EffectShaderBinaryOverlay :
+    internal partial class EffectShaderBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IEffectShaderGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectShader_Registration.Instance;
-        public new static EffectShader_Registration StaticRegistration => EffectShader_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => EffectShader_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EffectShaderCommon.Instance;
         [DebuggerStepThrough]

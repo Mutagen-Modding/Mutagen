@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -22,6 +21,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -661,10 +662,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum RegionGrasses_FieldIndex
+    internal enum RegionGrasses_FieldIndex
     {
         Header = 0,
         Icons = 1,
@@ -673,7 +674,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class RegionGrasses_Registration : ILoquiRegistration
+    internal partial class RegionGrasses_Registration : ILoquiRegistration
     {
         public static readonly RegionGrasses_Registration Instance = new RegionGrasses_Registration();
 
@@ -761,7 +762,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class RegionGrassesSetterCommon : RegionDataSetterCommon
+    internal partial class RegionGrassesSetterCommon : RegionDataSetterCommon
     {
         public new static readonly RegionGrassesSetterCommon Instance = new RegionGrassesSetterCommon();
 
@@ -816,7 +817,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class RegionGrassesCommon : RegionDataCommon
+    internal partial class RegionGrassesCommon : RegionDataCommon
     {
         public new static readonly RegionGrassesCommon Instance = new RegionGrassesCommon();
 
@@ -997,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class RegionGrassesSetterTranslationCommon : RegionDataSetterTranslationCommon
+    internal partial class RegionGrassesSetterTranslationCommon : RegionDataSetterTranslationCommon
     {
         public new static readonly RegionGrassesSetterTranslationCommon Instance = new RegionGrassesSetterTranslationCommon();
 
@@ -1125,7 +1126,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionGrasses_Registration.Instance;
-        public new static RegionGrasses_Registration StaticRegistration => RegionGrasses_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => RegionGrasses_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionGrassesCommon.Instance;
         [DebuggerStepThrough]
@@ -1143,7 +1144,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class RegionGrassesBinaryWriteTranslation :
         RegionDataBinaryWriteTranslation,
@@ -1209,7 +1210,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class RegionGrassesBinaryCreateTranslation : RegionDataBinaryCreateTranslation
+    internal partial class RegionGrassesBinaryCreateTranslation : RegionDataBinaryCreateTranslation
     {
         public new readonly static RegionGrassesBinaryCreateTranslation Instance = new RegionGrassesBinaryCreateTranslation();
 
@@ -1265,16 +1266,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class RegionGrassesBinaryOverlay :
+    internal partial class RegionGrassesBinaryOverlay :
         RegionDataBinaryOverlay,
         IRegionGrassesGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionGrasses_Registration.Instance;
-        public new static RegionGrasses_Registration StaticRegistration => RegionGrasses_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => RegionGrasses_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionGrassesCommon.Instance;
         [DebuggerStepThrough]

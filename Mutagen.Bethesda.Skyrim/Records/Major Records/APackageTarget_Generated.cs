@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -587,17 +588,17 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum APackageTarget_FieldIndex
+    internal enum APackageTarget_FieldIndex
     {
         CountOrDistance = 0,
     }
     #endregion
 
     #region Registration
-    public partial class APackageTarget_Registration : ILoquiRegistration
+    internal partial class APackageTarget_Registration : ILoquiRegistration
     {
         public static readonly APackageTarget_Registration Instance = new APackageTarget_Registration();
 
@@ -671,7 +672,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class APackageTargetSetterCommon
+    internal partial class APackageTargetSetterCommon
     {
         public static readonly APackageTargetSetterCommon Instance = new APackageTargetSetterCommon();
 
@@ -701,7 +702,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class APackageTargetCommon
+    internal partial class APackageTargetCommon
     {
         public static readonly APackageTargetCommon Instance = new APackageTargetCommon();
 
@@ -817,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class APackageTargetSetterTranslationCommon
+    internal partial class APackageTargetSetterTranslationCommon
     {
         public static readonly APackageTargetSetterTranslationCommon Instance = new APackageTargetSetterTranslationCommon();
 
@@ -895,7 +896,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APackageTarget_Registration.Instance;
-        public static APackageTarget_Registration StaticRegistration => APackageTarget_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => APackageTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => APackageTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -919,7 +920,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class APackageTargetBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -971,7 +972,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class APackageTargetBinaryCreateTranslation
+    internal partial class APackageTargetBinaryCreateTranslation
     {
         public readonly static APackageTargetBinaryCreateTranslation Instance = new APackageTargetBinaryCreateTranslation();
 
@@ -1013,16 +1014,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public abstract partial class APackageTargetBinaryOverlay :
+    internal abstract partial class APackageTargetBinaryOverlay :
         PluginBinaryOverlay,
         IAPackageTargetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APackageTarget_Registration.Instance;
-        public static APackageTarget_Registration StaticRegistration => APackageTarget_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => APackageTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => APackageTargetCommon.Instance;
         [DebuggerStepThrough]

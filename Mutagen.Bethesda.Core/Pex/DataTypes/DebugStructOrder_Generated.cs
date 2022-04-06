@@ -6,7 +6,6 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda.Pex.Internals;
 using Noggog;
 using System;
 using System.Collections;
@@ -680,10 +679,10 @@ namespace Mutagen.Bethesda.Pex
 
 }
 
-namespace Mutagen.Bethesda.Pex.Internals
+namespace Mutagen.Bethesda.Pex
 {
     #region Field Index
-    public enum DebugStructOrder_FieldIndex
+    internal enum DebugStructOrder_FieldIndex
     {
         ObjectName = 0,
         OrderName = 1,
@@ -692,7 +691,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Registration
-    public partial class DebugStructOrder_Registration : ILoquiRegistration
+    internal partial class DebugStructOrder_Registration : ILoquiRegistration
     {
         public static readonly DebugStructOrder_Registration Instance = new DebugStructOrder_Registration();
 
@@ -765,7 +764,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Common
-    public partial class DebugStructOrderSetterCommon
+    internal partial class DebugStructOrderSetterCommon
     {
         public static readonly DebugStructOrderSetterCommon Instance = new DebugStructOrderSetterCommon();
 
@@ -780,7 +779,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class DebugStructOrderCommon
+    internal partial class DebugStructOrderCommon
     {
         public static readonly DebugStructOrderCommon Instance = new DebugStructOrderCommon();
 
@@ -925,7 +924,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class DebugStructOrderSetterTranslationCommon
+    internal partial class DebugStructOrderSetterTranslationCommon
     {
         public static readonly DebugStructOrderSetterTranslationCommon Instance = new DebugStructOrderSetterTranslationCommon();
 
@@ -1024,7 +1023,7 @@ namespace Mutagen.Bethesda.Pex
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DebugStructOrder_Registration.Instance;
-        public static DebugStructOrder_Registration StaticRegistration => DebugStructOrder_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DebugStructOrder_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DebugStructOrderCommon.Instance;
         [DebuggerStepThrough]

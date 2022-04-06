@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -24,6 +23,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -961,10 +962,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum IdleMarker_FieldIndex
+    internal enum IdleMarker_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -981,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class IdleMarker_Registration : ILoquiRegistration
+    internal partial class IdleMarker_Registration : ILoquiRegistration
     {
         public static readonly IdleMarker_Registration Instance = new IdleMarker_Registration();
 
@@ -1070,7 +1071,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class IdleMarkerSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class IdleMarkerSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly IdleMarkerSetterCommon Instance = new IdleMarkerSetterCommon();
 
@@ -1146,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class IdleMarkerCommon : SkyrimMajorRecordCommon
+    internal partial class IdleMarkerCommon : SkyrimMajorRecordCommon
     {
         public new static readonly IdleMarkerCommon Instance = new IdleMarkerCommon();
 
@@ -1474,7 +1475,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class IdleMarkerSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class IdleMarkerSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly IdleMarkerSetterTranslationCommon Instance = new IdleMarkerSetterTranslationCommon();
 
@@ -1712,7 +1713,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IdleMarker_Registration.Instance;
-        public new static IdleMarker_Registration StaticRegistration => IdleMarker_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => IdleMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IdleMarkerCommon.Instance;
         [DebuggerStepThrough]
@@ -1730,7 +1731,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class IdleMarkerBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
@@ -1865,7 +1866,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class IdleMarkerBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class IdleMarkerBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static IdleMarkerBinaryCreateTranslation Instance = new IdleMarkerBinaryCreateTranslation();
 
@@ -1962,16 +1963,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class IdleMarkerBinaryOverlay :
+    internal partial class IdleMarkerBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IIdleMarkerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IdleMarker_Registration.Instance;
-        public new static IdleMarker_Registration StaticRegistration => IdleMarker_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => IdleMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => IdleMarkerCommon.Instance;
         [DebuggerStepThrough]

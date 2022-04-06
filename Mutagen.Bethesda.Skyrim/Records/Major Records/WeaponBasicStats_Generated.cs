@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -20,6 +19,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -671,10 +672,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WeaponBasicStats_FieldIndex
+    internal enum WeaponBasicStats_FieldIndex
     {
         Value = 0,
         Weight = 1,
@@ -683,7 +684,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WeaponBasicStats_Registration : ILoquiRegistration
+    internal partial class WeaponBasicStats_Registration : ILoquiRegistration
     {
         public static readonly WeaponBasicStats_Registration Instance = new WeaponBasicStats_Registration();
 
@@ -764,7 +765,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WeaponBasicStatsSetterCommon
+    internal partial class WeaponBasicStatsSetterCommon
     {
         public static readonly WeaponBasicStatsSetterCommon Instance = new WeaponBasicStatsSetterCommon();
 
@@ -805,7 +806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeaponBasicStatsCommon
+    internal partial class WeaponBasicStatsCommon
     {
         public static readonly WeaponBasicStatsCommon Instance = new WeaponBasicStatsCommon();
 
@@ -941,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeaponBasicStatsSetterTranslationCommon
+    internal partial class WeaponBasicStatsSetterTranslationCommon
     {
         public static readonly WeaponBasicStatsSetterTranslationCommon Instance = new WeaponBasicStatsSetterTranslationCommon();
 
@@ -1027,7 +1028,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeaponBasicStats_Registration.Instance;
-        public static WeaponBasicStats_Registration StaticRegistration => WeaponBasicStats_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeaponBasicStats_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeaponBasicStatsCommon.Instance;
         [DebuggerStepThrough]
@@ -1051,7 +1052,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeaponBasicStatsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1098,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WeaponBasicStatsBinaryCreateTranslation
+    internal partial class WeaponBasicStatsBinaryCreateTranslation
     {
         public readonly static WeaponBasicStatsBinaryCreateTranslation Instance = new WeaponBasicStatsBinaryCreateTranslation();
 
@@ -1135,16 +1136,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WeaponBasicStatsBinaryOverlay :
+    internal partial class WeaponBasicStatsBinaryOverlay :
         PluginBinaryOverlay,
         IWeaponBasicStatsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeaponBasicStats_Registration.Instance;
-        public static WeaponBasicStats_Registration StaticRegistration => WeaponBasicStats_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeaponBasicStats_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeaponBasicStatsCommon.Instance;
         [DebuggerStepThrough]

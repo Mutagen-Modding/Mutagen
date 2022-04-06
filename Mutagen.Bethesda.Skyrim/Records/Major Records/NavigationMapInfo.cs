@@ -4,103 +4,98 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
 using System.Buffers.Binary;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+partial class NavigationMapInfoBinaryCreateTranslation
 {
-    namespace Internals
+    public static partial void FillBinaryIslandCustom(MutagenFrame frame, INavigationMapInfo item)
     {
-        public partial class NavigationMapInfoBinaryCreateTranslation
+        if (frame.ReadUInt8() > 0)
         {
-            public static partial void FillBinaryIslandCustom(MutagenFrame frame, INavigationMapInfo item)
-            {
-                if (frame.ReadUInt8() > 0)
-                {
-                    item.Island = IslandData.CreateFromBinary(frame);
-                }
-            }
-
-            public static partial void FillBinaryParentParseLogicCustom(MutagenFrame frame, INavigationMapInfo item)
-            {
-                if (item.ParentWorldspace.IsNull)
-                {
-                    item.ParentCell.SetTo(FormKeyBinaryTranslation.Instance.Parse(frame));
-                }
-                else
-                {
-                    item.ParentWorldspaceCoord = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(frame);
-                }
-            }
+            item.Island = IslandData.CreateFromBinary(frame);
         }
+    }
 
-        public partial class NavigationMapInfoBinaryWriteTranslation
+    public static partial void FillBinaryParentParseLogicCustom(MutagenFrame frame, INavigationMapInfo item)
+    {
+        if (item.ParentWorldspace.IsNull)
         {
-            public static partial void WriteBinaryIslandCustom(MutagenWriter writer, INavigationMapInfoGetter item)
-            {
-                if (item.Island is {} island)
-                {
-                    writer.Write((byte)1);
-                    island.WriteToBinary(writer);
-                }
-                else
-                {
-                    writer.Write(default(byte));
-                }
-            }
-
-            public static partial void WriteBinaryParentParseLogicCustom(MutagenWriter writer, INavigationMapInfoGetter item)
-            {
-                if (item.ParentWorldspace.IsNull)
-                {
-                    FormKeyBinaryTranslation.Instance.Write(writer, item.ParentCell.FormKey);
-                }
-                else
-                {
-                    P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(writer, item.ParentWorldspaceCoord);
-                }
-            }
+            item.ParentCell.SetTo(FormKeyBinaryTranslation.Instance.Parse(frame));
         }
-
-        public partial class NavigationMapInfoBinaryOverlay
+        else
         {
-            IIslandDataGetter? _island;
-            public partial IIslandDataGetter? GetIslandCustom(int location) => _island;
+            item.ParentWorldspaceCoord = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(frame);
+        }
+    }
+}
 
-            public P2Int16 ParentWorldspaceCoord
-            {
-                get
-                {
-                    return new P2Int16(
-                        BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(IslandEndingPos + 0x8)),
-                        BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(IslandEndingPos + 0xA)));
-                }
-            }
+partial class NavigationMapInfoBinaryWriteTranslation
+{
+    public static partial void WriteBinaryIslandCustom(MutagenWriter writer, INavigationMapInfoGetter item)
+    {
+        if (item.Island is {} island)
+        {
+            writer.Write((byte)1);
+            island.WriteToBinary(writer);
+        }
+        else
+        {
+            writer.Write(default(byte));
+        }
+    }
 
-            public IFormLinkGetter<ICellGetter> ParentCell
-            {
-                get
-                {
-                    return new FormLink<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(IslandEndingPos + 0x8, 0x4))));
-                }
-            }
+    public static partial void WriteBinaryParentParseLogicCustom(MutagenWriter writer, INavigationMapInfoGetter item)
+    {
+        if (item.ParentWorldspace.IsNull)
+        {
+            FormKeyBinaryTranslation.Instance.Write(writer, item.ParentCell.FormKey);
+        }
+        else
+        {
+            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(writer, item.ParentWorldspaceCoord);
+        }
+    }
+}
 
-            partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
-            {
-                if (_data[LinkedDoorsEndingPos] > 0)
-                {
-                    using var islandStream = new OverlayStream(_data.Slice(LinkedDoorsEndingPos + 1), stream.MetaData);
-                    this._island =  IslandDataBinaryOverlay.IslandDataFactory(
-                        islandStream,
-                        _package);
-                    this.IslandEndingPos = LinkedDoorsEndingPos + 1 + islandStream.Position;
-                }
-                else
-                {
-                    this._island = null;
-                    this.IslandEndingPos = LinkedDoorsEndingPos + 1;
-                }
-            }
+partial class NavigationMapInfoBinaryOverlay
+{
+    IIslandDataGetter? _island;
+    public partial IIslandDataGetter? GetIslandCustom(int location) => _island;
+
+    public P2Int16 ParentWorldspaceCoord
+    {
+        get
+        {
+            return new P2Int16(
+                BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(IslandEndingPos + 0x8)),
+                BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(IslandEndingPos + 0xA)));
+        }
+    }
+
+    public IFormLinkGetter<ICellGetter> ParentCell
+    {
+        get
+        {
+            return new FormLink<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(IslandEndingPos + 0x8, 0x4))));
+        }
+    }
+
+    partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
+    {
+        if (_data[LinkedDoorsEndingPos] > 0)
+        {
+            using var islandStream = new OverlayStream(_data.Slice(LinkedDoorsEndingPos + 1), stream.MetaData);
+            this._island =  IslandDataBinaryOverlay.IslandDataFactory(
+                islandStream,
+                _package);
+            this.IslandEndingPos = LinkedDoorsEndingPos + 1 + islandStream.Position;
+        }
+        else
+        {
+            this._island = null;
+            this.IslandEndingPos = LinkedDoorsEndingPos + 1;
         }
     }
 }

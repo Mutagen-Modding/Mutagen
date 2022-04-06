@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -635,10 +636,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum EntryPoints_FieldIndex
+    internal enum EntryPoints_FieldIndex
     {
         Type = 0,
         Points = 1,
@@ -646,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class EntryPoints_Registration : ILoquiRegistration
+    internal partial class EntryPoints_Registration : ILoquiRegistration
     {
         public static readonly EntryPoints_Registration Instance = new EntryPoints_Registration();
 
@@ -720,7 +721,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class EntryPointsSetterCommon
+    internal partial class EntryPointsSetterCommon
     {
         public static readonly EntryPointsSetterCommon Instance = new EntryPointsSetterCommon();
 
@@ -756,7 +757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class EntryPointsCommon
+    internal partial class EntryPointsCommon
     {
         public static readonly EntryPointsCommon Instance = new EntryPointsCommon();
 
@@ -882,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class EntryPointsSetterTranslationCommon
+    internal partial class EntryPointsSetterTranslationCommon
     {
         public static readonly EntryPointsSetterTranslationCommon Instance = new EntryPointsSetterTranslationCommon();
 
@@ -964,7 +965,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EntryPoints_Registration.Instance;
-        public static EntryPoints_Registration StaticRegistration => EntryPoints_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EntryPoints_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EntryPointsCommon.Instance;
         [DebuggerStepThrough]
@@ -988,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class EntryPointsBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1031,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class EntryPointsBinaryCreateTranslation
+    internal partial class EntryPointsBinaryCreateTranslation
     {
         public readonly static EntryPointsBinaryCreateTranslation Instance = new EntryPointsBinaryCreateTranslation();
 
@@ -1071,16 +1072,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class EntryPointsBinaryOverlay :
+    internal partial class EntryPointsBinaryOverlay :
         PluginBinaryOverlay,
         IEntryPointsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EntryPoints_Registration.Instance;
-        public static EntryPoints_Registration StaticRegistration => EntryPoints_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EntryPoints_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EntryPointsCommon.Instance;
         [DebuggerStepThrough]

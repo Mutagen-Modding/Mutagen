@@ -9,7 +9,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -25,6 +24,8 @@ using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -5371,10 +5372,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Npc_FieldIndex
+    internal enum Npc_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -5477,7 +5478,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Npc_Registration : ILoquiRegistration
+    internal partial class Npc_Registration : ILoquiRegistration
     {
         public static readonly Npc_Registration Instance = new Npc_Registration();
 
@@ -5649,7 +5650,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class NpcSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class NpcSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly NpcSetterCommon Instance = new NpcSetterCommon();
 
@@ -5855,7 +5856,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class NpcCommon : Fallout4MajorRecordCommon
+    internal partial class NpcCommon : Fallout4MajorRecordCommon
     {
         public new static readonly NpcCommon Instance = new NpcCommon();
 
@@ -7565,7 +7566,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class NpcSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class NpcSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly NpcSetterTranslationCommon Instance = new NpcSetterTranslationCommon();
 
@@ -8583,7 +8584,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Npc_Registration.Instance;
-        public new static Npc_Registration StaticRegistration => Npc_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Npc_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcCommon.Instance;
         [DebuggerStepThrough]
@@ -8601,7 +8602,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NpcBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
@@ -9174,7 +9175,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class NpcBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class NpcBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
         public new readonly static NpcBinaryCreateTranslation Instance = new NpcBinaryCreateTranslation();
 
@@ -9777,16 +9778,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class NpcBinaryOverlay :
+    internal partial class NpcBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         INpcGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Npc_Registration.Instance;
-        public new static Npc_Registration StaticRegistration => Npc_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Npc_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcCommon.Instance;
         [DebuggerStepThrough]

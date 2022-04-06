@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 
     namespace Internals
     {
-        public static class GroupRecordTypeGetter<T>
+        internal static class GroupRecordTypeGetter<T>
         {
             public static readonly RecordType GRUP_RECORD_TYPE;
 
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             }
         }
 
-        public class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
+        internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
             where T : IMajorRecordGetter
         {
             private readonly IReadOnlyDictionary<FormKey, int> _locs;
@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             }
         }
 
-        public abstract class AGroupBinaryOverlay<TMajor> : PluginBinaryOverlay, IGroupGetter<TMajor>
+        internal abstract class AGroupBinaryOverlay<TMajor> : PluginBinaryOverlay, IGroupGetter<TMajor>
             where TMajor : class, IMajorRecordGetter
         {
             protected IReadOnlyCache<TMajor, FormKey> _recordCache = null!;

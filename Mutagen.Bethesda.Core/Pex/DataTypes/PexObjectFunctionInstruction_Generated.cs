@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Pex;
-using Mutagen.Bethesda.Pex.Internals;
 using Noggog;
 using System;
 using System.Collections;
@@ -650,10 +649,10 @@ namespace Mutagen.Bethesda.Pex
 
 }
 
-namespace Mutagen.Bethesda.Pex.Internals
+namespace Mutagen.Bethesda.Pex
 {
     #region Field Index
-    public enum PexObjectFunctionInstruction_FieldIndex
+    internal enum PexObjectFunctionInstruction_FieldIndex
     {
         OpCode = 0,
         Arguments = 1,
@@ -661,7 +660,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Registration
-    public partial class PexObjectFunctionInstruction_Registration : ILoquiRegistration
+    internal partial class PexObjectFunctionInstruction_Registration : ILoquiRegistration
     {
         public static readonly PexObjectFunctionInstruction_Registration Instance = new PexObjectFunctionInstruction_Registration();
 
@@ -734,7 +733,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Common
-    public partial class PexObjectFunctionInstructionSetterCommon
+    internal partial class PexObjectFunctionInstructionSetterCommon
     {
         public static readonly PexObjectFunctionInstructionSetterCommon Instance = new PexObjectFunctionInstructionSetterCommon();
 
@@ -748,7 +747,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class PexObjectFunctionInstructionCommon
+    internal partial class PexObjectFunctionInstructionCommon
     {
         public static readonly PexObjectFunctionInstructionCommon Instance = new PexObjectFunctionInstructionCommon();
 
@@ -883,7 +882,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class PexObjectFunctionInstructionSetterTranslationCommon
+    internal partial class PexObjectFunctionInstructionSetterTranslationCommon
     {
         public static readonly PexObjectFunctionInstructionSetterTranslationCommon Instance = new PexObjectFunctionInstructionSetterTranslationCommon();
 
@@ -985,7 +984,7 @@ namespace Mutagen.Bethesda.Pex
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PexObjectFunctionInstruction_Registration.Instance;
-        public static PexObjectFunctionInstruction_Registration StaticRegistration => PexObjectFunctionInstruction_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PexObjectFunctionInstruction_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PexObjectFunctionInstructionCommon.Instance;
         [DebuggerStepThrough]

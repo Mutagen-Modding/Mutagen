@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -19,6 +18,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
@@ -742,10 +743,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum DialogResponseData_FieldIndex
+    internal enum DialogResponseData_FieldIndex
     {
         Emotion = 0,
         EmotionValue = 1,
@@ -756,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class DialogResponseData_Registration : ILoquiRegistration
+    internal partial class DialogResponseData_Registration : ILoquiRegistration
     {
         public static readonly DialogResponseData_Registration Instance = new DialogResponseData_Registration();
 
@@ -837,7 +838,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class DialogResponseDataSetterCommon
+    internal partial class DialogResponseDataSetterCommon
     {
         public static readonly DialogResponseDataSetterCommon Instance = new DialogResponseDataSetterCommon();
 
@@ -880,7 +881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class DialogResponseDataCommon
+    internal partial class DialogResponseDataCommon
     {
         public static readonly DialogResponseDataCommon Instance = new DialogResponseDataCommon();
 
@@ -1036,7 +1037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class DialogResponseDataSetterTranslationCommon
+    internal partial class DialogResponseDataSetterTranslationCommon
     {
         public static readonly DialogResponseDataSetterTranslationCommon Instance = new DialogResponseDataSetterTranslationCommon();
 
@@ -1130,7 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponseData_Registration.Instance;
-        public static DialogResponseData_Registration StaticRegistration => DialogResponseData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DialogResponseData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponseDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1154,7 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class DialogResponseDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1206,7 +1207,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class DialogResponseDataBinaryCreateTranslation
+    internal partial class DialogResponseDataBinaryCreateTranslation
     {
         public readonly static DialogResponseDataBinaryCreateTranslation Instance = new DialogResponseDataBinaryCreateTranslation();
 
@@ -1247,16 +1248,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class DialogResponseDataBinaryOverlay :
+    internal partial class DialogResponseDataBinaryOverlay :
         PluginBinaryOverlay,
         IDialogResponseDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponseData_Registration.Instance;
-        public static DialogResponseData_Registration StaticRegistration => DialogResponseData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DialogResponseData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponseDataCommon.Instance;
         [DebuggerStepThrough]
