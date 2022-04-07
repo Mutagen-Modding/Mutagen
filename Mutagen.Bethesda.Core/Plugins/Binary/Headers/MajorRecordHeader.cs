@@ -325,18 +325,16 @@ namespace Mutagen.Bethesda.Plugins.Binary.Headers
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public MajorRecordFrame Decompress(out byte[] rawDecompressedBytes)
+        public MajorRecordFrame Decompress(out ReadOnlyMemorySlice<byte> rawDecompressedBytes)
         {
-            // ToDo
-            // Copy less bytes around with some better API calls
             var resultLen = BinaryPrimitives.ReadUInt32LittleEndian(Content);
-            rawDecompressedBytes = Decompression.Decompress(Content.Slice(4).ToArray(), resultLen);
+            rawDecompressedBytes = Decompression.Decompress(Content.Slice(4), resultLen);
             var resultBytes = new byte[HeaderData.Length + rawDecompressedBytes.Length];
             HeaderData.Span.CopyTo(resultBytes);
             BinaryPrimitives.WriteUInt32LittleEndian(
                 resultBytes.AsSpan(4),
                 (uint)rawDecompressedBytes.Length);
-            rawDecompressedBytes.AsSpan().CopyTo(resultBytes.AsSpan(HeaderData.Length));
+            rawDecompressedBytes.Span.CopyTo(resultBytes.AsSpan(HeaderData.Length));
             return new MajorRecordFrame(
                 Header.Meta, 
                 resultBytes);

@@ -10,14 +10,19 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams;
 
 public static class Decompression
 {
-    public static byte[] Decompress(byte[] bytes, uint resultLen)
+    public static byte[] Decompress(ReadOnlyMemorySlice<byte> bytes, uint uncompressedLength)
     {
-        // ToDo
-        // Swap to span version if Zlib updates
-        return ZlibStream.UncompressBuffer(bytes);
+        byte[] buf = new byte[checked((int)uncompressedLength)];
+        using (var stream = new ZlibStream(new ByteMemorySliceStream(bytes),
+                   CompressionMode.Decompress))
+        {
+            stream.Read(buf, 0, checked((int)uncompressedLength));
+        }
+
+        return buf;
     }
 
-    public static ReadOnlyMemorySlice<byte> DecompressSpan(ReadOnlyMemorySlice<byte> slice, GameConstants meta)
+    internal static ReadOnlyMemorySlice<byte> DecompressMajorRecordSpan(ReadOnlyMemorySlice<byte> slice, GameConstants meta)
     {
         var majorMeta = meta.MajorRecord(slice);
         if (majorMeta.IsCompressed)
