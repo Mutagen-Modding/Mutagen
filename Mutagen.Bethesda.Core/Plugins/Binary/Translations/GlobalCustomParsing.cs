@@ -9,11 +9,11 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 /// <summary>
 /// Static class with some common utility functions for parsing Global records
 /// </summary>
-public static class GlobalCustomParsing
+internal static class GlobalCustomParsing
 {
-    public static readonly RecordType GLOB = new RecordType("GLOB");
-    public static readonly RecordType FNAM = new RecordType("FNAM");
-    public static readonly RecordType FLTV = new RecordType("FLTV");
+    public static readonly RecordType GLOB = new("GLOB");
+    public static readonly RecordType FNAM = new("FNAM");
+    public static readonly RecordType FLTV = new("FLTV");
 
     /// <summary>
     /// An interface for Global records

@@ -1,7 +1,6 @@
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using System;
 using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 

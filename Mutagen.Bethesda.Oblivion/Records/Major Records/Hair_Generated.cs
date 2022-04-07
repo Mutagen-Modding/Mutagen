@@ -1730,7 +1730,7 @@ namespace Mutagen.Bethesda.Oblivion
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
             var ret = new HairBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);

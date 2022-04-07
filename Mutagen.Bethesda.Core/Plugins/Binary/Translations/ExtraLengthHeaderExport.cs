@@ -6,10 +6,10 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
 public class ExtraLengthHeaderExport : IDisposable
 {
-    MemoryTributary _tributary = new MemoryTributary();
-    MutagenWriter _writer;
-    RecordType _mainRecord;
-    RecordType _overflowRecord;
+    private readonly MemoryTributary _tributary = new();
+    private readonly MutagenWriter _writer;
+    private readonly RecordType _mainRecord;
+    private readonly RecordType _overflowRecord;
 
     public MutagenWriter PrepWriter { get; }
 
@@ -18,9 +18,9 @@ public class ExtraLengthHeaderExport : IDisposable
         RecordType mainRecord,
         RecordType overflowRecord)
     {
-        this._writer = writer;
-        this._mainRecord = mainRecord;
-        this._overflowRecord = overflowRecord;
+        _writer = writer;
+        _mainRecord = mainRecord;
+        _overflowRecord = overflowRecord;
         PrepWriter = new MutagenWriter(_tributary, writer.MetaData);
     }
 

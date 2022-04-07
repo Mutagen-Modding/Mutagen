@@ -2712,7 +2712,7 @@ namespace Mutagen.Bethesda.Fallout4
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
             var ret = new MovableStaticBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);

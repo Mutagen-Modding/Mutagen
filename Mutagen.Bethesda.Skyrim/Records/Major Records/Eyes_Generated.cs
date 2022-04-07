@@ -1629,7 +1629,7 @@ namespace Mutagen.Bethesda.Skyrim
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
             var ret = new EyesBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);

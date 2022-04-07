@@ -25,7 +25,7 @@ public static class BooleanBinaryTranslationExt
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Factory(ex, header);
+            throw SubrecordException.Enrich(ex, header);
         }
     }
 
@@ -46,7 +46,7 @@ public static class BooleanBinaryTranslationExt
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Factory(ex, header);
+            throw SubrecordException.Enrich(ex, header);
         }
     }
 
@@ -68,7 +68,7 @@ public static class BooleanBinaryTranslationExt
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Factory(ex, header);
+            throw SubrecordException.Enrich(ex, header);
         }
     }
 }

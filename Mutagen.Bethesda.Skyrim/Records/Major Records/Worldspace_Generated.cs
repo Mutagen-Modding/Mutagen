@@ -5577,7 +5577,7 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams? parseParams = null)
         {
             var origStream = stream;
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
             var ret = new WorldspaceBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);

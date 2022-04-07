@@ -1,4 +1,3 @@
-using Ionic.Zlib;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -17,34 +16,34 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-internal static class PluginUtilityTranslation
+public static class PluginUtilityTranslation
 {
-    public delegate bool BinaryMasterParseDelegate<TItem>(
+    internal delegate bool BinaryMasterParseDelegate<TItem>(
         MutagenFrame reader,
         [MaybeNullWhen(false)] out TItem item,
         TypedParseParams? translationParams);
 
-    public delegate bool BinarySubParseRecordDelegate<TItem>(
+    internal delegate bool BinarySubParseRecordDelegate<TItem>(
         MutagenFrame reader,
         RecordType header,
         [MaybeNullWhen(false)] out TItem item);
 
-    public delegate bool BinaryMasterParseRecordDelegate<TItem>(
+    internal delegate bool BinaryMasterParseRecordDelegate<TItem>(
         MutagenFrame reader,
         RecordType header,
         [MaybeNullWhen(false)] out TItem item,
         TypedParseParams? translationParams);
 
-    public delegate void BinaryMasterWriteDelegate<TItem>(
+    internal delegate void BinaryMasterWriteDelegate<TItem>(
         MutagenWriter writer,
         TItem item,
         TypedWriteParams? translationParams);
 
-    public delegate void RecordStructFill<R>(
+    internal delegate void RecordStructFill<R>(
         R record,
         MutagenFrame frame);
 
-    public delegate ParseResult RecordTypeFill<R>(
+    internal delegate ParseResult RecordTypeFill<R>(
         R record,
         MutagenFrame frame,
         Dictionary<RecordType, int>? recordParseCount,
@@ -52,7 +51,7 @@ internal static class PluginUtilityTranslation
         int contentLength,
         TypedParseParams? translationParams);
 
-    public delegate ParseResult MajorRecordFill<R>(
+    internal delegate ParseResult MajorRecordFill<R>(
         R record,
         MutagenFrame frame,
         PreviousParse lastParsed,
@@ -61,7 +60,7 @@ internal static class PluginUtilityTranslation
         int contentLength,
         TypedParseParams? translationParams);
 
-    public delegate ParseResult SubrecordFill<R>(
+    internal delegate ParseResult SubrecordFill<R>(
         R record,
         MutagenFrame frame,
         PreviousParse previousSubrecordParse,
@@ -70,7 +69,7 @@ internal static class PluginUtilityTranslation
         int contentLength,
         TypedParseParams? translationParams);
 
-    public delegate ParseResult ModRecordTypeFill<TRecord, TImportMask>(
+    internal delegate ParseResult ModRecordTypeFill<TRecord, TImportMask>(
         TRecord record,
         MutagenFrame frame,
         RecordType nextRecordType,
@@ -78,7 +77,7 @@ internal static class PluginUtilityTranslation
         TImportMask importMask,
         TypedParseParams? translationParams);
 
-    public static M MajorRecordParse<M>(
+    internal static M MajorRecordParse<M>(
         M record,
         MutagenFrame frame,
         TypedParseParams? translationParams,
@@ -158,7 +157,7 @@ internal static class PluginUtilityTranslation
         }
     }
 
-    public static M RecordParse<M>(
+    internal static M RecordParse<M>(
         M record,
         MutagenFrame frame,
         RecordTypeConverter? recordTypeConverter,
@@ -170,7 +169,7 @@ internal static class PluginUtilityTranslation
         return record;
     }
 
-    public static M RecordParse<M>(
+    internal static M RecordParse<M>(
         M record,
         MutagenFrame frame,
         TypedParseParams? translationParams,
@@ -217,7 +216,7 @@ internal static class PluginUtilityTranslation
         return record;
     }
 
-    public static M SubrecordParse<M>(
+    internal static M SubrecordParse<M>(
         M record,
         MutagenFrame frame,
         TypedParseParams? translationParams,
@@ -229,7 +228,7 @@ internal static class PluginUtilityTranslation
         return record;
     }
 
-    public static M SubrecordParse<M>(
+    internal static M SubrecordParse<M>(
         M record,
         MutagenFrame frame,
         TypedParseParams? translationParams,
@@ -276,7 +275,7 @@ internal static class PluginUtilityTranslation
         return record;
     }
 
-    public static G GroupParse<G>(
+    internal static G GroupParse<G>(
         G record,
         MutagenFrame frame,
         TypedParseParams? translationParams,
@@ -319,7 +318,7 @@ internal static class PluginUtilityTranslation
         return record;
     }
 
-    public static TMod ModParse<TMod, TImportMask>(
+    internal static TMod ModParse<TMod, TImportMask>(
         TMod record,
         MutagenFrame frame,
         TImportMask importMask,
@@ -364,66 +363,6 @@ internal static class PluginUtilityTranslation
 
         frame.SetToFinalPosition();
         return record;
-    }
-
-    public static ReadOnlyMemorySlice<byte> DecompressSpan(ReadOnlyMemorySlice<byte> slice, GameConstants meta)
-    {
-        var majorMeta = meta.MajorRecord(slice);
-        if (majorMeta.IsCompressed)
-        {
-            uint uncompressedLength = BinaryPrimitives.ReadUInt32LittleEndian(slice.Slice(majorMeta.HeaderLength));
-            byte[] buf = new byte[majorMeta.HeaderLength + checked((int)uncompressedLength)];
-            // Copy major meta bytes over
-            slice.Span.Slice(0, majorMeta.HeaderLength).CopyTo(buf.AsSpan());
-            // Set length bytes
-            BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HeaderLength),
-                uncompressedLength);
-            // Remove compression flag
-            BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(meta.MajorConstants.FlagLocationOffset),
-                majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
-            // Copy uncompressed data over
-            using (var stream = new ZlibStream(new ByteMemorySliceStream(slice.Slice(majorMeta.HeaderLength + 4)),
-                       CompressionMode.Decompress))
-            {
-                stream.Read(buf, majorMeta.HeaderLength, checked((int)uncompressedLength));
-            }
-
-            slice = new MemorySlice<byte>(buf);
-        }
-
-        return slice;
-    }
-
-    internal static OverlayStream DecompressStream(OverlayStream stream)
-    {
-        var majorMeta = stream.GetMajorRecord();
-        if (majorMeta.IsCompressed)
-        {
-            uint uncompressedLength =
-                BinaryPrimitives.ReadUInt32LittleEndian(stream.RemainingSpan.Slice(majorMeta.HeaderLength));
-            byte[] buf = new byte[majorMeta.HeaderLength + checked((int)uncompressedLength)];
-            // Copy major meta bytes over
-            stream.RemainingSpan.Slice(0, majorMeta.HeaderLength).CopyTo(buf.AsSpan());
-            // Set length bytes
-            BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HeaderLength),
-                uncompressedLength);
-            // Remove compression flag
-            BinaryPrimitives.WriteInt32LittleEndian(
-                buf.AsSpan().Slice(stream.MetaData.Constants.MajorConstants.FlagLocationOffset),
-                majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
-            // Copy uncompressed data over
-            using (var compessionStream =
-                   new ZlibStream(new ByteMemorySliceStream(stream.RemainingMemory.Slice(majorMeta.HeaderLength + 4)),
-                       CompressionMode.Decompress))
-            {
-                compessionStream.Read(buf, majorMeta.HeaderLength, checked((int)uncompressedLength));
-            }
-
-            stream.Position += checked((int)majorMeta.TotalLength);
-            stream = new OverlayStream(buf, stream.MetaData);
-        }
-
-        return stream;
     }
 
     /// <summary>
@@ -733,7 +672,7 @@ internal static class PluginUtilityTranslation
         return ret.ToArray();
     }
 
-    public static async Task CompileStreamsInto(IEnumerable<Task<IEnumerable<Stream>>> inStreams, Stream outStream)
+    internal static async Task CompileStreamsInto(IEnumerable<Task<IEnumerable<Stream>>> inStreams, Stream outStream)
     {
         var streams = await Task.WhenAll(inStreams).ConfigureAwait(false);
         foreach (var s in streams.SelectMany(s => s))
@@ -743,7 +682,7 @@ internal static class PluginUtilityTranslation
         }
     }
 
-    public static async Task CompileStreamsInto(Task<IEnumerable<Stream>> inStreams, Stream outStream)
+    internal static async Task CompileStreamsInto(Task<IEnumerable<Stream>> inStreams, Stream outStream)
     {
         var streams = await inStreams.ConfigureAwait(false);
         foreach (var s in streams)
@@ -753,7 +692,7 @@ internal static class PluginUtilityTranslation
         }
     }
 
-    public static async Task CompileStreamsInto(IEnumerable<Task<Stream>> inStreams, Stream outStream)
+    internal static async Task CompileStreamsInto(IEnumerable<Task<Stream>> inStreams, Stream outStream)
     {
         foreach (var sTask in inStreams)
         {
@@ -763,7 +702,7 @@ internal static class PluginUtilityTranslation
         }
     }
 
-    public static void CompileStreamsInto(IEnumerable<Stream> inStreams, Stream outStream)
+    internal static void CompileStreamsInto(IEnumerable<Stream> inStreams, Stream outStream)
     {
         foreach (var s in inStreams)
         {
@@ -772,7 +711,7 @@ internal static class PluginUtilityTranslation
         }
     }
 
-    public static void SetGroupLength(
+    internal static void SetGroupLength(
         byte[] bytes,
         uint len)
     {
@@ -780,7 +719,7 @@ internal static class PluginUtilityTranslation
         BinaryPrimitives.WriteUInt32LittleEndian(bytesSpan.Slice(4), len);
     }
 
-    public static async Task<IEnumerable<Stream>> CompileSetGroupLength(
+    internal static async Task<IEnumerable<Stream>> CompileSetGroupLength(
         IEnumerable<Task<Stream>> streams,
         byte[] bytes)
     {
@@ -789,14 +728,14 @@ internal static class PluginUtilityTranslation
         return ret;
     }
 
-    public static void CompileSetGroupLength(
+    internal static void CompileSetGroupLength(
         IEnumerable<Stream> streams,
         byte[] bytes)
     {
         PluginUtilityTranslation.SetGroupLength(bytes, (uint)streams.NotNull().Sum(i => i.Length));
     }
 
-    public static void SkipPastAll(IBinaryReadStream stream, GameConstants meta, RecordType recordType)
+    internal static void SkipPastAll(IBinaryReadStream stream, GameConstants meta, RecordType recordType)
     {
         while (stream.TryReadSubrecordFrame(meta, recordType, out var _))
         {
@@ -819,7 +758,8 @@ internal static class PluginUtilityTranslation
         return pos;
     }
 
-    public static RecordType GetRecordType<T>()
+
+    internal static RecordType GetRecordType<T>()
     {
         return (RecordType)LoquiRegistration.GetRegister(typeof(T))!.GetType()
             .GetField(Constants.TriggeringRecordTypeMember)!.GetValue(null)!;
@@ -845,7 +785,7 @@ internal static class PluginUtilityTranslation
         }
     }
 
-    public static int HandleOverlayRecordOverflow(
+    internal static int HandleOverlayRecordOverflow(
         int? existingLoc,
         OverlayStream stream,
         int offset,

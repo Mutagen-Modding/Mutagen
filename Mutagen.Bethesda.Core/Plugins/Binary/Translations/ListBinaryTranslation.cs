@@ -1133,7 +1133,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
     #endregion
 }
 
-public class PluginListAsyncBinaryTranslation<T>
+internal class PluginListAsyncBinaryTranslation<T>
 {
     public static readonly PluginListAsyncBinaryTranslation<T> Instance = new PluginListAsyncBinaryTranslation<T>();
 

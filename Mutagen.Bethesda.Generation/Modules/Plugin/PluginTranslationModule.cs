@@ -2221,7 +2221,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             {
                                 fg.AppendLine("var origStream = stream;");
                             }
-                            fg.AppendLine($"stream = {nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.DecompressStream)}(stream);");
+                            fg.AppendLine($"stream = {nameof(Decompression)}.{nameof(Decompression.DecompressStream)}(stream);");
                         }
                         if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
                         {
