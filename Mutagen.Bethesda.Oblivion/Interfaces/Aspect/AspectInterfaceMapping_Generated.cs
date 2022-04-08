@@ -9,15 +9,15 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Loqui;
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public class AspectInterfaceMapping : IAspectInterfaceMapping
+    internal class OblivionAspectInterfaceMapping : IAspectInterfaceMapping
     {
         public IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes { get; }
 
         public GameCategory GameCategory => GameCategory.Oblivion;
 
-        public AspectInterfaceMapping()
+        public OblivionAspectInterfaceMapping()
         {
             var dict = new Dictionary<Type, InterfaceMappingResult>();
             dict[typeof(IModeled)] = new InterfaceMappingResult(true, new ILoquiRegistration[]

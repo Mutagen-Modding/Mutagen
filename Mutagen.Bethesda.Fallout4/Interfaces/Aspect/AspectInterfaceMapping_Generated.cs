@@ -9,15 +9,15 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Loqui;
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public class AspectInterfaceMapping : IAspectInterfaceMapping
+    internal class Fallout4AspectInterfaceMapping : IAspectInterfaceMapping
     {
         public IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes { get; }
 
         public GameCategory GameCategory => GameCategory.Fallout4;
 
-        public AspectInterfaceMapping()
+        public Fallout4AspectInterfaceMapping()
         {
             var dict = new Dictionary<Type, InterfaceMappingResult>();
             dict[typeof(IHasIcons)] = new InterfaceMappingResult(true, new ILoquiRegistration[]

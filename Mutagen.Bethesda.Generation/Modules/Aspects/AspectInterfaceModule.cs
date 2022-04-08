@@ -173,10 +173,11 @@ public class AspectInterfaceModule : GenerationModule
         mappingGen.AppendLine($"using Mutagen.Bethesda.Plugins.Aspects;");
         mappingGen.AppendLine($"using Loqui;");
         mappingGen.AppendLine();
-        using (new NamespaceWrapper(mappingGen, $"{proto.DefaultNamespace}.Internals", fileScoped: false))
+        using (new NamespaceWrapper(mappingGen, proto.DefaultNamespace, fileScoped: false))
         {
-            using (var c = new ClassWrapper(mappingGen, "AspectInterfaceMapping"))
+            using (var c = new ClassWrapper(mappingGen, $"{proto.Protocol.Namespace}AspectInterfaceMapping"))
             {
+                c.Public = PermissionLevel.@internal;
                 c.Interfaces.Add(nameof(IAspectInterfaceMapping));
             }
             
@@ -189,7 +190,7 @@ public class AspectInterfaceModule : GenerationModule
                     $"public {nameof(GameCategory)} GameCategory => {nameof(GameCategory)}.{proto.Protocol.Namespace};");
                 mappingGen.AppendLine();
 
-                mappingGen.AppendLine("public AspectInterfaceMapping()");
+                mappingGen.AppendLine($"public {proto.Protocol.Namespace}AspectInterfaceMapping()");
                 using (new BraceWrapper(mappingGen))
                 {
                     mappingGen.AppendLine($"var dict = new Dictionary<Type, {nameof(InterfaceMappingResult)}>();");

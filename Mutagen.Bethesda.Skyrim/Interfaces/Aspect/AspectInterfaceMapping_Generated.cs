@@ -9,15 +9,15 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Loqui;
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public class AspectInterfaceMapping : IAspectInterfaceMapping
+    internal class SkyrimAspectInterfaceMapping : IAspectInterfaceMapping
     {
         public IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes { get; }
 
         public GameCategory GameCategory => GameCategory.Skyrim;
 
-        public AspectInterfaceMapping()
+        public SkyrimAspectInterfaceMapping()
         {
             var dict = new Dictionary<Type, InterfaceMappingResult>();
             dict[typeof(IHasIcons)] = new InterfaceMappingResult(true, new ILoquiRegistration[]

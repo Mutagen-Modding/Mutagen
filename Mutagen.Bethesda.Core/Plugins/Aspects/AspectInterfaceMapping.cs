@@ -44,18 +44,14 @@ internal class AspectInterfaceMapper : IAspectInterfaceMapGetter
     public static AspectInterfaceMapper AutomaticFactory()
     {
         var ret = new AspectInterfaceMapper();
-        foreach (var interf in TypeExt.GetInheritingFromInterface<IAspectInterfaceMapping>(
-                     loadAssemblies: true))
+        foreach (var category in EnumExt<GameCategory>.Values)
         {
-            ret.Register((Activator.CreateInstance(interf) as IAspectInterfaceMapping)!);
+            var obj = Activator.CreateInstance(
+                $"Mutagen.Bethesda.{category}",
+                $"Mutagen.Bethesda.{category}.{category}AspectInterfaceMapping");
+            ret.Register((obj?.Unwrap() as IAspectInterfaceMapping)!);
         }
-
         return ret;
-    }
-
-    public static AspectInterfaceMapper EmptyFactory()
-    {
-        return new AspectInterfaceMapper();
     }
 }
 
@@ -65,14 +61,7 @@ public static class AspectInterfaceMapping
 
     private static Lazy<AspectInterfaceMapper> _mapper = new(() =>
     {
-        if (AutomaticRegistration)
-        {
-            return AspectInterfaceMapper.AutomaticFactory();
-        }
-        else
-        {
-            return AspectInterfaceMapper.EmptyFactory();
-        }
+        return AspectInterfaceMapper.AutomaticFactory();
     });
 
     public static IAspectInterfaceMapGetter Instance => _mapper.Value;
