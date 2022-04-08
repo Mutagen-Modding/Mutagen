@@ -24,7 +24,6 @@ public static partial class WarmupFallout4
         Loqui.Initialization.SpinUp(
             new ProtocolDefinition_Bethesda(),
             new ProtocolDefinition_Fallout4());
-        LinkInterfaceMapping.AutomaticRegistration = false;
         LinkInterfaceMapping.InternalInstance.Register(new Fallout4LinkInterfaceMapping());
         InitCustom();
     }

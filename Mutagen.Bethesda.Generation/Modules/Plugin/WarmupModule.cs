@@ -74,7 +74,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 args.Add($"new ProtocolDefinition_Bethesda()");
                                 args.Add($"new ProtocolDefinition_{proto.Protocol.Namespace}()");
                             }
-                            fg.AppendLine($"LinkInterfaceMapping.AutomaticRegistration = false;");
                             using (var args = new ArgsWrapper(fg,
                                 $"LinkInterfaceMapping.InternalInstance.Register"))
                             {

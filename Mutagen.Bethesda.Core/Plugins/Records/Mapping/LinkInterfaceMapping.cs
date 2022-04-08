@@ -45,35 +45,22 @@ internal class LinkInterfaceMapper : ILinkInterfaceMapGetter
     public static LinkInterfaceMapper AutomaticFactory()
     {
         var ret = new LinkInterfaceMapper();
-        foreach (var interf in TypeExt.GetInheritingFromInterface<ILinkInterfaceMapping>(
-                     loadAssemblies: true))
+        foreach (var category in EnumExt<GameCategory>.Values)
         {
-            ret.Register((Activator.CreateInstance(interf) as ILinkInterfaceMapping)!);
+            var obj = Activator.CreateInstance(
+                $"Mutagen.Bethesda.{category}",
+                $"Mutagen.Bethesda.{category}.{category}LinkInterfaceMapping");
+            ret.Register((obj?.Unwrap() as ILinkInterfaceMapping)!);
         }
-
         return ret;
-    }
-
-    public static LinkInterfaceMapper EmptyFactory()
-    {
-        return new LinkInterfaceMapper();
     }
 }
 
 public static class LinkInterfaceMapping
 {
-    public static bool AutomaticRegistration = true;
-
     private static Lazy<LinkInterfaceMapper> _mapper = new(() =>
     {
-        if (AutomaticRegistration)
-        {
-            return LinkInterfaceMapper.AutomaticFactory();
-        }
-        else
-        {
-            return LinkInterfaceMapper.EmptyFactory();
-        }
+        return LinkInterfaceMapper.AutomaticFactory();
     });
 
     public static ILinkInterfaceMapGetter Instance => _mapper.Value;
