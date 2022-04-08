@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Skyrim
                                         }
                                         entryPointEffect = new PerkEntryPointModifyActorValue()
                                         {
-                                            ActorValue = (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(epfd.Value),
+                                            ActorValue = (ActorValue)BinaryPrimitives.ReadSingleLittleEndian(epfd.Value),
                                             Value = epfd.Value.Slice(4).Float(),
                                             Modification = func switch
                                             {
@@ -449,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
                             case PerkEntryPointModifyActorValue actorVal:
                                 using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
                                 {
-                                    writer.Write((int)actorVal.ActorValue);
+                                    writer.Write((float)actorVal.ActorValue);
                                     writer.Write(actorVal.Value);
                                 }
                                 break;
