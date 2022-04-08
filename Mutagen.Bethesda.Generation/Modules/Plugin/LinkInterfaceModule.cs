@@ -120,10 +120,11 @@ public class LinkInterfaceModule : GenerationModule
         mappingGen.AppendLine($"using Mutagen.Bethesda.Plugins.Records.Mapping;");
         mappingGen.AppendLine($"using Loqui;");
         mappingGen.AppendLine();
-        using (new NamespaceWrapper(mappingGen, $"{proto.DefaultNamespace}.Internals", fileScoped: false))
+        using (new NamespaceWrapper(mappingGen, proto.DefaultNamespace))
         {
-            using (var c = new ClassWrapper(mappingGen, "LinkInterfaceMapping"))
+            using (var c = new ClassWrapper(mappingGen, $"{proto.Protocol.Namespace}LinkInterfaceMapping"))
             {
+                c.Public = PermissionLevel.@internal;
                 c.Interfaces.Add(nameof(ILinkInterfaceMapping));
             }
 
@@ -136,7 +137,7 @@ public class LinkInterfaceModule : GenerationModule
                     $"public {nameof(GameCategory)} GameCategory => {nameof(GameCategory)}.{proto.Protocol.Namespace};");
                 mappingGen.AppendLine();
 
-                mappingGen.AppendLine("public LinkInterfaceMapping()");
+                mappingGen.AppendLine($"public {proto.Protocol.Namespace}LinkInterfaceMapping()");
                 using (new BraceWrapper(mappingGen))
                 {
                     mappingGen.AppendLine($"var dict = new Dictionary<Type, {nameof(InterfaceMappingResult)}>();");

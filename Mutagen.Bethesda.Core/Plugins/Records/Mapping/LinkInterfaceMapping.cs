@@ -13,12 +13,13 @@ public interface ILinkInterfaceMapGetter
 
 internal class LinkInterfaceMapper : ILinkInterfaceMapGetter
 {
-    public Dictionary<GameCategory, IReadOnlyDictionary<Type, InterfaceMappingResult>> Mappings = new();
-    public Dictionary<string, Type> NameToInterfaceTypeMapping = new();
+    private readonly HashSet<Type> _registeredMappings = new();
+    private readonly Dictionary<GameCategory, IReadOnlyDictionary<Type, InterfaceMappingResult>> _mappings = new();
+    private readonly Dictionary<string, Type> _nameToInterfaceTypeMapping = new();
         
     public IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes(GameCategory mode)
     {
-        if (Mappings.TryGetValue(mode, out var value))
+        if (_mappings.TryGetValue(mode, out var value))
         {
             return value;
         }
@@ -28,15 +29,16 @@ internal class LinkInterfaceMapper : ILinkInterfaceMapGetter
 
     public bool TryGetByFullName(string name, [MaybeNullWhen(false)] out Type type)
     {
-        return NameToInterfaceTypeMapping.TryGetValue(name, out type);
+        return _nameToInterfaceTypeMapping.TryGetValue(name, out type);
     }
 
     public void Register(ILinkInterfaceMapping mapping)
     {
-        Mappings[mapping.GameCategory] = mapping.InterfaceToObjectTypes;
+        if (!_registeredMappings.Add(mapping.GetType())) return;
+        _mappings[mapping.GameCategory] = mapping.InterfaceToObjectTypes;
         foreach (var interf in mapping.InterfaceToObjectTypes.Keys)
         {
-            NameToInterfaceTypeMapping[interf.FullName!] = interf;
+            _nameToInterfaceTypeMapping[interf.FullName!] = interf;
         }
     }
 

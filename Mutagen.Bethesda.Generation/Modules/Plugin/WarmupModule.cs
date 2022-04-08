@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             fg.AppendLine("using Mutagen.Bethesda.Plugins.Records.Mapping;");
             fg.AppendLine();
 
-            using (new NamespaceWrapper(fg, proto.DefaultNamespace, fileScoped: false))
+            using (new NamespaceWrapper(fg, proto.DefaultNamespace))
             {
                 using (var comment = new CommentWrapper(fg))
                 {
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             using (var args = new ArgsWrapper(fg,
                                 $"LinkInterfaceMapping.InternalInstance.Register"))
                             {
-                                args.Add($"new {proto.DefaultNamespace}.Internals.LinkInterfaceMapping()");
+                                args.Add($"new {proto.Protocol.Namespace}LinkInterfaceMapping()");
                             }
                             fg.AppendLine("InitCustom();");
                         }

@@ -6,28 +6,27 @@
 using Loqui;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Oblivion;
+
+/// <summary>
+/// A static class to house initialization warmup logic
+/// </summary>
+public static partial class WarmupOblivion
 {
     /// <summary>
-    /// A static class to house initialization warmup logic
+    /// Will initialize internals in a more efficient way that avoids reflection.
+    /// Not required to call, but can be used to warm up ahead of time.
+    /// <br/><br/>NOTE: Calling this warmup which is for a single game, will require you warm up
+    /// other games in the same fashion.  Use WarmupAll if you want all games to be warmed.
     /// </summary>
-    public static partial class WarmupOblivion
+    public static void Init()
     {
-        /// <summary>
-        /// Will initialize internals in a more efficient way that avoids reflection.
-        /// Not required to call, but can be used to warm up ahead of time.
-        /// <br/><br/>NOTE: Calling this warmup which is for a single game, will require you warm up
-        /// other games in the same fashion.  Use WarmupAll if you want all games to be warmed.
-        /// </summary>
-        public static void Init()
-        {
-            Loqui.Initialization.SpinUp(
-                new ProtocolDefinition_Bethesda(),
-                new ProtocolDefinition_Oblivion());
-            LinkInterfaceMapping.AutomaticRegistration = false;
-            LinkInterfaceMapping.InternalInstance.Register(new Mutagen.Bethesda.Oblivion.Internals.LinkInterfaceMapping());
-            InitCustom();
-        }
-        static partial void InitCustom();
+        Loqui.Initialization.SpinUp(
+            new ProtocolDefinition_Bethesda(),
+            new ProtocolDefinition_Oblivion());
+        LinkInterfaceMapping.AutomaticRegistration = false;
+        LinkInterfaceMapping.InternalInstance.Register(new OblivionLinkInterfaceMapping());
+        InitCustom();
     }
+    static partial void InitCustom();
 }
