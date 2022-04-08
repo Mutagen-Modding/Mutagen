@@ -275,6 +275,30 @@ public abstract class AMajorRecordEnumerationTests
         Assert.Empty(RunTest<ITranslatedNamedRequired, ITranslatedNamedRequired>(conv));
         Assert.Empty(RunTest<ITranslatedNamedRequired, ITranslatedNamedRequiredGetter>(conv));
     }
+
+    [Fact]
+    public void EnumerateAbstractBaseClass()
+    {
+        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
+        var rec = mod.StoryManagerEventNodes.AddNew();
+        var conv = ConvertMod(mod);
+        Assert.Equal(Getter ? 0 : 1, RunTest<IStoryManagerEventNode, IStoryManagerEventNode>(conv).Count());
+        Assert.Single(RunTest<IStoryManagerEventNode, IStoryManagerEventNodeGetter>(conv));
+        Assert.Equal(Getter ? 0 : 1, RunTest<IAStoryManagerNode, IAStoryManagerNode>(conv).Count());
+        Assert.Single(RunTest<IAStoryManagerNode, IAStoryManagerNodeGetter>(conv));
+    }
+
+    [Fact]
+    public void EnumerateInheritingClasses()
+    {
+        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
+        var rec = mod.Globals.AddNewInt();
+        var conv = ConvertMod(mod);
+        Assert.Equal(Getter ? 0 : 1, RunTest<IGlobal, IGlobal>(conv).Count());
+        Assert.Single(RunTest<IGlobal, IGlobalGetter>(conv));
+        Assert.Equal(Getter ? 0 : 1, RunTest<IGlobalInt, IGlobalInt>(conv).Count());
+        Assert.Single(RunTest<IGlobalInt, IGlobalIntGetter>(conv));
+    }
 }
 
 public abstract class AMajorRecordEnumerationDirectTests : AMajorRecordEnumerationTests
