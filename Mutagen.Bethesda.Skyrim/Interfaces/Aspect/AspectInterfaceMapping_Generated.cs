@@ -11,7 +11,7 @@ using Loqui;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    internal class SkyrimAspectInterfaceMapping : IAspectInterfaceMapping
+    internal class SkyrimAspectInterfaceMapping : IInterfaceMapping
     {
         public IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes { get; }
 

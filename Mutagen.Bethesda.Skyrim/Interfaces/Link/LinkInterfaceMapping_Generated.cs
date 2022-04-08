@@ -10,7 +10,7 @@ using Loqui;
 
 namespace Mutagen.Bethesda.Skyrim;
 
-internal class SkyrimLinkInterfaceMapping : ILinkInterfaceMapping
+internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
 {
     public IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes { get; }
 

@@ -36,11 +36,14 @@ public static class MetaInterfaceMapping
     private static Lazy<MetaInterfaceMapper> _mapper = new(() =>
     {
         return new MetaInterfaceMapper(
-            AspectInterfaceMapping.InternalInstance,
-            LinkInterfaceMapping.InternalInstance);
+            AspectInterfaceMapping.Instance,
+            LinkInterfaceMapping.Instance);
     });
 
     public static IMetaInterfaceMapGetter Instance => _mapper.Value;
 
-    public static MetaInterfaceMapper InternalInstance => _mapper.Value;
+    internal static IMetaInterfaceMapGetter Warmup()
+    {
+        return _mapper.Value;
+    }
 }

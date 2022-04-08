@@ -24,7 +24,7 @@ public static partial class WarmupSkyrim
         Loqui.Initialization.SpinUp(
             new ProtocolDefinition_Bethesda(),
             new ProtocolDefinition_Skyrim());
-        LinkInterfaceMapping.InternalInstance.Register(new SkyrimLinkInterfaceMapping());
+        MetaInterfaceMapping.Warmup();
         InitCustom();
     }
     static partial void InitCustom();

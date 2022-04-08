@@ -11,7 +11,7 @@ using Loqui;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    internal class OblivionAspectInterfaceMapping : IAspectInterfaceMapping
+    internal class OblivionAspectInterfaceMapping : IInterfaceMapping
     {
         public IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes { get; }
 

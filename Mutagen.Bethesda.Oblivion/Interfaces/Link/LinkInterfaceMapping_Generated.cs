@@ -10,7 +10,7 @@ using Loqui;
 
 namespace Mutagen.Bethesda.Oblivion;
 
-internal class OblivionLinkInterfaceMapping : ILinkInterfaceMapping
+internal class OblivionLinkInterfaceMapping : IInterfaceMapping
 {
     public IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes { get; }
 

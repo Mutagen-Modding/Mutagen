@@ -10,7 +10,7 @@ using Loqui;
 
 namespace Mutagen.Bethesda.Fallout4;
 
-internal class Fallout4LinkInterfaceMapping : ILinkInterfaceMapping
+internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
 {
     public IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes { get; }
 

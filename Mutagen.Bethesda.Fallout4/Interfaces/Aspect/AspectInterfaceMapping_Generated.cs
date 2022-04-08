@@ -11,7 +11,7 @@ using Loqui;
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal class Fallout4AspectInterfaceMapping : IAspectInterfaceMapping
+    internal class Fallout4AspectInterfaceMapping : IInterfaceMapping
     {
         public IReadOnlyDictionary<Type, InterfaceMappingResult> InterfaceToObjectTypes { get; }
 

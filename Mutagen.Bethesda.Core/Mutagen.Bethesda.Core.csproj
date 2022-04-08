@@ -152,11 +152,6 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
     <Compile Include="Plugins\Analysis\RecordLocatorResults.cs" />
-    <Compile Include="Plugins\Aspects\AspectInterfaceMapping.cs">
-      <CodeLanguage>cs</CodeLanguage>
-      <DefaultPackFolder>content</DefaultPackFolder>
-      <BuildAction>Compile</BuildAction>
-    </Compile>
     <Compile Include="Plugins\Aspects\CustomAspectInterface.cs" />
     <Compile Include="Plugins\Binary\Overlay\BinaryOverlayArray2d.cs" />
     <Compile Include="Plugins\Binary\Parameters\AMastersListOrderingOption.cs" />
@@ -403,16 +398,12 @@
     </Compile>
     <Compile Include="Plugins\Records\Internals\GroupMergeGetter.cs" />
     <Compile Include="Plugins\Records\Internals\IModRegistration.cs" />
-    <Compile Include="Plugins\Records\Mapping\IAspectInterfaceMapping.cs">
+    <Compile Include="Plugins\Records\Mapping\AspectInterfaceMapping.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
-    <Compile Include="Plugins\Records\Mapping\ILinkInterfaceMapping.cs">
-      <CodeLanguage>cs</CodeLanguage>
-      <DefaultPackFolder>content</DefaultPackFolder>
-      <BuildAction>Compile</BuildAction>
-    </Compile>
+    <Compile Include="Plugins\Records\Mapping\IInterfaceMapping.cs" />
     <Compile Include="Plugins\Records\Mapping\InterfaceEnumerationHelper.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -423,6 +414,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Plugins\Records\Mapping\IInterfaceMapGetter.cs" />
     <Compile Include="Plugins\Records\Mapping\LinkInterfaceMapping.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>

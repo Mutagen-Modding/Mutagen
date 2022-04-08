@@ -178,7 +178,7 @@ public class AspectInterfaceModule : GenerationModule
             using (var c = new ClassWrapper(mappingGen, $"{proto.Protocol.Namespace}AspectInterfaceMapping"))
             {
                 c.Public = PermissionLevel.@internal;
-                c.Interfaces.Add(nameof(IAspectInterfaceMapping));
+                c.Interfaces.Add(nameof(IInterfaceMapping));
             }
             
             using (new BraceWrapper(mappingGen))

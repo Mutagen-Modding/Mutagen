@@ -74,10 +74,9 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 args.Add($"new ProtocolDefinition_Bethesda()");
                                 args.Add($"new ProtocolDefinition_{proto.Protocol.Namespace}()");
                             }
-                            using (var args = new ArgsWrapper(fg,
-                                $"LinkInterfaceMapping.InternalInstance.Register"))
+                            using (new ArgsWrapper(fg,
+                                       $"MetaInterfaceMapping.Warmup"))
                             {
-                                args.Add($"new {proto.Protocol.Namespace}LinkInterfaceMapping()");
                             }
                             fg.AppendLine("InitCustom();");
                         }

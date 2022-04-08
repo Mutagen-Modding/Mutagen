@@ -125,7 +125,7 @@ public class LinkInterfaceModule : GenerationModule
             using (var c = new ClassWrapper(mappingGen, $"{proto.Protocol.Namespace}LinkInterfaceMapping"))
             {
                 c.Public = PermissionLevel.@internal;
-                c.Interfaces.Add(nameof(ILinkInterfaceMapping));
+                c.Interfaces.Add(nameof(IInterfaceMapping));
             }
 
             using (new BraceWrapper(mappingGen))

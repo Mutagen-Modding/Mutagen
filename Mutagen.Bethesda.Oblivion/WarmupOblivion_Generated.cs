@@ -24,7 +24,7 @@ public static partial class WarmupOblivion
         Loqui.Initialization.SpinUp(
             new ProtocolDefinition_Bethesda(),
             new ProtocolDefinition_Oblivion());
-        LinkInterfaceMapping.InternalInstance.Register(new OblivionLinkInterfaceMapping());
+        MetaInterfaceMapping.Warmup();
         InitCustom();
     }
     static partial void InitCustom();
