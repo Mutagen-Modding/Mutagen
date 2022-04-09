@@ -448,7 +448,6 @@
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\RecordTypes.cs" />
-    <Compile Include="WarmupFallout4_Generated.cs" />
     <Compile Include="Records\Fallout4ModHeader_Generated.cs">
       <DependentUpon>Fallout4ModHeader.xml</DependentUpon>
     </Compile>

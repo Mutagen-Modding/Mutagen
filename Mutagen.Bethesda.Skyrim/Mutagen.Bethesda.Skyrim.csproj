@@ -1912,8 +1912,6 @@
     <Compile Include="Records\Major Records\WorldspaceObjectBounds_Generated.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
-    <Compile Include="WarmupSkyrim.cs" />
-    <Compile Include="WarmupSkyrim_Generated.cs" />
     <Compile Include="Records\Major Records\AssociationType_Generated.cs">
       <DependentUpon>AssociationType.xml</DependentUpon>
     </Compile>

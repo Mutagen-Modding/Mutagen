@@ -439,6 +439,11 @@
     <Compile Include="Plugins\Records\RecordTypes.cs" />
     <Compile Include="Plugins\RecordTypeMapping\AssociatedRecordTypesAttribute.cs" />
     <Compile Include="Plugins\RecordTypeMapping\RecordTypeLookup.cs" />
+    <Compile Include="Plugins\Warmup.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Strings\DI\MutagenEncodingProvider.cs" />
     <Compile Include="Strings\IOptionalStringsKeyGetter.cs" />
     <Compile Include="Strings\Language.cs" />

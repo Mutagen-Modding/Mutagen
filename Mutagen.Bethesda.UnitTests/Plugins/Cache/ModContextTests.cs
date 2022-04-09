@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using System.Linq;
+using Mutagen.Bethesda.Plugins;
 using Xunit;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Testing;
@@ -190,7 +191,7 @@ public class ModContextTests
     [Fact]
     public void CellInWorldspace()
     {
-        WarmupSkyrim.Init();
+        Warmup.Init();
         var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
         var worldspace = mod.Worldspaces.AddNew();
         var block = new WorldspaceBlock()
@@ -248,7 +249,7 @@ public class ModContextTests
     [Fact]
     public void PlacedInWorldspace()
     {
-        WarmupSkyrim.Init();
+        Warmup.Init();
         var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
         var worldspace = mod.Worldspaces.AddNew();
         var block = new WorldspaceBlock()
@@ -309,7 +310,7 @@ public class ModContextTests
     [Fact]
     public void IPlacedInWorldspace()
     {
-        WarmupSkyrim.Init();
+        Warmup.Init();
         var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
         var worldspace = mod.Worldspaces.AddNew();
         var block = new WorldspaceBlock()
@@ -372,7 +373,7 @@ public class ModContextTests
     [Fact]
     public void ComplexOverrides()
     {
-        WarmupSkyrim.Init();
+        Warmup.Init();
 
         // Construct base mod
         const string Mod1Name = "Mod1";
@@ -451,7 +452,7 @@ public class ModContextTests
     [Fact]
     public void SetModKeys()
     {
-        WarmupSkyrim.Init();
+        Warmup.Init();
         var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
         var worldspace = mod.Worldspaces.AddNew();
         var block = new WorldspaceBlock()
@@ -485,7 +486,7 @@ public class ModContextTests
     [Fact]
     public void ParentRefs()
     {
-        WarmupSkyrim.Init();
+        Warmup.Init();
         var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
         var worldspace = mod.Worldspaces.AddNew();
         var block = new WorldspaceBlock()

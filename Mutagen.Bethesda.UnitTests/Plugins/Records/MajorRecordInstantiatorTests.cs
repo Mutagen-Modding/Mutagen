@@ -10,7 +10,7 @@ public class MajorRecordInstantiatorTests
     [Fact]
     public void DirectGeneric()
     {
-        WarmupOblivion.Init();
+        Warmup.Init();
         var form = new FormKey(Mutagen.Bethesda.Oblivion.Constants.Oblivion, 0x123456);
         var ret = MajorRecordInstantiator<Oblivion.Ammunition>.Activator(form, GameRelease.Oblivion);
         Assert.IsType<Oblivion.Ammunition>(ret);
@@ -20,7 +20,7 @@ public class MajorRecordInstantiatorTests
     [Fact]
     public void SetterGeneric()
     {
-        WarmupOblivion.Init();
+        Warmup.Init();
         var form = new FormKey(Mutagen.Bethesda.Oblivion.Constants.Oblivion, 0x123456);
         var ret = MajorRecordInstantiator<Oblivion.IAmmunition>.Activator(form, GameRelease.Oblivion);
         Assert.IsType<Oblivion.Ammunition>(ret);
@@ -30,7 +30,7 @@ public class MajorRecordInstantiatorTests
     [Fact]
     public void GetterGeneric()
     {
-        WarmupOblivion.Init();
+        Warmup.Init();
         var form = new FormKey(Mutagen.Bethesda.Oblivion.Constants.Oblivion, 0x123456);
         var ret = MajorRecordInstantiator<Oblivion.IAmmunitionGetter>.Activator(form, GameRelease.Oblivion);
         Assert.IsType<Oblivion.Ammunition>(ret);
@@ -40,7 +40,7 @@ public class MajorRecordInstantiatorTests
     [Fact]
     public void Direct()
     {
-        WarmupOblivion.Init();
+        Warmup.Init();
         var form = new FormKey(Mutagen.Bethesda.Oblivion.Constants.Oblivion, 0x123456);
         var ret = MajorRecordInstantiator.Activator(form, GameRelease.Oblivion, typeof(Oblivion.Ammunition));
         Assert.IsType<Oblivion.Ammunition>(ret);
@@ -50,7 +50,7 @@ public class MajorRecordInstantiatorTests
     [Fact]
     public void Setter()
     {
-        WarmupOblivion.Init();
+        Warmup.Init();
         var form = new FormKey(Mutagen.Bethesda.Oblivion.Constants.Oblivion, 0x123456);
         var ret = MajorRecordInstantiator.Activator(form, GameRelease.Oblivion, typeof(Oblivion.IAmmunition));
         Assert.IsType<Oblivion.Ammunition>(ret);
@@ -60,7 +60,7 @@ public class MajorRecordInstantiatorTests
     [Fact]
     public void Getter()
     {
-        WarmupOblivion.Init();
+        Warmup.Init();
         var form = new FormKey(Mutagen.Bethesda.Oblivion.Constants.Oblivion, 0x123456);
         var ret = MajorRecordInstantiator.Activator(form, GameRelease.Oblivion, typeof(Oblivion.IAmmunitionGetter));
         Assert.IsType<Oblivion.Ammunition>(ret);

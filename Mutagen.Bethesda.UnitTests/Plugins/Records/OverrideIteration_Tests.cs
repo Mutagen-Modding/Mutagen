@@ -68,7 +68,7 @@ public class OverrideTests
     [Fact]
     public void Worldspace_GetOrAddAsOverride_Clean()
     {
-        WarmupSkyrim.Init();
+        Warmup.Init();
         var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
         var worldspace = mod.Worldspaces.AddNew();
         var block = worldspace.SubCells.AddReturn(new WorldspaceBlock());
@@ -83,7 +83,7 @@ public class OverrideTests
     [Fact]
     public void Worldspace_WinningContextOverride_IPlaced()
     {
-        WarmupSkyrim.Init();
+        Warmup.Init();
         var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
         var worldspace = mod.Worldspaces.AddNew();
         var block = worldspace.SubCells.AddReturn(new WorldspaceBlock());

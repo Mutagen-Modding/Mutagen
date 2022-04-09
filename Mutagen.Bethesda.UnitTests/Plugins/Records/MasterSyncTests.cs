@@ -16,7 +16,7 @@ public class MasterSyncTests
     [Fact]
     public void MasterFlagSync_Correct()
     {
-        WarmupOblivion.Init();
+        Warmup.Init();
         using var folder = TestPathing.GetTempFolder(nameof(MasterSyncTests));
         var masterMod = new OblivionMod(new ModKey("Test", ModType.Master));
         var masterPath = Path.Combine(folder.Dir.Path, "Test.esm");
@@ -43,7 +43,7 @@ public class MasterSyncTests
     [Fact]
     public void MasterFlagSync_MasterThrow()
     {
-        WarmupOblivion.Init();
+        Warmup.Init();
         using var folder = TestPathing.GetTempFolder(nameof(MasterSyncTests));
         var masterMod = new OblivionMod(new ModKey("Test", ModType.Master));
         var masterPath = Path.Combine(folder.Dir.Path, "Test.esp");
@@ -61,7 +61,7 @@ public class MasterSyncTests
     [Fact]
     public void MasterFlagSync_ChildThrow()
     {
-        WarmupOblivion.Init();
+        Warmup.Init();
         using var folder = TestPathing.GetTempFolder(nameof(MasterSyncTests));
         var masterMod = new OblivionMod(new ModKey("Test", ModType.Plugin));
         var masterPath = Path.Combine(folder.Dir.Path, "Test.esm");
@@ -81,7 +81,7 @@ public class MasterSyncTests
     [Fact]
     public void MasterListSync_AddMissingToEmpty()
     {
-        WarmupOblivion.Init();
+        Warmup.Init();
         using var folder = TestPathing.GetTempFolder(nameof(MasterSyncTests));
         var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
         var knights = ModKey.FromNameAndExtension("Knights.esm");
@@ -107,7 +107,7 @@ public class MasterSyncTests
     [Fact]
     public void MasterListSync_RemoveUnnecessary()
     {
-        WarmupOblivion.Init();
+        Warmup.Init();
         using var folder = TestPathing.GetTempFolder(nameof(MasterSyncTests));
         var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
         var knights = ModKey.FromNameAndExtension("Knights.esm");
@@ -137,7 +137,7 @@ public class MasterSyncTests
     [Fact]
     public void MasterListSync_SkipNulls()
     {
-        WarmupOblivion.Init();
+        Warmup.Init();
         using var folder = TestPathing.GetTempFolder(nameof(MasterSyncTests));
         var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
         var mod = new OblivionMod(obliv);
@@ -159,7 +159,7 @@ public class MasterSyncTests
     [Fact]
     public void MasterOrderSync_Typical()
     {
-        WarmupOblivion.Init();
+        Warmup.Init();
         using var folder = TestPathing.GetTempFolder(nameof(MasterSyncTests));
         var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
         var knights = ModKey.FromNameAndExtension("Knights.esm");
@@ -189,7 +189,7 @@ public class MasterSyncTests
     [Fact]
     public void MasterOrderSync_EsmFirst()
     {
-        WarmupOblivion.Init();
+        Warmup.Init();
         using var folder = TestPathing.GetTempFolder(nameof(MasterSyncTests));
         var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
         var first = ModKey.FromNameAndExtension("First.esp");
@@ -220,7 +220,7 @@ public class MasterSyncTests
     [Fact]
     public void MasterOrderSync_ByLoadOrder()
     {
-        WarmupOblivion.Init();
+        Warmup.Init();
         using var folder = TestPathing.GetTempFolder(nameof(MasterSyncTests));
         var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
         var esm = ModKey.FromNameAndExtension("First.esm");

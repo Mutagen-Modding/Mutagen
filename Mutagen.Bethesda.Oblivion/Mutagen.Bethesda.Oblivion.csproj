@@ -860,8 +860,6 @@
     <Compile Include="Records\OblivionGroupWrapper.cs">
       <DependentUpon>OblivionGroup.xml</DependentUpon>
     </Compile>
-    <Compile Include="WarmupOblivion.cs" />
-    <Compile Include="WarmupOblivion_Generated.cs" />
     <Compile Include="Records\OblivionModHeader_Generated.cs">
       <DependentUpon>OblivionModHeader.xml</DependentUpon>
     </Compile>
