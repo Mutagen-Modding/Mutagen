@@ -21,10 +21,16 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         static ModInstantiator()
         {
-            foreach (var modRegistration in LoquiRegistration.StaticRegister.Registrations
-                .WhereCastable<ILoquiRegistration, IModRegistration>())
+            foreach (var category in EnumExt<GameCategory>.Values)
             {
+                var t = Type.GetType(
+                    $"Mutagen.Bethesda.{category}.{category}Mod_Registration, Mutagen.Bethesda.{category}");
+                if (t == null) continue;
+                var obj = Activator.CreateInstance(t);
+                var modRegistration = obj as IModRegistration;
+                if (modRegistration == null) continue;
                 _dict[modRegistration.GameCategory] = ModInstantiatorReflection.GetOverlay<IModGetter>(modRegistration);
+
             }
         }
 
