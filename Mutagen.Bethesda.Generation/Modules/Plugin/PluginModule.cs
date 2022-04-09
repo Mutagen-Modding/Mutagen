@@ -33,6 +33,7 @@ public class PluginModule : GenerationModule
         SubModules.Add(new MajorRecordFlagModule());
         SubModules.Add(new DataTypeModule());
         SubModules.Add(new LinkInterfaceModule());
+        SubModules.Add(new AbstractInterfaceModule());
         SubModules.Add(new WarmupModule());
         SubModules.Add(new MajorRecordRemovalModule());
         SubModules.Add(new MajorRecordContextEnumerationModule());

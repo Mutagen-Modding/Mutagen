@@ -897,6 +897,8 @@
     <Compile Include="Interfaces\Aspect\AspectInterfaceMapping_Generated.cs" />
     <Compile Include="Records\RecordTypes_Generated.cs" />
     <Compile Include="Records\RecordTypeInts_Generated.cs" />
+    <Compile Include="Interfaces\InheritingInterfaceMapping_Generated.cs" />
+    <Compile Include="Interfaces\IsolatedAbstractInterfaceMapping_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

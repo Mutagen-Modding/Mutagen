@@ -398,12 +398,22 @@
     </Compile>
     <Compile Include="Plugins\Records\Internals\GroupMergeGetter.cs" />
     <Compile Include="Plugins\Records\Internals\IModRegistration.cs" />
+    <Compile Include="Plugins\Records\Mapping\AbstractInterfaceMapping.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Plugins\Records\Mapping\AspectInterfaceMapping.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
     <Compile Include="Plugins\Records\Mapping\IInterfaceMapping.cs" />
+    <Compile Include="Plugins\Records\Mapping\InheritingInterfaceMapping.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Plugins\Records\Mapping\InterfaceEnumerationHelper.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>

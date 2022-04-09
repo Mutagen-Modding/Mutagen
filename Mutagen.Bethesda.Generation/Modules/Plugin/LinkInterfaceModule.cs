@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
 using Noggog;
@@ -12,7 +8,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
 public class LinkInterfaceModule : GenerationModule
 {
-    public static Dictionary<ProtocolKey, Dictionary<string, List<ObjectGeneration>>> ObjectMappings = new Dictionary<ProtocolKey, Dictionary<string, List<ObjectGeneration>>>();
+    public static Dictionary<ProtocolKey, Dictionary<string, List<ObjectGeneration>>> ObjectMappings = new();
 
     public override async Task PreLoad(ObjectGeneration obj)
     {

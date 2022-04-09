@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Loqui;
-using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Cache.Internals;
 using Noggog;
@@ -66,8 +65,20 @@ internal static class InterfaceEnumerationHelper
         out IEnumerable<IMajorRecordGetter> interfaces)
         where T : IMajorRecordGetterEnumerable, ILoquiObjectGetter
     {
-        return TryEnumerateLinkRecordsFor(category, obj, linkInterface, out interfaces)
-            || TryEnumerateAspectRecordsFor(category, obj, linkInterface, out interfaces);
+        if (!MetaInterfaceMapping.Instance.TryGetRegistrationsForInterface(category, linkInterface, out var inheritingTypes))
+        {
+            interfaces = Enumerable.Empty<IMajorRecordGetter>();
+            return false;
+        }
+
+        if (inheritingTypes.Setter && !obj.Registration.SetterType.IsAssignableFrom(obj.GetType()))
+        {
+            interfaces = Enumerable.Empty<IMajorRecordGetter>();
+            return true;
+        }
+        
+        interfaces = inheritingTypes.Registrations.SelectMany(t => obj.EnumerateMajorRecords(inheritingTypes.Setter ? t.SetterType : t.GetterType, throwIfUnknown: false));
+        return true;
     }
     
     public static bool TryEnumerateLinkContextsFor<T, TMod, TModGetter>(
@@ -145,15 +156,10 @@ internal static class InterfaceEnumerationHelper
         where TModGetter : IModGetter
         where TMod : TModGetter, IMod
     {
-        var mapping = LinkInterfaceMapping.Instance.InterfaceToObjectTypes(category);
-        if (!mapping.TryGetValue(linkInterface, out var inheritingTypes))
+        if (!MetaInterfaceMapping.Instance.TryGetRegistrationsForInterface(category, linkInterface, out var inheritingTypes))
         {
-            mapping = AspectInterfaceMapping.Instance.InterfaceToObjectTypes(category);
-            if (!mapping.TryGetValue(linkInterface, out inheritingTypes))
-            {
-                interfaces = Enumerable.Empty<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>();
-                return false;
-            }
+            interfaces = Enumerable.Empty<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>();
+            return false;
         }
     
         if (inheritingTypes.Setter && !obj.Registration.SetterType.IsAssignableFrom(obj.GetType()))
