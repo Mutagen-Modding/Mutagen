@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Cache.Internals;
-using Mutagen.Bethesda.Skyrim.Internals;
 
-namespace Mutagen.Bethesda.Skyrim.Plugins.Cache.Internals
+namespace Mutagen.Bethesda.Skyrim;
+
+internal class SkyrimOverrideMaskRegistration : IOverrideMaskRegistration
 {
-    public class OverrideMaskRegistration : IOverrideMaskRegistration
+    public IEnumerable<(ILoquiRegistration, object)> Masks
     {
-        public IEnumerable<(ILoquiRegistration, object)> Masks
+        get
         {
-            get
-            {
-                yield return (Cell_Registration.Instance, ModContextExt.CellCopyMask);
-                yield return (Worldspace_Registration.Instance, ModContextExt.WorldspaceCopyMask);
-                yield return (DialogTopic_Registration.Instance, ModContextExt.DialogTopicCopyMask);
-            }
+            yield return (Cell_Registration.Instance, ModContextExt.CellCopyMask);
+            yield return (Worldspace_Registration.Instance, ModContextExt.WorldspaceCopyMask);
+            yield return (DialogTopic_Registration.Instance, ModContextExt.DialogTopicCopyMask);
         }
     }
 }

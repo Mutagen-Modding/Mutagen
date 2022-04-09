@@ -14,10 +14,13 @@ internal class LinkInterfaceMapper : InterfaceMapGetter, ILinkInterfaceMapGetter
         var ret = new LinkInterfaceMapper();
         foreach (var category in EnumExt<GameCategory>.Values)
         {
-            var obj = Activator.CreateInstance(
-                $"Mutagen.Bethesda.{category}",
-                $"Mutagen.Bethesda.{category}.{category}{nickname}Mapping");
-            ret.Register((obj?.Unwrap() as IInterfaceMapping)!);
+            var t = Type.GetType(
+                $"Mutagen.Bethesda.{category}.{category}{nickname}Mapping, Mutagen.Bethesda.{category}");
+            if (t == null) continue;
+            var obj = Activator.CreateInstance(t);
+            var regis = obj as IInterfaceMapping;
+            if (regis == null) continue;
+            ret.Register(regis);
         }
         return ret;
     }

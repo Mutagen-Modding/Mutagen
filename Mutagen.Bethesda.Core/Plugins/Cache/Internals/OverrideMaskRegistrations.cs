@@ -17,9 +17,14 @@ internal static class OverrideMaskRegistrations
 
     static OverrideMaskRegistrations()
     {
-        foreach (var type in typeof(IOverrideMaskRegistration).GetInheritingFromInterface(filter: x => x.FullName?.Contains("Mutagen") ?? false))
+        foreach (var category in EnumExt<GameCategory>.Values)
         {
-            var regis = (IOverrideMaskRegistration)Activator.CreateInstance(type)!;
+            var t = Type.GetType(
+                $"Mutagen.Bethesda.{category}.{category}OverrideMaskRegistration, Mutagen.Bethesda.{category}");
+            if (t == null) continue;
+            var obj = Activator.CreateInstance(t);
+            var regis = obj as IOverrideMaskRegistration;
+            if (regis == null) continue;
             foreach (var maskMap in regis.Masks)
             {
                 AddAsOverrideMasks.Add(maskMap.Item1.ClassType, maskMap.Item2);
