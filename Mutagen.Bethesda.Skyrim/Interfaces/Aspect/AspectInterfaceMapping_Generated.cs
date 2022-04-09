@@ -20,6 +20,18 @@ namespace Mutagen.Bethesda.Skyrim
         public SkyrimAspectInterfaceMapping()
         {
             var dict = new Dictionary<Type, InterfaceMappingResult>();
+            dict[typeof(IAmbientColorsCommon)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                AmbientColors_Registration.Instance,
+                CellLighting_Registration.Instance,
+                LightingTemplate_Registration.Instance,
+            });
+            dict[typeof(IAmbientColorsCommonGetter)] = dict[typeof(IAmbientColorsCommon)] with { Setter = false };
+            dict[typeof(IHarvestable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Tree_Registration.Instance,
+            });
+            dict[typeof(IHarvestableGetter)] = dict[typeof(IHarvestable)] with { Setter = false };
             dict[typeof(IHasIcons)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 AlchemicalApparatus_Registration.Instance,
@@ -401,6 +413,12 @@ namespace Mutagen.Bethesda.Skyrim
                 SoulGem_Registration.Instance,
             });
             dict[typeof(IObjectBoundedOptionalGetter)] = dict[typeof(IObjectBoundedOptional)] with { Setter = false };
+            dict[typeof(IPositionRotation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Placement_Registration.Instance,
+                TeleportDestination_Registration.Instance,
+            });
+            dict[typeof(IPositionRotationGetter)] = dict[typeof(IPositionRotation)] with { Setter = false };
             dict[typeof(IScripted)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,

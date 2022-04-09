@@ -299,6 +299,18 @@ public abstract class AMajorRecordEnumerationTests
         Assert.Equal(Getter ? 0 : 1, RunTest<IGlobalInt, IGlobalInt>(conv).Count());
         Assert.Single(RunTest<IGlobalInt, IGlobalIntGetter>(conv));
     }
+
+    [Fact]
+    public void EnumerateLooseInterfaceClasses()
+    {
+        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
+        var rec = mod.Trees.AddNew();
+        var conv = ConvertMod(mod);
+        Assert.Equal(Getter ? 0 : 1, RunTest<ITree, ITree>(conv).Count());
+        Assert.Single(RunTest<ITree, ITreeGetter>(conv));
+        Assert.Equal(Getter ? 0 : 1, RunTest<IHarvestable, IHarvestable>(conv).Count());
+        Assert.Single(RunTest<IHarvestable, IHarvestableGetter>(conv));
+    }
 }
 
 public abstract class AMajorRecordEnumerationDirectTests : AMajorRecordEnumerationTests

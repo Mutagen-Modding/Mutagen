@@ -20,6 +20,11 @@ namespace Mutagen.Bethesda.Fallout4
         public Fallout4AspectInterfaceMapping()
         {
             var dict = new Dictionary<Type, InterfaceMappingResult>();
+            dict[typeof(IHarvestable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Tree_Registration.Instance,
+            });
+            dict[typeof(IHarvestableGetter)] = dict[typeof(IHarvestable)] with { Setter = false };
             dict[typeof(IHasIcons)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 ArmorModel_Registration.Instance,
@@ -352,6 +357,19 @@ namespace Mutagen.Bethesda.Fallout4
                 Holotape_Registration.Instance,
             });
             dict[typeof(IObjectBoundedOptionalGetter)] = dict[typeof(IObjectBoundedOptional)] with { Setter = false };
+            dict[typeof(IObjectBounded)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Component_Registration.Instance,
+                SoundMarker_Registration.Instance,
+                TextureSet_Registration.Instance,
+            });
+            dict[typeof(IObjectBoundedGetter)] = dict[typeof(IObjectBounded)] with { Setter = false };
+            dict[typeof(IPositionRotation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Placement_Registration.Instance,
+                Transform_Registration.Instance,
+            });
+            dict[typeof(IPositionRotationGetter)] = dict[typeof(IPositionRotation)] with { Setter = false };
             dict[typeof(IScripted)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,

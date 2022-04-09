@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Loqui.Generation;
 using Noggog;
 using Loqui;
@@ -194,32 +195,65 @@ public class AspectInterfaceModule : GenerationModule
                 using (new BraceWrapper(mappingGen))
                 {
                     mappingGen.AppendLine($"var dict = new Dictionary<Type, {nameof(InterfaceMappingResult)}>();");
-                    foreach (var aspectDef in mappings.OrderBy(x => x.Key.Nickname))
+                    List<(string Name, Action ToDo)> toDo = new();
+                    foreach (var aspectDef in mappings)
                     {
-                        foreach (var subDef in aspectDef.Value.OrderBy(x => x.Key.Name))
+                        toDo.Add((aspectDef.Key.Nickname, () =>
                         {
-                            (string Name, bool Setter)? first = null;
-                            foreach (var reg in subDef.Key.Registrations.OrderBy(x => x.Name))
+                            foreach (var subDef in aspectDef.Value.OrderBy(x => x.Key.Name))
                             {
-                                if (first == null)
+                                (string Name, bool Setter)? first = null;
+                                foreach (var reg in subDef.Key.Registrations.OrderBy(x => x.Name))
                                 {
-                                    first = reg;
-                                    mappingGen.AppendLine($"dict[typeof({first.Value.Name})] = new {nameof(InterfaceMappingResult)}({first.Value.Setter.ToString().ToLower()}, new {nameof(ILoquiRegistration)}[]");
-                                    using (new BraceWrapper(mappingGen) { AppendSemicolon = true, AppendParenthesis = true })
+                                    if (first == null)
                                     {
-                                        foreach (var obj in subDef.Value.OrderBy(x => x.Name))
+                                        first = reg;
+                                        mappingGen.AppendLine($"dict[typeof({first.Value.Name})] = new {nameof(InterfaceMappingResult)}({first.Value.Setter.ToString().ToLower()}, new {nameof(ILoquiRegistration)}[]");
+                                        using (new BraceWrapper(mappingGen) { AppendSemicolon = true, AppendParenthesis = true })
                                         {
-                                            mappingGen.AppendLine($"{obj.RegistrationName}.Instance,");
+                                            foreach (var obj in subDef.Value.OrderBy(x => x.Name))
+                                            {
+                                                mappingGen.AppendLine($"{obj.RegistrationName}.Instance,");
+                                            }
                                         }
                                     }
-                                }
-                                else
-                                {
-                                    mappingGen.AppendLine($"dict[typeof({reg.Name})] = dict[typeof({first.Value.Name})] with {{ Setter = {reg.Setter.ToString().ToLower()} }};");
+                                    else
+                                    {
+                                        mappingGen.AppendLine($"dict[typeof({reg.Name})] = dict[typeof({first.Value.Name})] with {{ Setter = {reg.Setter.ToString().ToLower()} }};");
+                                    }
                                 }
                             }
-                        }
+                        }));
+                    }
 
+                    Dictionary<string, List<ObjectGeneration>> looseInterfaces = new();
+                    foreach (var obj in proto.ObjectGenerationsByID.Values)
+                    {
+                        foreach (var interf in obj.Node.Elements(XName.Get("Interface", LoquiGenerator.Namespace)))
+                        {
+                            looseInterfaces.GetOrAdd(interf.Value).Add(obj);
+                        }
+                    }
+
+                    foreach (var loose in looseInterfaces)
+                    {
+                        toDo.Add((loose.Key, () =>
+                        {
+                            mappingGen.AppendLine($"dict[typeof({loose.Key})] = new {nameof(InterfaceMappingResult)}(true, new {nameof(ILoquiRegistration)}[]");
+                            using (new BraceWrapper(mappingGen) { AppendSemicolon = true, AppendParenthesis = true })
+                            {
+                                foreach (var obj in loose.Value)
+                                {
+                                    mappingGen.AppendLine($"{obj.RegistrationName}.Instance,");
+                                }
+                            }
+                            mappingGen.AppendLine($"dict[typeof({loose.Key}Getter)] = dict[typeof({loose.Key})] with {{ Setter = false }};");
+                        }));
+                    }
+
+                    foreach (var item in toDo.OrderBy(x => x.Name))
+                    {
+                        item.ToDo();
                     }
 
                     mappingGen.AppendLine($"InterfaceToObjectTypes = dict;");
