@@ -14,10 +14,13 @@ internal class InheritingInterfaceMapper : InterfaceMapGetter, IInheritingInterf
         var ret = new InheritingInterfaceMapper();
         foreach (var category in EnumExt<GameCategory>.Values)
         {
-            var obj = Activator.CreateInstance(
-                $"Mutagen.Bethesda.{category}",
-                $"Mutagen.Bethesda.{category}.{category}InheritingInterfaceMapping");
-            ret.Register((obj?.Unwrap() as IInterfaceMapping)!);
+            var t = Type.GetType(
+                $"Mutagen.Bethesda.{category}.{category}InheritingInterfaceMapping, Mutagen.Bethesda.{category}");
+            if (t == null) continue;
+            var obj = Activator.CreateInstance(t);
+            var regis = obj as IInterfaceMapping;
+            if (regis == null) continue;
+            ret.Register(regis);
         }
         return ret;
     }
