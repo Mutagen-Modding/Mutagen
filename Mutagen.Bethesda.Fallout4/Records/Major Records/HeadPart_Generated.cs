@@ -1791,7 +1791,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.Parts) ?? true))
             {
-                if (!lhs.Parts.SequenceEqualNullable(rhs.Parts)) return false;
+                if (!lhs.Parts.SequenceEqual(rhs.Parts, (l, r) => ((PartCommon)((IPartGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)HeadPart_FieldIndex.Parts)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.TextureSet) ?? true))
             {
@@ -1807,7 +1807,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)HeadPart_FieldIndex.Conditions)))) return false;
             }
             return true;
         }

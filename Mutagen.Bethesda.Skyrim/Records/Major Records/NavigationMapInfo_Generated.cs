@@ -1647,7 +1647,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.LinkedDoors) ?? true))
             {
-                if (!lhs.LinkedDoors.SequenceEqualNullable(rhs.LinkedDoors)) return false;
+                if (!lhs.LinkedDoors.SequenceEqual(rhs.LinkedDoors, (l, r) => ((LinkedDoorCommon)((ILinkedDoorGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)NavigationMapInfo_FieldIndex.LinkedDoors)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Island) ?? true))
             {

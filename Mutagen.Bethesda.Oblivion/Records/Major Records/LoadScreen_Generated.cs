@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.Locations) ?? true))
             {
-                if (!lhs.Locations.SequenceEqualNullable(rhs.Locations)) return false;
+                if (!lhs.Locations.SequenceEqual(rhs.Locations, (l, r) => ((LoadScreenLocationCommon)((ILoadScreenLocationGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)LoadScreen_FieldIndex.Locations)))) return false;
             }
             return true;
         }

@@ -2234,11 +2234,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Reflections) ?? true))
             {
-                if (!lhs.Reflections.SequenceEqualNullable(rhs.Reflections)) return false;
+                if (!lhs.Reflections.SequenceEqual(rhs.Reflections, (l, r) => ((WaterReflectionCommon)((IWaterReflectionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)APlacedTrap_FieldIndex.Reflections)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.LinkedReferences) ?? true))
             {
-                if (!lhs.LinkedReferences.SequenceEqualNullable(rhs.LinkedReferences)) return false;
+                if (!lhs.LinkedReferences.SequenceEqual(rhs.LinkedReferences, (l, r) => ((LinkedReferencesCommon)((ILinkedReferencesGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)APlacedTrap_FieldIndex.LinkedReferences)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.ActivateParents) ?? true))
             {

@@ -1590,7 +1590,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)TintTemplateOption_FieldIndex.Conditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Textures) ?? true))
             {
@@ -1602,7 +1602,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.TemplateColors) ?? true))
             {
-                if (!lhs.TemplateColors.SequenceEqualNullable(rhs.TemplateColors)) return false;
+                if (!lhs.TemplateColors.SequenceEqualNullable(rhs.TemplateColors, (l, r) => ((TintTemplateColorCommon)((ITintTemplateColorGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)TintTemplateOption_FieldIndex.TemplateColors)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Default) ?? true))
             {

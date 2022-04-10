@@ -1067,7 +1067,7 @@ namespace Mutagen.Bethesda.Skyrim
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Impacts) ?? true))
             {
-                if (!lhs.Impacts.SequenceEqualNullable(rhs.Impacts)) return false;
+                if (!lhs.Impacts.SequenceEqual(rhs.Impacts, (l, r) => ((ImpactDataCommon)((IImpactDataGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImpactDataSet_FieldIndex.Impacts)))) return false;
             }
             return true;
         }

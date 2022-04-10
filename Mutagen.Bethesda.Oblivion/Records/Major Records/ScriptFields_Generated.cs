@@ -1232,11 +1232,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)ScriptFields_FieldIndex.LocalVariables) ?? true))
             {
-                if (!lhs.LocalVariables.SequenceEqualNullable(rhs.LocalVariables)) return false;
+                if (!lhs.LocalVariables.SequenceEqual(rhs.LocalVariables, (l, r) => ((LocalVariableCommon)((ILocalVariableGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ScriptFields_FieldIndex.LocalVariables)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ScriptFields_FieldIndex.References) ?? true))
             {
-                if (!lhs.References.SequenceEqualNullable(rhs.References)) return false;
+                if (!lhs.References.SequenceEqual(rhs.References, (l, r) => ((AScriptReferenceCommon)((IAScriptReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ScriptFields_FieldIndex.References)))) return false;
             }
             return true;
         }

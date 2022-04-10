@@ -1040,7 +1040,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Road_FieldIndex.Points) ?? true))
             {
-                if (!lhs.Points.SequenceEqualNullable(rhs.Points)) return false;
+                if (!lhs.Points.SequenceEqualNullable(rhs.Points, (l, r) => ((RoadPointCommon)((IRoadPointGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Road_FieldIndex.Points)))) return false;
             }
             return true;
         }

@@ -1007,7 +1007,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)SkyrimListGroup_FieldIndex.Records) ?? true))
             {
-                if (!lhs.Records.SequenceEqualNullable(rhs.Records)) return false;
+                if (!lhs.Records.SequenceEqual(rhs.Records, (l, r) => ((CellBlockCommon)((ICellBlockGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)SkyrimListGroup_FieldIndex.Records)))) return false;
             }
             return true;
         }

@@ -2283,7 +2283,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Relations) ?? true))
             {
-                if (!lhs.Relations.SequenceEqualNullable(rhs.Relations)) return false;
+                if (!lhs.Relations.SequenceEqual(rhs.Relations, (l, r) => ((RaceRelationCommon)((IRaceRelationGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.Relations)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Data) ?? true))
             {
@@ -2319,7 +2319,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FaceData) ?? true))
             {
-                if (!lhs.FaceData.SequenceEqualNullable(rhs.FaceData)) return false;
+                if (!lhs.FaceData.SequenceEqual(rhs.FaceData, (l, r) => ((FacePartCommon)((IFacePartGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.FaceData)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
             {

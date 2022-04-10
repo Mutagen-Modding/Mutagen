@@ -984,7 +984,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)QuestStage_FieldIndex.LogEntries) ?? true))
             {
-                if (!lhs.LogEntries.SequenceEqualNullable(rhs.LogEntries)) return false;
+                if (!lhs.LogEntries.SequenceEqual(rhs.LogEntries, (l, r) => ((LogEntryCommon)((ILogEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestStage_FieldIndex.LogEntries)))) return false;
             }
             return true;
         }

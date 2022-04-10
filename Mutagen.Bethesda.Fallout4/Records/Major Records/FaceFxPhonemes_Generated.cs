@@ -2047,7 +2047,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Unknowns) ?? true))
             {
-                if (!lhs.Unknowns.SequenceEqualNullable(rhs.Unknowns)) return false;
+                if (!lhs.Unknowns.SequenceEqual(rhs.Unknowns, (l, r) => ((PhonemeCommon)((IPhonemeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Unknowns)))) return false;
             }
             return true;
         }

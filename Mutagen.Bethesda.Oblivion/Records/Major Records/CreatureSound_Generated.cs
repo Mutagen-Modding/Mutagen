@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)CreatureSound_FieldIndex.Sounds) ?? true))
             {
-                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
+                if (!lhs.Sounds.SequenceEqual(rhs.Sounds, (l, r) => ((SoundItemCommon)((ISoundItemGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)CreatureSound_FieldIndex.Sounds)))) return false;
             }
             return true;
         }

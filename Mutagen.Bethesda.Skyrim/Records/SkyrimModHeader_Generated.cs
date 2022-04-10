@@ -1654,7 +1654,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.MasterReferences) ?? true))
             {
-                if (!lhs.MasterReferences.SequenceEqualNullable(rhs.MasterReferences)) return false;
+                if (!lhs.MasterReferences.SequenceEqual(rhs.MasterReferences, (l, r) => ((MasterReferenceCommon)((IMasterReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)SkyrimModHeader_FieldIndex.MasterReferences)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.OverriddenForms) ?? true))
             {

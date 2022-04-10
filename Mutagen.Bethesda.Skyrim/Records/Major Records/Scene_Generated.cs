@@ -1902,15 +1902,15 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Phases) ?? true))
             {
-                if (!lhs.Phases.SequenceEqualNullable(rhs.Phases)) return false;
+                if (!lhs.Phases.SequenceEqual(rhs.Phases, (l, r) => ((ScenePhaseCommon)((IScenePhaseGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Scene_FieldIndex.Phases)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Actors) ?? true))
             {
-                if (!lhs.Actors.SequenceEqualNullable(rhs.Actors)) return false;
+                if (!lhs.Actors.SequenceEqual(rhs.Actors, (l, r) => ((SceneActorCommon)((ISceneActorGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Scene_FieldIndex.Actors)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Actions) ?? true))
             {
-                if (!lhs.Actions.SequenceEqualNullable(rhs.Actions)) return false;
+                if (!lhs.Actions.SequenceEqual(rhs.Actions, (l, r) => ((SceneActionCommon)((ISceneActionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Scene_FieldIndex.Actions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Unused) ?? true))
             {
@@ -1942,7 +1942,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Scene_FieldIndex.Conditions)))) return false;
             }
             return true;
         }

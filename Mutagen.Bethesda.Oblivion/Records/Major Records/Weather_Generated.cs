@@ -1556,7 +1556,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Colors) ?? true))
             {
-                if (!lhs.Colors.SequenceEqualNullable(rhs.Colors)) return false;
+                if (!lhs.Colors.SequenceEqualNullable(rhs.Colors, (l, r) => ((WeatherColorsCommon)((IWeatherColorsGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Weather_FieldIndex.Colors)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistance) ?? true))
             {
@@ -1584,7 +1584,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Sounds) ?? true))
             {
-                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
+                if (!lhs.Sounds.SequenceEqual(rhs.Sounds, (l, r) => ((WeatherSoundCommon)((IWeatherSoundGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Weather_FieldIndex.Sounds)))) return false;
             }
             return true;
         }

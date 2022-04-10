@@ -1632,7 +1632,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.RegionAreas) ?? true))
             {
-                if (!lhs.RegionAreas.SequenceEqualNullable(rhs.RegionAreas)) return false;
+                if (!lhs.RegionAreas.SequenceEqual(rhs.RegionAreas, (l, r) => ((RegionAreaCommon)((IRegionAreaGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Region_FieldIndex.RegionAreas)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Objects) ?? true))
             {

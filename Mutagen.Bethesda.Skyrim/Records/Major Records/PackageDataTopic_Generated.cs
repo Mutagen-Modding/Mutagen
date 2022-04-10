@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
             if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)PackageDataTopic_FieldIndex.Topics) ?? true))
             {
-                if (!lhs.Topics.SequenceEqualNullable(rhs.Topics)) return false;
+                if (!lhs.Topics.SequenceEqual(rhs.Topics, (l, r) => ((ATopicReferenceCommon)((IATopicReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PackageDataTopic_FieldIndex.Topics)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PackageDataTopic_FieldIndex.TPIC) ?? true))
             {

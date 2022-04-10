@@ -3633,7 +3633,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Sounds) ?? true))
             {
-                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
+                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds, (l, r) => ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)MagicEffect_FieldIndex.Sounds)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Description) ?? true))
             {
@@ -3641,7 +3641,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)MagicEffect_FieldIndex.Conditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.DATADataTypeState) ?? true))
             {

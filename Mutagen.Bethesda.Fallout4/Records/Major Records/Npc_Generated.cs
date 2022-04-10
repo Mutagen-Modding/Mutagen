@@ -6799,7 +6799,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Factions) ?? true))
             {
-                if (!lhs.Factions.SequenceEqualNullable(rhs.Factions)) return false;
+                if (!lhs.Factions.SequenceEqual(rhs.Factions, (l, r) => ((RankPlacementCommon)((IRankPlacementGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Factions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DeathItem) ?? true))
             {
@@ -6859,7 +6859,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Attacks) ?? true))
             {
-                if (!lhs.Attacks.SequenceEqualNullable(rhs.Attacks)) return false;
+                if (!lhs.Attacks.SequenceEqual(rhs.Attacks, (l, r) => ((AttackCommon)((IAttackGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Attacks)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.SpectatorOverridePackageList) ?? true))
             {
@@ -6887,11 +6887,11 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Perks) ?? true))
             {
-                if (!lhs.Perks.SequenceEqualNullable(rhs.Perks)) return false;
+                if (!lhs.Perks.SequenceEqualNullable(rhs.Perks, (l, r) => ((PerkPlacementCommon)((IPerkPlacementGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Perks)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties)) return false;
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Properties)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ForcedLocRefType) ?? true))
             {
@@ -6903,7 +6903,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Items) ?? true))
             {
-                if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items, (l, r) => ((ContainerEntryCommon)((IContainerEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Items)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Agression) ?? true))
             {
@@ -6963,7 +6963,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ObjectTemplates) ?? true))
             {
-                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates)) return false;
+                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates, (l, r) => ((ObjectTemplateCommon<Npc.Property>)((IObjectTemplateGetter<Npc.Property>)l).CommonInstance(typeof(Npc.Property))!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.ObjectTemplates)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Class) ?? true))
             {
@@ -7047,7 +7047,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Sounds) ?? true))
             {
-                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
+                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds, (l, r) => ((NpcSoundCommon)((INpcSoundGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Sounds)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.SoundsFinalize) ?? true))
             {
@@ -7087,11 +7087,11 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Morphs) ?? true))
             {
-                if (!lhs.Morphs.SequenceEqualNullable(rhs.Morphs)) return false;
+                if (!lhs.Morphs.SequenceEqual(rhs.Morphs, (l, r) => ((NpcMorphCommon)((INpcMorphGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Morphs)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FaceTintingLayers) ?? true))
             {
-                if (!lhs.FaceTintingLayers.SequenceEqualNullable(rhs.FaceTintingLayers)) return false;
+                if (!lhs.FaceTintingLayers.SequenceEqual(rhs.FaceTintingLayers, (l, r) => ((NpcFaceTintingLayerCommon)((INpcFaceTintingLayerGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.FaceTintingLayers)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.BodyMorphRegionValues) ?? true))
             {
@@ -7103,7 +7103,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FaceMorphs) ?? true))
             {
-                if (!lhs.FaceMorphs.SequenceEqualNullable(rhs.FaceMorphs)) return false;
+                if (!lhs.FaceMorphs.SequenceEqual(rhs.FaceMorphs, (l, r) => ((NpcFaceMorphCommon)((INpcFaceMorphGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.FaceMorphs)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FacialMorphIntensity) ?? true))
             {

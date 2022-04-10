@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)RuleSet_FieldIndex.Names) ?? true))
             {
-                if (!lhs.Names.SequenceEqualNullable(rhs.Names)) return false;
+                if (!lhs.Names.SequenceEqual(rhs.Names, (l, r) => ((RuleNameCommon)((IRuleNameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)RuleSet_FieldIndex.Names)))) return false;
             }
             return true;
         }

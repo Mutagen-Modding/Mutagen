@@ -1328,7 +1328,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.MasterReferences) ?? true))
             {
-                if (!lhs.MasterReferences.SequenceEqualNullable(rhs.MasterReferences)) return false;
+                if (!lhs.MasterReferences.SequenceEqual(rhs.MasterReferences, (l, r) => ((MasterReferenceCommon)((IMasterReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)OblivionModHeader_FieldIndex.MasterReferences)))) return false;
             }
             return true;
         }

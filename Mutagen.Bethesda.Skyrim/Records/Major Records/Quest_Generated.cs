@@ -2409,23 +2409,23 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.DialogConditions) ?? true))
             {
-                if (!lhs.DialogConditions.SequenceEqualNullable(rhs.DialogConditions)) return false;
+                if (!lhs.DialogConditions.SequenceEqual(rhs.DialogConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.DialogConditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.UnusedConditions) ?? true))
             {
-                if (!lhs.UnusedConditions.SequenceEqualNullable(rhs.UnusedConditions)) return false;
+                if (!lhs.UnusedConditions.SequenceEqual(rhs.UnusedConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.UnusedConditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Stages) ?? true))
             {
-                if (!lhs.Stages.SequenceEqualNullable(rhs.Stages)) return false;
+                if (!lhs.Stages.SequenceEqual(rhs.Stages, (l, r) => ((QuestStageCommon)((IQuestStageGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.Stages)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Objectives) ?? true))
             {
-                if (!lhs.Objectives.SequenceEqualNullable(rhs.Objectives)) return false;
+                if (!lhs.Objectives.SequenceEqual(rhs.Objectives, (l, r) => ((QuestObjectiveCommon)((IQuestObjectiveGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.Objectives)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Aliases) ?? true))
             {
-                if (!lhs.Aliases.SequenceEqualNullable(rhs.Aliases)) return false;
+                if (!lhs.Aliases.SequenceEqual(rhs.Aliases, (l, r) => ((QuestAliasCommon)((IQuestAliasGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.Aliases)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Description) ?? true))
             {

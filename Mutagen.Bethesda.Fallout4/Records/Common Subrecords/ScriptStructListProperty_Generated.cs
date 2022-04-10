@@ -918,7 +918,7 @@ namespace Mutagen.Bethesda.Fallout4
             if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)ScriptStructListProperty_FieldIndex.Structs) ?? true))
             {
-                if (!lhs.Structs.SequenceEqualNullable(rhs.Structs)) return false;
+                if (!lhs.Structs.SequenceEqual(rhs.Structs, (l, r) => ((ScriptStructPropertyCommon)((IScriptStructPropertyGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ScriptStructListProperty_FieldIndex.Structs)))) return false;
             }
             return true;
         }

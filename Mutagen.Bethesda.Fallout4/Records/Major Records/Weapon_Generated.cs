@@ -4903,7 +4903,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectTemplates) ?? true))
             {
-                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates)) return false;
+                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates, (l, r) => ((ObjectTemplateCommon<Weapon.Property>)((IObjectTemplateGetter<Weapon.Property>)l).CommonInstance(typeof(Weapon.Property))!).Equals(l, r, crystal?.GetSubCrystal((int)Weapon_FieldIndex.ObjectTemplates)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.EmbeddedWeaponMod) ?? true))
             {

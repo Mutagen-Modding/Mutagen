@@ -1072,7 +1072,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Scripts) ?? true))
             {
-                if (!lhs.Scripts.SequenceEqualNullable(rhs.Scripts)) return false;
+                if (!lhs.Scripts.SequenceEqual(rhs.Scripts, (l, r) => ((ScriptEntryCommon)((IScriptEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestFragmentAlias_FieldIndex.Scripts)))) return false;
             }
             return true;
         }

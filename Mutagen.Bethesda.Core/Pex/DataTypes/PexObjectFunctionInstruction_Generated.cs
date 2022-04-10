@@ -860,7 +860,7 @@ namespace Mutagen.Bethesda.Pex
             }
             if ((crystal?.GetShouldTranslate((int)PexObjectFunctionInstruction_FieldIndex.Arguments) ?? true))
             {
-                if (!lhs.Arguments.SequenceEqualNullable(rhs.Arguments)) return false;
+                if (!lhs.Arguments.SequenceEqual(rhs.Arguments, (l, r) => ((PexObjectVariableDataCommon)((IPexObjectVariableDataGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PexObjectFunctionInstruction_FieldIndex.Arguments)))) return false;
             }
             return true;
         }

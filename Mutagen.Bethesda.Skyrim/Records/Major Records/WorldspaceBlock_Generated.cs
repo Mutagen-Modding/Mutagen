@@ -1622,7 +1622,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.Items) ?? true))
             {
-                if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+                if (!lhs.Items.SequenceEqual(rhs.Items, (l, r) => ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)WorldspaceBlock_FieldIndex.Items)))) return false;
             }
             return true;
         }

@@ -1853,11 +1853,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)DialogItem_FieldIndex.Responses) ?? true))
             {
-                if (!lhs.Responses.SequenceEqualNullable(rhs.Responses)) return false;
+                if (!lhs.Responses.SequenceEqual(rhs.Responses, (l, r) => ((DialogResponseCommon)((IDialogResponseGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DialogItem_FieldIndex.Responses)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DialogItem_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DialogItem_FieldIndex.Conditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DialogItem_FieldIndex.Choices) ?? true))
             {

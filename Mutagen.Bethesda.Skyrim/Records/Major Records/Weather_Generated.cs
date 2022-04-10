@@ -4499,7 +4499,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Sounds) ?? true))
             {
-                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
+                if (!lhs.Sounds.SequenceEqual(rhs.Sounds, (l, r) => ((WeatherSoundCommon)((IWeatherSoundGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Weather_FieldIndex.Sounds)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SkyStatics) ?? true))
             {

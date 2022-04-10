@@ -1855,7 +1855,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.MasterReferences) ?? true))
             {
-                if (!lhs.MasterReferences.SequenceEqualNullable(rhs.MasterReferences)) return false;
+                if (!lhs.MasterReferences.SequenceEqual(rhs.MasterReferences, (l, r) => ((MasterReferenceCommon)((IMasterReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Fallout4ModHeader_FieldIndex.MasterReferences)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.OverriddenForms) ?? true))
             {
@@ -1867,7 +1867,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.TransientTypes) ?? true))
             {
-                if (!lhs.TransientTypes.SequenceEqualNullable(rhs.TransientTypes)) return false;
+                if (!lhs.TransientTypes.SequenceEqual(rhs.TransientTypes, (l, r) => ((TransientTypeCommon)((ITransientTypeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Fallout4ModHeader_FieldIndex.TransientTypes)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.INTV) ?? true))
             {

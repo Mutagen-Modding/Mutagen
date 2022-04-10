@@ -1623,7 +1623,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.Layers) ?? true))
             {
-                if (!lhs.Layers.SequenceEqualNullable(rhs.Layers)) return false;
+                if (!lhs.Layers.SequenceEqual(rhs.Layers, (l, r) => ((BaseLayerCommon)((IBaseLayerGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Landscape_FieldIndex.Layers)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.Textures) ?? true))
             {

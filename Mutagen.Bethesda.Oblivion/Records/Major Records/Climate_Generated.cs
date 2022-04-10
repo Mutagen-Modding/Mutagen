@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.Weathers) ?? true))
             {
-                if (!lhs.Weathers.SequenceEqualNullable(rhs.Weathers)) return false;
+                if (!lhs.Weathers.SequenceEqualNullable(rhs.Weathers, (l, r) => ((WeatherTypeCommon)((IWeatherTypeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Climate_FieldIndex.Weathers)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.SunTexture) ?? true))
             {

@@ -1158,11 +1158,11 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Destructible_FieldIndex.Resistances) ?? true))
             {
-                if (!lhs.Resistances.SequenceEqualNullable(rhs.Resistances)) return false;
+                if (!lhs.Resistances.SequenceEqualNullable(rhs.Resistances, (l, r) => ((ResistanceDestructibleCommon)((IResistanceDestructibleGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Destructible_FieldIndex.Resistances)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Destructible_FieldIndex.Stages) ?? true))
             {
-                if (!lhs.Stages.SequenceEqualNullable(rhs.Stages)) return false;
+                if (!lhs.Stages.SequenceEqual(rhs.Stages, (l, r) => ((DestructionStageCommon)((IDestructionStageGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Destructible_FieldIndex.Stages)))) return false;
             }
             return true;
         }

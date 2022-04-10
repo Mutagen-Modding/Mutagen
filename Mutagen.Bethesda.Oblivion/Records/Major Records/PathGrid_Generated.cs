@@ -1385,7 +1385,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)PathGrid_FieldIndex.PointToPointConnections) ?? true))
             {
-                if (!lhs.PointToPointConnections.SequenceEqualNullable(rhs.PointToPointConnections)) return false;
+                if (!lhs.PointToPointConnections.SequenceEqualNullable(rhs.PointToPointConnections, (l, r) => ((PathGridPointCommon)((IPathGridPointGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PathGrid_FieldIndex.PointToPointConnections)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PathGrid_FieldIndex.PGAG) ?? true))
             {
@@ -1393,11 +1393,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)PathGrid_FieldIndex.InterCellConnections) ?? true))
             {
-                if (!lhs.InterCellConnections.SequenceEqualNullable(rhs.InterCellConnections)) return false;
+                if (!lhs.InterCellConnections.SequenceEqualNullable(rhs.InterCellConnections, (l, r) => ((InterCellPointCommon)((IInterCellPointGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PathGrid_FieldIndex.InterCellConnections)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PathGrid_FieldIndex.PointToReferenceMappings) ?? true))
             {
-                if (!lhs.PointToReferenceMappings.SequenceEqualNullable(rhs.PointToReferenceMappings)) return false;
+                if (!lhs.PointToReferenceMappings.SequenceEqual(rhs.PointToReferenceMappings, (l, r) => ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PathGrid_FieldIndex.PointToReferenceMappings)))) return false;
             }
             return true;
         }

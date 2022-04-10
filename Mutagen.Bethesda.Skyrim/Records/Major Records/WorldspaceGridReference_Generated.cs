@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)WorldspaceGridReference_FieldIndex.References) ?? true))
             {
-                if (!lhs.References.SequenceEqualNullable(rhs.References)) return false;
+                if (!lhs.References.SequenceEqual(rhs.References, (l, r) => ((WorldspaceReferenceCommon)((IWorldspaceReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)WorldspaceGridReference_FieldIndex.References)))) return false;
             }
             return true;
         }

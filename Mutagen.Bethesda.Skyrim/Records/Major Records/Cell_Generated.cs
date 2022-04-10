@@ -3584,7 +3584,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.NavigationMeshes) ?? true))
             {
-                if (!lhs.NavigationMeshes.SequenceEqualNullable(rhs.NavigationMeshes)) return false;
+                if (!lhs.NavigationMeshes.SequenceEqual(rhs.NavigationMeshes, (l, r) => ((ANavigationMeshCommon)((IANavigationMeshGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Cell_FieldIndex.NavigationMeshes)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Timestamp) ?? true))
             {

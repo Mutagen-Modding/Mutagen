@@ -2709,7 +2709,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Package_FieldIndex.Conditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Unknown4) ?? true))
             {
@@ -2749,7 +2749,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ProcedureTree) ?? true))
             {
-                if (!lhs.ProcedureTree.SequenceEqualNullable(rhs.ProcedureTree)) return false;
+                if (!lhs.ProcedureTree.SequenceEqual(rhs.ProcedureTree, (l, r) => ((PackageBranchCommon)((IPackageBranchGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Package_FieldIndex.ProcedureTree)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.OnBegin) ?? true))
             {

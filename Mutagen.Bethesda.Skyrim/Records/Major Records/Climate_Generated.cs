@@ -1562,7 +1562,7 @@ namespace Mutagen.Bethesda.Skyrim
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.WeatherTypes) ?? true))
             {
-                if (!lhs.WeatherTypes.SequenceEqualNullable(rhs.WeatherTypes)) return false;
+                if (!lhs.WeatherTypes.SequenceEqualNullable(rhs.WeatherTypes, (l, r) => ((WeatherTypeCommon)((IWeatherTypeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Climate_FieldIndex.WeatherTypes)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.SunTexture) ?? true))
             {

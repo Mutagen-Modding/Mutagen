@@ -5748,7 +5748,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Attacks) ?? true))
             {
-                if (!lhs.Attacks.SequenceEqualNullable(rhs.Attacks)) return false;
+                if (!lhs.Attacks.SequenceEqual(rhs.Attacks, (l, r) => ((AttackCommon)((IAttackGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.Attacks)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
             {
@@ -5796,7 +5796,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MovementTypes) ?? true))
             {
-                if (!lhs.MovementTypes.SequenceEqualNullable(rhs.MovementTypes)) return false;
+                if (!lhs.MovementTypes.SequenceEqual(rhs.MovementTypes, (l, r) => ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.MovementTypes)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.EquipmentFlags) ?? true))
             {

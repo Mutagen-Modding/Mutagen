@@ -3836,11 +3836,11 @@ namespace Mutagen.Bethesda.Skyrim
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellPersistentReferences) ?? true))
             {
-                if (!lhs.ActorCellPersistentReferences.SequenceEqualNullable(rhs.ActorCellPersistentReferences)) return false;
+                if (!lhs.ActorCellPersistentReferences.SequenceEqualNullable(rhs.ActorCellPersistentReferences, (l, r) => ((LocationReferenceCommon)((ILocationReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellPersistentReferences)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellPersistentReferences) ?? true))
             {
-                if (!lhs.LocationCellPersistentReferences.SequenceEqualNullable(rhs.LocationCellPersistentReferences)) return false;
+                if (!lhs.LocationCellPersistentReferences.SequenceEqualNullable(rhs.LocationCellPersistentReferences, (l, r) => ((LocationReferenceCommon)((ILocationReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellPersistentReferences)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellPersistentReferences) ?? true))
             {
@@ -3848,11 +3848,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellUniques) ?? true))
             {
-                if (!lhs.ActorCellUniques.SequenceEqualNullable(rhs.ActorCellUniques)) return false;
+                if (!lhs.ActorCellUniques.SequenceEqualNullable(rhs.ActorCellUniques, (l, r) => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellUniques)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellUniques) ?? true))
             {
-                if (!lhs.LocationCellUniques.SequenceEqualNullable(rhs.LocationCellUniques)) return false;
+                if (!lhs.LocationCellUniques.SequenceEqualNullable(rhs.LocationCellUniques, (l, r) => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellUniques)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellUnique) ?? true))
             {
@@ -3860,11 +3860,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellStaticReferences) ?? true))
             {
-                if (!lhs.ActorCellStaticReferences.SequenceEqualNullable(rhs.ActorCellStaticReferences)) return false;
+                if (!lhs.ActorCellStaticReferences.SequenceEqualNullable(rhs.ActorCellStaticReferences, (l, r) => ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellStaticReferences)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellStaticReferences) ?? true))
             {
-                if (!lhs.LocationCellStaticReferences.SequenceEqualNullable(rhs.LocationCellStaticReferences)) return false;
+                if (!lhs.LocationCellStaticReferences.SequenceEqualNullable(rhs.LocationCellStaticReferences, (l, r) => ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellStaticReferences)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellStaticReferences) ?? true))
             {
@@ -3872,15 +3872,15 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEncounterCell) ?? true))
             {
-                if (!lhs.ActorCellEncounterCell.SequenceEqualNullable(rhs.ActorCellEncounterCell)) return false;
+                if (!lhs.ActorCellEncounterCell.SequenceEqual(rhs.ActorCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellEncounterCell)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEncounterCell) ?? true))
             {
-                if (!lhs.LocationCellEncounterCell.SequenceEqualNullable(rhs.LocationCellEncounterCell)) return false;
+                if (!lhs.LocationCellEncounterCell.SequenceEqual(rhs.LocationCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellEncounterCell)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellEncounterCell) ?? true))
             {
-                if (!lhs.ReferenceCellEncounterCell.SequenceEqualNullable(rhs.ReferenceCellEncounterCell)) return false;
+                if (!lhs.ReferenceCellEncounterCell.SequenceEqual(rhs.ReferenceCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ReferenceCellEncounterCell)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellMarkerReference) ?? true))
             {
@@ -3892,11 +3892,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEnablePoint) ?? true))
             {
-                if (!lhs.ActorCellEnablePoint.SequenceEqualNullable(rhs.ActorCellEnablePoint)) return false;
+                if (!lhs.ActorCellEnablePoint.SequenceEqualNullable(rhs.ActorCellEnablePoint, (l, r) => ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellEnablePoint)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEnablePoint) ?? true))
             {
-                if (!lhs.LocationCellEnablePoint.SequenceEqualNullable(rhs.LocationCellEnablePoint)) return false;
+                if (!lhs.LocationCellEnablePoint.SequenceEqualNullable(rhs.LocationCellEnablePoint, (l, r) => ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellEnablePoint)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Name) ?? true))
             {

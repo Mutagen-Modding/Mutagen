@@ -1266,7 +1266,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.Quests) ?? true))
             {
-                if (!lhs.Quests.SequenceEqualNullable(rhs.Quests)) return false;
+                if (!lhs.Quests.SequenceEqual(rhs.Quests, (l, r) => ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)StoryManagerQuestNode_FieldIndex.Quests)))) return false;
             }
             return true;
         }

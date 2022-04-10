@@ -1241,7 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Entries) ?? true))
             {
-                if (!lhs.Entries.SequenceEqualNullable(rhs.Entries)) return false;
+                if (!lhs.Entries.SequenceEqual(rhs.Entries, (l, r) => ((LeveledCreatureEntryCommon)((ILeveledCreatureEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)LeveledCreature_FieldIndex.Entries)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Script) ?? true))
             {

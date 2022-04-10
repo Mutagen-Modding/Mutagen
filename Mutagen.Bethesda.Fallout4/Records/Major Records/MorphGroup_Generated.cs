@@ -1112,7 +1112,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)MorphGroup_FieldIndex.MorphPresets) ?? true))
             {
-                if (!lhs.MorphPresets.SequenceEqualNullable(rhs.MorphPresets)) return false;
+                if (!lhs.MorphPresets.SequenceEqualNullable(rhs.MorphPresets, (l, r) => ((MorphPresetCommon)((IMorphPresetGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)MorphGroup_FieldIndex.MorphPresets)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)MorphGroup_FieldIndex.UnknownMPPK) ?? true))
             {

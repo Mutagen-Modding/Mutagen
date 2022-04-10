@@ -2178,7 +2178,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.Effects) ?? true))
             {
-                if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Ingredient_FieldIndex.Effects)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.DATADataTypeState) ?? true))
             {

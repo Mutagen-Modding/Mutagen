@@ -1501,7 +1501,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.MenuButtons) ?? true))
             {
-                if (!lhs.MenuButtons.SequenceEqualNullable(rhs.MenuButtons)) return false;
+                if (!lhs.MenuButtons.SequenceEqual(rhs.MenuButtons, (l, r) => ((MessageButtonCommon)((IMessageButtonGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Message_FieldIndex.MenuButtons)))) return false;
             }
             return true;
         }

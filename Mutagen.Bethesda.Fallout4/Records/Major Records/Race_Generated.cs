@@ -6351,7 +6351,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties)) return false;
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.Properties)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AttachParentSlots) ?? true))
             {
@@ -6547,7 +6547,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Attacks) ?? true))
             {
-                if (!lhs.Attacks.SequenceEqualNullable(rhs.Attacks)) return false;
+                if (!lhs.Attacks.SequenceEqual(rhs.Attacks, (l, r) => ((AttackCommon)((IAttackGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.Attacks)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
             {
@@ -6595,7 +6595,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MovementDataOverrides) ?? true))
             {
-                if (!lhs.MovementDataOverrides.SequenceEqualNullable(rhs.MovementDataOverrides)) return false;
+                if (!lhs.MovementDataOverrides.SequenceEqual(rhs.MovementDataOverrides, (l, r) => ((MovementDataOverrideCommon)((IMovementDataOverrideGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.MovementDataOverrides)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.EquipmentFlags) ?? true))
             {
@@ -6603,7 +6603,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.EquipmentSlots) ?? true))
             {
-                if (!lhs.EquipmentSlots.SequenceEqualNullable(rhs.EquipmentSlots)) return false;
+                if (!lhs.EquipmentSlots.SequenceEqual(rhs.EquipmentSlots, (l, r) => ((EquipmentSlotCommon)((IEquipmentSlotGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.EquipmentSlots)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.UnarmedWeapon) ?? true))
             {
@@ -6655,7 +6655,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Subgraphs) ?? true))
             {
-                if (!lhs.Subgraphs.SequenceEqualNullable(rhs.Subgraphs)) return false;
+                if (!lhs.Subgraphs.SequenceEqual(rhs.Subgraphs, (l, r) => ((SubgraphCommon)((ISubgraphGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.Subgraphs)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.IdleChatterTimeMin) ?? true))
             {
@@ -6667,7 +6667,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MorphValues) ?? true))
             {
-                if (!lhs.MorphValues.SequenceEqualNullable(rhs.MorphValues)) return false;
+                if (!lhs.MorphValues.SequenceEqual(rhs.MorphValues, (l, r) => ((MorphValueCommon)((IMorphValueGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.MorphValues)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.HairColorLookupTexture) ?? true))
             {

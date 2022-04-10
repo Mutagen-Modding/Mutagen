@@ -1325,11 +1325,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.StartConditions) ?? true))
             {
-                if (!lhs.StartConditions.SequenceEqualNullable(rhs.StartConditions)) return false;
+                if (!lhs.StartConditions.SequenceEqual(rhs.StartConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ScenePhase_FieldIndex.StartConditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.CompletionConditions) ?? true))
             {
-                if (!lhs.CompletionConditions.SequenceEqualNullable(rhs.CompletionConditions)) return false;
+                if (!lhs.CompletionConditions.SequenceEqual(rhs.CompletionConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ScenePhase_FieldIndex.CompletionConditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.Unused) ?? true))
             {

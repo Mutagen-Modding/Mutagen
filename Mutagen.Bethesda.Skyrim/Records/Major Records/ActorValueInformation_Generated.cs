@@ -1390,7 +1390,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.PerkTree) ?? true))
             {
-                if (!lhs.PerkTree.SequenceEqualNullable(rhs.PerkTree)) return false;
+                if (!lhs.PerkTree.SequenceEqual(rhs.PerkTree, (l, r) => ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ActorValueInformation_FieldIndex.PerkTree)))) return false;
             }
             return true;
         }

@@ -2426,7 +2426,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.Effects) ?? true))
             {
-                if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Scroll_FieldIndex.Effects)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.DATADataTypeState) ?? true))
             {

@@ -1500,7 +1500,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
             {
-                if (!lhs.Areas.SequenceEqualNullable(rhs.Areas)) return false;
+                if (!lhs.Areas.SequenceEqual(rhs.Areas, (l, r) => ((RegionAreaCommon)((IRegionAreaGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Region_FieldIndex.Areas)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Objects) ?? true))
             {

@@ -1146,15 +1146,15 @@ namespace Mutagen.Bethesda.Pex
             }
             if ((crystal?.GetShouldTranslate((int)DebugInfo_FieldIndex.Functions) ?? true))
             {
-                if (!lhs.Functions.SequenceEqualNullable(rhs.Functions)) return false;
+                if (!lhs.Functions.SequenceEqual(rhs.Functions, (l, r) => ((DebugFunctionCommon)((IDebugFunctionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DebugInfo_FieldIndex.Functions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DebugInfo_FieldIndex.PropertyGroups) ?? true))
             {
-                if (!lhs.PropertyGroups.SequenceEqualNullable(rhs.PropertyGroups)) return false;
+                if (!lhs.PropertyGroups.SequenceEqual(rhs.PropertyGroups, (l, r) => ((DebugPropertyGroupCommon)((IDebugPropertyGroupGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DebugInfo_FieldIndex.PropertyGroups)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DebugInfo_FieldIndex.StructOrders) ?? true))
             {
-                if (!lhs.StructOrders.SequenceEqualNullable(rhs.StructOrders)) return false;
+                if (!lhs.StructOrders.SequenceEqual(rhs.StructOrders, (l, r) => ((DebugStructOrderCommon)((IDebugStructOrderGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DebugInfo_FieldIndex.StructOrders)))) return false;
             }
             return true;
         }

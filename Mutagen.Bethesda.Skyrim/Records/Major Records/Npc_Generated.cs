@@ -4187,7 +4187,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Factions) ?? true))
             {
-                if (!lhs.Factions.SequenceEqualNullable(rhs.Factions)) return false;
+                if (!lhs.Factions.SequenceEqual(rhs.Factions, (l, r) => ((RankPlacementCommon)((IRankPlacementGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Factions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DeathItem) ?? true))
             {
@@ -4231,7 +4231,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Attacks) ?? true))
             {
-                if (!lhs.Attacks.SequenceEqualNullable(rhs.Attacks)) return false;
+                if (!lhs.Attacks.SequenceEqual(rhs.Attacks, (l, r) => ((AttackCommon)((IAttackGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Attacks)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.SpectatorOverridePackageList) ?? true))
             {
@@ -4251,11 +4251,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Perks) ?? true))
             {
-                if (!lhs.Perks.SequenceEqualNullable(rhs.Perks)) return false;
+                if (!lhs.Perks.SequenceEqualNullable(rhs.Perks, (l, r) => ((PerkPlacementCommon)((IPerkPlacementGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Perks)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Items) ?? true))
             {
-                if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items, (l, r) => ((ContainerEntryCommon)((IContainerEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Items)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AIData) ?? true))
             {
@@ -4375,7 +4375,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.TintLayers) ?? true))
             {
-                if (!lhs.TintLayers.SequenceEqualNullable(rhs.TintLayers)) return false;
+                if (!lhs.TintLayers.SequenceEqual(rhs.TintLayers, (l, r) => ((TintLayerCommon)((ITintLayerGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.TintLayers)))) return false;
             }
             return true;
         }

@@ -1672,15 +1672,15 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)ANavigationMeshData_FieldIndex.Triangles) ?? true))
             {
-                if (!lhs.Triangles.SequenceEqualNullable(rhs.Triangles)) return false;
+                if (!lhs.Triangles.SequenceEqual(rhs.Triangles, (l, r) => ((NavmeshTriangleCommon)((INavmeshTriangleGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ANavigationMeshData_FieldIndex.Triangles)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ANavigationMeshData_FieldIndex.EdgeLinks) ?? true))
             {
-                if (!lhs.EdgeLinks.SequenceEqualNullable(rhs.EdgeLinks)) return false;
+                if (!lhs.EdgeLinks.SequenceEqual(rhs.EdgeLinks, (l, r) => ((EdgeLinkCommon)((IEdgeLinkGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ANavigationMeshData_FieldIndex.EdgeLinks)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ANavigationMeshData_FieldIndex.DoorTriangles) ?? true))
             {
-                if (!lhs.DoorTriangles.SequenceEqualNullable(rhs.DoorTriangles)) return false;
+                if (!lhs.DoorTriangles.SequenceEqual(rhs.DoorTriangles, (l, r) => ((DoorTriangleCommon)((IDoorTriangleGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ANavigationMeshData_FieldIndex.DoorTriangles)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ANavigationMeshData_FieldIndex.NavmeshGridDivisor) ?? true))
             {

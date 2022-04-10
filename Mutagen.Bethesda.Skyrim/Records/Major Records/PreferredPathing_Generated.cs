@@ -1079,11 +1079,11 @@ namespace Mutagen.Bethesda.Skyrim
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)PreferredPathing_FieldIndex.NavmeshSets) ?? true))
             {
-                if (!lhs.NavmeshSets.SequenceEqualNullable(rhs.NavmeshSets)) return false;
+                if (!lhs.NavmeshSets.SequenceEqual(rhs.NavmeshSets, (l, r) => ((NavmeshSetCommon)((INavmeshSetGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PreferredPathing_FieldIndex.NavmeshSets)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PreferredPathing_FieldIndex.NavmeshTree) ?? true))
             {
-                if (!lhs.NavmeshTree.SequenceEqualNullable(rhs.NavmeshTree)) return false;
+                if (!lhs.NavmeshTree.SequenceEqual(rhs.NavmeshTree, (l, r) => ((NavmeshNodeCommon)((INavmeshNodeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PreferredPathing_FieldIndex.NavmeshTree)))) return false;
             }
             return true;
         }

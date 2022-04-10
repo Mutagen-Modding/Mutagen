@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)QuestStage_FieldIndex.LogEntries) ?? true))
             {
-                if (!lhs.LogEntries.SequenceEqualNullable(rhs.LogEntries)) return false;
+                if (!lhs.LogEntries.SequenceEqual(rhs.LogEntries, (l, r) => ((QuestLogEntryCommon)((IQuestLogEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestStage_FieldIndex.LogEntries)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)QuestStage_FieldIndex.INDXDataTypeState) ?? true))
             {

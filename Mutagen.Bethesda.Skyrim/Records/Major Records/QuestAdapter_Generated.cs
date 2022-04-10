@@ -1220,11 +1220,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Fragments) ?? true))
             {
-                if (!lhs.Fragments.SequenceEqualNullable(rhs.Fragments)) return false;
+                if (!lhs.Fragments.SequenceEqual(rhs.Fragments, (l, r) => ((QuestScriptFragmentCommon)((IQuestScriptFragmentGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestAdapter_FieldIndex.Fragments)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Aliases) ?? true))
             {
-                if (!lhs.Aliases.SequenceEqualNullable(rhs.Aliases)) return false;
+                if (!lhs.Aliases.SequenceEqual(rhs.Aliases, (l, r) => ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestAdapter_FieldIndex.Aliases)))) return false;
             }
             return true;
         }

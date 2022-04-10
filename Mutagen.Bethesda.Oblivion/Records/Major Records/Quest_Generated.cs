@@ -1583,15 +1583,15 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.Conditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Stages) ?? true))
             {
-                if (!lhs.Stages.SequenceEqualNullable(rhs.Stages)) return false;
+                if (!lhs.Stages.SequenceEqual(rhs.Stages, (l, r) => ((QuestStageCommon)((IQuestStageGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.Stages)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Targets) ?? true))
             {
-                if (!lhs.Targets.SequenceEqualNullable(rhs.Targets)) return false;
+                if (!lhs.Targets.SequenceEqual(rhs.Targets, (l, r) => ((QuestTargetCommon)((IQuestTargetGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.Targets)))) return false;
             }
             return true;
         }

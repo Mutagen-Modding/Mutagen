@@ -1026,7 +1026,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)ScriptFragmentsIndexed_FieldIndex.Fragments) ?? true))
             {
-                if (!lhs.Fragments.SequenceEqualNullable(rhs.Fragments)) return false;
+                if (!lhs.Fragments.SequenceEqual(rhs.Fragments, (l, r) => ((ScriptFragmentIndexedCommon)((IScriptFragmentIndexedGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ScriptFragmentsIndexed_FieldIndex.Fragments)))) return false;
             }
             return true;
         }

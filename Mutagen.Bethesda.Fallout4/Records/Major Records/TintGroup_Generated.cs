@@ -1085,7 +1085,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)TintGroup_FieldIndex.Options) ?? true))
             {
-                if (!lhs.Options.SequenceEqualNullable(rhs.Options)) return false;
+                if (!lhs.Options.SequenceEqual(rhs.Options, (l, r) => ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)TintGroup_FieldIndex.Options)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)TintGroup_FieldIndex.CategoryIndex) ?? true))
             {

@@ -905,11 +905,11 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.Includes) ?? true))
             {
-                if (!lhs.Includes.SequenceEqualNullable(rhs.Includes)) return false;
+                if (!lhs.Includes.SequenceEqual(rhs.Includes, (l, r) => ((ObjectTemplateIncludeCommon)((IObjectTemplateIncludeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ObjectTemplate_FieldIndex.Includes)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties)) return false;
+                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((AObjectModPropertyCommon<T>)((IAObjectModPropertyGetter<T>)l).CommonInstance(typeof(T))!).Equals(l, r, crystal?.GetSubCrystal((int)ObjectTemplate_FieldIndex.Properties)))) return false;
             }
             return true;
         }

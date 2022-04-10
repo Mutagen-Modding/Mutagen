@@ -4529,7 +4529,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Portals) ?? true))
             {
-                if (!lhs.Portals.SequenceEqualNullable(rhs.Portals)) return false;
+                if (!lhs.Portals.SequenceEqualNullable(rhs.Portals, (l, r) => ((PortalCommon)((IPortalGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.Portals)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.RoomPortal) ?? true))
             {
@@ -4573,7 +4573,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Reflections) ?? true))
             {
-                if (!lhs.Reflections.SequenceEqualNullable(rhs.Reflections)) return false;
+                if (!lhs.Reflections.SequenceEqual(rhs.Reflections, (l, r) => ((WaterReflectionCommon)((IWaterReflectionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.Reflections)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.LitWater) ?? true))
             {
@@ -4737,7 +4737,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.LinkedReferences) ?? true))
             {
-                if (!lhs.LinkedReferences.SequenceEqualNullable(rhs.LinkedReferences)) return false;
+                if (!lhs.LinkedReferences.SequenceEqual(rhs.LinkedReferences, (l, r) => ((LinkedReferencesCommon)((ILinkedReferencesGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.LinkedReferences)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Patrol) ?? true))
             {

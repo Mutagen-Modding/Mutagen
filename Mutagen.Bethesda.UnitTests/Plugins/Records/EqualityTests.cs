@@ -2,6 +2,7 @@ using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
+using Noggog;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records;
@@ -71,5 +72,45 @@ public class EqualityTests
 
         someWeapon.Equals(other)
             .Should().BeFalse();
+    }
+
+    [Fact]
+    public void DeepLoquiMasking()
+    {
+        VirtualMachineAdapter vc = new VirtualMachineAdapter()
+        {
+            Scripts = new Noggog.ExtendedList<ScriptEntry>()
+            {
+                new ScriptEntry()
+                {
+                    Name = "Testing123",
+                    Properties = new ExtendedList<ScriptProperty>()
+                    {
+                        new ScriptProperty()
+                        {
+                            Name = "Hello World"
+                        }
+                    }
+                }
+            }
+        };
+        VirtualMachineAdapter vc2 = new VirtualMachineAdapter()
+        {
+            Scripts = new Noggog.ExtendedList<ScriptEntry>()
+            {
+                new ScriptEntry()
+                {
+                    Name = "Testing123"
+                }
+            }
+        };
+
+        vc.Equals(vc2, new VirtualMachineAdapter.TranslationMask(true)
+        {
+            Scripts = new ScriptEntry.TranslationMask(true)
+            {
+                Properties = false,
+            }
+        }).Should().BeTrue();
     }
 }

@@ -2478,7 +2478,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties)) return false;
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Activator_FieldIndex.Properties)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.NativeTerminal) ?? true))
             {
@@ -2526,7 +2526,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Activator_FieldIndex.Conditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.NavmeshGeometry) ?? true))
             {

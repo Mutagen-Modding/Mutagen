@@ -1227,7 +1227,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.MapInfos) ?? true))
             {
-                if (!lhs.MapInfos.SequenceEqualNullable(rhs.MapInfos)) return false;
+                if (!lhs.MapInfos.SequenceEqual(rhs.MapInfos, (l, r) => ((NavigationMapInfoCommon)((INavigationMapInfoGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)NavigationMeshInfoMap_FieldIndex.MapInfos)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing) ?? true))
             {

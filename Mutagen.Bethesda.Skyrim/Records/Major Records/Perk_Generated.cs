@@ -1822,7 +1822,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Perk_FieldIndex.Conditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Trait) ?? true))
             {
@@ -1850,7 +1850,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Effects) ?? true))
             {
-                if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((APerkEffectCommon)((IAPerkEffectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Perk_FieldIndex.Effects)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.DATADataTypeState) ?? true))
             {

@@ -924,7 +924,7 @@ namespace Mutagen.Bethesda.Skyrim
             if (!base.Equals((IScriptFragmentsGetter)lhs, (IScriptFragmentsGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)SceneScriptFragments_FieldIndex.PhaseFragments) ?? true))
             {
-                if (!lhs.PhaseFragments.SequenceEqualNullable(rhs.PhaseFragments)) return false;
+                if (!lhs.PhaseFragments.SequenceEqual(rhs.PhaseFragments, (l, r) => ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)SceneScriptFragments_FieldIndex.PhaseFragments)))) return false;
             }
             return true;
         }

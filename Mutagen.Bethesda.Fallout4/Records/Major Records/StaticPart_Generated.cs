@@ -985,7 +985,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)StaticPart_FieldIndex.Placements) ?? true))
             {
-                if (!lhs.Placements.SequenceEqualNullable(rhs.Placements)) return false;
+                if (!lhs.Placements.SequenceEqualNullable(rhs.Placements, (l, r) => ((PlacementCommon)((IPlacementGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)StaticPart_FieldIndex.Placements)))) return false;
             }
             return true;
         }

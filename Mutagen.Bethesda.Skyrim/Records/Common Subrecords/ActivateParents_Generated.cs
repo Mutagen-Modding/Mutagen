@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)ActivateParents_FieldIndex.Parents) ?? true))
             {
-                if (!lhs.Parents.SequenceEqualNullable(rhs.Parents)) return false;
+                if (!lhs.Parents.SequenceEqual(rhs.Parents, (l, r) => ((ActivateParentCommon)((IActivateParentGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ActivateParents_FieldIndex.Parents)))) return false;
             }
             return true;
         }

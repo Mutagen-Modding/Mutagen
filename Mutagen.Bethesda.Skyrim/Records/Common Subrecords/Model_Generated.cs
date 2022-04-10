@@ -936,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim
             if (!base.Equals((ISimpleModelGetter)lhs, (ISimpleModelGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Model_FieldIndex.AlternateTextures) ?? true))
             {
-                if (!lhs.AlternateTextures.SequenceEqualNullable(rhs.AlternateTextures)) return false;
+                if (!lhs.AlternateTextures.SequenceEqualNullable(rhs.AlternateTextures, (l, r) => ((AlternateTextureCommon)((IAlternateTextureGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Model_FieldIndex.AlternateTextures)))) return false;
             }
             return true;
         }

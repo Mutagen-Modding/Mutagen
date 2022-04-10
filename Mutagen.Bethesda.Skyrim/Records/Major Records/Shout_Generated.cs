@@ -1282,7 +1282,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Shout_FieldIndex.WordsOfPower) ?? true))
             {
-                if (!lhs.WordsOfPower.SequenceEqualNullable(rhs.WordsOfPower)) return false;
+                if (!lhs.WordsOfPower.SequenceEqual(rhs.WordsOfPower, (l, r) => ((ShoutWordCommon)((IShoutWordGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Shout_FieldIndex.WordsOfPower)))) return false;
             }
             return true;
         }

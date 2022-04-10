@@ -1529,7 +1529,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)StaticCollection_FieldIndex.Parts) ?? true))
             {
-                if (!lhs.Parts.SequenceEqualNullable(rhs.Parts)) return false;
+                if (!lhs.Parts.SequenceEqual(rhs.Parts, (l, r) => ((StaticPartCommon)((IStaticPartGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)StaticCollection_FieldIndex.Parts)))) return false;
             }
             return true;
         }

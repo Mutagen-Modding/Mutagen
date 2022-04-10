@@ -1969,7 +1969,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Responses) ?? true))
             {
-                if (!lhs.Responses.SequenceEqualNullable(rhs.Responses)) return false;
+                if (!lhs.Responses.SequenceEqual(rhs.Responses, (l, r) => ((DialogResponsesCommon)((IDialogResponsesGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DialogTopic_FieldIndex.Responses)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.DATADataTypeState) ?? true))
             {

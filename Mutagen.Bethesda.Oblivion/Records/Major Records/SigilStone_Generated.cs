@@ -1371,7 +1371,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)SigilStone_FieldIndex.Effects) ?? true))
             {
-                if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)SigilStone_FieldIndex.Effects)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SigilStone_FieldIndex.Data) ?? true))
             {

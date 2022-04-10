@@ -3311,7 +3311,7 @@ namespace Mutagen.Bethesda.Skyrim
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.LargeReferences) ?? true))
             {
-                if (!lhs.LargeReferences.SequenceEqualNullable(rhs.LargeReferences)) return false;
+                if (!lhs.LargeReferences.SequenceEqual(rhs.LargeReferences, (l, r) => ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.LargeReferences)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.MaxHeight) ?? true))
             {
@@ -3463,7 +3463,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))
             {
-                if (!lhs.SubCells.SequenceEqualNullable(rhs.SubCells)) return false;
+                if (!lhs.SubCells.SequenceEqual(rhs.SubCells, (l, r) => ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.SubCells)))) return false;
             }
             return true;
         }

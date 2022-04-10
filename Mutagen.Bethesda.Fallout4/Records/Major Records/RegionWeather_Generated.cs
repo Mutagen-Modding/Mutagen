@@ -943,7 +943,7 @@ namespace Mutagen.Bethesda.Fallout4
             if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)RegionWeather_FieldIndex.Weathers) ?? true))
             {
-                if (!lhs.Weathers.SequenceEqualNullable(rhs.Weathers)) return false;
+                if (!lhs.Weathers.SequenceEqualNullable(rhs.Weathers, (l, r) => ((WeatherTypeCommon)((IWeatherTypeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)RegionWeather_FieldIndex.Weathers)))) return false;
             }
             return true;
         }

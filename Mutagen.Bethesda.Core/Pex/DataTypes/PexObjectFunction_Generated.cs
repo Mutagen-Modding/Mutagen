@@ -1282,15 +1282,15 @@ namespace Mutagen.Bethesda.Pex
             }
             if ((crystal?.GetShouldTranslate((int)PexObjectFunction_FieldIndex.Parameters) ?? true))
             {
-                if (!lhs.Parameters.SequenceEqualNullable(rhs.Parameters)) return false;
+                if (!lhs.Parameters.SequenceEqual(rhs.Parameters, (l, r) => ((PexObjectFunctionVariableCommon)((IPexObjectFunctionVariableGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PexObjectFunction_FieldIndex.Parameters)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PexObjectFunction_FieldIndex.Locals) ?? true))
             {
-                if (!lhs.Locals.SequenceEqualNullable(rhs.Locals)) return false;
+                if (!lhs.Locals.SequenceEqual(rhs.Locals, (l, r) => ((PexObjectFunctionVariableCommon)((IPexObjectFunctionVariableGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PexObjectFunction_FieldIndex.Locals)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PexObjectFunction_FieldIndex.Instructions) ?? true))
             {
-                if (!lhs.Instructions.SequenceEqualNullable(rhs.Instructions)) return false;
+                if (!lhs.Instructions.SequenceEqual(rhs.Instructions, (l, r) => ((PexObjectFunctionInstructionCommon)((IPexObjectFunctionInstructionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PexObjectFunction_FieldIndex.Instructions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PexObjectFunction_FieldIndex.RawUserFlags) ?? true))
             {

@@ -1562,11 +1562,11 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Entries) ?? true))
             {
-                if (!lhs.Entries.SequenceEqualNullable(rhs.Entries)) return false;
+                if (!lhs.Entries.SequenceEqualNullable(rhs.Entries, (l, r) => ((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)LeveledNpc_FieldIndex.Entries)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)LeveledNpc_FieldIndex.FilterKeywordChances) ?? true))
             {
-                if (!lhs.FilterKeywordChances.SequenceEqualNullable(rhs.FilterKeywordChances)) return false;
+                if (!lhs.FilterKeywordChances.SequenceEqualNullable(rhs.FilterKeywordChances, (l, r) => ((FilterKeywordChanceCommon)((IFilterKeywordChanceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)LeveledNpc_FieldIndex.FilterKeywordChances)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Model) ?? true))
             {

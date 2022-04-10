@@ -1962,7 +1962,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Static_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties)) return false;
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Static_FieldIndex.Properties)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Static_FieldIndex.Name) ?? true))
             {
@@ -1994,7 +1994,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Static_FieldIndex.DistantLods) ?? true))
             {
-                if (!lhs.DistantLods.SequenceEqualNullable(rhs.DistantLods)) return false;
+                if (!lhs.DistantLods.SequenceEqual(rhs.DistantLods, (l, r) => ((DistantLodCommon)((IDistantLodGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Static_FieldIndex.DistantLods)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Static_FieldIndex.DNAMDataTypeState) ?? true))
             {

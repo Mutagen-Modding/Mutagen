@@ -1520,19 +1520,19 @@ namespace Mutagen.Bethesda.Pex
             }
             if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.StructInfos) ?? true))
             {
-                if (!lhs.StructInfos.SequenceEqualNullable(rhs.StructInfos)) return false;
+                if (!lhs.StructInfos.SequenceEqual(rhs.StructInfos, (l, r) => ((PexObjectStructInfoCommon)((IPexObjectStructInfoGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PexObject_FieldIndex.StructInfos)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.Variables) ?? true))
             {
-                if (!lhs.Variables.SequenceEqualNullable(rhs.Variables)) return false;
+                if (!lhs.Variables.SequenceEqual(rhs.Variables, (l, r) => ((PexObjectVariableCommon)((IPexObjectVariableGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PexObject_FieldIndex.Variables)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties)) return false;
+                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((PexObjectPropertyCommon)((IPexObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PexObject_FieldIndex.Properties)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.States) ?? true))
             {
-                if (!lhs.States.SequenceEqualNullable(rhs.States)) return false;
+                if (!lhs.States.SequenceEqual(rhs.States, (l, r) => ((PexObjectStateCommon)((IPexObjectStateGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PexObject_FieldIndex.States)))) return false;
             }
             return true;
         }

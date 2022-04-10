@@ -2703,7 +2703,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Factions) ?? true))
             {
-                if (!lhs.Factions.SequenceEqualNullable(rhs.Factions)) return false;
+                if (!lhs.Factions.SequenceEqual(rhs.Factions, (l, r) => ((RankPlacementCommon)((IRankPlacementGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Factions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DeathItem) ?? true))
             {
@@ -2723,7 +2723,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Items) ?? true))
             {
-                if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+                if (!lhs.Items.SequenceEqual(rhs.Items, (l, r) => ((ItemEntryCommon)((IItemEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Items)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AIData) ?? true))
             {

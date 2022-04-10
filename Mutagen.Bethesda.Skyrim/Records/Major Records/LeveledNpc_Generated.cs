@@ -1378,7 +1378,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Entries) ?? true))
             {
-                if (!lhs.Entries.SequenceEqualNullable(rhs.Entries)) return false;
+                if (!lhs.Entries.SequenceEqualNullable(rhs.Entries, (l, r) => ((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)LeveledNpc_FieldIndex.Entries)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Model) ?? true))
             {

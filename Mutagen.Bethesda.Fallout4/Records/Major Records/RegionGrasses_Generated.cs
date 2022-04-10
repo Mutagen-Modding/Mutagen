@@ -943,7 +943,7 @@ namespace Mutagen.Bethesda.Fallout4
             if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)RegionGrasses_FieldIndex.Grasses) ?? true))
             {
-                if (!lhs.Grasses.SequenceEqualNullable(rhs.Grasses)) return false;
+                if (!lhs.Grasses.SequenceEqualNullable(rhs.Grasses, (l, r) => ((RegionGrassCommon)((IRegionGrassGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)RegionGrasses_FieldIndex.Grasses)))) return false;
             }
             return true;
         }

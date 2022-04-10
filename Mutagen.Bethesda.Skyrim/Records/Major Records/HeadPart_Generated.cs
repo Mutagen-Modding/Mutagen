@@ -1651,7 +1651,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.Parts) ?? true))
             {
-                if (!lhs.Parts.SequenceEqualNullable(rhs.Parts)) return false;
+                if (!lhs.Parts.SequenceEqual(rhs.Parts, (l, r) => ((PartCommon)((IPartGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)HeadPart_FieldIndex.Parts)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.TextureSet) ?? true))
             {

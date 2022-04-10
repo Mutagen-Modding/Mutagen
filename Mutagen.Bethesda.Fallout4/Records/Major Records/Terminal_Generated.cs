@@ -2610,7 +2610,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Terminal_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties)) return false;
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Terminal_FieldIndex.Properties)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Terminal_FieldIndex.PNAM) ?? true))
             {
@@ -2626,7 +2626,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Terminal_FieldIndex.Holotapes) ?? true))
             {
-                if (!lhs.Holotapes.SequenceEqualNullable(rhs.Holotapes)) return false;
+                if (!lhs.Holotapes.SequenceEqualNullable(rhs.Holotapes, (l, r) => ((TerminalHolotapeEntryCommon)((ITerminalHolotapeEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Terminal_FieldIndex.Holotapes)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Terminal_FieldIndex.Flags) ?? true))
             {
@@ -2642,15 +2642,15 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Terminal_FieldIndex.MarkerParameters) ?? true))
             {
-                if (!lhs.MarkerParameters.SequenceEqualNullable(rhs.MarkerParameters)) return false;
+                if (!lhs.MarkerParameters.SequenceEqualNullable(rhs.MarkerParameters, (l, r) => ((FurnitureMarkerParametersCommon)((IFurnitureMarkerParametersGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Terminal_FieldIndex.MarkerParameters)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Terminal_FieldIndex.BodyTexts) ?? true))
             {
-                if (!lhs.BodyTexts.SequenceEqualNullable(rhs.BodyTexts)) return false;
+                if (!lhs.BodyTexts.SequenceEqualNullable(rhs.BodyTexts, (l, r) => ((TerminalBodyTextCommon)((ITerminalBodyTextGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Terminal_FieldIndex.BodyTexts)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Terminal_FieldIndex.MenuItems) ?? true))
             {
-                if (!lhs.MenuItems.SequenceEqualNullable(rhs.MenuItems)) return false;
+                if (!lhs.MenuItems.SequenceEqualNullable(rhs.MenuItems, (l, r) => ((TerminalMenuItemCommon)((ITerminalMenuItemGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Terminal_FieldIndex.MenuItems)))) return false;
             }
             return true;
         }

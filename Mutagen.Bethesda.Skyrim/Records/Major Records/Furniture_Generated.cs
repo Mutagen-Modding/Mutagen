@@ -1998,7 +1998,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Markers) ?? true))
             {
-                if (!lhs.Markers.SequenceEqualNullable(rhs.Markers)) return false;
+                if (!lhs.Markers.SequenceEqualNullable(rhs.Markers, (l, r) => ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Furniture_FieldIndex.Markers)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.ModelFilename) ?? true))
             {

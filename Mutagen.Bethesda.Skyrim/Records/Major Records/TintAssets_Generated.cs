@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)TintAssets_FieldIndex.Presets) ?? true))
             {
-                if (!lhs.Presets.SequenceEqualNullable(rhs.Presets)) return false;
+                if (!lhs.Presets.SequenceEqual(rhs.Presets, (l, r) => ((TintPresetCommon)((ITintPresetGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)TintAssets_FieldIndex.Presets)))) return false;
             }
             return true;
         }

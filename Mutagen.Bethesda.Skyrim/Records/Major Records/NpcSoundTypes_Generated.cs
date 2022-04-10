@@ -917,7 +917,7 @@ namespace Mutagen.Bethesda.Skyrim
             if (!base.Equals((IANpcSoundDefinitionGetter)lhs, (IANpcSoundDefinitionGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)NpcSoundTypes_FieldIndex.Types) ?? true))
             {
-                if (!lhs.Types.SequenceEqualNullable(rhs.Types)) return false;
+                if (!lhs.Types.SequenceEqual(rhs.Types, (l, r) => ((NpcSoundTypeCommon)((INpcSoundTypeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)NpcSoundTypes_FieldIndex.Types)))) return false;
             }
             return true;
         }

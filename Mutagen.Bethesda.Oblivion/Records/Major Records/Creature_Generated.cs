@@ -2766,7 +2766,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Items) ?? true))
             {
-                if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+                if (!lhs.Items.SequenceEqual(rhs.Items, (l, r) => ((ItemEntryCommon)((IItemEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Creature_FieldIndex.Items)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Spells) ?? true))
             {
@@ -2790,7 +2790,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Factions) ?? true))
             {
-                if (!lhs.Factions.SequenceEqualNullable(rhs.Factions)) return false;
+                if (!lhs.Factions.SequenceEqual(rhs.Factions, (l, r) => ((RankPlacementCommon)((IRankPlacementGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Creature_FieldIndex.Factions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.DeathItem) ?? true))
             {
@@ -2858,7 +2858,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Sounds) ?? true))
             {
-                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
+                if (!lhs.Sounds.SequenceEqual(rhs.Sounds, (l, r) => ((CreatureSoundCommon)((ICreatureSoundGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Creature_FieldIndex.Sounds)))) return false;
             }
             return true;
         }

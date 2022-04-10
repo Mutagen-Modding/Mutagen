@@ -3221,7 +3221,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties)) return false;
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Furniture_FieldIndex.Properties)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.NativeTerminal) ?? true))
             {
@@ -3249,11 +3249,11 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Furniture_FieldIndex.Conditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Items) ?? true))
             {
-                if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items, (l, r) => ((ContainerEntryCommon)((IContainerEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Furniture_FieldIndex.Items)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.BenchType) ?? true))
             {
@@ -3273,7 +3273,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerEntryPoints) ?? true))
             {
-                if (!lhs.MarkerEntryPoints.SequenceEqualNullable(rhs.MarkerEntryPoints)) return false;
+                if (!lhs.MarkerEntryPoints.SequenceEqual(rhs.MarkerEntryPoints, (l, r) => ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Furniture_FieldIndex.MarkerEntryPoints)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerModel) ?? true))
             {
@@ -3281,7 +3281,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerParameters) ?? true))
             {
-                if (!lhs.MarkerParameters.SequenceEqualNullable(rhs.MarkerParameters)) return false;
+                if (!lhs.MarkerParameters.SequenceEqualNullable(rhs.MarkerParameters, (l, r) => ((FurnitureMarkerParametersCommon)((IFurnitureMarkerParametersGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Furniture_FieldIndex.MarkerParameters)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.AttachParentSlots) ?? true))
             {
@@ -3289,7 +3289,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.ObjectTemplates) ?? true))
             {
-                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates)) return false;
+                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates, (l, r) => ((ObjectTemplateCommon<Furniture.Property>)((IObjectTemplateGetter<Furniture.Property>)l).CommonInstance(typeof(Furniture.Property))!).Equals(l, r, crystal?.GetSubCrystal((int)Furniture_FieldIndex.ObjectTemplates)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.NavmeshGeometry) ?? true))
             {

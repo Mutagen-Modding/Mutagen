@@ -2322,7 +2322,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))
             {
-                if (!lhs.SubCells.SequenceEqualNullable(rhs.SubCells)) return false;
+                if (!lhs.SubCells.SequenceEqual(rhs.SubCells, (l, r) => ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.SubCells)))) return false;
             }
             return true;
         }

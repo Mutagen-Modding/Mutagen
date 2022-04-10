@@ -3145,7 +3145,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Armatures) ?? true))
             {
-                if (!lhs.Armatures.SequenceEqualNullable(rhs.Armatures)) return false;
+                if (!lhs.Armatures.SequenceEqual(rhs.Armatures, (l, r) => ((ArmorAddonModelCommon)((IArmorAddonModelGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Armor_FieldIndex.Armatures)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Value) ?? true))
             {
@@ -3177,7 +3177,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Resistances) ?? true))
             {
-                if (!lhs.Resistances.SequenceEqualNullable(rhs.Resistances)) return false;
+                if (!lhs.Resistances.SequenceEqualNullable(rhs.Resistances, (l, r) => ((ArmorResistanceCommon)((IArmorResistanceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Armor_FieldIndex.Resistances)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.TemplateArmor) ?? true))
             {
@@ -3189,7 +3189,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.ObjectTemplates) ?? true))
             {
-                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates)) return false;
+                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates, (l, r) => ((ObjectTemplateCommon<Armor.Property>)((IObjectTemplateGetter<Armor.Property>)l).CommonInstance(typeof(Armor.Property))!).Equals(l, r, crystal?.GetSubCrystal((int)Armor_FieldIndex.ObjectTemplates)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.DATADataTypeState) ?? true))
             {

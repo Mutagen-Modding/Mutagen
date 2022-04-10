@@ -2000,7 +2000,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.HeadParts) ?? true))
             {
-                if (!lhs.HeadParts.SequenceEqualNullable(rhs.HeadParts)) return false;
+                if (!lhs.HeadParts.SequenceEqual(rhs.HeadParts, (l, r) => ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)HeadData_FieldIndex.HeadParts)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.RacePresets) ?? true))
             {
@@ -2020,15 +2020,15 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.TintLayers) ?? true))
             {
-                if (!lhs.TintLayers.SequenceEqualNullable(rhs.TintLayers)) return false;
+                if (!lhs.TintLayers.SequenceEqual(rhs.TintLayers, (l, r) => ((TintGroupCommon)((ITintGroupGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)HeadData_FieldIndex.TintLayers)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.MorphGroups) ?? true))
             {
-                if (!lhs.MorphGroups.SequenceEqualNullable(rhs.MorphGroups)) return false;
+                if (!lhs.MorphGroups.SequenceEqual(rhs.MorphGroups, (l, r) => ((MorphGroupCommon)((IMorphGroupGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)HeadData_FieldIndex.MorphGroups)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.FaceMorphs) ?? true))
             {
-                if (!lhs.FaceMorphs.SequenceEqualNullable(rhs.FaceMorphs)) return false;
+                if (!lhs.FaceMorphs.SequenceEqual(rhs.FaceMorphs, (l, r) => ((FaceMorphCommon)((IFaceMorphGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)HeadData_FieldIndex.FaceMorphs)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.MaleWrinkleMapPath) ?? true))
             {

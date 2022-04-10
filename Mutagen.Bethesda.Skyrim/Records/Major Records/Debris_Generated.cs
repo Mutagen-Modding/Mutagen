@@ -1062,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Debris_FieldIndex.Models) ?? true))
             {
-                if (!lhs.Models.SequenceEqualNullable(rhs.Models)) return false;
+                if (!lhs.Models.SequenceEqual(rhs.Models, (l, r) => ((DebrisModelCommon)((IDebrisModelGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Debris_FieldIndex.Models)))) return false;
             }
             return true;
         }

@@ -1703,7 +1703,7 @@ namespace Mutagen.Bethesda.Skyrim
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.HeadParts) ?? true))
             {
-                if (!lhs.HeadParts.SequenceEqualNullable(rhs.HeadParts)) return false;
+                if (!lhs.HeadParts.SequenceEqual(rhs.HeadParts, (l, r) => ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)HeadData_FieldIndex.HeadParts)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.AvailableMorphs) ?? true))
             {
@@ -1731,7 +1731,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.TintMasks) ?? true))
             {
-                if (!lhs.TintMasks.SequenceEqualNullable(rhs.TintMasks)) return false;
+                if (!lhs.TintMasks.SequenceEqual(rhs.TintMasks, (l, r) => ((TintAssetsCommon)((ITintAssetsGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)HeadData_FieldIndex.TintMasks)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.Model) ?? true))
             {

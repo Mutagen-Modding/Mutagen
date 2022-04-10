@@ -1356,7 +1356,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Relations) ?? true))
             {
-                if (!lhs.Relations.SequenceEqualNullable(rhs.Relations)) return false;
+                if (!lhs.Relations.SequenceEqual(rhs.Relations, (l, r) => ((RelationCommon)((IRelationGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Faction_FieldIndex.Relations)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Flags) ?? true))
             {
@@ -1368,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
             {
-                if (!lhs.Ranks.SequenceEqualNullable(rhs.Ranks)) return false;
+                if (!lhs.Ranks.SequenceEqual(rhs.Ranks, (l, r) => ((RankCommon)((IRankGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Faction_FieldIndex.Ranks)))) return false;
             }
             return true;
         }
