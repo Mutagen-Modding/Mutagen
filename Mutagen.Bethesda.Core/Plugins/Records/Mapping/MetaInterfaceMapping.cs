@@ -9,7 +9,7 @@ public interface IMetaInterfaceMapGetter
         [MaybeNullWhen(false)] out InterfaceMappingResult registrations);
 }
 
-public class MetaInterfaceMapper : IMetaInterfaceMapGetter
+internal class MetaInterfaceMapper : IMetaInterfaceMapGetter
 {
     private readonly IAspectInterfaceMapGetter _aspectInterfaceMapGetter;
     private readonly ILinkInterfaceMapGetter _linkInterfaceMapGetter;
