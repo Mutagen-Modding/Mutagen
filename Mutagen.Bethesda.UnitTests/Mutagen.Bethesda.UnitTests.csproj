@@ -11,7 +11,7 @@
     <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="AutoFixture" Version="4.17.0" />
     <PackageReference Include="AutoFixture.AutoNSubstitute" Version="4.17.0" />
-    <PackageReference Include="FluentAssertions" Version="6.5.1" />
+    <PackageReference Include="FluentAssertions" Version="6.6.0" />
     <PackageReference Include="GitInfo" Version="2.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -19,8 +19,8 @@
     <PackageReference Include="Loqui" Version="2.41.0.1-dev" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
     <PackageReference Include="Microsoft.Reactive.Testing" Version="5.0.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.41.0" />
-    <PackageReference Include="Noggog.Testing" Version="2.41.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.41.0.1-dev" />
+    <PackageReference Include="Noggog.Testing" Version="2.41.0.1-dev" />
     <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

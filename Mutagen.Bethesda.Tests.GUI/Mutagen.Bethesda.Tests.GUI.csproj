@@ -16,14 +16,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.41.0" />
-    <PackageReference Include="Noggog.WPF" Version="2.41.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.41.0.1-dev" />
+    <PackageReference Include="Noggog.WPF" Version="2.41.0.1-dev" />
     <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="ReactiveUI" Version="17.1.50" />
-    <PackageReference Include="ReactiveUI.Fody" Version="17.1.50" />
+    <PackageReference Include="ReactiveUI" Version="18.0.4" />
+    <PackageReference Include="ReactiveUI.Fody" Version="18.0.4" />
     <PackageReference Include="Simple.Wpf.Terminal" Version="2.3.39" />
   </ItemGroup>
 
