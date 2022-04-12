@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Plugins
             if (name != null
                 && HasInvalidCharacters(name))
             {
-                throw new ArgumentException($"ModKey name contained path characters: {name}");
+                throw new ArgumentException($"ModKey name contained path characters: {name}", nameof(name));
             }
             this._name = name == null ? null : string.Intern(name);
             this.Type = type;
@@ -226,6 +226,12 @@ namespace Mutagen.Bethesda.Plugins
             return TryFromName(str, type, out modKey, out _);
         }
 
+        public static ModKey FromName(ReadOnlySpan<char> str, ModType type)
+        {
+            if (TryFromName(str, type, out var modKey, out _)) return modKey;
+            throw new ArgumentException("Could not construct ModKey.", nameof(str));
+        }
+
         public static bool TryConvertExtensionToType(ReadOnlySpan<char> str, [MaybeNullWhen(false)] out ModType modType)
         {
             if (str.Equals(Constants.Esm.AsSpan(), StringComparison.OrdinalIgnoreCase))
@@ -265,7 +271,7 @@ namespace Mutagen.Bethesda.Plugins
             {
                 return key;
             }
-            throw new ArgumentException("Could not construct ModKey.");
+            throw new ArgumentException("Could not construct ModKey.", nameof(str));
         }
 
         /// <summary>
