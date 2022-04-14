@@ -20,11 +20,11 @@ jobs:
           - Mutagen.Records.Linux.sln
         exclude:
           - os: ubuntu-latest
-            project: Mutagen.Records.sln
+            sln: Mutagen.Records.sln
           - os: macos-latest
-            project: Mutagen.Records.sln
+            sln: Mutagen.Records.sln
           - os: windows-latest
-            project: Mutagen.Records.Linux.sln
+            sln: Mutagen.Records.Linux.sln
 
     steps:
     - uses: actions/checkout@v2
