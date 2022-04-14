@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Mutagen.Bethesda.Pex;
+using Noggog;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Pex;
@@ -35,7 +36,7 @@ public class PexTests
     [MemberData(nameof(TestDataFiles))]
     public void TestPexParsing(string file, GameCategory gameCategory)
     {
-        var path = Path.Combine("Pex", "files", file);
+        var path = new FilePath(Path.Combine("Pex", "files", file));
         Assert.True(File.Exists(path));
 
         var pex = PexFile.CreateFromFile(path, gameCategory);
@@ -46,7 +47,7 @@ public class PexTests
     [MemberData(nameof(TestDataFiles))]
     public void TestPexWriting(string file, GameCategory gameCategory)
     {
-        var inputFile = Path.Combine("Pex", "files", file);
+        var inputFile = new FilePath(Path.Combine("Pex", "files", file));
         Assert.True(File.Exists(inputFile));
 
         var inputPex = PexFile.CreateFromFile(inputFile, gameCategory);
@@ -62,7 +63,7 @@ public class PexTests
     [Fact]
     public void TestSinglePexParsing()
     {
-        var path = Path.Combine("Pex", "files", "Art.pex");
+        var path = new FilePath(Path.Combine("Pex", "files", "Art.pex"));
         Assert.True(File.Exists(path));
 
         var pex = PexFile.CreateFromFile(path, GameCategory.Skyrim);
@@ -104,7 +105,7 @@ public class PexTests
     [Fact]
     public void TestPexAddition()
     {
-        var path = Path.Combine("Pex", "files", "Art.pex");
+        var path = new FilePath(Path.Combine("Pex", "files", "Art.pex"));
         Assert.True(File.Exists(path));
 
         var pex = PexFile.CreateFromFile(path, GameCategory.Skyrim);
@@ -128,7 +129,7 @@ public class PexTests
     [Fact]
     public void UserFlagSync()
     {
-        var path = Path.Combine("Pex", "files", "Art.pex");
+        var path = new FilePath(Path.Combine("Pex", "files", "Art.pex"));
         Assert.True(File.Exists(path));
 
         var pex = PexFile.CreateFromFile(path, GameCategory.Skyrim);
