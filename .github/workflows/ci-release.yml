@@ -8,12 +8,35 @@ on:
 
 jobs:
   build:
-  
+
     runs-on: ${{ matrix.os }}
 
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+        project:
+          - Mutagen.Bethesda.Autofac
+          - Mutagen.Bethesda.Core
+          - Mutagen.Bethesda.Json
+          - Mutagen.Bethesda.Kernel
+          - Mutagen.Bethesda.SourceGenerators
+          - Mutagen.Bethesda.Sqlite
+          - Mutagen.Bethesda.Fallout4
+          - Mutagen.Bethesda.Oblivion
+          - Mutagen.Bethesda.Skyrim
+          - Mutagen.Bethesda.Core.UnitTests
+          - Mutagen.Bethesda.Testing
+          - Mutagen.Bethesda.Tests
+          - Mutagen.Bethesda.Tests.GUI
+          - Mutagen.Bethesda.UnitTests
+          - Mutagen.Bethesda.WPF
+          - Mutagen.Bethesda
+        exclude:
+          - os: ubuntu-latest
+            project: Mutagen.Bethesda.WPF
+          - os: macos-latest
+            project: Mutagen.Bethesda.WPF
 
     steps:
     - uses: actions/checkout@v2
@@ -26,6 +49,6 @@ jobs:
         dotnet clean Mutagen.Records.sln -c Release && dotnet nuget locals all --clear
         dotnet restore Mutagen.Records.sln
     - name: Build
-      run: dotnet build Mutagen.Records.sln -c Release --no-restore
+      run: dotnet build ${{ matrix.project }}/${{ matrix.project }}.csproj -c Release --no-restore
     - name: Test
-      run: dotnet test Mutagen.Records.sln -c Release --no-build
+      run: dotnet test ${{ matrix.project }}/${{ matrix.project }}.csproj -c Release --no-build
