@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <LangVersion>Latest</LangVersion>
     </PropertyGroup>
-    
+
     <PropertyGroup>
         <PackageId>Mutagen.Bethesda.SourceGenerators</PackageId>
         <Authors>Noggog</Authors>
@@ -23,29 +23,29 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Loqui" Version="2.42.0" GeneratePathProperty="true" />
-      <PackageReference Include="Loqui.Generation" Version="2.42.0" GeneratePathProperty="true" />
-      <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" PrivateAssets="all" />
-      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.1.0" PrivateAssets="all" />
-      <PackageReference Include="Noggog.CSharpExt" Version="2.42.0" GeneratePathProperty="true" />
+        <PackageReference Include="Loqui" Version="2.42.0" GeneratePathProperty="true"/>
+        <PackageReference Include="Loqui.Generation" Version="2.42.0" GeneratePathProperty="true"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" PrivateAssets="all"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.1.0" PrivateAssets="all"/>
+        <PackageReference Include="Noggog.CSharpExt" Version="2.42.0" GeneratePathProperty="true"/>
         <PackageReference Include="GitInfo" Version="2.2.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
 
-  <ItemGroup>
-    <!-- Package the generator in the analyzer directory of the nuget package -->
-	  <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <ItemGroup>
+        <!-- Package the generator in the analyzer directory of the nuget package -->
+        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
 
-    <!-- Package the dependencies alongside the generator assembly -->
-    <None Include="$(PkgNoggog_CSharpExt)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="$(PkgLoqui)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="$(PkgLoqui_Generation)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-  </ItemGroup>
+        <!-- Package the dependencies alongside the generator assembly -->
+        <None Include="$(PkgNoggog_CSharpExt)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <None Include="$(PkgLoqui)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <None Include="$(PkgLoqui_Generation)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+    </ItemGroup>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.sourcegenerators&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
-  </Target>
-    
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+        <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.sourcegenerators&quot;" Condition="!$([MSBuild]::IsOSUnixLike())"/>
+    </Target>
+
 </Project>

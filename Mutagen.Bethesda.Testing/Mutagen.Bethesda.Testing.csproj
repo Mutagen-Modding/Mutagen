@@ -2,7 +2,6 @@
 
     <PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-        <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
         <PackageId>Mutagen.Bethesda.Testing</PackageId>
         <Authors>Noggog</Authors>
         <Company>Mutagen</Company>

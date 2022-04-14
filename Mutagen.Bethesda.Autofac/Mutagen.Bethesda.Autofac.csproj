@@ -2,7 +2,6 @@
 
     <PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-        <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Company>Mutagen</Company>
         <Product>Mutagen</Product>
