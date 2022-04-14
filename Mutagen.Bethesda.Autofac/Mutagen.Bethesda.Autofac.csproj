@@ -33,7 +33,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Mutagen.Bethesda.Core.Windows\Mutagen.Bethesda.Core.Windows.csproj" />
       <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
     </ItemGroup>
 

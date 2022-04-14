@@ -46,7 +46,6 @@
       <ProjectReference Include="..\Mutagen.Bethesda.SourceGenerators\Mutagen.Bethesda.SourceGenerators.csproj" />
       <ProjectReference Include="..\Mutagen.Bethesda.Sqlite\Mutagen.Bethesda.Sqlite.csproj" />
       <ProjectReference Include="..\Mutagen.Bethesda.Testing\Mutagen.Bethesda.Testing.csproj" />
-      <ProjectReference Include="..\Mutagen.Bethesda.WPF\Mutagen.Bethesda.WPF.csproj" />
     </ItemGroup>
 
     <ItemGroup>
