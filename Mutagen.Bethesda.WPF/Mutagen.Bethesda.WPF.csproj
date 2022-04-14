@@ -55,7 +55,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.wpf&quot;" />
+    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.wpf&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
   </Target>
   
   <PropertyGroup>
