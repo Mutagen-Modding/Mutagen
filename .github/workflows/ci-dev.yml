@@ -47,7 +47,7 @@ jobs:
     - name: Install dependencies
       run: |
         dotnet clean Mutagen.Records.sln -c Release && dotnet nuget locals all --clear
-        dotnet restore Mutagen.Records.sln
+        dotnet restore ${{ matrix.project }}/${{ matrix.project }}.csproj
     - name: Build
       run: dotnet build ${{ matrix.project }}/${{ matrix.project }}.csproj -c Release --no-restore
     - name: Test
