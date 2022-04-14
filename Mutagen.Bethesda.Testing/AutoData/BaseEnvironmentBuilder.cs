@@ -9,6 +9,7 @@ using Mutagen.Bethesda.Environments.DI;
 using Noggog;
 using Noggog.Testing.AutoFixture;
 using Noggog.Testing.FileSystem;
+using Noggog.Testing.IO;
 using NSubstitute;
 
 namespace Mutagen.Bethesda.Testing.AutoData
@@ -17,7 +18,7 @@ namespace Mutagen.Bethesda.Testing.AutoData
     {
         private readonly GameRelease _release;
         private MockFileSystem? _mockFileSystem;
-        public static readonly DirectoryPath GameDirectory = "C:/GameDirectory";
+        public static readonly DirectoryPath GameDirectory = $"{PathingUtil.DrivePrefix}GameDirectory";
 
         public BaseEnvironmentBuilder(GameRelease release)
         {

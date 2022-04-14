@@ -8,6 +8,7 @@ using Mutagen.Bethesda.Plugins.Allocators;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.AutoData;
+using Noggog.Testing.IO;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators;
@@ -21,14 +22,14 @@ public class TextFileFormKeyAllocatorTests : IPersistentFormKeyAllocatorTests<Te
 
     protected override string ConstructTypicalPath(IFileSystem fileSystem)
     {
-        return "C:/SomeFile";
+        return $"{PathingUtil.DrivePrefix}SomeFile";
     }
 
     [Fact]
     public void StaticExport()
     {
         var fileSystem = new MockFileSystem();
-        var someFile = "C:/SomeFile";
+        var someFile = $"{PathingUtil.DrivePrefix}SomeFile";
         TextFileFormKeyAllocator.WriteToFile(
             someFile,
             new KeyValuePair<string, FormKey>[]
@@ -54,7 +55,7 @@ public class TextFileFormKeyAllocatorTests : IPersistentFormKeyAllocatorTests<Te
     public void TypicalImport(IMod mod)
     {
         var fileSystem = new MockFileSystem();
-        var someFile = "C:/SomeFile";
+        var someFile = $"{PathingUtil.DrivePrefix}SomeFile";
         fileSystem.File.WriteAllLines(
             someFile,
             new string[]
@@ -78,7 +79,7 @@ public class TextFileFormKeyAllocatorTests : IPersistentFormKeyAllocatorTests<Te
     public void FailedImportTruncatedFile(IMod mod)
     {
         var fileSystem = new MockFileSystem();
-        var someFile = "C:/SomeFile";
+        var someFile = $"{PathingUtil.DrivePrefix}SomeFile";
 
         fileSystem.File.WriteAllLines(
             someFile,
@@ -95,7 +96,7 @@ public class TextFileFormKeyAllocatorTests : IPersistentFormKeyAllocatorTests<Te
     public void FailedImportDuplicateFormKey(IMod mod)
     {
         var fileSystem = new MockFileSystem();
-        var someFile = "C:/SomeFile";
+        var someFile = $"{PathingUtil.DrivePrefix}SomeFile";
 
         fileSystem.File.WriteAllLines(
             someFile,
@@ -112,7 +113,7 @@ public class TextFileFormKeyAllocatorTests : IPersistentFormKeyAllocatorTests<Te
     [Theory, MutagenAutoData]
     public void FailedImportDuplicateEditorId(IMod mod)
     {
-        var someFile = "C:/SomeFile";
+        var someFile = $"{PathingUtil.DrivePrefix}SomeFile";
 
         var fileSystem = new MockFileSystem();
         fileSystem.File.WriteAllLines(
@@ -131,7 +132,7 @@ public class TextFileFormKeyAllocatorTests : IPersistentFormKeyAllocatorTests<Te
     public void TypicalReimport(IMod mod)
     {
         var fileSystem = new MockFileSystem();
-        var someFile = "C:/SomeFile";
+        var someFile = $"{PathingUtil.DrivePrefix}SomeFile";
         TextFileFormKeyAllocator.WriteToFile(
             someFile,
             new KeyValuePair<string, FormKey>[]

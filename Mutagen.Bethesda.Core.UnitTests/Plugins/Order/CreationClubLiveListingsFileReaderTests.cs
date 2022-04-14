@@ -12,6 +12,7 @@ using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.UnitTests.AutoData;
 using Noggog;
 using Noggog.Testing.FileSystem;
+using Noggog.Testing.IO;
 using NSubstitute;
 using Xunit;
 
@@ -65,7 +66,7 @@ public class CreationClubLiveListingsFileReaderTests
     public void FileExists(Stream stream)
     {
         var scheduler = new TestScheduler();
-        var path = "C:/SomePath";
+        var path = $"{PathingUtil.DrivePrefix}SomePath";
         var listingA = new ModListing("ModA.esp", true);
         var fs = Substitute.For<IFileSystem>();
         fs.File.OpenRead(path).Returns(stream);

@@ -8,8 +8,8 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Skyrim;
-using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Testing;
+using Noggog.Testing.IO;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Skyrim;
@@ -21,7 +21,7 @@ public abstract class ABodyTemplateTests
     private void AssertBinaryEquality(IRaceGetter race, string path)
     {
         var fs = new MockFileSystem();
-        using (var writer = new MutagenWriter(fs.FileStream.Create("C:/output", FileMode.Create),
+        using (var writer = new MutagenWriter(fs.FileStream.Create($"{PathingUtil.DrivePrefix}output", FileMode.Create),
                    new WritingBundle(GameConstants.SkyrimSE)
                    {
                        MasterReferences = new MasterReferenceCollection("Skyrim.esm"),
@@ -30,7 +30,7 @@ public abstract class ABodyTemplateTests
         {
             BodyTemplateBinaryWriteTranslation.Write(writer, race.BodyTemplate!);
         }
-        var exported = fs.File.ReadAllBytes("C:/output");
+        var exported = fs.File.ReadAllBytes($"{PathingUtil.DrivePrefix}output");
         var expected = File.ReadAllBytes(path);
         exported.Should().Equal(expected);
     }

@@ -8,6 +8,7 @@ using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Testing;
 using Noggog;
+using Noggog.Testing.IO;
 using NSubstitute;
 using Path = System.IO.Path;
 
@@ -15,7 +16,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order;
 
 public class LoadOrderWriterTests
 {
-    private const string BaseFolder = "C:/BaseFolder";
+    private static readonly string BaseFolder = $"{PathingUtil.DrivePrefix}BaseFolder";
         
     [Fact]
     public void WriteExclude()

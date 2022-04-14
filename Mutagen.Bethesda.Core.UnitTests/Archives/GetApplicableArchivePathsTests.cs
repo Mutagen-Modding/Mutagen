@@ -9,6 +9,7 @@ using Mutagen.Bethesda.Inis;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing;
 using Noggog;
+using Noggog.Testing.IO;
 using Xunit;
 using Path = System.IO.Path;
 
@@ -20,7 +21,7 @@ public class GetApplicableArchivePathsTests
     private const string UnusedExplicitListingBsa = "SomeExplicitListing2.bsa";
     private const string SkyrimBsa = "Skyrim.bsa";
     private const string MyModBsa = "MyMod.bsa";
-    private const string BaseFolder = "C:/BaseFolder";
+    private static readonly string BaseFolder = $"{PathingUtil.DrivePrefix}BaseFolder";
 
     private IFileSystem GetFileSystem()
     {

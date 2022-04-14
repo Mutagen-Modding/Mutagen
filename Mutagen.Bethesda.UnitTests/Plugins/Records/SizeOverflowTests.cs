@@ -9,9 +9,9 @@ using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
-using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Testing;
 using Noggog;
+using Noggog.Testing.IO;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records;
@@ -41,7 +41,7 @@ public abstract class SizeOverflowTests
     [Fact]
     public void WorldspaceOffsetOverflowWriteTest()
     {
-        var path = "C:/WritePath.esp";
+        var path = $"{PathingUtil.DrivePrefix}WritePath.esp";
         var mockFileSystem = new MockFileSystem();
         var worldspace = new Worldspace(FormKey.Null, SkyrimRelease.SkyrimSE);
         worldspace.OffsetData = new byte[ushort.MaxValue + 1];
@@ -59,7 +59,7 @@ public abstract class SizeOverflowTests
     [Fact]
     public void WorldspaceMaxHeightOverflowWriteTest()
     {
-        var path = "C:/WritePath.esp";
+        var path = $"{PathingUtil.DrivePrefix}WritePath.esp";
         var mockFileSystem = new MockFileSystem();
         var worldspace = new Worldspace(FormKey.Null, SkyrimRelease.SkyrimSE);
         worldspace.MaxHeight = new WorldspaceMaxHeight()

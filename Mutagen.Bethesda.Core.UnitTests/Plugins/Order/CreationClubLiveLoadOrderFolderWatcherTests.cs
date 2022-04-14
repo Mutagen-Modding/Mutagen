@@ -12,6 +12,7 @@ using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.UnitTests.AutoData;
 using Noggog;
 using Noggog.Testing.FileSystem;
+using Noggog.Testing.IO;
 using NSubstitute;
 using Xunit;
 
@@ -24,7 +25,7 @@ public class CreationClubLiveLoadOrderFolderWatcherTests
         [Frozen]TestScheduler scheduler,
         CreationClubLiveLoadOrderFolderWatcher sut)
     {
-        sut.DataDirectory.Path.Returns(new DirectoryPath("C:/DoesNotExist"));
+        sut.DataDirectory.Path.Returns(new DirectoryPath($"{PathingUtil.DrivePrefix}DoesNotExist"));
         var obs = scheduler.Start(() =>
         {
             return sut.Get();
@@ -39,8 +40,8 @@ public class CreationClubLiveLoadOrderFolderWatcherTests
         MockFileSystem fs,
         CreationClubLiveLoadOrderFolderWatcher sut)
     {
-        fs.Directory.CreateDirectory("C:/Missing");
-        sut.DataDirectory.Path.Returns(new DirectoryPath("C:/Missing"));
+        fs.Directory.CreateDirectory($"{PathingUtil.DrivePrefix}Missing");
+        sut.DataDirectory.Path.Returns(new DirectoryPath($"{PathingUtil.DrivePrefix}Missing"));
         var obs = scheduler.Start(() =>
         {
             return sut.Get();

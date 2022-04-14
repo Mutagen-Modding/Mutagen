@@ -8,6 +8,7 @@ using Mutagen.Bethesda.Plugins.Allocators;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.AutoData;
+using Noggog.Testing.IO;
 using NSubstitute;
 using Xunit;
 using Path = System.IO.Path;
@@ -322,7 +323,7 @@ public abstract class IPersistentFormKeyAllocatorTests<TFormKeyAllocator> : IFor
     public void NonExistentEndpointProperlyConstructs()
     {
         var fileSystem = GetFileSystem();
-        var someFolder = "C:/SomeFolder";
+        var someFolder = $"{PathingUtil.DrivePrefix}SomeFolder";
         fileSystem.Directory.CreateDirectory(someFolder);
         var mod = Substitute.For<IMod>();
         using var allocator = CreateAllocator(fileSystem, mod, Path.Combine(someFolder, "DoesntExist"));
@@ -332,7 +333,7 @@ public abstract class IPersistentFormKeyAllocatorTests<TFormKeyAllocator> : IFor
     public void NonExistentParentDirThrows()
     {
         var fileSystem = GetFileSystem();
-        var someFolder = "C:/SomeFolder";
+        var someFolder = $"{PathingUtil.DrivePrefix}SomeFolder";
         var mod = Substitute.For<IMod>();
         Assert.ThrowsAny<Exception>(() =>
         {
