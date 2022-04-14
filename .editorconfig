@@ -18,6 +18,9 @@ dotnet_diagnostic.IDE0060.severity = silent
  
 # CS1066: // Optional parameter has no effect 
 dotnet_diagnostic.CS1066.severity = silent 
+ 
+# CLASS0001: Seal classes that do not have any virtual or abstract methods, properties, events, or indexers
+dotnet_diagnostic.CLASS0001.severity = silent 
 
 dotnet_diagnostic.LindhartAnalyserMissingAwaitWarning.severity = error 
 

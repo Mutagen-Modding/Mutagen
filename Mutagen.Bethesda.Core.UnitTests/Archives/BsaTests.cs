@@ -13,23 +13,23 @@ namespace Mutagen.Bethesda.UnitTests.Archives;
 public class BsaTests
 {
     public static FilePath TestBsa = new(Path.Combine("..", "..", "..", "Archives", "test.bsa"));
-        
+
     [Fact]
     public void TryGetFolder_CaseInsensitive()
     {
         var archive = Archive.CreateReader(GameRelease.SkyrimSE, TestBsa);
-        archive.TryGetFolder(Path.Combine("derp", "some_FoldeR"), out var folder)
+        archive.TryGetFolder("derp\\some_FoldeR", out var folder)
             .Should().BeTrue();
         if (folder == null) throw new NullReferenceException();
         folder.Files.Should().HaveCount(1);
-        folder.Files.First().Path.Should().Be(Path.Combine("derp", "some_folder", "someotherfile.txt"));
+        folder.Files.First().Path.Should().Be("derp\\some_folder\\someotherfile.txt");
     }
         
     [Fact]
     public void AsBytes()
     {
         var archive = Archive.CreateReader(GameRelease.SkyrimSE, TestBsa);
-        archive.TryGetFolder(Path.Combine("derp", "some_FoldeR"), out var folder)
+        archive.TryGetFolder("derp\\some_FoldeR", out var folder)
             .Should().BeTrue();
         if (folder == null) throw new NullReferenceException();
         var file = folder.Files.First();
@@ -41,7 +41,7 @@ public class BsaTests
     public void GetSpan()
     {
         var archive = Archive.CreateReader(GameRelease.SkyrimSE, TestBsa);
-        archive.TryGetFolder(Path.Combine("derp", "some_FoldeR"), out var folder)
+        archive.TryGetFolder("derp\\some_FoldeR", out var folder)
             .Should().BeTrue();
         if (folder == null) throw new NullReferenceException();
         var file = folder.Files.First();
@@ -53,7 +53,7 @@ public class BsaTests
     public void GetMemorySlice()
     {
         var archive = Archive.CreateReader(GameRelease.SkyrimSE, TestBsa);
-        archive.TryGetFolder(Path.Combine("derp", "some_FoldeR"), out var folder)
+        archive.TryGetFolder("derp\\some_FoldeR", out var folder)
             .Should().BeTrue();
         if (folder == null) throw new NullReferenceException();
         var file = folder.Files.First();
@@ -65,7 +65,7 @@ public class BsaTests
     public void AsStream()
     {
         var archive = Archive.CreateReader(GameRelease.SkyrimSE, TestBsa);
-        archive.TryGetFolder(Path.Combine("derp", "some_FoldeR"), out var folder)
+        archive.TryGetFolder("derp\\some_FoldeR", out var folder)
             .Should().BeTrue();
         if (folder == null) throw new NullReferenceException();
         var file = folder.Files.First();
