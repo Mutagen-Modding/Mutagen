@@ -1376,7 +1376,7 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        private int? _PRKELocation;
+        private RangeInt32? _PRKELocation;
         public APerkEffect.PRKEDataType PRKEDataTypeState { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1410,7 +1410,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.PRKE:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)APerkEffect_FieldIndex.Priority) return ParseResult.Stop;
-                    _PRKELocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _PRKELocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)APerkEffect_FieldIndex.Priority;
                 }
                 case RecordTypeInts.PRKF: // End Marker

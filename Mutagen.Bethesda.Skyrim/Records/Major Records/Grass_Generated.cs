@@ -2381,70 +2381,70 @@ namespace Mutagen.Bethesda.Skyrim
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         public IModelGetter? Model { get; private set; }
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Grass.DATADataType DATADataTypeState { get; private set; }
         #region Density
-        private int _DensityLocation => _DATALocation!.Value;
+        private int _DensityLocation => _DATALocation!.Value.Min;
         private bool _Density_IsSet => _DATALocation.HasValue;
         public Byte Density => _Density_IsSet ? _data.Span[_DensityLocation] : default;
         #endregion
         #region MinSlope
-        private int _MinSlopeLocation => _DATALocation!.Value + 0x1;
+        private int _MinSlopeLocation => _DATALocation!.Value.Min + 0x1;
         private bool _MinSlope_IsSet => _DATALocation.HasValue;
         public Byte MinSlope => _MinSlope_IsSet ? _data.Span[_MinSlopeLocation] : default;
         #endregion
         #region MaxSlope
-        private int _MaxSlopeLocation => _DATALocation!.Value + 0x2;
+        private int _MaxSlopeLocation => _DATALocation!.Value.Min + 0x2;
         private bool _MaxSlope_IsSet => _DATALocation.HasValue;
         public Byte MaxSlope => _MaxSlope_IsSet ? _data.Span[_MaxSlopeLocation] : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _DATALocation!.Value + 0x3;
+        private int _UnknownLocation => _DATALocation!.Value.Min + 0x3;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
         public Byte Unknown => _Unknown_IsSet ? _data.Span[_UnknownLocation] : default;
         #endregion
         #region UnitsFromWater
-        private int _UnitsFromWaterLocation => _DATALocation!.Value + 0x4;
+        private int _UnitsFromWaterLocation => _DATALocation!.Value.Min + 0x4;
         private bool _UnitsFromWater_IsSet => _DATALocation.HasValue;
         public UInt16 UnitsFromWater => _UnitsFromWater_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_UnitsFromWaterLocation, 2)) : default;
         #endregion
         #region Unknown2
-        private int _Unknown2Location => _DATALocation!.Value + 0x6;
+        private int _Unknown2Location => _DATALocation!.Value.Min + 0x6;
         private bool _Unknown2_IsSet => _DATALocation.HasValue;
         public UInt16 Unknown2 => _Unknown2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_Unknown2Location, 2)) : default;
         #endregion
         #region UnitsFromWaterType
-        private int _UnitsFromWaterTypeLocation => _DATALocation!.Value + 0x8;
+        private int _UnitsFromWaterTypeLocation => _DATALocation!.Value.Min + 0x8;
         private bool _UnitsFromWaterType_IsSet => _DATALocation.HasValue;
         public Grass.UnitsFromWaterTypeEnum UnitsFromWaterType => _UnitsFromWaterType_IsSet ? (Grass.UnitsFromWaterTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_UnitsFromWaterTypeLocation, 0x4)) : default;
         #endregion
         #region PositionRange
-        private int _PositionRangeLocation => _DATALocation!.Value + 0xC;
+        private int _PositionRangeLocation => _DATALocation!.Value.Min + 0xC;
         private bool _PositionRange_IsSet => _DATALocation.HasValue;
         public Single PositionRange => _PositionRange_IsSet ? _data.Slice(_PositionRangeLocation, 4).Float() : default;
         #endregion
         #region HeightRange
-        private int _HeightRangeLocation => _DATALocation!.Value + 0x10;
+        private int _HeightRangeLocation => _DATALocation!.Value.Min + 0x10;
         private bool _HeightRange_IsSet => _DATALocation.HasValue;
         public Single HeightRange => _HeightRange_IsSet ? _data.Slice(_HeightRangeLocation, 4).Float() : default;
         #endregion
         #region ColorRange
-        private int _ColorRangeLocation => _DATALocation!.Value + 0x14;
+        private int _ColorRangeLocation => _DATALocation!.Value.Min + 0x14;
         private bool _ColorRange_IsSet => _DATALocation.HasValue;
         public Single ColorRange => _ColorRange_IsSet ? _data.Slice(_ColorRangeLocation, 4).Float() : default;
         #endregion
         #region WavePeriod
-        private int _WavePeriodLocation => _DATALocation!.Value + 0x18;
+        private int _WavePeriodLocation => _DATALocation!.Value.Min + 0x18;
         private bool _WavePeriod_IsSet => _DATALocation.HasValue;
         public Single WavePeriod => _WavePeriod_IsSet ? _data.Slice(_WavePeriodLocation, 4).Float() : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x1C;
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public Grass.Flag Flags => _Flags_IsSet ? (Grass.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region Unknown3
-        private int _Unknown3Location => _DATALocation!.Value + 0x1D;
+        private int _Unknown3Location => _DATALocation!.Value.Min + 0x1D;
         private bool _Unknown3_IsSet => _DATALocation.HasValue;
         public ReadOnlyMemorySlice<Byte> Unknown3 => _Unknown3_IsSet ? _data.Span.Slice(_Unknown3Location, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
@@ -2529,7 +2529,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Grass_FieldIndex.Unknown3;
                 }
                 default:

@@ -12986,49 +12986,49 @@ namespace Mutagen.Bethesda.Skyrim
         protected override Type LinkType => typeof(IImageSpaceAdapter);
 
 
-        private int? _DNAMLocation;
+        private RangeInt32? _DNAMLocation;
         public ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Flags
-        private int _FlagsLocation => _DNAMLocation!.Value;
+        private int _FlagsLocation => _DNAMLocation!.Value.Min;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;
         public ImageSpaceAdapter.Flag Flags => _Flags_IsSet ? (ImageSpaceAdapter.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region Duration
-        private int _DurationLocation => _DNAMLocation!.Value + 0x4;
+        private int _DurationLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Duration_IsSet => _DNAMLocation.HasValue;
         public Single Duration => _Duration_IsSet ? _data.Slice(_DurationLocation, 4).Float() : default;
         #endregion
         #region Counts1
-        private int _Counts1Location => _DNAMLocation!.Value + 0x8;
+        private int _Counts1Location => _DNAMLocation!.Value.Min + 0x8;
         private bool _Counts1_IsSet => _DNAMLocation.HasValue;
         partial void Counts1CustomParse(
             OverlayStream stream,
             int offset);
         #endregion
         #region RadialBlurFlags
-        private int _RadialBlurFlagsLocation => _DNAMLocation!.Value + 0xC8;
+        private int _RadialBlurFlagsLocation => _DNAMLocation!.Value.Min + 0xC8;
         private bool _RadialBlurFlags_IsSet => _DNAMLocation.HasValue;
         public ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags => _RadialBlurFlags_IsSet ? (ImageSpaceAdapter.RadialBlurFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_RadialBlurFlagsLocation, 0x4)) : default;
         #endregion
         #region RadialBlurCenter
-        private int _RadialBlurCenterLocation => _DNAMLocation!.Value + 0xCC;
+        private int _RadialBlurCenterLocation => _DNAMLocation!.Value.Min + 0xCC;
         private bool _RadialBlurCenter_IsSet => _DNAMLocation.HasValue;
         public P2Float RadialBlurCenter => _RadialBlurCenter_IsSet ? P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_RadialBlurCenterLocation, 8)) : default;
         #endregion
         #region Counts2
-        private int _Counts2Location => _DNAMLocation!.Value + 0xD4;
+        private int _Counts2Location => _DNAMLocation!.Value.Min + 0xD4;
         private bool _Counts2_IsSet => _DNAMLocation.HasValue;
         partial void Counts2CustomParse(
             OverlayStream stream,
             int offset);
         #endregion
         #region DepthOfFieldFlags
-        private int _DepthOfFieldFlagsLocation => _DNAMLocation!.Value + 0xE0;
+        private int _DepthOfFieldFlagsLocation => _DNAMLocation!.Value.Min + 0xE0;
         private bool _DepthOfFieldFlags_IsSet => _DNAMLocation.HasValue;
         public ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags => _DepthOfFieldFlags_IsSet ? (ImageSpaceAdapter.DepthOfFieldFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_DepthOfFieldFlagsLocation, 0x4)) : default;
         #endregion
         #region Counts3
-        private int _Counts3Location => _DNAMLocation!.Value + 0xE4;
+        private int _Counts3Location => _DNAMLocation!.Value.Min + 0xE4;
         private bool _Counts3_IsSet => _DNAMLocation.HasValue;
         partial void Counts3CustomParse(
             OverlayStream stream,
@@ -13157,7 +13157,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.DNAM:
                 {
-                    _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags;
                 }
                 case RecordTypeInts.BNAM:

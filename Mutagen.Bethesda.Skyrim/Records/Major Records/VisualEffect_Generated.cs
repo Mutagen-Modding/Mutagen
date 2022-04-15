@@ -1609,20 +1609,20 @@ namespace Mutagen.Bethesda.Skyrim
         protected override Type LinkType => typeof(IVisualEffect);
 
 
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public VisualEffect.DATADataType DATADataTypeState { get; private set; }
         #region EffectArt
-        private int _EffectArtLocation => _DATALocation!.Value;
+        private int _EffectArtLocation => _DATALocation!.Value.Min;
         private bool _EffectArt_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IArtObjectGetter> EffectArt => _EffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region Shader
-        private int _ShaderLocation => _DATALocation!.Value + 0x4;
+        private int _ShaderLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Shader_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IEffectShaderGetter> Shader => _Shader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x8;
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public VisualEffect.Flag Flags => _Flags_IsSet ? (VisualEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
@@ -1694,7 +1694,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)VisualEffect_FieldIndex.Flags;
                 }
                 default:

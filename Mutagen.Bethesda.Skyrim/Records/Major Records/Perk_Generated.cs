@@ -2644,30 +2644,30 @@ namespace Mutagen.Bethesda.Skyrim
             RecordType type,
             PreviousParse lastParsed);
         #endregion
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Perk.DATADataType DATADataTypeState { get; private set; }
         #region Trait
-        private int _TraitLocation => _DATALocation!.Value;
+        private int _TraitLocation => _DATALocation!.Value.Min;
         private bool _Trait_IsSet => _DATALocation.HasValue;
         public Boolean Trait => _Trait_IsSet ? _data.Slice(_TraitLocation, 1)[0] >= 1 : default;
         #endregion
         #region Level
-        private int _LevelLocation => _DATALocation!.Value + 0x1;
+        private int _LevelLocation => _DATALocation!.Value.Min + 0x1;
         private bool _Level_IsSet => _DATALocation.HasValue;
         public Byte Level => _Level_IsSet ? _data.Span[_LevelLocation] : default;
         #endregion
         #region NumRanks
-        private int _NumRanksLocation => _DATALocation!.Value + 0x2;
+        private int _NumRanksLocation => _DATALocation!.Value.Min + 0x2;
         private bool _NumRanks_IsSet => _DATALocation.HasValue;
         public Byte NumRanks => _NumRanks_IsSet ? _data.Span[_NumRanksLocation] : default;
         #endregion
         #region Playable
-        private int _PlayableLocation => _DATALocation!.Value + 0x3;
+        private int _PlayableLocation => _DATALocation!.Value.Min + 0x3;
         private bool _Playable_IsSet => _DATALocation.HasValue;
         public Boolean Playable => _Playable_IsSet ? _data.Slice(_PlayableLocation, 1)[0] >= 1 : default;
         #endregion
         #region Hidden
-        private int _HiddenLocation => _DATALocation!.Value + 0x4;
+        private int _HiddenLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Hidden_IsSet => _DATALocation.HasValue;
         public Boolean Hidden => _Hidden_IsSet ? _data.Slice(_HiddenLocation, 1)[0] >= 1 : default;
         #endregion
@@ -2784,7 +2784,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Perk_FieldIndex.Hidden;
                 }
                 case RecordTypeInts.NNAM:

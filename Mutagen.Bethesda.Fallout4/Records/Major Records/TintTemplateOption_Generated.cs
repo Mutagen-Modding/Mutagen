@@ -2135,15 +2135,15 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        private int? _TETILocation;
+        private RangeInt32? _TETILocation;
         public TintTemplateOption.TETIDataType TETIDataTypeState { get; private set; }
         #region Slot
-        private int _SlotLocation => _TETILocation!.Value;
+        private int _SlotLocation => _TETILocation!.Value.Min;
         private bool _Slot_IsSet => _TETILocation.HasValue;
         public TintTemplateOption.TintSlot Slot => _Slot_IsSet ? (TintTemplateOption.TintSlot)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_SlotLocation, 0x2)) : default;
         #endregion
         #region Index
-        private int _IndexLocation => _TETILocation!.Value + 0x2;
+        private int _IndexLocation => _TETILocation!.Value.Min + 0x2;
         private bool _Index_IsSet => _TETILocation.HasValue;
         public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_IndexLocation, 2)) : default;
         #endregion
@@ -2241,7 +2241,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.TETI:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintTemplateOption_FieldIndex.Index) return ParseResult.Stop;
-                    _TETILocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _TETILocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)TintTemplateOption_FieldIndex.Index;
                 }
                 case RecordTypeInts.TTGP:

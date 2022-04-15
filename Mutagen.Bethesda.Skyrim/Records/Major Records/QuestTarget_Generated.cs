@@ -1432,15 +1432,15 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        private int? _QSTALocation;
+        private RangeInt32? _QSTALocation;
         public QuestTarget.QSTADataType QSTADataTypeState { get; private set; }
         #region Target
-        private int _TargetLocation => _QSTALocation!.Value;
+        private int _TargetLocation => _QSTALocation!.Value.Min;
         private bool _Target_IsSet => _QSTALocation.HasValue;
         public IFormLinkGetter<IPlacedGetter> Target => _Target_IsSet ? new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_TargetLocation, 0x4)))) : FormLink<IPlacedGetter>.Null;
         #endregion
         #region Flags
-        private int _FlagsLocation => _QSTALocation!.Value + 0x4;
+        private int _FlagsLocation => _QSTALocation!.Value.Min + 0x4;
         private bool _Flags_IsSet => _QSTALocation.HasValue;
         public Quest.TargetFlag Flags => _Flags_IsSet ? (Quest.TargetFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
@@ -1512,7 +1512,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.QSTA:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestTarget_FieldIndex.Flags) return ParseResult.Stop;
-                    _QSTALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _QSTALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)QuestTarget_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CTDA:

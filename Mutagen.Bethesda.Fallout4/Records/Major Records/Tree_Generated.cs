@@ -2875,65 +2875,65 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        private int? _CNAMLocation;
+        private RangeInt32? _CNAMLocation;
         public Tree.CNAMDataType CNAMDataTypeState { get; private set; }
         #region TrunkFlexibility
-        private int _TrunkFlexibilityLocation => _CNAMLocation!.Value;
+        private int _TrunkFlexibilityLocation => _CNAMLocation!.Value.Min;
         private bool _TrunkFlexibility_IsSet => _CNAMLocation.HasValue;
         public Single TrunkFlexibility => _TrunkFlexibility_IsSet ? _data.Slice(_TrunkFlexibilityLocation, 4).Float() : default;
         #endregion
         #region BranchFlexibility
-        private int _BranchFlexibilityLocation => _CNAMLocation!.Value + 0x4;
+        private int _BranchFlexibilityLocation => _CNAMLocation!.Value.Min + 0x4;
         private bool _BranchFlexibility_IsSet => _CNAMLocation.HasValue;
         public Single BranchFlexibility => _BranchFlexibility_IsSet ? _data.Slice(_BranchFlexibilityLocation, 4).Float() : default;
         #endregion
         #region TrunkAmplitude
-        private int _TrunkAmplitudeLocation => _CNAMLocation!.Value + 0x8;
+        private int _TrunkAmplitudeLocation => _CNAMLocation!.Value.Min + 0x8;
         private bool _TrunkAmplitude_IsSet => _CNAMLocation.HasValue;
         public Single TrunkAmplitude => _TrunkAmplitude_IsSet ? _data.Slice(_TrunkAmplitudeLocation, 4).Float() : default;
         #endregion
         #region FrontAmplitude
-        private int _FrontAmplitudeLocation => _CNAMLocation!.Value + 0xC;
+        private int _FrontAmplitudeLocation => _CNAMLocation!.Value.Min + 0xC;
         private bool _FrontAmplitude_IsSet => _CNAMLocation.HasValue;
         public Single FrontAmplitude => _FrontAmplitude_IsSet ? _data.Slice(_FrontAmplitudeLocation, 4).Float() : default;
         #endregion
         #region BackAmplitude
-        private int _BackAmplitudeLocation => _CNAMLocation!.Value + 0x10;
+        private int _BackAmplitudeLocation => _CNAMLocation!.Value.Min + 0x10;
         private bool _BackAmplitude_IsSet => _CNAMLocation.HasValue;
         public Single BackAmplitude => _BackAmplitude_IsSet ? _data.Slice(_BackAmplitudeLocation, 4).Float() : default;
         #endregion
         #region SideAmplitude
-        private int _SideAmplitudeLocation => _CNAMLocation!.Value + 0x14;
+        private int _SideAmplitudeLocation => _CNAMLocation!.Value.Min + 0x14;
         private bool _SideAmplitude_IsSet => _CNAMLocation.HasValue;
         public Single SideAmplitude => _SideAmplitude_IsSet ? _data.Slice(_SideAmplitudeLocation, 4).Float() : default;
         #endregion
         #region FrontFrequency
-        private int _FrontFrequencyLocation => _CNAMLocation!.Value + 0x18;
+        private int _FrontFrequencyLocation => _CNAMLocation!.Value.Min + 0x18;
         private bool _FrontFrequency_IsSet => _CNAMLocation.HasValue;
         public Single FrontFrequency => _FrontFrequency_IsSet ? _data.Slice(_FrontFrequencyLocation, 4).Float() : default;
         #endregion
         #region BackFrequency
-        private int _BackFrequencyLocation => _CNAMLocation!.Value + 0x1C;
+        private int _BackFrequencyLocation => _CNAMLocation!.Value.Min + 0x1C;
         private bool _BackFrequency_IsSet => _CNAMLocation.HasValue;
         public Single BackFrequency => _BackFrequency_IsSet ? _data.Slice(_BackFrequencyLocation, 4).Float() : default;
         #endregion
         #region SideFrequency
-        private int _SideFrequencyLocation => _CNAMLocation!.Value + 0x20;
+        private int _SideFrequencyLocation => _CNAMLocation!.Value.Min + 0x20;
         private bool _SideFrequency_IsSet => _CNAMLocation.HasValue;
         public Single SideFrequency => _SideFrequency_IsSet ? _data.Slice(_SideFrequencyLocation, 4).Float() : default;
         #endregion
         #region LeafFlexibility
-        private int _LeafFlexibilityLocation => _CNAMLocation!.Value + 0x24;
+        private int _LeafFlexibilityLocation => _CNAMLocation!.Value.Min + 0x24;
         private bool _LeafFlexibility_IsSet => _CNAMLocation.HasValue;
         public Single LeafFlexibility => _LeafFlexibility_IsSet ? _data.Slice(_LeafFlexibilityLocation, 4).Float() : default;
         #endregion
         #region LeafAmplitude
-        private int _LeafAmplitudeLocation => _CNAMLocation!.Value + 0x28;
+        private int _LeafAmplitudeLocation => _CNAMLocation!.Value.Min + 0x28;
         private bool _LeafAmplitude_IsSet => _CNAMLocation.HasValue;
         public Single LeafAmplitude => _LeafAmplitude_IsSet ? _data.Slice(_LeafAmplitudeLocation, 4).Float() : default;
         #endregion
         #region LeafFrequency
-        private int _LeafFrequencyLocation => _CNAMLocation!.Value + 0x2C;
+        private int _LeafFrequencyLocation => _CNAMLocation!.Value.Min + 0x2C;
         private bool _LeafFrequency_IsSet => _CNAMLocation.HasValue;
         public Single LeafFrequency => _LeafFrequency_IsSet ? _data.Slice(_LeafFrequencyLocation, 4).Float() : default;
         #endregion
@@ -3043,7 +3043,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _CNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _CNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Tree_FieldIndex.LeafFrequency;
                 }
                 default:

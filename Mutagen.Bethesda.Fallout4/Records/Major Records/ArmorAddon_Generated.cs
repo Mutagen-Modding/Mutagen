@@ -2812,10 +2812,10 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _RaceLocation;
         public IFormLinkNullableGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
-        private int? _DNAMLocation;
+        private RangeInt32? _DNAMLocation;
         public ArmorAddon.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Priority
-        private int _PriorityLocation => _DNAMLocation!.Value;
+        private int _PriorityLocation => _DNAMLocation!.Value.Min;
         private bool _Priority_IsSet => _DNAMLocation.HasValue;
         public IGenderedItemGetter<Byte> Priority
         {
@@ -2830,27 +2830,27 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region WeightSliderEnabled
-        private int _WeightSliderEnabledLocation => _DNAMLocation!.Value + 0x2;
+        private int _WeightSliderEnabledLocation => _DNAMLocation!.Value.Min + 0x2;
         public partial IGenderedItemGetter<Boolean> GetWeightSliderEnabledCustom();
         public IGenderedItemGetter<Boolean> WeightSliderEnabled => GetWeightSliderEnabledCustom();
         #endregion
         #region Unknown
-        private int _UnknownLocation => _DNAMLocation!.Value + 0x4;
+        private int _UnknownLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Unknown_IsSet => _DNAMLocation.HasValue;
         public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
         #endregion
         #region DetectionSoundValue
-        private int _DetectionSoundValueLocation => _DNAMLocation!.Value + 0x6;
+        private int _DetectionSoundValueLocation => _DNAMLocation!.Value.Min + 0x6;
         private bool _DetectionSoundValue_IsSet => _DNAMLocation.HasValue;
         public Byte DetectionSoundValue => _DetectionSoundValue_IsSet ? _data.Span[_DetectionSoundValueLocation] : default;
         #endregion
         #region Unknown2
-        private int _Unknown2Location => _DNAMLocation!.Value + 0x7;
+        private int _Unknown2Location => _DNAMLocation!.Value.Min + 0x7;
         private bool _Unknown2_IsSet => _DNAMLocation.HasValue;
         public Byte Unknown2 => _Unknown2_IsSet ? _data.Span[_Unknown2Location] : default;
         #endregion
         #region WeaponAdjust
-        private int _WeaponAdjustLocation => _DNAMLocation!.Value + 0x8;
+        private int _WeaponAdjustLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _WeaponAdjust_IsSet => _DNAMLocation.HasValue;
         public Single WeaponAdjust => _WeaponAdjust_IsSet ? _data.Slice(_WeaponAdjustLocation, 4).Float() : default;
         #endregion
@@ -2961,7 +2961,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)ArmorAddon_FieldIndex.WeaponAdjust;
                 }
                 case RecordTypeInts.MOD2:

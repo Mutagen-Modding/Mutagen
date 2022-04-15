@@ -2466,55 +2466,55 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _ImageSpaceModifierLocation;
         public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
         #endregion
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Hazard.DATADataType DATADataTypeState { get; private set; }
         #region Limit
-        private int _LimitLocation => _DATALocation!.Value;
+        private int _LimitLocation => _DATALocation!.Value.Min;
         private bool _Limit_IsSet => _DATALocation.HasValue;
         public UInt32 Limit => _Limit_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_LimitLocation, 4)) : default;
         #endregion
         #region Radius
-        private int _RadiusLocation => _DATALocation!.Value + 0x4;
+        private int _RadiusLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Radius_IsSet => _DATALocation.HasValue;
         public Single Radius => _Radius_IsSet ? _data.Slice(_RadiusLocation, 4).Float() : default;
         #endregion
         #region Lifetime
-        private int _LifetimeLocation => _DATALocation!.Value + 0x8;
+        private int _LifetimeLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Lifetime_IsSet => _DATALocation.HasValue;
         public Single Lifetime => _Lifetime_IsSet ? _data.Slice(_LifetimeLocation, 4).Float() : default;
         #endregion
         #region ImageSpaceRadius
-        private int _ImageSpaceRadiusLocation => _DATALocation!.Value + 0xC;
+        private int _ImageSpaceRadiusLocation => _DATALocation!.Value.Min + 0xC;
         private bool _ImageSpaceRadius_IsSet => _DATALocation.HasValue;
         public Single ImageSpaceRadius => _ImageSpaceRadius_IsSet ? _data.Slice(_ImageSpaceRadiusLocation, 4).Float() : default;
         #endregion
         #region TargetInterval
-        private int _TargetIntervalLocation => _DATALocation!.Value + 0x10;
+        private int _TargetIntervalLocation => _DATALocation!.Value.Min + 0x10;
         private bool _TargetInterval_IsSet => _DATALocation.HasValue;
         public Single TargetInterval => _TargetInterval_IsSet ? _data.Slice(_TargetIntervalLocation, 4).Float() : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x14;
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0x14;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public Hazard.Flag Flags => _Flags_IsSet ? (Hazard.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region Spell
-        private int _SpellLocation => _DATALocation!.Value + 0x18;
+        private int _SpellLocation => _DATALocation!.Value.Min + 0x18;
         private bool _Spell_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IEffectRecordGetter> Spell => _Spell_IsSet ? new FormLink<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SpellLocation, 0x4)))) : FormLink<IEffectRecordGetter>.Null;
         #endregion
         #region Light
-        private int _LightLocation => _DATALocation!.Value + 0x1C;
+        private int _LightLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _Light_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
         #endregion
         #region ImpactDataSet
-        private int _ImpactDataSetLocation => _DATALocation!.Value + 0x20;
+        private int _ImpactDataSetLocation => _DATALocation!.Value.Min + 0x20;
         private bool _ImpactDataSet_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region Sound
-        private int _SoundLocation => _DATALocation!.Value + 0x24;
+        private int _SoundLocation => _DATALocation!.Value.Min + 0x24;
         private bool _Sound_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
@@ -2609,7 +2609,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Hazard_FieldIndex.Sound;
                 }
                 default:

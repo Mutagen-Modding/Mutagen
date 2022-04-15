@@ -8174,57 +8174,57 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Race.DATADataType DATADataTypeState { get; private set; }
         #region SkillBoost0
-        private int _SkillBoost0Location => _DATALocation!.Value;
+        private int _SkillBoost0Location => _DATALocation!.Value.Min;
         private bool _SkillBoost0_IsSet => _DATALocation.HasValue;
         private ISkillBoostGetter? _SkillBoost0 => _SkillBoost0_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost0Location), _package), _package) : default;
         public ISkillBoostGetter SkillBoost0 => _SkillBoost0 ?? new SkillBoost();
         #endregion
         #region SkillBoost1
-        private int _SkillBoost1Location => _DATALocation!.Value + 0x2;
+        private int _SkillBoost1Location => _DATALocation!.Value.Min + 0x2;
         private bool _SkillBoost1_IsSet => _DATALocation.HasValue;
         private ISkillBoostGetter? _SkillBoost1 => _SkillBoost1_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost1Location), _package), _package) : default;
         public ISkillBoostGetter SkillBoost1 => _SkillBoost1 ?? new SkillBoost();
         #endregion
         #region SkillBoost2
-        private int _SkillBoost2Location => _DATALocation!.Value + 0x4;
+        private int _SkillBoost2Location => _DATALocation!.Value.Min + 0x4;
         private bool _SkillBoost2_IsSet => _DATALocation.HasValue;
         private ISkillBoostGetter? _SkillBoost2 => _SkillBoost2_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost2Location), _package), _package) : default;
         public ISkillBoostGetter SkillBoost2 => _SkillBoost2 ?? new SkillBoost();
         #endregion
         #region SkillBoost3
-        private int _SkillBoost3Location => _DATALocation!.Value + 0x6;
+        private int _SkillBoost3Location => _DATALocation!.Value.Min + 0x6;
         private bool _SkillBoost3_IsSet => _DATALocation.HasValue;
         private ISkillBoostGetter? _SkillBoost3 => _SkillBoost3_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost3Location), _package), _package) : default;
         public ISkillBoostGetter SkillBoost3 => _SkillBoost3 ?? new SkillBoost();
         #endregion
         #region SkillBoost4
-        private int _SkillBoost4Location => _DATALocation!.Value + 0x8;
+        private int _SkillBoost4Location => _DATALocation!.Value.Min + 0x8;
         private bool _SkillBoost4_IsSet => _DATALocation.HasValue;
         private ISkillBoostGetter? _SkillBoost4 => _SkillBoost4_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost4Location), _package), _package) : default;
         public ISkillBoostGetter SkillBoost4 => _SkillBoost4 ?? new SkillBoost();
         #endregion
         #region SkillBoost5
-        private int _SkillBoost5Location => _DATALocation!.Value + 0xA;
+        private int _SkillBoost5Location => _DATALocation!.Value.Min + 0xA;
         private bool _SkillBoost5_IsSet => _DATALocation.HasValue;
         private ISkillBoostGetter? _SkillBoost5 => _SkillBoost5_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost5Location), _package), _package) : default;
         public ISkillBoostGetter SkillBoost5 => _SkillBoost5 ?? new SkillBoost();
         #endregion
         #region SkillBoost6
-        private int _SkillBoost6Location => _DATALocation!.Value + 0xC;
+        private int _SkillBoost6Location => _DATALocation!.Value.Min + 0xC;
         private bool _SkillBoost6_IsSet => _DATALocation.HasValue;
         private ISkillBoostGetter? _SkillBoost6 => _SkillBoost6_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost6Location), _package), _package) : default;
         public ISkillBoostGetter SkillBoost6 => _SkillBoost6 ?? new SkillBoost();
         #endregion
         #region Unknown
-        private int _UnknownLocation => _DATALocation!.Value + 0xE;
+        private int _UnknownLocation => _DATALocation!.Value.Min + 0xE;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
         public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
         #endregion
         #region Height
-        private int _HeightLocation => _DATALocation!.Value + 0x10;
+        private int _HeightLocation => _DATALocation!.Value.Min + 0x10;
         private bool _Height_IsSet => _DATALocation.HasValue;
         public IGenderedItemGetter<Single> Height
         {
@@ -8239,7 +8239,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region Weight
-        private int _WeightLocation => _DATALocation!.Value + 0x18;
+        private int _WeightLocation => _DATALocation!.Value.Min + 0x18;
         private bool _Weight_IsSet => _DATALocation.HasValue;
         public IGenderedItemGetter<Single> Weight
         {
@@ -8254,12 +8254,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x20;
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0x20;
         public partial Race.Flag GetFlagsCustom();
         public Race.Flag Flags => GetFlagsCustom();
         #endregion
         #region Starting
-        private int _StartingLocation => _DATALocation!.Value + 0x24;
+        private int _StartingLocation => _DATALocation!.Value.Min + 0x24;
         private bool _Starting_IsSet => _DATALocation.HasValue;
         public IReadOnlyDictionary<BasicStat, Single> Starting => DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
             new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_StartingLocation), _package.MetaData)),
@@ -8267,52 +8267,52 @@ namespace Mutagen.Bethesda.Skyrim
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         #region BaseCarryWeight
-        private int _BaseCarryWeightLocation => _DATALocation!.Value + 0x30;
+        private int _BaseCarryWeightLocation => _DATALocation!.Value.Min + 0x30;
         private bool _BaseCarryWeight_IsSet => _DATALocation.HasValue;
         public Single BaseCarryWeight => _BaseCarryWeight_IsSet ? _data.Slice(_BaseCarryWeightLocation, 4).Float() : default;
         #endregion
         #region BaseMass
-        private int _BaseMassLocation => _DATALocation!.Value + 0x34;
+        private int _BaseMassLocation => _DATALocation!.Value.Min + 0x34;
         private bool _BaseMass_IsSet => _DATALocation.HasValue;
         public Single BaseMass => _BaseMass_IsSet ? _data.Slice(_BaseMassLocation, 4).Float() : default;
         #endregion
         #region AccelerationRate
-        private int _AccelerationRateLocation => _DATALocation!.Value + 0x38;
+        private int _AccelerationRateLocation => _DATALocation!.Value.Min + 0x38;
         private bool _AccelerationRate_IsSet => _DATALocation.HasValue;
         public Single AccelerationRate => _AccelerationRate_IsSet ? _data.Slice(_AccelerationRateLocation, 4).Float() : default;
         #endregion
         #region DecelerationRate
-        private int _DecelerationRateLocation => _DATALocation!.Value + 0x3C;
+        private int _DecelerationRateLocation => _DATALocation!.Value.Min + 0x3C;
         private bool _DecelerationRate_IsSet => _DATALocation.HasValue;
         public Single DecelerationRate => _DecelerationRate_IsSet ? _data.Slice(_DecelerationRateLocation, 4).Float() : default;
         #endregion
         #region Size
-        private int _SizeLocation => _DATALocation!.Value + 0x40;
+        private int _SizeLocation => _DATALocation!.Value.Min + 0x40;
         private bool _Size_IsSet => _DATALocation.HasValue;
         public Size Size => _Size_IsSet ? (Size)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SizeLocation, 0x4)) : default;
         #endregion
         #region HeadBipedObject
-        private int _HeadBipedObjectLocation => _DATALocation!.Value + 0x44;
+        private int _HeadBipedObjectLocation => _DATALocation!.Value.Min + 0x44;
         private bool _HeadBipedObject_IsSet => _DATALocation.HasValue;
         public BipedObject HeadBipedObject => _HeadBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_HeadBipedObjectLocation, 0x4)) : default;
         #endregion
         #region HairBipedObject
-        private int _HairBipedObjectLocation => _DATALocation!.Value + 0x48;
+        private int _HairBipedObjectLocation => _DATALocation!.Value.Min + 0x48;
         private bool _HairBipedObject_IsSet => _DATALocation.HasValue;
         public BipedObject HairBipedObject => _HairBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_HairBipedObjectLocation, 0x4)) : default;
         #endregion
         #region InjuredHealthPercent
-        private int _InjuredHealthPercentLocation => _DATALocation!.Value + 0x4C;
+        private int _InjuredHealthPercentLocation => _DATALocation!.Value.Min + 0x4C;
         private bool _InjuredHealthPercent_IsSet => _DATALocation.HasValue;
         public Single InjuredHealthPercent => _InjuredHealthPercent_IsSet ? _data.Slice(_InjuredHealthPercentLocation, 4).Float() : default;
         #endregion
         #region ShieldBipedObject
-        private int _ShieldBipedObjectLocation => _DATALocation!.Value + 0x50;
+        private int _ShieldBipedObjectLocation => _DATALocation!.Value.Min + 0x50;
         private bool _ShieldBipedObject_IsSet => _DATALocation.HasValue;
         public BipedObject ShieldBipedObject => _ShieldBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ShieldBipedObjectLocation, 0x4)) : default;
         #endregion
         #region Regen
-        private int _RegenLocation => _DATALocation!.Value + 0x54;
+        private int _RegenLocation => _DATALocation!.Value.Min + 0x54;
         private bool _Regen_IsSet => _DATALocation.HasValue;
         public IReadOnlyDictionary<BasicStat, Single> Regen => DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
             new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_RegenLocation), _package.MetaData)),
@@ -8320,49 +8320,49 @@ namespace Mutagen.Bethesda.Skyrim
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         #region UnarmedDamage
-        private int _UnarmedDamageLocation => _DATALocation!.Value + 0x60;
+        private int _UnarmedDamageLocation => _DATALocation!.Value.Min + 0x60;
         private bool _UnarmedDamage_IsSet => _DATALocation.HasValue;
         public Single UnarmedDamage => _UnarmedDamage_IsSet ? _data.Slice(_UnarmedDamageLocation, 4).Float() : default;
         #endregion
         #region UnarmedReach
-        private int _UnarmedReachLocation => _DATALocation!.Value + 0x64;
+        private int _UnarmedReachLocation => _DATALocation!.Value.Min + 0x64;
         private bool _UnarmedReach_IsSet => _DATALocation.HasValue;
         public Single UnarmedReach => _UnarmedReach_IsSet ? _data.Slice(_UnarmedReachLocation, 4).Float() : default;
         #endregion
         #region BodyBipedObject
-        private int _BodyBipedObjectLocation => _DATALocation!.Value + 0x68;
+        private int _BodyBipedObjectLocation => _DATALocation!.Value.Min + 0x68;
         private bool _BodyBipedObject_IsSet => _DATALocation.HasValue;
         public BipedObject BodyBipedObject => _BodyBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_BodyBipedObjectLocation, 0x4)) : default;
         #endregion
         #region AimAngleTolerance
-        private int _AimAngleToleranceLocation => _DATALocation!.Value + 0x6C;
+        private int _AimAngleToleranceLocation => _DATALocation!.Value.Min + 0x6C;
         private bool _AimAngleTolerance_IsSet => _DATALocation.HasValue;
         public Single AimAngleTolerance => _AimAngleTolerance_IsSet ? _data.Slice(_AimAngleToleranceLocation, 4).Float() : default;
         #endregion
         #region FlightRadius
-        private int _FlightRadiusLocation => _DATALocation!.Value + 0x70;
+        private int _FlightRadiusLocation => _DATALocation!.Value.Min + 0x70;
         private bool _FlightRadius_IsSet => _DATALocation.HasValue;
         public Single FlightRadius => _FlightRadius_IsSet ? _data.Slice(_FlightRadiusLocation, 4).Float() : default;
         #endregion
         #region AngularAccelerationRate
-        private int _AngularAccelerationRateLocation => _DATALocation!.Value + 0x74;
+        private int _AngularAccelerationRateLocation => _DATALocation!.Value.Min + 0x74;
         private bool _AngularAccelerationRate_IsSet => _DATALocation.HasValue;
         public Single AngularAccelerationRate => _AngularAccelerationRate_IsSet ? _data.Slice(_AngularAccelerationRateLocation, 4).Float() : default;
         #endregion
         #region AngularTolerance
-        private int _AngularToleranceLocation => _DATALocation!.Value + 0x78;
+        private int _AngularToleranceLocation => _DATALocation!.Value.Min + 0x78;
         private bool _AngularTolerance_IsSet => _DATALocation.HasValue;
         public Single AngularTolerance => _AngularTolerance_IsSet ? _data.Slice(_AngularToleranceLocation, 4).Float() : default;
         #endregion
         #region Flags2
-        private int _Flags2Location => _DATALocation!.Value + 0x7C;
+        private int _Flags2Location => _DATALocation!.Value.Min + 0x7C;
         private bool _Flags2_IsSet => _DATALocation.HasValue;
         partial void Flags2CustomParse(
             OverlayStream stream,
             int offset);
         #endregion
         #region MountData
-        private int _MountDataLocation => _DATALocation!.Value + 0x80;
+        private int _MountDataLocation => _DATALocation!.Value.Min + 0x80;
         private bool _MountData_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Race.DATADataType.Break0);
         private IMountDataGetter? _MountData => _MountData_IsSet ? MountDataBinaryOverlay.MountDataFactory(new OverlayStream(_data.Slice(_MountDataLocation), _package), _package) : default;
         public IMountDataGetter MountData => _MountData ?? new MountData();
@@ -8645,7 +8645,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x80)
                     {

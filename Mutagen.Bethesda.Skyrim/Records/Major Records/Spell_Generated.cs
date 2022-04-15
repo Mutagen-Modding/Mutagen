@@ -2841,50 +2841,50 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _DescriptionLocation;
         public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
-        private int? _SPITLocation;
+        private RangeInt32? _SPITLocation;
         public Spell.SPITDataType SPITDataTypeState { get; private set; }
         #region BaseCost
-        private int _BaseCostLocation => _SPITLocation!.Value;
+        private int _BaseCostLocation => _SPITLocation!.Value.Min;
         private bool _BaseCost_IsSet => _SPITLocation.HasValue;
         public UInt32 BaseCost => _BaseCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_BaseCostLocation, 4)) : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _SPITLocation!.Value + 0x4;
+        private int _FlagsLocation => _SPITLocation!.Value.Min + 0x4;
         private bool _Flags_IsSet => _SPITLocation.HasValue;
         public SpellDataFlag Flags => _Flags_IsSet ? (SpellDataFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region Type
-        private int _TypeLocation => _SPITLocation!.Value + 0x8;
+        private int _TypeLocation => _SPITLocation!.Value.Min + 0x8;
         private bool _Type_IsSet => _SPITLocation.HasValue;
         public SpellType Type => _Type_IsSet ? (SpellType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TypeLocation, 0x4)) : default;
         #endregion
         #region ChargeTime
-        private int _ChargeTimeLocation => _SPITLocation!.Value + 0xC;
+        private int _ChargeTimeLocation => _SPITLocation!.Value.Min + 0xC;
         private bool _ChargeTime_IsSet => _SPITLocation.HasValue;
         public Single ChargeTime => _ChargeTime_IsSet ? _data.Slice(_ChargeTimeLocation, 4).Float() : default;
         #endregion
         #region CastType
-        private int _CastTypeLocation => _SPITLocation!.Value + 0x10;
+        private int _CastTypeLocation => _SPITLocation!.Value.Min + 0x10;
         private bool _CastType_IsSet => _SPITLocation.HasValue;
         public CastType CastType => _CastType_IsSet ? (CastType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_CastTypeLocation, 0x4)) : default;
         #endregion
         #region TargetType
-        private int _TargetTypeLocation => _SPITLocation!.Value + 0x14;
+        private int _TargetTypeLocation => _SPITLocation!.Value.Min + 0x14;
         private bool _TargetType_IsSet => _SPITLocation.HasValue;
         public TargetType TargetType => _TargetType_IsSet ? (TargetType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TargetTypeLocation, 0x4)) : default;
         #endregion
         #region CastDuration
-        private int _CastDurationLocation => _SPITLocation!.Value + 0x18;
+        private int _CastDurationLocation => _SPITLocation!.Value.Min + 0x18;
         private bool _CastDuration_IsSet => _SPITLocation.HasValue;
         public Single CastDuration => _CastDuration_IsSet ? _data.Slice(_CastDurationLocation, 4).Float() : default;
         #endregion
         #region Range
-        private int _RangeLocation => _SPITLocation!.Value + 0x1C;
+        private int _RangeLocation => _SPITLocation!.Value.Min + 0x1C;
         private bool _Range_IsSet => _SPITLocation.HasValue;
         public Single Range => _Range_IsSet ? _data.Slice(_RangeLocation, 4).Float() : default;
         #endregion
         #region HalfCostPerk
-        private int _HalfCostPerkLocation => _SPITLocation!.Value + 0x20;
+        private int _HalfCostPerkLocation => _SPITLocation!.Value.Min + 0x20;
         private bool _HalfCostPerk_IsSet => _SPITLocation.HasValue;
         public IFormLinkGetter<IPerkGetter> HalfCostPerk => _HalfCostPerk_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HalfCostPerkLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
         #endregion
@@ -2995,7 +2995,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.SPIT:
                 {
-                    _SPITLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _SPITLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Spell_FieldIndex.HalfCostPerk;
                 }
                 case RecordTypeInts.EFID:

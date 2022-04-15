@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
         {
             DataType dataType = typeGen as DataType;
 
-            fg.AppendLine($"private int? _{dataType.GetFieldData().RecordType}Location;");
+            fg.AppendLine($"private {nameof(RangeInt32)}? _{dataType.GetFieldData().RecordType}Location;");
             fg.AppendLine($"public {objGen.ObjectName}.{dataType.EnumName} {dataType.StateName} {{ get; private set; }}");
             switch (typeGen.GetFieldData().BinaryOverlayFallback)
             {
@@ -115,12 +115,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                     var passIn = length.PassedAccessor;
                     if (passIn == null)
                     {
-                        passIn = $"_{dataType.GetFieldData().RecordType}Location!.Value";
+                        passIn = $"_{dataType.GetFieldData().RecordType}Location!.Value.{nameof(RangeInt32.Min)}";
                     } 
                     else if (passIn == null 
                         || length.PassedType == BinaryTranslationModule.PassedType.Direct)
                     {
-                        passIn = $"_{dataType.GetFieldData().RecordType}Location!.Value + {passIn}";
+                        passIn = $"_{dataType.GetFieldData().RecordType}Location!.Value.{nameof(RangeInt32.Min)} + {passIn}";
                     }
 
                     await subTypeGen.GenerateWrapperFields(
@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 default:
                     break;
             }
-            fg.AppendLine($"_{dataType.GetFieldData().RecordType}Location = {locationAccessor} + _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength;");
+            fg.AppendLine($"_{dataType.GetFieldData().RecordType}Location = new({locationAccessor} + _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength, finalPos - offset - 1);");
             if (dataType.Nullable)
             {
                 fg.AppendLine($"this.{dataType.StateName} = {objGen.ObjectName}.{dataType.EnumName}.Has;");
@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                             objGen,
                             field.Field,
                             length.PassedLength,
-                            $"ret._{dataType.GetFieldData().RecordType}Location!.Value + {length.PassedAccessor}");
+                            $"ret._{dataType.GetFieldData().RecordType}Location!.Value.{nameof(RangeInt32.Min)} + {length.PassedAccessor}");
                         break;
                 }
             }

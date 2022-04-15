@@ -1167,7 +1167,8 @@ namespace Mutagen.Bethesda.Pex
                 rhs.Objects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.UserFlags = item.UserFlags.SpanEqualsHelper(
+            ret.UserFlags = EqualsMaskHelper.SpanEqualsHelper<String?>(
+                item.UserFlags,
                 rhs.UserFlags,
                 (l, r) => string.Equals(l, r),
                 include);
@@ -1462,7 +1463,7 @@ namespace Mutagen.Bethesda.Pex
             }
             if ((copyMask?.GetShouldTranslate((int)PexFile_FieldIndex.UserFlags) ?? true))
             {
-                item.UserFlags.SetTo(rhs.UserFlags);
+                rhs.UserFlags.Span.CopyTo(item.UserFlags.AsSpan());
             }
         }
         

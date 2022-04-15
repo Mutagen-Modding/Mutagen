@@ -3424,30 +3424,30 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        private int? _DNAMLocation;
+        private RangeInt32? _DNAMLocation;
         public Quest.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Flags
-        private int _FlagsLocation => _DNAMLocation!.Value;
+        private int _FlagsLocation => _DNAMLocation!.Value.Min;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;
         public Quest.Flag Flags => _Flags_IsSet ? (Quest.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FlagsLocation, 0x2)) : default;
         #endregion
         #region Priority
-        private int _PriorityLocation => _DNAMLocation!.Value + 0x2;
+        private int _PriorityLocation => _DNAMLocation!.Value.Min + 0x2;
         private bool _Priority_IsSet => _DNAMLocation.HasValue;
         public Byte Priority => _Priority_IsSet ? _data.Span[_PriorityLocation] : default;
         #endregion
         #region QuestFormVersion
-        private int _QuestFormVersionLocation => _DNAMLocation!.Value + 0x3;
+        private int _QuestFormVersionLocation => _DNAMLocation!.Value.Min + 0x3;
         private bool _QuestFormVersion_IsSet => _DNAMLocation.HasValue;
         public Byte QuestFormVersion => _QuestFormVersion_IsSet ? _data.Span[_QuestFormVersionLocation] : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _DNAMLocation!.Value + 0x4;
+        private int _UnknownLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Unknown_IsSet => _DNAMLocation.HasValue;
         public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_UnknownLocation, 4)) : default;
         #endregion
         #region Type
-        private int _TypeLocation => _DNAMLocation!.Value + 0x8;
+        private int _TypeLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _Type_IsSet => _DNAMLocation.HasValue;
         public Quest.TypeEnum Type => _Type_IsSet ? (Quest.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TypeLocation, 0x4)) : default;
         #endregion
@@ -3563,7 +3563,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Quest_FieldIndex.Type;
                 }
                 case RecordTypeInts.ENAM:

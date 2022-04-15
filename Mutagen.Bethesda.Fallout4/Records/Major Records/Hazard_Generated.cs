@@ -2620,70 +2620,70 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _ImageSpaceModifierLocation;
         public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
         #endregion
-        private int? _DNAMLocation;
+        private RangeInt32? _DNAMLocation;
         public Hazard.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Limit
-        private int _LimitLocation => _DNAMLocation!.Value;
+        private int _LimitLocation => _DNAMLocation!.Value.Min;
         private bool _Limit_IsSet => _DNAMLocation.HasValue;
         public UInt32 Limit => _Limit_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_LimitLocation, 4)) : default;
         #endregion
         #region Radius
-        private int _RadiusLocation => _DNAMLocation!.Value + 0x4;
+        private int _RadiusLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Radius_IsSet => _DNAMLocation.HasValue;
         public Single Radius => _Radius_IsSet ? _data.Slice(_RadiusLocation, 4).Float() : default;
         #endregion
         #region Lifetime
-        private int _LifetimeLocation => _DNAMLocation!.Value + 0x8;
+        private int _LifetimeLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _Lifetime_IsSet => _DNAMLocation.HasValue;
         public Single Lifetime => _Lifetime_IsSet ? _data.Slice(_LifetimeLocation, 4).Float() : default;
         #endregion
         #region ImageSpaceRadius
-        private int _ImageSpaceRadiusLocation => _DNAMLocation!.Value + 0xC;
+        private int _ImageSpaceRadiusLocation => _DNAMLocation!.Value.Min + 0xC;
         private bool _ImageSpaceRadius_IsSet => _DNAMLocation.HasValue;
         public Single ImageSpaceRadius => _ImageSpaceRadius_IsSet ? _data.Slice(_ImageSpaceRadiusLocation, 4).Float() : default;
         #endregion
         #region TargetInterval
-        private int _TargetIntervalLocation => _DNAMLocation!.Value + 0x10;
+        private int _TargetIntervalLocation => _DNAMLocation!.Value.Min + 0x10;
         private bool _TargetInterval_IsSet => _DNAMLocation.HasValue;
         public Single TargetInterval => _TargetInterval_IsSet ? _data.Slice(_TargetIntervalLocation, 4).Float() : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DNAMLocation!.Value + 0x14;
+        private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x14;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;
         public Hazard.Flag Flags => _Flags_IsSet ? (Hazard.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region Effect
-        private int _EffectLocation => _DNAMLocation!.Value + 0x18;
+        private int _EffectLocation => _DNAMLocation!.Value.Min + 0x18;
         private bool _Effect_IsSet => _DNAMLocation.HasValue;
         public IFormLinkGetter<IEffectRecordGetter> Effect => _Effect_IsSet ? new FormLink<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EffectLocation, 0x4)))) : FormLink<IEffectRecordGetter>.Null;
         #endregion
         #region Light
-        private int _LightLocation => _DNAMLocation!.Value + 0x1C;
+        private int _LightLocation => _DNAMLocation!.Value.Min + 0x1C;
         private bool _Light_IsSet => _DNAMLocation.HasValue;
         public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
         #endregion
         #region ImpactDataSet
-        private int _ImpactDataSetLocation => _DNAMLocation!.Value + 0x20;
+        private int _ImpactDataSetLocation => _DNAMLocation!.Value.Min + 0x20;
         private bool _ImpactDataSet_IsSet => _DNAMLocation.HasValue;
         public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region Sound
-        private int _SoundLocation => _DNAMLocation!.Value + 0x24;
+        private int _SoundLocation => _DNAMLocation!.Value.Min + 0x24;
         private bool _Sound_IsSet => _DNAMLocation.HasValue;
         public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region TaperFullEffectRadius
-        private int _TaperFullEffectRadiusLocation => _DNAMLocation!.Value + 0x28;
+        private int _TaperFullEffectRadiusLocation => _DNAMLocation!.Value.Min + 0x28;
         private bool _TaperFullEffectRadius_IsSet => _DNAMLocation.HasValue;
         public Single TaperFullEffectRadius => _TaperFullEffectRadius_IsSet ? _data.Slice(_TaperFullEffectRadiusLocation, 4).Float() : default;
         #endregion
         #region TaperWeight
-        private int _TaperWeightLocation => _DNAMLocation!.Value + 0x2C;
+        private int _TaperWeightLocation => _DNAMLocation!.Value.Min + 0x2C;
         private bool _TaperWeight_IsSet => _DNAMLocation.HasValue;
         public Single TaperWeight => _TaperWeight_IsSet ? _data.Slice(_TaperWeightLocation, 4).Float() : default;
         #endregion
         #region TaperCurse
-        private int _TaperCurseLocation => _DNAMLocation!.Value + 0x30;
+        private int _TaperCurseLocation => _DNAMLocation!.Value.Min + 0x30;
         private bool _TaperCurse_IsSet => _DNAMLocation.HasValue;
         public Single TaperCurse => _TaperCurse_IsSet ? _data.Slice(_TaperCurseLocation, 4).Float() : default;
         #endregion
@@ -2778,7 +2778,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Hazard_FieldIndex.TaperCurse;
                 }
                 default:

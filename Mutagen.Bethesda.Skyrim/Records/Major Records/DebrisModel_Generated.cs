@@ -1367,10 +1367,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public DebrisModel.DATADataType DATADataTypeState { get; private set; }
         #region Percentage
-        private int _PercentageLocation => _DATALocation!.Value;
+        private int _PercentageLocation => _DATALocation!.Value.Min;
         private bool _Percentage_IsSet => _DATALocation.HasValue;
         public Byte Percentage => _Percentage_IsSet ? _data.Span[_PercentageLocation] : default;
         #endregion
@@ -1418,8 +1418,8 @@ namespace Mutagen.Bethesda.Skyrim
                 offset: offset,
                 parseParams: parseParams,
                 fill: ret.FillRecordType);
-            ret.ModelFilename = BinaryStringUtility.ParseUnknownLengthString(ret._data.Slice(ret._DATALocation!.Value + 0x1), package.MetaData.Encodings.NonTranslated);
-            ret.ModelFilenameEndingPos = ret._DATALocation!.Value + 0x1 + ret.ModelFilename.Length + 1;
+            ret.ModelFilename = BinaryStringUtility.ParseUnknownLengthString(ret._data.Slice(ret._DATALocation!.Value.Min + 0x1), package.MetaData.Encodings.NonTranslated);
+            ret.ModelFilenameEndingPos = ret._DATALocation!.Value.Min + 0x1 + ret.ModelFilename.Length + 1;
             return ret;
         }
 
@@ -1449,7 +1449,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DATA:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DebrisModel_FieldIndex.Flags) return ParseResult.Stop;
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= ModelFilenameEndingPos)
                     {

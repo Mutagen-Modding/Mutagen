@@ -4012,85 +4012,85 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         public IIconsGetter? Icons { get; private set; }
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Light.DATADataType DATADataTypeState { get; private set; }
         #region Time
-        private int _TimeLocation => _DATALocation!.Value;
+        private int _TimeLocation => _DATALocation!.Value.Min;
         private bool _Time_IsSet => _DATALocation.HasValue;
         public Int32 Time => _Time_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_TimeLocation, 4)) : default;
         #endregion
         #region Radius
-        private int _RadiusLocation => _DATALocation!.Value + 0x4;
+        private int _RadiusLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Radius_IsSet => _DATALocation.HasValue;
         public UInt32 Radius => _Radius_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_RadiusLocation, 4)) : default;
         #endregion
         #region Color
-        private int _ColorLocation => _DATALocation!.Value + 0x8;
+        private int _ColorLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Color_IsSet => _DATALocation.HasValue;
         public Color Color => _Color_IsSet ? _data.Slice(_ColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0xC;
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0xC;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public Light.Flag Flags => _Flags_IsSet ? (Light.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region FalloffExponent
-        private int _FalloffExponentLocation => _DATALocation!.Value + 0x10;
+        private int _FalloffExponentLocation => _DATALocation!.Value.Min + 0x10;
         private bool _FalloffExponent_IsSet => _DATALocation.HasValue;
         public Single FalloffExponent => _FalloffExponent_IsSet ? _data.Slice(_FalloffExponentLocation, 4).Float() : default;
         #endregion
         #region FOV
-        private int _FOVLocation => _DATALocation!.Value + 0x14;
+        private int _FOVLocation => _DATALocation!.Value.Min + 0x14;
         private bool _FOV_IsSet => _DATALocation.HasValue;
         public Single FOV => _FOV_IsSet ? _data.Slice(_FOVLocation, 4).Float() : default;
         #endregion
         #region NearClip
-        private int _NearClipLocation => _DATALocation!.Value + 0x18;
+        private int _NearClipLocation => _DATALocation!.Value.Min + 0x18;
         private bool _NearClip_IsSet => _DATALocation.HasValue;
         public Single NearClip => _NearClip_IsSet ? _data.Slice(_NearClipLocation, 4).Float() : default;
         #endregion
         #region FlickerPeriod
-        private int _FlickerPeriodLocation => _DATALocation!.Value + 0x1C;
+        private int _FlickerPeriodLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _FlickerPeriod_IsSet => _DATALocation.HasValue;
         public Single FlickerPeriod => _FlickerPeriod_IsSet ? _data.Slice(_FlickerPeriodLocation, 4).Float() : default;
         #endregion
         #region FlickerIntensityAmplitude
-        private int _FlickerIntensityAmplitudeLocation => _DATALocation!.Value + 0x20;
+        private int _FlickerIntensityAmplitudeLocation => _DATALocation!.Value.Min + 0x20;
         private bool _FlickerIntensityAmplitude_IsSet => _DATALocation.HasValue;
         public Single FlickerIntensityAmplitude => _FlickerIntensityAmplitude_IsSet ? _data.Slice(_FlickerIntensityAmplitudeLocation, 4).Float() : default;
         #endregion
         #region FlickerMovementAmplitude
-        private int _FlickerMovementAmplitudeLocation => _DATALocation!.Value + 0x24;
+        private int _FlickerMovementAmplitudeLocation => _DATALocation!.Value.Min + 0x24;
         private bool _FlickerMovementAmplitude_IsSet => _DATALocation.HasValue;
         public Single FlickerMovementAmplitude => _FlickerMovementAmplitude_IsSet ? _data.Slice(_FlickerMovementAmplitudeLocation, 4).Float() : default;
         #endregion
         #region Constant
-        private int _ConstantLocation => _DATALocation!.Value + 0x28;
+        private int _ConstantLocation => _DATALocation!.Value.Min + 0x28;
         private bool _Constant_IsSet => _DATALocation.HasValue;
         public Single Constant => _Constant_IsSet ? _data.Slice(_ConstantLocation, 4).Float() : default;
         #endregion
         #region Scalar
-        private int _ScalarLocation => _DATALocation!.Value + 0x2C;
+        private int _ScalarLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _Scalar_IsSet => _DATALocation.HasValue;
         public Single Scalar => _Scalar_IsSet ? _data.Slice(_ScalarLocation, 4).Float() : default;
         #endregion
         #region Exponent
-        private int _ExponentLocation => _DATALocation!.Value + 0x30;
+        private int _ExponentLocation => _DATALocation!.Value.Min + 0x30;
         private bool _Exponent_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Light.DATADataType.Break0);
         public Single Exponent => _Exponent_IsSet ? _data.Slice(_ExponentLocation, 4).Float() : default;
         #endregion
         #region GodRaysNearClip
-        private int _GodRaysNearClipLocation => _DATALocation!.Value + 0x34;
+        private int _GodRaysNearClipLocation => _DATALocation!.Value.Min + 0x34;
         private bool _GodRaysNearClip_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Light.DATADataType.Break0);
         public Single GodRaysNearClip => _GodRaysNearClip_IsSet ? _data.Slice(_GodRaysNearClipLocation, 4).Float() : default;
         #endregion
         #region Value
-        private int _ValueLocation => _DATALocation!.Value + 0x38;
+        private int _ValueLocation => _DATALocation!.Value.Min + 0x38;
         private bool _Value_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Light.DATADataType.Break0);
         public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
         #endregion
         #region Weight
-        private int _WeightLocation => _DATALocation!.Value + 0x3C;
+        private int _WeightLocation => _DATALocation!.Value.Min + 0x3C;
         private bool _Weight_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Light.DATADataType.Break1);
         public Single Weight => _Weight_IsSet ? _data.Slice(_WeightLocation, 4).Float() : default;
         #endregion
@@ -4256,7 +4256,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x30)
                     {

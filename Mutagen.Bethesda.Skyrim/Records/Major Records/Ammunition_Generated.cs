@@ -2926,30 +2926,30 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Ammunition.DATADataType DATADataTypeState { get; private set; }
         #region Projectile
-        private int _ProjectileLocation => _DATALocation!.Value;
+        private int _ProjectileLocation => _DATALocation!.Value.Min;
         private bool _Projectile_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x4;
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public Ammunition.Flag Flags => _Flags_IsSet ? (Ammunition.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region Damage
-        private int _DamageLocation => _DATALocation!.Value + 0x8;
+        private int _DamageLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Damage_IsSet => _DATALocation.HasValue;
         public Single Damage => _Damage_IsSet ? _data.Slice(_DamageLocation, 4).Float() : default;
         #endregion
         #region Value
-        private int _ValueLocation => _DATALocation!.Value + 0xC;
+        private int _ValueLocation => _DATALocation!.Value.Min + 0xC;
         private bool _Value_IsSet => _DATALocation.HasValue;
         public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
         #endregion
         #region Weight
-        private int _WeightLocation => _DATALocation!.Value + 0x10;
+        private int _WeightLocation => _DATALocation!.Value.Min + 0x10;
         private bool _Weight_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Ammunition.DATADataType.Break0) && _package.FormVersion!.FormVersion!.Value >= 44;
         public Single Weight => _Weight_IsSet ? _data.Slice(_WeightLocation, 4).Float() : default;
         int WeightVersioningOffset => _package.FormVersion!.FormVersion!.Value < 44 ? -4 : 0;
@@ -3090,7 +3090,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x10)
                     {

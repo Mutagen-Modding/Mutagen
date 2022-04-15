@@ -2255,60 +2255,60 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         public IModelGetter? Model { get; private set; }
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public CameraShot.DATADataType DATADataTypeState { get; private set; }
         #region Action
-        private int _ActionLocation => _DATALocation!.Value;
+        private int _ActionLocation => _DATALocation!.Value.Min;
         private bool _Action_IsSet => _DATALocation.HasValue;
         public CameraShot.ActionType Action => _Action_IsSet ? (CameraShot.ActionType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ActionLocation, 0x4)) : default;
         #endregion
         #region Location
-        private int _LocationLocation => _DATALocation!.Value + 0x4;
+        private int _LocationLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Location_IsSet => _DATALocation.HasValue;
         public CameraShot.LocationType Location => _Location_IsSet ? (CameraShot.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_LocationLocation, 0x4)) : default;
         #endregion
         #region Target
-        private int _TargetLocation => _DATALocation!.Value + 0x8;
+        private int _TargetLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Target_IsSet => _DATALocation.HasValue;
         public CameraShot.TargetType Target => _Target_IsSet ? (CameraShot.TargetType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TargetLocation, 0x4)) : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0xC;
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0xC;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public CameraShot.Flag Flags => _Flags_IsSet ? (CameraShot.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region TimeMultiplierPlayer
-        private int _TimeMultiplierPlayerLocation => _DATALocation!.Value + 0x10;
+        private int _TimeMultiplierPlayerLocation => _DATALocation!.Value.Min + 0x10;
         private bool _TimeMultiplierPlayer_IsSet => _DATALocation.HasValue;
         public Single TimeMultiplierPlayer => _TimeMultiplierPlayer_IsSet ? _data.Slice(_TimeMultiplierPlayerLocation, 4).Float() : default;
         #endregion
         #region TimeMultiplierTarget
-        private int _TimeMultiplierTargetLocation => _DATALocation!.Value + 0x14;
+        private int _TimeMultiplierTargetLocation => _DATALocation!.Value.Min + 0x14;
         private bool _TimeMultiplierTarget_IsSet => _DATALocation.HasValue;
         public Single TimeMultiplierTarget => _TimeMultiplierTarget_IsSet ? _data.Slice(_TimeMultiplierTargetLocation, 4).Float() : default;
         #endregion
         #region TimeMultiplierGlobal
-        private int _TimeMultiplierGlobalLocation => _DATALocation!.Value + 0x18;
+        private int _TimeMultiplierGlobalLocation => _DATALocation!.Value.Min + 0x18;
         private bool _TimeMultiplierGlobal_IsSet => _DATALocation.HasValue;
         public Single TimeMultiplierGlobal => _TimeMultiplierGlobal_IsSet ? _data.Slice(_TimeMultiplierGlobalLocation, 4).Float() : default;
         #endregion
         #region MaxTime
-        private int _MaxTimeLocation => _DATALocation!.Value + 0x1C;
+        private int _MaxTimeLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _MaxTime_IsSet => _DATALocation.HasValue;
         public Single MaxTime => _MaxTime_IsSet ? _data.Slice(_MaxTimeLocation, 4).Float() : default;
         #endregion
         #region MinTime
-        private int _MinTimeLocation => _DATALocation!.Value + 0x20;
+        private int _MinTimeLocation => _DATALocation!.Value.Min + 0x20;
         private bool _MinTime_IsSet => _DATALocation.HasValue;
         public Single MinTime => _MinTime_IsSet ? _data.Slice(_MinTimeLocation, 4).Float() : default;
         #endregion
         #region TargetPercentBetweenActors
-        private int _TargetPercentBetweenActorsLocation => _DATALocation!.Value + 0x24;
+        private int _TargetPercentBetweenActorsLocation => _DATALocation!.Value.Min + 0x24;
         private bool _TargetPercentBetweenActors_IsSet => _DATALocation.HasValue;
         public Single TargetPercentBetweenActors => _TargetPercentBetweenActors_IsSet ? _data.Slice(_TargetPercentBetweenActorsLocation, 4).Float() : default;
         #endregion
         #region NearTargetDistance
-        private int _NearTargetDistanceLocation => _DATALocation!.Value + 0x28;
+        private int _NearTargetDistanceLocation => _DATALocation!.Value.Min + 0x28;
         private bool _NearTargetDistance_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(CameraShot.DATADataType.Break0);
         public Single NearTargetDistance => _NearTargetDistance_IsSet ? _data.Slice(_NearTargetDistanceLocation, 4).Float() : default;
         #endregion
@@ -2392,7 +2392,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x28)
                     {

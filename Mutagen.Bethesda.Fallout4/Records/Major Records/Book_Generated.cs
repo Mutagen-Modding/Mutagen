@@ -3430,37 +3430,37 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _FeaturedItemMessageLocation;
         public IFormLinkNullableGetter<IMessageGetter> FeaturedItemMessage => _FeaturedItemMessageLocation.HasValue ? new FormLinkNullable<IMessageGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FeaturedItemMessageLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMessageGetter>.Null;
         #endregion
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Book.DATADataType DATADataTypeState { get; private set; }
         #region Value
-        private int _ValueLocation => _DATALocation!.Value;
+        private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
         public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
         #endregion
         #region Weight
-        private int _WeightLocation => _DATALocation!.Value + 0x4;
+        private int _WeightLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Weight_IsSet => _DATALocation.HasValue;
         public Single Weight => _Weight_IsSet ? _data.Slice(_WeightLocation, 4).Float() : default;
         #endregion
-        private int? _DNAMLocation;
+        private RangeInt32? _DNAMLocation;
         public Book.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Flags
-        private int _FlagsLocation => _DNAMLocation!.Value;
+        private int _FlagsLocation => _DNAMLocation!.Value.Min;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;
         public Book.Flag Flags => _Flags_IsSet ? (Book.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region Teaches
-        private int _TeachesLocation => _DNAMLocation!.Value + 0x1;
+        private int _TeachesLocation => _DNAMLocation!.Value.Min + 0x1;
         public partial IBookTeachTargetGetter? GetTeachesCustom();
         public IBookTeachTargetGetter? Teaches => GetTeachesCustom();
         #endregion
         #region TextOffsetX
-        private int _TextOffsetXLocation => _DNAMLocation!.Value + 0x5;
+        private int _TextOffsetXLocation => _DNAMLocation!.Value.Min + 0x5;
         private bool _TextOffsetX_IsSet => _DNAMLocation.HasValue;
         public UInt32 TextOffsetX => _TextOffsetX_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_TextOffsetXLocation, 4)) : default;
         #endregion
         #region TextOffsetY
-        private int _TextOffsetYLocation => _DNAMLocation!.Value + 0x9;
+        private int _TextOffsetYLocation => _DNAMLocation!.Value.Min + 0x9;
         private bool _TextOffsetY_IsSet => _DNAMLocation.HasValue;
         public UInt32 TextOffsetY => _TextOffsetY_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_TextOffsetYLocation, 4)) : default;
         #endregion
@@ -3622,12 +3622,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Book_FieldIndex.Weight;
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Book_FieldIndex.TextOffsetY;
                 }
                 case RecordTypeInts.CNAM:

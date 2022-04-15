@@ -1811,35 +1811,35 @@ namespace Mutagen.Bethesda.Skyrim
         protected override Type LinkType => typeof(IEncounterZone);
 
 
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public EncounterZone.DATADataType DATADataTypeState { get; private set; }
         #region Owner
-        private int _OwnerLocation => _DATALocation!.Value;
+        private int _OwnerLocation => _DATALocation!.Value.Min;
         private bool _Owner_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IOwnerGetter> Owner => _Owner_IsSet ? new FormLink<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OwnerLocation, 0x4)))) : FormLink<IOwnerGetter>.Null;
         #endregion
         #region Location
-        private int _LocationLocation => _DATALocation!.Value + 0x4;
+        private int _LocationLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Location_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<ILocationGetter> Location => _Location_IsSet ? new FormLink<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LocationLocation, 0x4)))) : FormLink<ILocationGetter>.Null;
         #endregion
         #region Rank
-        private int _RankLocation => _DATALocation!.Value + 0x8;
+        private int _RankLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Rank_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EncounterZone.DATADataType.Break0);
         public SByte Rank => _Rank_IsSet ? (sbyte)_data.Slice(_RankLocation, 1)[0] : default;
         #endregion
         #region MinLevel
-        private int _MinLevelLocation => _DATALocation!.Value + 0x9;
+        private int _MinLevelLocation => _DATALocation!.Value.Min + 0x9;
         private bool _MinLevel_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EncounterZone.DATADataType.Break0);
         public SByte MinLevel => _MinLevel_IsSet ? (sbyte)_data.Slice(_MinLevelLocation, 1)[0] : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0xA;
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0xA;
         private bool _Flags_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EncounterZone.DATADataType.Break0);
         public EncounterZone.Flag Flags => _Flags_IsSet ? (EncounterZone.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region MaxLevel
-        private int _MaxLevelLocation => _DATALocation!.Value + 0xB;
+        private int _MaxLevelLocation => _DATALocation!.Value.Min + 0xB;
         private bool _MaxLevel_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EncounterZone.DATADataType.Break0);
         public SByte MaxLevel => _MaxLevel_IsSet ? (sbyte)_data.Slice(_MaxLevelLocation, 1)[0] : default;
         #endregion
@@ -1911,7 +1911,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x8)
                     {

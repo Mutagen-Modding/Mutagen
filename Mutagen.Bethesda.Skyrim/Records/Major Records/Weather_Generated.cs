@@ -3715,7 +3715,8 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.CloudTextures = item.CloudTextures.SpanEqualsHelper(
+            ret.CloudTextures = EqualsMaskHelper.SpanEqualsHelper<String?>(
+                item.CloudTextures,
                 rhs.CloudTextures,
                 (l, r) => string.Equals(l, r),
                 include);
@@ -3727,7 +3728,8 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Precipitation = item.Precipitation.Equals(rhs.Precipitation);
             ret.VisualEffect = item.VisualEffect.Equals(rhs.VisualEffect);
             ret.ONAM = MemorySliceExt.Equal(item.ONAM, rhs.ONAM);
-            ret.Clouds = item.Clouds.SpanEqualsHelper(
+            ret.Clouds = EqualsMaskHelper.SpanEqualsHelper<ICloudLayerGetter, CloudLayer.Mask<bool>>(
+                item.Clouds,
                 rhs.Clouds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
@@ -4831,7 +4833,7 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudTextures) ?? true))
             {
-                item.CloudTextures.SetTo(rhs.CloudTextures);
+                rhs.CloudTextures.Span.CopyTo(item.CloudTextures.AsSpan());
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.DNAM) ?? true))
             {
@@ -6616,231 +6618,231 @@ namespace Mutagen.Bethesda.Skyrim
             OverlayStream stream,
             int offset);
         #endregion
-        private int? _NAM0Location;
+        private RangeInt32? _NAM0Location;
         public Weather.NAM0DataType NAM0DataTypeState { get; private set; }
         #region SkyUpperColor
-        private int _SkyUpperColorLocation => _NAM0Location!.Value;
+        private int _SkyUpperColorLocation => _NAM0Location!.Value.Min;
         private bool _SkyUpperColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _SkyUpperColor => _SkyUpperColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_SkyUpperColorLocation), _package), _package) : default;
         public IWeatherColorGetter SkyUpperColor => _SkyUpperColor ?? new WeatherColor();
         #endregion
         #region FogNearColor
-        private int _FogNearColorLocation => _NAM0Location!.Value + 0x10;
+        private int _FogNearColorLocation => _NAM0Location!.Value.Min + 0x10;
         private bool _FogNearColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _FogNearColor => _FogNearColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_FogNearColorLocation), _package), _package) : default;
         public IWeatherColorGetter FogNearColor => _FogNearColor ?? new WeatherColor();
         #endregion
         #region UnknownColor
-        private int _UnknownColorLocation => _NAM0Location!.Value + 0x20;
+        private int _UnknownColorLocation => _NAM0Location!.Value.Min + 0x20;
         private bool _UnknownColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _UnknownColor => _UnknownColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_UnknownColorLocation), _package), _package) : default;
         public IWeatherColorGetter UnknownColor => _UnknownColor ?? new WeatherColor();
         #endregion
         #region AmbientColor
-        private int _AmbientColorLocation => _NAM0Location!.Value + 0x30;
+        private int _AmbientColorLocation => _NAM0Location!.Value.Min + 0x30;
         private bool _AmbientColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _AmbientColor => _AmbientColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_AmbientColorLocation), _package), _package) : default;
         public IWeatherColorGetter AmbientColor => _AmbientColor ?? new WeatherColor();
         #endregion
         #region SunlightColor
-        private int _SunlightColorLocation => _NAM0Location!.Value + 0x40;
+        private int _SunlightColorLocation => _NAM0Location!.Value.Min + 0x40;
         private bool _SunlightColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _SunlightColor => _SunlightColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_SunlightColorLocation), _package), _package) : default;
         public IWeatherColorGetter SunlightColor => _SunlightColor ?? new WeatherColor();
         #endregion
         #region SunColor
-        private int _SunColorLocation => _NAM0Location!.Value + 0x50;
+        private int _SunColorLocation => _NAM0Location!.Value.Min + 0x50;
         private bool _SunColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _SunColor => _SunColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_SunColorLocation), _package), _package) : default;
         public IWeatherColorGetter SunColor => _SunColor ?? new WeatherColor();
         #endregion
         #region StarsColor
-        private int _StarsColorLocation => _NAM0Location!.Value + 0x60;
+        private int _StarsColorLocation => _NAM0Location!.Value.Min + 0x60;
         private bool _StarsColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _StarsColor => _StarsColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_StarsColorLocation), _package), _package) : default;
         public IWeatherColorGetter StarsColor => _StarsColor ?? new WeatherColor();
         #endregion
         #region SkyLowerColor
-        private int _SkyLowerColorLocation => _NAM0Location!.Value + 0x70;
+        private int _SkyLowerColorLocation => _NAM0Location!.Value.Min + 0x70;
         private bool _SkyLowerColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _SkyLowerColor => _SkyLowerColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_SkyLowerColorLocation), _package), _package) : default;
         public IWeatherColorGetter SkyLowerColor => _SkyLowerColor ?? new WeatherColor();
         #endregion
         #region HorizonColor
-        private int _HorizonColorLocation => _NAM0Location!.Value + 0x80;
+        private int _HorizonColorLocation => _NAM0Location!.Value.Min + 0x80;
         private bool _HorizonColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _HorizonColor => _HorizonColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_HorizonColorLocation), _package), _package) : default;
         public IWeatherColorGetter HorizonColor => _HorizonColor ?? new WeatherColor();
         #endregion
         #region EffectLightingColor
-        private int _EffectLightingColorLocation => _NAM0Location!.Value + 0x90;
+        private int _EffectLightingColorLocation => _NAM0Location!.Value.Min + 0x90;
         private bool _EffectLightingColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _EffectLightingColor => _EffectLightingColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_EffectLightingColorLocation), _package), _package) : default;
         public IWeatherColorGetter EffectLightingColor => _EffectLightingColor ?? new WeatherColor();
         #endregion
         #region CloudLodDiffuseColor
-        private int _CloudLodDiffuseColorLocation => _NAM0Location!.Value + 0xA0;
+        private int _CloudLodDiffuseColorLocation => _NAM0Location!.Value.Min + 0xA0;
         private bool _CloudLodDiffuseColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _CloudLodDiffuseColor => _CloudLodDiffuseColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_CloudLodDiffuseColorLocation), _package), _package) : default;
         public IWeatherColorGetter CloudLodDiffuseColor => _CloudLodDiffuseColor ?? new WeatherColor();
         #endregion
         #region CloudLodAmbientColor
-        private int _CloudLodAmbientColorLocation => _NAM0Location!.Value + 0xB0;
+        private int _CloudLodAmbientColorLocation => _NAM0Location!.Value.Min + 0xB0;
         private bool _CloudLodAmbientColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _CloudLodAmbientColor => _CloudLodAmbientColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_CloudLodAmbientColorLocation), _package), _package) : default;
         public IWeatherColorGetter CloudLodAmbientColor => _CloudLodAmbientColor ?? new WeatherColor();
         #endregion
         #region FogFarColor
-        private int _FogFarColorLocation => _NAM0Location!.Value + 0xC0;
+        private int _FogFarColorLocation => _NAM0Location!.Value.Min + 0xC0;
         private bool _FogFarColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _FogFarColor => _FogFarColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_FogFarColorLocation), _package), _package) : default;
         public IWeatherColorGetter FogFarColor => _FogFarColor ?? new WeatherColor();
         #endregion
         #region SkyStaticsColor
-        private int _SkyStaticsColorLocation => _NAM0Location!.Value + 0xD0;
+        private int _SkyStaticsColorLocation => _NAM0Location!.Value.Min + 0xD0;
         private bool _SkyStaticsColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break0);
         private IWeatherColorGetter? _SkyStaticsColor => _SkyStaticsColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_SkyStaticsColorLocation), _package), _package) : default;
         public IWeatherColorGetter SkyStaticsColor => _SkyStaticsColor ?? new WeatherColor();
         #endregion
         #region WaterMultiplierColor
-        private int _WaterMultiplierColorLocation => _NAM0Location!.Value + 0xE0;
+        private int _WaterMultiplierColorLocation => _NAM0Location!.Value.Min + 0xE0;
         private bool _WaterMultiplierColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break1);
         private IWeatherColorGetter? _WaterMultiplierColor => _WaterMultiplierColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_WaterMultiplierColorLocation), _package), _package) : default;
         public IWeatherColorGetter WaterMultiplierColor => _WaterMultiplierColor ?? new WeatherColor();
         #endregion
         #region SunGlareColor
-        private int _SunGlareColorLocation => _NAM0Location!.Value + 0xF0;
+        private int _SunGlareColorLocation => _NAM0Location!.Value.Min + 0xF0;
         private bool _SunGlareColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break1);
         private IWeatherColorGetter? _SunGlareColor => _SunGlareColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_SunGlareColorLocation), _package), _package) : default;
         public IWeatherColorGetter SunGlareColor => _SunGlareColor ?? new WeatherColor();
         #endregion
         #region MoonGlareColor
-        private int _MoonGlareColorLocation => _NAM0Location!.Value + 0x100;
+        private int _MoonGlareColorLocation => _NAM0Location!.Value.Min + 0x100;
         private bool _MoonGlareColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break1);
         private IWeatherColorGetter? _MoonGlareColor => _MoonGlareColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_MoonGlareColorLocation), _package), _package) : default;
         public IWeatherColorGetter MoonGlareColor => _MoonGlareColor ?? new WeatherColor();
         #endregion
-        private int? _FNAMLocation;
+        private RangeInt32? _FNAMLocation;
         public Weather.FNAMDataType FNAMDataTypeState { get; private set; }
         #region FogDistanceDayNear
-        private int _FogDistanceDayNearLocation => _FNAMLocation!.Value;
+        private int _FogDistanceDayNearLocation => _FNAMLocation!.Value.Min;
         private bool _FogDistanceDayNear_IsSet => _FNAMLocation.HasValue;
         public Single FogDistanceDayNear => _FogDistanceDayNear_IsSet ? _data.Slice(_FogDistanceDayNearLocation, 4).Float() : default;
         #endregion
         #region FogDistanceDayFar
-        private int _FogDistanceDayFarLocation => _FNAMLocation!.Value + 0x4;
+        private int _FogDistanceDayFarLocation => _FNAMLocation!.Value.Min + 0x4;
         private bool _FogDistanceDayFar_IsSet => _FNAMLocation.HasValue;
         public Single FogDistanceDayFar => _FogDistanceDayFar_IsSet ? _data.Slice(_FogDistanceDayFarLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightNear
-        private int _FogDistanceNightNearLocation => _FNAMLocation!.Value + 0x8;
+        private int _FogDistanceNightNearLocation => _FNAMLocation!.Value.Min + 0x8;
         private bool _FogDistanceNightNear_IsSet => _FNAMLocation.HasValue;
         public Single FogDistanceNightNear => _FogDistanceNightNear_IsSet ? _data.Slice(_FogDistanceNightNearLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightFar
-        private int _FogDistanceNightFarLocation => _FNAMLocation!.Value + 0xC;
+        private int _FogDistanceNightFarLocation => _FNAMLocation!.Value.Min + 0xC;
         private bool _FogDistanceNightFar_IsSet => _FNAMLocation.HasValue;
         public Single FogDistanceNightFar => _FogDistanceNightFar_IsSet ? _data.Slice(_FogDistanceNightFarLocation, 4).Float() : default;
         #endregion
         #region FogDistanceDayPower
-        private int _FogDistanceDayPowerLocation => _FNAMLocation!.Value + 0x10;
+        private int _FogDistanceDayPowerLocation => _FNAMLocation!.Value.Min + 0x10;
         private bool _FogDistanceDayPower_IsSet => _FNAMLocation.HasValue;
         public Single FogDistanceDayPower => _FogDistanceDayPower_IsSet ? _data.Slice(_FogDistanceDayPowerLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightPower
-        private int _FogDistanceNightPowerLocation => _FNAMLocation!.Value + 0x14;
+        private int _FogDistanceNightPowerLocation => _FNAMLocation!.Value.Min + 0x14;
         private bool _FogDistanceNightPower_IsSet => _FNAMLocation.HasValue;
         public Single FogDistanceNightPower => _FogDistanceNightPower_IsSet ? _data.Slice(_FogDistanceNightPowerLocation, 4).Float() : default;
         #endregion
         #region FogDistanceDayMax
-        private int _FogDistanceDayMaxLocation => _FNAMLocation!.Value + 0x18;
+        private int _FogDistanceDayMaxLocation => _FNAMLocation!.Value.Min + 0x18;
         private bool _FogDistanceDayMax_IsSet => _FNAMLocation.HasValue;
         public Single FogDistanceDayMax => _FogDistanceDayMax_IsSet ? _data.Slice(_FogDistanceDayMaxLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightMax
-        private int _FogDistanceNightMaxLocation => _FNAMLocation!.Value + 0x1C;
+        private int _FogDistanceNightMaxLocation => _FNAMLocation!.Value.Min + 0x1C;
         private bool _FogDistanceNightMax_IsSet => _FNAMLocation.HasValue;
         public Single FogDistanceNightMax => _FogDistanceNightMax_IsSet ? _data.Slice(_FogDistanceNightMaxLocation, 4).Float() : default;
         #endregion
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Weather.DATADataType DATADataTypeState { get; private set; }
         #region WindSpeed
-        private int _WindSpeedLocation => _DATALocation!.Value;
+        private int _WindSpeedLocation => _DATALocation!.Value.Min;
         private bool _WindSpeed_IsSet => _DATALocation.HasValue;
         public Percent WindSpeed => _WindSpeed_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_WindSpeedLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _DATALocation!.Value + 0x1;
+        private int _UnknownLocation => _DATALocation!.Value.Min + 0x1;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
         public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
         #endregion
         #region TransDelta
-        private int _TransDeltaLocation => _DATALocation!.Value + 0x3;
+        private int _TransDeltaLocation => _DATALocation!.Value.Min + 0x3;
         private bool _TransDelta_IsSet => _DATALocation.HasValue;
         public Single TransDelta => _TransDelta_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(_TransDeltaLocation, 1), FloatIntegerType.Byte, 4) : default;
         #endregion
         #region SunGlare
-        private int _SunGlareLocation => _DATALocation!.Value + 0x4;
+        private int _SunGlareLocation => _DATALocation!.Value.Min + 0x4;
         private bool _SunGlare_IsSet => _DATALocation.HasValue;
         public Percent SunGlare => _SunGlare_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_SunGlareLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region SunDamage
-        private int _SunDamageLocation => _DATALocation!.Value + 0x5;
+        private int _SunDamageLocation => _DATALocation!.Value.Min + 0x5;
         private bool _SunDamage_IsSet => _DATALocation.HasValue;
         public Percent SunDamage => _SunDamage_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_SunDamageLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region PrecipitationBeginFadeIn
-        private int _PrecipitationBeginFadeInLocation => _DATALocation!.Value + 0x6;
+        private int _PrecipitationBeginFadeInLocation => _DATALocation!.Value.Min + 0x6;
         private bool _PrecipitationBeginFadeIn_IsSet => _DATALocation.HasValue;
         public Percent PrecipitationBeginFadeIn => _PrecipitationBeginFadeIn_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_PrecipitationBeginFadeInLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region PrecipitationEndFadeOut
-        private int _PrecipitationEndFadeOutLocation => _DATALocation!.Value + 0x7;
+        private int _PrecipitationEndFadeOutLocation => _DATALocation!.Value.Min + 0x7;
         private bool _PrecipitationEndFadeOut_IsSet => _DATALocation.HasValue;
         public Percent PrecipitationEndFadeOut => _PrecipitationEndFadeOut_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_PrecipitationEndFadeOutLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region ThunderLightningBeginFadeIn
-        private int _ThunderLightningBeginFadeInLocation => _DATALocation!.Value + 0x8;
+        private int _ThunderLightningBeginFadeInLocation => _DATALocation!.Value.Min + 0x8;
         private bool _ThunderLightningBeginFadeIn_IsSet => _DATALocation.HasValue;
         public Percent ThunderLightningBeginFadeIn => _ThunderLightningBeginFadeIn_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_ThunderLightningBeginFadeInLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region ThunderLightningEndFadeOut
-        private int _ThunderLightningEndFadeOutLocation => _DATALocation!.Value + 0x9;
+        private int _ThunderLightningEndFadeOutLocation => _DATALocation!.Value.Min + 0x9;
         private bool _ThunderLightningEndFadeOut_IsSet => _DATALocation.HasValue;
         public Percent ThunderLightningEndFadeOut => _ThunderLightningEndFadeOut_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_ThunderLightningEndFadeOutLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region ThunderLightningFrequency
-        private int _ThunderLightningFrequencyLocation => _DATALocation!.Value + 0xA;
+        private int _ThunderLightningFrequencyLocation => _DATALocation!.Value.Min + 0xA;
         private bool _ThunderLightningFrequency_IsSet => _DATALocation.HasValue;
         public Percent ThunderLightningFrequency => _ThunderLightningFrequency_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_ThunderLightningFrequencyLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0xB;
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0xB;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public Weather.Flag Flags => _Flags_IsSet ? (Weather.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region LightningColor
-        private int _LightningColorLocation => _DATALocation!.Value + 0xC;
+        private int _LightningColorLocation => _DATALocation!.Value.Min + 0xC;
         private bool _LightningColor_IsSet => _DATALocation.HasValue;
         public Color LightningColor => _LightningColor_IsSet ? _data.Slice(_LightningColorLocation, 3).ReadColor(ColorBinaryType.NoAlpha) : default;
         #endregion
         #region VisualEffectBegin
-        private int _VisualEffectBeginLocation => _DATALocation!.Value + 0xF;
+        private int _VisualEffectBeginLocation => _DATALocation!.Value.Min + 0xF;
         private bool _VisualEffectBegin_IsSet => _DATALocation.HasValue;
         public Percent VisualEffectBegin => _VisualEffectBegin_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_VisualEffectBeginLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region VisualEffectEnd
-        private int _VisualEffectEndLocation => _DATALocation!.Value + 0x10;
+        private int _VisualEffectEndLocation => _DATALocation!.Value.Min + 0x10;
         private bool _VisualEffectEnd_IsSet => _DATALocation.HasValue;
         public Percent VisualEffectEnd => _VisualEffectEnd_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_VisualEffectEndLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region WindDirection
-        private int _WindDirectionLocation => _DATALocation!.Value + 0x11;
+        private int _WindDirectionLocation => _DATALocation!.Value.Min + 0x11;
         private bool _WindDirection_IsSet => _DATALocation.HasValue;
         public Single WindDirection => _WindDirection_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(_WindDirectionLocation, 1), FloatIntegerType.Byte, 0.002777777777777778) : default;
         #endregion
         #region WindDirectionRange
-        private int _WindDirectionRangeLocation => _DATALocation!.Value + 0x12;
+        private int _WindDirectionRangeLocation => _DATALocation!.Value.Min + 0x12;
         private bool _WindDirectionRange_IsSet => _DATALocation.HasValue;
         public Single WindDirectionRange => _WindDirectionRange_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(_WindDirectionRangeLocation, 1), FloatIntegerType.Byte, 0.005555555555555556) : default;
         #endregion
@@ -7016,7 +7018,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    _NAM0Location = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _NAM0Location = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0xD0)
                     {
@@ -7030,12 +7032,12 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    _FNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _FNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Weather_FieldIndex.FogDistanceNightMax;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Weather_FieldIndex.WindDirectionRange;
                 }
                 case RecordTypeInts.NAM1:

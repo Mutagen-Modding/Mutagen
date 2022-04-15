@@ -2847,120 +2847,120 @@ namespace Mutagen.Bethesda.Skyrim
         protected override Type LinkType => typeof(ILightingTemplate);
 
 
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public LightingTemplate.DATADataType DATADataTypeState { get; private set; }
         #region AmbientColor
-        private int _AmbientColorLocation => _DATALocation!.Value;
+        private int _AmbientColorLocation => _DATALocation!.Value.Min;
         private bool _AmbientColor_IsSet => _DATALocation.HasValue;
         public Color AmbientColor => _AmbientColor_IsSet ? _data.Slice(_AmbientColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region DirectionalColor
-        private int _DirectionalColorLocation => _DATALocation!.Value + 0x4;
+        private int _DirectionalColorLocation => _DATALocation!.Value.Min + 0x4;
         private bool _DirectionalColor_IsSet => _DATALocation.HasValue;
         public Color DirectionalColor => _DirectionalColor_IsSet ? _data.Slice(_DirectionalColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region FogNearColor
-        private int _FogNearColorLocation => _DATALocation!.Value + 0x8;
+        private int _FogNearColorLocation => _DATALocation!.Value.Min + 0x8;
         private bool _FogNearColor_IsSet => _DATALocation.HasValue;
         public Color FogNearColor => _FogNearColor_IsSet ? _data.Slice(_FogNearColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region FogNear
-        private int _FogNearLocation => _DATALocation!.Value + 0xC;
+        private int _FogNearLocation => _DATALocation!.Value.Min + 0xC;
         private bool _FogNear_IsSet => _DATALocation.HasValue;
         public Single FogNear => _FogNear_IsSet ? _data.Slice(_FogNearLocation, 4).Float() : default;
         #endregion
         #region FogFar
-        private int _FogFarLocation => _DATALocation!.Value + 0x10;
+        private int _FogFarLocation => _DATALocation!.Value.Min + 0x10;
         private bool _FogFar_IsSet => _DATALocation.HasValue;
         public Single FogFar => _FogFar_IsSet ? _data.Slice(_FogFarLocation, 4).Float() : default;
         #endregion
         #region DirectionalRotationXY
-        private int _DirectionalRotationXYLocation => _DATALocation!.Value + 0x14;
+        private int _DirectionalRotationXYLocation => _DATALocation!.Value.Min + 0x14;
         private bool _DirectionalRotationXY_IsSet => _DATALocation.HasValue;
         public Int32 DirectionalRotationXY => _DirectionalRotationXY_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_DirectionalRotationXYLocation, 4)) : default;
         #endregion
         #region DirectionalRotationZ
-        private int _DirectionalRotationZLocation => _DATALocation!.Value + 0x18;
+        private int _DirectionalRotationZLocation => _DATALocation!.Value.Min + 0x18;
         private bool _DirectionalRotationZ_IsSet => _DATALocation.HasValue;
         public Int32 DirectionalRotationZ => _DirectionalRotationZ_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_DirectionalRotationZLocation, 4)) : default;
         #endregion
         #region DirectionalFade
-        private int _DirectionalFadeLocation => _DATALocation!.Value + 0x1C;
+        private int _DirectionalFadeLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _DirectionalFade_IsSet => _DATALocation.HasValue;
         public Single DirectionalFade => _DirectionalFade_IsSet ? _data.Slice(_DirectionalFadeLocation, 4).Float() : default;
         #endregion
         #region FogClipDistance
-        private int _FogClipDistanceLocation => _DATALocation!.Value + 0x20;
+        private int _FogClipDistanceLocation => _DATALocation!.Value.Min + 0x20;
         private bool _FogClipDistance_IsSet => _DATALocation.HasValue;
         public Single FogClipDistance => _FogClipDistance_IsSet ? _data.Slice(_FogClipDistanceLocation, 4).Float() : default;
         #endregion
         #region FogPower
-        private int _FogPowerLocation => _DATALocation!.Value + 0x24;
+        private int _FogPowerLocation => _DATALocation!.Value.Min + 0x24;
         private bool _FogPower_IsSet => _DATALocation.HasValue;
         public Single FogPower => _FogPower_IsSet ? _data.Slice(_FogPowerLocation, 4).Float() : default;
         #endregion
         #region AmbientDirectionalXPlus
-        private int _AmbientDirectionalXPlusLocation => _DATALocation!.Value + 0x28;
+        private int _AmbientDirectionalXPlusLocation => _DATALocation!.Value.Min + 0x28;
         private bool _AmbientDirectionalXPlus_IsSet => _DATALocation.HasValue;
         public Color AmbientDirectionalXPlus => _AmbientDirectionalXPlus_IsSet ? _data.Slice(_AmbientDirectionalXPlusLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region AmbientDirectionalXMinus
-        private int _AmbientDirectionalXMinusLocation => _DATALocation!.Value + 0x2C;
+        private int _AmbientDirectionalXMinusLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _AmbientDirectionalXMinus_IsSet => _DATALocation.HasValue;
         public Color AmbientDirectionalXMinus => _AmbientDirectionalXMinus_IsSet ? _data.Slice(_AmbientDirectionalXMinusLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region AmbientDirectionalYPlus
-        private int _AmbientDirectionalYPlusLocation => _DATALocation!.Value + 0x30;
+        private int _AmbientDirectionalYPlusLocation => _DATALocation!.Value.Min + 0x30;
         private bool _AmbientDirectionalYPlus_IsSet => _DATALocation.HasValue;
         public Color AmbientDirectionalYPlus => _AmbientDirectionalYPlus_IsSet ? _data.Slice(_AmbientDirectionalYPlusLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region AmbientDirectionalYMinus
-        private int _AmbientDirectionalYMinusLocation => _DATALocation!.Value + 0x34;
+        private int _AmbientDirectionalYMinusLocation => _DATALocation!.Value.Min + 0x34;
         private bool _AmbientDirectionalYMinus_IsSet => _DATALocation.HasValue;
         public Color AmbientDirectionalYMinus => _AmbientDirectionalYMinus_IsSet ? _data.Slice(_AmbientDirectionalYMinusLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region AmbientDirectionalZPlus
-        private int _AmbientDirectionalZPlusLocation => _DATALocation!.Value + 0x38;
+        private int _AmbientDirectionalZPlusLocation => _DATALocation!.Value.Min + 0x38;
         private bool _AmbientDirectionalZPlus_IsSet => _DATALocation.HasValue;
         public Color AmbientDirectionalZPlus => _AmbientDirectionalZPlus_IsSet ? _data.Slice(_AmbientDirectionalZPlusLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region AmbientDirectionalZMinus
-        private int _AmbientDirectionalZMinusLocation => _DATALocation!.Value + 0x3C;
+        private int _AmbientDirectionalZMinusLocation => _DATALocation!.Value.Min + 0x3C;
         private bool _AmbientDirectionalZMinus_IsSet => _DATALocation.HasValue;
         public Color AmbientDirectionalZMinus => _AmbientDirectionalZMinus_IsSet ? _data.Slice(_AmbientDirectionalZMinusLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region AmbientSpecular
-        private int _AmbientSpecularLocation => _DATALocation!.Value + 0x40;
+        private int _AmbientSpecularLocation => _DATALocation!.Value.Min + 0x40;
         private bool _AmbientSpecular_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
         public Color AmbientSpecular => _AmbientSpecular_IsSet ? _data.Slice(_AmbientSpecularLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region AmbientScale
-        private int _AmbientScaleLocation => _DATALocation!.Value + 0x44;
+        private int _AmbientScaleLocation => _DATALocation!.Value.Min + 0x44;
         private bool _AmbientScale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
         public Single AmbientScale => _AmbientScale_IsSet ? _data.Slice(_AmbientScaleLocation, 4).Float() : default;
         #endregion
         #region FogFarColor
-        private int _FogFarColorLocation => _DATALocation!.Value + 0x48;
+        private int _FogFarColorLocation => _DATALocation!.Value.Min + 0x48;
         private bool _FogFarColor_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
         public Color FogFarColor => _FogFarColor_IsSet ? _data.Slice(_FogFarColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region FogMax
-        private int _FogMaxLocation => _DATALocation!.Value + 0x4C;
+        private int _FogMaxLocation => _DATALocation!.Value.Min + 0x4C;
         private bool _FogMax_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
         public Single FogMax => _FogMax_IsSet ? _data.Slice(_FogMaxLocation, 4).Float() : default;
         #endregion
         #region LightFadeStartDistance
-        private int _LightFadeStartDistanceLocation => _DATALocation!.Value + 0x50;
+        private int _LightFadeStartDistanceLocation => _DATALocation!.Value.Min + 0x50;
         private bool _LightFadeStartDistance_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
         public Single LightFadeStartDistance => _LightFadeStartDistance_IsSet ? _data.Slice(_LightFadeStartDistanceLocation, 4).Float() : default;
         #endregion
         #region LightFadeEndDistance
-        private int _LightFadeEndDistanceLocation => _DATALocation!.Value + 0x54;
+        private int _LightFadeEndDistanceLocation => _DATALocation!.Value.Min + 0x54;
         private bool _LightFadeEndDistance_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
         public Single LightFadeEndDistance => _LightFadeEndDistance_IsSet ? _data.Slice(_LightFadeEndDistanceLocation, 4).Float() : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _DATALocation!.Value + 0x58;
+        private int _UnknownLocation => _DATALocation!.Value.Min + 0x58;
         private bool _Unknown_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
         public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_UnknownLocation, 4)) : default;
         #endregion
@@ -3033,7 +3033,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x40)
                     {

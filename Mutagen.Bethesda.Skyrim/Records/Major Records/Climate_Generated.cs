@@ -2305,35 +2305,35 @@ namespace Mutagen.Bethesda.Skyrim
         public String? SunGlareTexture => _SunGlareTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SunGlareTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IModelGetter? Model { get; private set; }
-        private int? _TNAMLocation;
+        private RangeInt32? _TNAMLocation;
         public Climate.TNAMDataType TNAMDataTypeState { get; private set; }
         #region SunriseBeginRaw
-        private int _SunriseBeginRawLocation => _TNAMLocation!.Value;
+        private int _SunriseBeginRawLocation => _TNAMLocation!.Value.Min;
         private bool _SunriseBeginRaw_IsSet => _TNAMLocation.HasValue;
         public Byte SunriseBeginRaw => _SunriseBeginRaw_IsSet ? _data.Span[_SunriseBeginRawLocation] : default;
         #endregion
         #region SunriseEndRaw
-        private int _SunriseEndRawLocation => _TNAMLocation!.Value + 0x1;
+        private int _SunriseEndRawLocation => _TNAMLocation!.Value.Min + 0x1;
         private bool _SunriseEndRaw_IsSet => _TNAMLocation.HasValue;
         public Byte SunriseEndRaw => _SunriseEndRaw_IsSet ? _data.Span[_SunriseEndRawLocation] : default;
         #endregion
         #region SunsetBeginRaw
-        private int _SunsetBeginRawLocation => _TNAMLocation!.Value + 0x2;
+        private int _SunsetBeginRawLocation => _TNAMLocation!.Value.Min + 0x2;
         private bool _SunsetBeginRaw_IsSet => _TNAMLocation.HasValue;
         public Byte SunsetBeginRaw => _SunsetBeginRaw_IsSet ? _data.Span[_SunsetBeginRawLocation] : default;
         #endregion
         #region SunsetEndRaw
-        private int _SunsetEndRawLocation => _TNAMLocation!.Value + 0x3;
+        private int _SunsetEndRawLocation => _TNAMLocation!.Value.Min + 0x3;
         private bool _SunsetEndRaw_IsSet => _TNAMLocation.HasValue;
         public Byte SunsetEndRaw => _SunsetEndRaw_IsSet ? _data.Span[_SunsetEndRawLocation] : default;
         #endregion
         #region Volatility
-        private int _VolatilityLocation => _TNAMLocation!.Value + 0x4;
+        private int _VolatilityLocation => _TNAMLocation!.Value.Min + 0x4;
         private bool _Volatility_IsSet => _TNAMLocation.HasValue;
         public Byte Volatility => _Volatility_IsSet ? _data.Span[_VolatilityLocation] : default;
         #endregion
         #region MoonAndPhaseLength
-        private int _MoonAndPhaseLengthLocation => _TNAMLocation!.Value + 0x5;
+        private int _MoonAndPhaseLengthLocation => _TNAMLocation!.Value.Min + 0x5;
         private bool _MoonAndPhaseLength_IsSet => _TNAMLocation.HasValue;
         partial void MoonAndPhaseLengthCustomParse(
             OverlayStream stream,
@@ -2440,7 +2440,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _TNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Climate_FieldIndex.PhaseLength;
                 }
                 default:
