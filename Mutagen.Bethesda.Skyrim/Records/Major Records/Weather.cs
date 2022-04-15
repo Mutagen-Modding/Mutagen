@@ -38,7 +38,7 @@ public partial class Weather
     [Flags]
     public enum Flag
     {
-        Pleasent = 0x001,
+        Pleasant = 0x001,
         Cloudy = 0x002,
         Rainy = 0x004,
         Snow = 0x008,
@@ -199,7 +199,7 @@ partial class WeatherBinaryCreateTranslation
         int contentLength,
         TypedParseParams? translationParams = null)
     {
-        if (nextRecordType.TypeInt == 0x44494445) // EDID
+        if (nextRecordType == RecordTypes.EDID)
         {
             return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                 item: item,
@@ -470,7 +470,7 @@ partial class WeatherBinaryOverlay
         PreviousParse lastParsed,
         TypedParseParams? parseParams = null)
     {
-        if (type.TypeInt == 0x44494445) // EDID
+        if (type == RecordTypes.EDID)
         {
             return base.FillRecordType(
                 stream: stream,

@@ -11,12 +11,12 @@ namespace Mutagen.Bethesda.Oblivion
         public enum WeatherClassification
         {
             None = 0,
-            Pleasent = 1,
+            Pleasant = 1,
             Cloudy = 2,
             Unknown3 = 3,
             Rainy = 4,
             Snow = 8,
-            Pleasent2 = 0xC1,
+            Pleasant2 = 0xC1,
         }
     }
 }
