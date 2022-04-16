@@ -36,7 +36,7 @@ public class PexTests
     [MemberData(nameof(TestDataFiles))]
     public void TestPexParsing(string file, GameCategory gameCategory)
     {
-        var path = new FilePath(Path.Combine("Pex", "Files", file));
+        var path = new FilePath(Path.Combine("Pex", file));
         Assert.True(File.Exists(path));
 
         var pex = PexFile.CreateFromFile(path, gameCategory);
@@ -47,7 +47,7 @@ public class PexTests
     [MemberData(nameof(TestDataFiles))]
     public void TestPexWriting(string file, GameCategory gameCategory)
     {
-        var inputFile = new FilePath(Path.Combine("Pex", "Files", file));
+        var inputFile = new FilePath(Path.Combine("Pex", file));
         Assert.True(File.Exists(inputFile));
 
         var inputPex = PexFile.CreateFromFile(inputFile, gameCategory);
@@ -63,7 +63,7 @@ public class PexTests
     [Fact]
     public void TestSinglePexParsing()
     {
-        var path = new FilePath(Path.Combine("Pex", "Files", "Art.pex"));
+        var path = new FilePath(Path.Combine("Pex",  "Art.pex"));
         Assert.True(File.Exists(path));
 
         var pex = PexFile.CreateFromFile(path, GameCategory.Skyrim);
@@ -105,7 +105,7 @@ public class PexTests
     [Fact]
     public void TestPexAddition()
     {
-        var path = new FilePath(Path.Combine("Pex", "Files", "Art.pex"));
+        var path = new FilePath(Path.Combine("Pex",  "Art.pex"));
         Assert.True(File.Exists(path));
 
         var pex = PexFile.CreateFromFile(path, GameCategory.Skyrim);
@@ -129,7 +129,7 @@ public class PexTests
     [Fact]
     public void UserFlagSync()
     {
-        var path = new FilePath(Path.Combine("Pex", "Files", "Art.pex"));
+        var path = new FilePath(Path.Combine("Pex",  "Art.pex"));
         Assert.True(File.Exists(path));
 
         var pex = PexFile.CreateFromFile(path, GameCategory.Skyrim);
