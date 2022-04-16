@@ -21,6 +21,13 @@ internal static class BinaryOverlayArrayHelper
         return ret;
     }
 
+    public static ReadOnlyMemorySlice<float> FloatSliceFromFixedSize(
+        ReadOnlyMemorySlice<byte> mem,
+        int amount)
+    {
+        return mem.Span.Slice(amount * 4).AsFloatSpan().ToArray();
+    }
+
     public static ReadOnlyMemorySlice<T> LoquiSliceFromFixedSize<T>(
         ReadOnlyMemorySlice<byte> mem,
         int amount,
