@@ -29,6 +29,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 var gen = await obj.LoadField(elem, requireName: true, add: false);
                 if (gen.Failed) throw new ArgumentException();
                 gen.Value.SetObjectGeneration(obj, setDefaults: true);
+                gen.Value.GetFieldData().Binary = BinaryGenerationType.NoGeneration;
+                gen.Value.GetFieldData().BinaryOverlay = BinaryGenerationType.NoGeneration;
                 obj.Fields.Insert(0, gen.Value);
             }
         }

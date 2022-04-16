@@ -511,6 +511,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             {
                 if (item.Nullable) return null;
                 if (!this.Module.TryGetTypeGeneration(item.GetType(), out var gen)) continue;
+                if (item.GetFieldData().Binary == BinaryGenerationType.NoGeneration) continue;
                 var len = await gen.ExpectedLength(loqui.TargetObjectGeneration, item);
                 if (len == null) return null;
                 sum += len.Value;
