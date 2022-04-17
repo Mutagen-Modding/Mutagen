@@ -6,53 +6,52 @@ using System.Reactive.Linq;
 using System.Windows;
 using System;
 
-namespace  Mutagen.Bethesda.WPF.Reflection.Fields
-{
-    public class ObjectSettingsNodeViewBase : NoggogUserControl<ObjectSettingsVM> { }
+namespace  Mutagen.Bethesda.WPF.Reflection.Fields;
 
-    /// <summary>
-    /// Interaction logic for ObjectSettingsNodeView.xaml
-    /// </summary>
-    public partial class ObjectSettingsNodeView : ObjectSettingsNodeViewBase
+public class ObjectSettingsNodeViewBase : NoggogUserControl<ObjectSettingsVM> { }
+
+/// <summary>
+/// Interaction logic for ObjectSettingsNodeView.xaml
+/// </summary>
+public partial class ObjectSettingsNodeView : ObjectSettingsNodeViewBase
+{
+    public ObjectSettingsNodeView()
     {
-        public ObjectSettingsNodeView()
+        InitializeComponent();
+        this.WhenActivated(disposable =>
         {
-            InitializeComponent();
-            this.WhenActivated(disposable =>
-            {
-                this.WhenAnyValue(x => x.ViewModel!.Meta.DisplayName)
-                    .BindTo(this, x => x.SettingNameBlock.Text)
-                    .DisposeWith(disposable);
-                this.WhenAnyValue(x => x.ViewModel!.Meta.DisplayName)
-                    .Select(x => x.IsNullOrWhitespace() ? Visibility.Collapsed : Visibility.Visible)
-                    .BindTo(this, x => x.SettingNameBlock.Visibility)
-                    .DisposeWith(disposable);
-                this.WhenAnyValue(x => x.ViewModel!.Nodes)
-                    .BindTo(this, x => x.Nodes.ItemsSource)
-                    .DisposeWith(disposable);
-                this.WhenAnyValue(x => x.ViewModel!.FocusSettingCommand)
-                    .BindTo(this, x => x.SettingNameButton.Command)
-                    .DisposeWith(disposable);
-                this.WhenAnyValue(x => x.ViewModel!.Meta.MainVM.ScrolledToSettings)
-                    .WithLatestFrom(this.WhenAnyValue(x => x.ViewModel!.Meta.MainVM.SelectedSettings),
-                        (Scrolled, Selected) => (Scrolled, Selected))
-                    .Where(x => x.Selected == this.ViewModel)
-                    .Delay(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
-                    .Subscribe(setting =>
+            this.WhenAnyValue(x => x.ViewModel!.Meta.DisplayName)
+                .BindTo(this, x => x.SettingNameBlock.Text)
+                .DisposeWith(disposable);
+            this.WhenAnyValue(x => x.ViewModel!.Meta.DisplayName)
+                .Select(x => x.IsNullOrWhitespace() ? Visibility.Collapsed : Visibility.Visible)
+                .BindTo(this, x => x.SettingNameBlock.Visibility)
+                .DisposeWith(disposable);
+            this.WhenAnyValue(x => x.ViewModel!.Nodes)
+                .BindTo(this, x => x.Nodes.ItemsSource)
+                .DisposeWith(disposable);
+            this.WhenAnyValue(x => x.ViewModel!.FocusSettingCommand)
+                .BindTo(this, x => x.SettingNameButton.Command)
+                .DisposeWith(disposable);
+            this.WhenAnyValue(x => x.ViewModel!.Meta.MainVM.ScrolledToSettings)
+                .WithLatestFrom(this.WhenAnyValue(x => x.ViewModel!.Meta.MainVM.SelectedSettings),
+                    (Scrolled, Selected) => (Scrolled, Selected))
+                .Where(x => x.Selected == this.ViewModel)
+                .Delay(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
+                .Subscribe(setting =>
+                {
+                    if (this.ViewModel == null || this.Nodes.Items == null || this.Nodes.Items.Count == 0) return;
+                    var target = setting.Scrolled;
+                    while (target != null)
                     {
-                        if (this.ViewModel == null || this.Nodes.Items == null || this.Nodes.Items.Count == 0) return;
-                        var target = setting.Scrolled;
-                        while (target != null)
+                        if (this.ViewModel.Nodes.Contains(target))
                         {
-                            if (this.ViewModel.Nodes.Contains(target))
-                            {
-                                this.Nodes.ScrollIntoView(target);
-                            }
-                            target = target.Meta.Parent;
+                            this.Nodes.ScrollIntoView(target);
                         }
-                    })
-                    .DisposeWith(disposable);
-            });
-        }
+                        target = target.Meta.Parent;
+                    }
+                })
+                .DisposeWith(disposable);
+        });
     }
 }

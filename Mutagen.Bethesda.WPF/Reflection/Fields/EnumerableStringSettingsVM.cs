@@ -5,59 +5,58 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.Json;
 
-namespace Mutagen.Bethesda.WPF.Reflection.Fields
+namespace Mutagen.Bethesda.WPF.Reflection.Fields;
+
+public class EnumerableStringSettingsVM : EnumerableSettingsVM
 {
-    public class EnumerableStringSettingsVM : EnumerableSettingsVM
+    private readonly IEnumerable<string> _defaultVal;
+
+    public EnumerableStringSettingsVM(
+        FieldMeta fieldMeta,
+        Func<JsonElement, TryGet<IBasicSettingsNodeVM>> get,
+        Action<ObservableCollection<IBasicSettingsNodeVM>> add,
+        IEnumerable<string> defaultVal)
+        : base(fieldMeta, get, add)
     {
-        private readonly IEnumerable<string> _defaultVal;
-
-        public EnumerableStringSettingsVM(
-            FieldMeta fieldMeta,
-            Func<JsonElement, TryGet<IBasicSettingsNodeVM>> get,
-            Action<ObservableCollection<IBasicSettingsNodeVM>> add,
-            IEnumerable<string> defaultVal)
-            : base(fieldMeta, get, add)
+        _defaultVal = defaultVal;
+        Values.SetTo(_defaultVal.Select(x =>
         {
-            _defaultVal = defaultVal;
-            Values.SetTo(_defaultVal.Select(x =>
+            return new ListElementWrapperVM<string, StringSettingsVM>(new StringSettingsVM()
             {
-                return new ListElementWrapperVM<string, StringSettingsVM>(new StringSettingsVM()
-                {
-                    Value = x
-                });
-            }));
-        }
-
-        public static EnumerableStringSettingsVM Factory(FieldMeta fieldMeta, object? defaultVal)
-        {
-            Func<JsonElement, TryGet<IBasicSettingsNodeVM>> import = new((elem) =>
-            {
-                return TryGet<IBasicSettingsNodeVM>.Succeed(
-                    new ListElementWrapperVM<string, StringSettingsVM>(
-                        new StringSettingsVM()
-                        {
-                            Value = elem.GetString() ?? string.Empty
-                        }));
+                Value = x
             });
-            return new EnumerableStringSettingsVM(
-                fieldMeta,
-                import,
-                (list) =>
-                {
-                    list.Add(new ListElementWrapperVM<string, StringSettingsVM>(new StringSettingsVM()
-                    {
-                        Value = string.Empty
-                    })
-                    {
-                        IsSelected = true
-                    });
-                },
-                defaultVal as IEnumerable<string> ?? Enumerable.Empty<string>());
-        }
+        }));
+    }
 
-        public override SettingsNodeVM Duplicate()
+    public static EnumerableStringSettingsVM Factory(FieldMeta fieldMeta, object? defaultVal)
+    {
+        Func<JsonElement, TryGet<IBasicSettingsNodeVM>> import = new((elem) =>
         {
-            return new EnumerableStringSettingsVM(Meta, _import, _add, _defaultVal);
-        }
+            return TryGet<IBasicSettingsNodeVM>.Succeed(
+                new ListElementWrapperVM<string, StringSettingsVM>(
+                    new StringSettingsVM()
+                    {
+                        Value = elem.GetString() ?? string.Empty
+                    }));
+        });
+        return new EnumerableStringSettingsVM(
+            fieldMeta,
+            import,
+            (list) =>
+            {
+                list.Add(new ListElementWrapperVM<string, StringSettingsVM>(new StringSettingsVM()
+                {
+                    Value = string.Empty
+                })
+                {
+                    IsSelected = true
+                });
+            },
+            defaultVal as IEnumerable<string> ?? Enumerable.Empty<string>());
+    }
+
+    public override SettingsNodeVM Duplicate()
+    {
+        return new EnumerableStringSettingsVM(Meta, _import, _add, _defaultVal);
     }
 }

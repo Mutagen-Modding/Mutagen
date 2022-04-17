@@ -8,55 +8,54 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Text.Json;
 
-namespace Mutagen.Bethesda.WPF.Reflection.Fields
+namespace Mutagen.Bethesda.WPF.Reflection.Fields;
+
+public class EnumSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
 {
-    public class EnumSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
+    private readonly string? _defaultVal;
+
+    public IEnumerable<string> EnumNames { get; }
+
+    [Reactive]
+    public string Value { get; set; }
+
+    object IBasicSettingsNodeVM.Value => this.Value!;
+
+    [Reactive]
+    public bool IsSelected { get; set; }
+
+    private readonly ObservableAsPropertyHelper<string> _DisplayName;
+    public string DisplayName => _DisplayName.Value;
+
+    public EnumSettingsVM(FieldMeta fieldMeta, string? defaultVal, IEnumerable<string> enumNames)
+        : base(fieldMeta)
     {
-        private readonly string? _defaultVal;
+        EnumNames = enumNames;
+        _defaultVal = defaultVal;
+        Value = defaultVal ?? string.Empty;
+        _DisplayName = this.WhenAnyValue(x => x.Value)
+            .Select(x => x.ToString())
+            .ToGuiProperty(this, nameof(DisplayName), string.Empty, deferSubscription: true);
+    }
 
-        public IEnumerable<string> EnumNames { get; }
+    public override void Import(JsonElement property, Action<string> logger)
+    {
+        Value = property.GetString() ?? string.Empty;
+    }
 
-        [Reactive]
-        public string Value { get; set; }
+    public override void Persist(JObject obj, Action<string> logger)
+    {
+        obj[Meta.DiskName] = JToken.FromObject(Value);
+    }
 
-        object IBasicSettingsNodeVM.Value => this.Value!;
+    public override SettingsNodeVM Duplicate()
+    {
+        return new EnumSettingsVM(Meta, _defaultVal, EnumNames);
+    }
 
-        [Reactive]
-        public bool IsSelected { get; set; }
-
-        private readonly ObservableAsPropertyHelper<string> _DisplayName;
-        public string DisplayName => _DisplayName.Value;
-
-        public EnumSettingsVM(FieldMeta fieldMeta, string? defaultVal, IEnumerable<string> enumNames)
-            : base(fieldMeta)
-        {
-            EnumNames = enumNames;
-            _defaultVal = defaultVal;
-            Value = defaultVal ?? string.Empty;
-            _DisplayName = this.WhenAnyValue(x => x.Value)
-                .Select(x => x.ToString())
-                .ToGuiProperty(this, nameof(DisplayName), string.Empty, deferSubscription: true);
-        }
-
-        public override void Import(JsonElement property, Action<string> logger)
-        {
-            Value = property.GetString() ?? string.Empty;
-        }
-
-        public override void Persist(JObject obj, Action<string> logger)
-        {
-            obj[Meta.DiskName] = JToken.FromObject(Value);
-        }
-
-        public override SettingsNodeVM Duplicate()
-        {
-            return new EnumSettingsVM(Meta, _defaultVal, EnumNames);
-        }
-
-        public static EnumSettingsVM Factory(FieldMeta fieldMeta, object? defaultVal, Type enumType)
-        {
-            var names = Enum.GetNames(enumType).ToArray();
-            return new EnumSettingsVM(fieldMeta, defaultVal?.ToString(), names);
-        }
+    public static EnumSettingsVM Factory(FieldMeta fieldMeta, object? defaultVal, Type enumType)
+    {
+        var names = Enum.GetNames(enumType).ToArray();
+        return new EnumSettingsVM(fieldMeta, defaultVal?.ToString(), names);
     }
 }

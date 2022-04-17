@@ -4,18 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Oblivion;
+
+public partial class AIPackageLocation
 {
-    public partial class AIPackageLocation
+    public enum LocationType
     {
-        public enum LocationType
-        {
-            NearReference = 0,
-            InCell = 1,
-            NearCurrentLocation = 2,
-            NearEditorLocation = 3,
-            ObjectID = 4,
-            ObjectType = 5
-        }
+        NearReference = 0,
+        InCell = 1,
+        NearCurrentLocation = 2,
+        NearEditorLocation = 3,
+        ObjectID = 4,
+        ObjectType = 5
     }
 }

@@ -4,15 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Oblivion;
+
+public enum MagicSchool
 {
-    public enum MagicSchool
-    {
-        Alteration = 0,
-        Conjuration = 1,
-        Destruction = 2,
-        Illusion = 3,
-        Mysticism = 4,
-        Restoration = 5
-    }
+    Alteration = 0,
+    Conjuration = 1,
+    Destruction = 2,
+    Illusion = 3,
+    Mysticism = 4,
+    Restoration = 5
 }

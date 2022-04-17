@@ -4,104 +4,103 @@ using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
 
-namespace Mutagen.Bethesda.Plugins.Binary.Streams
+namespace Mutagen.Bethesda.Plugins.Binary.Streams;
+
+/// <summary>
+/// Class containing all the extra meta bits for parsing
+/// </summary>
+public class ParsingBundle
 {
     /// <summary>
-    /// Class containing all the extra meta bits for parsing
+    /// Game constants meta object to reference for header length measurements
     /// </summary>
-    public class ParsingBundle
+    public GameConstants Constants { get; }
+
+    /// <summary>
+    /// MasterReferenceReader to reference while reading
+    /// </summary>
+    public IMasterReferenceCollection MasterReferences { get; }
+
+    /// <summary>
+    /// Optional RecordInfoCache to reference while reading
+    /// </summary>
+    public RecordTypeInfoCacheReader? RecordInfoCache { get; set; }
+
+    /// <summary>
+    /// Optional strings lookup to reference while reading
+    /// </summary>
+    public IStringsFolderLookup? StringsLookup { get; set; }
+
+    /// <summary>
+    /// Whether to do parallel work when possible
+    /// </summary>
+    public bool Parallel { get; set; }
+
+    /// <summary>
+    /// Tracker of whether within worldspace data section
+    /// </summary>
+    public bool InWorldspace { get; set; }
+
+    /// <summary>
+    /// Tracker of current major record version
+    /// </summary>
+    public ushort? FormVersion { get; set; }
+
+    /// <summary>
+    /// ModKey of the mod being parsed
+    /// </summary>
+    public ModKey ModKey { get; set; }
+
+    public EncodingBundle Encodings { get; set; } = new(MutagenEncodingProvider._1252, MutagenEncodingProvider._1252);
+
+    public Language TranslatedTargetLanguage { get; set; } = Language.English;
+
+    public ParsingBundle(GameConstants constants, IMasterReferenceCollection masterReferences)
     {
-        /// <summary>
-        /// Game constants meta object to reference for header length measurements
-        /// </summary>
-        public GameConstants Constants { get; }
+        this.Constants = constants;
+        this.MasterReferences = masterReferences;
+    }
 
-        /// <summary>
-        /// MasterReferenceReader to reference while reading
-        /// </summary>
-        public IMasterReferenceCollection MasterReferences { get; }
+    public static implicit operator GameConstants(ParsingBundle bundle)
+    {
+        return bundle.Constants;
+    }
 
-        /// <summary>
-        /// Optional RecordInfoCache to reference while reading
-        /// </summary>
-        public RecordTypeInfoCacheReader? RecordInfoCache { get; set; }
+    public void ReportIssue(RecordType? recordType, string note)
+    {
+        // Nothing for now.  Need to implement
+    }
 
-        /// <summary>
-        /// Optional strings lookup to reference while reading
-        /// </summary>
-        public IStringsFolderLookup? StringsLookup { get; set; }
-
-        /// <summary>
-        /// Whether to do parallel work when possible
-        /// </summary>
-        public bool Parallel { get; set; }
-
-        /// <summary>
-        /// Tracker of whether within worldspace data section
-        /// </summary>
-        public bool InWorldspace { get; set; }
-
-        /// <summary>
-        /// Tracker of current major record version
-        /// </summary>
-        public ushort? FormVersion { get; set; }
-
-        /// <summary>
-        /// ModKey of the mod being parsed
-        /// </summary>
-        public ModKey ModKey { get; set; }
-
-        public EncodingBundle Encodings { get; set; } = new(MutagenEncodingProvider._1252, MutagenEncodingProvider._1252);
-
-        public Language TranslatedTargetLanguage { get; set; } = Language.English;
-
-        public ParsingBundle(GameConstants constants, IMasterReferenceCollection masterReferences)
+    public void Absorb(StringsReadParameters? stringsReadParameters)
+    {
+        if (stringsReadParameters == null) return;
+        if (stringsReadParameters.TargetLanguage != null)
         {
-            this.Constants = constants;
-            this.MasterReferences = masterReferences;
+            TranslatedTargetLanguage = stringsReadParameters.TargetLanguage.Value;
         }
 
-        public static implicit operator GameConstants(ParsingBundle bundle)
+        if (stringsReadParameters.NonLocalizedEncodingOverride == null)
         {
-            return bundle.Constants;
+            var encodingProv = stringsReadParameters.EncodingProvider ?? MutagenEncodingProvider.Instance;
+            Encodings = Encodings with
+            {
+                NonLocalized = encodingProv.GetEncoding(Constants.Release, TranslatedTargetLanguage)
+            };
+        }
+        else
+        {
+            Encodings = Encodings with
+            {
+                NonLocalized = stringsReadParameters.NonLocalizedEncodingOverride
+            };
         }
 
-        public void ReportIssue(RecordType? recordType, string note)
+        if (stringsReadParameters.NonTranslatedEncodingOverride != null)
         {
-            // Nothing for now.  Need to implement
-        }
-
-        public void Absorb(StringsReadParameters? stringsReadParameters)
-        {
-            if (stringsReadParameters == null) return;
-            if (stringsReadParameters.TargetLanguage != null)
+            Encodings = Encodings with
             {
-                TranslatedTargetLanguage = stringsReadParameters.TargetLanguage.Value;
-            }
-
-            if (stringsReadParameters.NonLocalizedEncodingOverride == null)
-            {
-                var encodingProv = stringsReadParameters.EncodingProvider ?? MutagenEncodingProvider.Instance;
-                Encodings = Encodings with
-                {
-                    NonLocalized = encodingProv.GetEncoding(Constants.Release, TranslatedTargetLanguage)
-                };
-            }
-            else
-            {
-                Encodings = Encodings with
-                {
-                    NonLocalized = stringsReadParameters.NonLocalizedEncodingOverride
-                };
-            }
-
-            if (stringsReadParameters.NonTranslatedEncodingOverride != null)
-            {
-                Encodings = Encodings with
-                {
-                    NonTranslated = stringsReadParameters.NonTranslatedEncodingOverride
-                };
-            }
+                NonTranslated = stringsReadParameters.NonTranslatedEncodingOverride
+            };
         }
     }
 }

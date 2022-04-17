@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+public enum Aggression
 {
-    public enum Aggression
-    {
-        Unagressive,
-        Agressive,
-        VeryAggressive,
-        Frenzied,
-    }
+    Unagressive,
+    Agressive,
+    VeryAggressive,
+    Frenzied,
 }

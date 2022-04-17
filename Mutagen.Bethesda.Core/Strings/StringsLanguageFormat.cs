@@ -1,17 +1,16 @@
 using System;
 
-namespace Mutagen.Bethesda.Strings
-{
-    public enum StringsLanguageFormat
-    {
-        /// <summary>
-        /// Full verbose name of the language
-        /// </summary>
-        FullName,
+namespace Mutagen.Bethesda.Strings;
 
-        /// <summary>
-        /// Iso code
-        /// </summary>
-        Iso,
-    }
+public enum StringsLanguageFormat
+{
+    /// <summary>
+    /// Full verbose name of the language
+    /// </summary>
+    FullName,
+
+    /// <summary>
+    /// Iso code
+    /// </summary>
+    Iso,
 }

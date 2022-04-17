@@ -8,13 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Oblivion;
+
+public partial class QuestTarget
 {
-    public partial class QuestTarget
+    public enum Flag
     {
-        public enum Flag
-        {
-            CompassMarkerIgnoresLocks = 0x01
-        }
+        CompassMarkerIgnoresLocks = 0x01
     }
 }

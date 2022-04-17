@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Oblivion;
+
+public partial class EnableParent
 {
-    public partial class EnableParent
+    [Flags]
+    public enum Flag
     {
-        [Flags]
-        public enum Flag
-        {
-            SetEnableStateToOppositeOfParent = 0x01
-        }
+        SetEnableStateToOppositeOfParent = 0x01
     }
 }

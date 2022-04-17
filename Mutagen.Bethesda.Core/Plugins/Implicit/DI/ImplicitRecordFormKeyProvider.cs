@@ -1,23 +1,22 @@
 ﻿using System.Collections.Generic;
 using Mutagen.Bethesda.Environments.DI;
 
-namespace Mutagen.Bethesda.Plugins.Implicit.DI
+namespace Mutagen.Bethesda.Plugins.Implicit.DI;
+
+public interface IImplicitRecordFormKeyProvider
 {
-    public interface IImplicitRecordFormKeyProvider
+    IReadOnlyCollection<FormKey> RecordFormKeys { get; }
+}
+
+public class ImplicitRecordFormKeyProvider : IImplicitRecordFormKeyProvider
+{
+    private readonly IGameReleaseContext _gameRelease;
+
+    public ImplicitRecordFormKeyProvider(
+        IGameReleaseContext gameRelease)
     {
-        IReadOnlyCollection<FormKey> RecordFormKeys { get; }
+        _gameRelease = gameRelease;
     }
 
-    public class ImplicitRecordFormKeyProvider : IImplicitRecordFormKeyProvider
-    {
-        private readonly IGameReleaseContext _gameRelease;
-
-        public ImplicitRecordFormKeyProvider(
-            IGameReleaseContext gameRelease)
-        {
-            _gameRelease = gameRelease;
-        }
-
-        public IReadOnlyCollection<FormKey> RecordFormKeys => Implicits.Get(_gameRelease.Release).RecordFormKeys;
-    }
+    public IReadOnlyCollection<FormKey> RecordFormKeys => Implicits.Get(_gameRelease.Release).RecordFormKeys;
 }

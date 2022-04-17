@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Fallout4;
+
+public enum Size
 {
-    public enum Size
-    {
-        Small,
-        Medium,
-        Large,
-        ExtraLarge
-    }
+    Small,
+    Medium,
+    Large,
+    ExtraLarge
 }

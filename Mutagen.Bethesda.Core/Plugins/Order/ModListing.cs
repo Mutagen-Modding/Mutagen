@@ -7,269 +7,268 @@ using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
-namespace Mutagen.Bethesda.Plugins.Order
+namespace Mutagen.Bethesda.Plugins.Order;
+
+/// <inheritdoc cref="IModListingGetter" />
+[DebuggerDisplay("{ToString()}")]
+public record ModListing : IModListingGetter
 {
-    /// <inheritdoc cref="IModListingGetter" />
-    [DebuggerDisplay("{ToString()}")]
-    public record ModListing : IModListingGetter
+    /// <inheritdoc />
+    public ModKey ModKey { get; init; }
+
+    /// <inheritdoc />
+    public bool Enabled { get; init; }
+
+    /// <inheritdoc />
+    public bool Ghosted => !string.IsNullOrWhiteSpace(GhostSuffix);
+
+    /// <inheritdoc />
+    public string GhostSuffix { get; init; } = string.Empty;
+
+    public ModListing()
     {
-        /// <inheritdoc />
-        public ModKey ModKey { get; init; }
+    }
 
-        /// <inheritdoc />
-        public bool Enabled { get; init; }
+    public ModListing(ModKey modKey, bool enabled, string ghostSuffix = "")
+    {
+        ModKey = modKey;
+        Enabled = enabled;
+        GhostSuffix = ghostSuffix;
+    }
 
-        /// <inheritdoc />
-        public bool Ghosted => !string.IsNullOrWhiteSpace(GhostSuffix);
+    public static ModListing CreateEnabled(ModKey modKey)
+    {
+        return new ModListing(modKey, enabled: true, ghostSuffix: "");
+    }
 
-        /// <inheritdoc />
-        public string GhostSuffix { get; init; } = string.Empty;
+    public static ModListing CreateDisabled(ModKey modKey)
+    {
+        return new ModListing(modKey, enabled: false, ghostSuffix: "");
+    }
 
-        public ModListing()
+    public static ModListing CreateGhosted(ModKey modKey, string ghostSuffix)
+    {
+        return new ModListing(modKey, enabled: false, ghostSuffix: ghostSuffix);
+    }
+
+    public override string ToString()
+    {
+        return IModListingGetter.ToString(this);
+    }
+
+    public static implicit operator ModListing(ModKey modKey)
+    {
+        return new ModListing(modKey, enabled: true);
+    }
+
+    /// <inheritdoc cref="IModListingParser" />
+    public static bool TryFromString(ReadOnlySpan<char> str, bool enabledMarkerProcessing, [MaybeNullWhen(false)] out ModListing listing)
+    {
+        str = str.Trim();
+        bool enabled = true;
+        if (enabledMarkerProcessing)
         {
-        }
-
-        public ModListing(ModKey modKey, bool enabled, string ghostSuffix = "")
-        {
-            ModKey = modKey;
-            Enabled = enabled;
-            GhostSuffix = ghostSuffix;
-        }
-
-        public static ModListing CreateEnabled(ModKey modKey)
-        {
-            return new ModListing(modKey, enabled: true, ghostSuffix: "");
-        }
-
-        public static ModListing CreateDisabled(ModKey modKey)
-        {
-            return new ModListing(modKey, enabled: false, ghostSuffix: "");
-        }
-
-        public static ModListing CreateGhosted(ModKey modKey, string ghostSuffix)
-        {
-            return new ModListing(modKey, enabled: false, ghostSuffix: ghostSuffix);
-        }
-
-        public override string ToString()
-        {
-            return IModListingGetter.ToString(this);
-        }
-
-        public static implicit operator ModListing(ModKey modKey)
-        {
-            return new ModListing(modKey, enabled: true);
-        }
-
-        /// <inheritdoc cref="IModListingParser" />
-        public static bool TryFromString(ReadOnlySpan<char> str, bool enabledMarkerProcessing, [MaybeNullWhen(false)] out ModListing listing)
-        {
-            str = str.Trim();
-            bool enabled = true;
-            if (enabledMarkerProcessing)
+            if (str[0] == '*')
             {
-                if (str[0] == '*')
-                {
-                    str = str[1..];
-                }
-                else
-                {
-                    enabled = false;
-                }
+                str = str[1..];
             }
-            if (ModKey.TryFromNameAndExtension(str, out var key))
+            else
             {
-                listing = new ModListing(key, enabled);
-                return true;
+                enabled = false;
             }
+        }
+        if (ModKey.TryFromNameAndExtension(str, out var key))
+        {
+            listing = new ModListing(key, enabled);
+            return true;
+        }
 
-            var periodIndex = str.LastIndexOf('.');
-            if (periodIndex == -1)
-            {
-                listing = default;
-                return false;
-            }
-            var ghostTerm = str.Slice(periodIndex + 1);
-            str = str.Slice(0, periodIndex);
-
-            if (ModKey.TryFromNameAndExtension(str, out key))
-            {
-                listing = ModListing.CreateGhosted(key, ghostTerm.ToString());
-                return true;
-            }
-
+        var periodIndex = str.LastIndexOf('.');
+        if (periodIndex == -1)
+        {
             listing = default;
             return false;
         }
+        var ghostTerm = str.Slice(periodIndex + 1);
+        str = str.Slice(0, periodIndex);
 
-        /// <inheritdoc cref="IModListingParser" />
-        public static bool TryFromFileName(FileName fileName, bool enabledMarkerProcessing, [MaybeNullWhen(false)] out ModListing listing)
+        if (ModKey.TryFromNameAndExtension(str, out key))
         {
-            return TryFromString(fileName.String, enabledMarkerProcessing, out listing);
+            listing = ModListing.CreateGhosted(key, ghostTerm.ToString());
+            return true;
         }
 
-        /// <inheritdoc cref="IModListingParser" />
-        public static ModListing FromString(ReadOnlySpan<char> str, bool enabledMarkerProcessing)
-        {
-            if (!TryFromString(str, enabledMarkerProcessing, out var listing))
-            {
-                throw new InvalidDataException($"Load order file had malformed line: {str.ToString()}");
-            }
-            return listing;
-        }
-
-        /// <inheritdoc cref="IModListingParser" />
-        public static ModListing FromFileName(FileName name, bool enabledMarkerProcessing)
-        {
-            if (!TryFromFileName(name, enabledMarkerProcessing, out var listing))
-            {
-                throw new InvalidDataException($"Load order file had malformed line: {name}");
-            }
-            return listing;
-        }
-
-        public static Comparer<ModListing> GetComparer(Comparer<ModKey> comparer) =>
-            Comparer<ModListing>.Create((x, y) => comparer.Compare(x.ModKey, y.ModKey));
-
-        public static Comparer<TListing> GetComparer<TListing>(Comparer<ModKey> comparer)
-            where TListing : IModListingGetter
-        {
-            return Comparer<TListing>.Create((x, y) => comparer.Compare(x.ModKey, y.ModKey));
-        }
+        listing = default;
+        return false;
     }
 
-    /// <inheritdoc cref="IModListingGetter{TMod}" />
-    [DebuggerDisplay("{ToString()}")]
-    public record ModListing<TMod> : ModListing, IModListing<TMod>
-        where TMod : class, IModGetter
+    /// <inheritdoc cref="IModListingParser" />
+    public static bool TryFromFileName(FileName fileName, bool enabledMarkerProcessing, [MaybeNullWhen(false)] out ModListing listing)
     {
-        /// <inheritdoc cref="IModListing{TMod}.Mod" />
-        public TMod? Mod { get; set; }
+        return TryFromString(fileName.String, enabledMarkerProcessing, out listing);
+    }
 
-        private ModListing(ModKey key, TMod? mod, bool enabled, string ghostSuffix = "")
+    /// <inheritdoc cref="IModListingParser" />
+    public static ModListing FromString(ReadOnlySpan<char> str, bool enabledMarkerProcessing)
+    {
+        if (!TryFromString(str, enabledMarkerProcessing, out var listing))
         {
-            this.ModKey = key;
-            this.Mod = mod;
-            this.Enabled = enabled;
-            this.GhostSuffix = ghostSuffix;
+            throw new InvalidDataException($"Load order file had malformed line: {str.ToString()}");
         }
+        return listing;
+    }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ModListing(TMod mod, bool enabled = true, string ghostSuffix = "")
+    /// <inheritdoc cref="IModListingParser" />
+    public static ModListing FromFileName(FileName name, bool enabledMarkerProcessing)
+    {
+        if (!TryFromFileName(name, enabledMarkerProcessing, out var listing))
         {
-            this.ModKey = mod.ModKey;
-            this.Mod = mod;
-            this.Enabled = enabled;
-            this.GhostSuffix = ghostSuffix;
+            throw new InvalidDataException($"Load order file had malformed line: {name}");
         }
+        return listing;
+    }
 
-        /// <summary>
-        /// Factory to create a ModListing which does not have a mod object
-        /// </summary>
-        /// <param name="key">ModKey to associate with listing</param>
-        /// <param name="enabled">Whether the listing is enabled in the load order</param>
-        /// <param name="ghostSuffix">
-        /// What file suffix is used if ghosted.  This is done by modifying the file type to be anything abnormal.<br/>
-        /// This is the same as disabling a mod as far as the game is concerned, but also is a hint to modmanagers to treat 
-        /// the mods differently depending on the context
-        /// </param>
-        /// <returns>ModListing with no mod object</returns>
-        public static ModListing<TMod> CreateUnloaded(ModKey key, bool enabled, string ghostSuffix = "")
-        {
-            return new ModListing<TMod>(key, default, enabled: enabled, ghostSuffix: ghostSuffix);
-        }
+    public static Comparer<ModListing> GetComparer(Comparer<ModKey> comparer) =>
+        Comparer<ModListing>.Create((x, y) => comparer.Compare(x.ModKey, y.ModKey));
 
-        /// <inheritdoc/>
-        public override string ToString()
-        {
-            return IModListingGetter<TMod>.ToString(this);
-        }
+    public static Comparer<TListing> GetComparer<TListing>(Comparer<ModKey> comparer)
+        where TListing : IModListingGetter
+    {
+        return Comparer<TListing>.Create((x, y) => comparer.Compare(x.ModKey, y.ModKey));
+    }
+}
 
-        public void Dispose()
-        {
-            if (Mod is IDisposable disp)
-            {
-                disp.Dispose();
-            }
-        }
+/// <inheritdoc cref="IModListingGetter{TMod}" />
+[DebuggerDisplay("{ToString()}")]
+public record ModListing<TMod> : ModListing, IModListing<TMod>
+    where TMod : class, IModGetter
+{
+    /// <inheritdoc cref="IModListing{TMod}.Mod" />
+    public TMod? Mod { get; set; }
+
+    private ModListing(ModKey key, TMod? mod, bool enabled, string ghostSuffix = "")
+    {
+        this.ModKey = key;
+        this.Mod = mod;
+        this.Enabled = enabled;
+        this.GhostSuffix = ghostSuffix;
     }
 
     /// <summary>
-    /// A Mod Listing on a load order.  Can be enabled or disabled.  Can also be "ghosted" which means
-    /// the listing does not end with a typical ModKey suffix.<br/>
-    /// <br/>
-    /// The generic variant also includes an optional Mod object that may or may not exist.
+    /// Constructor
     /// </summary>
-    public interface IModListingGetter<out TMod> : IModListingGetter, IDisposable
-        where TMod : class, IModGetter
+    public ModListing(TMod mod, bool enabled = true, string ghostSuffix = "")
     {
-        /// <summary>
-        /// Mod object
-        /// </summary>
-        TMod? Mod { get; }
-        
-        public static string ToString(IModListingGetter<TMod> getter)
-        {
-            return $"[{(getter.Enabled ? "X" : "_")}] {getter.ModKey}{(getter.Mod == null ? " (missing)" : null)}{(getter.Ghosted ? " (ghosted)" : null)}";
-        }
-    }
-
-    /// <inheritdoc />
-    public interface IModListing<TMod> : IModListingGetter<TMod>
-        where TMod : class, IModGetter
-    {
-        /// <summary>
-        /// Mod object
-        /// </summary>
-        new TMod? Mod { get; set; }
+        this.ModKey = mod.ModKey;
+        this.Mod = mod;
+        this.Enabled = enabled;
+        this.GhostSuffix = ghostSuffix;
     }
 
     /// <summary>
-    /// A Mod Listing on a load order.  Can be enabled or disabled.  Can also be "ghosted" which means
-    /// the listing does not end with a typical ModKey suffix
+    /// Factory to create a ModListing which does not have a mod object
     /// </summary>
-    public interface IModListingGetter : IModKeyed
+    /// <param name="key">ModKey to associate with listing</param>
+    /// <param name="enabled">Whether the listing is enabled in the load order</param>
+    /// <param name="ghostSuffix">
+    /// What file suffix is used if ghosted.  This is done by modifying the file type to be anything abnormal.<br/>
+    /// This is the same as disabling a mod as far as the game is concerned, but also is a hint to modmanagers to treat 
+    /// the mods differently depending on the context
+    /// </param>
+    /// <returns>ModListing with no mod object</returns>
+    public static ModListing<TMod> CreateUnloaded(ModKey key, bool enabled, string ghostSuffix = "")
     {
-        /// <summary>
-        /// Whether the listing is enabled in the load order
-        /// </summary>
-        bool Enabled { get; }
+        return new ModListing<TMod>(key, default, enabled: enabled, ghostSuffix: ghostSuffix);
+    }
 
-        /// <summary>
-        /// Whether the listing is "ghosted".  This is done by modifying the file type to be anything abnormal.<br/>
-        /// This is the same as disabling a mod as far as the game is concerned, but also is a hint to modmanagers to treat 
-        /// the mods differently depending on the context
-        /// </summary>
-        bool Ghosted { get; }
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return IModListingGetter<TMod>.ToString(this);
+    }
 
-        /// <summary>
-        /// What file suffix is used if ghosted.  This is done by modifying the file type to be anything abnormal.<br/>
-        /// This is the same as disabling a mod as far as the game is concerned, but also is a hint to modmanagers to treat 
-        /// the mods differently depending on the context
-        /// </summary>
-        string GhostSuffix { get; }
-        
-        public static string ToString(IModListingGetter getter)
+    public void Dispose()
+    {
+        if (Mod is IDisposable disp)
         {
-            return $"[{(getter.Enabled ? "X" : "_")}] {getter.ModKey}{(getter.Ghosted ? " (ghosted)" : null)}";
+            disp.Dispose();
         }
     }
+}
 
-    /// <inheritdoc cref="IModListingGetter" />
-    public interface IModListing : IModListingGetter
+/// <summary>
+/// A Mod Listing on a load order.  Can be enabled or disabled.  Can also be "ghosted" which means
+/// the listing does not end with a typical ModKey suffix.<br/>
+/// <br/>
+/// The generic variant also includes an optional Mod object that may or may not exist.
+/// </summary>
+public interface IModListingGetter<out TMod> : IModListingGetter, IDisposable
+    where TMod : class, IModGetter
+{
+    /// <summary>
+    /// Mod object
+    /// </summary>
+    TMod? Mod { get; }
+        
+    public static string ToString(IModListingGetter<TMod> getter)
     {
-        /// <summary>
-        /// Whether the listing is enabled in the load order
-        /// </summary>
-        new bool Enabled { get; set; }
-
-        /// <summary>
-        /// What file suffix is used if ghosted.  This is done by modifying the file type to be anything abnormal.<br/>
-        /// This is the same as disabling a mod as far as the game is concerned, but also is a hint to modmanagers to treat 
-        /// the mods differently depending on the context
-        /// </summary>
-        new string GhostSuffix { get; set; }
+        return $"[{(getter.Enabled ? "X" : "_")}] {getter.ModKey}{(getter.Mod == null ? " (missing)" : null)}{(getter.Ghosted ? " (ghosted)" : null)}";
     }
+}
+
+/// <inheritdoc />
+public interface IModListing<TMod> : IModListingGetter<TMod>
+    where TMod : class, IModGetter
+{
+    /// <summary>
+    /// Mod object
+    /// </summary>
+    new TMod? Mod { get; set; }
+}
+
+/// <summary>
+/// A Mod Listing on a load order.  Can be enabled or disabled.  Can also be "ghosted" which means
+/// the listing does not end with a typical ModKey suffix
+/// </summary>
+public interface IModListingGetter : IModKeyed
+{
+    /// <summary>
+    /// Whether the listing is enabled in the load order
+    /// </summary>
+    bool Enabled { get; }
+
+    /// <summary>
+    /// Whether the listing is "ghosted".  This is done by modifying the file type to be anything abnormal.<br/>
+    /// This is the same as disabling a mod as far as the game is concerned, but also is a hint to modmanagers to treat 
+    /// the mods differently depending on the context
+    /// </summary>
+    bool Ghosted { get; }
+
+    /// <summary>
+    /// What file suffix is used if ghosted.  This is done by modifying the file type to be anything abnormal.<br/>
+    /// This is the same as disabling a mod as far as the game is concerned, but also is a hint to modmanagers to treat 
+    /// the mods differently depending on the context
+    /// </summary>
+    string GhostSuffix { get; }
+        
+    public static string ToString(IModListingGetter getter)
+    {
+        return $"[{(getter.Enabled ? "X" : "_")}] {getter.ModKey}{(getter.Ghosted ? " (ghosted)" : null)}";
+    }
+}
+
+/// <inheritdoc cref="IModListingGetter" />
+public interface IModListing : IModListingGetter
+{
+    /// <summary>
+    /// Whether the listing is enabled in the load order
+    /// </summary>
+    new bool Enabled { get; set; }
+
+    /// <summary>
+    /// What file suffix is used if ghosted.  This is done by modifying the file type to be anything abnormal.<br/>
+    /// This is the same as disabling a mod as far as the game is concerned, but also is a hint to modmanagers to treat 
+    /// the mods differently depending on the context
+    /// </summary>
+    new string GhostSuffix { get; set; }
 }

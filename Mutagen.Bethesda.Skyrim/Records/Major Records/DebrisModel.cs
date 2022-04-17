@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+public partial class DebrisModel
 {
-    public partial class DebrisModel
+    [Flags]
+    public enum Flag
     {
-        [Flags]
-        public enum Flag
-        {
-            HasCollisionData = 0x01
-        }
+        HasCollisionData = 0x01
     }
 }

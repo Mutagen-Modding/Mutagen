@@ -1,23 +1,22 @@
 ﻿using System.Collections.Generic;
 using Mutagen.Bethesda.Environments.DI;
 
-namespace Mutagen.Bethesda.Plugins.Implicit.DI
+namespace Mutagen.Bethesda.Plugins.Implicit.DI;
+
+public interface IImplicitBaseMasterProvider
 {
-    public interface IImplicitBaseMasterProvider
+    IReadOnlyList<ModKey> BaseMasters { get; }
+}
+
+public class ImplicitBaseMasterProvider : IImplicitBaseMasterProvider
+{
+    private readonly IGameReleaseContext _gameRelease;
+
+    public ImplicitBaseMasterProvider(
+        IGameReleaseContext gameRelease)
     {
-        IReadOnlyList<ModKey> BaseMasters { get; }
+        _gameRelease = gameRelease;
     }
-
-    public class ImplicitBaseMasterProvider : IImplicitBaseMasterProvider
-    {
-        private readonly IGameReleaseContext _gameRelease;
-
-        public ImplicitBaseMasterProvider(
-            IGameReleaseContext gameRelease)
-        {
-            _gameRelease = gameRelease;
-        }
         
-        public IReadOnlyList<ModKey> BaseMasters => Implicits.Get(_gameRelease.Release).BaseMasters;
-    }
+    public IReadOnlyList<ModKey> BaseMasters => Implicits.Get(_gameRelease.Release).BaseMasters;
 }

@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+public enum Size
 {
-    public enum Size
-    {
-        Small,
-        Medium,
-        Large,
-        ExtraLarge
-    }
+    Small,
+    Medium,
+    Large,
+    ExtraLarge
 }

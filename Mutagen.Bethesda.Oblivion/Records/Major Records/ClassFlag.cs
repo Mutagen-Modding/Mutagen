@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Oblivion;
+
+[Flags]
+public enum ClassFlag
 {
-    [Flags]
-    public enum ClassFlag
-    {
-        Playable = 0x1,
-        Guard = 0x2
-    }
+    Playable = 0x1,
+    Guard = 0x2
 }

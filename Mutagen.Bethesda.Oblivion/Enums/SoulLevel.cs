@@ -4,15 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Oblivion;
+
+public enum SoulLevel
 {
-    public enum SoulLevel
-    {
-        None,
-        Petty,
-        Lesser,
-        Common,
-        Greater,
-        Grand,
-    }
+    None,
+    Petty,
+    Lesser,
+    Common,
+    Greater,
+    Grand,
 }

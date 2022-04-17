@@ -6,17 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Pex
+namespace Mutagen.Bethesda.Pex;
+
+internal record PexParseMeta(
+    GameCategory Category,
+    IBinaryReadStream Reader,
+    Dictionary<ushort, string> Strings)
 {
-    internal record PexParseMeta(
-        GameCategory Category,
-        IBinaryReadStream Reader,
-        Dictionary<ushort, string> Strings)
+    public string ReadString()
     {
-        public string ReadString()
-        {
-            var index = Reader.ReadUInt16();
-            return Strings[index];
-        }
+        var index = Reader.ReadUInt16();
+        return Strings[index];
     }
 }

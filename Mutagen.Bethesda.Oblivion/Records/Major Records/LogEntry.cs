@@ -8,13 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Oblivion;
+
+public partial class LogEntry
 {
-    public partial class LogEntry
+    public enum Flag
     {
-        public enum Flag
-        {
-            CompleteQuest = 0x01
-        }
+        CompleteQuest = 0x01
     }
 }

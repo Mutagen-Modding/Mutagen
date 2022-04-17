@@ -9,61 +9,61 @@ using System.IO;
 using System.Threading;
 using Mutagen.Bethesda.Strings.DI;
 
-namespace Mutagen.Bethesda.Strings
+namespace Mutagen.Bethesda.Strings;
+
+public class StringsFolderLookupOverlay : IStringsFolderLookup
 {
-    public class StringsFolderLookupOverlay : IStringsFolderLookup
+    private readonly Lazy<DictionaryBundle> _dictionaries;
+
+    public DirectoryPath DataPath { get; }
+    public ModKey ModKey { get; }
+
+    class DictionaryBundle
     {
-        private readonly Lazy<DictionaryBundle> _dictionaries;
+        private readonly Dictionary<Language, Lazy<IStringsLookup>> _strings = new();
+        private readonly Dictionary<Language, Lazy<IStringsLookup>> _dlStrings = new();
+        private readonly Dictionary<Language, Lazy<IStringsLookup>> _ilStrings = new();
 
-        public DirectoryPath DataPath { get; }
-        public ModKey ModKey { get; }
+        public bool Empty =>
+            _strings.Count == 0
+            && _dlStrings.Count == 0
+            && _ilStrings.Count == 0;
 
-        class DictionaryBundle
+        public Dictionary<Language, Lazy<IStringsLookup>> Get(StringsSource source)
         {
-            private readonly Dictionary<Language, Lazy<IStringsLookup>> _strings = new();
-            private readonly Dictionary<Language, Lazy<IStringsLookup>> _dlStrings = new();
-            private readonly Dictionary<Language, Lazy<IStringsLookup>> _ilStrings = new();
-
-            public bool Empty =>
-                _strings.Count == 0
-                && _dlStrings.Count == 0
-                && _ilStrings.Count == 0;
-
-            public Dictionary<Language, Lazy<IStringsLookup>> Get(StringsSource source)
+            return source switch
             {
-                return source switch
-                {
-                    StringsSource.Normal => _strings,
-                    StringsSource.IL => _ilStrings,
-                    StringsSource.DL => _dlStrings,
-                    _ => throw new NotImplementedException(),
-                };
-            }
+                StringsSource.Normal => _strings,
+                StringsSource.IL => _ilStrings,
+                StringsSource.DL => _dlStrings,
+                _ => throw new NotImplementedException(),
+            };
         }
+    }
 
-        public bool Empty => _dictionaries.Value.Empty;
+    public bool Empty => _dictionaries.Value.Empty;
 
-        private StringsFolderLookupOverlay(Lazy<DictionaryBundle> instantiator, DirectoryPath dataPath, ModKey modKey)
+    private StringsFolderLookupOverlay(Lazy<DictionaryBundle> instantiator, DirectoryPath dataPath, ModKey modKey)
+    {
+        _dictionaries = instantiator;
+        DataPath = dataPath;
+        ModKey = modKey;
+    }
+
+    public static StringsFolderLookupOverlay TypicalFactory(
+        GameRelease release, 
+        ModKey modKey, 
+        DirectoryPath dataPath,
+        StringsReadParameters? instructions)
+    {
+        var languageFormat = release.GetLanguageFormat();
+        var encodings = instructions?.EncodingProvider ?? new MutagenEncodingProvider();
+        var stringsFolderPath = instructions?.StringsFolderOverride;
+        if (stringsFolderPath == null)
         {
-            _dictionaries = instantiator;
-            DataPath = dataPath;
-            ModKey = modKey;
+            stringsFolderPath = Path.Combine(dataPath.Path, "Strings");
         }
-
-        public static StringsFolderLookupOverlay TypicalFactory(
-            GameRelease release, 
-            ModKey modKey, 
-            DirectoryPath dataPath,
-            StringsReadParameters? instructions)
-        {
-            var languageFormat = release.GetLanguageFormat();
-            var encodings = instructions?.EncodingProvider ?? new MutagenEncodingProvider();
-            var stringsFolderPath = instructions?.StringsFolderOverride;
-            if (stringsFolderPath == null)
-            {
-                stringsFolderPath = Path.Combine(dataPath.Path, "Strings");
-            }
-            return new StringsFolderLookupOverlay(new Lazy<DictionaryBundle>(
+        return new StringsFolderLookupOverlay(new Lazy<DictionaryBundle>(
                 isThreadSafe: true,
                 valueFactory: () =>
                 {
@@ -74,11 +74,11 @@ namespace Mutagen.Bethesda.Strings
                         foreach (var file in bsaEnumer)
                         {
                             if (!StringsUtility.TryRetrieveInfoFromString(
-                                languageFormat,
-                                file.Name.String, 
-                                out var type,
-                                out var lang, 
-                                out _))
+                                    languageFormat,
+                                    file.Name.String, 
+                                    out var type,
+                                    out var lang, 
+                                    out _))
                             {
                                 continue;
                             }
@@ -97,11 +97,11 @@ namespace Mutagen.Bethesda.Strings
                                 foreach (var item in stringsFolder.Files)
                                 {
                                     if (!StringsUtility.TryRetrieveInfoFromString(
-                                        release.GetLanguageFormat(), 
-                                        Path.GetFileName(item.Path), 
-                                        out var type, 
-                                        out var lang,
-                                        out var modName))
+                                            release.GetLanguageFormat(), 
+                                            Path.GetFileName(item.Path), 
+                                            out var type, 
+                                            out var lang,
+                                            out var modName))
                                     {
                                         continue;
                                     }
@@ -134,37 +134,36 @@ namespace Mutagen.Bethesda.Strings
                     }
                     return bundle;
                 }),
-                dataPath: dataPath,
-                modKey: modKey);
-        }
+            dataPath: dataPath,
+            modKey: modKey);
+    }
 
-        /// <inheritdoc />
-        public bool TryLookup(StringsSource source, Language language, uint key, [MaybeNullWhen(false)] out string str)
+    /// <inheritdoc />
+    public bool TryLookup(StringsSource source, Language language, uint key, [MaybeNullWhen(false)] out string str)
+    {
+        var dict = Get(source);
+        if (!dict.TryGetValue(language, out var lookup))
         {
-            var dict = Get(source);
-            if (!dict.TryGetValue(language, out var lookup))
-            {
-                str = default;
-                return false;
-            }
-            return lookup.Value.TryLookup(key, out str);
+            str = default;
+            return false;
         }
+        return lookup.Value.TryLookup(key, out str);
+    }
 
-        public Dictionary<Language, Lazy<IStringsLookup>> Get(StringsSource source) => _dictionaries.Value.Get(source);
+    public Dictionary<Language, Lazy<IStringsLookup>> Get(StringsSource source) => _dictionaries.Value.Get(source);
 
-        public TranslatedString CreateString(StringsSource source, uint key, Language defaultLanguage)
+    public TranslatedString CreateString(StringsSource source, uint key, Language defaultLanguage)
+    {
+        return new TranslatedString(defaultLanguage)
         {
-            return new TranslatedString(defaultLanguage)
-            {
-                StringsLookup = this,
-                StringsKey = key,
-                StringsSource = source,
-            };
-        }
+            StringsLookup = this,
+            StringsKey = key,
+            StringsSource = source,
+        };
+    }
 
-        public IReadOnlyCollection<Language> AvailableLanguages(StringsSource source)
-        {
-            return Get(source).Keys;
-        }
+    public IReadOnlyCollection<Language> AvailableLanguages(StringsSource source)
+    {
+        return Get(source).Keys;
     }
 }

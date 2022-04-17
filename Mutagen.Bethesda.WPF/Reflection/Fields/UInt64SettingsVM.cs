@@ -1,23 +1,22 @@
 using System.Text.Json;
 
-namespace Mutagen.Bethesda.WPF.Reflection.Fields
+namespace Mutagen.Bethesda.WPF.Reflection.Fields;
+
+public class UInt64SettingsVM : BasicSettingsVM<ulong>
 {
-    public class UInt64SettingsVM : BasicSettingsVM<ulong>
+    public UInt64SettingsVM(FieldMeta fieldMeta, object? defaultVal)
+        : base(fieldMeta, defaultVal)
     {
-        public UInt64SettingsVM(FieldMeta fieldMeta, object? defaultVal)
-            : base(fieldMeta, defaultVal)
-        {
-        }
-
-        public UInt64SettingsVM()
-            : base(FieldMeta.Empty, default)
-        {
-        }
-
-        public override ulong Get(JsonElement property) => property.GetUInt64();
-
-        public override ulong GetDefault() => default(ulong);
-
-        public override SettingsNodeVM Duplicate() => new UInt64SettingsVM(Meta, DefaultValue);
     }
+
+    public UInt64SettingsVM()
+        : base(FieldMeta.Empty, default)
+    {
+    }
+
+    public override ulong Get(JsonElement property) => property.GetUInt64();
+
+    public override ulong GetDefault() => default(ulong);
+
+    public override SettingsNodeVM Duplicate() => new UInt64SettingsVM(Meta, DefaultValue);
 }

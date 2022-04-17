@@ -4,23 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Oblivion;
+
+/// <summary>
+/// Different categories of Group records
+/// </summary>
+public enum GroupTypeEnum
 {
-    /// <summary>
-    /// Different categories of Group records
-    /// </summary>
-    public enum GroupTypeEnum
-    {
-        Type = 0,
-        WorldChildren = 1,
-        InteriorCellBlock = 2,
-        InteriorCellSubBlock = 3,
-        ExteriorCellBlock = 4,
-        ExteriorCellSubBlock = 5,
-        CellChildren = 6,
-        TopicChildren = 7,
-        CellPersistentChildren = 8,
-        CellTemporaryChildren = 9,
-        CellVisibleDistantChildren = 10,
-    }
+    Type = 0,
+    WorldChildren = 1,
+    InteriorCellBlock = 2,
+    InteriorCellSubBlock = 3,
+    ExteriorCellBlock = 4,
+    ExteriorCellSubBlock = 5,
+    CellChildren = 6,
+    TopicChildren = 7,
+    CellPersistentChildren = 8,
+    CellTemporaryChildren = 9,
+    CellVisibleDistantChildren = 10,
 }

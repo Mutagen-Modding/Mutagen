@@ -4,80 +4,79 @@ using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Plugins;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation;
+
+public class FormLinkXmlTranslationGeneration : PrimitiveXmlTranslationGeneration<FormKey>
 {
-    public class FormLinkXmlTranslationGeneration : PrimitiveXmlTranslationGeneration<FormKey>
+    public override string TypeName(TypeGeneration typeGen)
     {
-        public override string TypeName(TypeGeneration typeGen)
+        FormLinkType type = typeGen as FormLinkType;
+        switch (type.FormIDType)
         {
-            FormLinkType type = typeGen as FormLinkType;
-            switch (type.FormIDType)
-            {
-                case FormLinkType.FormIDTypeEnum.Normal:
-                    return base.TypeName(typeGen);
-                case FormLinkType.FormIDTypeEnum.EDIDChars:
-                    return "RecordType";
-                default:
-                    throw new NotImplementedException();
-            }
+            case FormLinkType.FormIDTypeEnum.Normal:
+                return base.TypeName(typeGen);
+            case FormLinkType.FormIDTypeEnum.EDIDChars:
+                return "RecordType";
+            default:
+                throw new NotImplementedException();
         }
+    }
 
-        protected override string ItemWriteAccess(TypeGeneration typeGen, Accessor itemAccessor)
+    protected override string ItemWriteAccess(TypeGeneration typeGen, Accessor itemAccessor)
+    {
+        FormLinkType type = typeGen as FormLinkType;
+        switch (type.FormIDType)
         {
-            FormLinkType type = typeGen as FormLinkType;
-            switch (type.FormIDType)
-            {
-                case FormLinkType.FormIDTypeEnum.Normal:
-                    return $"{itemAccessor}.FormKey";
-                case FormLinkType.FormIDTypeEnum.EDIDChars:
-                    return $"{itemAccessor}.EDID";
-                default:
-                    throw new NotImplementedException();
-            }
+            case FormLinkType.FormIDTypeEnum.Normal:
+                return $"{itemAccessor}.FormKey";
+            case FormLinkType.FormIDTypeEnum.EDIDChars:
+                return $"{itemAccessor}.EDID";
+            default:
+                throw new NotImplementedException();
         }
+    }
 
-        public override void GenerateCopyIn(
-            FileGeneration fg,
-            ObjectGeneration objGen,
-            TypeGeneration typeGen,
-            Accessor frameAccessor, 
-            Accessor itemAccessor,
-            Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
-        {
-            FormLinkType linkType = typeGen as FormLinkType;
-            MaskGenerationUtility.WrapErrorFieldIndexPush(fg,
-                () =>
+    public override void GenerateCopyIn(
+        FileGeneration fg,
+        ObjectGeneration objGen,
+        TypeGeneration typeGen,
+        Accessor frameAccessor, 
+        Accessor itemAccessor,
+        Accessor errorMaskAccessor,
+        Accessor translationMaskAccessor)
+    {
+        FormLinkType linkType = typeGen as FormLinkType;
+        MaskGenerationUtility.WrapErrorFieldIndexPush(fg,
+            () =>
+            {
+                if (itemAccessor.IsAssignment)
                 {
-                    if (itemAccessor.IsAssignment)
+                    using (var args = new ArgsWrapper(fg,
+                               $"{itemAccessor} = {(linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType")}XmlTranslation.Instance.Parse"))
                     {
-                        using (var args = new ArgsWrapper(fg,
-                            $"{itemAccessor} = {(linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType")}XmlTranslation.Instance.Parse"))
-                        {
-                            args.AddPassArg("node");
-                            args.AddPassArg("errorMask");
-                        }
+                        args.AddPassArg("node");
+                        args.AddPassArg("errorMask");
                     }
-                    else
+                }
+                else
+                {
+                    using (var args = new FunctionWrapper(fg,
+                               itemAccessor.Assign($"new {linkType.DirectTypeName(getter: false)}")))
                     {
-                        using (var args = new FunctionWrapper(fg,
-                            itemAccessor.Assign($"new {linkType.DirectTypeName(getter: false)}")))
+                        args.Add(subFg =>
                         {
-                            args.Add(subFg =>
+                            using (var subArgs = new FunctionWrapper(subFg,
+                                       $"FormKeyXmlTranslation.Instance.Parse"))
                             {
-                                using (var subArgs = new FunctionWrapper(subFg,
-                                    $"FormKeyXmlTranslation.Instance.Parse"))
-                                {
-                                    subArgs.AddPassArg("node");
-                                    subArgs.AddPassArg("errorMask");
-                                }
-                            });
-                        }
+                                subArgs.AddPassArg("node");
+                                subArgs.AddPassArg("errorMask");
+                            }
+                        });
                     }
-                },
-                indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,
-                errorMaskAccessor: errorMaskAccessor,
-                doIt: typeGen.HasIndex);
-        }
+                }
+            },
+            indexAccessor: typeGen.HasIndex ? typeGen.IndexEnumInt : null,
+            errorMaskAccessor: errorMaskAccessor,
+            doIt: typeGen.HasIndex);
     }
 }

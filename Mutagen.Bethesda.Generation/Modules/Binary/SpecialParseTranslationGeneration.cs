@@ -6,92 +6,91 @@ using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
 
-namespace Mutagen.Bethesda.Generation.Modules.Binary
+namespace Mutagen.Bethesda.Generation.Modules.Binary;
+
+public class SpecialParseTranslationGeneration : BinaryTranslationGeneration
 {
-    public class SpecialParseTranslationGeneration : BinaryTranslationGeneration
+    public override bool ShouldGenerateCopyIn(TypeGeneration typeGen) => true;
+    public override bool ShouldGenerateWrite(TypeGeneration typeGen) => true;
+
+    public override async Task GenerateCopyIn(
+        FileGeneration fg, 
+        ObjectGeneration objGen, 
+        TypeGeneration typeGen,
+        Accessor readerAccessor,
+        Accessor itemAccessor,
+        Accessor errorMaskAccessor,
+        Accessor translationMaskAccessor)
     {
-        public override bool ShouldGenerateCopyIn(TypeGeneration typeGen) => true;
-        public override bool ShouldGenerateWrite(TypeGeneration typeGen) => true;
-
-        public override async Task GenerateCopyIn(
-            FileGeneration fg, 
-            ObjectGeneration objGen, 
-            TypeGeneration typeGen,
-            Accessor readerAccessor,
-            Accessor itemAccessor,
-            Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
+        var data = typeGen.GetFieldData();
+        using (var args = new ArgsWrapper(fg,
+                   $"SpecialParse_{typeGen.Name}"))
         {
-            var data = typeGen.GetFieldData();
-            using (var args = new ArgsWrapper(fg,
-                $"SpecialParse_{typeGen.Name}"))
-            {
-                args.AddPassArg("item");
-                args.AddPassArg("frame");
-            }
+            args.AddPassArg("item");
+            args.AddPassArg("frame");
         }
+    }
 
-        public override void GenerateCopyInRet(
-            FileGeneration fg,
-            ObjectGeneration objGen, 
-            TypeGeneration typeGen, 
-            TypeGeneration targetGen,
-            Accessor readerAccessor,
-            AsyncMode asyncMode,
-            Accessor retAccessor,
-            Accessor outItemAccessor,
-            Accessor errorMaskAccessor,
-            Accessor translationAccessor,
-            Accessor converterAccessor,
-            bool inline)
+    public override void GenerateCopyInRet(
+        FileGeneration fg,
+        ObjectGeneration objGen, 
+        TypeGeneration typeGen, 
+        TypeGeneration targetGen,
+        Accessor readerAccessor,
+        AsyncMode asyncMode,
+        Accessor retAccessor,
+        Accessor outItemAccessor,
+        Accessor errorMaskAccessor,
+        Accessor translationAccessor,
+        Accessor converterAccessor,
+        bool inline)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override async Task GenerateWrite(
+        FileGeneration fg, 
+        ObjectGeneration objGen, 
+        TypeGeneration typeGen,
+        Accessor writerAccessor,
+        Accessor itemAccessor,
+        Accessor errorMaskAccessor,
+        Accessor translationMaskAccessor,
+        Accessor converterAccessor)
+    {
+        var data = typeGen.GetFieldData();
+        using (var args = new ArgsWrapper(fg,
+                   $"{objGen.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.SpecialWrite_{typeGen.Name}_Internal"))
         {
-            throw new NotImplementedException();
+            args.AddPassArg("item");
+            args.AddPassArg("writer");
         }
+    }
 
-        public override async Task GenerateWrite(
-            FileGeneration fg, 
-            ObjectGeneration objGen, 
-            TypeGeneration typeGen,
-            Accessor writerAccessor,
-            Accessor itemAccessor,
-            Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor,
-            Accessor converterAccessor)
+    public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override async Task<int?> GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
+
+    public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen) => null;
+
+    public override async Task GenerateWrapperRecordTypeParse(
+        FileGeneration fg, 
+        ObjectGeneration objGen, 
+        TypeGeneration typeGen, 
+        Accessor locationAccessor, 
+        Accessor packageAccessor, 
+        Accessor converterAccessor)
+    {
+        using (var args = new ArgsWrapper(fg,
+                   $"{typeGen.Name}SpecialParse"))
         {
-            var data = typeGen.GetFieldData();
-            using (var args = new ArgsWrapper(fg,
-                $"{objGen.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.SpecialWrite_{typeGen.Name}_Internal"))
-            {
-                args.AddPassArg("item");
-                args.AddPassArg("writer");
-            }
-        }
-
-        public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override async Task<int?> GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
-
-        public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen) => null;
-
-        public override async Task GenerateWrapperRecordTypeParse(
-            FileGeneration fg, 
-            ObjectGeneration objGen, 
-            TypeGeneration typeGen, 
-            Accessor locationAccessor, 
-            Accessor packageAccessor, 
-            Accessor converterAccessor)
-        {
-            using (var args = new ArgsWrapper(fg,
-                $"{typeGen.Name}SpecialParse"))
-            {
-                args.AddPassArg("stream");
-                args.AddPassArg("offset");
-                args.AddPassArg("type");
-                args.AddPassArg("lastParsed");
-            }
+            args.AddPassArg("stream");
+            args.AddPassArg("offset");
+            args.AddPassArg("type");
+            args.AddPassArg("lastParsed");
         }
     }
 }

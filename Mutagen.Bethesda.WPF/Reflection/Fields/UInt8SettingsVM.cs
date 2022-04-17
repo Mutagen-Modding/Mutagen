@@ -1,23 +1,22 @@
 using System.Text.Json;
 
-namespace Mutagen.Bethesda.WPF.Reflection.Fields
+namespace Mutagen.Bethesda.WPF.Reflection.Fields;
+
+public class UInt8SettingsVM : BasicSettingsVM<byte>
 {
-    public class UInt8SettingsVM : BasicSettingsVM<byte>
+    public UInt8SettingsVM(FieldMeta fieldMeta, object? defaultVal)
+        : base(fieldMeta, defaultVal)
     {
-        public UInt8SettingsVM(FieldMeta fieldMeta, object? defaultVal)
-            : base(fieldMeta, defaultVal)
-        {
-        }
-
-        public UInt8SettingsVM()
-            : base(FieldMeta.Empty, default)
-        {
-        }
-
-        public override byte Get(JsonElement property) => property.GetByte();
-
-        public override byte GetDefault() => default(byte);
-
-        public override SettingsNodeVM Duplicate() => new UInt8SettingsVM(Meta, DefaultValue);
     }
+
+    public UInt8SettingsVM()
+        : base(FieldMeta.Empty, default)
+    {
+    }
+
+    public override byte Get(JsonElement property) => property.GetByte();
+
+    public override byte GetDefault() => default(byte);
+
+    public override SettingsNodeVM Duplicate() => new UInt8SettingsVM(Meta, DefaultValue);
 }

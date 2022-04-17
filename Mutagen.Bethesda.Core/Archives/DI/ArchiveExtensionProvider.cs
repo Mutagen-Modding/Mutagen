@@ -1,38 +1,37 @@
 ﻿using System;
 using Mutagen.Bethesda.Environments.DI;
 
-namespace Mutagen.Bethesda.Archives.DI
+namespace Mutagen.Bethesda.Archives.DI;
+
+public interface IArchiveExtensionProvider
 {
-    public interface IArchiveExtensionProvider
+    /// <summary>
+    /// Returns the preferred extension (.bsa/.ba2) depending on the Game Release context
+    /// </summary>
+    /// <returns>Archive extension used by the game release context, with period delimiter.</returns>
+    string Get();
+}
+
+public class ArchiveExtensionProvider : IArchiveExtensionProvider
+{
+    private readonly IGameReleaseContext _gameReleaseContext;
+
+    public ArchiveExtensionProvider(IGameReleaseContext gameReleaseContext)
     {
-        /// <summary>
-        /// Returns the preferred extension (.bsa/.ba2) depending on the Game Release context
-        /// </summary>
-        /// <returns>Archive extension used by the game release context, with period delimiter.</returns>
-        string Get();
+        _gameReleaseContext = gameReleaseContext;
     }
-
-    public class ArchiveExtensionProvider : IArchiveExtensionProvider
-    {
-        private readonly IGameReleaseContext _gameReleaseContext;
-
-        public ArchiveExtensionProvider(IGameReleaseContext gameReleaseContext)
-        {
-            _gameReleaseContext = gameReleaseContext;
-        }
         
-        public string Get()
+    public string Get()
+    {
+        switch (_gameReleaseContext.Release.ToCategory())
         {
-            switch (_gameReleaseContext.Release.ToCategory())
-            {
-                case GameCategory.Oblivion:
-                case GameCategory.Skyrim:
-                    return ".bsa";
-                case GameCategory.Fallout4:
-                    return ".ba2";
-                default:
-                    throw new NotImplementedException();
-            }
+            case GameCategory.Oblivion:
+            case GameCategory.Skyrim:
+                return ".bsa";
+            case GameCategory.Fallout4:
+                return ".ba2";
+            default:
+                throw new NotImplementedException();
         }
     }
 }

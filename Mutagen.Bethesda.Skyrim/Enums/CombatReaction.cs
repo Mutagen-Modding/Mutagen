@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+public enum CombatReaction
 {
-    public enum CombatReaction
-    {
-        Neutral,
-        Enemy,
-        Ally,
-        Friend
-    }
+    Neutral,
+    Enemy,
+    Ally,
+    Friend
 }

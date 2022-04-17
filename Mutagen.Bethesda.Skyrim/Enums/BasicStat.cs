@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+public enum BasicStat
 {
-    public enum BasicStat
-    {
-        Health,
-        Magicka,
-        Stamina,
-    }
+    Health,
+    Magicka,
+    Stamina,
 }

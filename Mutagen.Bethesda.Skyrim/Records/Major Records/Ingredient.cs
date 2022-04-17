@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+public partial class Ingredient
 {
-    public partial class Ingredient
+    [Flags]
+    public enum Flag
     {
-        [Flags]
-        public enum Flag
-        {
-            NoAutoCalculation = 0x001,
-            FoodItem = 0x002,
-            ReferencesPersist = 0x100
-        }
+        NoAutoCalculation = 0x001,
+        FoodItem = 0x002,
+        ReferencesPersist = 0x100
     }
 }

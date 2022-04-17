@@ -5,26 +5,25 @@ using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
 using Noggog.Testing.AutoFixture;
 
-namespace Mutagen.Bethesda.Testing.AutoData
+namespace Mutagen.Bethesda.Testing.AutoData;
+
+public interface IMakeModExist
 {
-    public interface IMakeModExist
+    void MakeExist(ModKey modKey, ISpecimenContext context);
+}
+
+public class MakeModExist : IMakeModExist
+{
+    public IMakeFileExist MakeFileExist { get; }
+
+    public MakeModExist(IMakeFileExist makeFileExist)
     {
-        void MakeExist(ModKey modKey, ISpecimenContext context);
+        MakeFileExist = makeFileExist;
     }
-
-    public class MakeModExist : IMakeModExist
-    {
-        public IMakeFileExist MakeFileExist { get; }
-
-        public MakeModExist(IMakeFileExist makeFileExist)
-        {
-            MakeFileExist = makeFileExist;
-        }
         
-        public void MakeExist(ModKey modKey, ISpecimenContext context)
-        {
-            var dataDir = context.Create<IDataDirectoryProvider>();
-            MakeFileExist.MakeExist(Path.Combine(dataDir.Path, modKey.FileName), context);
-        }
+    public void MakeExist(ModKey modKey, ISpecimenContext context)
+    {
+        var dataDir = context.Create<IDataDirectoryProvider>();
+        MakeFileExist.MakeExist(Path.Combine(dataDir.Path, modKey.FileName), context);
     }
 }

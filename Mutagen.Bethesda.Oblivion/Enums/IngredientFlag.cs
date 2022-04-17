@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Oblivion;
+
+[Flags]
+public enum IngredientFlag
 {
-    [Flags]
-    public enum IngredientFlag
-    {
-        ManualValue = 0x01,
-        FoodItem = 0x02
-    }
+    ManualValue = 0x01,
+    FoodItem = 0x02
 }

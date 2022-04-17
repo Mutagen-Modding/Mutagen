@@ -2,20 +2,19 @@
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
 
-namespace Mutagen.Bethesda.Generation.Modules.Plugin
+namespace Mutagen.Bethesda.Generation.Modules.Plugin;
+
+public class BreakMarkingModule : GenerationModule
 {
-    public class BreakMarkingModule : GenerationModule
+    public override async Task PostLoad(ObjectGeneration obj)
     {
-        public override async Task PostLoad(ObjectGeneration obj)
+        bool passedBreak = false;
+        foreach (var field in obj.Fields)
         {
-            bool passedBreak = false;
-            foreach (var field in obj.Fields)
+            field.GetFieldData().IsAfterBreak = passedBreak;
+            if (field is BreakType)
             {
-                field.GetFieldData().IsAfterBreak = passedBreak;
-                if (field is BreakType)
-                {
-                    passedBreak = true;
-                }
+                passedBreak = true;
             }
         }
     }

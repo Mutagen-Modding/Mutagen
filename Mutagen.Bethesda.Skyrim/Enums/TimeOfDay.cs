@@ -1,10 +1,9 @@
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+public enum TimeOfDay
 {
-    public enum TimeOfDay
-    {
-        Sunrise,
-        Day,
-        Sunset,
-        Night,
-    }
+    Sunrise,
+    Day,
+    Sunset,
+    Night,
 }

@@ -1,13 +1,12 @@
 using System;
 
-namespace Mutagen.Bethesda.Plugins.Implicit
-{
-    public class ImplicitListings
-    {
-        public static readonly ImplicitListings Instance = new ImplicitListings();
+namespace Mutagen.Bethesda.Plugins.Implicit;
 
-        private ImplicitListings()
-        {
-        }
+public class ImplicitListings
+{
+    public static readonly ImplicitListings Instance = new ImplicitListings();
+
+    private ImplicitListings()
+    {
     }
 }

@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Oblivion;
+
+public enum Specialization
 {
-    public enum Specialization
-    {
-        Combat = 0,
-        Magic = 1,
-        Stealth = 2
-    }
+    Combat = 0,
+    Magic = 1,
+    Stealth = 2
 }

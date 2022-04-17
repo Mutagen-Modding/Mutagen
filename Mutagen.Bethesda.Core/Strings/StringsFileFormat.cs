@@ -1,17 +1,16 @@
 using System;
 
-namespace Mutagen.Bethesda.Strings
-{
-    public enum StringsFileFormat
-    {
-        /// <summary>
-        /// .strings format
-        /// </summary>
-        Normal,
+namespace Mutagen.Bethesda.Strings;
 
-        /// <summary>
-        /// .dlstrings and .ilstrings format
-        /// </summary>
-        LengthPrepended,
-    }
+public enum StringsFileFormat
+{
+    /// <summary>
+    /// .strings format
+    /// </summary>
+    Normal,
+
+    /// <summary>
+    /// .dlstrings and .ilstrings format
+    /// </summary>
+    LengthPrepended,
 }
