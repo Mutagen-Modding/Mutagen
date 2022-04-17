@@ -1,10 +1,12 @@
 ﻿using System;
+using System.IO;
 using AutoFixture;
 using AutoFixture.Kernel;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Noggog;
+using Noggog.Testing.IO;
 using NSubstitute;
 
 namespace Mutagen.Bethesda.Testing.AutoData
@@ -26,7 +28,7 @@ namespace Mutagen.Bethesda.Testing.AutoData
                 else if (t == typeof(IPluginListingsPathProvider))
                 {
                     var ret = Substitute.For<IPluginListingsPathProvider>();
-                    ret.Path.Returns(new FilePath($"C:\\ExistingDirectory\\Plugins.txt"));
+                    ret.Path.Returns(new FilePath($"{PathingUtil.DrivePrefix}{Path.Combine("ExistingDirectory", "Plugins.txt")}"));
                     return ret;
                 }
                 else if (t == typeof(ICreationClubListingsPathProvider))

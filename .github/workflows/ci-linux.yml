@@ -1,0 +1,42 @@
+name: Linux
+
+on:
+  push:
+    branches: [ linux ]
+  pull_request:
+    branches: [ linux ]
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        sln:
+          - Mutagen.Records.sln
+          - Mutagen.Records.Linux.sln
+        exclude:
+          - os: ubuntu-latest
+            sln: Mutagen.Records.sln
+          - os: macos-latest
+            sln: Mutagen.Records.sln
+          - os: windows-latest
+            sln: Mutagen.Records.Linux.sln
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.*
+    - name: Install dependencies
+      run: |
+        dotnet clean ${{ matrix.sln }} -c Release && dotnet nuget locals all --clear
+        dotnet restore ${{ matrix.sln }}
+    - name: Build
+      run: dotnet build ${{ matrix.sln }} -c Release --no-restore
+    - name: Test
+      run: dotnet test ${{ matrix.sln }} -c Release --no-build
