@@ -620,7 +620,20 @@ public class LoadOrder<TListing> : ILoadOrder<TListing>
     }
 
     /// <inheritdoc />
-    public TListing this[ModKey key] => _byModKey[key].Item;
+    public TListing this[ModKey key]
+    {
+        get
+        {
+            try
+            {
+                return _byModKey[key].Item;
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new MissingModException(key, "Tried to retrieve a mod from the load order that did not exist", e);
+            }
+        }
+    }
 
     public LoadOrder(bool disposeItems = true)
     {
