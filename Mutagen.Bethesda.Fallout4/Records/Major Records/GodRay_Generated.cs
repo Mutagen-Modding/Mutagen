@@ -41,14 +41,14 @@ using System.Text;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class SoundDescriptor :
+    public partial class GodRay :
         Fallout4MajorRecord,
-        IEquatable<ISoundDescriptorGetter>,
-        ILoquiObjectSetter<SoundDescriptor>,
-        ISoundDescriptorInternal
+        IEquatable<IGodRayGetter>,
+        IGodRayInternal,
+        ILoquiObjectSetter<GodRay>
     {
         #region Ctor
-        protected SoundDescriptor()
+        protected GodRay()
         {
             CustomCtor();
         }
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Fallout4
             FileGeneration fg,
             string? name = null)
         {
-            SoundDescriptorMixIn.ToString(
+            GodRayMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new SoundDescriptor.Mask<R>();
+                var ret = new GodRay.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -164,16 +164,16 @@ namespace Mutagen.Bethesda.Fallout4
                 return ToString(printMask: null);
             }
 
-            public string ToString(SoundDescriptor.Mask<bool>? printMask = null)
+            public string ToString(GodRay.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, SoundDescriptor.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, GodRay.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(SoundDescriptor.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(GodRay.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                SoundDescriptor_FieldIndex enu = (SoundDescriptor_FieldIndex)index;
+                GodRay_FieldIndex enu = (GodRay_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthException(int index, Exception ex)
             {
-                SoundDescriptor_FieldIndex enu = (SoundDescriptor_FieldIndex)index;
+                GodRay_FieldIndex enu = (GodRay_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -212,7 +212,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthMask(int index, object obj)
             {
-                SoundDescriptor_FieldIndex enu = (SoundDescriptor_FieldIndex)index;
+                GodRay_FieldIndex enu = (GodRay_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -307,14 +307,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = SoundDescriptor_Registration.TriggeringRecordType;
-        public SoundDescriptor(FormKey formKey)
+        public static readonly RecordType GrupRecordType = GodRay_Registration.TriggeringRecordType;
+        public GodRay(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        private SoundDescriptor(
+        private GodRay(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -323,7 +323,7 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        internal SoundDescriptor(
+        internal GodRay(
             FormKey formKey,
             ushort formVersion)
         {
@@ -332,12 +332,12 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        public SoundDescriptor(IFallout4Mod mod)
+        public GodRay(IFallout4Mod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public SoundDescriptor(IFallout4Mod mod, string editorID)
+        public GodRay(IFallout4Mod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -345,10 +345,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<SoundDescriptor>.ToString(this);
+            return MajorRecordPrinter<GodRay>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(ISoundDescriptor);
+        protected override Type LinkType => typeof(IGodRay);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -357,16 +357,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not ISoundDescriptorGetter rhs) return false;
-            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IGodRayGetter rhs) return false;
+            return ((GodRayCommon)((IGodRayGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(ISoundDescriptorGetter? obj)
+        public bool Equals(IGodRayGetter? obj)
         {
-            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((GodRayCommon)((IGodRayGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((GodRayCommon)((IGodRayGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -374,23 +374,23 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => SoundDescriptorBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => GodRayBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((SoundDescriptorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((GodRayBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static SoundDescriptor CreateFromBinary(
+        public new static GodRay CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new SoundDescriptor();
-            ((SoundDescriptorSetterCommon)((ISoundDescriptorGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new GodRay();
+            ((GodRaySetterCommon)((IGodRayGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out SoundDescriptor item,
+            out GodRay item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -416,84 +416,82 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((SoundDescriptorSetterCommon)((ISoundDescriptorGetter)this).CommonSetterInstance()!).Clear(this);
+            ((GodRaySetterCommon)((IGodRayGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new SoundDescriptor GetNew()
+        internal static new GodRay GetNew()
         {
-            return new SoundDescriptor();
+            return new GodRay();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ISoundDescriptor :
+    public partial interface IGodRay :
         IFallout4MajorRecordInternal,
-        ILoquiObjectSetter<ISoundDescriptorInternal>,
-        ISound,
-        ISoundDescriptorGetter
+        IGodRayGetter,
+        ILoquiObjectSetter<IGodRayInternal>
     {
     }
 
-    public partial interface ISoundDescriptorInternal :
+    public partial interface IGodRayInternal :
         IFallout4MajorRecordInternal,
-        ISoundDescriptor,
-        ISoundDescriptorGetter
+        IGodRay,
+        IGodRayGetter
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.SNDR)]
-    public partial interface ISoundDescriptorGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.GDRY)]
+    public partial interface IGodRayGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<ISoundDescriptorGetter>,
-        IMapsToGetter<ISoundDescriptorGetter>,
-        ISoundGetter
+        ILoquiObject<IGodRayGetter>,
+        IMapsToGetter<IGodRayGetter>
     {
-        static new ILoquiRegistration StaticRegistration => SoundDescriptor_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => GodRay_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class SoundDescriptorMixIn
+    public static partial class GodRayMixIn
     {
-        public static void Clear(this ISoundDescriptorInternal item)
+        public static void Clear(this IGodRayInternal item)
         {
-            ((SoundDescriptorSetterCommon)((ISoundDescriptorGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((GodRaySetterCommon)((IGodRayGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static SoundDescriptor.Mask<bool> GetEqualsMask(
-            this ISoundDescriptorGetter item,
-            ISoundDescriptorGetter rhs,
+        public static GodRay.Mask<bool> GetEqualsMask(
+            this IGodRayGetter item,
+            IGodRayGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((GodRayCommon)((IGodRayGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this ISoundDescriptorGetter item,
+            this IGodRayGetter item,
             string? name = null,
-            SoundDescriptor.Mask<bool>? printMask = null)
+            GodRay.Mask<bool>? printMask = null)
         {
-            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)item).CommonInstance()!).ToString(
+            return ((GodRayCommon)((IGodRayGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this ISoundDescriptorGetter item,
+            this IGodRayGetter item,
             FileGeneration fg,
             string? name = null,
-            SoundDescriptor.Mask<bool>? printMask = null)
+            GodRay.Mask<bool>? printMask = null)
         {
-            ((SoundDescriptorCommon)((ISoundDescriptorGetter)item).CommonInstance()!).ToString(
+            ((GodRayCommon)((IGodRayGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -501,39 +499,39 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this ISoundDescriptorGetter item,
-            ISoundDescriptorGetter rhs,
-            SoundDescriptor.TranslationMask? equalsMask = null)
+            this IGodRayGetter item,
+            IGodRayGetter rhs,
+            GodRay.TranslationMask? equalsMask = null)
         {
-            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)item).CommonInstance()!).Equals(
+            return ((GodRayCommon)((IGodRayGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ISoundDescriptorInternal lhs,
-            ISoundDescriptorGetter rhs,
-            out SoundDescriptor.ErrorMask errorMask,
-            SoundDescriptor.TranslationMask? copyMask = null)
+            this IGodRayInternal lhs,
+            IGodRayGetter rhs,
+            out GodRay.ErrorMask errorMask,
+            GodRay.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((SoundDescriptorSetterTranslationCommon)((ISoundDescriptorGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((GodRaySetterTranslationCommon)((IGodRayGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = SoundDescriptor.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GodRay.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ISoundDescriptorInternal lhs,
-            ISoundDescriptorGetter rhs,
+            this IGodRayInternal lhs,
+            IGodRayGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((SoundDescriptorSetterTranslationCommon)((ISoundDescriptorGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((GodRaySetterTranslationCommon)((IGodRayGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -541,44 +539,44 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static SoundDescriptor DeepCopy(
-            this ISoundDescriptorGetter item,
-            SoundDescriptor.TranslationMask? copyMask = null)
+        public static GodRay DeepCopy(
+            this IGodRayGetter item,
+            GodRay.TranslationMask? copyMask = null)
         {
-            return ((SoundDescriptorSetterTranslationCommon)((ISoundDescriptorGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((GodRaySetterTranslationCommon)((IGodRayGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static SoundDescriptor DeepCopy(
-            this ISoundDescriptorGetter item,
-            out SoundDescriptor.ErrorMask errorMask,
-            SoundDescriptor.TranslationMask? copyMask = null)
+        public static GodRay DeepCopy(
+            this IGodRayGetter item,
+            out GodRay.ErrorMask errorMask,
+            GodRay.TranslationMask? copyMask = null)
         {
-            return ((SoundDescriptorSetterTranslationCommon)((ISoundDescriptorGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((GodRaySetterTranslationCommon)((IGodRayGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static SoundDescriptor DeepCopy(
-            this ISoundDescriptorGetter item,
+        public static GodRay DeepCopy(
+            this IGodRayGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((SoundDescriptorSetterTranslationCommon)((ISoundDescriptorGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((GodRaySetterTranslationCommon)((IGodRayGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static SoundDescriptor Duplicate(
-            this ISoundDescriptorGetter item,
+        public static GodRay Duplicate(
+            this IGodRayGetter item,
             FormKey formKey,
-            SoundDescriptor.TranslationMask? copyMask = null)
+            GodRay.TranslationMask? copyMask = null)
         {
-            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)item).CommonInstance()!).Duplicate(
+            return ((GodRayCommon)((IGodRayGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
@@ -588,11 +586,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ISoundDescriptorInternal item,
+            this IGodRayInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((SoundDescriptorSetterCommon)((ISoundDescriptorGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((GodRaySetterCommon)((IGodRayGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -608,7 +606,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    internal enum SoundDescriptor_FieldIndex
+    internal enum GodRay_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -620,40 +618,40 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Registration
-    internal partial class SoundDescriptor_Registration : ILoquiRegistration
+    internal partial class GodRay_Registration : ILoquiRegistration
     {
-        public static readonly SoundDescriptor_Registration Instance = new SoundDescriptor_Registration();
+        public static readonly GodRay_Registration Instance = new GodRay_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 40,
+            msgID: 435,
             version: 0);
 
-        public const string GUID = "bf0b717d-4b81-4da3-88bf-7c8e8fe162c8";
+        public const string GUID = "035c2e63-4363-4995-add5-91d9f6905fa2";
 
         public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(SoundDescriptor.Mask<>);
+        public static readonly Type MaskType = typeof(GodRay.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(SoundDescriptor.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(GodRay.ErrorMask);
 
-        public static readonly Type ClassType = typeof(SoundDescriptor);
+        public static readonly Type ClassType = typeof(GodRay);
 
-        public static readonly Type GetterType = typeof(ISoundDescriptorGetter);
+        public static readonly Type GetterType = typeof(IGodRayGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ISoundDescriptor);
+        public static readonly Type SetterType = typeof(IGodRay);
 
-        public static readonly Type? InternalSetterType = typeof(ISoundDescriptorInternal);
+        public static readonly Type? InternalSetterType = typeof(IGodRayInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.SoundDescriptor";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.GodRay";
 
-        public const string Name = "SoundDescriptor";
+        public const string Name = "GodRay";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -661,14 +659,14 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.SNDR;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.GDRY;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.SNDR);
+            var all = RecordCollection.Factory(RecordTypes.GDRY);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(SoundDescriptorBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(GodRayBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -701,13 +699,13 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class SoundDescriptorSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class GodRaySetterCommon : Fallout4MajorRecordSetterCommon
     {
-        public new static readonly SoundDescriptorSetterCommon Instance = new SoundDescriptorSetterCommon();
+        public new static readonly GodRaySetterCommon Instance = new GodRaySetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ISoundDescriptorInternal item)
+        public void Clear(IGodRayInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -715,16 +713,16 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override void Clear(IFallout4MajorRecordInternal item)
         {
-            Clear(item: (ISoundDescriptorInternal)item);
+            Clear(item: (IGodRayInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (ISoundDescriptorInternal)item);
+            Clear(item: (IGodRayInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(ISoundDescriptor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IGodRay obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -733,16 +731,16 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ISoundDescriptorInternal item,
+            IGodRayInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            PluginUtilityTranslation.MajorRecordParse<ISoundDescriptorInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IGodRayInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: SoundDescriptorBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: SoundDescriptorBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: GodRayBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: GodRayBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -751,7 +749,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (SoundDescriptor)item,
+                item: (GodRay)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -762,7 +760,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (SoundDescriptor)item,
+                item: (GodRay)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -770,17 +768,17 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class SoundDescriptorCommon : Fallout4MajorRecordCommon
+    internal partial class GodRayCommon : Fallout4MajorRecordCommon
     {
-        public new static readonly SoundDescriptorCommon Instance = new SoundDescriptorCommon();
+        public new static readonly GodRayCommon Instance = new GodRayCommon();
 
-        public SoundDescriptor.Mask<bool> GetEqualsMask(
-            ISoundDescriptorGetter item,
-            ISoundDescriptorGetter rhs,
+        public GodRay.Mask<bool> GetEqualsMask(
+            IGodRayGetter item,
+            IGodRayGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new SoundDescriptor.Mask<bool>(false);
-            ((SoundDescriptorCommon)((ISoundDescriptorGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new GodRay.Mask<bool>(false);
+            ((GodRayCommon)((IGodRayGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -789,9 +787,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            ISoundDescriptorGetter item,
-            ISoundDescriptorGetter rhs,
-            SoundDescriptor.Mask<bool> ret,
+            IGodRayGetter item,
+            IGodRayGetter rhs,
+            GodRay.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -799,9 +797,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public string ToString(
-            ISoundDescriptorGetter item,
+            IGodRayGetter item,
             string? name = null,
-            SoundDescriptor.Mask<bool>? printMask = null)
+            GodRay.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -813,18 +811,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void ToString(
-            ISoundDescriptorGetter item,
+            IGodRayGetter item,
             FileGeneration fg,
             string? name = null,
-            SoundDescriptor.Mask<bool>? printMask = null)
+            GodRay.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SoundDescriptor =>");
+                fg.AppendLine($"GodRay =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SoundDescriptor) =>");
+                fg.AppendLine($"{name} (GodRay) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -838,9 +836,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            ISoundDescriptorGetter item,
+            IGodRayGetter item,
             FileGeneration fg,
-            SoundDescriptor.Mask<bool>? printMask = null)
+            GodRay.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
@@ -848,39 +846,39 @@ namespace Mutagen.Bethesda.Fallout4
                 printMask: printMask);
         }
         
-        public static SoundDescriptor_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
+        public static GodRay_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout4MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (SoundDescriptor_FieldIndex)((int)index);
+                    return (GodRay_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormKey:
-                    return (SoundDescriptor_FieldIndex)((int)index);
+                    return (GodRay_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.VersionControl:
-                    return (SoundDescriptor_FieldIndex)((int)index);
+                    return (GodRay_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.EditorID:
-                    return (SoundDescriptor_FieldIndex)((int)index);
+                    return (GodRay_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
-                    return (SoundDescriptor_FieldIndex)((int)index);
+                    return (GodRay_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
-                    return (SoundDescriptor_FieldIndex)((int)index);
+                    return (GodRay_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new SoundDescriptor_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new GodRay_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (SoundDescriptor_FieldIndex)((int)index);
+                    return (GodRay_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (SoundDescriptor_FieldIndex)((int)index);
+                    return (GodRay_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (SoundDescriptor_FieldIndex)((int)index);
+                    return (GodRay_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (SoundDescriptor_FieldIndex)((int)index);
+                    return (GodRay_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -888,8 +886,8 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Equals and Hash
         public virtual bool Equals(
-            ISoundDescriptorGetter? lhs,
-            ISoundDescriptorGetter? rhs,
+            IGodRayGetter? lhs,
+            IGodRayGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -903,8 +901,8 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (ISoundDescriptorGetter?)lhs,
-                rhs: rhs as ISoundDescriptorGetter,
+                lhs: (IGodRayGetter?)lhs,
+                rhs: rhs as IGodRayGetter,
                 crystal: crystal);
         }
         
@@ -914,12 +912,12 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (ISoundDescriptorGetter?)lhs,
-                rhs: rhs as ISoundDescriptorGetter,
+                lhs: (IGodRayGetter?)lhs,
+                rhs: rhs as IGodRayGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(ISoundDescriptorGetter item)
+        public virtual int GetHashCode(IGodRayGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -928,12 +926,12 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override int GetHashCode(IFallout4MajorRecordGetter item)
         {
-            return GetHashCode(item: (ISoundDescriptorGetter)item);
+            return GetHashCode(item: (IGodRayGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (ISoundDescriptorGetter)item);
+            return GetHashCode(item: (IGodRayGetter)item);
         }
         
         #endregion
@@ -941,11 +939,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override object GetNew()
         {
-            return SoundDescriptor.GetNew();
+            return GodRay.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISoundDescriptorGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IGodRayGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -955,12 +953,12 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Duplicate
-        public SoundDescriptor Duplicate(
-            ISoundDescriptorGetter item,
+        public GodRay Duplicate(
+            IGodRayGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new SoundDescriptor(formKey);
+            var newRec = new GodRay(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -971,7 +969,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ISoundDescriptorGetter)item,
+                item: (IGodRayGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -982,7 +980,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ISoundDescriptorGetter)item,
+                item: (IGodRayGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -992,14 +990,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class SoundDescriptorSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class GodRaySetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
-        public new static readonly SoundDescriptorSetterTranslationCommon Instance = new SoundDescriptorSetterTranslationCommon();
+        public new static readonly GodRaySetterTranslationCommon Instance = new GodRaySetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ISoundDescriptorInternal item,
-            ISoundDescriptorGetter rhs,
+            IGodRayInternal item,
+            IGodRayGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1013,8 +1011,8 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void DeepCopyIn(
-            ISoundDescriptor item,
-            ISoundDescriptorGetter rhs,
+            IGodRay item,
+            IGodRayGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1035,8 +1033,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ISoundDescriptorInternal)item,
-                rhs: (ISoundDescriptorGetter)rhs,
+                item: (IGodRayInternal)item,
+                rhs: (IGodRayGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1050,8 +1048,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ISoundDescriptor)item,
-                rhs: (ISoundDescriptorGetter)rhs,
+                item: (IGodRay)item,
+                rhs: (IGodRayGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1065,8 +1063,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ISoundDescriptorInternal)item,
-                rhs: (ISoundDescriptorGetter)rhs,
+                item: (IGodRayInternal)item,
+                rhs: (IGodRayGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1080,8 +1078,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ISoundDescriptor)item,
-                rhs: (ISoundDescriptorGetter)rhs,
+                item: (IGodRay)item,
+                rhs: (IGodRayGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1089,12 +1087,12 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
-        public SoundDescriptor DeepCopy(
-            ISoundDescriptorGetter item,
-            SoundDescriptor.TranslationMask? copyMask = null)
+        public GodRay DeepCopy(
+            IGodRayGetter item,
+            GodRay.TranslationMask? copyMask = null)
         {
-            SoundDescriptor ret = (SoundDescriptor)((SoundDescriptorCommon)((ISoundDescriptorGetter)item).CommonInstance()!).GetNew();
-            ((SoundDescriptorSetterTranslationCommon)((ISoundDescriptorGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            GodRay ret = (GodRay)((GodRayCommon)((IGodRayGetter)item).CommonInstance()!).GetNew();
+            ((GodRaySetterTranslationCommon)((IGodRayGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1103,30 +1101,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public SoundDescriptor DeepCopy(
-            ISoundDescriptorGetter item,
-            out SoundDescriptor.ErrorMask errorMask,
-            SoundDescriptor.TranslationMask? copyMask = null)
+        public GodRay DeepCopy(
+            IGodRayGetter item,
+            out GodRay.ErrorMask errorMask,
+            GodRay.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            SoundDescriptor ret = (SoundDescriptor)((SoundDescriptorCommon)((ISoundDescriptorGetter)item).CommonInstance()!).GetNew();
-            ((SoundDescriptorSetterTranslationCommon)((ISoundDescriptorGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            GodRay ret = (GodRay)((GodRayCommon)((IGodRayGetter)item).CommonInstance()!).GetNew();
+            ((GodRaySetterTranslationCommon)((IGodRayGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = SoundDescriptor.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GodRay.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public SoundDescriptor DeepCopy(
-            ISoundDescriptorGetter item,
+        public GodRay DeepCopy(
+            IGodRayGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            SoundDescriptor ret = (SoundDescriptor)((SoundDescriptorCommon)((ISoundDescriptorGetter)item).CommonInstance()!).GetNew();
-            ((SoundDescriptorSetterTranslationCommon)((ISoundDescriptorGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            GodRay ret = (GodRay)((GodRayCommon)((IGodRayGetter)item).CommonInstance()!).GetNew();
+            ((GodRaySetterTranslationCommon)((IGodRayGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1142,21 +1140,21 @@ namespace Mutagen.Bethesda.Fallout4
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class SoundDescriptor
+    public partial class GodRay
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => SoundDescriptor_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => SoundDescriptor_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => GodRay_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GodRay_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => SoundDescriptorCommon.Instance;
+        protected override object CommonInstance() => GodRayCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return SoundDescriptorSetterCommon.Instance;
+            return GodRaySetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => SoundDescriptorSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => GodRaySetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1167,20 +1165,20 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class SoundDescriptorBinaryWriteTranslation :
+    public partial class GodRayBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static SoundDescriptorBinaryWriteTranslation Instance = new SoundDescriptorBinaryWriteTranslation();
+        public new readonly static GodRayBinaryWriteTranslation Instance = new GodRayBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
-            ISoundDescriptorGetter item,
+            IGodRayGetter item,
             TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.SNDR)))
+                record: translationParams.ConvertToCustom(RecordTypes.GDRY)))
             {
                 try
                 {
@@ -1205,7 +1203,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (ISoundDescriptorGetter)item,
+                item: (IGodRayGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1216,7 +1214,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (ISoundDescriptorGetter)item,
+                item: (IGodRayGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1227,20 +1225,20 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (ISoundDescriptorGetter)item,
+                item: (IGodRayGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class SoundDescriptorBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class GodRayBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static SoundDescriptorBinaryCreateTranslation Instance = new SoundDescriptorBinaryCreateTranslation();
+        public new readonly static GodRayBinaryCreateTranslation Instance = new GodRayBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.SNDR;
+        public override RecordType RecordType => RecordTypes.GDRY;
         public static void FillBinaryStructs(
-            ISoundDescriptorInternal item,
+            IGodRayInternal item,
             MutagenFrame frame)
         {
             Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
@@ -1254,7 +1252,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class SoundDescriptorBinaryTranslationMixIn
+    public static class GodRayBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1263,35 +1261,35 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal partial class SoundDescriptorBinaryOverlay :
+    internal partial class GodRayBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
-        ISoundDescriptorGetter
+        IGodRayGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => SoundDescriptor_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => SoundDescriptor_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => GodRay_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GodRay_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => SoundDescriptorCommon.Instance;
+        protected override object CommonInstance() => GodRayCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => SoundDescriptorSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => GodRaySetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => SoundDescriptorBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => GodRayBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((SoundDescriptorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((GodRayBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISoundDescriptor);
+        protected override Type LinkType => typeof(IGodRay);
 
 
         partial void CustomFactoryEnd(
@@ -1300,7 +1298,7 @@ namespace Mutagen.Bethesda.Fallout4
             int offset);
 
         partial void CustomCtor();
-        protected SoundDescriptorBinaryOverlay(
+        protected GodRayBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1310,13 +1308,13 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static SoundDescriptorBinaryOverlay SoundDescriptorFactory(
+        public static GodRayBinaryOverlay GodRayFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
             stream = Decompression.DecompressStream(stream);
-            var ret = new SoundDescriptorBinaryOverlay(
+            var ret = new GodRayBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
@@ -1337,12 +1335,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static SoundDescriptorBinaryOverlay SoundDescriptorFactory(
+        public static GodRayBinaryOverlay GodRayFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return SoundDescriptorFactory(
+            return GodRayFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1354,7 +1352,7 @@ namespace Mutagen.Bethesda.Fallout4
             FileGeneration fg,
             string? name = null)
         {
-            SoundDescriptorMixIn.ToString(
+            GodRayMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1363,7 +1361,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<SoundDescriptor>.ToString(this);
+            return MajorRecordPrinter<GodRay>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1373,16 +1371,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not ISoundDescriptorGetter rhs) return false;
-            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IGodRayGetter rhs) return false;
+            return ((GodRayCommon)((IGodRayGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(ISoundDescriptorGetter? obj)
+        public bool Equals(IGodRayGetter? obj)
         {
-            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((GodRayCommon)((IGodRayGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((GodRayCommon)((IGodRayGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ShaderParticleGeometry" recordType="SPGD" objType="Record" baseClass="Fallout4MajorRecord" GUID="a37c06ab-6966-4331-90d1-c9cffbd53eca" ID="436">
+  </Object>
+</Loqui>

@@ -107,6 +107,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IRelatable
 - Faction
 - Race
+### ISound
+- SoundDescriptor
+- SoundMarker
 ### ISpellRecord
 - LeveledSpell
 - Spell
@@ -249,6 +252,10 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IRelatable
 ### Region
 - IEmittance
+### SoundDescriptor
+- ISound
+### SoundMarker
+- ISound
 ### Spell
 - IEffectRecord
 - IFurnitureAssociation

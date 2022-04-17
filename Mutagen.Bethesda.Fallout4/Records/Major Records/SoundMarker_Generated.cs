@@ -590,6 +590,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainer,
         ILoquiObjectSetter<ISoundMarkerInternal>,
         IObjectBounded,
+        ISound,
         ISoundMarkerGetter
     {
         /// <summary>
@@ -614,7 +615,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         ILoquiObject<ISoundMarkerGetter>,
         IMapsToGetter<ISoundMarkerGetter>,
-        IObjectBoundedGetter
+        IObjectBoundedGetter,
+        ISoundGetter
     {
         static new ILoquiRegistration StaticRegistration => SoundMarker_Registration.Instance;
         #region ObjectBounds

@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             {
                 isRequiredRecord = true;
                 DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, passedLengthAccessor);
-                var finalPosParam = loqui.TargetObjectGeneration.IsVariableLengthStruct() ? $", _{dataType.GetFieldData().RecordType}Location!.Value.Max" : null;
+                var finalPosParam = loqui.TargetObjectGeneration.IsVariableLengthStruct() ? $", _{dataType.GetFieldData().RecordType}Location!.Value.Width - {currentPosition}" : null;
                 fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)}? _{typeGen.Name} => _{typeGen.Name}_IsSet ? {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location", null)}, _package), _package{finalPosParam}) : default;");
             }
 

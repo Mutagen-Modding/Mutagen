@@ -312,7 +312,17 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             ScriptFragmentsIndexed_Registration.Instance,
             TerminalHolotapeEntry_Registration.Instance,
             TerminalBodyText_Registration.Instance,
-            TerminalMenuItem_Registration.Instance
+            TerminalMenuItem_Registration.Instance,
+            AmbientColors_Registration.Instance,
+            GodRay_Registration.Instance,
+            ShaderParticleGeometry_Registration.Instance,
+            CloudLayer_Registration.Instance,
+            WeatherColor_Registration.Instance,
+            WeatherAlpha_Registration.Instance,
+            WeatherAmbientColorSet_Registration.Instance,
+            WeatherSound_Registration.Instance,
+            WeatherMagic_Registration.Instance,
+            WeatherGodRays_Registration.Instance
         );
     }
 }

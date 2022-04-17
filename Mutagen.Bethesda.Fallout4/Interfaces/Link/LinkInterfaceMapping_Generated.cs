@@ -201,6 +201,12 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             APlacedTrap_Registration.Instance,
         });
         dict[typeof(ILocationTargetableGetter)] = dict[typeof(ILocationTargetable)] with { Setter = false };
+        dict[typeof(ISound)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            SoundDescriptor_Registration.Instance,
+            SoundMarker_Registration.Instance,
+        });
+        dict[typeof(ISoundGetter)] = dict[typeof(ISound)] with { Setter = false };
         InterfaceToObjectTypes = dict;
     }
 }

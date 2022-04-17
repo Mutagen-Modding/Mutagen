@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 else if (arr.SubTypeGeneration is Loqui.Generation.FloatType f
                     && data.HasTrigger)
                 {
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(BinaryOverlayArrayHelper)}.{nameof(BinaryOverlayArrayHelper.FloatSliceFromFixedSize)}({dataAccessor}, amount: {arr.FixedSize.Value}) : {typeGen.GetDefault(getter: true)};");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(BinaryOverlayArrayHelper)}.{nameof(BinaryOverlayArrayHelper.FloatSliceFromFixedSize)}(HeaderTranslation.ExtractSubrecordMemory({dataAccessor}, _{typeGen.Name}Location.Value, _package.MetaData.Constants), amount: {arr.FixedSize.Value}) : {typeGen.GetDefault(getter: true)};");
                 }
                 else
                 {

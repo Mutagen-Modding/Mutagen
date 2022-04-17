@@ -80,6 +80,7 @@ public partial class RecordTypeInts
     public const int CTDA = 0x41445443;
     public const int CUSD = 0x44535543;
     public const int CVPA = 0x41505643;
+    public const int DALC = 0x434C4144;
     public const int DAMA = 0x414D4144;
     public const int DAMC = 0x434D4144;
     public const int DATA = 0x41544144;
@@ -183,6 +184,7 @@ public partial class RecordTypeInts
     public const int IDLT = 0x544C4449;
     public const int IIAD = 0x44414949;
     public const int IMAD = 0x44414D49;
+    public const int IMSP = 0x50534D49;
     public const int INAM = 0x4D414E49;
     public const int INCC = 0x43434E49;
     public const int INDX = 0x58444E49;
@@ -196,6 +198,7 @@ public partial class RecordTypeInts
     public const int ITXT = 0x54585449;
     public const int JAIL = 0x4C49414A;
     public const int JIAD = 0x4441494A;
+    public const int JNAM = 0x4D414E4A;
     public const int JOUT = 0x54554F4A;
     public const int KEYM = 0x4D59454B;
     public const int KIAD = 0x4441494B;
@@ -367,6 +370,7 @@ public partial class RecordTypeInts
     public const int SPCT = 0x54435053;
     public const int SPED = 0x44455053;
     public const int SPEL = 0x4C455053;
+    public const int SPGD = 0x44475053;
     public const int SPIT = 0x54495053;
     public const int SPLO = 0x4F4C5053;
     public const int SPOR = 0x524F5053;
