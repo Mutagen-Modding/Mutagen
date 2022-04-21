@@ -54,6 +54,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ArtObject
 - BodyData
 - Book
+- Climate
 - Container
 - DestructionStage
 - Door
@@ -256,6 +257,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IWeightValue
 ### Class
 - INamed
+### Climate
+- IModeled
 ### CollisionLayer
 - INamed
 ### Component

@@ -465,6 +465,30 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         /// <summary>
+        /// Scope a load order query to Climate
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on Climate</returns>
+        public static TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IClimate, IClimateGetter> Climate(this IEnumerable<IModListingGetter<IFallout4ModGetter>> listings)
+        {
+            return new TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IClimate, IClimateGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IClimateGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IClimate, IClimateGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to Climate
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on Climate</returns>
+        public static TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IClimate, IClimateGetter> Climate(this IEnumerable<IFallout4ModGetter> mods)
+        {
+            return new TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IClimate, IClimateGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IClimateGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IClimate, IClimateGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to CollisionLayer
         /// </summary>
         /// <param name="listings">ModListings to query</param>

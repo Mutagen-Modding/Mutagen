@@ -58,6 +58,7 @@ public partial class RecordTypeInts
     public const int CITC = 0x43544943;
     public const int CLAS = 0x53414C43;
     public const int CLFM = 0x4D464C43;
+    public const int CLMT = 0x544D4C43;
     public const int CMPO = 0x4F504D43;
     public const int CNAM = 0x4D414E43;
     public const int CNTO = 0x4F544E43;
@@ -427,6 +428,7 @@ public partial class RecordTypeInts
     public const int WEAP = 0x50414557;
     public const int WGDR = 0x52444757;
     public const int WKMV = 0x564D4B57;
+    public const int WLST = 0x54534C57;
     public const int WMAP = 0x50414D57;
     public const int WNAM = 0x4D414E57;
     public const int WRLD = 0x444C5257;

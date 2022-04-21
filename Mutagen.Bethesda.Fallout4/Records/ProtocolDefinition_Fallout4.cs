@@ -322,7 +322,8 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             WeatherAmbientColorSet_Registration.Instance,
             WeatherSound_Registration.Instance,
             WeatherMagic_Registration.Instance,
-            WeatherGodRays_Registration.Instance
+            WeatherGodRays_Registration.Instance,
+            Climate_Registration.Instance
         );
     }
 }

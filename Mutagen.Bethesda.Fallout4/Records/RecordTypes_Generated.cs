@@ -60,6 +60,7 @@ public partial class RecordTypes
     public static readonly RecordType CITC = new(0x43544943);
     public static readonly RecordType CLAS = new(0x53414C43);
     public static readonly RecordType CLFM = new(0x4D464C43);
+    public static readonly RecordType CLMT = new(0x544D4C43);
     public static readonly RecordType CMPO = new(0x4F504D43);
     public static readonly RecordType CNAM = new(0x4D414E43);
     public static readonly RecordType CNTO = new(0x4F544E43);
@@ -429,6 +430,7 @@ public partial class RecordTypes
     public static readonly RecordType WEAP = new(0x50414557);
     public static readonly RecordType WGDR = new(0x52444757);
     public static readonly RecordType WKMV = new(0x564D4B57);
+    public static readonly RecordType WLST = new(0x54534C57);
     public static readonly RecordType WMAP = new(0x50414D57);
     public static readonly RecordType WNAM = new(0x4D414E57);
     public static readonly RecordType WRLD = new(0x444C5257);

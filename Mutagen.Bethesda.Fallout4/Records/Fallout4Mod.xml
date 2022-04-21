@@ -52,6 +52,7 @@
       <Group name="Terminals" refName="Terminal" />
       <Group name="LeveledItems" refName="LeveledItem" />
       <Group name="Weather" refName="Weather" />
+      <Group name="Climates" refName="Climate" />
       <!--			<Group name="VoiceTypes" refName="VoiceType" />-->
       <!--			<Group name="Quests" refName="Quest" />-->
       <!--			<Group name="MaterialTypes" refName="MaterialType" />-->

@@ -177,6 +177,9 @@
     <Compile Include="Records\Major Records\Book.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Climate.cs">
+      <DependentUpon>Climate.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\CloudLayer.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
@@ -1416,6 +1419,9 @@
     <Compile Include="Interfaces\Link\ISound_Generated.cs" />
     <Compile Include="Records\Major Records\WeatherGodRays_Generated.cs">
       <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Climate_Generated.cs">
+      <DependentUpon>Climate.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
