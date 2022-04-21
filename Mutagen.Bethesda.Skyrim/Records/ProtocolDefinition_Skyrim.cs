@@ -240,7 +240,7 @@ internal class ProtocolDefinition_Skyrim : IProtocolRegistration
             RegionGrasses_Registration.Instance,
             RegionGrass_Registration.Instance,
             RegionLand_Registration.Instance,
-            ANavigationMesh_Registration.Instance,
+            NavigationMesh_Registration.Instance,
             NavigationMeshInfoMap_Registration.Instance,
             NavigationMapInfo_Registration.Instance,
             LinkedDoor_Registration.Instance,
@@ -282,14 +282,10 @@ internal class ProtocolDefinition_Skyrim : IProtocolRegistration
             Patrol_Registration.Instance,
             MapMarker_Registration.Instance,
             LinkedReferenceColor_Registration.Instance,
-            WorldspaceNavigationMesh_Registration.Instance,
-            CellNavigationMesh_Registration.Instance,
             NavmeshTriangle_Registration.Instance,
             EdgeLink_Registration.Instance,
             DoorTriangle_Registration.Instance,
-            ANavigationMeshData_Registration.Instance,
-            WorldspaceNavigationMeshData_Registration.Instance,
-            CellNavigationMeshData_Registration.Instance,
+            NavigationMeshData_Registration.Instance,
             PlacedArrow_Registration.Instance,
             PlacedBeam_Registration.Instance,
             PlacedFlame_Registration.Instance,
@@ -442,7 +438,10 @@ internal class ProtocolDefinition_Skyrim : IProtocolRegistration
             SoundOutputData_Registration.Instance,
             Placement_Registration.Instance,
             LandscapeVertexHeightMap_Registration.Instance,
-            CellMaxHeightData_Registration.Instance
+            CellMaxHeightData_Registration.Instance,
+            ANavmeshParent_Registration.Instance,
+            WorldspaceNavmeshParent_Registration.Instance,
+            CellNavmeshParent_Registration.Instance
         );
     }
 }

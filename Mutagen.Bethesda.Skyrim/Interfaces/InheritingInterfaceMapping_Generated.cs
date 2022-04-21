@@ -19,11 +19,6 @@ internal class SkyrimInheritingInterfaceMapping : IInterfaceMapping
     public SkyrimInheritingInterfaceMapping()
     {
         var dict = new Dictionary<Type, InterfaceMappingResult>();
-        dict[typeof(ICellNavigationMesh)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            ANavigationMesh_Registration.Instance,
-        });
-        dict[typeof(ICellNavigationMeshGetter)] = dict[typeof(ICellNavigationMesh)] with { Setter = false };
         dict[typeof(IGameSettingBool)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             GameSetting_Registration.Instance,
@@ -99,11 +94,6 @@ internal class SkyrimInheritingInterfaceMapping : IInterfaceMapping
             APlacedTrap_Registration.Instance,
         });
         dict[typeof(IPlacedTrapGetter)] = dict[typeof(IPlacedTrap)] with { Setter = false };
-        dict[typeof(IWorldspaceNavigationMesh)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            ANavigationMesh_Registration.Instance,
-        });
-        dict[typeof(IWorldspaceNavigationMeshGetter)] = dict[typeof(IWorldspaceNavigationMesh)] with { Setter = false };
         InterfaceToObjectTypes = dict;
     }
 }

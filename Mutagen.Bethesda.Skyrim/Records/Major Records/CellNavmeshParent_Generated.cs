@@ -40,14 +40,14 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class CellNavigationMeshData :
-        ANavigationMeshData,
-        ICellNavigationMeshData,
-        IEquatable<ICellNavigationMeshDataGetter>,
-        ILoquiObjectSetter<CellNavigationMeshData>
+    public partial class CellNavmeshParent :
+        ANavmeshParent,
+        ICellNavmeshParent,
+        IEquatable<ICellNavmeshParentGetter>,
+        ILoquiObjectSetter<CellNavmeshParent>
     {
         #region Ctor
-        public CellNavigationMeshData()
+        public CellNavmeshParent()
         {
             CustomCtor();
         }
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
             set => _UnusedWorldspaceParent.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IWorldspaceGetter> ICellNavigationMeshDataGetter.UnusedWorldspaceParent => this.UnusedWorldspaceParent;
+        IFormLinkGetter<IWorldspaceGetter> ICellNavmeshParentGetter.UnusedWorldspaceParent => this.UnusedWorldspaceParent;
         #endregion
         #region Parent
         private readonly IFormLink<ICellGetter> _Parent = new FormLink<ICellGetter>();
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
             set => _Parent.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ICellGetter> ICellNavigationMeshDataGetter.Parent => this.Parent;
+        IFormLinkGetter<ICellGetter> ICellNavmeshParentGetter.Parent => this.Parent;
         #endregion
 
         #region To String
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            CellNavigationMeshDataMixIn.ToString(
+            CellNavmeshParentMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -91,22 +91,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ICellNavigationMeshDataGetter rhs) return false;
-            return ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not ICellNavmeshParentGetter rhs) return false;
+            return ((CellNavmeshParentCommon)((ICellNavmeshParentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(ICellNavigationMeshDataGetter? obj)
+        public bool Equals(ICellNavmeshParentGetter? obj)
         {
-            return ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CellNavmeshParentCommon)((ICellNavmeshParentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((CellNavmeshParentCommon)((ICellNavmeshParentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Mask
         public new class Mask<TItem> :
-            ANavigationMeshData.Mask<TItem>,
+            ANavmeshParent.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -119,33 +119,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
-                TItem NavmeshVersion,
-                TItem Magic,
-                TItem Vertices,
-                TItem Triangles,
-                TItem EdgeLinks,
-                TItem DoorTriangles,
-                TItem NavmeshGridDivisor,
-                TItem MaxDistanceX,
-                TItem MaxDistanceY,
-                TItem Min,
-                TItem Max,
-                TItem NavmeshGrid,
                 TItem UnusedWorldspaceParent,
                 TItem Parent)
-            : base(
-                NavmeshVersion: NavmeshVersion,
-                Magic: Magic,
-                Vertices: Vertices,
-                Triangles: Triangles,
-                EdgeLinks: EdgeLinks,
-                DoorTriangles: DoorTriangles,
-                NavmeshGridDivisor: NavmeshGridDivisor,
-                MaxDistanceX: MaxDistanceX,
-                MaxDistanceY: MaxDistanceY,
-                Min: Min,
-                Max: Max,
-                NavmeshGrid: NavmeshGrid)
+            : base()
             {
                 this.UnusedWorldspaceParent = UnusedWorldspaceParent;
                 this.Parent = Parent;
@@ -213,7 +189,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new CellNavigationMeshData.Mask<R>();
+                var ret = new CellNavmeshParent.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -232,16 +208,16 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(CellNavigationMeshData.Mask<bool>? printMask = null)
+            public string ToString(CellNavmeshParent.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, CellNavigationMeshData.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, CellNavmeshParent.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(CellNavigationMeshData.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(CellNavmeshParent.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -261,7 +237,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            ANavigationMeshData.ErrorMask,
+            ANavmeshParent.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -272,12 +248,12 @@ namespace Mutagen.Bethesda.Skyrim
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                CellNavigationMeshData_FieldIndex enu = (CellNavigationMeshData_FieldIndex)index;
+                CellNavmeshParent_FieldIndex enu = (CellNavmeshParent_FieldIndex)index;
                 switch (enu)
                 {
-                    case CellNavigationMeshData_FieldIndex.UnusedWorldspaceParent:
+                    case CellNavmeshParent_FieldIndex.UnusedWorldspaceParent:
                         return UnusedWorldspaceParent;
-                    case CellNavigationMeshData_FieldIndex.Parent:
+                    case CellNavmeshParent_FieldIndex.Parent:
                         return Parent;
                     default:
                         return base.GetNthMask(index);
@@ -286,13 +262,13 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                CellNavigationMeshData_FieldIndex enu = (CellNavigationMeshData_FieldIndex)index;
+                CellNavmeshParent_FieldIndex enu = (CellNavmeshParent_FieldIndex)index;
                 switch (enu)
                 {
-                    case CellNavigationMeshData_FieldIndex.UnusedWorldspaceParent:
+                    case CellNavmeshParent_FieldIndex.UnusedWorldspaceParent:
                         this.UnusedWorldspaceParent = ex;
                         break;
-                    case CellNavigationMeshData_FieldIndex.Parent:
+                    case CellNavmeshParent_FieldIndex.Parent:
                         this.Parent = ex;
                         break;
                     default:
@@ -303,13 +279,13 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                CellNavigationMeshData_FieldIndex enu = (CellNavigationMeshData_FieldIndex)index;
+                CellNavmeshParent_FieldIndex enu = (CellNavmeshParent_FieldIndex)index;
                 switch (enu)
                 {
-                    case CellNavigationMeshData_FieldIndex.UnusedWorldspaceParent:
+                    case CellNavmeshParent_FieldIndex.UnusedWorldspaceParent:
                         this.UnusedWorldspaceParent = (Exception?)obj;
                         break;
-                    case CellNavigationMeshData_FieldIndex.Parent:
+                    case CellNavmeshParent_FieldIndex.Parent:
                         this.Parent = (Exception?)obj;
                         break;
                     default:
@@ -388,7 +364,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            ANavigationMeshData.TranslationMask,
+            ANavmeshParent.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -424,29 +400,29 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => CellNavigationMeshDataCommon.Instance.GetContainedFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellNavigationMeshDataSetterCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => CellNavmeshParentCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellNavmeshParentSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => CellNavigationMeshDataBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => CellNavmeshParentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((CellNavigationMeshDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((CellNavmeshParentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static CellNavigationMeshData CreateFromBinary(
+        public new static CellNavmeshParent CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new CellNavigationMeshData();
-            ((CellNavigationMeshDataSetterCommon)((ICellNavigationMeshDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new CellNavmeshParent();
+            ((CellNavmeshParentSetterCommon)((ICellNavmeshParentGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -457,7 +433,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out CellNavigationMeshData item,
+            out CellNavmeshParent item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -472,35 +448,35 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((CellNavigationMeshDataSetterCommon)((ICellNavigationMeshDataGetter)this).CommonSetterInstance()!).Clear(this);
+            ((CellNavmeshParentSetterCommon)((ICellNavmeshParentGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new CellNavigationMeshData GetNew()
+        internal static new CellNavmeshParent GetNew()
         {
-            return new CellNavigationMeshData();
+            return new CellNavmeshParent();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ICellNavigationMeshData :
-        IANavigationMeshData,
-        ICellNavigationMeshDataGetter,
+    public partial interface ICellNavmeshParent :
+        IANavmeshParent,
+        ICellNavmeshParentGetter,
         IFormLinkContainer,
-        ILoquiObjectSetter<ICellNavigationMeshData>
+        ILoquiObjectSetter<ICellNavmeshParent>
     {
         new IFormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; set; }
         new IFormLink<ICellGetter> Parent { get; set; }
     }
 
-    public partial interface ICellNavigationMeshDataGetter :
-        IANavigationMeshDataGetter,
+    public partial interface ICellNavmeshParentGetter :
+        IANavmeshParentGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ICellNavigationMeshDataGetter>
+        ILoquiObject<ICellNavmeshParentGetter>
     {
-        static new ILoquiRegistration StaticRegistration => CellNavigationMeshData_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => CellNavmeshParent_Registration.Instance;
         IFormLinkGetter<IWorldspaceGetter> UnusedWorldspaceParent { get; }
         IFormLinkGetter<ICellGetter> Parent { get; }
 
@@ -509,42 +485,42 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static partial class CellNavigationMeshDataMixIn
+    public static partial class CellNavmeshParentMixIn
     {
-        public static void Clear(this ICellNavigationMeshData item)
+        public static void Clear(this ICellNavmeshParent item)
         {
-            ((CellNavigationMeshDataSetterCommon)((ICellNavigationMeshDataGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((CellNavmeshParentSetterCommon)((ICellNavmeshParentGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static CellNavigationMeshData.Mask<bool> GetEqualsMask(
-            this ICellNavigationMeshDataGetter item,
-            ICellNavigationMeshDataGetter rhs,
+        public static CellNavmeshParent.Mask<bool> GetEqualsMask(
+            this ICellNavmeshParentGetter item,
+            ICellNavmeshParentGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((CellNavmeshParentCommon)((ICellNavmeshParentGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this ICellNavigationMeshDataGetter item,
+            this ICellNavmeshParentGetter item,
             string? name = null,
-            CellNavigationMeshData.Mask<bool>? printMask = null)
+            CellNavmeshParent.Mask<bool>? printMask = null)
         {
-            return ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)item).CommonInstance()!).ToString(
+            return ((CellNavmeshParentCommon)((ICellNavmeshParentGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this ICellNavigationMeshDataGetter item,
+            this ICellNavmeshParentGetter item,
             FileGeneration fg,
             string? name = null,
-            CellNavigationMeshData.Mask<bool>? printMask = null)
+            CellNavmeshParent.Mask<bool>? printMask = null)
         {
-            ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)item).CommonInstance()!).ToString(
+            ((CellNavmeshParentCommon)((ICellNavmeshParentGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -552,39 +528,39 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool Equals(
-            this ICellNavigationMeshDataGetter item,
-            ICellNavigationMeshDataGetter rhs,
-            CellNavigationMeshData.TranslationMask? equalsMask = null)
+            this ICellNavmeshParentGetter item,
+            ICellNavmeshParentGetter rhs,
+            CellNavmeshParent.TranslationMask? equalsMask = null)
         {
-            return ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)item).CommonInstance()!).Equals(
+            return ((CellNavmeshParentCommon)((ICellNavmeshParentGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ICellNavigationMeshData lhs,
-            ICellNavigationMeshDataGetter rhs,
-            out CellNavigationMeshData.ErrorMask errorMask,
-            CellNavigationMeshData.TranslationMask? copyMask = null)
+            this ICellNavmeshParent lhs,
+            ICellNavmeshParentGetter rhs,
+            out CellNavmeshParent.ErrorMask errorMask,
+            CellNavmeshParent.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((CellNavigationMeshDataSetterTranslationCommon)((ICellNavigationMeshDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((CellNavmeshParentSetterTranslationCommon)((ICellNavmeshParentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = CellNavigationMeshData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CellNavmeshParent.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ICellNavigationMeshData lhs,
-            ICellNavigationMeshDataGetter rhs,
+            this ICellNavmeshParent lhs,
+            ICellNavmeshParentGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((CellNavigationMeshDataSetterTranslationCommon)((ICellNavigationMeshDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((CellNavmeshParentSetterTranslationCommon)((ICellNavmeshParentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -592,32 +568,32 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: false);
         }
 
-        public static CellNavigationMeshData DeepCopy(
-            this ICellNavigationMeshDataGetter item,
-            CellNavigationMeshData.TranslationMask? copyMask = null)
+        public static CellNavmeshParent DeepCopy(
+            this ICellNavmeshParentGetter item,
+            CellNavmeshParent.TranslationMask? copyMask = null)
         {
-            return ((CellNavigationMeshDataSetterTranslationCommon)((ICellNavigationMeshDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((CellNavmeshParentSetterTranslationCommon)((ICellNavmeshParentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static CellNavigationMeshData DeepCopy(
-            this ICellNavigationMeshDataGetter item,
-            out CellNavigationMeshData.ErrorMask errorMask,
-            CellNavigationMeshData.TranslationMask? copyMask = null)
+        public static CellNavmeshParent DeepCopy(
+            this ICellNavmeshParentGetter item,
+            out CellNavmeshParent.ErrorMask errorMask,
+            CellNavmeshParent.TranslationMask? copyMask = null)
         {
-            return ((CellNavigationMeshDataSetterTranslationCommon)((ICellNavigationMeshDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((CellNavmeshParentSetterTranslationCommon)((ICellNavmeshParentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static CellNavigationMeshData DeepCopy(
-            this ICellNavigationMeshDataGetter item,
+        public static CellNavmeshParent DeepCopy(
+            this ICellNavmeshParentGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((CellNavigationMeshDataSetterTranslationCommon)((ICellNavigationMeshDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((CellNavmeshParentSetterTranslationCommon)((ICellNavmeshParentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -625,11 +601,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ICellNavigationMeshData item,
+            this ICellNavmeshParent item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((CellNavigationMeshDataSetterCommon)((ICellNavigationMeshDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((CellNavmeshParentSetterCommon)((ICellNavmeshParentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -645,60 +621,48 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    internal enum CellNavigationMeshData_FieldIndex
+    internal enum CellNavmeshParent_FieldIndex
     {
-        NavmeshVersion = 0,
-        Magic = 1,
-        Vertices = 2,
-        Triangles = 3,
-        EdgeLinks = 4,
-        DoorTriangles = 5,
-        NavmeshGridDivisor = 6,
-        MaxDistanceX = 7,
-        MaxDistanceY = 8,
-        Min = 9,
-        Max = 10,
-        NavmeshGrid = 11,
-        UnusedWorldspaceParent = 12,
-        Parent = 13,
+        UnusedWorldspaceParent = 0,
+        Parent = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class CellNavigationMeshData_Registration : ILoquiRegistration
+    internal partial class CellNavmeshParent_Registration : ILoquiRegistration
     {
-        public static readonly CellNavigationMeshData_Registration Instance = new CellNavigationMeshData_Registration();
+        public static readonly CellNavmeshParent_Registration Instance = new CellNavmeshParent_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 326,
+            msgID: 484,
             version: 0);
 
-        public const string GUID = "91d1e4c9-6710-4005-a9f3-e8408fa6e343";
+        public const string GUID = "ade210ed-9dba-497c-803d-e37ff35cc602";
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(CellNavigationMeshData.Mask<>);
+        public static readonly Type MaskType = typeof(CellNavmeshParent.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(CellNavigationMeshData.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(CellNavmeshParent.ErrorMask);
 
-        public static readonly Type ClassType = typeof(CellNavigationMeshData);
+        public static readonly Type ClassType = typeof(CellNavmeshParent);
 
-        public static readonly Type GetterType = typeof(ICellNavigationMeshDataGetter);
+        public static readonly Type GetterType = typeof(ICellNavmeshParentGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ICellNavigationMeshData);
+        public static readonly Type SetterType = typeof(ICellNavmeshParent);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.CellNavigationMeshData";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.CellNavmeshParent";
 
-        public const string Name = "CellNavigationMeshData";
+        public const string Name = "CellNavmeshParent";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -706,7 +670,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(CellNavigationMeshDataBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(CellNavmeshParentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -739,13 +703,13 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common
-    internal partial class CellNavigationMeshDataSetterCommon : ANavigationMeshDataSetterCommon
+    internal partial class CellNavmeshParentSetterCommon : ANavmeshParentSetterCommon
     {
-        public new static readonly CellNavigationMeshDataSetterCommon Instance = new CellNavigationMeshDataSetterCommon();
+        public new static readonly CellNavmeshParentSetterCommon Instance = new CellNavmeshParentSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ICellNavigationMeshData item)
+        public void Clear(ICellNavmeshParent item)
         {
             ClearPartial();
             item.UnusedWorldspaceParent.Clear();
@@ -753,13 +717,13 @@ namespace Mutagen.Bethesda.Skyrim
             base.Clear(item);
         }
         
-        public override void Clear(IANavigationMeshData item)
+        public override void Clear(IANavmeshParent item)
         {
-            Clear(item: (ICellNavigationMeshData)item);
+            Clear(item: (ICellNavmeshParent)item);
         }
         
         #region Mutagen
-        public void RemapLinks(ICellNavigationMeshData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ICellNavmeshParent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
             obj.UnusedWorldspaceParent.Relink(mapping);
@@ -770,7 +734,7 @@ namespace Mutagen.Bethesda.Skyrim
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ICellNavigationMeshData item,
+            ICellNavmeshParent item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -778,16 +742,16 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: CellNavigationMeshDataBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: CellNavmeshParentBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
-            IANavigationMeshData item,
+            IANavmeshParent item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (CellNavigationMeshData)item,
+                item: (CellNavmeshParent)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -795,17 +759,17 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class CellNavigationMeshDataCommon : ANavigationMeshDataCommon
+    internal partial class CellNavmeshParentCommon : ANavmeshParentCommon
     {
-        public new static readonly CellNavigationMeshDataCommon Instance = new CellNavigationMeshDataCommon();
+        public new static readonly CellNavmeshParentCommon Instance = new CellNavmeshParentCommon();
 
-        public CellNavigationMeshData.Mask<bool> GetEqualsMask(
-            ICellNavigationMeshDataGetter item,
-            ICellNavigationMeshDataGetter rhs,
+        public CellNavmeshParent.Mask<bool> GetEqualsMask(
+            ICellNavmeshParentGetter item,
+            ICellNavmeshParentGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new CellNavigationMeshData.Mask<bool>(false);
-            ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new CellNavmeshParent.Mask<bool>(false);
+            ((CellNavmeshParentCommon)((ICellNavmeshParentGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -814,9 +778,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public void FillEqualsMask(
-            ICellNavigationMeshDataGetter item,
-            ICellNavigationMeshDataGetter rhs,
-            CellNavigationMeshData.Mask<bool> ret,
+            ICellNavmeshParentGetter item,
+            ICellNavmeshParentGetter rhs,
+            CellNavmeshParent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -826,9 +790,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public string ToString(
-            ICellNavigationMeshDataGetter item,
+            ICellNavmeshParentGetter item,
             string? name = null,
-            CellNavigationMeshData.Mask<bool>? printMask = null)
+            CellNavmeshParent.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -840,18 +804,18 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public void ToString(
-            ICellNavigationMeshDataGetter item,
+            ICellNavmeshParentGetter item,
             FileGeneration fg,
             string? name = null,
-            CellNavigationMeshData.Mask<bool>? printMask = null)
+            CellNavmeshParent.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CellNavigationMeshData =>");
+                fg.AppendLine($"CellNavmeshParent =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CellNavigationMeshData) =>");
+                fg.AppendLine($"{name} (CellNavmeshParent) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -865,11 +829,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         protected static void ToStringFields(
-            ICellNavigationMeshDataGetter item,
+            ICellNavmeshParentGetter item,
             FileGeneration fg,
-            CellNavigationMeshData.Mask<bool>? printMask = null)
+            CellNavmeshParent.Mask<bool>? printMask = null)
         {
-            ANavigationMeshDataCommon.ToStringFields(
+            ANavmeshParentCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -883,34 +847,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         
-        public static CellNavigationMeshData_FieldIndex ConvertFieldIndex(ANavigationMeshData_FieldIndex index)
+        public static CellNavmeshParent_FieldIndex ConvertFieldIndex(ANavmeshParent_FieldIndex index)
         {
             switch (index)
             {
-                case ANavigationMeshData_FieldIndex.NavmeshVersion:
-                    return (CellNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.Magic:
-                    return (CellNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.Vertices:
-                    return (CellNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.Triangles:
-                    return (CellNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.EdgeLinks:
-                    return (CellNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.DoorTriangles:
-                    return (CellNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.NavmeshGridDivisor:
-                    return (CellNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.MaxDistanceX:
-                    return (CellNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.MaxDistanceY:
-                    return (CellNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.Min:
-                    return (CellNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.Max:
-                    return (CellNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.NavmeshGrid:
-                    return (CellNavigationMeshData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -918,17 +858,17 @@ namespace Mutagen.Bethesda.Skyrim
         
         #region Equals and Hash
         public virtual bool Equals(
-            ICellNavigationMeshDataGetter? lhs,
-            ICellNavigationMeshDataGetter? rhs,
+            ICellNavmeshParentGetter? lhs,
+            ICellNavmeshParentGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IANavigationMeshDataGetter)lhs, (IANavigationMeshDataGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)CellNavigationMeshData_FieldIndex.UnusedWorldspaceParent) ?? true))
+            if (!base.Equals((IANavmeshParentGetter)lhs, (IANavmeshParentGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)CellNavmeshParent_FieldIndex.UnusedWorldspaceParent) ?? true))
             {
                 if (!lhs.UnusedWorldspaceParent.Equals(rhs.UnusedWorldspaceParent)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CellNavigationMeshData_FieldIndex.Parent) ?? true))
+            if ((crystal?.GetShouldTranslate((int)CellNavmeshParent_FieldIndex.Parent) ?? true))
             {
                 if (!lhs.Parent.Equals(rhs.Parent)) return false;
             }
@@ -936,17 +876,17 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public override bool Equals(
-            IANavigationMeshDataGetter? lhs,
-            IANavigationMeshDataGetter? rhs,
+            IANavmeshParentGetter? lhs,
+            IANavmeshParentGetter? rhs,
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (ICellNavigationMeshDataGetter?)lhs,
-                rhs: rhs as ICellNavigationMeshDataGetter,
+                lhs: (ICellNavmeshParentGetter?)lhs,
+                rhs: rhs as ICellNavmeshParentGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(ICellNavigationMeshDataGetter item)
+        public virtual int GetHashCode(ICellNavmeshParentGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.UnusedWorldspaceParent);
@@ -955,9 +895,9 @@ namespace Mutagen.Bethesda.Skyrim
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(IANavigationMeshDataGetter item)
+        public override int GetHashCode(IANavmeshParentGetter item)
         {
-            return GetHashCode(item: (ICellNavigationMeshDataGetter)item);
+            return GetHashCode(item: (ICellNavmeshParentGetter)item);
         }
         
         #endregion
@@ -965,11 +905,11 @@ namespace Mutagen.Bethesda.Skyrim
         
         public override object GetNew()
         {
-            return CellNavigationMeshData.GetNew();
+            return CellNavmeshParent.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICellNavigationMeshDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICellNavmeshParentGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -983,29 +923,29 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class CellNavigationMeshDataSetterTranslationCommon : ANavigationMeshDataSetterTranslationCommon
+    internal partial class CellNavmeshParentSetterTranslationCommon : ANavmeshParentSetterTranslationCommon
     {
-        public new static readonly CellNavigationMeshDataSetterTranslationCommon Instance = new CellNavigationMeshDataSetterTranslationCommon();
+        public new static readonly CellNavmeshParentSetterTranslationCommon Instance = new CellNavmeshParentSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ICellNavigationMeshData item,
-            ICellNavigationMeshDataGetter rhs,
+            ICellNavmeshParent item,
+            ICellNavmeshParentGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IANavigationMeshData)item,
-                (IANavigationMeshDataGetter)rhs,
+                (IANavmeshParent)item,
+                (IANavmeshParentGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)CellNavigationMeshData_FieldIndex.UnusedWorldspaceParent) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CellNavmeshParent_FieldIndex.UnusedWorldspaceParent) ?? true))
             {
                 item.UnusedWorldspaceParent.SetTo(rhs.UnusedWorldspaceParent.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)CellNavigationMeshData_FieldIndex.Parent) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CellNavmeshParent_FieldIndex.Parent) ?? true))
             {
                 item.Parent.SetTo(rhs.Parent.FormKey);
             }
@@ -1013,15 +953,15 @@ namespace Mutagen.Bethesda.Skyrim
         
         
         public override void DeepCopyIn(
-            IANavigationMeshData item,
-            IANavigationMeshDataGetter rhs,
+            IANavmeshParent item,
+            IANavmeshParentGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ICellNavigationMeshData)item,
-                rhs: (ICellNavigationMeshDataGetter)rhs,
+                item: (ICellNavmeshParent)item,
+                rhs: (ICellNavmeshParentGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1029,12 +969,12 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-        public CellNavigationMeshData DeepCopy(
-            ICellNavigationMeshDataGetter item,
-            CellNavigationMeshData.TranslationMask? copyMask = null)
+        public CellNavmeshParent DeepCopy(
+            ICellNavmeshParentGetter item,
+            CellNavmeshParent.TranslationMask? copyMask = null)
         {
-            CellNavigationMeshData ret = (CellNavigationMeshData)((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)item).CommonInstance()!).GetNew();
-            ((CellNavigationMeshDataSetterTranslationCommon)((ICellNavigationMeshDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            CellNavmeshParent ret = (CellNavmeshParent)((CellNavmeshParentCommon)((ICellNavmeshParentGetter)item).CommonInstance()!).GetNew();
+            ((CellNavmeshParentSetterTranslationCommon)((ICellNavmeshParentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1043,30 +983,30 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
         
-        public CellNavigationMeshData DeepCopy(
-            ICellNavigationMeshDataGetter item,
-            out CellNavigationMeshData.ErrorMask errorMask,
-            CellNavigationMeshData.TranslationMask? copyMask = null)
+        public CellNavmeshParent DeepCopy(
+            ICellNavmeshParentGetter item,
+            out CellNavmeshParent.ErrorMask errorMask,
+            CellNavmeshParent.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            CellNavigationMeshData ret = (CellNavigationMeshData)((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)item).CommonInstance()!).GetNew();
-            ((CellNavigationMeshDataSetterTranslationCommon)((ICellNavigationMeshDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            CellNavmeshParent ret = (CellNavmeshParent)((CellNavmeshParentCommon)((ICellNavmeshParentGetter)item).CommonInstance()!).GetNew();
+            ((CellNavmeshParentSetterTranslationCommon)((ICellNavmeshParentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = CellNavigationMeshData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CellNavmeshParent.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public CellNavigationMeshData DeepCopy(
-            ICellNavigationMeshDataGetter item,
+        public CellNavmeshParent DeepCopy(
+            ICellNavmeshParentGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            CellNavigationMeshData ret = (CellNavigationMeshData)((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)item).CommonInstance()!).GetNew();
-            ((CellNavigationMeshDataSetterTranslationCommon)((ICellNavigationMeshDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            CellNavmeshParent ret = (CellNavmeshParent)((CellNavmeshParentCommon)((ICellNavmeshParentGetter)item).CommonInstance()!).GetNew();
+            ((CellNavmeshParentSetterTranslationCommon)((ICellNavmeshParentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1082,21 +1022,21 @@ namespace Mutagen.Bethesda.Skyrim
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CellNavigationMeshData
+    public partial class CellNavmeshParent
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => CellNavigationMeshData_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => CellNavigationMeshData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => CellNavmeshParent_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CellNavmeshParent_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => CellNavigationMeshDataCommon.Instance;
+        protected override object CommonInstance() => CellNavmeshParentCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return CellNavigationMeshDataSetterCommon.Instance;
+            return CellNavmeshParentSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => CellNavigationMeshDataSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => CellNavmeshParentSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1107,24 +1047,27 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CellNavigationMeshDataBinaryWriteTranslation :
-        ANavigationMeshDataBinaryWriteTranslation,
+    public partial class CellNavmeshParentBinaryWriteTranslation :
+        ANavmeshParentBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static CellNavigationMeshDataBinaryWriteTranslation Instance = new CellNavigationMeshDataBinaryWriteTranslation();
+        public new readonly static CellNavmeshParentBinaryWriteTranslation Instance = new CellNavmeshParentBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            ICellNavigationMeshDataGetter item,
+            ICellNavmeshParentGetter item,
             MutagenWriter writer)
         {
-            ANavigationMeshDataBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.UnusedWorldspaceParent);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Parent);
         }
 
         public void Write(
             MutagenWriter writer,
-            ICellNavigationMeshDataGetter item,
+            ICellNavmeshParentGetter item,
             TypedWriteParams? translationParams = null)
         {
             WriteEmbedded(
@@ -1138,35 +1081,34 @@ namespace Mutagen.Bethesda.Skyrim
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (ICellNavigationMeshDataGetter)item,
+                item: (ICellNavmeshParentGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
-            IANavigationMeshDataGetter item,
+            IANavmeshParentGetter item,
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (ICellNavigationMeshDataGetter)item,
+                item: (ICellNavmeshParentGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class CellNavigationMeshDataBinaryCreateTranslation : ANavigationMeshDataBinaryCreateTranslation
+    internal partial class CellNavmeshParentBinaryCreateTranslation : ANavmeshParentBinaryCreateTranslation
     {
-        public new readonly static CellNavigationMeshDataBinaryCreateTranslation Instance = new CellNavigationMeshDataBinaryCreateTranslation();
+        public new readonly static CellNavmeshParentBinaryCreateTranslation Instance = new CellNavmeshParentBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            ICellNavigationMeshData item,
+            ICellNavmeshParent item,
             MutagenFrame frame)
         {
-            ANavigationMeshDataBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
+            item.UnusedWorldspaceParent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }
@@ -1175,7 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class CellNavigationMeshDataBinaryTranslationMixIn
+    public static class CellNavmeshParentBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1184,43 +1126,45 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim
 {
-    internal partial class CellNavigationMeshDataBinaryOverlay :
-        ANavigationMeshDataBinaryOverlay,
-        ICellNavigationMeshDataGetter
+    internal partial class CellNavmeshParentBinaryOverlay :
+        ANavmeshParentBinaryOverlay,
+        ICellNavmeshParentGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => CellNavigationMeshData_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => CellNavigationMeshData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => CellNavmeshParent_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CellNavmeshParent_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => CellNavigationMeshDataCommon.Instance;
+        protected override object CommonInstance() => CellNavmeshParentCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => CellNavigationMeshDataSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => CellNavmeshParentSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => CellNavigationMeshDataCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => CellNavmeshParentCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => CellNavigationMeshDataBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => CellNavmeshParentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((CellNavigationMeshDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((CellNavmeshParentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
+        public IFormLinkGetter<IWorldspaceGetter> UnusedWorldspaceParent => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ICellGetter> Parent => new FormLink<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected CellNavigationMeshDataBinaryOverlay(
+        protected CellNavmeshParentBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1230,16 +1174,16 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static CellNavigationMeshDataBinaryOverlay CellNavigationMeshDataFactory(
+        public static CellNavmeshParentBinaryOverlay CellNavmeshParentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new CellNavigationMeshDataBinaryOverlay(
-                bytes: stream.RemainingMemory,
+            var ret = new CellNavmeshParentBinaryOverlay(
+                bytes: stream.RemainingMemory.Slice(0, 0x8),
                 package: package);
             int offset = stream.Position;
-            stream.Position += ret.DoorTrianglesEndingPos;
+            stream.Position += 0x8;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1247,12 +1191,12 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static CellNavigationMeshDataBinaryOverlay CellNavigationMeshDataFactory(
+        public static CellNavmeshParentBinaryOverlay CellNavmeshParentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return CellNavigationMeshDataFactory(
+            return CellNavmeshParentFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1264,7 +1208,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            CellNavigationMeshDataMixIn.ToString(
+            CellNavmeshParentMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1274,16 +1218,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ICellNavigationMeshDataGetter rhs) return false;
-            return ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not ICellNavmeshParentGetter rhs) return false;
+            return ((CellNavmeshParentCommon)((ICellNavmeshParentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(ICellNavigationMeshDataGetter? obj)
+        public bool Equals(ICellNavmeshParentGetter? obj)
         {
-            return ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CellNavmeshParentCommon)((ICellNavmeshParentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((CellNavmeshParentCommon)((ICellNavmeshParentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

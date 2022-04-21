@@ -1302,18 +1302,10 @@ namespace Mutagen.Bethesda.Skyrim
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "ANavigationMesh":
-                case "IANavigationMeshGetter":
-                case "IANavigationMesh":
-                case "IANavigationMeshInternal":
-                case "WorldspaceNavigationMesh":
-                case "IWorldspaceNavigationMeshGetter":
-                case "IWorldspaceNavigationMesh":
-                case "IWorldspaceNavigationMeshInternal":
-                case "CellNavigationMesh":
-                case "ICellNavigationMeshGetter":
-                case "ICellNavigationMesh":
-                case "ICellNavigationMeshInternal":
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
                     foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
@@ -1719,10 +1711,10 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                     yield break;
-                case "ANavigationMesh":
-                case "IANavigationMeshGetter":
-                case "IANavigationMesh":
-                case "IANavigationMeshInternal":
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
                     foreach (var subItem in obj.Items)
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))

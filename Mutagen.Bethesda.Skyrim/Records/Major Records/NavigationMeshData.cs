@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -9,9 +10,9 @@ using System.Collections.Generic;
 
 namespace Mutagen.Bethesda.Skyrim;
 
-partial class ANavigationMeshDataBinaryCreateTranslation
+partial class NavigationMeshDataBinaryCreateTranslation
 {
-    public static partial void FillBinaryCoverTrianglesLogicCustom(MutagenFrame frame, IANavigationMeshData item)
+    public static partial void FillBinaryCoverTrianglesLogicCustom(MutagenFrame frame, INavigationMeshData item)
     {
         var count = frame.ReadInt32();
         for (int i = 0; i < count; i++)
@@ -21,21 +22,40 @@ partial class ANavigationMeshDataBinaryCreateTranslation
         }
     }
 
-    public static partial void FillBinaryParentLogicCustom(MutagenFrame frame, IANavigationMeshData item)
+    public static partial void FillBinaryParentCustom(MutagenFrame frame, INavigationMeshData item)
     {
-        // Handled in Navigation Mesh parent
-        frame.Position += 8;
+        item.Parent = GetBinaryParent(frame);
     }
 
-    public static partial void FillBinaryNavmeshGridCustom(MutagenFrame frame, IANavigationMeshData item)
+    public static ANavmeshParent GetBinaryParent<TReader>(TReader frame)
+        where TReader : IMutagenReadStream
+    {
+        var formKey = FormKeyBinaryTranslation.Instance.Parse(frame);
+        if (formKey.IsNull)
+        {
+            var cell = new CellNavmeshParent();
+            cell.UnusedWorldspaceParent.SetTo(formKey);
+            cell.Parent.SetTo(FormKeyBinaryTranslation.Instance.Parse(frame));
+            return cell;
+        }
+        else
+        {
+            var wrld = new WorldspaceNavmeshParent();
+            wrld.Parent.SetTo(formKey);
+            wrld.Coordinates = P2Int16BinaryTranslation<TReader, MutagenWriter>.Instance.Parse(reader: frame);
+            return wrld;
+        }
+    }
+
+    public static partial void FillBinaryNavmeshGridCustom(MutagenFrame frame, INavigationMeshData item)
     {
         item.NavmeshGrid = frame.ReadRemainingBytes();
     }
 }
 
-partial class ANavigationMeshDataBinaryWriteTranslation
+partial class NavigationMeshDataBinaryWriteTranslation
 {
-    public static partial void WriteBinaryCoverTrianglesLogicCustom(MutagenWriter writer, IANavigationMeshDataGetter item)
+    public static partial void WriteBinaryCoverTrianglesLogicCustom(MutagenWriter writer, INavigationMeshDataGetter item)
     {
         var triangles = item.Triangles;
         var indices = new List<short>();
@@ -53,32 +73,18 @@ partial class ANavigationMeshDataBinaryWriteTranslation
         }
     }
 
-    public static partial void WriteBinaryParentLogicCustom(MutagenWriter writer, IANavigationMeshDataGetter item)
+    public static partial void WriteBinaryParentCustom(MutagenWriter writer, INavigationMeshDataGetter item)
     {
-        switch (item)
-        {
-            case ICellNavigationMeshDataGetter cell:
-                FormKeyBinaryTranslation.Instance.Write(writer, cell.UnusedWorldspaceParent.FormKey);
-                FormKeyBinaryTranslation.Instance.Write(writer, cell.Parent.FormKey);
-                break;
-            case IWorldspaceNavigationMeshDataGetter worldspace:
-                FormKeyBinaryTranslation.Instance.Write(writer, worldspace.Parent.FormKey);
-                var coords = worldspace.Coordinates;
-                writer.Write(coords.X);
-                writer.Write(coords.Y);
-                break;
-            default:
-                throw new NotImplementedException();
-        }
+        item.Parent.WriteToBinary(writer);
     }
 
-    public static partial void WriteBinaryNavmeshGridCustom(MutagenWriter writer, IANavigationMeshDataGetter item)
+    public static partial void WriteBinaryNavmeshGridCustom(MutagenWriter writer, INavigationMeshDataGetter item)
     {
         writer.Write(item.NavmeshGrid);
     }
 }
-    
-partial class ANavigationMeshDataBinaryOverlay
+
+partial class NavigationMeshDataBinaryOverlay
 {
     public uint NavmeshGridDivisor => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(CoverTrianglesLogicEndingPos));
 
@@ -98,21 +104,28 @@ partial class ANavigationMeshDataBinaryOverlay
 
     public ReadOnlyMemorySlice<byte> NavmeshGrid { get; private set; }
 
-    public IReadOnlyList<INavmeshTriangleGetter> Triangles => 
+    public IReadOnlyList<INavmeshTriangleGetter> Triangles =>
         new TrianglesOverlay(
-            _data, 
+            _data,
             _package,
-            trianglesStartPos: VerticesEndingPos, 
+            trianglesStartPos: VerticesEndingPos,
             coverIndicesStartPos: DoorTrianglesEndingPos);
 
-    protected void CustomLogic()
+    public partial IANavmeshParentGetter GetParentCustom(int location)
     {
-        VerticesEndingPos = checked((int)((BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(16)) * 12) + 20));
-        TrianglesEndingPos = VerticesEndingPos + checked((int)((BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(VerticesEndingPos)) * 16) + 4));
-        EdgeLinksEndingPos = TrianglesEndingPos + checked((int)((BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(TrianglesEndingPos)) * 10) + 4));
-        DoorTrianglesEndingPos = EdgeLinksEndingPos + checked((int)((BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(EdgeLinksEndingPos)) * 10) + 4));
+        return NavigationMeshDataBinaryCreateTranslation.GetBinaryParent(new OverlayStream(_data.Slice(8), _package));
+    }
+
+    partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
+    {
         CoverTrianglesLogicEndingPos = DoorTrianglesEndingPos + checked((int)((BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(DoorTrianglesEndingPos)) * 2) + 4));
         NavmeshGrid = _data.Slice(CoverTrianglesLogicEndingPos + 0x24);
+    }
+
+    public partial void CustomTrianglesEndPos()
+    {
+        var count = BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(VerticesEndingPos));
+        TrianglesEndingPos = VerticesEndingPos + checked((int)((count * 0x10) + 4));
     }
 
     class TrianglesOverlay : IReadOnlyList<INavmeshTriangleGetter>

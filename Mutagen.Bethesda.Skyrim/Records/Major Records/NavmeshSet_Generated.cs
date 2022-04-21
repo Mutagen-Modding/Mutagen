@@ -54,15 +54,15 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Navmeshes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> _Navmeshes = new ExtendedList<IFormLinkGetter<IANavigationMeshGetter>>();
-        public ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> Navmeshes
+        private ExtendedList<IFormLinkGetter<INavigationMeshGetter>> _Navmeshes = new ExtendedList<IFormLinkGetter<INavigationMeshGetter>>();
+        public ExtendedList<IFormLinkGetter<INavigationMeshGetter>> Navmeshes
         {
             get => this._Navmeshes;
             init => this._Navmeshes = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> INavmeshSetGetter.Navmeshes => _Navmeshes;
+        IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> INavmeshSetGetter.Navmeshes => _Navmeshes;
         #endregion
 
         #endregion
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INavmeshSet>,
         INavmeshSetGetter
     {
-        new ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> Navmeshes { get; }
+        new ExtendedList<IFormLinkGetter<INavigationMeshGetter>> Navmeshes { get; }
     }
 
     public partial interface INavmeshSetGetter :
@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => NavmeshSet_Registration.Instance;
-        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> Navmeshes { get; }
+        IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> Navmeshes { get; }
 
     }
 
@@ -967,7 +967,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Navmeshes.SetTo(
                         rhs.Navmeshes
-                        .Select(r => (IFormLinkGetter<IANavigationMeshGetter>)new FormLink<IANavigationMeshGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<INavigationMeshGetter>)new FormLink<INavigationMeshGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1075,11 +1075,11 @@ namespace Mutagen.Bethesda.Skyrim
             INavmeshSetGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Navmeshes,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IANavigationMeshGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<INavigationMeshGetter> subItem, TypedWriteParams? conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenFrame frame)
         {
             item.Navmeshes.SetTo(
-                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Navmeshes
-        public IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> Navmeshes => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<IANavigationMeshGetter>>(_data, _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> Navmeshes => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_data, _package, 4, countLength: 4, (s, p) => new FormLink<INavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int NavmeshesEndingPos;
         #endregion
         partial void CustomFactoryEnd(
