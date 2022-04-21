@@ -110,6 +110,7 @@ namespace Mutagen.Bethesda.Fallout4
             _LeveledItems_Object = new Fallout4Group<LeveledItem>(this);
             _Weather_Object = new Fallout4Group<Weather>(this);
             _Climates_Object = new Fallout4Group<Climate>(this);
+            _ShaderParticleGeometries_Object = new Fallout4Group<ShaderParticleGeometry>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -472,6 +473,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IClimateGetter> IFallout4ModGetter.Climates => _Climates_Object;
         #endregion
+        #region ShaderParticleGeometries
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<ShaderParticleGeometry> _ShaderParticleGeometries_Object;
+        public Fallout4Group<ShaderParticleGeometry> ShaderParticleGeometries => _ShaderParticleGeometries_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<IShaderParticleGeometryGetter> IFallout4ModGetter.ShaderParticleGeometries => _ShaderParticleGeometries_Object;
+        #endregion
 
         #region To String
 
@@ -561,6 +569,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.LeveledItems = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Weather = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Climates = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.ShaderParticleGeometries = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -614,7 +623,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Terminals,
                 TItem LeveledItems,
                 TItem Weather,
-                TItem Climates)
+                TItem Climates,
+                TItem ShaderParticleGeometries)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -667,6 +677,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.LeveledItems = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(LeveledItems, new Fallout4Group.Mask<TItem>(LeveledItems));
                 this.Weather = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Weather, new Fallout4Group.Mask<TItem>(Weather));
                 this.Climates = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Climates, new Fallout4Group.Mask<TItem>(Climates));
+                this.ShaderParticleGeometries = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ShaderParticleGeometries, new Fallout4Group.Mask<TItem>(ShaderParticleGeometries));
             }
 
             #pragma warning disable CS8618
@@ -729,6 +740,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? LeveledItems { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Weather { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Climates { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ShaderParticleGeometries { get; set; }
             #endregion
 
             #region Equals
@@ -792,6 +804,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.LeveledItems, rhs.LeveledItems)) return false;
                 if (!object.Equals(this.Weather, rhs.Weather)) return false;
                 if (!object.Equals(this.Climates, rhs.Climates)) return false;
+                if (!object.Equals(this.ShaderParticleGeometries, rhs.ShaderParticleGeometries)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -848,6 +861,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.LeveledItems);
                 hash.Add(this.Weather);
                 hash.Add(this.Climates);
+                hash.Add(this.ShaderParticleGeometries);
                 return hash.ToHashCode();
             }
 
@@ -1111,6 +1125,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Climates.Overall)) return false;
                     if (this.Climates.Specific != null && !this.Climates.Specific.All(eval)) return false;
                 }
+                if (ShaderParticleGeometries != null)
+                {
+                    if (!eval(this.ShaderParticleGeometries.Overall)) return false;
+                    if (this.ShaderParticleGeometries.Specific != null && !this.ShaderParticleGeometries.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1373,6 +1392,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Climates.Overall)) return true;
                     if (this.Climates.Specific != null && this.Climates.Specific.Any(eval)) return true;
                 }
+                if (ShaderParticleGeometries != null)
+                {
+                    if (eval(this.ShaderParticleGeometries.Overall)) return true;
+                    if (this.ShaderParticleGeometries.Specific != null && this.ShaderParticleGeometries.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1438,6 +1462,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.LeveledItems = this.LeveledItems == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.LeveledItems.Overall), this.LeveledItems.Specific?.Translate(eval));
                 obj.Weather = this.Weather == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Weather.Overall), this.Weather.Specific?.Translate(eval));
                 obj.Climates = this.Climates == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Climates.Overall), this.Climates.Specific?.Translate(eval));
+                obj.ShaderParticleGeometries = this.ShaderParticleGeometries == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ShaderParticleGeometries.Overall), this.ShaderParticleGeometries.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1664,6 +1689,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Climates?.ToString(fg);
                     }
+                    if (printMask?.ShaderParticleGeometries?.Overall ?? true)
+                    {
+                        ShaderParticleGeometries?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1740,6 +1769,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<LeveledItem.ErrorMask>?>? LeveledItems;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Weather.ErrorMask>?>? Weather;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Climate.ErrorMask>?>? Climates;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<ShaderParticleGeometry.ErrorMask>?>? ShaderParticleGeometries;
             #endregion
 
             #region IErrorMask
@@ -1850,6 +1880,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Weather;
                     case Fallout4Mod_FieldIndex.Climates:
                         return Climates;
+                    case Fallout4Mod_FieldIndex.ShaderParticleGeometries:
+                        return ShaderParticleGeometries;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2012,6 +2044,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.Climates:
                         this.Climates = new MaskItem<Exception?, Fallout4Group.ErrorMask<Climate.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.ShaderParticleGeometries:
+                        this.ShaderParticleGeometries = new MaskItem<Exception?, Fallout4Group.ErrorMask<ShaderParticleGeometry.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2176,6 +2211,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.Climates:
                         this.Climates = (MaskItem<Exception?, Fallout4Group.ErrorMask<Climate.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.ShaderParticleGeometries:
+                        this.ShaderParticleGeometries = (MaskItem<Exception?, Fallout4Group.ErrorMask<ShaderParticleGeometry.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2235,6 +2273,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (LeveledItems != null) return true;
                 if (Weather != null) return true;
                 if (Climates != null) return true;
+                if (ShaderParticleGeometries != null) return true;
                 return false;
             }
             #endregion
@@ -2320,6 +2359,7 @@ namespace Mutagen.Bethesda.Fallout4
                 LeveledItems?.ToString(fg);
                 Weather?.ToString(fg);
                 Climates?.ToString(fg);
+                ShaderParticleGeometries?.ToString(fg);
             }
             #endregion
 
@@ -2379,6 +2419,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.LeveledItems = this.LeveledItems.Combine(rhs.LeveledItems, (l, r) => l.Combine(r));
                 ret.Weather = this.Weather.Combine(rhs.Weather, (l, r) => l.Combine(r));
                 ret.Climates = this.Climates.Combine(rhs.Climates, (l, r) => l.Combine(r));
+                ret.ShaderParticleGeometries = this.ShaderParticleGeometries.Combine(rhs.ShaderParticleGeometries, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2453,6 +2494,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<LeveledItem.TranslationMask>? LeveledItems;
             public Fallout4Group.TranslationMask<Weather.TranslationMask>? Weather;
             public Fallout4Group.TranslationMask<Climate.TranslationMask>? Climates;
+            public Fallout4Group.TranslationMask<ShaderParticleGeometry.TranslationMask>? ShaderParticleGeometries;
             #endregion
 
             #region Ctors
@@ -2528,6 +2570,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((LeveledItems != null ? LeveledItems.OnOverall : DefaultOn, LeveledItems?.GetCrystal()));
                 ret.Add((Weather != null ? Weather.OnOverall : DefaultOn, Weather?.GetCrystal()));
                 ret.Add((Climates != null ? Climates.OnOverall : DefaultOn, Climates?.GetCrystal()));
+                ret.Add((ShaderParticleGeometries != null ? ShaderParticleGeometries.OnOverall : DefaultOn, ShaderParticleGeometries?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2619,6 +2662,7 @@ namespace Mutagen.Bethesda.Fallout4
             _LeveledItems_Object = new Fallout4Group<LeveledItem>(this);
             _Weather_Object = new Fallout4Group<Weather>(this);
             _Climates_Object = new Fallout4Group<Climate>(this);
+            _ShaderParticleGeometries_Object = new Fallout4Group<ShaderParticleGeometry>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -2825,6 +2869,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Climates.RecordCache.Set(rhsMod.Climates.RecordCache.Items);
             }
+            if (mask?.ShaderParticleGeometries ?? true)
+            {
+                this.ShaderParticleGeometries.RecordCache.Set(rhsMod.ShaderParticleGeometries.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -2885,6 +2933,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += LeveledItems.RecordCache.Count > 0 ? 1 : default(uint);
             count += Weather.RecordCache.Count > 0 ? 1 : default(uint);
             count += Climates.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ShaderParticleGeometries.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -3184,6 +3233,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<LeveledItem> LeveledItems { get; }
         new Fallout4Group<Weather> Weather { get; }
         new Fallout4Group<Climate> Climates { get; }
+        new Fallout4Group<ShaderParticleGeometry> ShaderParticleGeometries { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -3253,6 +3303,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<ILeveledItemGetter> LeveledItems { get; }
         IFallout4GroupGetter<IWeatherGetter> Weather { get; }
         IFallout4GroupGetter<IClimateGetter> Climates { get; }
+        IFallout4GroupGetter<IShaderParticleGeometryGetter> ShaderParticleGeometries { get; }
 
     }
 
@@ -3866,6 +3917,7 @@ namespace Mutagen.Bethesda.Fallout4
         LeveledItems = 48,
         Weather = 49,
         Climates = 50,
+        ShaderParticleGeometries = 51,
     }
     #endregion
 
@@ -3883,9 +3935,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 51;
+        public const ushort AdditionalFieldCount = 52;
 
-        public const ushort FieldCount = 51;
+        public const ushort FieldCount = 52;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -4004,6 +4056,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.LeveledItems.Clear();
             item.Weather.Clear();
             item.Climates.Clear();
+            item.ShaderParticleGeometries.Clear();
         }
         
         #region Mutagen
@@ -4139,6 +4192,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.LeveledItems.Remove(keys);
             obj.Weather.Remove(keys);
             obj.Climates.Remove(keys);
+            obj.ShaderParticleGeometries.Remove(keys);
         }
         
         public void Remove(
@@ -4602,6 +4656,14 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "ShaderParticleGeometry":
+                case "IShaderParticleGeometryGetter":
+                case "IShaderParticleGeometry":
+                case "IShaderParticleGeometryInternal":
+                    obj.ShaderParticleGeometries.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
@@ -4857,6 +4919,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.LeveledItems = MaskItemExt.Factory(item.LeveledItems.GetEqualsMask(rhs.LeveledItems, include), include);
             ret.Weather = MaskItemExt.Factory(item.Weather.GetEqualsMask(rhs.Weather, include), include);
             ret.Climates = MaskItemExt.Factory(item.Climates.GetEqualsMask(rhs.Climates, include), include);
+            ret.ShaderParticleGeometries = MaskItemExt.Factory(item.ShaderParticleGeometries.GetEqualsMask(rhs.ShaderParticleGeometries, include), include);
         }
         
         public string ToString(
@@ -5106,6 +5169,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.Climates?.Overall ?? true)
             {
                 item.Climates?.ToString(fg, "Climates");
+            }
+            if (printMask?.ShaderParticleGeometries?.Overall ?? true)
+            {
+                item.ShaderParticleGeometries?.ToString(fg, "ShaderParticleGeometries");
             }
         }
         
@@ -5524,6 +5591,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isClimatesEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ShaderParticleGeometries) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ShaderParticleGeometries, rhs.ShaderParticleGeometries, out var lhsShaderParticleGeometries, out var rhsShaderParticleGeometries, out var isShaderParticleGeometriesEqual))
+                {
+                    if (!object.Equals(lhsShaderParticleGeometries, rhsShaderParticleGeometries)) return false;
+                }
+                else if (!isShaderParticleGeometriesEqual) return false;
+            }
             return true;
         }
         
@@ -5581,6 +5656,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.LeveledItems);
             hash.Add(item.Weather);
             hash.Add(item.Climates);
+            hash.Add(item.ShaderParticleGeometries);
             return hash.ToHashCode();
         }
         
@@ -5849,6 +5925,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IClimate":
                 case "IClimateInternal":
                     return obj.Climates;
+                case "ShaderParticleGeometry":
+                case "IShaderParticleGeometryGetter":
+                case "IShaderParticleGeometry":
+                case "IShaderParticleGeometryInternal":
+                    return obj.ShaderParticleGeometries;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -5873,7 +5954,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[50];
+            Stream[] outputStreams = new Stream[51];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -5925,6 +6006,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.LeveledItems, 47, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Weather, 48, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Climates, 49, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ShaderParticleGeometries, 50, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -6358,6 +6440,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.Climates.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ShaderParticleGeometries.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -6846,6 +6932,15 @@ namespace Mutagen.Bethesda.Fallout4
                         yield return item;
                     }
                     yield break;
+                case "ShaderParticleGeometry":
+                case "IShaderParticleGeometryGetter":
+                case "IShaderParticleGeometry":
+                case "IShaderParticleGeometryInternal":
+                    foreach (var item in obj.ShaderParticleGeometries.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout4, obj, type, out var linkInterfaces))
                     {
@@ -7317,6 +7412,15 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.Climates,
                 groupGetter: (m) => m.Climates))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ShaderParticleGeometry, IShaderParticleGeometryGetter>(
+                srcGroup: obj.ShaderParticleGeometries,
+                type: typeof(IShaderParticleGeometryGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ShaderParticleGeometries,
+                groupGetter: (m) => m.ShaderParticleGeometries))
             {
                 yield return item;
             }
@@ -8047,6 +8151,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.Climates,
                         groupGetter: (m) => m.Climates))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ShaderParticleGeometry":
+                case "IShaderParticleGeometryGetter":
+                case "IShaderParticleGeometry":
+                case "IShaderParticleGeometryInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, ShaderParticleGeometry, IShaderParticleGeometryGetter>(
+                        srcGroup: obj.ShaderParticleGeometries,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ShaderParticleGeometries,
+                        groupGetter: (m) => m.ShaderParticleGeometries))
                     {
                         yield return item;
                     }
@@ -9111,6 +9229,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ShaderParticleGeometries) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.ShaderParticleGeometries);
+                try
+                {
+                    item.ShaderParticleGeometries.DeepCopyIn(
+                        rhs: rhs.ShaderParticleGeometries,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.ShaderParticleGeometries));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -9251,6 +9389,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool LeveledItems;
         public bool Weather;
         public bool Climates;
+        public bool ShaderParticleGeometries;
         public GroupMask()
         {
         }
@@ -9306,6 +9445,7 @@ namespace Mutagen.Bethesda.Fallout4
             LeveledItems = defaultValue;
             Weather = defaultValue;
             Climates = defaultValue;
+            ShaderParticleGeometries = defaultValue;
         }
     }
 
@@ -9883,6 +10023,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ClimatesItem).BinaryWriteTranslator).Write<IClimateGetter>(
                         item: ClimatesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ShaderParticleGeometries ?? true)
+            {
+                var ShaderParticleGeometriesItem = item.ShaderParticleGeometries;
+                if (ShaderParticleGeometriesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)ShaderParticleGeometriesItem).BinaryWriteTranslator).Write<IShaderParticleGeometryGetter>(
+                        item: ShaderParticleGeometriesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -10653,6 +10804,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.Climates;
                 }
+                case RecordTypeInts.SPGD:
+                {
+                    if (importMask?.ShaderParticleGeometries ?? true)
+                    {
+                        item.ShaderParticleGeometries.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.ShaderParticleGeometries;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -11064,6 +11229,11 @@ namespace Mutagen.Bethesda.Fallout4
         private IFallout4GroupGetter<IClimateGetter>? _Climates => _ClimatesLocations != null ? Fallout4GroupBinaryOverlay<IClimateGetter>.Fallout4GroupFactory(_data, _ClimatesLocations, _package) : default;
         public IFallout4GroupGetter<IClimateGetter> Climates => _Climates ?? new Fallout4Group<Climate>(this);
         #endregion
+        #region ShaderParticleGeometries
+        private List<RangeInt64>? _ShaderParticleGeometriesLocations;
+        private IFallout4GroupGetter<IShaderParticleGeometryGetter>? _ShaderParticleGeometries => _ShaderParticleGeometriesLocations != null ? Fallout4GroupBinaryOverlay<IShaderParticleGeometryGetter>.Fallout4GroupFactory(_data, _ShaderParticleGeometriesLocations, _package) : default;
+        public IFallout4GroupGetter<IShaderParticleGeometryGetter> ShaderParticleGeometries => _ShaderParticleGeometries ?? new Fallout4Group<ShaderParticleGeometry>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -11451,6 +11621,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _ClimatesLocations ??= new();
                     _ClimatesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Climates;
+                }
+                case RecordTypeInts.SPGD:
+                {
+                    _ShaderParticleGeometriesLocations ??= new();
+                    _ShaderParticleGeometriesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.ShaderParticleGeometries;
                 }
                 default:
                     return default(int?);
