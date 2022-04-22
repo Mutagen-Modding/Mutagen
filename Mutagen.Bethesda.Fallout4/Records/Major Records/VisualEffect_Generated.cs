@@ -14,6 +14,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -55,6 +56,32 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region EffectArt
+        private readonly IFormLink<IArtObjectGetter> _EffectArt = new FormLink<IArtObjectGetter>();
+        public IFormLink<IArtObjectGetter> EffectArt
+        {
+            get => _EffectArt;
+            set => _EffectArt.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IArtObjectGetter> IVisualEffectGetter.EffectArt => this.EffectArt;
+        #endregion
+        #region Shader
+        private readonly IFormLink<IEffectShaderGetter> _Shader = new FormLink<IEffectShaderGetter>();
+        public IFormLink<IEffectShaderGetter> Shader
+        {
+            get => _Shader;
+            set => _Shader.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IEffectShaderGetter> IVisualEffectGetter.Shader => this.Shader;
+        #endregion
+        #region Flags
+        public VisualEffect.Flag Flags { get; set; } = default;
+        #endregion
+        #region DATADataTypeState
+        public VisualEffect.DATADataType DATADataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -79,6 +106,10 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.EffectArt = initialValue;
+                this.Shader = initialValue;
+                this.Flags = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -87,7 +118,11 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem EffectArt,
+                TItem Shader,
+                TItem Flags,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -96,6 +131,10 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.EffectArt = EffectArt;
+                this.Shader = Shader;
+                this.Flags = Flags;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -104,6 +143,13 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem EffectArt;
+            public TItem Shader;
+            public TItem Flags;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -117,11 +163,19 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.EffectArt, rhs.EffectArt)) return false;
+                if (!object.Equals(this.Shader, rhs.Shader)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.EffectArt);
+                hash.Add(this.Shader);
+                hash.Add(this.Flags);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -132,6 +186,10 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.EffectArt)) return false;
+                if (!eval(this.Shader)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -140,6 +198,10 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.EffectArt)) return true;
+                if (eval(this.Shader)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -155,6 +217,10 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.EffectArt = eval(this.EffectArt);
+                obj.Shader = eval(this.Shader);
+                obj.Flags = eval(this.Flags);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -177,6 +243,22 @@ namespace Mutagen.Bethesda.Fallout4
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.EffectArt ?? true)
+                    {
+                        fg.AppendItem(EffectArt, "EffectArt");
+                    }
+                    if (printMask?.Shader ?? true)
+                    {
+                        fg.AppendItem(Shader, "Shader");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -188,12 +270,27 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? EffectArt;
+            public Exception? Shader;
+            public Exception? Flags;
+            public Exception? DATADataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 VisualEffect_FieldIndex enu = (VisualEffect_FieldIndex)index;
                 switch (enu)
                 {
+                    case VisualEffect_FieldIndex.EffectArt:
+                        return EffectArt;
+                    case VisualEffect_FieldIndex.Shader:
+                        return Shader;
+                    case VisualEffect_FieldIndex.Flags:
+                        return Flags;
+                    case VisualEffect_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -204,6 +301,18 @@ namespace Mutagen.Bethesda.Fallout4
                 VisualEffect_FieldIndex enu = (VisualEffect_FieldIndex)index;
                 switch (enu)
                 {
+                    case VisualEffect_FieldIndex.EffectArt:
+                        this.EffectArt = ex;
+                        break;
+                    case VisualEffect_FieldIndex.Shader:
+                        this.Shader = ex;
+                        break;
+                    case VisualEffect_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case VisualEffect_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -215,6 +324,18 @@ namespace Mutagen.Bethesda.Fallout4
                 VisualEffect_FieldIndex enu = (VisualEffect_FieldIndex)index;
                 switch (enu)
                 {
+                    case VisualEffect_FieldIndex.EffectArt:
+                        this.EffectArt = (Exception?)obj;
+                        break;
+                    case VisualEffect_FieldIndex.Shader:
+                        this.Shader = (Exception?)obj;
+                        break;
+                    case VisualEffect_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case VisualEffect_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -224,6 +345,10 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (EffectArt != null) return true;
+                if (Shader != null) return true;
+                if (Flags != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -259,6 +384,10 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                fg.AppendItem(EffectArt, "EffectArt");
+                fg.AppendItem(Shader, "Shader");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -267,6 +396,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.EffectArt = this.EffectArt.Combine(rhs.EffectArt);
+                ret.Shader = this.Shader.Combine(rhs.Shader);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -288,15 +421,35 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool EffectArt;
+            public bool Shader;
+            public bool Flags;
+            public bool DATADataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.EffectArt = defaultOn;
+                this.Shader = defaultOn;
+                this.Flags = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((EffectArt, null));
+                ret.Add((Shader, null));
+                ret.Add((Flags, null));
+                ret.Add((DATADataTypeState, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -308,6 +461,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = VisualEffect_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => VisualEffectCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => VisualEffectSetterCommon.Instance.RemapLinks(this, mapping);
         public VisualEffect(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -350,6 +505,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IVisualEffect);
 
+        [Flags]
+        public enum DATADataType
+        {
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -430,9 +589,14 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IVisualEffect :
         IFallout4MajorRecordInternal,
+        IFormLinkContainer,
         ILoquiObjectSetter<IVisualEffectInternal>,
         IVisualEffectGetter
     {
+        new IFormLink<IArtObjectGetter> EffectArt { get; set; }
+        new IFormLink<IEffectShaderGetter> Shader { get; set; }
+        new VisualEffect.Flag Flags { get; set; }
+        new VisualEffect.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IVisualEffectInternal :
@@ -446,10 +610,15 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IVisualEffectGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IVisualEffectGetter>,
         IMapsToGetter<IVisualEffectGetter>
     {
         static new ILoquiRegistration StaticRegistration => VisualEffect_Registration.Instance;
+        IFormLinkGetter<IArtObjectGetter> EffectArt { get; }
+        IFormLinkGetter<IEffectShaderGetter> Shader { get; }
+        VisualEffect.Flag Flags { get; }
+        VisualEffect.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -614,6 +783,10 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        EffectArt = 6,
+        Shader = 7,
+        Flags = 8,
+        DATADataTypeState = 9,
     }
     #endregion
 
@@ -631,9 +804,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "a392cd2c-a76b-42c0-ac4f-02dab056aac8";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(VisualEffect.Mask<>);
 
@@ -663,8 +836,11 @@ namespace Mutagen.Bethesda.Fallout4
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.RFCT);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.RFCT);
+            var all = RecordCollection.Factory(
+                RecordTypes.RFCT,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(VisualEffectBinaryWriteTranslation);
         #region Interface
@@ -708,6 +884,10 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IVisualEffectInternal item)
         {
             ClearPartial();
+            item.EffectArt.Clear();
+            item.Shader.Clear();
+            item.Flags = default;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -725,6 +905,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(IVisualEffect obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.EffectArt.Relink(mapping);
+            obj.Shader.Relink(mapping);
         }
         
         #endregion
@@ -793,6 +975,10 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.EffectArt = item.EffectArt.Equals(rhs.EffectArt);
+            ret.Shader = item.Shader.Equals(rhs.Shader);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -844,6 +1030,22 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.EffectArt ?? true)
+            {
+                fg.AppendItem(item.EffectArt.FormKey, "EffectArt");
+            }
+            if (printMask?.Shader ?? true)
+            {
+                fg.AppendItem(item.Shader.FormKey, "Shader");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public static VisualEffect_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -892,6 +1094,22 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)VisualEffect_FieldIndex.EffectArt) ?? true))
+            {
+                if (!lhs.EffectArt.Equals(rhs.EffectArt)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)VisualEffect_FieldIndex.Shader) ?? true))
+            {
+                if (!lhs.Shader.Equals(rhs.Shader)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)VisualEffect_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)VisualEffect_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
@@ -920,6 +1138,10 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IVisualEffectGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.EffectArt);
+            hash.Add(item.Shader);
+            hash.Add(item.Flags);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -949,6 +1171,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
+            yield return FormLinkInformation.Factory(obj.EffectArt);
+            yield return FormLinkInformation.Factory(obj.Shader);
             yield break;
         }
         
@@ -1023,6 +1247,22 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.EffectArt) ?? true))
+            {
+                item.EffectArt.SetTo(rhs.EffectArt.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.Shader) ?? true))
+            {
+                item.Shader.SetTo(rhs.Shader.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1171,6 +1411,39 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new readonly static VisualEffectBinaryWriteTranslation Instance = new VisualEffectBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IVisualEffectGetter item,
+            MutagenWriter writer)
+        {
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IVisualEffectGetter item,
+            MutagenWriter writer,
+            TypedWriteParams? translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.EffectArt);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Shader);
+                EnumBinaryTranslation<VisualEffect.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IVisualEffectGetter item,
@@ -1182,13 +1455,15 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
                         item: item,
                         writer: writer,
                         translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
                 }
                 catch (Exception ex)
                 {
@@ -1246,6 +1521,40 @@ namespace Mutagen.Bethesda.Fallout4
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IVisualEffectInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams? translationParams = null)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.EffectArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Shader.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Flags = EnumBinaryTranslation<VisualEffect.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    return (int)VisualEffect_FieldIndex.Flags;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1278,6 +1587,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => VisualEffectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => VisualEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1292,6 +1602,23 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IVisualEffect);
 
 
+        private RangeInt32? _DATALocation;
+        public VisualEffect.DATADataType DATADataTypeState { get; private set; }
+        #region EffectArt
+        private int _EffectArtLocation => _DATALocation!.Value.Min;
+        private bool _EffectArt_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IArtObjectGetter> EffectArt => _EffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        #endregion
+        #region Shader
+        private int _ShaderLocation => _DATALocation!.Value.Min + 0x4;
+        private bool _Shader_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IEffectShaderGetter> Shader => _Shader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0x8;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public VisualEffect.Flag Flags => _Flags_IsSet ? (VisualEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1346,6 +1673,33 @@ namespace Mutagen.Bethesda.Fallout4
                 parseParams: parseParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams? parseParams = null)
+        {
+            type = parseParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)VisualEffect_FieldIndex.Flags;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void ToString(
