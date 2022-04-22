@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;

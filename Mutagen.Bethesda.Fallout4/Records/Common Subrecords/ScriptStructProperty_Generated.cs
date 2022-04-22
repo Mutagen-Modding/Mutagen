@@ -1232,7 +1232,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region Members
-        public IReadOnlyList<IScriptEntryStructGetter> Members => BinaryOverlayList.FactoryByLazyParse<ScriptEntryStructBinaryOverlay>(_data, _package, countLength: 4, (s, p) => ScriptEntryStructBinaryOverlay.ScriptEntryStructFactory(s, p));
+        public IReadOnlyList<IScriptEntryStructGetter> Members => BinaryOverlayList.FactoryByCountLength<ScriptEntryStructBinaryOverlay>(_data, _package, 0, countLength: 4, (s, p) => ScriptEntryStructBinaryOverlay.ScriptEntryStructFactory(s, p));
         protected int MembersEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1260,6 +1260,7 @@ namespace Mutagen.Bethesda.Fallout4
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
+            ret.MembersEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._data) * 0 + 4;
             stream.Position += ret.MembersEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

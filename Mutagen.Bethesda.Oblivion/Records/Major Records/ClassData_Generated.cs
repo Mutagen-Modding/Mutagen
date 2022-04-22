@@ -1157,12 +1157,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
-            ret.PrimaryAttributes = item.PrimaryAttributes.SpanEqualsHelper(
+            ret.PrimaryAttributes = EqualsMaskHelper.SpanEqualsHelper<ActorValue>(
+                item.PrimaryAttributes,
                 rhs.PrimaryAttributes,
                 (l, r) => l == r,
                 include);
             ret.Specialization = item.Specialization == rhs.Specialization;
-            ret.SecondaryAttributes = item.SecondaryAttributes.SpanEqualsHelper(
+            ret.SecondaryAttributes = EqualsMaskHelper.SpanEqualsHelper<ActorValue>(
+                item.SecondaryAttributes,
                 rhs.SecondaryAttributes,
                 (l, r) => l == r,
                 include);
@@ -1363,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.PrimaryAttributes) ?? true))
             {
-                item.PrimaryAttributes.SetTo(rhs.PrimaryAttributes);
+                rhs.PrimaryAttributes.Span.CopyTo(item.PrimaryAttributes.AsSpan());
             }
             if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.Specialization) ?? true))
             {
@@ -1371,7 +1373,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.SecondaryAttributes) ?? true))
             {
-                item.SecondaryAttributes.SetTo(rhs.SecondaryAttributes);
+                rhs.SecondaryAttributes.Span.CopyTo(item.SecondaryAttributes.AsSpan());
             }
             if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.Flags) ?? true))
             {

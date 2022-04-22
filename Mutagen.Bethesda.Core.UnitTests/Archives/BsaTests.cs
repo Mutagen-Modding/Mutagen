@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Mutagen.Bethesda.Archives;
@@ -11,8 +12,8 @@ namespace Mutagen.Bethesda.UnitTests.Archives;
 
 public class BsaTests
 {
-    public static FilePath TestBsa = new FilePath("../../../Archives/test.bsa");
-        
+    public static FilePath TestBsa = new(Path.Combine("..", "..", "..", "Archives", "test.bsa"));
+
     [Fact]
     public void TryGetFolder_CaseInsensitive()
     {

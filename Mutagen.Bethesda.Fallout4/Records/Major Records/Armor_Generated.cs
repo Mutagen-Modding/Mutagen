@@ -4564,42 +4564,42 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullableGetter<IInstanceNamingRuleGetter> InstanceNaming => _InstanceNamingLocation.HasValue ? new FormLinkNullable<IInstanceNamingRuleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InstanceNamingLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IInstanceNamingRuleGetter>.Null;
         #endregion
         public IReadOnlyList<IArmorAddonModelGetter> Armatures { get; private set; } = ListExt.Empty<ArmorAddonModelBinaryOverlay>();
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Armor.DATADataType DATADataTypeState { get; private set; }
         #region Value
-        private int _ValueLocation => _DATALocation!.Value;
+        private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
         public Int32 Value => _Value_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
         #endregion
         #region Weight
-        private int _WeightLocation => _DATALocation!.Value + 0x4;
+        private int _WeightLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Weight_IsSet => _DATALocation.HasValue;
         public Single Weight => _Weight_IsSet ? _data.Slice(_WeightLocation, 4).Float() : default;
         #endregion
         #region Health
-        private int _HealthLocation => _DATALocation!.Value + 0x8;
+        private int _HealthLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Health_IsSet => _DATALocation.HasValue;
         public UInt32 Health => _Health_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_HealthLocation, 4)) : default;
         #endregion
-        private int? _FNAMLocation;
+        private RangeInt32? _FNAMLocation;
         public Armor.FNAMDataType FNAMDataTypeState { get; private set; }
         #region ArmorRating
-        private int _ArmorRatingLocation => _FNAMLocation!.Value;
+        private int _ArmorRatingLocation => _FNAMLocation!.Value.Min;
         private bool _ArmorRating_IsSet => _FNAMLocation.HasValue;
         public UInt16 ArmorRating => _ArmorRating_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_ArmorRatingLocation, 2)) : default;
         #endregion
         #region BaseAddonIndex
-        private int _BaseAddonIndexLocation => _FNAMLocation!.Value + 0x2;
+        private int _BaseAddonIndexLocation => _FNAMLocation!.Value.Min + 0x2;
         private bool _BaseAddonIndex_IsSet => _FNAMLocation.HasValue;
         public UInt16 BaseAddonIndex => _BaseAddonIndex_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_BaseAddonIndexLocation, 2)) : default;
         #endregion
         #region StaggerRating
-        private int _StaggerRatingLocation => _FNAMLocation!.Value + 0x4;
+        private int _StaggerRatingLocation => _FNAMLocation!.Value.Min + 0x4;
         private bool _StaggerRating_IsSet => _FNAMLocation.HasValue;
         public UInt16 StaggerRating => _StaggerRating_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_StaggerRatingLocation, 2)) : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _FNAMLocation!.Value + 0x6;
+        private int _UnknownLocation => _FNAMLocation!.Value.Min + 0x6;
         private bool _Unknown_IsSet => _FNAMLocation.HasValue;
         public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
         #endregion
@@ -4798,12 +4798,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Armor_FieldIndex.Health;
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    _FNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _FNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Armor_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.DAMA:

@@ -1,15 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace Mutagen.Bethesda.Archives.Ba2;
 
-namespace Mutagen.Bethesda.Archives.Ba2
+enum Ba2EntryType
 {
-    enum Ba2EntryType
-    {
-        GNRL,
-        DX10,
-        GNMF
-    }
+    GNRL,
+    DX10,
+    GNMF
 }

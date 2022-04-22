@@ -1354,15 +1354,15 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _ObjectLocation;
         public IFormLinkGetter<ISkyrimMajorRecordGetter> Object => _ObjectLocation.HasValue ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectLocation.Value, _package.MetaData.Constants)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
         #endregion
-        private int? _ALCALocation;
+        private RangeInt32? _ALCALocation;
         public CreateReferenceToObject.ALCADataType ALCADataTypeState { get; private set; }
         #region AliasIndex
-        private int _AliasIndexLocation => _ALCALocation!.Value;
+        private int _AliasIndexLocation => _ALCALocation!.Value.Min;
         private bool _AliasIndex_IsSet => _ALCALocation.HasValue;
         public Int16 AliasIndex => _AliasIndex_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_AliasIndexLocation, 2)) : default;
         #endregion
         #region Create
-        private int _CreateLocation => _ALCALocation!.Value + 0x2;
+        private int _CreateLocation => _ALCALocation!.Value.Min + 0x2;
         private bool _Create_IsSet => _ALCALocation.HasValue;
         public CreateReferenceToObject.CreateEnum Create => _Create_IsSet ? (CreateReferenceToObject.CreateEnum)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_CreateLocation, 0x2)) : default;
         #endregion
@@ -1435,7 +1435,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ALCA:
                 {
-                    _ALCALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _ALCALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)CreateReferenceToObject_FieldIndex.Create;
                 }
                 case RecordTypeInts.ALCL:

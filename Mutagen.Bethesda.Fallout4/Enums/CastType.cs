@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Mutagen.Bethesda.Fallout4;
 
-namespace Mutagen.Bethesda.Fallout4
+public enum CastType
 {
-    public enum CastType
-    {
-        ConstantEffect = 0,
-        FireAndForget = 1,
-        Concentration = 2,
-        Scroll = 3,
-    }
+    ConstantEffect = 0,
+    FireAndForget = 1,
+    Concentration = 2,
+    Scroll = 3,
 }

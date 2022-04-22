@@ -1,16 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+public partial class Key
 {
-    public partial class Key
+    [Flags]
+    public enum MajorFlag
     {
-        [Flags]
-        public enum MajorFlag
-        {
-            NonPlayable = 0x0000_0004
-        }
+        NonPlayable = 0x0000_0004
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace Mutagen.Bethesda.Plugins.Binary.Parameters
+﻿namespace Mutagen.Bethesda.Plugins.Binary.Parameters;
+
+public class MastersListOrderingEnumOption : AMastersListOrderingOption
 {
-    public class MastersListOrderingEnumOption : AMastersListOrderingOption
-    {
-        public MastersListOrderingOption Option { get; set; } = MastersListOrderingOption.MastersFirst;
-    }
+    public MastersListOrderingOption Option { get; set; } = MastersListOrderingOption.MastersFirst;
 }

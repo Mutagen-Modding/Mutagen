@@ -160,20 +160,10 @@ partial class CellBinaryCreateTranslation
         var nextHeader = majorMeta.RecordType;
         if (nextHeader.Equals(RecordTypes.NAVM))
         {
-            if (frame.MetaData.InWorldspace)
-            {
-                obj.NavigationMeshes.Add(
-                    WorldspaceNavigationMesh.CreateFromBinary(
-                        frame.SpawnWithLength(majorMeta.TotalLength),
-                        translationParams: null));
-            }
-            else
-            {
-                obj.NavigationMeshes.Add(
-                    CellNavigationMesh.CreateFromBinary(
-                        frame.SpawnWithLength(majorMeta.TotalLength),
-                        translationParams: null));
-            }
+            obj.NavigationMeshes.Add(
+                NavigationMesh.CreateFromBinary(
+                    frame.SpawnWithLength(majorMeta.TotalLength),
+                    translationParams: null));
             return true;
         }
         else if (nextHeader.Equals(RecordTypes.LAND))
@@ -344,7 +334,7 @@ partial class CellBinaryOverlay
 
     private ReadOnlyMemorySlice<byte>? _grupData;
 
-    public IReadOnlyList<IANavigationMeshGetter> NavigationMeshes { get; private set; } = ListExt.Empty<IANavigationMeshGetter>();
+    public IReadOnlyList<INavigationMeshGetter> NavigationMeshes { get; private set; } = ListExt.Empty<INavigationMeshGetter>();
 
     public int UnknownGroupData => _grupData.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData.Value.Slice(20)) : default;
 
@@ -528,30 +518,15 @@ partial class CellBinaryOverlay
                             switch (recType.TypeInt)
                             {
                                 case RecordTypeInts.NAVM:
-                                    if (this.InsideWorldspace)
-                                    {
-                                        this.NavigationMeshes = BinaryOverlayList.FactoryByArray<IWorldspaceNavigationMeshGetter>(
-                                            mem: stream.RemainingMemory,
-                                            package: _package,
-                                            getter: (s, p) => WorldspaceNavigationMeshBinaryOverlay.WorldspaceNavigationMeshFactory(s, p),
-                                            locs: ParseRecordLocations(
-                                                stream: stream,
-                                                constants: _package.MetaData.Constants.MajorConstants,
-                                                trigger: recType,
-                                                skipHeader: false));
-                                    }
-                                    else
-                                    {
-                                        this.NavigationMeshes = BinaryOverlayList.FactoryByArray<ICellNavigationMeshGetter>(
-                                            mem: stream.RemainingMemory,
-                                            package: _package,
-                                            getter: (s, p) => CellNavigationMeshBinaryOverlay.CellNavigationMeshFactory(s, p),
-                                            locs: ParseRecordLocations(
-                                                stream: stream,
-                                                constants: _package.MetaData.Constants.MajorConstants,
-                                                trigger: recType,
-                                                skipHeader: false));
-                                    }
+                                    this.NavigationMeshes = BinaryOverlayList.FactoryByArray<INavigationMeshGetter>(
+                                        mem: stream.RemainingMemory,
+                                        package: _package,
+                                        getter: (s, p) => NavigationMeshBinaryOverlay.NavigationMeshFactory(s, p),
+                                        locs: ParseRecordLocations(
+                                            stream: stream,
+                                            constants: _package.MetaData.Constants.MajorConstants,
+                                            trigger: recType,
+                                            skipHeader: false));
                                     break;
                                 case RecordTypeInts.LAND:
                                     _landscapeLocation = checked((int)stream.Position);

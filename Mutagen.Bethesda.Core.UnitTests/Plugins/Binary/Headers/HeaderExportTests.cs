@@ -2,7 +2,6 @@ using System;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Xunit;
 using RecordTypes = Mutagen.Bethesda.Plugins.Records.Internals.RecordTypes;
 using MemoryStream = System.IO.MemoryStream;

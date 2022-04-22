@@ -1726,30 +1726,30 @@ namespace Mutagen.Bethesda.Fallout4
 
         public Transform.MajorFlag MajorFlags => (Transform.MajorFlag)this.MajorRecordFlagsRaw;
 
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Transform.DATADataType DATADataTypeState { get; private set; }
         #region Position
-        private int _PositionLocation => _DATALocation!.Value;
+        private int _PositionLocation => _DATALocation!.Value.Min;
         private bool _Position_IsSet => _DATALocation.HasValue;
         public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_PositionLocation, 12)) : default;
         #endregion
         #region Rotation
-        private int _RotationLocation => _DATALocation!.Value + 0xC;
+        private int _RotationLocation => _DATALocation!.Value.Min + 0xC;
         private bool _Rotation_IsSet => _DATALocation.HasValue;
         public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_RotationLocation, 12)) : default;
         #endregion
         #region Scale
-        private int _ScaleLocation => _DATALocation!.Value + 0x18;
+        private int _ScaleLocation => _DATALocation!.Value.Min + 0x18;
         private bool _Scale_IsSet => _DATALocation.HasValue;
         public Single Scale => _Scale_IsSet ? _data.Slice(_ScaleLocation, 4).Float() : default;
         #endregion
         #region ZoomMin
-        private int _ZoomMinLocation => _DATALocation!.Value + 0x1C;
+        private int _ZoomMinLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _ZoomMin_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Transform.DATADataType.Break0);
         public Single ZoomMin => _ZoomMin_IsSet ? _data.Slice(_ZoomMinLocation, 4).Float() : default;
         #endregion
         #region ZoomMax
-        private int _ZoomMaxLocation => _DATALocation!.Value + 0x20;
+        private int _ZoomMaxLocation => _DATALocation!.Value.Min + 0x20;
         private bool _ZoomMax_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Transform.DATADataType.Break0);
         public Single ZoomMax => _ZoomMax_IsSet ? _data.Slice(_ZoomMaxLocation, 4).Float() : default;
         #endregion
@@ -1821,7 +1821,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x1C)
                     {

@@ -1,18 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Oblivion;
+
+public partial class ScriptEffect
 {
-    public partial class ScriptEffect
+    [Flags]
+    public enum Flag
     {
-        [Flags]
-        public enum Flag
-        {
-            Hostile = 1
-        }
+        Hostile = 1
     }
 }

@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Mutagen.Bethesda.Translations.Binary;
 
-namespace Mutagen.Bethesda.Translations.Binary
+public enum FloatIntegerType
 {
-    public enum FloatIntegerType
-    {
-        UInt,
-        UShort,
-        Byte
-    }
+    UInt,
+    UShort,
+    Byte
 }

@@ -2101,65 +2101,65 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IReverbParameters);
 
 
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public ReverbParameters.DATADataType DATADataTypeState { get; private set; }
         #region DecayMilliseconds
-        private int _DecayMillisecondsLocation => _DATALocation!.Value;
+        private int _DecayMillisecondsLocation => _DATALocation!.Value.Min;
         private bool _DecayMilliseconds_IsSet => _DATALocation.HasValue;
         public UInt16 DecayMilliseconds => _DecayMilliseconds_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_DecayMillisecondsLocation, 2)) : default;
         #endregion
         #region HfReferenceHertz
-        private int _HfReferenceHertzLocation => _DATALocation!.Value + 0x2;
+        private int _HfReferenceHertzLocation => _DATALocation!.Value.Min + 0x2;
         private bool _HfReferenceHertz_IsSet => _DATALocation.HasValue;
         public UInt16 HfReferenceHertz => _HfReferenceHertz_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_HfReferenceHertzLocation, 2)) : default;
         #endregion
         #region RoomFilter
-        private int _RoomFilterLocation => _DATALocation!.Value + 0x4;
+        private int _RoomFilterLocation => _DATALocation!.Value.Min + 0x4;
         private bool _RoomFilter_IsSet => _DATALocation.HasValue;
         public SByte RoomFilter => _RoomFilter_IsSet ? (sbyte)_data.Slice(_RoomFilterLocation, 1)[0] : default;
         #endregion
         #region RoomHfFilter
-        private int _RoomHfFilterLocation => _DATALocation!.Value + 0x5;
+        private int _RoomHfFilterLocation => _DATALocation!.Value.Min + 0x5;
         private bool _RoomHfFilter_IsSet => _DATALocation.HasValue;
         public SByte RoomHfFilter => _RoomHfFilter_IsSet ? (sbyte)_data.Slice(_RoomHfFilterLocation, 1)[0] : default;
         #endregion
         #region Reflections
-        private int _ReflectionsLocation => _DATALocation!.Value + 0x6;
+        private int _ReflectionsLocation => _DATALocation!.Value.Min + 0x6;
         private bool _Reflections_IsSet => _DATALocation.HasValue;
         public SByte Reflections => _Reflections_IsSet ? (sbyte)_data.Slice(_ReflectionsLocation, 1)[0] : default;
         #endregion
         #region ReverbAmp
-        private int _ReverbAmpLocation => _DATALocation!.Value + 0x7;
+        private int _ReverbAmpLocation => _DATALocation!.Value.Min + 0x7;
         private bool _ReverbAmp_IsSet => _DATALocation.HasValue;
         public SByte ReverbAmp => _ReverbAmp_IsSet ? (sbyte)_data.Slice(_ReverbAmpLocation, 1)[0] : default;
         #endregion
         #region DecayHfRatio
-        private int _DecayHfRatioLocation => _DATALocation!.Value + 0x8;
+        private int _DecayHfRatioLocation => _DATALocation!.Value.Min + 0x8;
         private bool _DecayHfRatio_IsSet => _DATALocation.HasValue;
         public Single DecayHfRatio => _DecayHfRatio_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(_DecayHfRatioLocation, 1), FloatIntegerType.Byte, 0.01) : default;
         #endregion
         #region ReflectDelayMS
-        private int _ReflectDelayMSLocation => _DATALocation!.Value + 0x9;
+        private int _ReflectDelayMSLocation => _DATALocation!.Value.Min + 0x9;
         private bool _ReflectDelayMS_IsSet => _DATALocation.HasValue;
         public Byte ReflectDelayMS => _ReflectDelayMS_IsSet ? _data.Span[_ReflectDelayMSLocation] : default;
         #endregion
         #region ReverbDelayMS
-        private int _ReverbDelayMSLocation => _DATALocation!.Value + 0xA;
+        private int _ReverbDelayMSLocation => _DATALocation!.Value.Min + 0xA;
         private bool _ReverbDelayMS_IsSet => _DATALocation.HasValue;
         public Byte ReverbDelayMS => _ReverbDelayMS_IsSet ? _data.Span[_ReverbDelayMSLocation] : default;
         #endregion
         #region DiffusionPercent
-        private int _DiffusionPercentLocation => _DATALocation!.Value + 0xB;
+        private int _DiffusionPercentLocation => _DATALocation!.Value.Min + 0xB;
         private bool _DiffusionPercent_IsSet => _DATALocation.HasValue;
         public Byte DiffusionPercent => _DiffusionPercent_IsSet ? _data.Span[_DiffusionPercentLocation] : default;
         #endregion
         #region DensityPercent
-        private int _DensityPercentLocation => _DATALocation!.Value + 0xC;
+        private int _DensityPercentLocation => _DATALocation!.Value.Min + 0xC;
         private bool _DensityPercent_IsSet => _DATALocation.HasValue;
         public Byte DensityPercent => _DensityPercent_IsSet ? _data.Span[_DensityPercentLocation] : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _DATALocation!.Value + 0xD;
+        private int _UnknownLocation => _DATALocation!.Value.Min + 0xD;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
         public Byte Unknown => _Unknown_IsSet ? _data.Span[_UnknownLocation] : default;
         #endregion
@@ -2235,7 +2235,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)ReverbParameters_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.ANAM:

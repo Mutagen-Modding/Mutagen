@@ -1,59 +1,51 @@
 using Noggog;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using GameFinder;
-using GameFinder.StoreHandlers.Steam;
-using GameFinder.StoreHandlers.GOG;
-using Microsoft.Win32;
 using Mutagen.Bethesda.Installs.DI;
 
-namespace Mutagen.Bethesda.Installs
+namespace Mutagen.Bethesda.Installs;
+
+/// <summary>
+/// A static class that locates game installations
+/// </summary>
+public static class GameLocations
 {
-    /// <summary>
-    /// A static class that locates game installations
-    /// </summary>
-    public static class GameLocations
+    private static readonly GameLocator Locator = new();
+        
+    /// <inheritdoc cref="GameLocator" />
+    public static IEnumerable<DirectoryPath> GetGameFolders(GameRelease release)
     {
-        private static readonly GameLocator Locator = new();
+        return Locator.GetGameDirectories(release);
+    }
+
+    /// <inheritdoc cref="GameLocator" />
+    public static bool TryGetGameFolderFromRegistry(GameRelease release,
+        [MaybeNullWhen(false)] out DirectoryPath path)
+    {
+        return Locator.TryGetGameDirectoryFromRegistry(release, out path);
+    }
         
-        /// <inheritdoc cref="GameLocator" />
-        public static IEnumerable<DirectoryPath> GetGameFolders(GameRelease release)
-        {
-            return Locator.GetGameDirectories(release);
-        }
+    /// <inheritdoc cref="GameLocator" />
+    public static bool TryGetGameFolder(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
+    {
+        return Locator.TryGetGameDirectory(release, out path);
+    }
 
-        /// <inheritdoc cref="GameLocator" />
-        public static bool TryGetGameFolderFromRegistry(GameRelease release,
-            [MaybeNullWhen(false)] out DirectoryPath path)
-        {
-            return Locator.TryGetGameDirectoryFromRegistry(release, out path);
-        }
-        
-        /// <inheritdoc cref="GameLocator" />
-        public static bool TryGetGameFolder(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
-        {
-            return Locator.TryGetGameDirectory(release, out path);
-        }
+    /// <inheritdoc cref="GameLocator" />
+    public static DirectoryPath GetGameFolder(GameRelease release)
+    {
+        return Locator.GetGameDirectory(release);
+    }
 
-        /// <inheritdoc cref="GameLocator" />
-        public static DirectoryPath GetGameFolder(GameRelease release)
-        {
-            return Locator.GetGameDirectory(release);
-        }
+    /// <inheritdoc cref="GameLocator" />
+    public static bool TryGetDataFolder(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
+    {
+        return Locator.TryGetDataDirectory(release, out path);
+    }
 
-        /// <inheritdoc cref="GameLocator" />
-        public static bool TryGetDataFolder(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
-        {
-            return Locator.TryGetDataDirectory(release, out path);
-        }
-
-        /// <inheritdoc cref="GameLocator" />
-        public static DirectoryPath GetDataFolder(GameRelease release)
-        {
-            return Locator.GetDataDirectory(release);
-        }
+    /// <inheritdoc cref="GameLocator" />
+    public static DirectoryPath GetDataFolder(GameRelease release)
+    {
+        return Locator.GetDataDirectory(release);
     }
 }

@@ -1,23 +1,22 @@
-namespace Mutagen.Bethesda.Plugins.Internals
+namespace Mutagen.Bethesda.Plugins.Internals;
+
+public class RecordTriggerSpecs
 {
-    public class RecordTriggerSpecs
+    public IRecordCollection AllRecordTypes { get; }
+    public IRecordCollection TriggeringRecordTypes { get; }
+    public bool AllAreTriggers { get; }
+
+    public RecordTriggerSpecs(IRecordCollection allRecordTypes, IRecordCollection triggeringRecordTypes)
     {
-        public IRecordCollection AllRecordTypes { get; }
-        public IRecordCollection TriggeringRecordTypes { get; }
-        public bool AllAreTriggers { get; }
+        AllRecordTypes = allRecordTypes;
+        TriggeringRecordTypes = triggeringRecordTypes;
+        AllAreTriggers = false;
+    }
 
-        public RecordTriggerSpecs(IRecordCollection allRecordTypes, IRecordCollection triggeringRecordTypes)
-        {
-            AllRecordTypes = allRecordTypes;
-            TriggeringRecordTypes = triggeringRecordTypes;
-            AllAreTriggers = false;
-        }
-
-        public RecordTriggerSpecs(IRecordCollection allRecordTypes)
-        {
-            AllRecordTypes = allRecordTypes;
-            TriggeringRecordTypes = allRecordTypes;
-            AllAreTriggers = true;
-        }
+    public RecordTriggerSpecs(IRecordCollection allRecordTypes)
+    {
+        AllRecordTypes = allRecordTypes;
+        TriggeringRecordTypes = allRecordTypes;
+        AllAreTriggers = true;
     }
 }

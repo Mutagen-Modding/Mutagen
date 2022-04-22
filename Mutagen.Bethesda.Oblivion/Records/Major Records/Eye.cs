@@ -1,18 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Oblivion;
+
+public partial class Eye
 {
-    public partial class Eye
+    [Flags]
+    public enum Flag
     {
-        [Flags]
-        public enum Flag
-        {
-            Playable = 0x1
-        }
+        Playable = 0x1
     }
 }

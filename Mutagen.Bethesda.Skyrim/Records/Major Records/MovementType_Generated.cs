@@ -2248,60 +2248,60 @@ namespace Mutagen.Bethesda.Skyrim
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
         #endregion
         #endregion
-        private int? _SPEDLocation;
+        private RangeInt32? _SPEDLocation;
         public MovementType.SPEDDataType SPEDDataTypeState { get; private set; }
         #region LeftWalk
-        private int _LeftWalkLocation => _SPEDLocation!.Value;
+        private int _LeftWalkLocation => _SPEDLocation!.Value.Min;
         private bool _LeftWalk_IsSet => _SPEDLocation.HasValue;
         public Single LeftWalk => _LeftWalk_IsSet ? _data.Slice(_LeftWalkLocation, 4).Float() : default;
         #endregion
         #region LeftRun
-        private int _LeftRunLocation => _SPEDLocation!.Value + 0x4;
+        private int _LeftRunLocation => _SPEDLocation!.Value.Min + 0x4;
         private bool _LeftRun_IsSet => _SPEDLocation.HasValue;
         public Single LeftRun => _LeftRun_IsSet ? _data.Slice(_LeftRunLocation, 4).Float() : default;
         #endregion
         #region RightWalk
-        private int _RightWalkLocation => _SPEDLocation!.Value + 0x8;
+        private int _RightWalkLocation => _SPEDLocation!.Value.Min + 0x8;
         private bool _RightWalk_IsSet => _SPEDLocation.HasValue;
         public Single RightWalk => _RightWalk_IsSet ? _data.Slice(_RightWalkLocation, 4).Float() : default;
         #endregion
         #region RightRun
-        private int _RightRunLocation => _SPEDLocation!.Value + 0xC;
+        private int _RightRunLocation => _SPEDLocation!.Value.Min + 0xC;
         private bool _RightRun_IsSet => _SPEDLocation.HasValue;
         public Single RightRun => _RightRun_IsSet ? _data.Slice(_RightRunLocation, 4).Float() : default;
         #endregion
         #region ForwardWalk
-        private int _ForwardWalkLocation => _SPEDLocation!.Value + 0x10;
+        private int _ForwardWalkLocation => _SPEDLocation!.Value.Min + 0x10;
         private bool _ForwardWalk_IsSet => _SPEDLocation.HasValue;
         public Single ForwardWalk => _ForwardWalk_IsSet ? _data.Slice(_ForwardWalkLocation, 4).Float() : default;
         #endregion
         #region ForwardRun
-        private int _ForwardRunLocation => _SPEDLocation!.Value + 0x14;
+        private int _ForwardRunLocation => _SPEDLocation!.Value.Min + 0x14;
         private bool _ForwardRun_IsSet => _SPEDLocation.HasValue;
         public Single ForwardRun => _ForwardRun_IsSet ? _data.Slice(_ForwardRunLocation, 4).Float() : default;
         #endregion
         #region BackWalk
-        private int _BackWalkLocation => _SPEDLocation!.Value + 0x18;
+        private int _BackWalkLocation => _SPEDLocation!.Value.Min + 0x18;
         private bool _BackWalk_IsSet => _SPEDLocation.HasValue;
         public Single BackWalk => _BackWalk_IsSet ? _data.Slice(_BackWalkLocation, 4).Float() : default;
         #endregion
         #region BackRun
-        private int _BackRunLocation => _SPEDLocation!.Value + 0x1C;
+        private int _BackRunLocation => _SPEDLocation!.Value.Min + 0x1C;
         private bool _BackRun_IsSet => _SPEDLocation.HasValue;
         public Single BackRun => _BackRun_IsSet ? _data.Slice(_BackRunLocation, 4).Float() : default;
         #endregion
         #region RotateInPlaceWalk
-        private int _RotateInPlaceWalkLocation => _SPEDLocation!.Value + 0x20;
+        private int _RotateInPlaceWalkLocation => _SPEDLocation!.Value.Min + 0x20;
         private bool _RotateInPlaceWalk_IsSet => _SPEDLocation.HasValue;
         public Single RotateInPlaceWalk => _RotateInPlaceWalk_IsSet ? _data.Slice(_RotateInPlaceWalkLocation, 4).Float() * 57.2958f : default;
         #endregion
         #region RotateInPlaceRun
-        private int _RotateInPlaceRunLocation => _SPEDLocation!.Value + 0x24;
+        private int _RotateInPlaceRunLocation => _SPEDLocation!.Value.Min + 0x24;
         private bool _RotateInPlaceRun_IsSet => _SPEDLocation.HasValue;
         public Single RotateInPlaceRun => _RotateInPlaceRun_IsSet ? _data.Slice(_RotateInPlaceRunLocation, 4).Float() * 57.2958f : default;
         #endregion
         #region RotateWhileMovingRun
-        private int _RotateWhileMovingRunLocation => _SPEDLocation!.Value + 0x28;
+        private int _RotateWhileMovingRunLocation => _SPEDLocation!.Value.Min + 0x28;
         private bool _RotateWhileMovingRun_IsSet => _SPEDLocation.HasValue && !SPEDDataTypeState.HasFlag(MovementType.SPEDDataType.Break0);
         public Single RotateWhileMovingRun => _RotateWhileMovingRun_IsSet ? _data.Slice(_RotateWhileMovingRunLocation, 4).Float() * 57.2958f : default;
         #endregion
@@ -2382,7 +2382,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.SPED:
                 {
-                    _SPEDLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _SPEDLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x28)
                     {

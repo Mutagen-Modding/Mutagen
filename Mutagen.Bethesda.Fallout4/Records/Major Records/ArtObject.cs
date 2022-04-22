@@ -1,18 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Fallout4;
+
+public partial class ArtObject
 {
-    public partial class ArtObject
+    [Flags]
+    public enum TypeEnum
     {
-        [Flags]
-        public enum TypeEnum
-        {
-            MagicCasting = 0x01,
-            MagicHitEffect = 0x02,
-            EnchantmentEffect = 0x04,
-        }
+        MagicCasting = 0x01,
+        MagicHitEffect = 0x02,
+        EnchantmentEffect = 0x04,
     }
 }

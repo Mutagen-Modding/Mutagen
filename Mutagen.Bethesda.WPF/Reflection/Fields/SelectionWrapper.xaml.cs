@@ -1,15 +1,14 @@
 using System.Windows.Controls;
 
-namespace Mutagen.Bethesda.WPF.Reflection.Fields
+namespace Mutagen.Bethesda.WPF.Reflection.Fields;
+
+/// <summary>
+/// Interaction logic for SelectionWrapper.xaml
+/// </summary>
+public partial class SelectionWrapper : UserControl
 {
-    /// <summary>
-    /// Interaction logic for SelectionWrapper.xaml
-    /// </summary>
-    public partial class SelectionWrapper : UserControl
+    public SelectionWrapper()
     {
-        public SelectionWrapper()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

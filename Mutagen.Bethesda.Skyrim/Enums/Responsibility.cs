@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Skyrim
+public enum Responsibility
 {
-    public enum Responsibility
-    {
-        AnyCrime,
-        ViolenceAgainstEnemies,
-        PropertyCrimeOnly,
-        NoCrime,
-    }
+    AnyCrime,
+    ViolenceAgainstEnemies,
+    PropertyCrimeOnly,
+    NoCrime,
 }

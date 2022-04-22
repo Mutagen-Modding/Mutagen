@@ -1,26 +1,25 @@
 using Mutagen.Bethesda.Strings;
 
-namespace Mutagen.Bethesda.Plugins.Aspects
+namespace Mutagen.Bethesda.Plugins.Aspects;
+
+/// <summary>
+/// An interface implemented by Major Records that have names
+/// </summary>
+public interface ITranslatedNamedRequired : ITranslatedNamedRequiredGetter, INamedRequired
 {
     /// <summary>
-    /// An interface implemented by Major Records that have names
+    /// The display name of the record
     /// </summary>
-    public interface ITranslatedNamedRequired : ITranslatedNamedRequiredGetter, INamedRequired
-    {
-        /// <summary>
-        /// The display name of the record
-        /// </summary>
-        new TranslatedString Name { get; set; }
-    }
+    new TranslatedString Name { get; set; }
+}
 
+/// <summary>
+/// An interface implemented by Major Records that have names
+/// </summary>
+public interface ITranslatedNamedRequiredGetter : INamedRequiredGetter
+{
     /// <summary>
-    /// An interface implemented by Major Records that have names
+    /// The display name of the record
     /// </summary>
-    public interface ITranslatedNamedRequiredGetter : INamedRequiredGetter
-    {
-        /// <summary>
-        /// The display name of the record
-        /// </summary>
-        new ITranslatedStringGetter Name { get; }
-    }
+    new ITranslatedStringGetter Name { get; }
 }

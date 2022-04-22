@@ -1,11 +1,8 @@
-using System;
+namespace Mutagen.Bethesda.Strings;
 
-namespace Mutagen.Bethesda.Strings
+public enum StringsSource
 {
-    public enum StringsSource
-    {
-        Normal,
-        IL,
-        DL,
-    }
+    Normal,
+    IL,
+    DL,
 }

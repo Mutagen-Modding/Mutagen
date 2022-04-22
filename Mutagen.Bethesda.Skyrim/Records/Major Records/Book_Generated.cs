@@ -3233,35 +3233,35 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Book.DATADataType DATADataTypeState { get; private set; }
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value;
+        private int _FlagsLocation => _DATALocation!.Value.Min;
         public partial Book.Flag GetFlagsCustom();
         public Book.Flag Flags => GetFlagsCustom();
         #endregion
         #region Type
-        private int _TypeLocation => _DATALocation!.Value + 0x1;
+        private int _TypeLocation => _DATALocation!.Value.Min + 0x1;
         private bool _Type_IsSet => _DATALocation.HasValue;
         public Book.BookType Type => _Type_IsSet ? (Book.BookType)_data.Span.Slice(_TypeLocation, 0x1)[0] : default;
         #endregion
         #region Unused
-        private int _UnusedLocation => _DATALocation!.Value + 0x2;
+        private int _UnusedLocation => _DATALocation!.Value.Min + 0x2;
         private bool _Unused_IsSet => _DATALocation.HasValue;
         public UInt16 Unused => _Unused_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_UnusedLocation, 2)) : default;
         #endregion
         #region Teaches
-        private int _TeachesLocation => _DATALocation!.Value + 0x4;
+        private int _TeachesLocation => _DATALocation!.Value.Min + 0x4;
         public partial IBookTeachTargetGetter? GetTeachesCustom();
         public IBookTeachTargetGetter? Teaches => GetTeachesCustom();
         #endregion
         #region Value
-        private int _ValueLocation => _DATALocation!.Value + 0x8;
+        private int _ValueLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Value_IsSet => _DATALocation.HasValue;
         public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
         #endregion
         #region Weight
-        private int _WeightLocation => _DATALocation!.Value + 0xC;
+        private int _WeightLocation => _DATALocation!.Value.Min + 0xC;
         private bool _Weight_IsSet => _DATALocation.HasValue;
         public Single Weight => _Weight_IsSet ? _data.Slice(_WeightLocation, 4).Float() : default;
         #endregion
@@ -3410,7 +3410,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Book_FieldIndex.Weight;
                 }
                 case RecordTypeInts.INAM:

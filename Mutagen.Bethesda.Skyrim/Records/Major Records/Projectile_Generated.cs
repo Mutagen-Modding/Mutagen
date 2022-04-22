@@ -3530,125 +3530,125 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         public IModelGetter? Model { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Projectile.DATADataType DATADataTypeState { get; private set; }
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value;
+        private int _FlagsLocation => _DATALocation!.Value.Min;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public Projectile.Flag Flags => _Flags_IsSet ? (Projectile.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FlagsLocation, 0x2)) : default;
         #endregion
         #region Type
-        private int _TypeLocation => _DATALocation!.Value + 0x2;
+        private int _TypeLocation => _DATALocation!.Value.Min + 0x2;
         private bool _Type_IsSet => _DATALocation.HasValue;
         public Projectile.TypeEnum Type => _Type_IsSet ? (Projectile.TypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_TypeLocation, 0x2)) : default;
         #endregion
         #region Gravity
-        private int _GravityLocation => _DATALocation!.Value + 0x4;
+        private int _GravityLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Gravity_IsSet => _DATALocation.HasValue;
         public Single Gravity => _Gravity_IsSet ? _data.Slice(_GravityLocation, 4).Float() : default;
         #endregion
         #region Speed
-        private int _SpeedLocation => _DATALocation!.Value + 0x8;
+        private int _SpeedLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Speed_IsSet => _DATALocation.HasValue;
         public Single Speed => _Speed_IsSet ? _data.Slice(_SpeedLocation, 4).Float() : default;
         #endregion
         #region Range
-        private int _RangeLocation => _DATALocation!.Value + 0xC;
+        private int _RangeLocation => _DATALocation!.Value.Min + 0xC;
         private bool _Range_IsSet => _DATALocation.HasValue;
         public Single Range => _Range_IsSet ? _data.Slice(_RangeLocation, 4).Float() : default;
         #endregion
         #region Light
-        private int _LightLocation => _DATALocation!.Value + 0x10;
+        private int _LightLocation => _DATALocation!.Value.Min + 0x10;
         private bool _Light_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
         #endregion
         #region MuzzleFlash
-        private int _MuzzleFlashLocation => _DATALocation!.Value + 0x14;
+        private int _MuzzleFlashLocation => _DATALocation!.Value.Min + 0x14;
         private bool _MuzzleFlash_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<ILightGetter> MuzzleFlash => _MuzzleFlash_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MuzzleFlashLocation, 0x4)))) : FormLink<ILightGetter>.Null;
         #endregion
         #region TracerChance
-        private int _TracerChanceLocation => _DATALocation!.Value + 0x18;
+        private int _TracerChanceLocation => _DATALocation!.Value.Min + 0x18;
         private bool _TracerChance_IsSet => _DATALocation.HasValue;
         public Single TracerChance => _TracerChance_IsSet ? _data.Slice(_TracerChanceLocation, 4).Float() : default;
         #endregion
         #region ExplosionAltTriggerProximity
-        private int _ExplosionAltTriggerProximityLocation => _DATALocation!.Value + 0x1C;
+        private int _ExplosionAltTriggerProximityLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _ExplosionAltTriggerProximity_IsSet => _DATALocation.HasValue;
         public Single ExplosionAltTriggerProximity => _ExplosionAltTriggerProximity_IsSet ? _data.Slice(_ExplosionAltTriggerProximityLocation, 4).Float() : default;
         #endregion
         #region ExplosionAltTriggerTimer
-        private int _ExplosionAltTriggerTimerLocation => _DATALocation!.Value + 0x20;
+        private int _ExplosionAltTriggerTimerLocation => _DATALocation!.Value.Min + 0x20;
         private bool _ExplosionAltTriggerTimer_IsSet => _DATALocation.HasValue;
         public Single ExplosionAltTriggerTimer => _ExplosionAltTriggerTimer_IsSet ? _data.Slice(_ExplosionAltTriggerTimerLocation, 4).Float() : default;
         #endregion
         #region Explosion
-        private int _ExplosionLocation => _DATALocation!.Value + 0x24;
+        private int _ExplosionLocation => _DATALocation!.Value.Min + 0x24;
         private bool _Explosion_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region Sound
-        private int _SoundLocation => _DATALocation!.Value + 0x28;
+        private int _SoundLocation => _DATALocation!.Value.Min + 0x28;
         private bool _Sound_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region MuzzleFlashDuration
-        private int _MuzzleFlashDurationLocation => _DATALocation!.Value + 0x2C;
+        private int _MuzzleFlashDurationLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _MuzzleFlashDuration_IsSet => _DATALocation.HasValue;
         public Single MuzzleFlashDuration => _MuzzleFlashDuration_IsSet ? _data.Slice(_MuzzleFlashDurationLocation, 4).Float() : default;
         #endregion
         #region FadeDuration
-        private int _FadeDurationLocation => _DATALocation!.Value + 0x30;
+        private int _FadeDurationLocation => _DATALocation!.Value.Min + 0x30;
         private bool _FadeDuration_IsSet => _DATALocation.HasValue;
         public Single FadeDuration => _FadeDuration_IsSet ? _data.Slice(_FadeDurationLocation, 4).Float() : default;
         #endregion
         #region ImpactForce
-        private int _ImpactForceLocation => _DATALocation!.Value + 0x34;
+        private int _ImpactForceLocation => _DATALocation!.Value.Min + 0x34;
         private bool _ImpactForce_IsSet => _DATALocation.HasValue;
         public Single ImpactForce => _ImpactForce_IsSet ? _data.Slice(_ImpactForceLocation, 4).Float() : default;
         #endregion
         #region CountdownSound
-        private int _CountdownSoundLocation => _DATALocation!.Value + 0x38;
+        private int _CountdownSoundLocation => _DATALocation!.Value.Min + 0x38;
         private bool _CountdownSound_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<ISoundDescriptorGetter> CountdownSound => _CountdownSound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CountdownSoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region DisaleSound
-        private int _DisaleSoundLocation => _DATALocation!.Value + 0x3C;
+        private int _DisaleSoundLocation => _DATALocation!.Value.Min + 0x3C;
         private bool _DisaleSound_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<ISoundDescriptorGetter> DisaleSound => _DisaleSound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DisaleSoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region DefaultWeaponSource
-        private int _DefaultWeaponSourceLocation => _DATALocation!.Value + 0x40;
+        private int _DefaultWeaponSourceLocation => _DATALocation!.Value.Min + 0x40;
         private bool _DefaultWeaponSource_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IWeaponGetter> DefaultWeaponSource => _DefaultWeaponSource_IsSet ? new FormLink<IWeaponGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DefaultWeaponSourceLocation, 0x4)))) : FormLink<IWeaponGetter>.Null;
         #endregion
         #region ConeSpread
-        private int _ConeSpreadLocation => _DATALocation!.Value + 0x44;
+        private int _ConeSpreadLocation => _DATALocation!.Value.Min + 0x44;
         private bool _ConeSpread_IsSet => _DATALocation.HasValue;
         public Single ConeSpread => _ConeSpread_IsSet ? _data.Slice(_ConeSpreadLocation, 4).Float() : default;
         #endregion
         #region CollisionRadius
-        private int _CollisionRadiusLocation => _DATALocation!.Value + 0x48;
+        private int _CollisionRadiusLocation => _DATALocation!.Value.Min + 0x48;
         private bool _CollisionRadius_IsSet => _DATALocation.HasValue;
         public Single CollisionRadius => _CollisionRadius_IsSet ? _data.Slice(_CollisionRadiusLocation, 4).Float() : default;
         #endregion
         #region Lifetime
-        private int _LifetimeLocation => _DATALocation!.Value + 0x4C;
+        private int _LifetimeLocation => _DATALocation!.Value.Min + 0x4C;
         private bool _Lifetime_IsSet => _DATALocation.HasValue;
         public Single Lifetime => _Lifetime_IsSet ? _data.Slice(_LifetimeLocation, 4).Float() : default;
         #endregion
         #region RelaunchInterval
-        private int _RelaunchIntervalLocation => _DATALocation!.Value + 0x50;
+        private int _RelaunchIntervalLocation => _DATALocation!.Value.Min + 0x50;
         private bool _RelaunchInterval_IsSet => _DATALocation.HasValue;
         public Single RelaunchInterval => _RelaunchInterval_IsSet ? _data.Slice(_RelaunchIntervalLocation, 4).Float() : default;
         #endregion
         #region DecalData
-        private int _DecalDataLocation => _DATALocation!.Value + 0x54;
+        private int _DecalDataLocation => _DATALocation!.Value.Min + 0x54;
         private bool _DecalData_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break0);
         public IFormLinkGetter<ITextureSetGetter> DecalData => _DecalData_IsSet ? new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DecalDataLocation, 0x4)))) : FormLink<ITextureSetGetter>.Null;
         #endregion
         #region CollisionLayer
-        private int _CollisionLayerLocation => _DATALocation!.Value + 0x58;
+        private int _CollisionLayerLocation => _DATALocation!.Value.Min + 0x58;
         private bool _CollisionLayer_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break1);
         public IFormLinkGetter<ICollisionLayerGetter> CollisionLayer => _CollisionLayer_IsSet ? new FormLink<ICollisionLayerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CollisionLayerLocation, 0x4)))) : FormLink<ICollisionLayerGetter>.Null;
         #endregion
@@ -3760,7 +3760,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x54)
                     {

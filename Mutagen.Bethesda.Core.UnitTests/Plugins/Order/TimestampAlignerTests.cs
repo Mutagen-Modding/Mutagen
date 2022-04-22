@@ -7,6 +7,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Testing;
+using Noggog.Testing.IO;
 using Xunit;
 using Path = System.IO.Path;
 
@@ -14,7 +15,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order;
 
 public class TimestampAlignerTests
 {
-    const string DataFolder = "C:/DataFolder";
+    static readonly string DataFolder = $"{PathingUtil.DrivePrefix}DataFolder";
         
     private IEnumerable<(ModKey ModKey, DateTime Write)> GetTypical()
     {

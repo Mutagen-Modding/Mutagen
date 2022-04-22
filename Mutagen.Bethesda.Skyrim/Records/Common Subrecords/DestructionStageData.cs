@@ -1,17 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Skyrim
+public partial class DestructionStageData
 {
-    public partial class DestructionStageData
+    public enum Flag
     {
-        public enum Flag
-        {
-            CapDamage,
-            Disable,
-            Destroy,
-            IgnoreExternalDamage
-        }
+        CapDamage,
+        Disable,
+        Destroy,
+        IgnoreExternalDamage
     }
 }

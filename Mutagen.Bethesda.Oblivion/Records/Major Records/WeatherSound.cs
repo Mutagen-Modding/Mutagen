@@ -1,19 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace Mutagen.Bethesda.Oblivion;
 
-namespace Mutagen.Bethesda.Oblivion
+public partial class WeatherSound
 {
-    public partial class WeatherSound
+    public enum SoundType
     {
-        public enum SoundType
-        {
-            Default = 0,
-            Precip = 1,
-            Wind = 2,
-            Thunder = 3
-        }
+        Default = 0,
+        Precip = 1,
+        Wind = 2,
+        Thunder = 3
     }
 }

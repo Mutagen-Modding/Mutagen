@@ -1483,20 +1483,20 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        private int? _INDXLocation;
+        private RangeInt32? _INDXLocation;
         public QuestStage.INDXDataType INDXDataTypeState { get; private set; }
         #region Index
-        private int _IndexLocation => _INDXLocation!.Value;
+        private int _IndexLocation => _INDXLocation!.Value.Min;
         private bool _Index_IsSet => _INDXLocation.HasValue;
         public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_IndexLocation, 2)) : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _INDXLocation!.Value + 0x2;
+        private int _FlagsLocation => _INDXLocation!.Value.Min + 0x2;
         private bool _Flags_IsSet => _INDXLocation.HasValue;
         public QuestStage.Flag Flags => _Flags_IsSet ? (QuestStage.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _INDXLocation!.Value + 0x3;
+        private int _UnknownLocation => _INDXLocation!.Value.Min + 0x3;
         private bool _Unknown_IsSet => _INDXLocation.HasValue;
         public Byte Unknown => _Unknown_IsSet ? _data.Span[_UnknownLocation] : default;
         #endregion
@@ -1561,7 +1561,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.INDX:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestStage_FieldIndex.Unknown) return ParseResult.Stop;
-                    _INDXLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _INDXLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)QuestStage_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.QSDT:

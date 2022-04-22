@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda;
+
+/// <summary>
+/// Game categories that generally have similar or the same formats
+/// </summary>
+public enum GameCategory
 {
-    /// <summary>
-    /// Game categories that generally have similar or the same formats
-    /// </summary>
-    public enum GameCategory
-    {
-        [Description("Oblivion")]
-        Oblivion,
-        [Description("Skyrim")]
-        Skyrim, 
-        [Description("Fallout4")]
-        Fallout4,
-    }
+    [Description("Oblivion")]
+    Oblivion,
+    [Description("Skyrim")]
+    Skyrim, 
+    [Description("Fallout4")]
+    Fallout4,
 }

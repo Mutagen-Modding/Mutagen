@@ -3412,30 +3412,30 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _WeightLocation;
         public Single Weight => _WeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _WeightLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
-        private int? _ENITLocation;
+        private RangeInt32? _ENITLocation;
         public Ingestible.ENITDataType ENITDataTypeState { get; private set; }
         #region Value
-        private int _ValueLocation => _ENITLocation!.Value;
+        private int _ValueLocation => _ENITLocation!.Value.Min;
         private bool _Value_IsSet => _ENITLocation.HasValue;
         public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _ENITLocation!.Value + 0x4;
+        private int _FlagsLocation => _ENITLocation!.Value.Min + 0x4;
         private bool _Flags_IsSet => _ENITLocation.HasValue;
         public Ingestible.Flag Flags => _Flags_IsSet ? (Ingestible.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region Addiction
-        private int _AddictionLocation => _ENITLocation!.Value + 0x8;
+        private int _AddictionLocation => _ENITLocation!.Value.Min + 0x8;
         private bool _Addiction_IsSet => _ENITLocation.HasValue;
         public IFormLinkGetter<ISpellGetter> Addiction => _Addiction_IsSet ? new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AddictionLocation, 0x4)))) : FormLink<ISpellGetter>.Null;
         #endregion
         #region AddictionChance
-        private int _AddictionChanceLocation => _ENITLocation!.Value + 0xC;
+        private int _AddictionChanceLocation => _ENITLocation!.Value.Min + 0xC;
         private bool _AddictionChance_IsSet => _ENITLocation.HasValue;
         public Single AddictionChance => _AddictionChance_IsSet ? _data.Slice(_AddictionChanceLocation, 4).Float() : default;
         #endregion
         #region ConsumeSound
-        private int _ConsumeSoundLocation => _ENITLocation!.Value + 0x10;
+        private int _ConsumeSoundLocation => _ENITLocation!.Value.Min + 0x10;
         private bool _ConsumeSound_IsSet => _ENITLocation.HasValue;
         public IFormLinkGetter<ISoundDescriptorGetter> ConsumeSound => _ConsumeSound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ConsumeSoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
@@ -3599,7 +3599,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ENIT:
                 {
-                    _ENITLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _ENITLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Ingestible_FieldIndex.ConsumeSound;
                 }
                 case RecordTypeInts.DNAM:

@@ -1,23 +1,22 @@
 using System.Text.Json;
 
-namespace Mutagen.Bethesda.WPF.Reflection.Fields
+namespace Mutagen.Bethesda.WPF.Reflection.Fields;
+
+public class Int64SettingsVM : BasicSettingsVM<long>
 {
-    public class Int64SettingsVM : BasicSettingsVM<long>
+    public Int64SettingsVM(FieldMeta fieldMeta, object? defaultVal)
+        : base(fieldMeta, defaultVal)
     {
-        public Int64SettingsVM(FieldMeta fieldMeta, object? defaultVal)
-            : base(fieldMeta, defaultVal)
-        {
-        }
-
-        public Int64SettingsVM()
-            : base(FieldMeta.Empty, default)
-        {
-        }
-
-        public override long Get(JsonElement property) => property.GetInt64();
-
-        public override long GetDefault() => default(long);
-
-        public override SettingsNodeVM Duplicate() => new Int64SettingsVM(Meta, DefaultValue);
     }
+
+    public Int64SettingsVM()
+        : base(FieldMeta.Empty, default)
+    {
+    }
+
+    public override long Get(JsonElement property) => property.GetInt64();
+
+    public override long GetDefault() => default(long);
+
+    public override SettingsNodeVM Duplicate() => new Int64SettingsVM(Meta, DefaultValue);
 }

@@ -2072,25 +2072,25 @@ namespace Mutagen.Bethesda.Skyrim
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         public IModelGetter? Model { get; private set; }
-        private int? _DNAMLocation;
+        private RangeInt32? _DNAMLocation;
         public Static.DNAMDataType DNAMDataTypeState { get; private set; }
         #region MaxAngle
-        private int _MaxAngleLocation => _DNAMLocation!.Value;
+        private int _MaxAngleLocation => _DNAMLocation!.Value.Min;
         private bool _MaxAngle_IsSet => _DNAMLocation.HasValue;
         public Single MaxAngle => _MaxAngle_IsSet ? _data.Slice(_MaxAngleLocation, 4).Float() : default;
         #endregion
         #region Material
-        private int _MaterialLocation => _DNAMLocation!.Value + 0x4;
+        private int _MaterialLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Material_IsSet => _DNAMLocation.HasValue;
         public IFormLinkGetter<IMaterialObjectGetter> Material => _Material_IsSet ? new FormLink<IMaterialObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MaterialLocation, 0x4)))) : FormLink<IMaterialObjectGetter>.Null;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DNAMLocation!.Value + 0x8;
+        private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _Flags_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0);
         public Static.Flag Flags => _Flags_IsSet ? (Static.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region Unused
-        private int _UnusedLocation => _DNAMLocation!.Value + 0x9;
+        private int _UnusedLocation => _DNAMLocation!.Value.Min + 0x9;
         private bool _Unused_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0);
         public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _data.Span.Slice(_UnusedLocation, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
@@ -2179,7 +2179,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x8)
                     {

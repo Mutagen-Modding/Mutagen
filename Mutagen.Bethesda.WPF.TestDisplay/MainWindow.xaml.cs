@@ -1,19 +1,17 @@
-using System.Diagnostics;
 using Autofac;
 
-namespace Mutagen.Bethesda.WPF.TestDisplay
+namespace Mutagen.Bethesda.WPF.TestDisplay;
+
+/// <summary>
+/// Interaction logic for MainWindow.xaml
+/// </summary>
+public partial class MainWindow
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow
+    public MainWindow()
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-            var builder = new ContainerBuilder();
-            builder.RegisterModule<MainModule>();
-            this.DataContext = builder.Build().Resolve<MainVM>();
-        }
+        InitializeComponent();
+        var builder = new ContainerBuilder();
+        builder.RegisterModule<MainModule>();
+        this.DataContext = builder.Build().Resolve<MainVM>();
     }
 }

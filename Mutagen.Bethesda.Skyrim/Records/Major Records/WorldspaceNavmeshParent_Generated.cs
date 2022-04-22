@@ -40,14 +40,14 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class WorldspaceNavigationMeshData :
-        ANavigationMeshData,
-        IEquatable<IWorldspaceNavigationMeshDataGetter>,
-        ILoquiObjectSetter<WorldspaceNavigationMeshData>,
-        IWorldspaceNavigationMeshData
+    public partial class WorldspaceNavmeshParent :
+        ANavmeshParent,
+        IEquatable<IWorldspaceNavmeshParentGetter>,
+        ILoquiObjectSetter<WorldspaceNavmeshParent>,
+        IWorldspaceNavmeshParent
     {
         #region Ctor
-        public WorldspaceNavigationMeshData()
+        public WorldspaceNavmeshParent()
         {
             CustomCtor();
         }
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
             set => _Parent.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IWorldspaceGetter> IWorldspaceNavigationMeshDataGetter.Parent => this.Parent;
+        IFormLinkGetter<IWorldspaceGetter> IWorldspaceNavmeshParentGetter.Parent => this.Parent;
         #endregion
         #region Coordinates
         public P2Int16 Coordinates { get; set; } = default;
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            WorldspaceNavigationMeshDataMixIn.ToString(
+            WorldspaceNavmeshParentMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -84,22 +84,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IWorldspaceNavigationMeshDataGetter rhs) return false;
-            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IWorldspaceNavmeshParentGetter rhs) return false;
+            return ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IWorldspaceNavigationMeshDataGetter? obj)
+        public bool Equals(IWorldspaceNavmeshParentGetter? obj)
         {
-            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Mask
         public new class Mask<TItem> :
-            ANavigationMeshData.Mask<TItem>,
+            ANavmeshParent.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -112,33 +112,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
-                TItem NavmeshVersion,
-                TItem Magic,
-                TItem Vertices,
-                TItem Triangles,
-                TItem EdgeLinks,
-                TItem DoorTriangles,
-                TItem NavmeshGridDivisor,
-                TItem MaxDistanceX,
-                TItem MaxDistanceY,
-                TItem Min,
-                TItem Max,
-                TItem NavmeshGrid,
                 TItem Parent,
                 TItem Coordinates)
-            : base(
-                NavmeshVersion: NavmeshVersion,
-                Magic: Magic,
-                Vertices: Vertices,
-                Triangles: Triangles,
-                EdgeLinks: EdgeLinks,
-                DoorTriangles: DoorTriangles,
-                NavmeshGridDivisor: NavmeshGridDivisor,
-                MaxDistanceX: MaxDistanceX,
-                MaxDistanceY: MaxDistanceY,
-                Min: Min,
-                Max: Max,
-                NavmeshGrid: NavmeshGrid)
+            : base()
             {
                 this.Parent = Parent;
                 this.Coordinates = Coordinates;
@@ -206,7 +182,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new WorldspaceNavigationMeshData.Mask<R>();
+                var ret = new WorldspaceNavmeshParent.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -225,16 +201,16 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(WorldspaceNavigationMeshData.Mask<bool>? printMask = null)
+            public string ToString(WorldspaceNavmeshParent.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, WorldspaceNavigationMeshData.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, WorldspaceNavmeshParent.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(WorldspaceNavigationMeshData.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(WorldspaceNavmeshParent.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -254,7 +230,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            ANavigationMeshData.ErrorMask,
+            ANavmeshParent.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -265,12 +241,12 @@ namespace Mutagen.Bethesda.Skyrim
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                WorldspaceNavigationMeshData_FieldIndex enu = (WorldspaceNavigationMeshData_FieldIndex)index;
+                WorldspaceNavmeshParent_FieldIndex enu = (WorldspaceNavmeshParent_FieldIndex)index;
                 switch (enu)
                 {
-                    case WorldspaceNavigationMeshData_FieldIndex.Parent:
+                    case WorldspaceNavmeshParent_FieldIndex.Parent:
                         return Parent;
-                    case WorldspaceNavigationMeshData_FieldIndex.Coordinates:
+                    case WorldspaceNavmeshParent_FieldIndex.Coordinates:
                         return Coordinates;
                     default:
                         return base.GetNthMask(index);
@@ -279,13 +255,13 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                WorldspaceNavigationMeshData_FieldIndex enu = (WorldspaceNavigationMeshData_FieldIndex)index;
+                WorldspaceNavmeshParent_FieldIndex enu = (WorldspaceNavmeshParent_FieldIndex)index;
                 switch (enu)
                 {
-                    case WorldspaceNavigationMeshData_FieldIndex.Parent:
+                    case WorldspaceNavmeshParent_FieldIndex.Parent:
                         this.Parent = ex;
                         break;
-                    case WorldspaceNavigationMeshData_FieldIndex.Coordinates:
+                    case WorldspaceNavmeshParent_FieldIndex.Coordinates:
                         this.Coordinates = ex;
                         break;
                     default:
@@ -296,13 +272,13 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                WorldspaceNavigationMeshData_FieldIndex enu = (WorldspaceNavigationMeshData_FieldIndex)index;
+                WorldspaceNavmeshParent_FieldIndex enu = (WorldspaceNavmeshParent_FieldIndex)index;
                 switch (enu)
                 {
-                    case WorldspaceNavigationMeshData_FieldIndex.Parent:
+                    case WorldspaceNavmeshParent_FieldIndex.Parent:
                         this.Parent = (Exception?)obj;
                         break;
-                    case WorldspaceNavigationMeshData_FieldIndex.Coordinates:
+                    case WorldspaceNavmeshParent_FieldIndex.Coordinates:
                         this.Coordinates = (Exception?)obj;
                         break;
                     default:
@@ -381,7 +357,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            ANavigationMeshData.TranslationMask,
+            ANavmeshParent.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -417,29 +393,29 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceNavigationMeshDataCommon.Instance.GetContainedFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceNavigationMeshDataSetterCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceNavmeshParentCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceNavmeshParentSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => WorldspaceNavigationMeshDataBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => WorldspaceNavmeshParentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((WorldspaceNavigationMeshDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WorldspaceNavmeshParentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static WorldspaceNavigationMeshData CreateFromBinary(
+        public new static WorldspaceNavmeshParent CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new WorldspaceNavigationMeshData();
-            ((WorldspaceNavigationMeshDataSetterCommon)((IWorldspaceNavigationMeshDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new WorldspaceNavmeshParent();
+            ((WorldspaceNavmeshParentSetterCommon)((IWorldspaceNavmeshParentGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -450,7 +426,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out WorldspaceNavigationMeshData item,
+            out WorldspaceNavmeshParent item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -465,35 +441,35 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((WorldspaceNavigationMeshDataSetterCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonSetterInstance()!).Clear(this);
+            ((WorldspaceNavmeshParentSetterCommon)((IWorldspaceNavmeshParentGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new WorldspaceNavigationMeshData GetNew()
+        internal static new WorldspaceNavmeshParent GetNew()
         {
-            return new WorldspaceNavigationMeshData();
+            return new WorldspaceNavmeshParent();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IWorldspaceNavigationMeshData :
-        IANavigationMeshData,
+    public partial interface IWorldspaceNavmeshParent :
+        IANavmeshParent,
         IFormLinkContainer,
-        ILoquiObjectSetter<IWorldspaceNavigationMeshData>,
-        IWorldspaceNavigationMeshDataGetter
+        ILoquiObjectSetter<IWorldspaceNavmeshParent>,
+        IWorldspaceNavmeshParentGetter
     {
         new IFormLink<IWorldspaceGetter> Parent { get; set; }
         new P2Int16 Coordinates { get; set; }
     }
 
-    public partial interface IWorldspaceNavigationMeshDataGetter :
-        IANavigationMeshDataGetter,
+    public partial interface IWorldspaceNavmeshParentGetter :
+        IANavmeshParentGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IWorldspaceNavigationMeshDataGetter>
+        ILoquiObject<IWorldspaceNavmeshParentGetter>
     {
-        static new ILoquiRegistration StaticRegistration => WorldspaceNavigationMeshData_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => WorldspaceNavmeshParent_Registration.Instance;
         IFormLinkGetter<IWorldspaceGetter> Parent { get; }
         P2Int16 Coordinates { get; }
 
@@ -502,42 +478,42 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static partial class WorldspaceNavigationMeshDataMixIn
+    public static partial class WorldspaceNavmeshParentMixIn
     {
-        public static void Clear(this IWorldspaceNavigationMeshData item)
+        public static void Clear(this IWorldspaceNavmeshParent item)
         {
-            ((WorldspaceNavigationMeshDataSetterCommon)((IWorldspaceNavigationMeshDataGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((WorldspaceNavmeshParentSetterCommon)((IWorldspaceNavmeshParentGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static WorldspaceNavigationMeshData.Mask<bool> GetEqualsMask(
-            this IWorldspaceNavigationMeshDataGetter item,
-            IWorldspaceNavigationMeshDataGetter rhs,
+        public static WorldspaceNavmeshParent.Mask<bool> GetEqualsMask(
+            this IWorldspaceNavmeshParentGetter item,
+            IWorldspaceNavmeshParentGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IWorldspaceNavigationMeshDataGetter item,
+            this IWorldspaceNavmeshParentGetter item,
             string? name = null,
-            WorldspaceNavigationMeshData.Mask<bool>? printMask = null)
+            WorldspaceNavmeshParent.Mask<bool>? printMask = null)
         {
-            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)item).CommonInstance()!).ToString(
+            return ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IWorldspaceNavigationMeshDataGetter item,
+            this IWorldspaceNavmeshParentGetter item,
             FileGeneration fg,
             string? name = null,
-            WorldspaceNavigationMeshData.Mask<bool>? printMask = null)
+            WorldspaceNavmeshParent.Mask<bool>? printMask = null)
         {
-            ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)item).CommonInstance()!).ToString(
+            ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -545,39 +521,39 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool Equals(
-            this IWorldspaceNavigationMeshDataGetter item,
-            IWorldspaceNavigationMeshDataGetter rhs,
-            WorldspaceNavigationMeshData.TranslationMask? equalsMask = null)
+            this IWorldspaceNavmeshParentGetter item,
+            IWorldspaceNavmeshParentGetter rhs,
+            WorldspaceNavmeshParent.TranslationMask? equalsMask = null)
         {
-            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)item).CommonInstance()!).Equals(
+            return ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IWorldspaceNavigationMeshData lhs,
-            IWorldspaceNavigationMeshDataGetter rhs,
-            out WorldspaceNavigationMeshData.ErrorMask errorMask,
-            WorldspaceNavigationMeshData.TranslationMask? copyMask = null)
+            this IWorldspaceNavmeshParent lhs,
+            IWorldspaceNavmeshParentGetter rhs,
+            out WorldspaceNavmeshParent.ErrorMask errorMask,
+            WorldspaceNavmeshParent.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((WorldspaceNavigationMeshDataSetterTranslationCommon)((IWorldspaceNavigationMeshDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WorldspaceNavmeshParentSetterTranslationCommon)((IWorldspaceNavmeshParentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = WorldspaceNavigationMeshData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WorldspaceNavmeshParent.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IWorldspaceNavigationMeshData lhs,
-            IWorldspaceNavigationMeshDataGetter rhs,
+            this IWorldspaceNavmeshParent lhs,
+            IWorldspaceNavmeshParentGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((WorldspaceNavigationMeshDataSetterTranslationCommon)((IWorldspaceNavigationMeshDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WorldspaceNavmeshParentSetterTranslationCommon)((IWorldspaceNavmeshParentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -585,32 +561,32 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: false);
         }
 
-        public static WorldspaceNavigationMeshData DeepCopy(
-            this IWorldspaceNavigationMeshDataGetter item,
-            WorldspaceNavigationMeshData.TranslationMask? copyMask = null)
+        public static WorldspaceNavmeshParent DeepCopy(
+            this IWorldspaceNavmeshParentGetter item,
+            WorldspaceNavmeshParent.TranslationMask? copyMask = null)
         {
-            return ((WorldspaceNavigationMeshDataSetterTranslationCommon)((IWorldspaceNavigationMeshDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WorldspaceNavmeshParentSetterTranslationCommon)((IWorldspaceNavmeshParentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static WorldspaceNavigationMeshData DeepCopy(
-            this IWorldspaceNavigationMeshDataGetter item,
-            out WorldspaceNavigationMeshData.ErrorMask errorMask,
-            WorldspaceNavigationMeshData.TranslationMask? copyMask = null)
+        public static WorldspaceNavmeshParent DeepCopy(
+            this IWorldspaceNavmeshParentGetter item,
+            out WorldspaceNavmeshParent.ErrorMask errorMask,
+            WorldspaceNavmeshParent.TranslationMask? copyMask = null)
         {
-            return ((WorldspaceNavigationMeshDataSetterTranslationCommon)((IWorldspaceNavigationMeshDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WorldspaceNavmeshParentSetterTranslationCommon)((IWorldspaceNavmeshParentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static WorldspaceNavigationMeshData DeepCopy(
-            this IWorldspaceNavigationMeshDataGetter item,
+        public static WorldspaceNavmeshParent DeepCopy(
+            this IWorldspaceNavmeshParentGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((WorldspaceNavigationMeshDataSetterTranslationCommon)((IWorldspaceNavigationMeshDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WorldspaceNavmeshParentSetterTranslationCommon)((IWorldspaceNavmeshParentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -618,11 +594,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IWorldspaceNavigationMeshData item,
+            this IWorldspaceNavmeshParent item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((WorldspaceNavigationMeshDataSetterCommon)((IWorldspaceNavigationMeshDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((WorldspaceNavmeshParentSetterCommon)((IWorldspaceNavmeshParentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -638,60 +614,48 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    internal enum WorldspaceNavigationMeshData_FieldIndex
+    internal enum WorldspaceNavmeshParent_FieldIndex
     {
-        NavmeshVersion = 0,
-        Magic = 1,
-        Vertices = 2,
-        Triangles = 3,
-        EdgeLinks = 4,
-        DoorTriangles = 5,
-        NavmeshGridDivisor = 6,
-        MaxDistanceX = 7,
-        MaxDistanceY = 8,
-        Min = 9,
-        Max = 10,
-        NavmeshGrid = 11,
-        Parent = 12,
-        Coordinates = 13,
+        Parent = 0,
+        Coordinates = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class WorldspaceNavigationMeshData_Registration : ILoquiRegistration
+    internal partial class WorldspaceNavmeshParent_Registration : ILoquiRegistration
     {
-        public static readonly WorldspaceNavigationMeshData_Registration Instance = new WorldspaceNavigationMeshData_Registration();
+        public static readonly WorldspaceNavmeshParent_Registration Instance = new WorldspaceNavmeshParent_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 325,
+            msgID: 483,
             version: 0);
 
-        public const string GUID = "f11242bf-a5b1-431f-9a8a-49a5283a4c0a";
+        public const string GUID = "bb417d46-40c9-4c4a-a9f8-dfdf77750b70";
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(WorldspaceNavigationMeshData.Mask<>);
+        public static readonly Type MaskType = typeof(WorldspaceNavmeshParent.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(WorldspaceNavigationMeshData.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(WorldspaceNavmeshParent.ErrorMask);
 
-        public static readonly Type ClassType = typeof(WorldspaceNavigationMeshData);
+        public static readonly Type ClassType = typeof(WorldspaceNavmeshParent);
 
-        public static readonly Type GetterType = typeof(IWorldspaceNavigationMeshDataGetter);
+        public static readonly Type GetterType = typeof(IWorldspaceNavmeshParentGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IWorldspaceNavigationMeshData);
+        public static readonly Type SetterType = typeof(IWorldspaceNavmeshParent);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.WorldspaceNavigationMeshData";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.WorldspaceNavmeshParent";
 
-        public const string Name = "WorldspaceNavigationMeshData";
+        public const string Name = "WorldspaceNavmeshParent";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -699,7 +663,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(WorldspaceNavigationMeshDataBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(WorldspaceNavmeshParentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -732,13 +696,13 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common
-    internal partial class WorldspaceNavigationMeshDataSetterCommon : ANavigationMeshDataSetterCommon
+    internal partial class WorldspaceNavmeshParentSetterCommon : ANavmeshParentSetterCommon
     {
-        public new static readonly WorldspaceNavigationMeshDataSetterCommon Instance = new WorldspaceNavigationMeshDataSetterCommon();
+        public new static readonly WorldspaceNavmeshParentSetterCommon Instance = new WorldspaceNavmeshParentSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IWorldspaceNavigationMeshData item)
+        public void Clear(IWorldspaceNavmeshParent item)
         {
             ClearPartial();
             item.Parent.Clear();
@@ -746,13 +710,13 @@ namespace Mutagen.Bethesda.Skyrim
             base.Clear(item);
         }
         
-        public override void Clear(IANavigationMeshData item)
+        public override void Clear(IANavmeshParent item)
         {
-            Clear(item: (IWorldspaceNavigationMeshData)item);
+            Clear(item: (IWorldspaceNavmeshParent)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IWorldspaceNavigationMeshData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IWorldspaceNavmeshParent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
             obj.Parent.Relink(mapping);
@@ -762,7 +726,7 @@ namespace Mutagen.Bethesda.Skyrim
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IWorldspaceNavigationMeshData item,
+            IWorldspaceNavmeshParent item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -770,16 +734,16 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: WorldspaceNavigationMeshDataBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: WorldspaceNavmeshParentBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
-            IANavigationMeshData item,
+            IANavmeshParent item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (WorldspaceNavigationMeshData)item,
+                item: (WorldspaceNavmeshParent)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -787,17 +751,17 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class WorldspaceNavigationMeshDataCommon : ANavigationMeshDataCommon
+    internal partial class WorldspaceNavmeshParentCommon : ANavmeshParentCommon
     {
-        public new static readonly WorldspaceNavigationMeshDataCommon Instance = new WorldspaceNavigationMeshDataCommon();
+        public new static readonly WorldspaceNavmeshParentCommon Instance = new WorldspaceNavmeshParentCommon();
 
-        public WorldspaceNavigationMeshData.Mask<bool> GetEqualsMask(
-            IWorldspaceNavigationMeshDataGetter item,
-            IWorldspaceNavigationMeshDataGetter rhs,
+        public WorldspaceNavmeshParent.Mask<bool> GetEqualsMask(
+            IWorldspaceNavmeshParentGetter item,
+            IWorldspaceNavmeshParentGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new WorldspaceNavigationMeshData.Mask<bool>(false);
-            ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new WorldspaceNavmeshParent.Mask<bool>(false);
+            ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -806,9 +770,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public void FillEqualsMask(
-            IWorldspaceNavigationMeshDataGetter item,
-            IWorldspaceNavigationMeshDataGetter rhs,
-            WorldspaceNavigationMeshData.Mask<bool> ret,
+            IWorldspaceNavmeshParentGetter item,
+            IWorldspaceNavmeshParentGetter rhs,
+            WorldspaceNavmeshParent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -818,9 +782,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public string ToString(
-            IWorldspaceNavigationMeshDataGetter item,
+            IWorldspaceNavmeshParentGetter item,
             string? name = null,
-            WorldspaceNavigationMeshData.Mask<bool>? printMask = null)
+            WorldspaceNavmeshParent.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -832,18 +796,18 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public void ToString(
-            IWorldspaceNavigationMeshDataGetter item,
+            IWorldspaceNavmeshParentGetter item,
             FileGeneration fg,
             string? name = null,
-            WorldspaceNavigationMeshData.Mask<bool>? printMask = null)
+            WorldspaceNavmeshParent.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WorldspaceNavigationMeshData =>");
+                fg.AppendLine($"WorldspaceNavmeshParent =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WorldspaceNavigationMeshData) =>");
+                fg.AppendLine($"{name} (WorldspaceNavmeshParent) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -857,11 +821,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         protected static void ToStringFields(
-            IWorldspaceNavigationMeshDataGetter item,
+            IWorldspaceNavmeshParentGetter item,
             FileGeneration fg,
-            WorldspaceNavigationMeshData.Mask<bool>? printMask = null)
+            WorldspaceNavmeshParent.Mask<bool>? printMask = null)
         {
-            ANavigationMeshDataCommon.ToStringFields(
+            ANavmeshParentCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -875,34 +839,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         
-        public static WorldspaceNavigationMeshData_FieldIndex ConvertFieldIndex(ANavigationMeshData_FieldIndex index)
+        public static WorldspaceNavmeshParent_FieldIndex ConvertFieldIndex(ANavmeshParent_FieldIndex index)
         {
             switch (index)
             {
-                case ANavigationMeshData_FieldIndex.NavmeshVersion:
-                    return (WorldspaceNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.Magic:
-                    return (WorldspaceNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.Vertices:
-                    return (WorldspaceNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.Triangles:
-                    return (WorldspaceNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.EdgeLinks:
-                    return (WorldspaceNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.DoorTriangles:
-                    return (WorldspaceNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.NavmeshGridDivisor:
-                    return (WorldspaceNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.MaxDistanceX:
-                    return (WorldspaceNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.MaxDistanceY:
-                    return (WorldspaceNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.Min:
-                    return (WorldspaceNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.Max:
-                    return (WorldspaceNavigationMeshData_FieldIndex)((int)index);
-                case ANavigationMeshData_FieldIndex.NavmeshGrid:
-                    return (WorldspaceNavigationMeshData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -910,17 +850,17 @@ namespace Mutagen.Bethesda.Skyrim
         
         #region Equals and Hash
         public virtual bool Equals(
-            IWorldspaceNavigationMeshDataGetter? lhs,
-            IWorldspaceNavigationMeshDataGetter? rhs,
+            IWorldspaceNavmeshParentGetter? lhs,
+            IWorldspaceNavmeshParentGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IANavigationMeshDataGetter)lhs, (IANavigationMeshDataGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)WorldspaceNavigationMeshData_FieldIndex.Parent) ?? true))
+            if (!base.Equals((IANavmeshParentGetter)lhs, (IANavmeshParentGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)WorldspaceNavmeshParent_FieldIndex.Parent) ?? true))
             {
                 if (!lhs.Parent.Equals(rhs.Parent)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WorldspaceNavigationMeshData_FieldIndex.Coordinates) ?? true))
+            if ((crystal?.GetShouldTranslate((int)WorldspaceNavmeshParent_FieldIndex.Coordinates) ?? true))
             {
                 if (!lhs.Coordinates.Equals(rhs.Coordinates)) return false;
             }
@@ -928,17 +868,17 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public override bool Equals(
-            IANavigationMeshDataGetter? lhs,
-            IANavigationMeshDataGetter? rhs,
+            IANavmeshParentGetter? lhs,
+            IANavmeshParentGetter? rhs,
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IWorldspaceNavigationMeshDataGetter?)lhs,
-                rhs: rhs as IWorldspaceNavigationMeshDataGetter,
+                lhs: (IWorldspaceNavmeshParentGetter?)lhs,
+                rhs: rhs as IWorldspaceNavmeshParentGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(IWorldspaceNavigationMeshDataGetter item)
+        public virtual int GetHashCode(IWorldspaceNavmeshParentGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Parent);
@@ -947,9 +887,9 @@ namespace Mutagen.Bethesda.Skyrim
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(IANavigationMeshDataGetter item)
+        public override int GetHashCode(IANavmeshParentGetter item)
         {
-            return GetHashCode(item: (IWorldspaceNavigationMeshDataGetter)item);
+            return GetHashCode(item: (IWorldspaceNavmeshParentGetter)item);
         }
         
         #endregion
@@ -957,11 +897,11 @@ namespace Mutagen.Bethesda.Skyrim
         
         public override object GetNew()
         {
-            return WorldspaceNavigationMeshData.GetNew();
+            return WorldspaceNavmeshParent.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorldspaceNavigationMeshDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorldspaceNavmeshParentGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -974,29 +914,29 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class WorldspaceNavigationMeshDataSetterTranslationCommon : ANavigationMeshDataSetterTranslationCommon
+    internal partial class WorldspaceNavmeshParentSetterTranslationCommon : ANavmeshParentSetterTranslationCommon
     {
-        public new static readonly WorldspaceNavigationMeshDataSetterTranslationCommon Instance = new WorldspaceNavigationMeshDataSetterTranslationCommon();
+        public new static readonly WorldspaceNavmeshParentSetterTranslationCommon Instance = new WorldspaceNavmeshParentSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IWorldspaceNavigationMeshData item,
-            IWorldspaceNavigationMeshDataGetter rhs,
+            IWorldspaceNavmeshParent item,
+            IWorldspaceNavmeshParentGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IANavigationMeshData)item,
-                (IANavigationMeshDataGetter)rhs,
+                (IANavmeshParent)item,
+                (IANavmeshParentGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)WorldspaceNavigationMeshData_FieldIndex.Parent) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WorldspaceNavmeshParent_FieldIndex.Parent) ?? true))
             {
                 item.Parent.SetTo(rhs.Parent.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)WorldspaceNavigationMeshData_FieldIndex.Coordinates) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WorldspaceNavmeshParent_FieldIndex.Coordinates) ?? true))
             {
                 item.Coordinates = rhs.Coordinates;
             }
@@ -1004,15 +944,15 @@ namespace Mutagen.Bethesda.Skyrim
         
         
         public override void DeepCopyIn(
-            IANavigationMeshData item,
-            IANavigationMeshDataGetter rhs,
+            IANavmeshParent item,
+            IANavmeshParentGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IWorldspaceNavigationMeshData)item,
-                rhs: (IWorldspaceNavigationMeshDataGetter)rhs,
+                item: (IWorldspaceNavmeshParent)item,
+                rhs: (IWorldspaceNavmeshParentGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1020,12 +960,12 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-        public WorldspaceNavigationMeshData DeepCopy(
-            IWorldspaceNavigationMeshDataGetter item,
-            WorldspaceNavigationMeshData.TranslationMask? copyMask = null)
+        public WorldspaceNavmeshParent DeepCopy(
+            IWorldspaceNavmeshParentGetter item,
+            WorldspaceNavmeshParent.TranslationMask? copyMask = null)
         {
-            WorldspaceNavigationMeshData ret = (WorldspaceNavigationMeshData)((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)item).CommonInstance()!).GetNew();
-            ((WorldspaceNavigationMeshDataSetterTranslationCommon)((IWorldspaceNavigationMeshDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WorldspaceNavmeshParent ret = (WorldspaceNavmeshParent)((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)item).CommonInstance()!).GetNew();
+            ((WorldspaceNavmeshParentSetterTranslationCommon)((IWorldspaceNavmeshParentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1034,30 +974,30 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
         
-        public WorldspaceNavigationMeshData DeepCopy(
-            IWorldspaceNavigationMeshDataGetter item,
-            out WorldspaceNavigationMeshData.ErrorMask errorMask,
-            WorldspaceNavigationMeshData.TranslationMask? copyMask = null)
+        public WorldspaceNavmeshParent DeepCopy(
+            IWorldspaceNavmeshParentGetter item,
+            out WorldspaceNavmeshParent.ErrorMask errorMask,
+            WorldspaceNavmeshParent.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            WorldspaceNavigationMeshData ret = (WorldspaceNavigationMeshData)((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)item).CommonInstance()!).GetNew();
-            ((WorldspaceNavigationMeshDataSetterTranslationCommon)((IWorldspaceNavigationMeshDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WorldspaceNavmeshParent ret = (WorldspaceNavmeshParent)((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)item).CommonInstance()!).GetNew();
+            ((WorldspaceNavmeshParentSetterTranslationCommon)((IWorldspaceNavmeshParentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = WorldspaceNavigationMeshData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WorldspaceNavmeshParent.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public WorldspaceNavigationMeshData DeepCopy(
-            IWorldspaceNavigationMeshDataGetter item,
+        public WorldspaceNavmeshParent DeepCopy(
+            IWorldspaceNavmeshParentGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            WorldspaceNavigationMeshData ret = (WorldspaceNavigationMeshData)((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)item).CommonInstance()!).GetNew();
-            ((WorldspaceNavigationMeshDataSetterTranslationCommon)((IWorldspaceNavigationMeshDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WorldspaceNavmeshParent ret = (WorldspaceNavmeshParent)((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)item).CommonInstance()!).GetNew();
+            ((WorldspaceNavmeshParentSetterTranslationCommon)((IWorldspaceNavmeshParentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1073,21 +1013,21 @@ namespace Mutagen.Bethesda.Skyrim
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WorldspaceNavigationMeshData
+    public partial class WorldspaceNavmeshParent
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => WorldspaceNavigationMeshData_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => WorldspaceNavigationMeshData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WorldspaceNavmeshParent_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => WorldspaceNavmeshParent_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => WorldspaceNavigationMeshDataCommon.Instance;
+        protected override object CommonInstance() => WorldspaceNavmeshParentCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return WorldspaceNavigationMeshDataSetterCommon.Instance;
+            return WorldspaceNavmeshParentSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => WorldspaceNavigationMeshDataSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => WorldspaceNavmeshParentSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1098,24 +1038,27 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WorldspaceNavigationMeshDataBinaryWriteTranslation :
-        ANavigationMeshDataBinaryWriteTranslation,
+    public partial class WorldspaceNavmeshParentBinaryWriteTranslation :
+        ANavmeshParentBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static WorldspaceNavigationMeshDataBinaryWriteTranslation Instance = new WorldspaceNavigationMeshDataBinaryWriteTranslation();
+        public new readonly static WorldspaceNavmeshParentBinaryWriteTranslation Instance = new WorldspaceNavmeshParentBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IWorldspaceNavigationMeshDataGetter item,
+            IWorldspaceNavmeshParentGetter item,
             MutagenWriter writer)
         {
-            ANavigationMeshDataBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Parent);
+            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Coordinates);
         }
 
         public void Write(
             MutagenWriter writer,
-            IWorldspaceNavigationMeshDataGetter item,
+            IWorldspaceNavmeshParentGetter item,
             TypedWriteParams? translationParams = null)
         {
             WriteEmbedded(
@@ -1129,35 +1072,34 @@ namespace Mutagen.Bethesda.Skyrim
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IWorldspaceNavigationMeshDataGetter)item,
+                item: (IWorldspaceNavmeshParentGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
-            IANavigationMeshDataGetter item,
+            IANavmeshParentGetter item,
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IWorldspaceNavigationMeshDataGetter)item,
+                item: (IWorldspaceNavmeshParentGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class WorldspaceNavigationMeshDataBinaryCreateTranslation : ANavigationMeshDataBinaryCreateTranslation
+    internal partial class WorldspaceNavmeshParentBinaryCreateTranslation : ANavmeshParentBinaryCreateTranslation
     {
-        public new readonly static WorldspaceNavigationMeshDataBinaryCreateTranslation Instance = new WorldspaceNavigationMeshDataBinaryCreateTranslation();
+        public new readonly static WorldspaceNavmeshParentBinaryCreateTranslation Instance = new WorldspaceNavmeshParentBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IWorldspaceNavigationMeshData item,
+            IWorldspaceNavmeshParent item,
             MutagenFrame frame)
         {
-            ANavigationMeshDataBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
+            item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Coordinates = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1166,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class WorldspaceNavigationMeshDataBinaryTranslationMixIn
+    public static class WorldspaceNavmeshParentBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1175,43 +1117,45 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim
 {
-    internal partial class WorldspaceNavigationMeshDataBinaryOverlay :
-        ANavigationMeshDataBinaryOverlay,
-        IWorldspaceNavigationMeshDataGetter
+    internal partial class WorldspaceNavmeshParentBinaryOverlay :
+        ANavmeshParentBinaryOverlay,
+        IWorldspaceNavmeshParentGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => WorldspaceNavigationMeshData_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => WorldspaceNavigationMeshData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WorldspaceNavmeshParent_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => WorldspaceNavmeshParent_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => WorldspaceNavigationMeshDataCommon.Instance;
+        protected override object CommonInstance() => WorldspaceNavmeshParentCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => WorldspaceNavigationMeshDataSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => WorldspaceNavmeshParentSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceNavigationMeshDataCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceNavmeshParentCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => WorldspaceNavigationMeshDataBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => WorldspaceNavmeshParentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((WorldspaceNavigationMeshDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WorldspaceNavmeshParentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
+        public IFormLinkGetter<IWorldspaceGetter> Parent => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public P2Int16 Coordinates => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected WorldspaceNavigationMeshDataBinaryOverlay(
+        protected WorldspaceNavmeshParentBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1221,16 +1165,16 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static WorldspaceNavigationMeshDataBinaryOverlay WorldspaceNavigationMeshDataFactory(
+        public static WorldspaceNavmeshParentBinaryOverlay WorldspaceNavmeshParentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new WorldspaceNavigationMeshDataBinaryOverlay(
-                bytes: stream.RemainingMemory,
+            var ret = new WorldspaceNavmeshParentBinaryOverlay(
+                bytes: stream.RemainingMemory.Slice(0, 0x8),
                 package: package);
             int offset = stream.Position;
-            stream.Position += ret.DoorTrianglesEndingPos;
+            stream.Position += 0x8;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1238,12 +1182,12 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static WorldspaceNavigationMeshDataBinaryOverlay WorldspaceNavigationMeshDataFactory(
+        public static WorldspaceNavmeshParentBinaryOverlay WorldspaceNavmeshParentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return WorldspaceNavigationMeshDataFactory(
+            return WorldspaceNavmeshParentFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1255,7 +1199,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            WorldspaceNavigationMeshDataMixIn.ToString(
+            WorldspaceNavmeshParentMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1265,16 +1209,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IWorldspaceNavigationMeshDataGetter rhs) return false;
-            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IWorldspaceNavmeshParentGetter rhs) return false;
+            return ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IWorldspaceNavigationMeshDataGetter? obj)
+        public bool Equals(IWorldspaceNavmeshParentGetter? obj)
         {
-            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -8584,18 +8584,10 @@ namespace Mutagen.Bethesda.Skyrim
                         type: type,
                         keys: keys);
                     break;
-                case "ANavigationMesh":
-                case "IANavigationMeshGetter":
-                case "IANavigationMesh":
-                case "IANavigationMeshInternal":
-                case "WorldspaceNavigationMesh":
-                case "IWorldspaceNavigationMeshGetter":
-                case "IWorldspaceNavigationMesh":
-                case "IWorldspaceNavigationMeshInternal":
-                case "CellNavigationMesh":
-                case "ICellNavigationMeshGetter":
-                case "ICellNavigationMesh":
-                case "ICellNavigationMeshInternal":
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
                     obj.Cells.Remove(
                         type: type,
                         keys: keys);
@@ -13265,10 +13257,10 @@ namespace Mutagen.Bethesda.Skyrim
                         yield return item;
                     }
                     yield break;
-                case "ANavigationMesh":
-                case "IANavigationMeshGetter":
-                case "IANavigationMesh":
-                case "IANavigationMeshInternal":
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
                     foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -16048,10 +16040,10 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                     yield break;
-                case "ANavigationMesh":
-                case "IANavigationMeshGetter":
-                case "IANavigationMesh":
-                case "IANavigationMeshInternal":
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
                         linkCache: linkCache,
                         type: type,

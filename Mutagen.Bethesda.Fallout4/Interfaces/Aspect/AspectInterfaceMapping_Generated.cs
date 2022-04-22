@@ -86,6 +86,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ArtObject_Registration.Instance,
                 BodyData_Registration.Instance,
                 Book_Registration.Instance,
+                Climate_Registration.Instance,
                 Container_Registration.Instance,
                 DestructionStage_Registration.Instance,
                 Door_Registration.Instance,

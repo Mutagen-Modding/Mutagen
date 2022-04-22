@@ -153,7 +153,7 @@
   </Object>
   <Object name="NavigationDoorLink" objType="Subrecord" recordType="XNDP" GUID="3dfc5897-6afc-4b57-9d2a-1946257205ed" ID="310">
     <Fields>
-      <FormLink name="NavMesh" refName="ANavigationMesh" />
+      <FormLink name="NavMesh" refName="NavigationMesh" />
       <!-- ToDo:  Add a linking accessor to get triangle directly through formlink? -->
       <Int16 name="NavMeshTriangleIndex" />
       <Int16 name="Unused" />

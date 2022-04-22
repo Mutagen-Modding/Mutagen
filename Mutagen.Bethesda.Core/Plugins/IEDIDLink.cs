@@ -1,56 +1,54 @@
-using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
-namespace Mutagen.Bethesda.Plugins
+namespace Mutagen.Bethesda.Plugins;
+
+/// <summary>
+/// An interface for a EDID Link
+/// </summary>
+public interface IEDIDLinkGetter : ILink
 {
     /// <summary>
-    /// An interface for a EDID Link
+    /// Record type representing the target EditorID to link against
     /// </summary>
-    public interface IEDIDLinkGetter : ILink
-    {
-        /// <summary>
-        /// Record type representing the target EditorID to link against
-        /// </summary>
-        RecordType EDID { get; }
-    }
+    RecordType EDID { get; }
+}
 
-    public interface IEDIDLink : IEDIDLinkGetter
-    {
-        /// <summary>
-        /// Record type representing the target EditorID to link against
-        /// </summary>
-        new RecordType EDID { get; set; }
-    }
-
+public interface IEDIDLink : IEDIDLinkGetter
+{
     /// <summary>
-    /// An interface for a EDID Link, with a Major Record type constraint
+    /// Record type representing the target EditorID to link against
     /// </summary>
-    /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public interface IEDIDLinkGetter<out TMajor> : ILink<TMajor>, IEDIDLinkGetter
-       where TMajor : IMajorRecordGetter
-    {
-    }
+    new RecordType EDID { get; set; }
+}
 
-    public interface IEDIDLink<TMajor> : IEDIDLinkGetter<TMajor>, IEDIDLink, IClearable
-       where TMajor : IMajorRecordGetter
-    {
-        void SetTo(RecordType type);
-        void SetTo(IEDIDLinkGetter<TMajor> rhsLink);
-    }
+/// <summary>
+/// An interface for a EDID Link, with a Major Record type constraint
+/// </summary>
+/// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
+public interface IEDIDLinkGetter<out TMajor> : ILink<TMajor>, IEDIDLinkGetter
+    where TMajor : IMajorRecordGetter
+{
+}
 
-    /// <summary>
-    /// A static class that contains extension functions for EDIDLinks
-    /// </summary>
-    public static class IEDIDLinkExt
+public interface IEDIDLink<TMajor> : IEDIDLinkGetter<TMajor>, IEDIDLink, IClearable
+    where TMajor : IMajorRecordGetter
+{
+    void SetTo(RecordType type);
+    void SetTo(IEDIDLinkGetter<TMajor> rhsLink);
+}
+
+/// <summary>
+/// A static class that contains extension functions for EDIDLinks
+/// </summary>
+public static class IEDIDLinkExt
+{
+    /// <summary> 
+    /// Creates a new FormLinkNullable with the same type 
+    /// </summary> 
+    public static IEDIDLink<TMajor> AsSetter<TMajor>(this IEDIDLinkGetter<TMajor> link)
+        where TMajor : class, IMajorRecordGetter
     {
-        /// <summary> 
-        /// Creates a new FormLinkNullable with the same type 
-        /// </summary> 
-        public static IEDIDLink<TMajor> AsSetter<TMajor>(this IEDIDLinkGetter<TMajor> link)
-            where TMajor : class, IMajorRecordGetter
-        {
-            return new EDIDLink<TMajor>(link.EDID);
-        }
+        return new EDIDLink<TMajor>(link.EDID);
     }
 }

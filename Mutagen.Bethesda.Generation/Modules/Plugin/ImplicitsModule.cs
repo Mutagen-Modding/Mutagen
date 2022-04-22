@@ -1,85 +1,81 @@
 using Loqui;
 using Loqui.Generation;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Generation.Modules.Plugin
+namespace Mutagen.Bethesda.Generation.Modules.Plugin;
+
+public class ImplicitsModule : GenerationModule
 {
-    public class ImplicitsModule : GenerationModule
+    public override async Task FinalizeGeneration(ProtocolGeneration proto)
     {
-        public override async Task FinalizeGeneration(ProtocolGeneration proto)
+        if (proto.Protocol.Namespace.Equals("Bethesda")) return;
+
+        var objData = proto.ObjectGenerationsByID.Values.FirstOrDefault()?.GetObjectData();
+        if (objData == null) return;
+
+        var relString = objData.HasMultipleReleases ? "release.ToGameRelease()" : $"{nameof(GameRelease)}.{proto.Protocol.Namespace}";
+
+        FileGeneration fg = new FileGeneration();
+        fg.AppendLine("using System.Collections.Generic;");
+        fg.AppendLine($"using Mutagen.Bethesda.Plugins;");
+        fg.AppendLine($"using Mutagen.Bethesda.Plugins.Implicit;");
+        fg.AppendLine($"using Mutagen.Bethesda.{proto.Protocol.Namespace};");
+        fg.AppendLine();
+        using (var n = new NamespaceWrapper(fg, "Mutagen.Bethesda", fileScoped: false))
         {
-            if (proto.Protocol.Namespace.Equals("Bethesda")) return;
-
-            var objData = proto.ObjectGenerationsByID.Values.FirstOrDefault()?.GetObjectData();
-            if (objData == null) return;
-
-            var relString = objData.HasMultipleReleases ? "release.ToGameRelease()" : $"{nameof(GameRelease)}.{proto.Protocol.Namespace}";
-
-            FileGeneration fg = new FileGeneration();
-            fg.AppendLine("using System.Collections.Generic;");
-            fg.AppendLine($"using Mutagen.Bethesda.Plugins;");
-            fg.AppendLine($"using Mutagen.Bethesda.Plugins.Implicit;");
-            fg.AppendLine($"using Mutagen.Bethesda.{proto.Protocol.Namespace};");
-            fg.AppendLine();
-            using (var n = new NamespaceWrapper(fg, "Mutagen.Bethesda", fileScoped: false))
+            using (var c = new ClassWrapper(fg, "ImplicitsMixIn"))
             {
-                using (var c = new ClassWrapper(fg, "ImplicitsMixIn"))
+                c.Static = true;
+            }
+            using (new BraceWrapper(fg))
+            {
+                using (var args = new FunctionWrapper(fg,
+                           $"public static IReadOnlyCollection<ModKey> {proto.Protocol.Namespace}"))
                 {
-                    c.Static = true;
+                    args.Add($"this ImplicitBaseMasters _");
+                    if (objData.HasMultipleReleases)
+                    {
+                        args.Add($"{objData.GameCategory}Release release");
+                    }
                 }
                 using (new BraceWrapper(fg))
                 {
-                    using (var args = new FunctionWrapper(fg,
-                        $"public static IReadOnlyCollection<ModKey> {proto.Protocol.Namespace}"))
-                    {
-                        args.Add($"this ImplicitBaseMasters _");
-                        if (objData.HasMultipleReleases)
-                        {
-                            args.Add($"{objData.GameCategory}Release release");
-                        }
-                    }
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine($"return Implicits.Get({relString}).BaseMasters;");
-                    }
-                    fg.AppendLine();
+                    fg.AppendLine($"return Implicits.Get({relString}).BaseMasters;");
+                }
+                fg.AppendLine();
 
-                    using (var args = new FunctionWrapper(fg,
-                        $"public static IReadOnlyCollection<ModKey> {proto.Protocol.Namespace}"))
+                using (var args = new FunctionWrapper(fg,
+                           $"public static IReadOnlyCollection<ModKey> {proto.Protocol.Namespace}"))
+                {
+                    args.Add($"this ImplicitListings _");
+                    if (objData.HasMultipleReleases)
                     {
-                        args.Add($"this ImplicitListings _");
-                        if (objData.HasMultipleReleases)
-                        {
-                            args.Add($"{objData.GameCategory}Release release");
-                        }
-                    }
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine($"return Implicits.Get({relString}).Listings;");
-                    }
-                    fg.AppendLine();
-
-                    using (var args = new FunctionWrapper(fg,
-                        $"public static IReadOnlyCollection<FormKey> {proto.Protocol.Namespace}"))
-                    {
-                        args.Add($"this ImplicitRecordFormKeys _");
-                        if (objData.HasMultipleReleases)
-                        {
-                            args.Add($"{objData.GameCategory}Release release");
-                        }
-                    }
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine($"return Implicits.Get({relString}).RecordFormKeys;");
+                        args.Add($"{objData.GameCategory}Release release");
                     }
                 }
-            }
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"return Implicits.Get({relString}).Listings;");
+                }
+                fg.AppendLine();
 
-            var path = Path.Combine(proto.DefFileLocation.FullName, $"../ImplicitsMixIn{Loqui.Generation.Constants.AutogeneratedMarkerString}.cs");
-            fg.Generate(path);
-            proto.GeneratedFiles.Add(path, ProjItemType.Compile);
+                using (var args = new FunctionWrapper(fg,
+                           $"public static IReadOnlyCollection<FormKey> {proto.Protocol.Namespace}"))
+                {
+                    args.Add($"this ImplicitRecordFormKeys _");
+                    if (objData.HasMultipleReleases)
+                    {
+                        args.Add($"{objData.GameCategory}Release release");
+                    }
+                }
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"return Implicits.Get({relString}).RecordFormKeys;");
+                }
+            }
         }
+
+        var path = Path.Combine(proto.DefFileLocation.FullName, $"../ImplicitsMixIn{Loqui.Generation.Constants.AutogeneratedMarkerString}.cs");
+        fg.Generate(path);
+        proto.GeneratedFiles.Add(path, ProjItemType.Compile);
     }
 }

@@ -8,6 +8,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Noggog;
 
+#pragma warning disable CS0618
+
 namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 
 /// <summary>

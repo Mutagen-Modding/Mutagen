@@ -1,19 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
-using Noggog;
 
-namespace Mutagen.Bethesda.Archives.Ba2
+namespace Mutagen.Bethesda.Archives.Ba2;
+
+class Ba2FolderWrapper : IArchiveFolder
 {
-    class Ba2FolderWrapper : IArchiveFolder
+    public IReadOnlyCollection<IArchiveFile> Files { get; }
+
+    public string? Path { get; }
+
+    public Ba2FolderWrapper(string path, IEnumerable<IArchiveFile> files)
     {
-        public IReadOnlyCollection<IArchiveFile> Files { get; }
-
-        public string? Path { get; }
-
-        public Ba2FolderWrapper(string path, IEnumerable<IArchiveFile> files)
-        {
-            Path = path;
-            Files = files.ToList();
-        }
+        Path = path;
+        Files = files.ToList();
     }
 }

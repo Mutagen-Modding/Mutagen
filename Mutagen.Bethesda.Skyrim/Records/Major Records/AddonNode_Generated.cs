@@ -1953,15 +1953,15 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _SoundLocation;
         public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
-        private int? _DNAMLocation;
+        private RangeInt32? _DNAMLocation;
         public AddonNode.DNAMDataType DNAMDataTypeState { get; private set; }
         #region MasterParticleSystemCap
-        private int _MasterParticleSystemCapLocation => _DNAMLocation!.Value;
+        private int _MasterParticleSystemCapLocation => _DNAMLocation!.Value.Min;
         private bool _MasterParticleSystemCap_IsSet => _DNAMLocation.HasValue;
         public UInt16 MasterParticleSystemCap => _MasterParticleSystemCap_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_MasterParticleSystemCapLocation, 2)) : default;
         #endregion
         #region AlwaysLoaded
-        private int _AlwaysLoadedLocation => _DNAMLocation!.Value + 0x2;
+        private int _AlwaysLoadedLocation => _DNAMLocation!.Value.Min + 0x2;
         public partial Boolean GetAlwaysLoadedCustom();
         public Boolean AlwaysLoaded => GetAlwaysLoadedCustom();
         #endregion
@@ -2056,7 +2056,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)AddonNode_FieldIndex.AlwaysLoaded;
                 }
                 default:

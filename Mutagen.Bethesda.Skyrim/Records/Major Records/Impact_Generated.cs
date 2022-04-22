@@ -2474,45 +2474,45 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         public IModelGetter? Model { get; private set; }
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Impact.DATADataType DATADataTypeState { get; private set; }
         #region Duration
-        private int _DurationLocation => _DATALocation!.Value;
+        private int _DurationLocation => _DATALocation!.Value.Min;
         private bool _Duration_IsSet => _DATALocation.HasValue;
         public Single Duration => _Duration_IsSet ? _data.Slice(_DurationLocation, 4).Float() : default;
         #endregion
         #region Orientation
-        private int _OrientationLocation => _DATALocation!.Value + 0x4;
+        private int _OrientationLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Orientation_IsSet => _DATALocation.HasValue;
         public Impact.OrientationType Orientation => _Orientation_IsSet ? (Impact.OrientationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_OrientationLocation, 0x4)) : default;
         #endregion
         #region AngleThreshold
-        private int _AngleThresholdLocation => _DATALocation!.Value + 0x8;
+        private int _AngleThresholdLocation => _DATALocation!.Value.Min + 0x8;
         private bool _AngleThreshold_IsSet => _DATALocation.HasValue;
         public Single AngleThreshold => _AngleThreshold_IsSet ? _data.Slice(_AngleThresholdLocation, 4).Float() : default;
         #endregion
         #region PlacementRadius
-        private int _PlacementRadiusLocation => _DATALocation!.Value + 0xC;
+        private int _PlacementRadiusLocation => _DATALocation!.Value.Min + 0xC;
         private bool _PlacementRadius_IsSet => _DATALocation.HasValue;
         public Single PlacementRadius => _PlacementRadius_IsSet ? _data.Slice(_PlacementRadiusLocation, 4).Float() : default;
         #endregion
         #region SoundLevel
-        private int _SoundLevelLocation => _DATALocation!.Value + 0x10;
+        private int _SoundLevelLocation => _DATALocation!.Value.Min + 0x10;
         private bool _SoundLevel_IsSet => _DATALocation.HasValue;
         public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SoundLevelLocation, 0x4)) : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x14;
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0x14;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public Impact.Flag Flags => _Flags_IsSet ? (Impact.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region Result
-        private int _ResultLocation => _DATALocation!.Value + 0x15;
+        private int _ResultLocation => _DATALocation!.Value.Min + 0x15;
         private bool _Result_IsSet => _DATALocation.HasValue;
         public Impact.ResultType Result => _Result_IsSet ? (Impact.ResultType)_data.Span.Slice(_ResultLocation, 0x1)[0] : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _DATALocation!.Value + 0x16;
+        private int _UnknownLocation => _DATALocation!.Value.Min + 0x16;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
         public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
         #endregion
@@ -2616,7 +2616,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Impact_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.DODT:

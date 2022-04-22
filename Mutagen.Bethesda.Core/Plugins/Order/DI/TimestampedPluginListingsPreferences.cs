@@ -1,12 +1,11 @@
-﻿namespace Mutagen.Bethesda.Plugins.Order.DI
-{
-    public interface ITimestampedPluginListingsPreferences
-    {
-        bool ThrowOnMissingMods { get; }
-    }
+﻿namespace Mutagen.Bethesda.Plugins.Order.DI;
 
-    public class TimestampedPluginListingsPreferences : ITimestampedPluginListingsPreferences
-    {
-        public bool ThrowOnMissingMods { get; init; }
-    }
+public interface ITimestampedPluginListingsPreferences
+{
+    bool ThrowOnMissingMods { get; }
+}
+
+public class TimestampedPluginListingsPreferences : ITimestampedPluginListingsPreferences
+{
+    public bool ThrowOnMissingMods { get; init; }
 }

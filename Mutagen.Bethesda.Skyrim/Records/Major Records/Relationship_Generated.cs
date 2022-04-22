@@ -1792,35 +1792,35 @@ namespace Mutagen.Bethesda.Skyrim
 
         public Relationship.MajorFlag MajorFlags => (Relationship.MajorFlag)this.MajorRecordFlagsRaw;
 
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Relationship.DATADataType DATADataTypeState { get; private set; }
         #region Parent
-        private int _ParentLocation => _DATALocation!.Value;
+        private int _ParentLocation => _DATALocation!.Value.Min;
         private bool _Parent_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<INpcGetter> Parent => _Parent_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ParentLocation, 0x4)))) : FormLink<INpcGetter>.Null;
         #endregion
         #region Child
-        private int _ChildLocation => _DATALocation!.Value + 0x4;
+        private int _ChildLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Child_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<INpcGetter> Child => _Child_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ChildLocation, 0x4)))) : FormLink<INpcGetter>.Null;
         #endregion
         #region Rank
-        private int _RankLocation => _DATALocation!.Value + 0x8;
+        private int _RankLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Rank_IsSet => _DATALocation.HasValue;
         public Relationship.RankType Rank => _Rank_IsSet ? (Relationship.RankType)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_RankLocation, 0x2)) : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _DATALocation!.Value + 0xA;
+        private int _UnknownLocation => _DATALocation!.Value.Min + 0xA;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
         public Byte Unknown => _Unknown_IsSet ? _data.Span[_UnknownLocation] : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0xB;
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0xB;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public Relationship.Flag Flags => _Flags_IsSet ? (Relationship.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region AssociationType
-        private int _AssociationTypeLocation => _DATALocation!.Value + 0xC;
+        private int _AssociationTypeLocation => _DATALocation!.Value.Min + 0xC;
         private bool _AssociationType_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IAssociationTypeGetter> AssociationType => _AssociationType_IsSet ? new FormLink<IAssociationTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AssociationTypeLocation, 0x4)))) : FormLink<IAssociationTypeGetter>.Null;
         #endregion
@@ -1892,7 +1892,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Relationship_FieldIndex.AssociationType;
                 }
                 default:

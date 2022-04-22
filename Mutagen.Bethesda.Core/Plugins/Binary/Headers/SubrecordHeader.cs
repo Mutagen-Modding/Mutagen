@@ -1,307 +1,305 @@
 using Mutagen.Bethesda.Plugins.Meta;
-using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using System.Buffers.Binary;
 
-namespace Mutagen.Bethesda.Plugins.Binary.Headers
+namespace Mutagen.Bethesda.Plugins.Binary.Headers;
+
+/// <summary>
+/// A struct that overlays on top of bytes that is able to retrieve Sub Record header data on demand.
+/// </summary>
+public struct SubrecordHeader
 {
     /// <summary>
-    /// A struct that overlays on top of bytes that is able to retrieve Sub Record header data on demand.
+    /// Game metadata to use as reference for alignment
     /// </summary>
-    public struct SubrecordHeader
+    public GameConstants Meta { get; }
+        
+    /// <summary>
+    /// Bytes overlaid onto
+    /// </summary>
+    public ReadOnlyMemorySlice<byte> HeaderData { get; }
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="meta">Game metadata to use as reference for alignment</param>
+    /// <param name="span">Span to overlay on, aligned to the start of the Sub Record's header</param>
+    public SubrecordHeader(GameConstants meta, ReadOnlyMemorySlice<byte> span)
     {
-        /// <summary>
-        /// Game metadata to use as reference for alignment
-        /// </summary>
-        public GameConstants Meta { get; }
-        
-        /// <summary>
-        /// Bytes overlaid onto
-        /// </summary>
-        public ReadOnlyMemorySlice<byte> HeaderData { get; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="meta">Game metadata to use as reference for alignment</param>
-        /// <param name="span">Span to overlay on, aligned to the start of the Sub Record's header</param>
-        public SubrecordHeader(GameConstants meta, ReadOnlyMemorySlice<byte> span)
-        {
-            this.Meta = meta;
-            this.HeaderData = span.Slice(0, meta.SubConstants.HeaderLength);
-        }
-
-        /// <summary>
-        /// Game release associated with header
-        /// </summary>
-        public GameRelease Release => Meta.Release;
-        
-        /// <summary>
-        /// The length that the header itself takes
-        /// </summary>
-        public byte HeaderLength => Meta.SubConstants.HeaderLength;
-        
-        /// <summary>
-        /// RecordType of the header
-        /// </summary>
-        public RecordType RecordType => new RecordType(this.RecordTypeInt);
-        
-        /// <summary>
-        /// RecordType of the header, represented as an int
-        /// </summary>
-        public int RecordTypeInt => BinaryPrimitives.ReadInt32LittleEndian(this.HeaderData.Slice(0, 4));
-        
-        /// <summary>
-        /// The length of the content of the Sub Record, excluding the header bytes.
-        /// </summary>
-        public ushort ContentLength => BinaryPrimitives.ReadUInt16LittleEndian(this.HeaderData.Slice(4, 2));
-
-        /// <summary>
-        /// Total length of the Sub Record, including the header and its content.
-        /// </summary>
-        public int TotalLength => this.HeaderLength + this.ContentLength;
-
-        /// <inheritdoc/>
-        public override string ToString() => $"{RecordType.ToString()} => 0x{ContentLength.ToString("X")}";
+        this.Meta = meta;
+        this.HeaderData = span.Slice(0, meta.SubConstants.HeaderLength);
     }
 
     /// <summary>
-    /// A struct that overlays on top of bytes that is able to retrive Sub Record header and content data on demand.
+    /// Game release associated with header
     /// </summary>
-    public struct SubrecordFrame
+    public GameRelease Release => Meta.Release;
+        
+    /// <summary>
+    /// The length that the header itself takes
+    /// </summary>
+    public byte HeaderLength => Meta.SubConstants.HeaderLength;
+        
+    /// <summary>
+    /// RecordType of the header
+    /// </summary>
+    public RecordType RecordType => new RecordType(this.RecordTypeInt);
+        
+    /// <summary>
+    /// RecordType of the header, represented as an int
+    /// </summary>
+    public int RecordTypeInt => BinaryPrimitives.ReadInt32LittleEndian(this.HeaderData.Slice(0, 4));
+        
+    /// <summary>
+    /// The length of the content of the Sub Record, excluding the header bytes.
+    /// </summary>
+    public ushort ContentLength => BinaryPrimitives.ReadUInt16LittleEndian(this.HeaderData.Slice(4, 2));
+
+    /// <summary>
+    /// Total length of the Sub Record, including the header and its content.
+    /// </summary>
+    public int TotalLength => this.HeaderLength + this.ContentLength;
+
+    /// <inheritdoc/>
+    public override string ToString() => $"{RecordType.ToString()} => 0x{ContentLength.ToString("X")}";
+}
+
+/// <summary>
+/// A struct that overlays on top of bytes that is able to retrive Sub Record header and content data on demand.
+/// </summary>
+public struct SubrecordFrame
+{
+    /// <summary>
+    /// Header struct contained in the frame
+    /// </summary>
+    public SubrecordHeader Header { get; }
+
+    /// <summary>
+    /// Raw bytes of both header and content data
+    /// </summary>
+    public ReadOnlyMemorySlice<byte> HeaderAndContentData { get; }
+
+    /// <summary>
+    /// Total length of the Sub Record, including the header and its content.
+    /// </summary>
+    public int TotalLength => HeaderAndContentData.Length;
+
+    /// <summary>
+    /// Raw bytes of the content data, excluding the header
+    /// </summary>
+    public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(Header.HeaderLength);
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="meta">Game metadata to use as reference for alignment</param>
+    /// <param name="span">Span to overlay on, aligned to the start of the header</param>
+    public SubrecordFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
     {
-        /// <summary>
-        /// Header struct contained in the frame
-        /// </summary>
-        public SubrecordHeader Header { get; }
+        Header = meta.Subrecord(span);
+        HeaderAndContentData = span.Slice(0, Header.TotalLength);
+    }
 
-        /// <summary>
-        /// Raw bytes of both header and content data
-        /// </summary>
-        public ReadOnlyMemorySlice<byte> HeaderAndContentData { get; }
-
-        /// <summary>
-        /// Total length of the Sub Record, including the header and its content.
-        /// </summary>
-        public int TotalLength => HeaderAndContentData.Length;
-
-        /// <summary>
-        /// Raw bytes of the content data, excluding the header
-        /// </summary>
-        public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(Header.HeaderLength);
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="meta">Game metadata to use as reference for alignment</param>
-        /// <param name="span">Span to overlay on, aligned to the start of the header</param>
-        public SubrecordFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
-        {
-            Header = meta.Subrecord(span);
-            HeaderAndContentData = span.Slice(0, Header.TotalLength);
-        }
-
-        private SubrecordFrame(SubrecordHeader header, ReadOnlyMemorySlice<byte> span)
-        {
-            Header = header;
-            HeaderAndContentData = span;
-        }
-
-        /// <summary>
-        /// Factory
-        /// </summary>
-        /// <param name="header">Existing SubrecordHeader struct</param>
-        /// <param name="span">Span to overlay on, aligned to the start of the header</param>
-        public static SubrecordFrame Factory(SubrecordHeader header, ReadOnlyMemorySlice<byte> span)
-        {
-            return new SubrecordFrame(header, span.Slice(0, header.TotalLength));
-        }
-
-        /// <summary>
-        /// Factory
-        /// </summary>
-        /// <param name="header">Existing SubrecordHeader struct</param>
-        /// <param name="span">Span to overlay on, aligned to the start of the header</param>
-        public static SubrecordFrame FactoryNoTrim(SubrecordHeader header, ReadOnlyMemorySlice<byte> span)
-        {
-            return new SubrecordFrame(header, span);
-        }
-
-        /// <inheritdoc/>
-        public override string ToString() => Header.ToString();
-
-        #region Header Forwarding
-        /// <summary>
-        /// Game metadata to use as reference for alignment
-        /// </summary>
-        public GameConstants Meta => Header.Meta;
-
-        /// <summary>
-        /// Raw bytes of header
-        /// </summary>
-        public ReadOnlyMemorySlice<byte> HeaderData => Header.HeaderData;
-
-        /// <summary>
-        /// Game release associated with header
-        /// </summary>
-        public GameRelease Release => Header.Release;
-
-        /// <summary>
-        /// The length that the header itself takes
-        /// </summary>
-        public byte HeaderLength => Header.HeaderLength;
-
-        /// <summary>
-        /// RecordType of the header
-        /// </summary>
-        public RecordType RecordType => Header.RecordType;
-
-        /// <summary>
-        /// RecordType of the header, represented as an int
-        /// </summary>
-        public int RecordTypeInt => Header.RecordTypeInt;
-
-        /// <summary>
-        /// The length of the content of the Sub Record, excluding the header bytes.
-        /// </summary>
-        public ushort ContentLength => (ushort)Content.Length;
-        #endregion
-
-        public static implicit operator SubrecordHeader(SubrecordFrame frame)
-        {
-            return frame.Header;
-        }
+    private SubrecordFrame(SubrecordHeader header, ReadOnlyMemorySlice<byte> span)
+    {
+        Header = header;
+        HeaderAndContentData = span;
     }
 
     /// <summary>
-    /// A struct that overlays on top of bytes that is able to retrive Sub Record data on demand.
-    /// In addition, it keeps track of its location relative to its parent MajorRecordFrame
+    /// Factory
     /// </summary>
-    public struct SubrecordPinFrame
+    /// <param name="header">Existing SubrecordHeader struct</param>
+    /// <param name="span">Span to overlay on, aligned to the start of the header</param>
+    public static SubrecordFrame Factory(SubrecordHeader header, ReadOnlyMemorySlice<byte> span)
     {
-        /// <summary>
-        /// Frame struct contained in the pin
-        /// </summary>
-        public SubrecordFrame Frame { get; }
+        return new SubrecordFrame(header, span.Slice(0, header.TotalLength));
+    }
 
-        /// <summary>
-        /// Location of the subrecord relative to the parent MajorRecordFrame's data.<br/>
-        /// E.g., relative to the position of the RecordType of the parent MajorRecord.
-        /// </summary>
-        public int Location { get; }
+    /// <summary>
+    /// Factory
+    /// </summary>
+    /// <param name="header">Existing SubrecordHeader struct</param>
+    /// <param name="span">Span to overlay on, aligned to the start of the header</param>
+    public static SubrecordFrame FactoryNoTrim(SubrecordHeader header, ReadOnlyMemorySlice<byte> span)
+    {
+        return new SubrecordFrame(header, span);
+    }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="meta">Game metadata to use as reference for alignment</param>
-        /// <param name="span">Span to overlay on, aligned to the start of the header</param>
-        /// <param name="pinLocation">Location pin tracker relative to parent MajorRecordFrame</param>
-        public SubrecordPinFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span, int pinLocation)
-        {
-            Frame = new SubrecordFrame(meta, span);
-            Location = pinLocation;
-        }
+    /// <inheritdoc/>
+    public override string ToString() => Header.ToString();
 
-        private SubrecordPinFrame(SubrecordFrame frame, int pinLocation)
-        {
-            Frame = frame;
-            Location = pinLocation;
-        }
+    #region Header Forwarding
+    /// <summary>
+    /// Game metadata to use as reference for alignment
+    /// </summary>
+    public GameConstants Meta => Header.Meta;
 
-        /// <summary>
-        /// Factory
-        /// </summary>
-        /// <param name="header">Existing SubrecordHeader struct</param>
-        /// <param name="span">Span to overlay on, aligned to the start of the header</param>
-        /// <param name="pinLocation">Location pin tracker relative to parent MajorRecordFrame</param>
-        public static SubrecordPinFrame Factory(SubrecordHeader header, ReadOnlyMemorySlice<byte> span, int pinLocation)
-        {
-            return new SubrecordPinFrame(
-                SubrecordFrame.Factory(header, span),
-                pinLocation);
-        }
+    /// <summary>
+    /// Raw bytes of header
+    /// </summary>
+    public ReadOnlyMemorySlice<byte> HeaderData => Header.HeaderData;
 
-        /// <summary>
-        /// Factory
-        /// </summary>
-        /// <param name="header">Existing SubrecordHeader struct</param>
-        /// <param name="span">Span to overlay on, aligned to the start of the header</param>
-        /// <param name="pinLocation">Location pin tracker relative to parent MajorRecordFrame</param>
-        public static SubrecordPinFrame FactoryNoTrim(SubrecordHeader header, ReadOnlyMemorySlice<byte> span, int pinLocation)
-        {
-            return new SubrecordPinFrame(
-                SubrecordFrame.FactoryNoTrim(header, span),
-                pinLocation);
-        }
+    /// <summary>
+    /// Game release associated with header
+    /// </summary>
+    public GameRelease Release => Header.Release;
 
-        /// <inheritdoc/>
-        public override string ToString() => $"{Frame.ToString()} @ {Location.ToString()}";
+    /// <summary>
+    /// The length that the header itself takes
+    /// </summary>
+    public byte HeaderLength => Header.HeaderLength;
 
-        #region Forwarding
-        /// <summary>
-        /// Header struct contained in the pin
-        /// </summary>
-        public SubrecordHeader Header => Frame.Header;
+    /// <summary>
+    /// RecordType of the header
+    /// </summary>
+    public RecordType RecordType => Header.RecordType;
 
-        /// <summary>
-        /// Raw bytes of both header and content data
-        /// </summary>
-        public ReadOnlyMemorySlice<byte> HeaderAndContentData => Frame.HeaderAndContentData;
+    /// <summary>
+    /// RecordType of the header, represented as an int
+    /// </summary>
+    public int RecordTypeInt => Header.RecordTypeInt;
 
-        /// <summary>
-        /// Total length of the Sub Record, including the header and its content.
-        /// </summary>
-        public int TotalLength => Frame.TotalLength;
+    /// <summary>
+    /// The length of the content of the Sub Record, excluding the header bytes.
+    /// </summary>
+    public ushort ContentLength => (ushort)Content.Length;
+    #endregion
 
-        /// <summary>
-        /// Raw bytes of the content data, excluding the header
-        /// </summary>
-        public ReadOnlyMemorySlice<byte> Content => Frame.Content;
+    public static implicit operator SubrecordHeader(SubrecordFrame frame)
+    {
+        return frame.Header;
+    }
+}
 
-        /// <summary>
-        /// Game metadata to use as reference for alignment
-        /// </summary>
-        public GameConstants Meta => Frame.Meta;
+/// <summary>
+/// A struct that overlays on top of bytes that is able to retrive Sub Record data on demand.
+/// In addition, it keeps track of its location relative to its parent MajorRecordFrame
+/// </summary>
+public struct SubrecordPinFrame
+{
+    /// <summary>
+    /// Frame struct contained in the pin
+    /// </summary>
+    public SubrecordFrame Frame { get; }
 
-        /// <summary>
-        /// Raw bytes of header
-        /// </summary>
-        public ReadOnlyMemorySlice<byte> HeaderData => Frame.HeaderData;
+    /// <summary>
+    /// Location of the subrecord relative to the parent MajorRecordFrame's data.<br/>
+    /// E.g., relative to the position of the RecordType of the parent MajorRecord.
+    /// </summary>
+    public int Location { get; }
 
-        /// <summary>
-        /// Game release associated with header
-        /// </summary>
-        public GameRelease Release => Frame.Release;
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="meta">Game metadata to use as reference for alignment</param>
+    /// <param name="span">Span to overlay on, aligned to the start of the header</param>
+    /// <param name="pinLocation">Location pin tracker relative to parent MajorRecordFrame</param>
+    public SubrecordPinFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span, int pinLocation)
+    {
+        Frame = new SubrecordFrame(meta, span);
+        Location = pinLocation;
+    }
 
-        /// <summary>
-        /// The length that the header itself takes
-        /// </summary>
-        public byte HeaderLength => Frame.HeaderLength;
+    private SubrecordPinFrame(SubrecordFrame frame, int pinLocation)
+    {
+        Frame = frame;
+        Location = pinLocation;
+    }
 
-        /// <summary>
-        /// RecordType of the header
-        /// </summary>
-        public RecordType RecordType => Frame.RecordType;
+    /// <summary>
+    /// Factory
+    /// </summary>
+    /// <param name="header">Existing SubrecordHeader struct</param>
+    /// <param name="span">Span to overlay on, aligned to the start of the header</param>
+    /// <param name="pinLocation">Location pin tracker relative to parent MajorRecordFrame</param>
+    public static SubrecordPinFrame Factory(SubrecordHeader header, ReadOnlyMemorySlice<byte> span, int pinLocation)
+    {
+        return new SubrecordPinFrame(
+            SubrecordFrame.Factory(header, span),
+            pinLocation);
+    }
 
-        /// <summary>
-        /// RecordType of the header, represented as an int
-        /// </summary>
-        public int RecordTypeInt => Frame.RecordTypeInt;
+    /// <summary>
+    /// Factory
+    /// </summary>
+    /// <param name="header">Existing SubrecordHeader struct</param>
+    /// <param name="span">Span to overlay on, aligned to the start of the header</param>
+    /// <param name="pinLocation">Location pin tracker relative to parent MajorRecordFrame</param>
+    public static SubrecordPinFrame FactoryNoTrim(SubrecordHeader header, ReadOnlyMemorySlice<byte> span, int pinLocation)
+    {
+        return new SubrecordPinFrame(
+            SubrecordFrame.FactoryNoTrim(header, span),
+            pinLocation);
+    }
 
-        /// <summary>
-        /// The length of the content of the Sub Record, excluding the header bytes.
-        /// </summary>
-        public ushort ContentLength => Frame.ContentLength;
-        #endregion
+    /// <inheritdoc/>
+    public override string ToString() => $"{Frame.ToString()} @ {Location.ToString()}";
 
-        public static implicit operator SubrecordHeader(SubrecordPinFrame pin)
-        {
-            return pin.Header;
-        }
+    #region Forwarding
+    /// <summary>
+    /// Header struct contained in the pin
+    /// </summary>
+    public SubrecordHeader Header => Frame.Header;
 
-        public static implicit operator SubrecordFrame(SubrecordPinFrame pin)
-        {
-            return pin.Frame;
-        }
+    /// <summary>
+    /// Raw bytes of both header and content data
+    /// </summary>
+    public ReadOnlyMemorySlice<byte> HeaderAndContentData => Frame.HeaderAndContentData;
+
+    /// <summary>
+    /// Total length of the Sub Record, including the header and its content.
+    /// </summary>
+    public int TotalLength => Frame.TotalLength;
+
+    /// <summary>
+    /// Raw bytes of the content data, excluding the header
+    /// </summary>
+    public ReadOnlyMemorySlice<byte> Content => Frame.Content;
+
+    /// <summary>
+    /// Game metadata to use as reference for alignment
+    /// </summary>
+    public GameConstants Meta => Frame.Meta;
+
+    /// <summary>
+    /// Raw bytes of header
+    /// </summary>
+    public ReadOnlyMemorySlice<byte> HeaderData => Frame.HeaderData;
+
+    /// <summary>
+    /// Game release associated with header
+    /// </summary>
+    public GameRelease Release => Frame.Release;
+
+    /// <summary>
+    /// The length that the header itself takes
+    /// </summary>
+    public byte HeaderLength => Frame.HeaderLength;
+
+    /// <summary>
+    /// RecordType of the header
+    /// </summary>
+    public RecordType RecordType => Frame.RecordType;
+
+    /// <summary>
+    /// RecordType of the header, represented as an int
+    /// </summary>
+    public int RecordTypeInt => Frame.RecordTypeInt;
+
+    /// <summary>
+    /// The length of the content of the Sub Record, excluding the header bytes.
+    /// </summary>
+    public ushort ContentLength => Frame.ContentLength;
+    #endregion
+
+    public static implicit operator SubrecordHeader(SubrecordPinFrame pin)
+    {
+        return pin.Header;
+    }
+
+    public static implicit operator SubrecordFrame(SubrecordPinFrame pin)
+    {
+        return pin.Frame;
     }
 }

@@ -49,7 +49,7 @@
       <FormLink name="Music" refName="MusicType" recordType="XCMO" />
       <FormLink name="ImageSpace" refName="ImageSpace" recordType="XCIM" />
       <RefDirect name="Landscape" binary="NoGeneration" refName="Landscape" />
-      <RefList name="NavigationMeshes" binary="NoGeneration" refName="ANavigationMesh" />
+      <RefList name="NavigationMeshes" binary="NoGeneration" refName="NavigationMesh" />
       <Int32 name="Timestamp" binary="NoGeneration" />
       <Int32 name="UnknownGroupData" binary="NoGeneration" />
       <Int32 name="PersistentTimestamp" binary="NoGeneration" />

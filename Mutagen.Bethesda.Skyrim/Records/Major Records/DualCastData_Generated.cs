@@ -1917,35 +1917,35 @@ namespace Mutagen.Bethesda.Skyrim
         private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public DualCastData.DATADataType DATADataTypeState { get; private set; }
         #region Projectile
-        private int _ProjectileLocation => _DATALocation!.Value;
+        private int _ProjectileLocation => _DATALocation!.Value.Min;
         private bool _Projectile_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
         #endregion
         #region Explosion
-        private int _ExplosionLocation => _DATALocation!.Value + 0x4;
+        private int _ExplosionLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Explosion_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region EffectShader
-        private int _EffectShaderLocation => _DATALocation!.Value + 0x8;
+        private int _EffectShaderLocation => _DATALocation!.Value.Min + 0x8;
         private bool _EffectShader_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IEffectShaderGetter> EffectShader => _EffectShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EffectShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
         #endregion
         #region HitEffectArt
-        private int _HitEffectArtLocation => _DATALocation!.Value + 0xC;
+        private int _HitEffectArtLocation => _DATALocation!.Value.Min + 0xC;
         private bool _HitEffectArt_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IArtObjectGetter> HitEffectArt => _HitEffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HitEffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region ImpactDataSet
-        private int _ImpactDataSetLocation => _DATALocation!.Value + 0x10;
+        private int _ImpactDataSetLocation => _DATALocation!.Value.Min + 0x10;
         private bool _ImpactDataSet_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region InheritScale
-        private int _InheritScaleLocation => _DATALocation!.Value + 0x14;
+        private int _InheritScaleLocation => _DATALocation!.Value.Min + 0x14;
         private bool _InheritScale_IsSet => _DATALocation.HasValue;
         public DualCastData.InheritScaleType InheritScale => _InheritScale_IsSet ? (DualCastData.InheritScaleType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_InheritScaleLocation, 0x4)) : default;
         #endregion
@@ -2022,7 +2022,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)DualCastData_FieldIndex.InheritScale;
                 }
                 default:

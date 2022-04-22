@@ -1,12 +1,9 @@
-using System;
+namespace Mutagen.Bethesda.Plugins.Records;
 
-namespace Mutagen.Bethesda.Plugins.Records
+public enum Quadrant
 {
-    public enum Quadrant
-    {
-        BottomLeft = 0,
-        BottomRight = 1,
-        TopLeft = 2,
-        TopRight = 3,
-    }
+    BottomLeft = 0,
+    BottomRight = 1,
+    TopLeft = 2,
+    TopRight = 3,
 }

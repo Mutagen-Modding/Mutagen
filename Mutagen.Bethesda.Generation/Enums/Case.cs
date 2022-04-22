@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Mutagen.Bethesda.Generation;
 
-namespace Mutagen.Bethesda.Generation
+public enum Case
 {
-    public enum Case
-    {
-        No,
-        Yes,
-        Maybe
-    }
+    No,
+    Yes,
+    Maybe
 }

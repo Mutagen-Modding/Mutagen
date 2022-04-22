@@ -60,6 +60,7 @@ public partial class RecordTypes
     public static readonly RecordType CITC = new(0x43544943);
     public static readonly RecordType CLAS = new(0x53414C43);
     public static readonly RecordType CLFM = new(0x4D464C43);
+    public static readonly RecordType CLMT = new(0x544D4C43);
     public static readonly RecordType CMPO = new(0x4F504D43);
     public static readonly RecordType CNAM = new(0x4D414E43);
     public static readonly RecordType CNTO = new(0x4F544E43);
@@ -82,6 +83,7 @@ public partial class RecordTypes
     public static readonly RecordType CTDA = new(0x41445443);
     public static readonly RecordType CUSD = new(0x44535543);
     public static readonly RecordType CVPA = new(0x41505643);
+    public static readonly RecordType DALC = new(0x434C4144);
     public static readonly RecordType DAMA = new(0x414D4144);
     public static readonly RecordType DAMC = new(0x434D4144);
     public static readonly RecordType DATA = new(0x41544144);
@@ -185,6 +187,7 @@ public partial class RecordTypes
     public static readonly RecordType IDLT = new(0x544C4449);
     public static readonly RecordType IIAD = new(0x44414949);
     public static readonly RecordType IMAD = new(0x44414D49);
+    public static readonly RecordType IMSP = new(0x50534D49);
     public static readonly RecordType INAM = new(0x4D414E49);
     public static readonly RecordType INCC = new(0x43434E49);
     public static readonly RecordType INDX = new(0x58444E49);
@@ -198,6 +201,7 @@ public partial class RecordTypes
     public static readonly RecordType ITXT = new(0x54585449);
     public static readonly RecordType JAIL = new(0x4C49414A);
     public static readonly RecordType JIAD = new(0x4441494A);
+    public static readonly RecordType JNAM = new(0x4D414E4A);
     public static readonly RecordType JOUT = new(0x54554F4A);
     public static readonly RecordType KEYM = new(0x4D59454B);
     public static readonly RecordType KIAD = new(0x4441494B);
@@ -369,6 +373,7 @@ public partial class RecordTypes
     public static readonly RecordType SPCT = new(0x54435053);
     public static readonly RecordType SPED = new(0x44455053);
     public static readonly RecordType SPEL = new(0x4C455053);
+    public static readonly RecordType SPGD = new(0x44475053);
     public static readonly RecordType SPIT = new(0x54495053);
     public static readonly RecordType SPLO = new(0x4F4C5053);
     public static readonly RecordType SPOR = new(0x524F5053);
@@ -425,6 +430,7 @@ public partial class RecordTypes
     public static readonly RecordType WEAP = new(0x50414557);
     public static readonly RecordType WGDR = new(0x52444757);
     public static readonly RecordType WKMV = new(0x564D4B57);
+    public static readonly RecordType WLST = new(0x54534C57);
     public static readonly RecordType WMAP = new(0x50414D57);
     public static readonly RecordType WNAM = new(0x4D414E57);
     public static readonly RecordType WRLD = new(0x444C5257);

@@ -2907,20 +2907,20 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _QuestLocation;
         public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public DialogTopic.DATADataType DATADataTypeState { get; private set; }
         #region TopicFlags
-        private int _TopicFlagsLocation => _DATALocation!.Value;
+        private int _TopicFlagsLocation => _DATALocation!.Value.Min;
         private bool _TopicFlags_IsSet => _DATALocation.HasValue;
         public DialogTopic.TopicFlag TopicFlags => _TopicFlags_IsSet ? (DialogTopic.TopicFlag)_data.Span.Slice(_TopicFlagsLocation, 0x1)[0] : default;
         #endregion
         #region Category
-        private int _CategoryLocation => _DATALocation!.Value + 0x1;
+        private int _CategoryLocation => _DATALocation!.Value.Min + 0x1;
         private bool _Category_IsSet => _DATALocation.HasValue;
         public DialogTopic.CategoryEnum Category => _Category_IsSet ? (DialogTopic.CategoryEnum)_data.Span.Slice(_CategoryLocation, 0x1)[0] : default;
         #endregion
         #region Subtype
-        private int _SubtypeLocation => _DATALocation!.Value + 0x2;
+        private int _SubtypeLocation => _DATALocation!.Value.Min + 0x2;
         private bool _Subtype_IsSet => _DATALocation.HasValue;
         public DialogTopic.SubtypeEnum Subtype => _Subtype_IsSet ? (DialogTopic.SubtypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_SubtypeLocation, 0x2)) : default;
         #endregion
@@ -3030,7 +3030,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)DialogTopic_FieldIndex.Subtype;
                 }
                 case RecordTypeInts.SNAM:

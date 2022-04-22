@@ -4,47 +4,46 @@ using AutoFixture.Kernel;
 using Mutagen.Bethesda.Plugins;
 using Noggog;
 
-namespace Mutagen.Bethesda.Testing.AutoData
+namespace Mutagen.Bethesda.Testing.AutoData;
+
+public class ModKeyBuilder : ISpecimenBuilder
 {
-    public class ModKeyBuilder : ISpecimenBuilder
+    public object Create(object request, ISpecimenContext context)
     {
-        public object Create(object request, ISpecimenContext context)
+        if (request is MultipleRequest mult)
         {
-            if (request is MultipleRequest mult)
+            var req = mult.Request;
+            if (req is SeededRequest seed)
             {
-                var req = mult.Request;
-                if (req is SeededRequest seed)
-                {
-                    req = seed.Request;
-                }
-                if (req is Type t)
-                {
-                    if (t == typeof(ModKey))
-                    {
-                        return new object[]
-                        {
-                            TestConstants.MasterModKey,
-                            TestConstants.PluginModKey,
-                            TestConstants.PluginModKey2,
-                        };
-                    }
-                }
+                req = seed.Request;
             }
-            else if (request is Type t)
+            if (req is Type t)
             {
                 if (t == typeof(ModKey))
                 {
-                    return GetRandomModKey(ModType.Plugin);
+                    return new object[]
+                    {
+                        TestConstants.MasterModKey,
+                        TestConstants.PluginModKey,
+                        TestConstants.PluginModKey2,
+                    };
                 }
             }
-
-            return new NoSpecimen();
         }
-
-        public static ModKey GetRandomModKey(ModType type)
+        else if (request is Type t)
         {
-            var fileName = new FileName(Path.GetRandomFileName());
-            return new ModKey(fileName.NameWithoutExtension, ModType.Plugin);
+            if (t == typeof(ModKey))
+            {
+                return GetRandomModKey(ModType.Plugin);
+            }
         }
+
+        return new NoSpecimen();
+    }
+
+    public static ModKey GetRandomModKey(ModType type)
+    {
+        var fileName = new FileName(Path.GetRandomFileName());
+        return new ModKey(fileName.NameWithoutExtension, ModType.Plugin);
     }
 }

@@ -1,22 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Mutagen.Bethesda.Fallout4;
 
-namespace Mutagen.Bethesda.Fallout4
+/// <summary>
+/// An interface implemented by Major Records that have scripts
+/// </summary>
+public interface IScripted : IScriptedGetter
 {
-    /// <summary>
-    /// An interface implemented by Major Records that have scripts
-    /// </summary>
-    public interface IScripted : IScriptedGetter
-    {
-        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
-    }
+    new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+}
 
-    /// <summary>
-    /// An interface implemented by Major Records that have scripts
-    /// </summary>
-    public interface IScriptedGetter
-    {
-        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
-    }
+/// <summary>
+/// An interface implemented by Major Records that have scripts
+/// </summary>
+public interface IScriptedGetter
+{
+    IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
 }

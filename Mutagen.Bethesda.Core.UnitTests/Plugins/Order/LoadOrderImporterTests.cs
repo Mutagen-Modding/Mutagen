@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.AutoData;
 using Mutagen.Bethesda.UnitTests.Placeholders;
+using Noggog.Testing.IO;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Xunit;
@@ -66,7 +67,7 @@ public class LoadOrderImporterTests
         {
             new LoadOrderImporter<TestMod>(
                     fs,
-                    new DataDirectoryInjection("C:/DataFolder"),
+                    new DataDirectoryInjection($"{PathingUtil.DrivePrefix}DataFolder"),
                     new LoadOrderListingsInjection(TestConstants.Dawnguard),
                     importer)
                 .Import();
@@ -78,7 +79,7 @@ public class LoadOrderImporterTests
     [Fact]
     public void ExceptionDisposesExistingMods()
     {
-        var dataFolder = "C:/DataFolder";
+        var dataFolder = $"{PathingUtil.DrivePrefix}DataFolder";
         var modPaths = new ModKey[]
             {
                 TestConstants.MasterModKey,
@@ -107,7 +108,7 @@ public class LoadOrderImporterTests
     [Fact]
     public void EntryDoesNotExist()
     {
-        var dataFolder = "C:/DataFolder";
+        var dataFolder = $"{PathingUtil.DrivePrefix}DataFolder";
         var modPaths = new ModKey[]
             {
                 TestConstants.MasterModKey,

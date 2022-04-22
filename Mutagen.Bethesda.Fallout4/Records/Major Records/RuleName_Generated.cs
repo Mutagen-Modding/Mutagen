@@ -1654,20 +1654,20 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
-        private int? _XNAMLocation;
+        private RangeInt32? _XNAMLocation;
         public RuleName.XNAMDataType XNAMDataTypeState { get; private set; }
         #region Value
-        private int _ValueLocation => _XNAMLocation!.Value;
+        private int _ValueLocation => _XNAMLocation!.Value.Min;
         private bool _Value_IsSet => _XNAMLocation.HasValue;
         public Single Value => _Value_IsSet ? _data.Slice(_ValueLocation, 4).Float() : default;
         #endregion
         #region PropertyEnum
-        private int _PropertyEnumLocation => _XNAMLocation!.Value + 0x4;
+        private int _PropertyEnumLocation => _XNAMLocation!.Value.Min + 0x4;
         private bool _PropertyEnum_IsSet => _XNAMLocation.HasValue;
         public InstanceNamingRule.PropertyEnum PropertyEnum => _PropertyEnum_IsSet ? (InstanceNamingRule.PropertyEnum)_data.Span.Slice(_PropertyEnumLocation, 0x1)[0] : default;
         #endregion
         #region OpEnum
-        private int _OpEnumLocation => _XNAMLocation!.Value + 0x5;
+        private int _OpEnumLocation => _XNAMLocation!.Value.Min + 0x5;
         private bool _OpEnum_IsSet => _XNAMLocation.HasValue;
         public InstanceNamingRule.OpEnum OpEnum => _OpEnum_IsSet ? (InstanceNamingRule.OpEnum)_data.Span.Slice(_OpEnumLocation, 0x1)[0] : default;
         #endregion
@@ -1755,7 +1755,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XNAM:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RuleName_FieldIndex.OpEnum) return ParseResult.Stop;
-                    _XNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _XNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)RuleName_FieldIndex.OpEnum;
                 }
                 case RecordTypeInts.YNAM:

@@ -299,7 +299,7 @@ public class MainVM : ViewModel
         return new PassthroughSettings()
         {
             DeleteCachesAfter = false,
-            ParallelProccessingSteps = true,
+            ParallelProccessingSteps = false,
             CacheReuse = new CacheReuse()
             {
                 ReuseAlignment = CacheAlignment,

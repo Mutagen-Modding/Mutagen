@@ -1,18 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Oblivion;
+
+public partial class Container
 {
-    public partial class Container
+    [Flags]
+    public enum ContainerFlag
     {
-        [Flags]
-        public enum ContainerFlag
-        {
-            Respawns = 0x2,
-        }
+        Respawns = 0x2,
     }
 }

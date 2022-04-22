@@ -1,6 +1,4 @@
 using Loqui.Generation;
-using System;
-using System.Threading.Tasks;
 using Loqui;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Generation.Fields;

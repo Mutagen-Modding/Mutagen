@@ -4845,199 +4845,199 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public MagicEffect.DATADataType DATADataTypeState { get; private set; }
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value;
+        private int _FlagsLocation => _DATALocation!.Value.Min;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public MagicEffect.Flag Flags => _Flags_IsSet ? (MagicEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region BaseCost
-        private int _BaseCostLocation => _DATALocation!.Value + 0x4;
+        private int _BaseCostLocation => _DATALocation!.Value.Min + 0x4;
         private bool _BaseCost_IsSet => _DATALocation.HasValue;
         public Single BaseCost => _BaseCost_IsSet ? _data.Slice(_BaseCostLocation, 4).Float() : default;
         #endregion
         #region AssociatedItem
-        private int _AssociatedItemLocation => _DATALocation!.Value + 0x8;
+        private int _AssociatedItemLocation => _DATALocation!.Value.Min + 0x8;
         private bool _AssociatedItem_IsSet => _DATALocation.HasValue;
         partial void AssociatedItemCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
         #region MagicSkill
-        private int _MagicSkillLocation => _DATALocation!.Value + 0xC;
+        private int _MagicSkillLocation => _DATALocation!.Value.Min + 0xC;
         private bool _MagicSkill_IsSet => _DATALocation.HasValue;
         public ActorValue MagicSkill => _MagicSkill_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MagicSkillLocation, 0x4)) : default;
         #endregion
         #region ResistValue
-        private int _ResistValueLocation => _DATALocation!.Value + 0x10;
+        private int _ResistValueLocation => _DATALocation!.Value.Min + 0x10;
         private bool _ResistValue_IsSet => _DATALocation.HasValue;
         public ActorValue ResistValue => _ResistValue_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ResistValueLocation, 0x4)) : default;
         #endregion
         #region CounterEffectLogic
-        private int _CounterEffectLogicLocation => _DATALocation!.Value + 0x14;
+        private int _CounterEffectLogicLocation => _DATALocation!.Value.Min + 0x14;
         private bool _CounterEffectLogic_IsSet => _DATALocation.HasValue;
         partial void CounterEffectLogicCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
         #region Unknown1
-        private int _Unknown1Location => _DATALocation!.Value + 0x16;
+        private int _Unknown1Location => _DATALocation!.Value.Min + 0x16;
         private bool _Unknown1_IsSet => _DATALocation.HasValue;
         public UInt16 Unknown1 => _Unknown1_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_Unknown1Location, 2)) : default;
         #endregion
         #region CastingLight
-        private int _CastingLightLocation => _DATALocation!.Value + 0x18;
+        private int _CastingLightLocation => _DATALocation!.Value.Min + 0x18;
         private bool _CastingLight_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<ILightGetter> CastingLight => _CastingLight_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CastingLightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
         #endregion
         #region TaperWeight
-        private int _TaperWeightLocation => _DATALocation!.Value + 0x1C;
+        private int _TaperWeightLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _TaperWeight_IsSet => _DATALocation.HasValue;
         public Single TaperWeight => _TaperWeight_IsSet ? _data.Slice(_TaperWeightLocation, 4).Float() : default;
         #endregion
         #region HitShader
-        private int _HitShaderLocation => _DATALocation!.Value + 0x20;
+        private int _HitShaderLocation => _DATALocation!.Value.Min + 0x20;
         private bool _HitShader_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IEffectShaderGetter> HitShader => _HitShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HitShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
         #endregion
         #region EnchantShader
-        private int _EnchantShaderLocation => _DATALocation!.Value + 0x24;
+        private int _EnchantShaderLocation => _DATALocation!.Value.Min + 0x24;
         private bool _EnchantShader_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IEffectShaderGetter> EnchantShader => _EnchantShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EnchantShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
         #endregion
         #region MinimumSkillLevel
-        private int _MinimumSkillLevelLocation => _DATALocation!.Value + 0x28;
+        private int _MinimumSkillLevelLocation => _DATALocation!.Value.Min + 0x28;
         private bool _MinimumSkillLevel_IsSet => _DATALocation.HasValue;
         public UInt32 MinimumSkillLevel => _MinimumSkillLevel_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_MinimumSkillLevelLocation, 4)) : default;
         #endregion
         #region SpellmakingArea
-        private int _SpellmakingAreaLocation => _DATALocation!.Value + 0x2C;
+        private int _SpellmakingAreaLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _SpellmakingArea_IsSet => _DATALocation.HasValue;
         public UInt32 SpellmakingArea => _SpellmakingArea_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_SpellmakingAreaLocation, 4)) : default;
         #endregion
         #region SpellmakingCastingTime
-        private int _SpellmakingCastingTimeLocation => _DATALocation!.Value + 0x30;
+        private int _SpellmakingCastingTimeLocation => _DATALocation!.Value.Min + 0x30;
         private bool _SpellmakingCastingTime_IsSet => _DATALocation.HasValue;
         public Single SpellmakingCastingTime => _SpellmakingCastingTime_IsSet ? _data.Slice(_SpellmakingCastingTimeLocation, 4).Float() : default;
         #endregion
         #region TaperCurve
-        private int _TaperCurveLocation => _DATALocation!.Value + 0x34;
+        private int _TaperCurveLocation => _DATALocation!.Value.Min + 0x34;
         private bool _TaperCurve_IsSet => _DATALocation.HasValue;
         public Single TaperCurve => _TaperCurve_IsSet ? _data.Slice(_TaperCurveLocation, 4).Float() : default;
         #endregion
         #region TaperDuration
-        private int _TaperDurationLocation => _DATALocation!.Value + 0x38;
+        private int _TaperDurationLocation => _DATALocation!.Value.Min + 0x38;
         private bool _TaperDuration_IsSet => _DATALocation.HasValue;
         public Single TaperDuration => _TaperDuration_IsSet ? _data.Slice(_TaperDurationLocation, 4).Float() : default;
         #endregion
         #region SecondActorValueWeight
-        private int _SecondActorValueWeightLocation => _DATALocation!.Value + 0x3C;
+        private int _SecondActorValueWeightLocation => _DATALocation!.Value.Min + 0x3C;
         private bool _SecondActorValueWeight_IsSet => _DATALocation.HasValue;
         public Single SecondActorValueWeight => _SecondActorValueWeight_IsSet ? _data.Slice(_SecondActorValueWeightLocation, 4).Float() : default;
         #endregion
         #region Archetype
-        private int _ArchetypeLocation => _DATALocation!.Value + 0x40;
+        private int _ArchetypeLocation => _DATALocation!.Value.Min + 0x40;
         public partial IMagicEffectArchetypeGetter GetArchetypeCustom();
         public IMagicEffectArchetypeGetter Archetype => GetArchetypeCustom();
         #endregion
         #region Projectile
-        private int _ProjectileLocation => _DATALocation!.Value + 0x48;
+        private int _ProjectileLocation => _DATALocation!.Value.Min + 0x48;
         private bool _Projectile_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
         #endregion
         #region Explosion
-        private int _ExplosionLocation => _DATALocation!.Value + 0x4C;
+        private int _ExplosionLocation => _DATALocation!.Value.Min + 0x4C;
         private bool _Explosion_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region CastType
-        private int _CastTypeLocation => _DATALocation!.Value + 0x50;
+        private int _CastTypeLocation => _DATALocation!.Value.Min + 0x50;
         private bool _CastType_IsSet => _DATALocation.HasValue;
         public CastType CastType => _CastType_IsSet ? (CastType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_CastTypeLocation, 0x4)) : default;
         #endregion
         #region TargetType
-        private int _TargetTypeLocation => _DATALocation!.Value + 0x54;
+        private int _TargetTypeLocation => _DATALocation!.Value.Min + 0x54;
         private bool _TargetType_IsSet => _DATALocation.HasValue;
         public TargetType TargetType => _TargetType_IsSet ? (TargetType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TargetTypeLocation, 0x4)) : default;
         #endregion
         #region SecondActorValue
-        private int _SecondActorValueLocation => _DATALocation!.Value + 0x58;
+        private int _SecondActorValueLocation => _DATALocation!.Value.Min + 0x58;
         private bool _SecondActorValue_IsSet => _DATALocation.HasValue;
         public ActorValue SecondActorValue => _SecondActorValue_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SecondActorValueLocation, 0x4)) : default;
         #endregion
         #region CastingArt
-        private int _CastingArtLocation => _DATALocation!.Value + 0x5C;
+        private int _CastingArtLocation => _DATALocation!.Value.Min + 0x5C;
         private bool _CastingArt_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IArtObjectGetter> CastingArt => _CastingArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CastingArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region HitEffectArt
-        private int _HitEffectArtLocation => _DATALocation!.Value + 0x60;
+        private int _HitEffectArtLocation => _DATALocation!.Value.Min + 0x60;
         private bool _HitEffectArt_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IArtObjectGetter> HitEffectArt => _HitEffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HitEffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region ImpactData
-        private int _ImpactDataLocation => _DATALocation!.Value + 0x64;
+        private int _ImpactDataLocation => _DATALocation!.Value.Min + 0x64;
         private bool _ImpactData_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IImpactDataSetGetter> ImpactData => _ImpactData_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImpactDataLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region SkillUsageMultiplier
-        private int _SkillUsageMultiplierLocation => _DATALocation!.Value + 0x68;
+        private int _SkillUsageMultiplierLocation => _DATALocation!.Value.Min + 0x68;
         private bool _SkillUsageMultiplier_IsSet => _DATALocation.HasValue;
         public Single SkillUsageMultiplier => _SkillUsageMultiplier_IsSet ? _data.Slice(_SkillUsageMultiplierLocation, 4).Float() : default;
         #endregion
         #region DualCastArt
-        private int _DualCastArtLocation => _DATALocation!.Value + 0x6C;
+        private int _DualCastArtLocation => _DATALocation!.Value.Min + 0x6C;
         private bool _DualCastArt_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IDualCastDataGetter> DualCastArt => _DualCastArt_IsSet ? new FormLink<IDualCastDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DualCastArtLocation, 0x4)))) : FormLink<IDualCastDataGetter>.Null;
         #endregion
         #region DualCastScale
-        private int _DualCastScaleLocation => _DATALocation!.Value + 0x70;
+        private int _DualCastScaleLocation => _DATALocation!.Value.Min + 0x70;
         private bool _DualCastScale_IsSet => _DATALocation.HasValue;
         public Single DualCastScale => _DualCastScale_IsSet ? _data.Slice(_DualCastScaleLocation, 4).Float() : default;
         #endregion
         #region EnchantArt
-        private int _EnchantArtLocation => _DATALocation!.Value + 0x74;
+        private int _EnchantArtLocation => _DATALocation!.Value.Min + 0x74;
         private bool _EnchantArt_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IArtObjectGetter> EnchantArt => _EnchantArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EnchantArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region HitVisuals
-        private int _HitVisualsLocation => _DATALocation!.Value + 0x78;
+        private int _HitVisualsLocation => _DATALocation!.Value.Min + 0x78;
         private bool _HitVisuals_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IVisualEffectGetter> HitVisuals => _HitVisuals_IsSet ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HitVisualsLocation, 0x4)))) : FormLink<IVisualEffectGetter>.Null;
         #endregion
         #region EnchantVisuals
-        private int _EnchantVisualsLocation => _DATALocation!.Value + 0x7C;
+        private int _EnchantVisualsLocation => _DATALocation!.Value.Min + 0x7C;
         private bool _EnchantVisuals_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IVisualEffectGetter> EnchantVisuals => _EnchantVisuals_IsSet ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EnchantVisualsLocation, 0x4)))) : FormLink<IVisualEffectGetter>.Null;
         #endregion
         #region EquipAbility
-        private int _EquipAbilityLocation => _DATALocation!.Value + 0x80;
+        private int _EquipAbilityLocation => _DATALocation!.Value.Min + 0x80;
         private bool _EquipAbility_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<ISpellGetter> EquipAbility => _EquipAbility_IsSet ? new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EquipAbilityLocation, 0x4)))) : FormLink<ISpellGetter>.Null;
         #endregion
         #region ImageSpaceModifier
-        private int _ImageSpaceModifierLocation => _DATALocation!.Value + 0x84;
+        private int _ImageSpaceModifierLocation => _DATALocation!.Value.Min + 0x84;
         private bool _ImageSpaceModifier_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifier_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceModifierLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
         #endregion
         #region PerkToApply
-        private int _PerkToApplyLocation => _DATALocation!.Value + 0x88;
+        private int _PerkToApplyLocation => _DATALocation!.Value.Min + 0x88;
         private bool _PerkToApply_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IPerkGetter> PerkToApply => _PerkToApply_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_PerkToApplyLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
         #endregion
         #region CastingSoundLevel
-        private int _CastingSoundLevelLocation => _DATALocation!.Value + 0x8C;
+        private int _CastingSoundLevelLocation => _DATALocation!.Value.Min + 0x8C;
         private bool _CastingSoundLevel_IsSet => _DATALocation.HasValue;
         public SoundLevel CastingSoundLevel => _CastingSoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_CastingSoundLevelLocation, 0x4)) : default;
         #endregion
         #region ScriptEffectAIScore
-        private int _ScriptEffectAIScoreLocation => _DATALocation!.Value + 0x90;
+        private int _ScriptEffectAIScoreLocation => _DATALocation!.Value.Min + 0x90;
         private bool _ScriptEffectAIScore_IsSet => _DATALocation.HasValue;
         public Single ScriptEffectAIScore => _ScriptEffectAIScore_IsSet ? _data.Slice(_ScriptEffectAIScoreLocation, 4).Float() : default;
         #endregion
         #region ScriptEffectAIDelayTime
-        private int _ScriptEffectAIDelayTimeLocation => _DATALocation!.Value + 0x94;
+        private int _ScriptEffectAIDelayTimeLocation => _DATALocation!.Value.Min + 0x94;
         private bool _ScriptEffectAIDelayTime_IsSet => _DATALocation.HasValue;
         public Single ScriptEffectAIDelayTime => _ScriptEffectAIDelayTime_IsSet ? _data.Slice(_ScriptEffectAIDelayTimeLocation, 4).Float() : default;
         #endregion
@@ -5151,7 +5151,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime;
                 }
                 case RecordTypeInts.ESCE:

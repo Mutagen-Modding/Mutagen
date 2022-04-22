@@ -2238,30 +2238,30 @@ namespace Mutagen.Bethesda.Skyrim
         public String? AnimationEvent => _AnimationEventLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _AnimationEventLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; private set; } = ListExt.Empty<IFormLinkGetter<IIdleRelationGetter>>();
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public IdleAnimation.DATADataType DATADataTypeState { get; private set; }
         #region LoopingSecondsMin
-        private int _LoopingSecondsMinLocation => _DATALocation!.Value;
+        private int _LoopingSecondsMinLocation => _DATALocation!.Value.Min;
         private bool _LoopingSecondsMin_IsSet => _DATALocation.HasValue;
         public Byte LoopingSecondsMin => _LoopingSecondsMin_IsSet ? _data.Span[_LoopingSecondsMinLocation] : default;
         #endregion
         #region LoopingSecondsMax
-        private int _LoopingSecondsMaxLocation => _DATALocation!.Value + 0x1;
+        private int _LoopingSecondsMaxLocation => _DATALocation!.Value.Min + 0x1;
         private bool _LoopingSecondsMax_IsSet => _DATALocation.HasValue;
         public Byte LoopingSecondsMax => _LoopingSecondsMax_IsSet ? _data.Span[_LoopingSecondsMaxLocation] : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x2;
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0x2;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public IdleAnimation.Flag Flags => _Flags_IsSet ? (IdleAnimation.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region AnimationGroupSection
-        private int _AnimationGroupSectionLocation => _DATALocation!.Value + 0x3;
+        private int _AnimationGroupSectionLocation => _DATALocation!.Value.Min + 0x3;
         private bool _AnimationGroupSection_IsSet => _DATALocation.HasValue;
         public Byte AnimationGroupSection => _AnimationGroupSection_IsSet ? _data.Span[_AnimationGroupSectionLocation] : default;
         #endregion
         #region ReplayDelay
-        private int _ReplayDelayLocation => _DATALocation!.Value + 0x4;
+        private int _ReplayDelayLocation => _DATALocation!.Value.Min + 0x4;
         private bool _ReplayDelay_IsSet => _DATALocation.HasValue;
         public UInt16 ReplayDelay => _ReplayDelay_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_ReplayDelayLocation, 2)) : default;
         #endregion
@@ -2365,7 +2365,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)IdleAnimation_FieldIndex.ReplayDelay;
                 }
                 default:

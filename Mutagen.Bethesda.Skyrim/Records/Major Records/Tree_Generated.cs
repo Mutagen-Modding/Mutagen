@@ -2519,30 +2519,30 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        private int? _CNAMLocation;
+        private RangeInt32? _CNAMLocation;
         public Tree.CNAMDataType CNAMDataTypeState { get; private set; }
         #region TrunkFlexibility
-        private int _TrunkFlexibilityLocation => _CNAMLocation!.Value;
+        private int _TrunkFlexibilityLocation => _CNAMLocation!.Value.Min;
         private bool _TrunkFlexibility_IsSet => _CNAMLocation.HasValue;
         public Single TrunkFlexibility => _TrunkFlexibility_IsSet ? _data.Slice(_TrunkFlexibilityLocation, 4).Float() : default;
         #endregion
         #region BranchFlexibility
-        private int _BranchFlexibilityLocation => _CNAMLocation!.Value + 0x4;
+        private int _BranchFlexibilityLocation => _CNAMLocation!.Value.Min + 0x4;
         private bool _BranchFlexibility_IsSet => _CNAMLocation.HasValue;
         public Single BranchFlexibility => _BranchFlexibility_IsSet ? _data.Slice(_BranchFlexibilityLocation, 4).Float() : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _CNAMLocation!.Value + 0x8;
+        private int _UnknownLocation => _CNAMLocation!.Value.Min + 0x8;
         private bool _Unknown_IsSet => _CNAMLocation.HasValue;
         public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _data.Span.Slice(_UnknownLocation, 32).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region LeafAmplitude
-        private int _LeafAmplitudeLocation => _CNAMLocation!.Value + 0x28;
+        private int _LeafAmplitudeLocation => _CNAMLocation!.Value.Min + 0x28;
         private bool _LeafAmplitude_IsSet => _CNAMLocation.HasValue;
         public Single LeafAmplitude => _LeafAmplitude_IsSet ? _data.Slice(_LeafAmplitudeLocation, 4).Float() : default;
         #endregion
         #region LeafFrequency
-        private int _LeafFrequencyLocation => _CNAMLocation!.Value + 0x2C;
+        private int _LeafFrequencyLocation => _CNAMLocation!.Value.Min + 0x2C;
         private bool _LeafFrequency_IsSet => _CNAMLocation.HasValue;
         public Single LeafFrequency => _LeafFrequency_IsSet ? _data.Slice(_LeafFrequencyLocation, 4).Float() : default;
         #endregion
@@ -2652,7 +2652,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _CNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _CNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Tree_FieldIndex.LeafFrequency;
                 }
                 default:

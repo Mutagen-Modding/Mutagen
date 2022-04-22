@@ -3,7 +3,7 @@ using Mutagen.Bethesda.WPF.Reflection;
 using Mutagen.Bethesda.WPF.Reflection.Attributes;
 using Xunit;
 
-namespace Mutagen.Bethesda.UnitTests.WPF.Reflection;
+namespace Mutagen.Bethesda.WPF.UnitTests;
 
 public class ReflectionMixInTests
 {

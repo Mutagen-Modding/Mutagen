@@ -7,6 +7,7 @@ using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.UnitTests.AutoData;
 using Noggog;
+using Noggog.Testing.IO;
 using NSubstitute;
 using Xunit;
 
@@ -14,7 +15,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order;
 
 public class CreationClubListingsProviderIntegrationTests
 {
-    private const string DataDir = "C:/DataDirectory";
+    private static readonly string DataDir = $"{PathingUtil.DrivePrefix}DataDirectory";
         
     [Theory, MutagenAutoData(Release: GameRelease.Oblivion)]
     public void CccNotUsed(

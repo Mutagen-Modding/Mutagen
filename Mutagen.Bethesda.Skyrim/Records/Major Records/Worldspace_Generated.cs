@@ -2696,22 +2696,14 @@ namespace Mutagen.Bethesda.Skyrim
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "ANavigationMesh":
-                case "IANavigationMeshGetter":
-                case "IANavigationMesh":
-                case "IANavigationMeshInternal":
-                case "WorldspaceNavigationMesh":
-                case "IWorldspaceNavigationMeshGetter":
-                case "IWorldspaceNavigationMesh":
-                case "IWorldspaceNavigationMeshInternal":
-                case "CellNavigationMesh":
-                case "ICellNavigationMeshGetter":
-                case "ICellNavigationMesh":
-                case "ICellNavigationMeshInternal":
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
                     {
-                        if (obj.TopCell is {} ANavigationMeshTopCellitem)
+                        if (obj.TopCell is {} NavigationMeshTopCellitem)
                         {
-                            ANavigationMeshTopCellitem.Remove(keys, type, throwIfUnknown);
+                            NavigationMeshTopCellitem.Remove(keys, type, throwIfUnknown);
                         }
                     }
                     foreach (var subItem in obj.SubCells)
@@ -3780,14 +3772,14 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                     yield break;
-                case "ANavigationMesh":
-                case "IANavigationMeshGetter":
-                case "IANavigationMesh":
-                case "IANavigationMeshInternal":
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
                     {
-                        if (obj.TopCell is {} ANavigationMeshTopCellitem)
+                        if (obj.TopCell is {} NavigationMeshTopCellitem)
                         {
-                            foreach (var item in ANavigationMeshTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            foreach (var item in NavigationMeshTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
                                 yield return item;
                             }
@@ -4135,10 +4127,10 @@ namespace Mutagen.Bethesda.Skyrim
                         yield return item;
                     }
                     yield break;
-                case "ANavigationMesh":
-                case "IANavigationMeshGetter":
-                case "IANavigationMesh":
-                case "IANavigationMeshInternal":
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
                     {
                         if (obj.TopCell is {} WorldspaceTopCellitem)
                         {

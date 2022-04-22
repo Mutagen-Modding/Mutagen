@@ -1,23 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+public partial class MusicType
 {
-    public partial class MusicType
+    [Flags]
+    public enum Flag
     {
-        [Flags]
-        public enum Flag
-        {
-            PlaysOneSelection = 0x01,
-            AbruptTransition = 0x02,
-            CycleTracks = 0x04,
-            MaintainTrackOrder = 0x08,
-            DucksCurrentTrack = 0x20,
-            /// <summary>
-            /// SSE only
-            /// </summary>
-            DoesNotQueue = 0x40,
-        }
+        PlaysOneSelection = 0x01,
+        AbruptTransition = 0x02,
+        CycleTracks = 0x04,
+        MaintainTrackOrder = 0x08,
+        DucksCurrentTrack = 0x20,
+        /// <summary>
+        /// SSE only
+        /// </summary>
+        DoesNotQueue = 0x40,
     }
 }

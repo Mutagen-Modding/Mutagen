@@ -1,9 +1,8 @@
 using Mutagen.Bethesda.Plugins.Records;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+public partial class GameSettingString
 {
-    public partial class GameSettingString
-    {
-        public override GameSettingType SettingType => GameSettingType.String;
-    }
+    public override GameSettingType SettingType => GameSettingType.String;
 }

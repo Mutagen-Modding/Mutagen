@@ -1421,15 +1421,15 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        private int? _QSTALocation;
+        private RangeInt32? _QSTALocation;
         public QuestObjectiveTarget.QSTADataType QSTADataTypeState { get; private set; }
         #region AliasIndex
-        private int _AliasIndexLocation => _QSTALocation!.Value;
+        private int _AliasIndexLocation => _QSTALocation!.Value.Min;
         private bool _AliasIndex_IsSet => _QSTALocation.HasValue;
         public Int32 AliasIndex => _AliasIndex_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_AliasIndexLocation, 4)) : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _QSTALocation!.Value + 0x4;
+        private int _FlagsLocation => _QSTALocation!.Value.Min + 0x4;
         private bool _Flags_IsSet => _QSTALocation.HasValue;
         public Quest.TargetFlag Flags => _Flags_IsSet ? (Quest.TargetFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
@@ -1501,7 +1501,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.QSTA:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestObjectiveTarget_FieldIndex.Flags) return ParseResult.Stop;
-                    _QSTALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _QSTALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)QuestObjectiveTarget_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CTDA:

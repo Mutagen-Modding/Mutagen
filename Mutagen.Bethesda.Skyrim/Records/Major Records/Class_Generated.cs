@@ -2359,15 +2359,15 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _IconLocation;
         public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Class.DATADataType DATADataTypeState { get; private set; }
         #region Unknown
-        private int _UnknownLocation => _DATALocation!.Value;
+        private int _UnknownLocation => _DATALocation!.Value.Min;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
         public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_UnknownLocation, 4)) : default;
         #endregion
         #region Teaches
-        private int _TeachesLocation => _DATALocation!.Value + 0x4;
+        private int _TeachesLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Teaches_IsSet => _DATALocation.HasValue;
         public Skill? Teaches
         {
@@ -2380,12 +2380,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region MaxTrainingLevel
-        private int _MaxTrainingLevelLocation => _DATALocation!.Value + 0x5;
+        private int _MaxTrainingLevelLocation => _DATALocation!.Value.Min + 0x5;
         private bool _MaxTrainingLevel_IsSet => _DATALocation.HasValue;
         public Byte MaxTrainingLevel => _MaxTrainingLevel_IsSet ? _data.Span[_MaxTrainingLevelLocation] : default;
         #endregion
         #region SkillWeights
-        private int _SkillWeightsLocation => _DATALocation!.Value + 0x6;
+        private int _SkillWeightsLocation => _DATALocation!.Value.Min + 0x6;
         private bool _SkillWeights_IsSet => _DATALocation.HasValue;
         public IReadOnlyDictionary<Skill, Byte> SkillWeights => DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
             new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_SkillWeightsLocation), _package.MetaData)),
@@ -2393,17 +2393,17 @@ namespace Mutagen.Bethesda.Skyrim
             ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         #region BleedoutDefault
-        private int _BleedoutDefaultLocation => _DATALocation!.Value + 0x18;
+        private int _BleedoutDefaultLocation => _DATALocation!.Value.Min + 0x18;
         private bool _BleedoutDefault_IsSet => _DATALocation.HasValue;
         public Single BleedoutDefault => _BleedoutDefault_IsSet ? _data.Slice(_BleedoutDefaultLocation, 4).Float() : default;
         #endregion
         #region VoicePoints
-        private int _VoicePointsLocation => _DATALocation!.Value + 0x1C;
+        private int _VoicePointsLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _VoicePoints_IsSet => _DATALocation.HasValue;
         public UInt32 VoicePoints => _VoicePoints_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_VoicePointsLocation, 4)) : default;
         #endregion
         #region StatWeights
-        private int _StatWeightsLocation => _DATALocation!.Value + 0x20;
+        private int _StatWeightsLocation => _DATALocation!.Value.Min + 0x20;
         private bool _StatWeights_IsSet => _DATALocation.HasValue;
         public IReadOnlyDictionary<BasicStat, Byte> StatWeights => DictBinaryTranslation<Byte>.Instance.Parse<BasicStat>(
             new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_StatWeightsLocation), _package.MetaData)),
@@ -2411,7 +2411,7 @@ namespace Mutagen.Bethesda.Skyrim
             ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         #region Unknown2
-        private int _Unknown2Location => _DATALocation!.Value + 0x23;
+        private int _Unknown2Location => _DATALocation!.Value.Min + 0x23;
         private bool _Unknown2_IsSet => _DATALocation.HasValue;
         public Byte Unknown2 => _Unknown2_IsSet ? _data.Span[_Unknown2Location] : default;
         #endregion
@@ -2498,7 +2498,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Class_FieldIndex.Unknown2;
                 }
                 default:

@@ -1925,15 +1925,15 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _MaterialTypeLocation;
         public IFormLinkGetter<IMaterialTypeGetter> MaterialType => _MaterialTypeLocation.HasValue ? new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLink<IMaterialTypeGetter>.Null;
         #endregion
-        private int? _HNAMLocation;
+        private RangeInt32? _HNAMLocation;
         public LandscapeTexture.HNAMDataType HNAMDataTypeState { get; private set; }
         #region HavokFriction
-        private int _HavokFrictionLocation => _HNAMLocation!.Value;
+        private int _HavokFrictionLocation => _HNAMLocation!.Value.Min;
         private bool _HavokFriction_IsSet => _HNAMLocation.HasValue;
         public Byte HavokFriction => _HavokFriction_IsSet ? _data.Span[_HavokFrictionLocation] : default;
         #endregion
         #region HavokRestitution
-        private int _HavokRestitutionLocation => _HNAMLocation!.Value + 0x1;
+        private int _HavokRestitutionLocation => _HNAMLocation!.Value.Min + 0x1;
         private bool _HavokRestitution_IsSet => _HNAMLocation.HasValue;
         public Byte HavokRestitution => _HavokRestitution_IsSet ? _data.Span[_HavokRestitutionLocation] : default;
         #endregion
@@ -2020,7 +2020,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    _HNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _HNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)LandscapeTexture_FieldIndex.HavokRestitution;
                 }
                 case RecordTypeInts.SNAM:

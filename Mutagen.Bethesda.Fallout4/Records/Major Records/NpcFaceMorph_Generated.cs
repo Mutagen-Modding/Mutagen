@@ -1439,30 +1439,30 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _IndexLocation;
         public UInt32? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        private int? _FMRSLocation;
+        private RangeInt32? _FMRSLocation;
         public NpcFaceMorph.FMRSDataType FMRSDataTypeState { get; private set; }
         #region Position
-        private int _PositionLocation => _FMRSLocation!.Value;
+        private int _PositionLocation => _FMRSLocation!.Value.Min;
         private bool _Position_IsSet => _FMRSLocation.HasValue;
         public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_PositionLocation, 12)) : default;
         #endregion
         #region Rotation
-        private int _RotationLocation => _FMRSLocation!.Value + 0xC;
+        private int _RotationLocation => _FMRSLocation!.Value.Min + 0xC;
         private bool _Rotation_IsSet => _FMRSLocation.HasValue;
         public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_RotationLocation, 12)) : default;
         #endregion
         #region Scale
-        private int _ScaleLocation => _FMRSLocation!.Value + 0x18;
+        private int _ScaleLocation => _FMRSLocation!.Value.Min + 0x18;
         private bool _Scale_IsSet => _FMRSLocation.HasValue;
         public Single Scale => _Scale_IsSet ? _data.Slice(_ScaleLocation, 4).Float() : default;
         #endregion
         #region Unknown1
-        private int _Unknown1Location => _FMRSLocation!.Value + 0x1C;
+        private int _Unknown1Location => _FMRSLocation!.Value.Min + 0x1C;
         private bool _Unknown1_IsSet => _FMRSLocation.HasValue;
         public Single Unknown1 => _Unknown1_IsSet ? _data.Slice(_Unknown1Location, 4).Float() : default;
         #endregion
         #region Unknown2
-        private int _Unknown2Location => _FMRSLocation!.Value + 0x20;
+        private int _Unknown2Location => _FMRSLocation!.Value.Min + 0x20;
         private bool _Unknown2_IsSet => _FMRSLocation.HasValue;
         public Single Unknown2 => _Unknown2_IsSet ? _data.Slice(_Unknown2Location, 4).Float() : default;
         #endregion
@@ -1532,7 +1532,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.FMRS:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcFaceMorph_FieldIndex.Unknown2) return ParseResult.Stop;
-                    _FMRSLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _FMRSLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)NpcFaceMorph_FieldIndex.Unknown2;
                 }
                 default:

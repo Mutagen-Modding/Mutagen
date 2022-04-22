@@ -2,6 +2,7 @@
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using Mutagen.Bethesda.Skyrim;
+using Noggog.Testing.IO;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Binary;
@@ -12,8 +13,8 @@ public class BinaryOverlayTests
     public void DisposedIfException()
     {
         var fs = new MockFileSystem();
-        fs.Directory.CreateDirectory("C:/SomeFolder");
-        var modPath = Path.Combine("C:/SomeFolder", "Test.esp");
+        fs.Directory.CreateDirectory($"{PathingUtil.DrivePrefix}SomeFolder");
+        var modPath = Path.Combine($"{PathingUtil.DrivePrefix}SomeFolder", "Test.esp");
         try
         {
             fs.File.WriteAllText(modPath, "DERP");

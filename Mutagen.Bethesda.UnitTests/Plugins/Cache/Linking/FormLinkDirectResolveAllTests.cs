@@ -4,7 +4,6 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
-using Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers;
 using Xunit;
 
 #nullable disable

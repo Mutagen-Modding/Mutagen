@@ -1467,32 +1467,32 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        private int? _TETILocation;
+        private RangeInt32? _TETILocation;
         public NpcFaceTintingLayer.TETIDataType TETIDataTypeState { get; private set; }
         #region DataType
-        private int _DataTypeLocation => _TETILocation!.Value;
+        private int _DataTypeLocation => _TETILocation!.Value.Min;
         private bool _DataType_IsSet => _TETILocation.HasValue;
         public NpcFaceTintingLayer.Type DataType => _DataType_IsSet ? (NpcFaceTintingLayer.Type)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_DataTypeLocation, 0x2)) : default;
         #endregion
         #region Index
-        private int _IndexLocation => _TETILocation!.Value + 0x2;
+        private int _IndexLocation => _TETILocation!.Value.Min + 0x2;
         private bool _Index_IsSet => _TETILocation.HasValue;
         public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_IndexLocation, 2)) : default;
         #endregion
-        private int? _TENDLocation;
+        private RangeInt32? _TENDLocation;
         public NpcFaceTintingLayer.TENDDataType TENDDataTypeState { get; private set; }
         #region Value
-        private int _ValueLocation => _TENDLocation!.Value;
+        private int _ValueLocation => _TENDLocation!.Value.Min;
         private bool _Value_IsSet => _TENDLocation.HasValue;
         public Single Value => _Value_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(_ValueLocation, 1), FloatIntegerType.Byte, 0.01) : default;
         #endregion
         #region Color
-        private int _ColorLocation => _TENDLocation!.Value + 0x1;
+        private int _ColorLocation => _TENDLocation!.Value.Min + 0x1;
         private bool _Color_IsSet => _TENDLocation.HasValue && !TENDDataTypeState.HasFlag(NpcFaceTintingLayer.TENDDataType.Break0);
         public Color Color => _Color_IsSet ? _data.Slice(_ColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region TemplateColorIndex
-        private int _TemplateColorIndexLocation => _TENDLocation!.Value + 0x5;
+        private int _TemplateColorIndexLocation => _TENDLocation!.Value.Min + 0x5;
         private bool _TemplateColorIndex_IsSet => _TENDLocation.HasValue && !TENDDataTypeState.HasFlag(NpcFaceTintingLayer.TENDDataType.Break0);
         public Int16 TemplateColorIndex => _TemplateColorIndex_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_TemplateColorIndexLocation, 2)) : default;
         #endregion
@@ -1556,12 +1556,12 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.TETI:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcFaceTintingLayer_FieldIndex.Index) return ParseResult.Stop;
-                    _TETILocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _TETILocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)NpcFaceTintingLayer_FieldIndex.Index;
                 }
                 case RecordTypeInts.TEND:
                 {
-                    _TENDLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _TENDLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x1)
                     {

@@ -1897,45 +1897,45 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        private int? _TRDTLocation;
+        private RangeInt32? _TRDTLocation;
         public DialogResponse.TRDTDataType TRDTDataTypeState { get; private set; }
         #region Emotion
-        private int _EmotionLocation => _TRDTLocation!.Value;
+        private int _EmotionLocation => _TRDTLocation!.Value.Min;
         private bool _Emotion_IsSet => _TRDTLocation.HasValue;
         public Emotion Emotion => _Emotion_IsSet ? (Emotion)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_EmotionLocation, 0x4)) : default;
         #endregion
         #region EmotionValue
-        private int _EmotionValueLocation => _TRDTLocation!.Value + 0x4;
+        private int _EmotionValueLocation => _TRDTLocation!.Value.Min + 0x4;
         private bool _EmotionValue_IsSet => _TRDTLocation.HasValue;
         public UInt32 EmotionValue => _EmotionValue_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_EmotionValueLocation, 4)) : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _TRDTLocation!.Value + 0x8;
+        private int _UnknownLocation => _TRDTLocation!.Value.Min + 0x8;
         private bool _Unknown_IsSet => _TRDTLocation.HasValue;
         public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_UnknownLocation, 4)) : default;
         #endregion
         #region ResponseNumber
-        private int _ResponseNumberLocation => _TRDTLocation!.Value + 0xC;
+        private int _ResponseNumberLocation => _TRDTLocation!.Value.Min + 0xC;
         private bool _ResponseNumber_IsSet => _TRDTLocation.HasValue;
         public Byte ResponseNumber => _ResponseNumber_IsSet ? _data.Span[_ResponseNumberLocation] : default;
         #endregion
         #region Unknown2
-        private int _Unknown2Location => _TRDTLocation!.Value + 0xD;
+        private int _Unknown2Location => _TRDTLocation!.Value.Min + 0xD;
         private bool _Unknown2_IsSet => _TRDTLocation.HasValue;
         public ReadOnlyMemorySlice<Byte> Unknown2 => _Unknown2_IsSet ? _data.Span.Slice(_Unknown2Location, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region Sound
-        private int _SoundLocation => _TRDTLocation!.Value + 0x10;
+        private int _SoundLocation => _TRDTLocation!.Value.Min + 0x10;
         private bool _Sound_IsSet => _TRDTLocation.HasValue;
         public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region Flags
-        private int _FlagsLocation => _TRDTLocation!.Value + 0x14;
+        private int _FlagsLocation => _TRDTLocation!.Value.Min + 0x14;
         private bool _Flags_IsSet => _TRDTLocation.HasValue;
         public DialogResponse.Flag Flags => _Flags_IsSet ? (DialogResponse.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region Unknown3
-        private int _Unknown3Location => _TRDTLocation!.Value + 0x15;
+        private int _Unknown3Location => _TRDTLocation!.Value.Min + 0x15;
         private bool _Unknown3_IsSet => _TRDTLocation.HasValue;
         public ReadOnlyMemorySlice<Byte> Unknown3 => _Unknown3_IsSet ? _data.Span.Slice(_Unknown3Location, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
@@ -2019,7 +2019,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.TRDT:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponse_FieldIndex.Unknown3) return ParseResult.Stop;
-                    _TRDTLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _TRDTLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)DialogResponse_FieldIndex.Unknown3;
                 }
                 case RecordTypeInts.NAM1:

@@ -58,6 +58,7 @@ public partial class RecordTypeInts
     public const int CITC = 0x43544943;
     public const int CLAS = 0x53414C43;
     public const int CLFM = 0x4D464C43;
+    public const int CLMT = 0x544D4C43;
     public const int CMPO = 0x4F504D43;
     public const int CNAM = 0x4D414E43;
     public const int CNTO = 0x4F544E43;
@@ -80,6 +81,7 @@ public partial class RecordTypeInts
     public const int CTDA = 0x41445443;
     public const int CUSD = 0x44535543;
     public const int CVPA = 0x41505643;
+    public const int DALC = 0x434C4144;
     public const int DAMA = 0x414D4144;
     public const int DAMC = 0x434D4144;
     public const int DATA = 0x41544144;
@@ -183,6 +185,7 @@ public partial class RecordTypeInts
     public const int IDLT = 0x544C4449;
     public const int IIAD = 0x44414949;
     public const int IMAD = 0x44414D49;
+    public const int IMSP = 0x50534D49;
     public const int INAM = 0x4D414E49;
     public const int INCC = 0x43434E49;
     public const int INDX = 0x58444E49;
@@ -196,6 +199,7 @@ public partial class RecordTypeInts
     public const int ITXT = 0x54585449;
     public const int JAIL = 0x4C49414A;
     public const int JIAD = 0x4441494A;
+    public const int JNAM = 0x4D414E4A;
     public const int JOUT = 0x54554F4A;
     public const int KEYM = 0x4D59454B;
     public const int KIAD = 0x4441494B;
@@ -367,6 +371,7 @@ public partial class RecordTypeInts
     public const int SPCT = 0x54435053;
     public const int SPED = 0x44455053;
     public const int SPEL = 0x4C455053;
+    public const int SPGD = 0x44475053;
     public const int SPIT = 0x54495053;
     public const int SPLO = 0x4F4C5053;
     public const int SPOR = 0x524F5053;
@@ -423,6 +428,7 @@ public partial class RecordTypeInts
     public const int WEAP = 0x50414557;
     public const int WGDR = 0x52444757;
     public const int WKMV = 0x564D4B57;
+    public const int WLST = 0x54534C57;
     public const int WMAP = 0x50414D57;
     public const int WNAM = 0x4D414E57;
     public const int WRLD = 0x444C5257;

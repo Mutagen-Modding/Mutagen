@@ -1,15 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace Mutagen.Bethesda.Generation;
 
-namespace Mutagen.Bethesda.Generation
+public enum CustomEnd
 {
-    public enum CustomEnd
-    {
-        Off,
-        Normal,
-        Async
-    }
+    Off,
+    Normal,
+    Async
 }

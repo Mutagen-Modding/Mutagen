@@ -1,72 +1,70 @@
 ﻿using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
-using Mutagen.Bethesda.Plugins.Implicit;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Noggog;
 
-namespace Mutagen.Bethesda.Plugins.Order.DI
+namespace Mutagen.Bethesda.Plugins.Order.DI;
+
+public interface ILoadOrderWriter
 {
-    public interface ILoadOrderWriter
+    void Write(
+        FilePath path,
+        IEnumerable<IModListingGetter> loadOrder,
+        bool removeImplicitMods = true);
+}
+
+public class LoadOrderWriter : ILoadOrderWriter
+{
+    private readonly IFileSystem _fileSystem;
+    private readonly IHasEnabledMarkersProvider _hasEnabledMarkersProvider;
+    private readonly IImplicitListingModKeyProvider _implicitListingsProvider;
+
+    public LoadOrderWriter(
+        IFileSystem fileSystem,
+        IHasEnabledMarkersProvider hasEnabledMarkersProvider,
+        IImplicitListingModKeyProvider implicitListingsProvider)
     {
-        void Write(
-            FilePath path,
-            IEnumerable<IModListingGetter> loadOrder,
-            bool removeImplicitMods = true);
+        _fileSystem = fileSystem;
+        _hasEnabledMarkersProvider = hasEnabledMarkersProvider;
+        _implicitListingsProvider = implicitListingsProvider;
     }
-
-    public class LoadOrderWriter : ILoadOrderWriter
-    {
-        private readonly IFileSystem _fileSystem;
-        private readonly IHasEnabledMarkersProvider _hasEnabledMarkersProvider;
-        private readonly IImplicitListingModKeyProvider _implicitListingsProvider;
-
-        public LoadOrderWriter(
-            IFileSystem fileSystem,
-            IHasEnabledMarkersProvider hasEnabledMarkersProvider,
-            IImplicitListingModKeyProvider implicitListingsProvider)
-        {
-            _fileSystem = fileSystem;
-            _hasEnabledMarkersProvider = hasEnabledMarkersProvider;
-            _implicitListingsProvider = implicitListingsProvider;
-        }
         
-        /// <inheritdoc />
-        public void Write(
-            FilePath path,
-            IEnumerable<IModListingGetter> loadOrder,
-            bool removeImplicitMods = true)
+    /// <inheritdoc />
+    public void Write(
+        FilePath path,
+        IEnumerable<IModListingGetter> loadOrder,
+        bool removeImplicitMods = true)
+    {
+        bool markers = _hasEnabledMarkersProvider.HasEnabledMarkers;
+        var loadOrderList = loadOrder.ToList();
+        if (removeImplicitMods)
         {
-            bool markers = _hasEnabledMarkersProvider.HasEnabledMarkers;
-            var loadOrderList = loadOrder.ToList();
-            if (removeImplicitMods)
+            foreach (var implicitMod in _implicitListingsProvider.Listings)
             {
-                foreach (var implicitMod in _implicitListingsProvider.Listings)
+                if (loadOrderList.Count > 0
+                    && loadOrderList[0].ModKey == implicitMod
+                    && loadOrderList[0].Enabled)
                 {
-                    if (loadOrderList.Count > 0
-                        && loadOrderList[0].ModKey == implicitMod
-                        && loadOrderList[0].Enabled)
-                    {
-                        loadOrderList.RemoveAt(0);
-                    }
+                    loadOrderList.RemoveAt(0);
                 }
             }
-            _fileSystem.File.WriteAllLines(path,
-                loadOrderList.Where(x =>
-                    {
-                        return (markers || x.Enabled);
-                    })
-                    .Select(x =>
-                    {
-                        if (x.Enabled && markers)
-                        {
-                            return $"*{x.ModKey.FileName}";
-                        }
-                        else
-                        {
-                            return x.ModKey.FileName.String;
-                        }
-                    }));
         }
+        _fileSystem.File.WriteAllLines(path,
+            loadOrderList.Where(x =>
+                {
+                    return (markers || x.Enabled);
+                })
+                .Select(x =>
+                {
+                    if (x.Enabled && markers)
+                    {
+                        return $"*{x.ModKey.FileName}";
+                    }
+                    else
+                    {
+                        return x.ModKey.FileName.String;
+                    }
+                }));
     }
 }

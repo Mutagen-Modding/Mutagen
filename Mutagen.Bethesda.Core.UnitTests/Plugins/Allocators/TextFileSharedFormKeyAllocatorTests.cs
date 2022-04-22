@@ -6,6 +6,7 @@ using Mutagen.Bethesda.Plugins.Allocators;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.AutoData;
+using Noggog.Testing.IO;
 using Xunit;
 using Path = System.IO.Path;
 
@@ -19,7 +20,7 @@ public class TextFileSharedFormKeyAllocatorTests : ISharedFormKeyAllocatorTests<
 
     protected override TextFileSharedFormKeyAllocator CreateNamedAllocator(IFileSystem fileSystem, IMod mod, string path, string patcherName) => new(mod, path, patcherName, preload: true, fileSystem: fileSystem);
 
-    public const string SomeFolder = "C:/SomeFolder";
+    public static readonly string SomeFolder = $"{PathingUtil.DrivePrefix}SomeFolder";
         
     protected override string ConstructTypicalPath(IFileSystem fileSystem)
     {
@@ -32,7 +33,7 @@ public class TextFileSharedFormKeyAllocatorTests : ISharedFormKeyAllocatorTests<
     public void StaticExport()
     {
         var fileSystem = new MockFileSystem();
-        var someFile = "C:/SomeFile";
+        var someFile = $"{PathingUtil.DrivePrefix}SomeFile";
         TextFileSharedFormKeyAllocator.WriteToFile(
             someFile,
             new (string, FormKey)[]

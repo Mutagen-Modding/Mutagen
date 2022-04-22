@@ -7,6 +7,7 @@
       <FormLink name="SoundDescriptor" recordType="SDSC" refName="SoundDescriptor" />
       <RefDirect name="Repeat" refName="SoundRepeat" />
     </Fields>
+    <LinkInterface>ISound</LinkInterface>
   </Object>
   <Object name="SoundRepeat" objType="Subrecord" recordType="REPT" GUID="beab6506-5f95-4dd2-b8ee-02655c76538c" ID="94">
     <Fields>

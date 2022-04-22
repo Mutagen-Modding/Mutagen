@@ -2,43 +2,42 @@ using Mutagen.Bethesda.Plugins;
 using Newtonsoft.Json;
 using System;
 
-namespace Mutagen.Bethesda.Json
+namespace Mutagen.Bethesda.Json;
+
+public class ModKeyJsonConverter : JsonConverter
 {
-    public class ModKeyJsonConverter : JsonConverter
+    public override bool CanConvert(Type objectType)
     {
-        public override bool CanConvert(Type objectType)
-        {
-            if (objectType == typeof(ModKey)) return true;
-            if (objectType == typeof(ModKey?)) return true;
-            return false;
-        }
+        if (objectType == typeof(ModKey)) return true;
+        if (objectType == typeof(ModKey?)) return true;
+        return false;
+    }
 
-        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+    public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+    {
+        var obj = reader.Value;
+        if (obj == null)
         {
-            var obj = reader.Value;
-            if (obj == null)
+            if (objectType == typeof(ModKey))
             {
-                if (objectType == typeof(ModKey))
-                {
-                    return ModKey.Null;
-                }
-                if (objectType == typeof(ModKey?))
-                {
-                    return null;
-                }
-                throw new ArgumentException();
+                return ModKey.Null;
             }
-            return ModKey.FromNameAndExtension(obj.ToString());
+            if (objectType == typeof(ModKey?))
+            {
+                return null;
+            }
+            throw new ArgumentException();
         }
+        return ModKey.FromNameAndExtension(obj.ToString());
+    }
 
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+    {
+        if (value == null) return;
+        if (value is not ModKey modKey)
         {
-            if (value == null) return;
-            if (value is not ModKey modKey)
-            {
-                throw new ArgumentException();
-            }
-            writer.WriteValue(modKey.FileName);
+            throw new ArgumentException();
         }
+        writer.WriteValue(modKey.FileName);
     }
 }

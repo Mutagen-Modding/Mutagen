@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="GodRay" recordType="GDRY" objType="Record" baseClass="Fallout4MajorRecord" GUID="035c2e63-4363-4995-add5-91d9f6905fa2" ID="435">
+  </Object>
+</Loqui>

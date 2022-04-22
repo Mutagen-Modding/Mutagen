@@ -3,162 +3,161 @@ using Noggog;
 using System.Collections.Generic;
 using Loqui;
 
-namespace Mutagen.Bethesda.Plugins.Records
+namespace Mutagen.Bethesda.Plugins.Records;
+
+/// <summary>
+/// An interface that Group Record objects implement to hook into the common systems
+/// </summary>
+public interface IGroupGetter : IFormLinkContainerGetter
 {
     /// <summary>
-    /// An interface that Group Record objects implement to hook into the common systems
+    /// Mod object the Group belongs to
     /// </summary>
-    public interface IGroupGetter : IFormLinkContainerGetter
-    {
-        /// <summary>
-        /// Mod object the Group belongs to
-        /// </summary>
-        IMod SourceMod { get; }
+    IMod SourceMod { get; }
 
-        /// <summary>
-        /// Access to records in an IReadOnlyCache interface
-        /// </summary>
-        IReadOnlyCache<IMajorRecordGetter, FormKey> RecordCache { get; }
-
-        /// <summary>
-        /// Number of contained records
-        /// </summary>
-        int Count { get; }
-
-        /// <summary>
-        /// Gets the record associated with the specified key
-        /// </summary>
-        /// <param name="key">FormKey to retrieve</param>
-        /// <exception cref="KeyNotFoundException">A record with the given FormKey does not exist</exception>
-        /// <returns>Record associated with the specified key</returns>
-        IMajorRecordGetter this[FormKey key] { get; }
-
-        /// <summary>
-        /// Enumerable containing all the FormKeys present in the group
-        /// </summary>
-        IEnumerable<FormKey> FormKeys { get; }
-
-        /// <summary>
-        /// Enumerable containing all the FormKeys present in the group
-        /// </summary>
-        IEnumerable<IMajorRecordGetter> Records { get; }
-
-        /// <summary>
-        /// Checks if a record with the specified key exists in the group
-        /// </summary>
-        /// <param name="key">Key to search for</param>
-        /// <returns>True if record found with given key</returns>
-        bool ContainsKey(FormKey key);
-        
-        ILoquiRegistration ContainedRecordRegistration { get; }
-        
-        Type ContainedRecordType { get; }
-    }
-    
     /// <summary>
-    /// An interface that Group Record objects implement to hook into the common systems
+    /// Access to records in an IReadOnlyCache interface
     /// </summary>
-    public interface IGroupGetter<out TMajor> : IGroupGetter, IEnumerable<TMajor>
-        where TMajor : IMajorRecordGetter
-    {
-        /// <summary>
-        /// Access to records in an IReadOnlyCache interface
-        /// </summary>
-        new IReadOnlyCache<TMajor, FormKey> RecordCache { get; }
+    IReadOnlyCache<IMajorRecordGetter, FormKey> RecordCache { get; }
 
-        /// <summary>
-        /// Gets the record associated with the specified key
-        /// </summary>
-        /// <param name="key">FormKey to retrieve</param>
-        /// <exception cref="KeyNotFoundException">A record with the given FormKey does not exist</exception>
-        /// <returns>Record associated with the specified key</returns>
-        new TMajor this[FormKey key] { get; }
+    /// <summary>
+    /// Number of contained records
+    /// </summary>
+    int Count { get; }
 
-        /// <summary>
-        /// Enumerable containing all the FormKeys present in the group
-        /// </summary>
-        new IEnumerable<TMajor> Records { get; }
-    }
+    /// <summary>
+    /// Gets the record associated with the specified key
+    /// </summary>
+    /// <param name="key">FormKey to retrieve</param>
+    /// <exception cref="KeyNotFoundException">A record with the given FormKey does not exist</exception>
+    /// <returns>Record associated with the specified key</returns>
+    IMajorRecordGetter this[FormKey key] { get; }
 
-    public interface IGroup : IGroupGetter
-    {
-        /// <summary>
-        /// Adds
-        /// </summary>
-        /// <param name="record"></param>
-        /// <exception cref="ArgumentException">
-        /// A record with the same FormKey already exists in the group, or is of the wrong type.
-        /// </exception>
-        void AddUntyped(IMajorRecord record);
+    /// <summary>
+    /// Enumerable containing all the FormKeys present in the group
+    /// </summary>
+    IEnumerable<FormKey> FormKeys { get; }
 
-        /// <summary>
-        /// Adds or replaces the major record
-        /// </summary>
-        /// <exception cref="ArgumentException">
-        /// Record was the wrong type
-        /// </exception>
-        /// <param name="record">The record</param>
-        void SetUntyped(IMajorRecord record);
+    /// <summary>
+    /// Enumerable containing all the FormKeys present in the group
+    /// </summary>
+    IEnumerable<IMajorRecordGetter> Records { get; }
 
-        /// <summary>
-        /// Adds or updates the major records given
-        /// </summary>
-        /// <exception cref="ArgumentException">
-        /// A record was the wrong type.  The contents of the group will be undefined.  Some records may have been added.
-        /// </exception>
-        /// <param name="records">The records</param>
-        void SetUntyped(IEnumerable<IMajorRecord> records);
-
-        /// <summary>
-        /// Enumerable containing all the FormKeys present in the group
-        /// </summary>
-        new IEnumerable<IMajorRecord> Records { get; }
-    }
-
-    public interface IGroup<TMajor> : IGroupGetter<TMajor>, IGroup, IClearable
-        where TMajor : IMajorRecordGetter
-    {
-        /// <summary>
-        /// Access to records in an ICache interface
-        /// </summary>
-        new ICache<TMajor, FormKey> RecordCache { get; }
-
-        /// <summary>
-        /// Enumerable containing all the FormKeys present in the group
-        /// </summary>
-        new IEnumerable<TMajor> Records { get; }
+    /// <summary>
+    /// Checks if a record with the specified key exists in the group
+    /// </summary>
+    /// <param name="key">Key to search for</param>
+    /// <returns>True if record found with given key</returns>
+    bool ContainsKey(FormKey key);
         
-        /// <summary>
-        /// Adds a major record to the group
-        /// </summary>
-        /// <param name="record">The record</param>
-        /// <exception cref="ArgumentException">
-        /// A record with the same FormKey already exists in the group
-        /// </exception>
-        void Add(TMajor record);
+    ILoquiRegistration ContainedRecordRegistration { get; }
+        
+    Type ContainedRecordType { get; }
+}
+    
+/// <summary>
+/// An interface that Group Record objects implement to hook into the common systems
+/// </summary>
+public interface IGroupGetter<out TMajor> : IGroupGetter, IEnumerable<TMajor>
+    where TMajor : IMajorRecordGetter
+{
+    /// <summary>
+    /// Access to records in an IReadOnlyCache interface
+    /// </summary>
+    new IReadOnlyCache<TMajor, FormKey> RecordCache { get; }
 
-        /// <summary>
-        /// Adds or replaces the major record
-        /// </summary>
-        /// <param name="record">The record</param>
-        void Set(TMajor record);
+    /// <summary>
+    /// Gets the record associated with the specified key
+    /// </summary>
+    /// <param name="key">FormKey to retrieve</param>
+    /// <exception cref="KeyNotFoundException">A record with the given FormKey does not exist</exception>
+    /// <returns>Record associated with the specified key</returns>
+    new TMajor this[FormKey key] { get; }
 
-        /// <summary>
-        /// Adds or updates the major records given
-        /// </summary>
-        /// <param name="records">The records</param>
-        void Set(IEnumerable<TMajor> records);
+    /// <summary>
+    /// Enumerable containing all the FormKeys present in the group
+    /// </summary>
+    new IEnumerable<TMajor> Records { get; }
+}
 
-        /// <summary>
-        /// Removes the item matching the specified key.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        bool Remove(FormKey key);
+public interface IGroup : IGroupGetter
+{
+    /// <summary>
+    /// Adds
+    /// </summary>
+    /// <param name="record"></param>
+    /// <exception cref="ArgumentException">
+    /// A record with the same FormKey already exists in the group, or is of the wrong type.
+    /// </exception>
+    void AddUntyped(IMajorRecord record);
 
-        /// <summary>
-        /// Removes all items matching the specified keys
-        /// </summary>
-        /// <param name="keys">The keys.</param>
-        void Remove(IEnumerable<FormKey> keys);
-    }
+    /// <summary>
+    /// Adds or replaces the major record
+    /// </summary>
+    /// <exception cref="ArgumentException">
+    /// Record was the wrong type
+    /// </exception>
+    /// <param name="record">The record</param>
+    void SetUntyped(IMajorRecord record);
+
+    /// <summary>
+    /// Adds or updates the major records given
+    /// </summary>
+    /// <exception cref="ArgumentException">
+    /// A record was the wrong type.  The contents of the group will be undefined.  Some records may have been added.
+    /// </exception>
+    /// <param name="records">The records</param>
+    void SetUntyped(IEnumerable<IMajorRecord> records);
+
+    /// <summary>
+    /// Enumerable containing all the FormKeys present in the group
+    /// </summary>
+    new IEnumerable<IMajorRecord> Records { get; }
+}
+
+public interface IGroup<TMajor> : IGroupGetter<TMajor>, IGroup, IClearable
+    where TMajor : IMajorRecordGetter
+{
+    /// <summary>
+    /// Access to records in an ICache interface
+    /// </summary>
+    new ICache<TMajor, FormKey> RecordCache { get; }
+
+    /// <summary>
+    /// Enumerable containing all the FormKeys present in the group
+    /// </summary>
+    new IEnumerable<TMajor> Records { get; }
+        
+    /// <summary>
+    /// Adds a major record to the group
+    /// </summary>
+    /// <param name="record">The record</param>
+    /// <exception cref="ArgumentException">
+    /// A record with the same FormKey already exists in the group
+    /// </exception>
+    void Add(TMajor record);
+
+    /// <summary>
+    /// Adds or replaces the major record
+    /// </summary>
+    /// <param name="record">The record</param>
+    void Set(TMajor record);
+
+    /// <summary>
+    /// Adds or updates the major records given
+    /// </summary>
+    /// <param name="records">The records</param>
+    void Set(IEnumerable<TMajor> records);
+
+    /// <summary>
+    /// Removes the item matching the specified key.
+    /// </summary>
+    /// <param name="key">The key.</param>
+    bool Remove(FormKey key);
+
+    /// <summary>
+    /// Removes all items matching the specified keys
+    /// </summary>
+    /// <param name="keys">The keys.</param>
+    void Remove(IEnumerable<FormKey> keys);
 }

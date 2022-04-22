@@ -168,6 +168,12 @@
     <Compile Include="Records\Major Records\Landscape.cs">
       <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\NavigationMesh.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavigationMeshData.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\SkyrimGroupWrapper.cs">
       <DependentUpon>SkyrimGroup.xml</DependentUpon>
     </Compile>
@@ -188,12 +194,6 @@
     </Compile>
     <Compile Include="Records\Major Records\Ammunition.cs">
       <DependentUpon>Ammunition.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ANavigationMesh.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ANavigationMeshData.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\APackageData.cs">
       <DependentUpon>Package.xml</DependentUpon>
@@ -251,12 +251,6 @@
     </Compile>
     <Compile Include="Records\Major Records\CellLighting.cs">
       <DependentUpon>Cell.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\CellNavigationMesh.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\CellNavigationMeshData.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\CellSubBlock.cs">
       <DependentUpon>Cell.xml</DependentUpon>
@@ -764,12 +758,6 @@
     </Compile>
     <Compile Include="Records\Major Records\Worldspace.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\WorldspaceNavigationMesh.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\WorldspaceNavigationMeshData.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\WorldspaceObjectBounds.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
@@ -1404,33 +1392,6 @@
     </Compile>
     <Compile Include="Records\Major Records\MusicTypeData_Generated.cs">
       <DependentUpon>MusicType.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ANavigationMesh_Generated.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\WorldspaceNavigationMesh_Generated.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\CellNavigationMesh_Generated.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ANavigationMeshData_Generated.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\WorldspaceNavigationMeshData_Generated.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\CellNavigationMeshData_Generated.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\NavmeshTriangle_Generated.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\EdgeLink_Generated.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\DoorTriangle_Generated.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\NavigationMeshInfoMap_Generated.cs">
       <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
@@ -2129,14 +2090,38 @@
     <Compile Include="Records\RecordTypeInts_Generated.cs" />
     <Compile Include="Interfaces\InheritingInterfaceMapping_Generated.cs" />
     <Compile Include="Interfaces\IsolatedAbstractInterfaceMapping_Generated.cs" />
+    <Compile Include="Records\Major Records\NavigationMesh_Generated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ANavmeshParent_Generated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceNavmeshParent_Generated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CellNavmeshParent_Generated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavigationMeshData_Generated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavmeshTriangle_Generated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\EdgeLink_Generated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DoorTriangle_Generated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.41.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.41.0" />
+    <PackageReference Include="Loqui" Version="2.42.0.1-dev" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.42.0.1-dev" />
     <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -2146,6 +2131,6 @@
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
   </ItemGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.skyrim&quot;" />
+    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.skyrim&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
   </Target>
 </Project>

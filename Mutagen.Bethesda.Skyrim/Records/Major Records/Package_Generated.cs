@@ -3875,77 +3875,77 @@ namespace Mutagen.Bethesda.Skyrim
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IPackageAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? PackageAdapterBinaryOverlay.PackageAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
         #endregion
-        private int? _PKDTLocation;
+        private RangeInt32? _PKDTLocation;
         public Package.PKDTDataType PKDTDataTypeState { get; private set; }
         #region Flags
-        private int _FlagsLocation => _PKDTLocation!.Value;
+        private int _FlagsLocation => _PKDTLocation!.Value.Min;
         private bool _Flags_IsSet => _PKDTLocation.HasValue;
         public Package.Flag Flags => _Flags_IsSet ? (Package.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region Type
-        private int _TypeLocation => _PKDTLocation!.Value + 0x4;
+        private int _TypeLocation => _PKDTLocation!.Value.Min + 0x4;
         private bool _Type_IsSet => _PKDTLocation.HasValue;
         public Package.Types Type => _Type_IsSet ? (Package.Types)_data.Span.Slice(_TypeLocation, 0x1)[0] : default;
         #endregion
         #region InterruptOverride
-        private int _InterruptOverrideLocation => _PKDTLocation!.Value + 0x5;
+        private int _InterruptOverrideLocation => _PKDTLocation!.Value.Min + 0x5;
         private bool _InterruptOverride_IsSet => _PKDTLocation.HasValue;
         public Package.Interrupt InterruptOverride => _InterruptOverride_IsSet ? (Package.Interrupt)_data.Span.Slice(_InterruptOverrideLocation, 0x1)[0] : default;
         #endregion
         #region PreferredSpeed
-        private int _PreferredSpeedLocation => _PKDTLocation!.Value + 0x6;
+        private int _PreferredSpeedLocation => _PKDTLocation!.Value.Min + 0x6;
         private bool _PreferredSpeed_IsSet => _PKDTLocation.HasValue;
         public Package.Speed PreferredSpeed => _PreferredSpeed_IsSet ? (Package.Speed)_data.Span.Slice(_PreferredSpeedLocation, 0x1)[0] : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _PKDTLocation!.Value + 0x7;
+        private int _UnknownLocation => _PKDTLocation!.Value.Min + 0x7;
         private bool _Unknown_IsSet => _PKDTLocation.HasValue;
         public Byte Unknown => _Unknown_IsSet ? _data.Span[_UnknownLocation] : default;
         #endregion
         #region InteruptFlags
-        private int _InteruptFlagsLocation => _PKDTLocation!.Value + 0x8;
+        private int _InteruptFlagsLocation => _PKDTLocation!.Value.Min + 0x8;
         private bool _InteruptFlags_IsSet => _PKDTLocation.HasValue;
         public Package.InterruptFlag InteruptFlags => _InteruptFlags_IsSet ? (Package.InterruptFlag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_InteruptFlagsLocation, 0x2)) : default;
         #endregion
         #region Unknown2
-        private int _Unknown2Location => _PKDTLocation!.Value + 0xA;
+        private int _Unknown2Location => _PKDTLocation!.Value.Min + 0xA;
         private bool _Unknown2_IsSet => _PKDTLocation.HasValue;
         public UInt16 Unknown2 => _Unknown2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_Unknown2Location, 2)) : default;
         #endregion
-        private int? _PSDTLocation;
+        private RangeInt32? _PSDTLocation;
         public Package.PSDTDataType PSDTDataTypeState { get; private set; }
         #region ScheduleMonth
-        private int _ScheduleMonthLocation => _PSDTLocation!.Value;
+        private int _ScheduleMonthLocation => _PSDTLocation!.Value.Min;
         private bool _ScheduleMonth_IsSet => _PSDTLocation.HasValue;
         public SByte ScheduleMonth => _ScheduleMonth_IsSet ? (sbyte)_data.Slice(_ScheduleMonthLocation, 1)[0] : default;
         #endregion
         #region ScheduleDayOfWeek
-        private int _ScheduleDayOfWeekLocation => _PSDTLocation!.Value + 0x1;
+        private int _ScheduleDayOfWeekLocation => _PSDTLocation!.Value.Min + 0x1;
         private bool _ScheduleDayOfWeek_IsSet => _PSDTLocation.HasValue;
         public Package.DayOfWeek ScheduleDayOfWeek => _ScheduleDayOfWeek_IsSet ? (Package.DayOfWeek)_data.Span.Slice(_ScheduleDayOfWeekLocation, 0x1)[0] : default;
         #endregion
         #region ScheduleDate
-        private int _ScheduleDateLocation => _PSDTLocation!.Value + 0x2;
+        private int _ScheduleDateLocation => _PSDTLocation!.Value.Min + 0x2;
         private bool _ScheduleDate_IsSet => _PSDTLocation.HasValue;
         public Byte ScheduleDate => _ScheduleDate_IsSet ? _data.Span[_ScheduleDateLocation] : default;
         #endregion
         #region ScheduleHour
-        private int _ScheduleHourLocation => _PSDTLocation!.Value + 0x3;
+        private int _ScheduleHourLocation => _PSDTLocation!.Value.Min + 0x3;
         private bool _ScheduleHour_IsSet => _PSDTLocation.HasValue;
         public SByte ScheduleHour => _ScheduleHour_IsSet ? (sbyte)_data.Slice(_ScheduleHourLocation, 1)[0] : default;
         #endregion
         #region ScheduleMinute
-        private int _ScheduleMinuteLocation => _PSDTLocation!.Value + 0x4;
+        private int _ScheduleMinuteLocation => _PSDTLocation!.Value.Min + 0x4;
         private bool _ScheduleMinute_IsSet => _PSDTLocation.HasValue;
         public SByte ScheduleMinute => _ScheduleMinute_IsSet ? (sbyte)_data.Slice(_ScheduleMinuteLocation, 1)[0] : default;
         #endregion
         #region Unknown3
-        private int _Unknown3Location => _PSDTLocation!.Value + 0x5;
+        private int _Unknown3Location => _PSDTLocation!.Value.Min + 0x5;
         private bool _Unknown3_IsSet => _PSDTLocation.HasValue;
         public ReadOnlyMemorySlice<Byte> Unknown3 => _Unknown3_IsSet ? _data.Span.Slice(_Unknown3Location, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region ScheduleDurationInMinutes
-        private int _ScheduleDurationInMinutesLocation => _PSDTLocation!.Value + 0x8;
+        private int _ScheduleDurationInMinutesLocation => _PSDTLocation!.Value.Min + 0x8;
         private bool _ScheduleDurationInMinutes_IsSet => _PSDTLocation.HasValue;
         public Int32 ScheduleDurationInMinutes => _ScheduleDurationInMinutes_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_ScheduleDurationInMinutesLocation, 4)) : default;
         #endregion
@@ -4062,12 +4062,12 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.PKDT:
                 {
-                    _PKDTLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _PKDTLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Package_FieldIndex.Unknown2;
                 }
                 case RecordTypeInts.PSDT:
                 {
-                    _PSDTLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _PSDTLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Package_FieldIndex.ScheduleDurationInMinutes;
                 }
                 case RecordTypeInts.CTDA:

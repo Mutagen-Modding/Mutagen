@@ -9832,50 +9832,50 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _AnimationSoundLocation;
         public IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound => _AnimationSoundLocation.HasValue ? new FormLinkNullable<IAnimationSoundTagSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AnimationSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAnimationSoundTagSetGetter>.Null;
         #endregion
-        private int? _ACBSLocation;
+        private RangeInt32? _ACBSLocation;
         public Npc.ACBSDataType ACBSDataTypeState { get; private set; }
         #region Flags
-        private int _FlagsLocation => _ACBSLocation!.Value;
+        private int _FlagsLocation => _ACBSLocation!.Value.Min;
         public partial Npc.Flag GetFlagsCustom();
         public Npc.Flag Flags => GetFlagsCustom();
         #endregion
         #region XpValueOffset
-        private int _XpValueOffsetLocation => _ACBSLocation!.Value + 0x4;
+        private int _XpValueOffsetLocation => _ACBSLocation!.Value.Min + 0x4;
         private bool _XpValueOffset_IsSet => _ACBSLocation.HasValue;
         public Int16 XpValueOffset => _XpValueOffset_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_XpValueOffsetLocation, 2)) : default;
         #endregion
         #region Level
-        private int _LevelLocation => _ACBSLocation!.Value + 0x6;
+        private int _LevelLocation => _ACBSLocation!.Value.Min + 0x6;
         public partial IANpcLevelGetter GetLevelCustom();
         public IANpcLevelGetter Level => GetLevelCustom();
         #endregion
         #region CalcMinLevel
-        private int _CalcMinLevelLocation => _ACBSLocation!.Value + 0x8;
+        private int _CalcMinLevelLocation => _ACBSLocation!.Value.Min + 0x8;
         private bool _CalcMinLevel_IsSet => _ACBSLocation.HasValue;
         public Int16 CalcMinLevel => _CalcMinLevel_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_CalcMinLevelLocation, 2)) : default;
         #endregion
         #region CalcMaxLevel
-        private int _CalcMaxLevelLocation => _ACBSLocation!.Value + 0xA;
+        private int _CalcMaxLevelLocation => _ACBSLocation!.Value.Min + 0xA;
         private bool _CalcMaxLevel_IsSet => _ACBSLocation.HasValue;
         public Int16 CalcMaxLevel => _CalcMaxLevel_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_CalcMaxLevelLocation, 2)) : default;
         #endregion
         #region DispositionBase
-        private int _DispositionBaseLocation => _ACBSLocation!.Value + 0xC;
+        private int _DispositionBaseLocation => _ACBSLocation!.Value.Min + 0xC;
         private bool _DispositionBase_IsSet => _ACBSLocation.HasValue;
         public Int16 DispositionBase => _DispositionBase_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_DispositionBaseLocation, 2)) : default;
         #endregion
         #region UseTemplateActors
-        private int _UseTemplateActorsLocation => _ACBSLocation!.Value + 0xE;
+        private int _UseTemplateActorsLocation => _ACBSLocation!.Value.Min + 0xE;
         private bool _UseTemplateActors_IsSet => _ACBSLocation.HasValue;
         public Npc.TemplateActorType UseTemplateActors => _UseTemplateActors_IsSet ? (Npc.TemplateActorType)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_UseTemplateActorsLocation, 0x2)) : default;
         #endregion
         #region BleedoutOverride
-        private int _BleedoutOverrideLocation => _ACBSLocation!.Value + 0x10;
+        private int _BleedoutOverrideLocation => _ACBSLocation!.Value.Min + 0x10;
         private bool _BleedoutOverride_IsSet => _ACBSLocation.HasValue;
         public Int16 BleedoutOverride => _BleedoutOverride_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_BleedoutOverrideLocation, 2)) : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _ACBSLocation!.Value + 0x12;
+        private int _UnknownLocation => _ACBSLocation!.Value.Min + 0x12;
         private bool _Unknown_IsSet => _ACBSLocation.HasValue;
         public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
         #endregion
@@ -9958,60 +9958,60 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullableGetter<ITerminalGetter> NativeTerminal => _NativeTerminalLocation.HasValue ? new FormLinkNullable<ITerminalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NativeTerminalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITerminalGetter>.Null;
         #endregion
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
-        private int? _AIDTLocation;
+        private RangeInt32? _AIDTLocation;
         public Npc.AIDTDataType AIDTDataTypeState { get; private set; }
         #region Agression
-        private int _AgressionLocation => _AIDTLocation!.Value;
+        private int _AgressionLocation => _AIDTLocation!.Value.Min;
         private bool _Agression_IsSet => _AIDTLocation.HasValue;
         public Npc.AggressionType Agression => _Agression_IsSet ? (Npc.AggressionType)_data.Span.Slice(_AgressionLocation, 0x1)[0] : default;
         #endregion
         #region Confidence
-        private int _ConfidenceLocation => _AIDTLocation!.Value + 0x1;
+        private int _ConfidenceLocation => _AIDTLocation!.Value.Min + 0x1;
         private bool _Confidence_IsSet => _AIDTLocation.HasValue;
         public Npc.ConfidenceType Confidence => _Confidence_IsSet ? (Npc.ConfidenceType)_data.Span.Slice(_ConfidenceLocation, 0x1)[0] : default;
         #endregion
         #region EnergyLevel
-        private int _EnergyLevelLocation => _AIDTLocation!.Value + 0x2;
+        private int _EnergyLevelLocation => _AIDTLocation!.Value.Min + 0x2;
         private bool _EnergyLevel_IsSet => _AIDTLocation.HasValue;
         public Byte EnergyLevel => _EnergyLevel_IsSet ? _data.Span[_EnergyLevelLocation] : default;
         #endregion
         #region Responsibility
-        private int _ResponsibilityLocation => _AIDTLocation!.Value + 0x3;
+        private int _ResponsibilityLocation => _AIDTLocation!.Value.Min + 0x3;
         private bool _Responsibility_IsSet => _AIDTLocation.HasValue;
         public Npc.ResponsibilityType Responsibility => _Responsibility_IsSet ? (Npc.ResponsibilityType)_data.Span.Slice(_ResponsibilityLocation, 0x1)[0] : default;
         #endregion
         #region Mood
-        private int _MoodLocation => _AIDTLocation!.Value + 0x4;
+        private int _MoodLocation => _AIDTLocation!.Value.Min + 0x4;
         private bool _Mood_IsSet => _AIDTLocation.HasValue;
         public Npc.MoodType Mood => _Mood_IsSet ? (Npc.MoodType)_data.Span.Slice(_MoodLocation, 0x1)[0] : default;
         #endregion
         #region Assistence
-        private int _AssistenceLocation => _AIDTLocation!.Value + 0x5;
+        private int _AssistenceLocation => _AIDTLocation!.Value.Min + 0x5;
         private bool _Assistence_IsSet => _AIDTLocation.HasValue;
         public Npc.AssistenceType Assistence => _Assistence_IsSet ? (Npc.AssistenceType)_data.Span.Slice(_AssistenceLocation, 0x1)[0] : default;
         #endregion
         #region AggroRadiusBehaviorEnabled
-        private int _AggroRadiusBehaviorEnabledLocation => _AIDTLocation!.Value + 0x6;
+        private int _AggroRadiusBehaviorEnabledLocation => _AIDTLocation!.Value.Min + 0x6;
         private bool _AggroRadiusBehaviorEnabled_IsSet => _AIDTLocation.HasValue;
         public Boolean AggroRadiusBehaviorEnabled => _AggroRadiusBehaviorEnabled_IsSet ? _data.Slice(_AggroRadiusBehaviorEnabledLocation, 2)[0] >= 1 : default;
         #endregion
         #region AggroRadiusWarn
-        private int _AggroRadiusWarnLocation => _AIDTLocation!.Value + 0x8;
+        private int _AggroRadiusWarnLocation => _AIDTLocation!.Value.Min + 0x8;
         private bool _AggroRadiusWarn_IsSet => _AIDTLocation.HasValue;
         public UInt32 AggroRadiusWarn => _AggroRadiusWarn_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_AggroRadiusWarnLocation, 4)) : default;
         #endregion
         #region AggroRadiusWarnOrAttack
-        private int _AggroRadiusWarnOrAttackLocation => _AIDTLocation!.Value + 0xC;
+        private int _AggroRadiusWarnOrAttackLocation => _AIDTLocation!.Value.Min + 0xC;
         private bool _AggroRadiusWarnOrAttack_IsSet => _AIDTLocation.HasValue;
         public UInt32 AggroRadiusWarnOrAttack => _AggroRadiusWarnOrAttack_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_AggroRadiusWarnOrAttackLocation, 4)) : default;
         #endregion
         #region AggroRadiusAttack
-        private int _AggroRadiusAttackLocation => _AIDTLocation!.Value + 0x10;
+        private int _AggroRadiusAttackLocation => _AIDTLocation!.Value.Min + 0x10;
         private bool _AggroRadiusAttack_IsSet => _AIDTLocation.HasValue;
         public UInt32 AggroRadiusAttack => _AggroRadiusAttack_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_AggroRadiusAttackLocation, 4)) : default;
         #endregion
         #region NoSlowApproach
-        private int _NoSlowApproachLocation => _AIDTLocation!.Value + 0x14;
+        private int _NoSlowApproachLocation => _AIDTLocation!.Value.Min + 0x14;
         private bool _NoSlowApproach_IsSet => _AIDTLocation.HasValue;
         public Boolean NoSlowApproach => _NoSlowApproach_IsSet ? _data.Slice(_NoSlowApproachLocation, 4)[0] >= 1 : default;
         #endregion
@@ -10042,30 +10042,30 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _ShortNameLocation;
         public String? ShortName => _ShortNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ShortNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        private int? _DNAMLocation;
+        private RangeInt32? _DNAMLocation;
         public Npc.DNAMDataType DNAMDataTypeState { get; private set; }
         #region BaseHealth
-        private int _BaseHealthLocation => _DNAMLocation!.Value;
+        private int _BaseHealthLocation => _DNAMLocation!.Value.Min;
         private bool _BaseHealth_IsSet => _DNAMLocation.HasValue;
         public UInt16 BaseHealth => _BaseHealth_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_BaseHealthLocation, 2)) : default;
         #endregion
         #region BaseActionPoints
-        private int _BaseActionPointsLocation => _DNAMLocation!.Value + 0x2;
+        private int _BaseActionPointsLocation => _DNAMLocation!.Value.Min + 0x2;
         private bool _BaseActionPoints_IsSet => _DNAMLocation.HasValue;
         public UInt16 BaseActionPoints => _BaseActionPoints_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_BaseActionPointsLocation, 2)) : default;
         #endregion
         #region FarAwayModelDistance
-        private int _FarAwayModelDistanceLocation => _DNAMLocation!.Value + 0x4;
+        private int _FarAwayModelDistanceLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _FarAwayModelDistance_IsSet => _DNAMLocation.HasValue;
         public UInt16 FarAwayModelDistance => _FarAwayModelDistance_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_FarAwayModelDistanceLocation, 2)) : default;
         #endregion
         #region GearedUpWeapons
-        private int _GearedUpWeaponsLocation => _DNAMLocation!.Value + 0x6;
+        private int _GearedUpWeaponsLocation => _DNAMLocation!.Value.Min + 0x6;
         private bool _GearedUpWeapons_IsSet => _DNAMLocation.HasValue;
         public Byte GearedUpWeapons => _GearedUpWeapons_IsSet ? _data.Span[_GearedUpWeaponsLocation] : default;
         #endregion
         #region Unused
-        private int _UnusedLocation => _DNAMLocation!.Value + 0x7;
+        private int _UnusedLocation => _DNAMLocation!.Value.Min + 0x7;
         private bool _Unused_IsSet => _DNAMLocation.HasValue;
         public Byte Unused => _Unused_IsSet ? _data.Span[_UnusedLocation] : default;
         #endregion
@@ -10251,7 +10251,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ACBS:
                 {
-                    _ACBSLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _ACBSLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Npc_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.SNAM:
@@ -10438,7 +10438,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.AIDT:
                 {
-                    _AIDTLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _AIDTLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Npc_FieldIndex.NoSlowApproach;
                 }
                 case RecordTypeInts.PKID:
@@ -10515,7 +10515,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Npc_FieldIndex.Unused;
                 }
                 case RecordTypeInts.PNAM:
