@@ -3643,7 +3643,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.HNAM:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.Hairs = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IHairGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -3655,7 +3655,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.ENAM:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.Eyes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IEyeGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,

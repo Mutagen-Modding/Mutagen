@@ -2131,7 +2131,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.ESCE:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.CounterEffects = BinaryOverlayList.FactoryByStartIndex<IEDIDLinkGetter<IMagicEffectGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,

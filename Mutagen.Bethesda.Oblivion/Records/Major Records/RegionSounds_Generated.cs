@@ -1426,7 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.RDSD:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.Sounds = BinaryOverlayList.FactoryByStartIndex<RegionSoundBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,

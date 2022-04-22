@@ -838,27 +838,8 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                 }
                 break;
             case ListBinaryType.Trigger:
-                if (data.OverflowRecordType.HasValue)
-                {
-                    fg.AppendLine($"var subMeta = stream.ReadSubrecord();");
-                    fg.AppendLine("int subLen;");
-                    fg.AppendLine($"if (subMeta.RecordType == {objGen.RecordTypeHeaderName(data.OverflowRecordType.Value)})");
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine("subLen = checked((int)stream.ReadUInt32());");
-                        fg.AppendLine($"stream.ReadSubrecord();");
-                    }
-                    fg.AppendLine("else");
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine("subLen = subMeta.ContentLength;");
-                    }
-                }
-                else
-                {
-                    fg.AppendLine($"var subMeta = stream.ReadSubrecord();");
-                    fg.AppendLine("var subLen = subMeta.ContentLength;");
-                }
+                fg.AppendLine($"var subMeta = stream.ReadSubrecord();");
+                fg.AppendLine("var subLen = finalPos - stream.Position;");
                 if (expectedLen.HasValue)
                 {
                     using (var args = new ArgsWrapper(fg,

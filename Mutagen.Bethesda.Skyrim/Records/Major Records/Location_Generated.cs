@@ -5647,7 +5647,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ACPR:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.ActorCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<LocationReferenceBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -5659,7 +5659,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.LCPR:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.LocationCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<LocationReferenceBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -5671,7 +5671,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.RCPR:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.ReferenceCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedSimpleGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -5683,7 +5683,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ACUN:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.ActorCellUniques = BinaryOverlayList.FactoryByStartIndex<LocationCellUniqueBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -5695,7 +5695,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.LCUN:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.LocationCellUniques = BinaryOverlayList.FactoryByStartIndex<LocationCellUniqueBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -5707,7 +5707,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.RCUN:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.ReferenceCellUnique = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<INpcGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -5719,7 +5719,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ACSR:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.ActorCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<LocationCellStaticReferenceBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -5731,7 +5731,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.LCSR:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.LocationCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<LocationCellStaticReferenceBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -5743,7 +5743,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.RCSR:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.ReferenceCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedSimpleGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -5785,7 +5785,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ACID:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.ActorCellMarkerReference = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -5797,7 +5797,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.LCID:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.LocationCellMarkerReference = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -5809,7 +5809,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ACEP:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.ActorCellEnablePoint = BinaryOverlayList.FactoryByStartIndex<LocationCellEnablePointBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -5821,7 +5821,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.LCEP:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.LocationCellEnablePoint = BinaryOverlayList.FactoryByStartIndex<LocationCellEnablePointBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,

@@ -617,9 +617,9 @@ public static class HeaderExt
         return EnumerateSubrecords(modHeader.HeaderAndContentData, modHeader.Meta, modHeader.HeaderLength, lengthOverflowTypes ?? _headerOverflow);
     }
 
-    public static IEnumerable<SubrecordPinFrame> Masters(this ModHeaderFrame modHeader)
+    public static IEnumerable<SubrecordPinFrame> Masters(this ModHeaderFrame modHeader, ICollection<RecordType>? lengthOverflowTypes = null)
     {
-        foreach (var pin in EnumerateSubrecords(modHeader, lengthOverflowTypes: Array.Empty<RecordType>()))
+        foreach (var pin in EnumerateSubrecords(modHeader, lengthOverflowTypes: lengthOverflowTypes ?? _headerOverflow))
         {
             if (pin.RecordType == RecordTypes.MAST)
             {

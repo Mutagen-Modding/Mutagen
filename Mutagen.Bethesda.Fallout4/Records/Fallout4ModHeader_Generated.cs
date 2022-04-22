@@ -2681,16 +2681,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ONAM:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    int subLen;
-                    if (subMeta.RecordType == RecordTypes.XXXX)
-                    {
-                        subLen = checked((int)stream.ReadUInt32());
-                        stream.ReadSubrecord();
-                    }
-                    else
-                    {
-                        subLen = subMeta.ContentLength;
-                    }
+                    var subLen = finalPos - stream.Position;
                     this.OverriddenForms = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IFallout4MajorRecordGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,

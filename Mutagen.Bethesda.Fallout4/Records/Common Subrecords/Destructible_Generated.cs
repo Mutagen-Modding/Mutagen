@@ -1648,7 +1648,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Destructible_FieldIndex.Resistances) return ParseResult.Stop;
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.Resistances = BinaryOverlayList.FactoryByStartIndex<ResistanceDestructibleBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,

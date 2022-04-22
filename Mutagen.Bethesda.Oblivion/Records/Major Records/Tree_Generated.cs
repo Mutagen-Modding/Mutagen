@@ -2036,7 +2036,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.SNAM:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.SpeedTreeSeeds = BinaryOverlayList.FactoryByStartIndex<UInt32>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,

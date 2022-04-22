@@ -42,6 +42,7 @@ public class TestDataPathing
     public static string SubgraphOutOfOrder = "Files/Fallout4/SubgraphOutOfOrder.esp";
     public static string SkyrimConditionWithTwoStrings = "Files/Skyrim/ConditionWithTwoStrings.esp";
     public static string CountDisagreesWithReality = "Files/Core/CountDisagreesWithReality.esp";
+    public static string HeaderOverflow = "Plugins/Binary/Headers/ModHeaderOverflow";
 
     public static byte[] GetBytes(FilePath path)
     {
