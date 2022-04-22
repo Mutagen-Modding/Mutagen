@@ -1,5 +1,3 @@
-using System;
-
 namespace Mutagen.Bethesda.WPF.Reflection.Fields;
 
 public record FieldMeta(

@@ -2,9 +2,6 @@ using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;

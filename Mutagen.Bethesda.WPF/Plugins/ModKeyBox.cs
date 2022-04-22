@@ -1,12 +1,10 @@
 using ReactiveUI;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System;
 using System.Collections.Generic;
 using Noggog;
-using System.Linq;
 using System.IO;
 using Noggog.WPF;
 using System.ComponentModel;

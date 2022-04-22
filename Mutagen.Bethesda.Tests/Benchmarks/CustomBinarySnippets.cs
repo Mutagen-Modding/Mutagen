@@ -1,6 +1,5 @@
 using BenchmarkDotNet.Attributes;
 using Mutagen.Bethesda.Oblivion;
-using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Newtonsoft.Json;

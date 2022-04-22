@@ -2,7 +2,6 @@
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
-using Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking;

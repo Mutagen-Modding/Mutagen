@@ -5,10 +5,7 @@ using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams; 
 using Mutagen.Bethesda.Plugins.Binary.Translations; 
 using Mutagen.Bethesda.Plugins.Meta; 
-using Mutagen.Bethesda.Strings; 
-using System; 
-using System.Collections.Generic; 
-using System.Threading.Tasks; 
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Generation.Fields; 
 using StringType = Mutagen.Bethesda.Generation.Fields.StringType; 
  

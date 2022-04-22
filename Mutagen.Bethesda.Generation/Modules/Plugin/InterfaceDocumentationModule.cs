@@ -2,10 +2,6 @@ using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Modules.Aspects;
 using Noggog;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 

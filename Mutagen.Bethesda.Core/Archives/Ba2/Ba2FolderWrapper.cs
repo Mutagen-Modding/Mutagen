@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Noggog;
 
 namespace Mutagen.Bethesda.Archives.Ba2;
 

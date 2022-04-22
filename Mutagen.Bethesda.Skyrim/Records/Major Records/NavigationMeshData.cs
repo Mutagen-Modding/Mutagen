@@ -3,7 +3,6 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
 using System.Buffers.Binary;
 using System.Collections;
 using System.Collections.Generic;

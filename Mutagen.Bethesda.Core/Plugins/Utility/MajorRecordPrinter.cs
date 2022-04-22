@@ -1,4 +1,3 @@
-using System;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Records;
 

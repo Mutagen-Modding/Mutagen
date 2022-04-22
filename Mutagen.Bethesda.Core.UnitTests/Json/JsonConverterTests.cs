@@ -1,7 +1,6 @@
 using FluentAssertions;
 using Mutagen.Bethesda.Json;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.Placeholders;
 using Newtonsoft.Json;

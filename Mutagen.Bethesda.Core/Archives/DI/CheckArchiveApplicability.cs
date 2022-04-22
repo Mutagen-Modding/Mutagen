@@ -1,5 +1,4 @@
 ﻿using System;
-using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
 using Noggog;
 

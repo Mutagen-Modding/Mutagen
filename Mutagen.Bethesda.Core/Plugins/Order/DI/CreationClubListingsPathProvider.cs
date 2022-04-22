@@ -1,5 +1,4 @@
-﻿using Mutagen.Bethesda.Environments;
-using Mutagen.Bethesda.Environments.DI;
+﻿using Mutagen.Bethesda.Environments.DI;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Order.DI;

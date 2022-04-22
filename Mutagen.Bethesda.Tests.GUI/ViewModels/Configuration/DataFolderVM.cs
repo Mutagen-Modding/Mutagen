@@ -1,7 +1,4 @@
 using Noggog.WPF;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Tests.GUI;
 

@@ -1,7 +1,4 @@
-using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
-using System;
-using System.IO;
 
 namespace Mutagen.Bethesda.Translations.Binary;
 

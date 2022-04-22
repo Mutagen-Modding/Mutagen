@@ -8,7 +8,6 @@ using Noggog;
 using System.Windows.Media;
 using ReactiveUI;
 using System.Reactive.Linq;
-using System.Reactive.Disposables;
 using System.Windows.Input;
 using DynamicData;
 using System.Windows.Controls;

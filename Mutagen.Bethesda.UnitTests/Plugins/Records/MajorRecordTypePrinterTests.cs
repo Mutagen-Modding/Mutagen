@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Xunit;

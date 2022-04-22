@@ -1,8 +1,5 @@
 ﻿using Loqui;
 using Loqui.Generation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using StringType = Mutagen.Bethesda.Generation.Fields.StringType;
 
 namespace Mutagen.Bethesda.Generation;

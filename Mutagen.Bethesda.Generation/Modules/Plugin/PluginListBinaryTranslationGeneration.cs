@@ -6,7 +6,6 @@ using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Generation.Fields;

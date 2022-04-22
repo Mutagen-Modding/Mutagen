@@ -1,5 +1,4 @@
 using Mutagen.Bethesda.Plugins.Meta;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System;
 using System.Buffers.Binary;

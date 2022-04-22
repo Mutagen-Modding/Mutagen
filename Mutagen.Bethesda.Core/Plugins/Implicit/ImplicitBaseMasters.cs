@@ -1,5 +1,3 @@
-using System;
-
 namespace Mutagen.Bethesda.Plugins.Implicit;
 
 public class ImplicitBaseMasters

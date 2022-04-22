@@ -1,5 +1,4 @@
 using Loqui.Generation;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 

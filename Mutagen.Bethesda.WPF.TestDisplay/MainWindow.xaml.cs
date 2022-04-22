@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Autofac;
 
 namespace Mutagen.Bethesda.WPF.TestDisplay;

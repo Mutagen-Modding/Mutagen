@@ -2,7 +2,6 @@
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
-using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Environments.DI;
 using Path = System.IO.Path;
 

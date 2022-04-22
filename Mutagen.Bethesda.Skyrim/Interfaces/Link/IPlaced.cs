@@ -1,6 +1,3 @@
-using Noggog;
-using static Mutagen.Bethesda.Skyrim.SkyrimMajorRecord;
-
 namespace Mutagen.Bethesda.Skyrim;
 
 public partial interface IPlaced : IPlacedThing, IPlacedSimple

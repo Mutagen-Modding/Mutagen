@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.VisualBasic.CompilerServices;
-
-namespace Mutagen.Bethesda.Environments.DI;
+﻿namespace Mutagen.Bethesda.Environments.DI;
 
 public interface IGameCategoryContext
 {

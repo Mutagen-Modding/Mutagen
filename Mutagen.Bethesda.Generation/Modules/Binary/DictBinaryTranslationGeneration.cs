@@ -1,9 +1,6 @@
 using Loqui;
 using Noggog;
 using Loqui.Generation;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;

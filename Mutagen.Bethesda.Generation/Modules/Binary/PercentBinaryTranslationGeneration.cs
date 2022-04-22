@@ -1,10 +1,7 @@
 using Loqui;
 using Loqui.Generation;
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Translations.Binary;
-using System;
-using System.Threading.Tasks;
 using PercentType = Mutagen.Bethesda.Generation.Fields.PercentType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary;

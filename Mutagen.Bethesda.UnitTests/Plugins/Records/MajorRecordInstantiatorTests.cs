@@ -1,4 +1,3 @@
-using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Utility;
 using Xunit;

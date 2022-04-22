@@ -4,7 +4,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Records.Internals;

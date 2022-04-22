@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Mutagen.Bethesda.Generation;
+﻿namespace Mutagen.Bethesda.Generation;
 
 public static class GameCategoryExt
 {

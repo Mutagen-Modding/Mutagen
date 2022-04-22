@@ -1,7 +1,6 @@
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
-using Mutagen.Bethesda.WPF.Plugins;
 using Mutagen.Bethesda.WPF.Plugins.Order.Implementations;
 using Mutagen.Bethesda.WPF.Reflection;
 using Noggog;

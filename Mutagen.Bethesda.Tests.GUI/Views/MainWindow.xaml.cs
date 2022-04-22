@@ -1,13 +1,8 @@
 ﻿using Loqui;
 using MahApps.Metro.Controls;
-using Newtonsoft.Json;
 using Noggog;
 using Noggog.WPF;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Tests.GUI.Views;

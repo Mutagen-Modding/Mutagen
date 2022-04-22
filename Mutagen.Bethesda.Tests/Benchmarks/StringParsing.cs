@@ -1,8 +1,6 @@
 using BenchmarkDotNet.Attributes;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
-using System;
-using System.Buffers;
 using System.Linq;
 using Mutagen.Bethesda.Strings.DI;
 

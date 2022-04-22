@@ -3,7 +3,6 @@ using System;
 using System.Windows;
 using ReactiveUI;
 using System.Reactive.Linq;
-using System.Reactive.Disposables;
 using Noggog;
 using Mutagen.Bethesda.Plugins;
 

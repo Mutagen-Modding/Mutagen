@@ -1,5 +1,4 @@
 using Loqui.Generation;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Binary.Translations;

@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Mutagen.Bethesda.Plugins.Records;
-using Noggog;
 using System;
 using System.Data;
 using System.IO;

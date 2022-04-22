@@ -1,8 +1,5 @@
 using Loqui;
 using Loqui.Generation;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary;
 

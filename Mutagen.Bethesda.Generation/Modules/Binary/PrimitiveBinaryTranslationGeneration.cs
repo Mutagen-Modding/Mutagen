@@ -6,9 +6,6 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Mutagen.Bethesda.Generation.Fields;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary;

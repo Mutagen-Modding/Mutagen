@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;

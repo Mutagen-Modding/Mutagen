@@ -2372,7 +2372,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Triangles
         protected int TrianglesEndingPos;
-        public partial void CustomTrianglesEndPos();
+        partial void CustomTrianglesEndPos();
         #endregion
         #region EdgeLinks
         public IReadOnlyList<IEdgeLinkGetter> EdgeLinks => BinaryOverlayList.FactoryByCountLength<EdgeLinkBinaryOverlay>(_data.Slice(TrianglesEndingPos), _package, 10, countLength: 4, (s, p) => EdgeLinkBinaryOverlay.EdgeLinkFactory(s, p));

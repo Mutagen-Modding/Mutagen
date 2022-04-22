@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.RecordTypeMapping;
 

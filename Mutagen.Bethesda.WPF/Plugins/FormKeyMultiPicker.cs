@@ -1,21 +1,16 @@
-using System;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 using ReactiveUI;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using DynamicData;
-using DynamicData.Binding;
 using Noggog;
 using Noggog.WPF;
 using Noggog.WPF.Containers;
-using ReactiveUI.Fody.Helpers;
 
 namespace Mutagen.Bethesda.WPF.Plugins;
 

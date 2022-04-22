@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;

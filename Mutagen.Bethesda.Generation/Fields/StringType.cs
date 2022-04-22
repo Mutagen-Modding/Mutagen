@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Loqui;
 using Loqui.Generation;

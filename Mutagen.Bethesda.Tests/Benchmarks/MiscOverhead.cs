@@ -1,6 +1,5 @@
 using BenchmarkDotNet.Attributes;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
-using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Translations.Binary;
 using System;
 

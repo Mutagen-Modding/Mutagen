@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Environments.DI;
 
 namespace Mutagen.Bethesda.Plugins.Implicit.DI;

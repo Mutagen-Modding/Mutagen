@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Loqui.Generation;
+﻿using Loqui.Generation;
 
 namespace Mutagen.Bethesda.Generation.Fields;
 

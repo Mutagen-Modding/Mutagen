@@ -2,8 +2,6 @@ using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Modules.Binary;
 using Noggog;
-using System;
-using System.Threading.Tasks;
 using Mutagen.Bethesda.Generation.Fields;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;

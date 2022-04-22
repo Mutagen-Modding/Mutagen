@@ -1,5 +1,4 @@
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Records;

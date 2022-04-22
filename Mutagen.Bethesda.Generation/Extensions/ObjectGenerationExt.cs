@@ -1,12 +1,7 @@
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Mutagen.Bethesda.Generation.Fields;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
 using Loqui;

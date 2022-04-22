@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Mutagen.Bethesda.Kernel;
+﻿namespace Mutagen.Bethesda.Kernel;
 
 public static class Constants
 {

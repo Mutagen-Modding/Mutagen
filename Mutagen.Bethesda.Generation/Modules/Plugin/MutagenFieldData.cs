@@ -2,8 +2,6 @@ using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Modules.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 

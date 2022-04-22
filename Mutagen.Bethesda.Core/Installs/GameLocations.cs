@@ -1,13 +1,6 @@
 using Noggog;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using GameFinder;
-using GameFinder.StoreHandlers.Steam;
-using GameFinder.StoreHandlers.GOG;
-using Microsoft.Win32;
 using Mutagen.Bethesda.Installs.DI;
 
 namespace Mutagen.Bethesda.Installs;
