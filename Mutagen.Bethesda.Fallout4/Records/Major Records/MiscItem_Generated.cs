@@ -3445,7 +3445,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CVPA:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.Components = BinaryOverlayList.FactoryByStartIndex<MiscItemComponentBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -3457,7 +3457,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CDIX:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.ComponentDisplayIndices = BinaryOverlayList.FactoryByStartIndex<Byte>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,

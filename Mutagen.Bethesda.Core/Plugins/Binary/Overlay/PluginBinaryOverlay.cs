@@ -191,7 +191,15 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
             {
                 SubrecordHeader subMeta = stream.GetSubrecord();
                 lastParsedType = subMeta.RecordType;
-                var minimumFinalPos = stream.Position + subMeta.TotalLength;
+                var minimumFinalPos = stream.Position;
+                if (lastParsed.LengthOverride.HasValue)
+                {
+                    minimumFinalPos += lastParsed.LengthOverride.Value + subMeta.HeaderLength;
+                }
+                else
+                {
+                    minimumFinalPos += subMeta.TotalLength;
+                }
                 var parsed = fill(
                     stream: stream,
                     finalPos: minimumFinalPos,
@@ -262,7 +270,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
             var minimumFinalPos = stream.Position + subMeta.TotalLength;
             var parsed = fill(
                 stream: stream,
-                finalPos: finalPos,
+                finalPos: minimumFinalPos,
                 offset: offset,
                 recordParseCount: recordParseCount,
                 type: subMeta.RecordType,

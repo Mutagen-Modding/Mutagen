@@ -2038,7 +2038,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.DATA:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.RelatedIdleAnimations = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IIdleAnimationGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,

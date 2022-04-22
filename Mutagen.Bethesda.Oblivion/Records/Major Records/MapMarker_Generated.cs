@@ -1480,7 +1480,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MapMarker_FieldIndex.Types) return ParseResult.Stop;
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subLen = finalPos - stream.Position;
                     this.Types = BinaryOverlayList.FactoryByStartIndex<MapMarker.Type>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,

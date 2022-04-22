@@ -4,6 +4,7 @@ using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Strings.DI;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.Placeholders;
 using Xunit;
@@ -116,9 +117,9 @@ public class HeaderExtTests
     }
 
     [Fact]
-    public void ModHeaderOverflow()
+    public void ModHeaderFrameOverflow()
     {
-        byte[] b = TestDataPathing.GetBytes("Plugins/Binary/Headers/ModHeaderOverflow");
+        byte[] b = TestDataPathing.GetBytes(TestDataPathing.HeaderOverflow);
         var modHeader = new ModHeaderFrame(GameConstants.SkyrimSE, b);
         var recs = modHeader.ToList();
         recs.Should().HaveCount(3);
@@ -129,5 +130,14 @@ public class HeaderExtTests
         recs[1].ContentLength.Should().Be(0x08);
         recs[2].ContentLength.Should().Be(0x04);
         recs[2].AsInt32().Should().Be(0x04030201);
+    }
+
+    [Fact]
+    public void MastersEnumerationWithOverflow()
+    {
+        byte[] b = TestDataPathing.GetBytes(TestDataPathing.HeaderOverflow);
+        var modHeader = new ModHeaderFrame(GameConstants.SkyrimSE, b);
+        modHeader.Masters().Select(x => x.AsString(MutagenEncodingProvider._1252))
+            .Should().Equal("Dawnguard.esm");
     }
 }

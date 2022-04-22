@@ -191,7 +191,7 @@ public static class PluginUtilityTranslation
                 lastParsed: previousParse,
                 recordParseCount: recordParseCount,
                 nextRecordType: subMeta.RecordType,
-                contentLength: subMeta.ContentLength,
+                contentLength: previousParse.LengthOverride ?? subMeta.ContentLength,
                 translationParams: translationParams);
             if (!parsed.KeepParsing) break;
             if (parsed.DuplicateParseMarker != null)
