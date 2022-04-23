@@ -87,8 +87,8 @@ public class OblivionProcessor : Processor
         var dataFlag = dataFrame.AsUInt8();
         if (dataFlag == 1)
         {
-            var lvld = majorFrame.LocateSubrecord(RecordTypes.LVLD, out var index);
-            index += lvld.HeaderLength + 1;
+            var lvld = majorFrame.LocateSubrecord(RecordTypes.LVLD);
+            var index = lvld.EndLocation + 1;
             this._instructions.SetAddition(
                 loc: index + fileOffset,
                 addition: new byte[]
@@ -414,110 +414,110 @@ public class OblivionProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecord(RecordTypes.CSTD, out var ctsd, out var ctsdLoc))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.CSTD, out var ctsd))
         {
             var len = ctsd.ContentLength;
             var move = 2;
             this._instructions.SetSubstitution(
                 sub: new byte[] { 0, 0 },
-                loc: fileOffset + ctsdLoc + ctsd.HeaderLength + move);
+                loc: fileOffset + ctsd.EndLocation + move);
             move = 38;
             if (len < 2 + move) return;
             this._instructions.SetSubstitution(
                 sub: new byte[] { 0, 0 },
-                loc: fileOffset + ctsdLoc + ctsd.HeaderLength + move);
+                loc: fileOffset + ctsd.EndLocation + move);
             move = 53;
             if (len < 3 + move) return;
             this._instructions.SetSubstitution(
                 sub: new byte[] { 0, 0, 0 },
-                loc: fileOffset + ctsdLoc + ctsd.HeaderLength + 53);
+                loc: fileOffset + ctsd.EndLocation + 53);
             move = 69;
             if (len < 3 + move) return;
             this._instructions.SetSubstitution(
                 sub: new byte[] { 0, 0, 0 },
-                loc: fileOffset + ctsdLoc + ctsd.HeaderLength + 69);
+                loc: fileOffset + ctsd.EndLocation + 69);
             move = 82;
             if (len < 2 + move) return;
             this._instructions.SetSubstitution(
                 sub: new byte[] { 0, 0 },
-                loc: fileOffset + ctsdLoc + ctsd.HeaderLength + 82);
+                loc: fileOffset + ctsd.EndLocation + 82);
             move = 113;
             if (len < 3 + move) return;
             this._instructions.SetSubstitution(
                 sub: new byte[] { 0, 0, 0 },
-                loc: fileOffset + ctsdLoc + ctsd.HeaderLength + 113);
+                loc: fileOffset + ctsd.EndLocation + 113);
         }
     }
 
-    private void ProcessWater(
-        MajorRecordFrame majorFrame,
-        long fileOffset)
-    {
-        var amount = 0;
-        if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec, out var dataLoc))
-        {
-            var len = dataRec.ContentLength;
-            if (len == 0x02)
-            {
-                this._instructions.SetSubstitution(
-                    loc: fileOffset + dataLoc + Plugins.Internals.Constants.HeaderLength,
-                    sub: new byte[] { 0, 0 });
-                this._instructions.SetRemove(
-                    section: RangeInt64.FromLength(
-                        loc: fileOffset + dataLoc + dataRec.HeaderLength,
-                        length: 2));
-                amount -= 2;
-            }
-
-            if (len == 0x56)
-            {
-                this._instructions.SetSubstitution(
-                    loc: fileOffset + dataLoc + Plugins.Internals.Constants.HeaderLength,
-                    sub: new byte[] { 0x54, 0 });
-                this._instructions.SetRemove(
-                    section: RangeInt64.FromLength(
-                        loc: fileOffset + dataLoc + dataRec.HeaderLength + 0x54,
-                        length: 2));
-                amount -= 2;
-            }
-
-            if (len == 0x2A)
-            {
-                this._instructions.SetSubstitution(
-                    loc: fileOffset + dataLoc + Plugins.Internals.Constants.HeaderLength,
-                    sub: new byte[] { 0x28, 0 });
-                this._instructions.SetRemove(
-                    section: RangeInt64.FromLength(
-                        loc: fileOffset + dataLoc + dataRec.HeaderLength + 0x28,
-                        length: 2));
-                amount -= 2;
-            }
-
-            if (len == 0x3E)
-            {
-                this._instructions.SetSubstitution(
-                    loc: fileOffset + dataLoc + Plugins.Internals.Constants.HeaderLength,
-                    sub: new byte[] { 0x3C, 0 });
-                this._instructions.SetRemove(
-                    section: RangeInt64.FromLength(
-                        loc: fileOffset + dataLoc + dataRec.HeaderLength + 0x3C,
-                        length: 2));
-                amount -= 2;
-            }
-
-            var move = 0x39;
-            if (len >= 3 + move)
-            {
-                this._instructions.SetSubstitution(
-                    sub: new byte[] { 0, 0, 0 },
-                    loc: fileOffset + dataLoc + dataRec.HeaderLength + move);
-            }
-        }
-
-        ProcessLengths(
-            majorFrame,
-            amount,
-            fileOffset);
+    private void ProcessWater( 
+        MajorRecordFrame majorFrame, 
+        long fileOffset) 
+    { 
+        var amount = 0; 
+        if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec)) 
+        { 
+            var len = dataRec.ContentLength; 
+            if (len == 0x02) 
+            { 
+                this._instructions.SetSubstitution( 
+                    loc: fileOffset + dataRec.Location + Plugins.Internals.Constants.HeaderLength, 
+                    sub: new byte[] { 0, 0 }); 
+                this._instructions.SetRemove( 
+                    section: RangeInt64.FromLength( 
+                        loc: fileOffset + dataRec.EndLocation, 
+                        length: 2)); 
+                amount -= 2; 
+            } 
+ 
+            if (len == 0x56) 
+            { 
+                this._instructions.SetSubstitution( 
+                    loc: fileOffset + dataRec.Location + Plugins.Internals.Constants.HeaderLength, 
+                    sub: new byte[] { 0x54, 0 }); 
+                this._instructions.SetRemove( 
+                    section: RangeInt64.FromLength( 
+                        loc: fileOffset + dataRec.EndLocation + 0x54, 
+                        length: 2)); 
+                amount -= 2; 
+            } 
+ 
+            if (len == 0x2A) 
+            { 
+                this._instructions.SetSubstitution( 
+                    loc: fileOffset + dataRec.Location + Plugins.Internals.Constants.HeaderLength, 
+                    sub: new byte[] { 0x28, 0 }); 
+                this._instructions.SetRemove( 
+                    section: RangeInt64.FromLength( 
+                        loc: fileOffset + dataRec.EndLocation + 0x28, 
+                        length: 2)); 
+                amount -= 2; 
+            } 
+ 
+            if (len == 0x3E) 
+            { 
+                this._instructions.SetSubstitution( 
+                    loc: fileOffset + dataRec.Location + Plugins.Internals.Constants.HeaderLength, 
+                    sub: new byte[] { 0x3C, 0 }); 
+                this._instructions.SetRemove( 
+                    section: RangeInt64.FromLength( 
+                        loc: fileOffset + dataRec.EndLocation + 0x3C, 
+                        length: 2)); 
+                amount -= 2; 
+            } 
+ 
+            var move = 0x39; 
+            if (len >= 3 + move) 
+            { 
+                this._instructions.SetSubstitution( 
+                    sub: new byte[] { 0, 0, 0 }, 
+                    loc: fileOffset + dataRec.EndLocation + move); 
+            } 
+        } 
+ 
+        ProcessLengths( 
+            majorFrame, 
+            amount, 
+            fileOffset); 
     }
 
     private void ProcessGameSettings(
@@ -527,9 +527,9 @@ public class OblivionProcessor : Processor
         var edidRec = majorFrame.LocateSubrecordFrame("EDID");
         if ((char)edidRec.Content[0] != 'f') return;
 
-        if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec, out var dataIndex))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec))
         {
-            dataIndex += dataRec.HeaderLength;
+            var dataIndex = dataRec.EndLocation;
             ProcessZeroFloat(majorFrame, fileOffset, ref dataIndex);
         }
     }
