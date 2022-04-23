@@ -35,9 +35,6 @@ Check out the [Wiki](https://github.com/Mutagen-Modding/Mutagen/wiki) for more d
 ### Synthesis
 [Synthesis](https://github.com/Mutagen-Modding/Synthesis) is a patcher pipeline built on top of Mutagen, and it already has a [large library](https://github.com/Mutagen-Modding/Synthesis/network/dependents?package_id=UGFja2FnZS0xMzg1MjY1MjYz) of example patchers to study and get inspiration from.
 
-### Example Project
-Another option is the [Mutagen Bootcamp](https://github.com/Mutagen-Modding/MutagenBootcamp) project.  It contains a good number of example tasks which you can run after pointing it to your copy of Skyrim.  It should be a good starter to help you understand the basics and actually see some of the processing in action.
-
 ## Installing Mutagen
 Mutagen can be added to your C# project via NuGet, under the package name `Mutagen.Bethesda`.  Search for it in Visual Studio, or find it [here](https://www.nuget.org/packages/Mutagen.Bethesda/).
 
