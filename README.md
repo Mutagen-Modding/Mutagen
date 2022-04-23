@@ -18,16 +18,16 @@ What is Mutagen trying to provide?
 
 ## Sample API
 ```csharp
-using var mod = OblivionMod.CreateFromBinaryOverlay(pathToMod);
-foreach (var editorId in mod.Potions.Records
-    .Select(potion => potion.EditorID)
-    .Distinct()
-    .Where(s => !string.IsNullOrWhiteSpace(s)))
+using var env = GameEnvironment.Typical.Skyrim(SkyrimRelease.SkyrimSE);
+foreach (var weaponEditorId in env.LoadOrder.PriorityOrder.Weapon().WinningOverrides()
+    .Select(weap => weap.EditorID)
+    .Where(x => !x.IsNullOrWhitespace())
+    .Distinct())
 {
-    System.Console.WriteLine(editorId);
+    System.Console.WriteLine(weaponEditorId);
 }
 ```
-This example snippet would print a mod's unique Potion EditorIDs to the console.
+This example snippet would print all the unique Weapon EditorIDs from the load order to the console.
 
 Check out the [Wiki](https://github.com/Mutagen-Modding/Mutagen/wiki) for more detailed explainations of Mutagen's API, and more typical use cases and examples.
 
