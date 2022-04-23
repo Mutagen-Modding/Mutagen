@@ -81,7 +81,7 @@ public class OblivionProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataFrame, out var dataIndex)) return;
+        if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataFrame)) return;
 
         int amount = 0;
         var dataFlag = dataFrame.AsUInt8();
@@ -117,7 +117,7 @@ public class OblivionProcessor : Processor
         }
 
         // Remove DATA
-        var dataRange = new RangeInt64(dataIndex + fileOffset, dataIndex + fileOffset + 7 - 1);
+        var dataRange = new RangeInt64(dataFrame.Location + fileOffset, dataFrame.Location + fileOffset + 7 - 1);
         this._instructions.SetRemove(dataRange);
         amount -= (int)dataRange.Width;
 
@@ -132,20 +132,21 @@ public class OblivionProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.RDAT, out var rdatFrame, out var rdatIndex)) return;
+        if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.RDAT, out var rdatFrame)) return;
+        var rdatIndex = rdatFrame.Location;
         int amount = 0;
         SortedList<uint, RangeInt64> rdats = new SortedList<uint, RangeInt64>();
         bool foundNext = true;
         while (foundNext)
         {
-            foundNext = majorFrame.TryLocateSubrecordFrame(RecordTypes.RDAT, offset: rdatIndex + rdatFrame.TotalLength, out var nextRdatFrame, out var nextRdatIndex);
+            foundNext = majorFrame.TryLocateSubrecordFrame(RecordTypes.RDAT, offset: rdatIndex + rdatFrame.TotalLength, out var nextRdatFrame);
             var index = rdatFrame.Content.UInt32();
             rdats[index] =
                 new RangeInt64(
                     rdatIndex + fileOffset,
-                    foundNext ? nextRdatIndex - 1 + fileOffset : fileOffset + majorFrame.TotalLength - 1);
+                    foundNext ? nextRdatFrame.Location - 1 + fileOffset : fileOffset + majorFrame.TotalLength - 1);
             rdatFrame = nextRdatFrame;
-            rdatIndex = nextRdatIndex;
+            rdatIndex = nextRdatFrame.Location;
         }
 
         foreach (var item in rdats.Reverse())
@@ -158,11 +159,11 @@ public class OblivionProcessor : Processor
 
         if (rdats.ContainsKey((int)RegionData.RegionDataType.Icon))
         { // Need to create icon record
-            if (!majorFrame.TryLocateSubrecordFrame("EDID", out var edidFrame, out var edidLoc))
+            if (!majorFrame.TryLocateSubrecordFrame("EDID", out var edidFrame))
             {
                 throw new ArgumentException();
             }
-            var locToPlace = fileOffset + edidLoc + edidFrame.TotalLength;
+            var locToPlace = fileOffset + edidFrame.Location + edidFrame.TotalLength;
 
             // Get icon string
             var iconLoc = rdats[(int)RegionData.RegionDataType.Icon];
@@ -203,13 +204,13 @@ public class OblivionProcessor : Processor
         long fileOffset)
     {
         int amount = 0;
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XLOC, out var xlocFrame, out var xlocLoc)
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XLOC, out var xlocFrame)
             && xlocFrame.ContentLength == 16)
         {
             ModifyLengthTracking(fileOffset, -4);
-            var removeStart = fileOffset + xlocLoc + xlocFrame.HeaderLength + 12;
+            var removeStart = fileOffset + xlocFrame.Location + xlocFrame.HeaderLength + 12;
             this._instructions.SetSubstitution(
-                loc: fileOffset + xlocLoc + 4,
+                loc: fileOffset + xlocFrame.Location + 4,
                 sub: new byte[] { 12, 0 });
             this._instructions.SetRemove(
                 section: new RangeInt64(
@@ -217,15 +218,15 @@ public class OblivionProcessor : Processor
                     removeStart + 3));
             amount -= 4;
         }
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XSED, out var xsedFrame, out var xsedLoc))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XSED, out var xsedFrame))
         {
             var len = xsedFrame.ContentLength;
             if (len == 4)
             {
                 ModifyLengthTracking(fileOffset, -3);
-                var removeStart = fileOffset + xsedLoc + xsedFrame.HeaderLength + 1;
+                var removeStart = fileOffset + xsedFrame.Location + xsedFrame.HeaderLength + 1;
                 this._instructions.SetSubstitution(
-                    loc: fileOffset + xsedLoc + 4,
+                    loc: fileOffset + xsedFrame.Location + 4,
                     sub: new byte[] { 1, 0 });
                 this._instructions.SetRemove(
                     section: new RangeInt64(
@@ -235,12 +236,12 @@ public class OblivionProcessor : Processor
             }
         }
 
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec))
         {
             ProcessZeroFloats(dataRec, fileOffset, 6);
         }
 
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.XTEL, out var xtelFrame))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XTEL, out var xtelFrame))
         {
             ProcessZeroFloats(xtelFrame, fileOffset, 6);
         }
@@ -256,7 +257,7 @@ public class OblivionProcessor : Processor
         long fileOffset)
     {
         int amount = 0;
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec))
         {
             ProcessZeroFloats(dataRec, fileOffset, 6);
         }
@@ -272,7 +273,7 @@ public class OblivionProcessor : Processor
         long fileOffset)
     {
         int amount = 0;
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec))
         {
             ProcessZeroFloats(dataRec, fileOffset, 6);
         }
@@ -537,7 +538,7 @@ public class OblivionProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec))
         {
             var offset = 2;
             ProcessZeroFloats(dataRec, fileOffset, ref offset, 2);
@@ -548,7 +549,7 @@ public class OblivionProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec))
         {
             var offset = 16;
             ProcessZeroFloats(dataRec, fileOffset, ref offset, 2);

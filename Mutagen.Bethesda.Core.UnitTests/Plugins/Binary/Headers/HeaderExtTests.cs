@@ -30,8 +30,8 @@ public class HeaderExtTests
     public void MajorFrameTryLocateSubrecordFrame()
     {
         var majorFrame = new MajorRecordFrame(GameConstants.Oblivion, GetMajorBytes());
-        Assert.True(majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var subFrame, out var loc));
-        Assert.Equal(DataPos, loc);
+        Assert.True(majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var subFrame));
+        Assert.Equal(DataPos, subFrame.Location);
         Assert.Equal(DataValue, subFrame.AsInt32());
     }
 
@@ -47,8 +47,8 @@ public class HeaderExtTests
     public void MajorFrameLocateSubrecordFrame()
     {
         var majorFrame = new MajorRecordFrame(GameConstants.Oblivion, GetMajorBytes());
-        var subFrame = majorFrame.LocateSubrecordFrame(RecordTypes.DATA, out var loc);
-        Assert.Equal(DataPos, loc);
+        var subFrame = majorFrame.LocateSubrecordFrame(RecordTypes.DATA);
+        Assert.Equal(DataPos, subFrame.Location);
         Assert.Equal(DataValue, subFrame.AsInt32());
     }
 
@@ -64,8 +64,8 @@ public class HeaderExtTests
     public void MajorMemoryFrameTryLocateSubrecordFrame()
     {
         var majorFrame = new MajorRecordFrame(GameConstants.Oblivion, GetMajorBytes());
-        Assert.True(majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var subFrame, out var loc));
-        Assert.Equal(DataPos, loc);
+        Assert.True(majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var subFrame));
+        Assert.Equal(DataPos, subFrame.Location);
         Assert.Equal(DataValue, subFrame.AsInt32());
     }
 
@@ -81,8 +81,8 @@ public class HeaderExtTests
     public void MajorMemoryFrameLocateSubrecordFrame()
     {
         var majorFrame = new MajorRecordFrame(GameConstants.Oblivion, GetMajorBytes());
-        var subFrame = majorFrame.LocateSubrecordFrame(RecordTypes.DATA, out var loc);
-        Assert.Equal(DataPos, loc);
+        var subFrame = majorFrame.LocateSubrecordFrame(RecordTypes.DATA);
+        Assert.Equal(DataPos, subFrame.Location);
         Assert.Equal(DataValue, subFrame.AsInt32());
     }
 

@@ -73,7 +73,7 @@ public class SkyrimProcessor : Processor
         if (!majorFrame.TryLocateSubrecordFrame("EDID", out var edidFrame)) return;
         if ((char)edidFrame.Content[0] != 'f') return;
 
-        if (!majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec)) return;
+        if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec)) return;
         ProcessZeroFloat(dataRec, fileOffset);
     }
 
@@ -84,8 +84,8 @@ public class SkyrimProcessor : Processor
         // Find and store marker data
         var data = new Dictionary<int, ReadOnlyMemorySlice<byte>>();
         var indices = new List<int>();
-        if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.ENAM, out _, out var initialPos)) return;
-        var pos = initialPos - majorFrame.HeaderLength;
+        if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.ENAM, out var rec)) return;
+        var pos = rec.Location - majorFrame.HeaderLength;
         while (pos < majorFrame.Content.Length)
         {
             var positions = PluginUtilityTranslation.FindNextSubrecords(
@@ -117,14 +117,14 @@ public class SkyrimProcessor : Processor
             transferPos += bytes.Length;
         }
 
-        this._instructions.SetSubstitution(fileOffset + initialPos, reordered);
+        this._instructions.SetSubstitution(fileOffset + rec.Location, reordered);
     }
 
     private void ProcessNpcs(
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.QNAM, out var qnamFrame, out var qnamLoc))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.QNAM, out var qnamFrame))
         {
             // Standardize float rounding errors
             var r = IBinaryStreamExt.GetColorByte(qnamFrame.Content.Slice(0, 4).Float());
@@ -135,11 +135,12 @@ public class SkyrimProcessor : Processor
             writer.Write(r / 255f);
             writer.Write(g / 255f);
             writer.Write(b / 255f);
-            this._instructions.SetSubstitution(fileOffset + qnamLoc + qnamFrame.HeaderLength, bytes);
+            this._instructions.SetSubstitution(fileOffset + qnamFrame.Location + qnamFrame.HeaderLength, bytes);
         }
 
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.NAM9, out var nam9Frame, out var nam9Loc))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.NAM9, out var nam9Frame))
         {
+            var nam9Loc = nam9Frame.Location;
             nam9Loc += nam9Frame.HeaderLength;
             var endPos = nam9Loc + nam9Frame.ContentLength;
             while (nam9Loc < endPos)
@@ -198,22 +199,22 @@ public class SkyrimProcessor : Processor
             fileOffset,
             numSubGroups: 2);
         
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.MHDT, out var pin))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.MHDT, out var pin))
         {
             ProcessZeroFloat(pin, offsetLoc: fileOffset);
         }
 
         // Process odd length changing flags
         var sizeChange = 0;
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec, out var dataIndex))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec))
         {
             if (dataRec.ContentLength == 1)
             {
                 _instructions.SetSubstitution(
-                    fileOffset + dataIndex + 4,
+                    fileOffset + dataRec.Location + 4,
                     2);
                 _instructions.SetAddition(
-                    fileOffset + dataIndex + stream.MetaData.Constants.SubConstants.HeaderLength + 1,
+                    fileOffset + dataRec.Location + stream.MetaData.Constants.SubConstants.HeaderLength + 1,
                     new byte[] { 0 });
                 sizeChange++;
             }
@@ -237,7 +238,7 @@ public class SkyrimProcessor : Processor
             fileOffset);
 
         // Reset misnumbered counter
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.TIFC, out var tifcRec, out var tifcIndex))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.TIFC, out var tifcRec))
         {
             var count = tifcRec.AsUInt32();
 
@@ -259,7 +260,7 @@ public class SkyrimProcessor : Processor
                 byte[] b = new byte[4];
                 BinaryPrimitives.WriteUInt32LittleEndian(b, actualCount);
                 _instructions.SetSubstitution(
-                    fileOffset + tifcIndex + stream.MetaData.Constants.SubConstants.HeaderLength,
+                    fileOffset + tifcRec.Location + stream.MetaData.Constants.SubConstants.HeaderLength,
                     b);
             }
         }
@@ -269,7 +270,7 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.ANAM, out var anamRec, out var anamIndex))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.ANAM, out var anamRec))
         {
             var next = anamRec.AsUInt32();
             var targets = new RecordType[]
@@ -295,7 +296,7 @@ public class SkyrimProcessor : Processor
                 byte[] sub = new byte[4];
                 BinaryPrimitives.WriteUInt32LittleEndian(sub, actualNext);
                 _instructions.SetSubstitution(
-                    fileOffset + anamIndex + anamRec.HeaderLength,
+                    fileOffset + anamRec.Location + anamRec.HeaderLength,
                     sub);
             }
         }
@@ -470,18 +471,18 @@ public class SkyrimProcessor : Processor
     {
         var sizeChange = 0;
 
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec))
         {
             ProcessZeroFloats(dataRec, fileOffset, 6);
         }
 
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.XTEL, out var xtelRec))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XTEL, out var xtelRec))
         {
             var offset = 4;
             ProcessZeroFloats(xtelRec, fileOffset, ref offset, 6);
         }
 
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.XPRM, out var xprmRec))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XPRM, out var xprmRec))
         {
             int offset = 0;
             ProcessZeroFloats(xprmRec, fileOffset, ref offset, 3);
@@ -489,13 +490,13 @@ public class SkyrimProcessor : Processor
             ProcessZeroFloat(xprmRec, fileOffset, ref offset);
         }
 
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XRMR, out var xrmrRec, out var xrmrIndex))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XRMR, out var xrmrRec))
         {
             if (xrmrRec.AsInt32() == 0)
             {
                 _instructions.SetRemove(
                     RangeInt64.FromLength(
-                        fileOffset + xrmrIndex,
+                        fileOffset + xrmrRec.Location,
                         10));
                 sizeChange -= 10;
             }
@@ -511,8 +512,9 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.NVNM, out var nvnmRec, out var nvnmIndex))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.NVNM, out var nvnmRec))
         {
+            var nvnmIndex = nvnmRec.Location;
             nvnmIndex += nvnmRec.HeaderLength + 16;
             var count = majorFrame.HeaderAndContentData.Slice(nvnmIndex).Int32() * 3;
             nvnmIndex += 4;
@@ -728,7 +730,7 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec))
         {
             var index = 20;
             ProcessZeroFloats(dataRec, fileOffset, ref index, 9);
@@ -755,7 +757,7 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec))
         {
             int offset = 0;
             ProcessFormIDOverflows(dataRec, fileOffset, ref offset, 6);
@@ -785,7 +787,7 @@ public class SkyrimProcessor : Processor
             }
         }
 
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec))
         {
             int offset = 0;
             ProcessFormIDOverflows(dataRec, fileOffset, ref offset, 6);
@@ -797,7 +799,7 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.XNAM, out var xnamRec))
+        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XNAM, out var xnamRec))
         {
             ProcessZeroFloats(xnamRec, fileOffset, 3);
         }
@@ -819,12 +821,9 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.SNAM, out var _, out var initialIndex))
+        foreach (var snam in majorFrame.FindEnumerateSubrecords(RecordTypes.SNAM))
         {
-            foreach (var snam in majorFrame.FindEnumerateSubrecords(RecordTypes.SNAM))
-            {
-                ProcessFormIDOverflow(snam, fileOffset);
-            }
+            ProcessFormIDOverflow(snam, fileOffset);
         }
     }
 
@@ -878,7 +877,7 @@ public class SkyrimProcessor : Processor
         var majorRec = stream.GetMajorRecordFrame();
         if (!majorRec.TryLocateSubrecordFrame("EDID", out var edidRec)) throw new ArgumentException();
         if (edidRec.Content[0] != (byte)'s') return;
-        if (!majorRec.TryLocateSubrecordPinFrame("DATA", out var dataRec)) throw new ArgumentException();
+        if (!majorRec.TryLocateSubrecordFrame("DATA", out var dataRec)) throw new ArgumentException();
         stream.Position += dataRec.Location;
         AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay);
     }
