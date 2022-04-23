@@ -188,6 +188,11 @@ public struct SubrecordPinFrame
     /// E.g., relative to the position of the RecordType of the parent MajorRecord.
     /// </summary>
     public int Location { get; }
+    
+    /// <summary>
+    /// Location where the subrecord ends.  This is equivalent to Location + TotalLength
+    /// </summary>
+    public int EndLocation => Location + TotalLength;
 
     /// <summary>
     /// Constructor

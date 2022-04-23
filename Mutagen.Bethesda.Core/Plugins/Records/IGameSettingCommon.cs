@@ -154,13 +154,12 @@ public static class GameSettingUtility
     public static GetResponse<GameSettingType> GetGameSettingType(ReadOnlyMemorySlice<byte> span, GameConstants meta)
     {
         var majorMeta = meta.MajorRecordFrame(span);
-        var edidLoc = PluginUtilityTranslation.FindFirstSubrecord(majorMeta.Content, meta, Constants.EditorID);
-        if (edidLoc == null)
+        var edidMeta = PluginUtilityTranslation.FindFirstSubrecord(majorMeta.Content, meta, Constants.EditorID);
+        if (edidMeta == null)
         {
             return GetResponse<GameSettingType>.Fail($"EDID was not located");
         }
-        var edidMeta = meta.SubrecordFrame(majorMeta.Content.Slice(edidLoc.Value));
-        var edid = BinaryStringUtility.ProcessWholeToZString(edidMeta.Content, MutagenEncodingProvider._1252);
+        var edid = edidMeta.Value.AsString(MutagenEncodingProvider._1252);
         if (edid.Length == 0)
         {
             return GetResponse<GameSettingType>.Fail("No EDID parsed.");

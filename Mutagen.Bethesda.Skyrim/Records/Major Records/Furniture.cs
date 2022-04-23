@@ -149,8 +149,8 @@ partial class FurnitureBinaryCreateTranslation
                 recordTypes: _activeMarkerTypes);
 
             // Process index first
-            var enamLoc = next[0];
-            if (enamLoc == null)
+            var enam = next[0];
+            if (enam == null)
             {
                 if (next[1] == null && next[2] == null)
                 {
@@ -162,7 +162,7 @@ partial class FurnitureBinaryCreateTranslation
                     throw new ArgumentException("Could not locate index subrecord of marker data");
                 }
             }
-            var index = BinaryPrimitives.ReadInt32LittleEndian(stream.MetaData.Constants.SubrecordFrame(stream.RemainingMemory.Slice(enamLoc.Value)).Content);
+            var index = enam.Value.AsInt32();
             if (index > NumSits)
             {
                 throw new ArgumentException($"Unexpected index value that was larger than the number of sit slots: {index} > {NumSits}");
@@ -171,25 +171,24 @@ partial class FurnitureBinaryCreateTranslation
             var marker = getter(index);
 
             // Parse content
-            foreach (var loc in next.Skip(1))
+            foreach (var subMeta in next.Skip(1))
             {
-                if (loc == null) continue;
+                if (subMeta == null) continue;
 
-                var subMeta = stream.MetaData.Constants.SubrecordFrame(stream.RemainingMemory.Slice(loc.Value));
-                switch (subMeta.RecordTypeInt)
+                switch (subMeta.Value.RecordTypeInt)
                 {
-                    case 0x304D414E: // NAM0
+                    case RecordTypeInts.NAM0:
                         marker.DisabledEntryPoints = new EntryPoints()
                         {
-                            Type = (Furniture.AnimationType)BinaryPrimitives.ReadUInt16LittleEndian(subMeta.Content),
-                            Points = (Furniture.Entry)BinaryPrimitives.ReadUInt16LittleEndian(subMeta.Content.Slice(2)),
+                            Type = (Furniture.AnimationType)BinaryPrimitives.ReadUInt16LittleEndian(subMeta.Value.Content),
+                            Points = (Furniture.Entry)BinaryPrimitives.ReadUInt16LittleEndian(subMeta.Value.Content.Slice(2)),
                         };
                         break;
-                    case 0x4B4D4E46: // FNMK
-                        marker.MarkerKeyword.FormKey = FormKeyBinaryTranslation.Instance.Parse(subMeta.Content, stream.MetaData.MasterReferences!);
+                    case RecordTypeInts.FNMK:
+                        marker.MarkerKeyword.FormKey = FormKeyBinaryTranslation.Instance.Parse(subMeta.Value.Content, stream.MetaData.MasterReferences!);
                         break;
                     default:
-                        throw new ArgumentException($"Unexpected record type: {subMeta.RecordType}");
+                        throw new ArgumentException($"Unexpected record type: {subMeta.Value.RecordType}");
                 }
             }
 
@@ -204,17 +203,16 @@ partial class FurnitureBinaryCreateTranslation
 
     public static void FillBinaryMarkers(IMutagenReadStream stream, Func<int, FurnitureMarker> getter)
     {
-        var locs = PluginUtilityTranslation.ParseRepeatingSubrecord(
+        var recs = PluginUtilityTranslation.ParseRepeatingSubrecord(
             stream.RemainingMemory,
             stream.MetaData.Constants,
             RecordTypes.FNPR,
             out var parsed);
-        for (int i = 0; i < locs.Length; i++)
+        for (int i = 0; i < recs.Length; i++)
         {
             var marker = getter(i);
 
-            var loc = locs[i];
-            var subMeta = stream.MetaData.Constants.SubrecordFrame(stream.RemainingMemory.Slice(loc));
+            var subMeta = recs[i];
             marker.EntryPoints = new EntryPoints()
             {
                 Type = (Furniture.AnimationType)BinaryPrimitives.ReadUInt16LittleEndian(subMeta.Content),

@@ -889,17 +889,17 @@ public abstract class Processor
         var offender = PluginUtilityTranslation.FindFirstSubrecord(
             majorFrame.Content,
             majorFrame.Meta,
-            recordTypes: offendingIndices.ToGetter());
+            recordTypes: offendingIndices.ToGetter())?.Location;
         if (offender == null) return false;
         var limit = PluginUtilityTranslation.FindFirstSubrecord(
             majorFrame.Content,
             majorFrame.Meta,
-            recordTypes: offendingLimits.ToGetter());
+            recordTypes: offendingLimits.ToGetter())?.Location;
         if (limit == null) return false;
         long? locToMove = PluginUtilityTranslation.FindFirstSubrecord(
             majorFrame.Content.Slice(enforcePast ? offender.Value : 0),
             majorFrame.Meta,
-            recordTypes: locationsToMove.ToGetter());
+            recordTypes: locationsToMove.ToGetter())?.Location;
         if (locToMove == null)
         {
             locToMove = majorFrame.TotalLength;

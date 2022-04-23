@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using System;
@@ -30,6 +31,7 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.WEAP, ProcessWeapons);
         AddDynamicProcessing(RecordTypes.NPC_, ProcessNpcs);
         AddDynamicProcessing(RecordTypes.BNDS, ProcessBendableSplines);
+        AddDynamicProcessing(RecordTypes.REGN, ProcessRegions);
     }
 
     private void ProcessGameSettings(
@@ -186,6 +188,43 @@ public class Fallout4Processor : Processor
         AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay);
     }
 
+    private void ProcessRegions(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        var rdatHeader = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.RDAT);
+        if (rdatHeader == null) return;
+
+        // Order RDATs by index
+        SortedList<uint, RangeInt64> rdats = new SortedList<uint, RangeInt64>();
+        List<uint> raw = new List<uint>();
+        while (rdatHeader != null)
+        {
+            var index = BinaryPrimitives.ReadUInt32LittleEndian(rdatHeader.Value.Content);
+            var nextRdat = PluginUtilityTranslation.FindFirstSubrecord(
+                majorFrame.Content,
+                majorFrame.Meta,
+                RecordTypes.RDAT,
+                offset: rdatHeader.Value.Location + rdatHeader.Value.TotalLength);
+            rdats[index] =
+                new RangeInt64(
+                    fileOffset + majorFrame.HeaderLength + rdatHeader.Value.Location,
+                    nextRdat == null
+                        ? fileOffset + majorFrame.TotalLength - 1
+                        : nextRdat.Value.Location - 1 + fileOffset + majorFrame.HeaderLength);
+            raw.Add(index);
+            rdatHeader = nextRdat;
+        }
+
+        if (raw.SequenceEqual(rdats.Keys)) return;
+        foreach (var item in rdats.Reverse())
+        {
+            this._instructions.SetMove(
+                loc: fileOffset + majorFrame.TotalLength,
+                section: item.Value);
+        }
+    }
+
     protected override AStringsAlignment[] GetStringsFileAlignments(StringsSource source)
     {
         switch (source)
@@ -227,6 +266,7 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "HAZD", "FULL" },
                     new RecordType[] { "TERM", "FULL" },
                     new RecordType[] { "LVLI", "ONAM" },
+                    new RecordType[] { "REGN", "RDMP" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]

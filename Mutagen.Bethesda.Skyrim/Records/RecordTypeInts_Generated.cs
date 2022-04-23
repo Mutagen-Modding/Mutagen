@@ -167,6 +167,7 @@ public partial class RecordTypeInts
     public const int FLTR = 0x52544C46;
     public const int FLTV = 0x56544C46;
     public const int FNAM = 0x4D414E46;
+    public const int FNMK = 0x4B4D4E46;
     public const int FNPR = 0x52504E46;
     public const int FPRT = 0x54525046;
     public const int FSTP = 0x50545346;

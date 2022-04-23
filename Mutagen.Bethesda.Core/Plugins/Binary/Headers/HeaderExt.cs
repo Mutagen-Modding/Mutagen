@@ -276,15 +276,15 @@ public static class HeaderExt
     /// <returns>True if matching subrecord is found</returns>
     public static bool TryLocateSubrecord(this MajorRecordFrame majorFrame, RecordType type, out SubrecordHeader header, out int loc)
     {
-        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
+        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type);
         if (find == null)
         {
             header = default;
             loc = default;
             return false;
         }
-        header = new SubrecordHeader(majorFrame.Meta, majorFrame.Content.Slice(find.Value));
-        loc = find.Value + majorFrame.HeaderLength;
+        header = new SubrecordHeader(majorFrame.Meta, majorFrame.Content.Slice(find.Value.Location));
+        loc = find.Value.Location + majorFrame.HeaderLength;
         return true;
     }
 
@@ -298,15 +298,15 @@ public static class HeaderExt
     /// <returns>True if matching subrecord is found</returns>
     public static bool TryLocateSubrecord(this MajorRecordFrame majorFrame, RecordType type, int offset, out SubrecordHeader header, out int loc)
     {
-        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type, navigateToContent: false);
+        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type);
         if (find == null)
         {
             header = default;
             loc = default;
             return false;
         }
-        header = new SubrecordHeader(majorFrame.Meta, majorFrame.Content.Slice(find.Value + offset - majorFrame.HeaderLength));
-        loc = find.Value + offset;
+        header = new SubrecordHeader(majorFrame.Meta, majorFrame.Content.Slice(find.Value.Location + offset - majorFrame.HeaderLength));
+        loc = find.Value.Location + offset;
         return true;
     }
 
@@ -319,13 +319,13 @@ public static class HeaderExt
     /// <returns>True if matching subrecord is found</returns>
     public static bool TryLocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, out SubrecordFrame frame)
     {
-        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
+        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type);
         if (find == null)
         {
             frame = default;
             return false;
         }
-        frame = new SubrecordFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value));
+        frame = new SubrecordFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value.Location));
         return true;
     }
 
@@ -339,15 +339,15 @@ public static class HeaderExt
     /// <returns>True if matching subrecord is found</returns>
     public static bool TryLocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, out SubrecordFrame frame, out int loc)
     {
-        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
+        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type);
         if (find == null)
         {
             frame = default;
             loc = default;
             return false;
         }
-        frame = new SubrecordFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value));
-        loc = find.Value + majorFrame.HeaderLength;
+        frame = new SubrecordFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value.Location));
+        loc = find.Value.Location + majorFrame.HeaderLength;
         return true;
     }
 
@@ -362,15 +362,15 @@ public static class HeaderExt
     /// <returns>True if matching subrecord is found</returns>
     public static bool TryLocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, int offset, out SubrecordFrame frame, out int loc)
     {
-        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type, navigateToContent: false);
+        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type);
         if (find == null)
         {
             frame = default;
             loc = default;
             return false;
         }
-        frame = new SubrecordFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value + offset - majorFrame.HeaderLength));
-        loc = find.Value + offset;
+        frame = new SubrecordFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value.Location + offset - majorFrame.HeaderLength));
+        loc = find.Value.Location + offset;
         return true;
     }
 
@@ -383,13 +383,13 @@ public static class HeaderExt
     /// <returns>True if matching subrecord is found</returns>
     public static bool TryLocateSubrecordPinFrame(this MajorRecordFrame majorFrame, RecordType type, out SubrecordPinFrame pin)
     {
-        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
+        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type);
         if (find == null)
         {
             pin = default;
             return false;
         }
-        pin = new SubrecordPinFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value), find.Value + majorFrame.HeaderLength);
+        pin = new SubrecordPinFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value.Location), find.Value.Location + majorFrame.HeaderLength);
         return true;
     }
 
@@ -403,13 +403,13 @@ public static class HeaderExt
     /// <returns>True if matching subrecord is found</returns>
     public static bool TryLocateSubrecordPinFrame(this MajorRecordFrame majorFrame, RecordType type, int offset, out SubrecordPinFrame pin)
     {
-        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type, navigateToContent: false);
+        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type);
         if (find == null)
         {
             pin = default;
             return false;
         }
-        pin = new SubrecordPinFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value + offset - majorFrame.HeaderLength), find.Value + offset);
+        pin = new SubrecordPinFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value.Location + offset - majorFrame.HeaderLength), find.Value.Location + offset);
         return true;
     }
 

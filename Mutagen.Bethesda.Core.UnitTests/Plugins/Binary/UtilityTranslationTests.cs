@@ -92,8 +92,8 @@ public class UtilityTranslationTests
     {
         var ret = PluginUtilityTranslation.FindFirstSubrecords(GetTypical(), GameConstants.Oblivion, SecondTypicalType, FirstTypicalType);
         Assert.Equal(2, ret.Length);
-        Assert.Equal(SecondTypicalLocation, ret[0]);
-        Assert.Equal(FirstTypicalLocation, ret[1]);
+        Assert.Equal(SecondTypicalLocation, ret[0]?.Location);
+        Assert.Equal(FirstTypicalLocation, ret[1]?.Location);
     }
 
     [Fact]
@@ -101,7 +101,7 @@ public class UtilityTranslationTests
     {
         var ret = PluginUtilityTranslation.FindFirstSubrecords(GetTypical(), GameConstants.Oblivion, SecondTypicalType);
         Assert.Single(ret);
-        Assert.Equal(SecondTypicalLocation, ret[0]);
+        Assert.Equal(SecondTypicalLocation, ret[0]?.Location);
     }
 
     [Fact]
@@ -109,8 +109,8 @@ public class UtilityTranslationTests
     {
         var ret = PluginUtilityTranslation.FindFirstSubrecords(GetDuplicate(), GameConstants.Oblivion, SecondTypicalType, FirstTypicalType);
         Assert.Equal(2, ret.Length);
-        Assert.Equal(SecondTypicalLocation, ret[0]);
-        Assert.Equal(FirstTypicalLocation, ret[1]);
+        Assert.Equal(SecondTypicalLocation, ret[0]?.Location);
+        Assert.Equal(FirstTypicalLocation, ret[1]?.Location);
     }
     #endregion
 
@@ -125,13 +125,13 @@ public class UtilityTranslationTests
     [Fact]
     public void FindFirstSubrecord_Typical()
     {
-        Assert.Equal(SecondTypicalLocation, PluginUtilityTranslation.FindFirstSubrecord(GetTypical(), GameConstants.Oblivion, SecondTypicalType));
+        Assert.Equal(SecondTypicalLocation, PluginUtilityTranslation.FindFirstSubrecord(GetTypical(), GameConstants.Oblivion, SecondTypicalType)?.Location);
     }
 
     [Fact]
     public void FindFirstSubrecord_Duplicate()
     {
-        Assert.Equal(FirstTypicalLocation, PluginUtilityTranslation.FindFirstSubrecord(GetTypical(), GameConstants.Oblivion, FirstTypicalType));
+        Assert.Equal(FirstTypicalLocation, PluginUtilityTranslation.FindFirstSubrecord(GetTypical(), GameConstants.Oblivion, FirstTypicalType)?.Location);
     }
     #endregion
 }

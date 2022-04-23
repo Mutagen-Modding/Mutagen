@@ -1,4 +1,5 @@
 using Loqui;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Exceptions;
@@ -395,17 +396,17 @@ public static class PluginUtilityTranslation
     /// <param name="meta">Metadata to use in subrecord parsing</param>
     /// <param name="recordType">Repeating type to locate</param>
     /// <param name="lenParsed">The amount of data located subrecords cover</param>
-    /// <returns>Array of locations of located target types</returns>
-    public static int[] ParseRepeatingSubrecord(ReadOnlyMemorySlice<byte> span, GameConstants meta,
+    /// <returns>SubrecordPinFrames of located records relative to given span</returns>
+    public static SubrecordPinFrame[] ParseRepeatingSubrecord(ReadOnlyMemorySlice<byte> span, GameConstants meta,
         RecordType recordType, out int lenParsed)
     {
         lenParsed = 0;
-        List<int> list = new List<int>();
+        List<SubrecordPinFrame> list = new List<SubrecordPinFrame>();
         while (span.Length > lenParsed)
         {
             var subMeta = meta.Subrecord(span.Slice(lenParsed));
             if (subMeta.RecordType != recordType) break;
-            list.Add(lenParsed);
+            list.Add(new SubrecordPinFrame(meta, span.Slice(lenParsed), lenParsed));
             lenParsed += subMeta.TotalLength;
         }
 
@@ -419,23 +420,40 @@ public static class PluginUtilityTranslation
     /// Not suggested to use with high numbers of record types, as it is an N^2 algorithm
     /// </summary>
     /// <param name="data">Subrecord data to be parsed</param>
-    /// <param name="recordTypes">Record types to locate</param>
     /// <param name="meta">Metadata to use in subrecord parsing</param>
-    /// <returns>Array of found record locations</returns>
-    public static int?[] FindFirstSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta,
+    /// <param name="recordTypes">Record types to locate</param>
+    /// <returns>SubrecordPinFrames of located records relative to given span</returns>
+    public static SubrecordPinFrame?[] FindFirstSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta,
         params RecordType[] recordTypes)
     {
-        int loc = 0;
-        int?[] ret = new int?[recordTypes.Length];
-        while (data.Length > loc)
+        return FindFirstSubrecords(data, meta, out _, recordTypes);
+    }
+
+    /// <summary>
+    /// Locates the first encountered instances of all given subrecord types, and returns an array of their locations
+    /// -1 represents a recordtype that was not found.
+    /// 
+    /// Not suggested to use with high numbers of record types, as it is an N^2 algorithm
+    /// </summary>
+    /// <param name="data">Subrecord data to be parsed</param>
+    /// <param name="meta">Metadata to use in subrecord parsing</param>
+    /// <param name="lenParsed">Amount parsed after processing</param>
+    /// <param name="recordTypes">Record types to locate</param>
+    /// <returns>SubrecordPinFrames of located records relative to given span</returns>
+    public static SubrecordPinFrame?[] FindFirstSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta, out int lenParsed,
+        params RecordType[] recordTypes)
+    {
+        lenParsed = 0;
+        SubrecordPinFrame?[] ret = new SubrecordPinFrame?[recordTypes.Length];
+        while (data.Length > lenParsed)
         {
-            var subMeta = meta.Subrecord(data.Slice(loc));
+            var subMeta = meta.Subrecord(data.Slice(lenParsed));
             var recType = subMeta.RecordType;
             for (int i = 0; i < recordTypes.Length; i++)
             {
                 if (recordTypes[i] == recType && ret[i] == null)
                 {
-                    ret[i] = loc;
+                    ret[i] = new SubrecordPinFrame(meta, data.Slice(lenParsed), lenParsed);
                     bool breakOut = false;
 
                     // Check to see if there's still more to find
@@ -458,7 +476,7 @@ public static class PluginUtilityTranslation
                 }
             }
 
-            loc += subMeta.TotalLength;
+            lenParsed += subMeta.TotalLength;
         }
 
         return ret;
@@ -475,8 +493,8 @@ public static class PluginUtilityTranslation
     /// <param name="recordTypes">Record types to locate</param>
     /// <param name="meta">Metadata to use in subrecord parsing</param>
     /// <param name="lenParsed">Amount of data contained in located records</param>
-    /// <returns>Array of found record locations</returns>
-    public static int?[] FindNextSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta, out int lenParsed,
+    /// <returns>SubrecordPinFrames of located records relative to given span</returns>
+    public static SubrecordPinFrame?[] FindNextSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta, out int lenParsed,
         params RecordType[] recordTypes)
     {
         return FindNextSubrecords(
@@ -500,8 +518,8 @@ public static class PluginUtilityTranslation
     /// <param name="meta">Metadata to use in subrecord parsing</param>
     /// <param name="lenParsed">Amount of data contained in located records</param>
     /// <param name="stopOnAlreadyEncounteredRecord">Whether to stop looking if encountering a record type that has already been seen</param>
-    /// <returns>Array of found record locations</returns>
-    public static int?[] FindNextSubrecords(
+    /// <returns>SubrecordPinFrames of located records relative to given span</returns>
+    public static SubrecordPinFrame?[] FindNextSubrecords(
         ReadOnlyMemorySlice<byte> data,
         GameConstants meta,
         out int lenParsed,
@@ -509,7 +527,7 @@ public static class PluginUtilityTranslation
         params RecordType[] recordTypes)
     {
         lenParsed = 0;
-        int?[] ret = new int?[recordTypes.Length];
+        SubrecordPinFrame?[] ret = new SubrecordPinFrame?[recordTypes.Length];
         while (data.Length > lenParsed)
         {
             var subMeta = meta.Subrecord(data.Slice(lenParsed));
@@ -522,7 +540,7 @@ public static class PluginUtilityTranslation
                     breakOut = false;
                     if (ret[i] == null)
                     {
-                        ret[i] = lenParsed;
+                        ret[i] = new SubrecordPinFrame(meta, data.Slice(lenParsed), lenParsed);
                         bool moreToFind = false;
                         for (int j = 0; j < ret.Length; j++)
                         {
@@ -560,11 +578,10 @@ public static class PluginUtilityTranslation
         return ret;
     }
 
-    public static int? FindFirstSubrecord(
+    public static SubrecordPinFrame? FindFirstSubrecord(
         ReadOnlyMemorySlice<byte> data,
         GameConstants meta,
         RecordType recordType,
-        bool navigateToContent = false,
         int? offset = null)
     {
         int loc = offset ?? 0;
@@ -573,12 +590,7 @@ public static class PluginUtilityTranslation
             var subMeta = meta.Subrecord(data.Slice(loc));
             if (subMeta.RecordType == recordType)
             {
-                if (navigateToContent)
-                {
-                    loc += meta.SubConstants.HeaderLength;
-                }
-
-                return loc;
+                return new SubrecordPinFrame(meta, data.Slice(loc), loc);
             }
 
             loc += subMeta.TotalLength;
@@ -587,11 +599,10 @@ public static class PluginUtilityTranslation
         return null;
     }
 
-    public static int? FindFirstSubrecord(
+    public static SubrecordPinFrame? FindFirstSubrecord(
         ReadOnlyMemorySlice<byte> data,
         GameConstants meta,
         ICollectionGetter<RecordType> recordTypes,
-        bool navigateToContent = false,
         int? offset = null)
     {
         int loc = offset ?? 0;
@@ -600,12 +611,7 @@ public static class PluginUtilityTranslation
             var subMeta = meta.Subrecord(data.Slice(loc));
             if (recordTypes.Contains(subMeta.RecordType))
             {
-                if (navigateToContent)
-                {
-                    loc += meta.SubConstants.HeaderLength;
-                }
-
-                return loc;
+                return new SubrecordPinFrame(meta, data.Slice(loc), loc);
             }
 
             loc += subMeta.TotalLength;
@@ -614,27 +620,19 @@ public static class PluginUtilityTranslation
         return null;
     }
 
-    public static int[] FindAllOfSubrecord(
+    public static SubrecordPinFrame[] FindAllOfSubrecord(
         ReadOnlyMemorySlice<byte> data,
         GameConstants meta,
-        RecordType recordType,
-        bool navigateToContent = false)
+        RecordType recordType)
     {
-        List<int> ret = new List<int>();
+        List<SubrecordPinFrame> ret = new List<SubrecordPinFrame>();
         int lenParsed = 0;
         while (data.Length > lenParsed)
         {
             var subMeta = meta.Subrecord(data.Slice(lenParsed));
             if (subMeta.RecordType == recordType)
             {
-                if (navigateToContent)
-                {
-                    ret.Add(subMeta.HeaderLength + lenParsed);
-                }
-                else
-                {
-                    ret.Add(lenParsed);
-                }
+                ret.Add(new SubrecordPinFrame(meta, data.Slice(lenParsed), lenParsed));
             }
 
             lenParsed += subMeta.TotalLength;
@@ -643,27 +641,19 @@ public static class PluginUtilityTranslation
         return ret.ToArray();
     }
 
-    public static int[] FindAllOfSubrecords(
+    public static SubrecordPinFrame[] FindAllOfSubrecords(
         ReadOnlyMemorySlice<byte> data,
         GameConstants meta,
-        ICollectionGetter<RecordType> recordTypes,
-        bool navigateToContent = false)
+        ICollectionGetter<RecordType> recordTypes)
     {
-        List<int> ret = new List<int>();
+        List<SubrecordPinFrame> ret = new List<SubrecordPinFrame>();
         int lenParsed = 0;
         while (data.Length > lenParsed)
         {
             var subMeta = meta.Subrecord(data.Slice(lenParsed));
             if (recordTypes.Contains(subMeta.RecordType))
             {
-                if (navigateToContent)
-                {
-                    ret.Add(subMeta.HeaderLength + lenParsed);
-                }
-                else
-                {
-                    ret.Add(lenParsed);
-                }
+                ret.Add(new SubrecordPinFrame(meta, data.Slice(lenParsed), lenParsed));
             }
 
             lenParsed += subMeta.TotalLength;

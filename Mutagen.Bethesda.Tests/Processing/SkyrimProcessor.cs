@@ -84,7 +84,7 @@ public class SkyrimProcessor : Processor
         // Find and store marker data
         var data = new Dictionary<int, ReadOnlyMemorySlice<byte>>();
         var indices = new List<int>();
-        if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.ENAM, out var enamFrame, out var initialPos)) return;
+        if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.ENAM, out _, out var initialPos)) return;
         var pos = initialPos - majorFrame.HeaderLength;
         while (pos < majorFrame.Content.Length)
         {
@@ -99,11 +99,10 @@ public class SkyrimProcessor : Processor
                     new RecordType("NAM0"),
                     new RecordType("FNMK"),
                 });
-            var enamPos = positions[0];
-            if (enamPos == null) break;
-            enamFrame = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(pos + enamPos.Value));
-            var index = BinaryPrimitives.ReadInt32LittleEndian(enamFrame.Content);
-            data.Add(index, majorFrame.Content.Slice(pos + enamPos.Value, lenParsed));
+            var enam = positions[0];
+            if (enam == null) break;
+            var index = enam.Value.AsInt32();
+            data.Add(index, majorFrame.Content.Slice(pos + enam.Value.Location, lenParsed));
             indices.Add(index);
             pos += lenParsed;
         }
@@ -154,8 +153,7 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        var rdat = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.RDAT,
-            navigateToContent: false);
+        var rdat = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.RDAT);
         if (rdat == null) return;
 
         // Order RDATs by index
@@ -163,20 +161,18 @@ public class SkyrimProcessor : Processor
         List<uint> raw = new List<uint>();
         while (rdat != null)
         {
-            var rdatHeader = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(rdat.Value));
-            var index = BinaryPrimitives.ReadUInt32LittleEndian(rdatHeader.Content);
+            var index = BinaryPrimitives.ReadUInt32LittleEndian(rdat.Value.Content);
             var nextRdat = PluginUtilityTranslation.FindFirstSubrecord(
                 majorFrame.Content,
                 majorFrame.Meta,
                 RecordTypes.RDAT,
-                navigateToContent: false,
-                offset: rdat.Value + rdatHeader.TotalLength);
+                offset: rdat.Value.EndLocation);
             rdats[index] =
                 new RangeInt64(
-                    fileOffset + majorFrame.HeaderLength + rdat.Value,
+                    fileOffset + majorFrame.HeaderLength + rdat.Value.Location,
                     nextRdat == null
                         ? fileOffset + majorFrame.TotalLength - 1
-                        : nextRdat.Value - 1 + fileOffset + majorFrame.HeaderLength);
+                        : nextRdat.Value.Location - 1 + fileOffset + majorFrame.HeaderLength);
             raw.Add(index);
             rdat = nextRdat;
         }
@@ -284,13 +280,12 @@ public class SkyrimProcessor : Processor
             var locs = PluginUtilityTranslation.FindAllOfSubrecords(
                 majorFrame.Content,
                 majorFrame.Meta,
-                targets.ToGetter(),
-                navigateToContent: true);
+                targets.ToGetter());
             uint actualNext = 0;
             if (locs.Length > 0)
             {
                 actualNext = locs
-                    .Select(l => { return BinaryPrimitives.ReadUInt32LittleEndian(majorFrame.Content.Slice(l)); })
+                    .Select(l => l.AsUInt32())
                     .Max();
                 actualNext++;
             }
@@ -319,15 +314,14 @@ public class SkyrimProcessor : Processor
         FixVMADFormIDs(
             majorFrame,
             fileOffset,
-            out var vmadPos,
+            out var vmad,
             out var objectFormat,
             out var processedLen);
-        if (vmadPos != null)
+        if (vmad != null)
         {
-            var vmadFrame = Meta.SubrecordFrame(majorFrame.Content.Slice(vmadPos.Value));
-            var stream = new MutagenMemoryReadStream(vmadFrame.Content, Bundle)
+            var stream = new MutagenMemoryReadStream(vmad.Value.Content, Bundle)
             {
-                Position = processedLen - vmadFrame.HeaderLength
+                Position = processedLen - vmad.Value.HeaderLength
             };
             if (stream.Complete) return;
             // skip unknown
@@ -366,12 +360,12 @@ public class SkyrimProcessor : Processor
     public void FixVMADFormIDs(
         MajorRecordFrame frame,
         long fileOffset,
-        out int? vmadPos,
+        out SubrecordPinFrame? vmad,
         out ushort objectFormat,
         out int processed)
     {
-        vmadPos = PluginUtilityTranslation.FindFirstSubrecord(frame.Content, Meta, RecordTypes.VMAD);
-        if (vmadPos == null)
+        vmad = PluginUtilityTranslation.FindFirstSubrecord(frame.Content, Meta, RecordTypes.VMAD);
+        if (vmad == null)
         {
             processed = 0;
             objectFormat = 0;
@@ -380,7 +374,7 @@ public class SkyrimProcessor : Processor
 
         var stream = new MutagenMemoryReadStream(frame.HeaderAndContentData, Bundle)
         {
-            Position = vmadPos.Value + frame.HeaderLength
+            Position = vmad.Value.Location + frame.HeaderLength
         };
         stream.Position += Meta.SubConstants.HeaderLength;
         // Skip version
@@ -392,7 +386,7 @@ public class SkyrimProcessor : Processor
             FixVMADScriptIDs(stream, fileOffset, objectFormat);
         }
 
-        processed = (int)(stream.Position - vmadPos.Value - frame.HeaderLength);
+        processed = (int)(stream.Position - vmad.Value.Location - frame.HeaderLength);
     }
 
     private void FixVMADScriptIDs(IMutagenReadStream stream, long fileOffset, ushort objectFormat)
@@ -537,7 +531,7 @@ public class SkyrimProcessor : Processor
 
         // Reorder data values
         var xnamPos =
-            PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.XNAM);
+            PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.XNAM)?.Location;
         if (xnamPos == null)
         {
             throw new ArgumentException();
@@ -553,7 +547,7 @@ public class SkyrimProcessor : Processor
         if (count == 0) return;
 
         var anamPos =
-            PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.ANAM);
+            PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.ANAM)?.Location;
         RecordType pldt = new RecordType("PLDT");
         RecordType ptda = new RecordType("PTDA");
         RecordType pdto = new RecordType("PDTO");
@@ -583,9 +577,9 @@ public class SkyrimProcessor : Processor
                 int finalLoc;
                 if (recs[0] == null)
                 {
-                    finalLoc = recs.NotNull().Max();
+                    finalLoc = recs.NotNull().Select(x => x.Location).Max();
                 }
-                else if (recs[0] == 0)
+                else if (recs[0]!.Value.Location == 0)
                 {
                     dataValues.Add(
                         (-1, majorFrame.Content.Slice(anamPos.Value, anamRecord.TotalLength)));
@@ -597,7 +591,8 @@ public class SkyrimProcessor : Processor
                 {
                     finalLoc = recs
                         .NotNull()
-                        .Where(i => i < recs[0]!.Value)
+                        .Select(x => x.Location)
+                        .Where(i => i < recs[0]!.Value.Location)
                         .Max();
                 }
 
@@ -612,7 +607,7 @@ public class SkyrimProcessor : Processor
                 {
                     // Ensure bool value is 1 or 0
                     var cnam = majorFrame.Meta.SubrecordFrame(
-                        majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength + recs[1].Value));
+                        majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength + recs[1].Value.Location));
                     if (cnam.Content.Length != 1)
                     {
                         throw new ArgumentException();
@@ -621,7 +616,7 @@ public class SkyrimProcessor : Processor
                     if (cnam.Content[0] > 1)
                     {
                         var bytes = dataSlice.ToArray();
-                        int boolIndex = anamRecord.TotalLength + recs[1].Value + cnam.HeaderLength;
+                        int boolIndex = anamRecord.TotalLength + recs[1].Value.Location + cnam.HeaderLength;
                         bytes[boolIndex] = (byte)(bytes[boolIndex] > 0 ? 1 : 0);
                         dataSlice = bytes;
                     }
@@ -630,7 +625,7 @@ public class SkyrimProcessor : Processor
                 dataValues.Add((-1, dataSlice));
 
                 curLoc = anamPos.Value + anamRecord.TotalLength + finalLoc + finalRec.TotalLength;
-                anamPos = anamPos.Value + anamRecord.TotalLength + recs[0];
+                anamPos = anamPos.Value + anamRecord.TotalLength + recs[0]?.Location;
             }
 
             var unamLocs = PluginUtilityTranslation.ParseRepeatingSubrecord(
@@ -647,7 +642,7 @@ public class SkyrimProcessor : Processor
 
             for (sbyte i = 0; i < unamLocs.Length; i++)
             {
-                var unamRec = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(curLoc + unamLocs[i]));
+                var unamRec = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(curLoc + unamLocs[i].Location));
                 dataValues[i] = (
                     (sbyte)unamRec.Content[0],
                     dataValues[i].Data);
@@ -675,7 +670,7 @@ public class SkyrimProcessor : Processor
 
         // Reorder inputs
         var unamPos =
-            PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(xnamPos.Value), majorFrame.Meta, unam);
+            PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(xnamPos.Value), majorFrame.Meta, unam)?.Location;
         if (!unamPos.HasValue) return;
         unamPos += xnamPos.Value;
         var writeLoc = fileOffset + majorFrame.HeaderLength + unamPos.Value;
@@ -693,9 +688,9 @@ public class SkyrimProcessor : Processor
             int finalLoc;
             if (recs[0] == null)
             {
-                finalLoc = recs.NotNull().Max();
+                finalLoc = recs.NotNull().Select(x => x.Location).Max();
             }
-            else if (recs[0] == 0)
+            else if (recs[0].Value.Location == 0)
             {
                 inputValues.Add(
                     ((sbyte)unamRecord.Content[0], majorFrame.Content.Slice(unamPos.Value, unamRecord.TotalLength)));
@@ -706,7 +701,8 @@ public class SkyrimProcessor : Processor
             {
                 finalLoc = recs
                     .NotNull()
-                    .Where(i => i < recs[0]!.Value)
+                    .Select(x => x.Location)
+                    .Where(i => i < recs[0]!.Value.Location)
                     .Max();
             }
 
@@ -716,7 +712,7 @@ public class SkyrimProcessor : Processor
                 ((sbyte)unamRecord.Content[0],
                     majorFrame.Content.Slice(unamPos.Value, unamRecord.TotalLength + finalLoc + finalRec.TotalLength)));
 
-            unamPos = unamPos.Value + unamRecord.TotalLength + recs[0];
+            unamPos = unamPos.Value + unamRecord.TotalLength + recs[0]?.Location;
         }
 
         foreach (var item in inputValues.OrderBy(i => i.Index))

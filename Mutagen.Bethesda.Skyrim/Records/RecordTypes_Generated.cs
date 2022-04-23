@@ -169,6 +169,7 @@ public partial class RecordTypes
     public static readonly RecordType FLTR = new(0x52544C46);
     public static readonly RecordType FLTV = new(0x56544C46);
     public static readonly RecordType FNAM = new(0x4D414E46);
+    public static readonly RecordType FNMK = new(0x4B4D4E46);
     public static readonly RecordType FNPR = new(0x52504E46);
     public static readonly RecordType FPRT = new(0x54525046);
     public static readonly RecordType FSTP = new(0x50545346);
