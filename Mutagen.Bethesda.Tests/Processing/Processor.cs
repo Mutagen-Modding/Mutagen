@@ -7,13 +7,8 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Strings;
 using Noggog;
-using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reactive.Subjects;
-using System.Threading.Tasks;
 using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Masters;
@@ -37,7 +32,7 @@ public abstract class Processor
     protected DirectoryPath TempFolder;
     public bool DoMultithreading = true;
     public ModKey ModKey => SourcePath.ModKey;
-    protected DirectoryPath DataFolder => new DirectoryInfo(Path.GetDirectoryName(this.SourcePath));
+    protected DirectoryPath DataFolder => new DirectoryInfo(Path.GetDirectoryName(SourcePath));
     public delegate void DynamicProcessor(MajorRecordFrame majorFrame, long fileOffset);
     public delegate void DynamicStreamProcessor(IMutagenReadStream stream, MajorRecordFrame majorFrame, long fileOffset);
     protected Dictionary<RecordType, List<DynamicProcessor>> DynamicProcessors = new();
@@ -629,14 +624,14 @@ public abstract class Processor
 
     public class StringsAlignmentTypical : AStringsAlignment
     {
-        public HashSet<RecordType> StringTypes = new HashSet<RecordType>();
+        public HashSet<RecordType> StringTypes = new();
 
         public StringsAlignmentTypical(RecordType[] types)
         {
             StringTypes.Add(types);
         }
 
-        public override AStringsAlignment.Handle Handler => Align;
+        public override Handle Handler => Align;
 
         private void Align(
             IMutagenReadStream stream,

@@ -5,10 +5,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Strings;
 using Noggog;
-using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -219,7 +216,7 @@ public class Fallout4Processor : Processor
         if (raw.SequenceEqual(rdats.Keys)) return;
         foreach (var item in rdats.Reverse())
         {
-            this._instructions.SetMove(
+            _instructions.SetMove(
                 loc: fileOffset + majorFrame.TotalLength,
                 section: item.Value);
         }

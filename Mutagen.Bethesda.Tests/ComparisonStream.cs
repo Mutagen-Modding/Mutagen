@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-
 namespace Mutagen.Bethesda.Tests;
 
 public class ComparisonStream : Stream
@@ -22,9 +19,9 @@ public class ComparisonStream : Stream
     {
         this.stream1 = stream1;
         this.stream2 = stream2;
-        this.len = Math.Min(stream1.Length, stream2.Length);
-        this.buf1 = new byte[buffLen];
-        this.buf2 = new byte[buffLen];
+        len = Math.Min(stream1.Length, stream2.Length);
+        buf1 = new byte[buffLen];
+        buf2 = new byte[buffLen];
         this.equal = equal;
         this.notEqual = notEqual;
     }
@@ -32,14 +29,14 @@ public class ComparisonStream : Stream
     public override bool CanRead => true;
     public override bool CanSeek => true;
     public override bool CanWrite => false;
-    public override long Length => this.len;
+    public override long Length => len;
     public override long Position
     {
         get => stream1.Position;
         set
         {
-            this.stream1.Position = value;
-            this.stream2.Position = value;
+            stream1.Position = value;
+            stream2.Position = value;
         }
     }
 

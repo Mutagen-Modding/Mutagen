@@ -3,7 +3,6 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Meta;
 using Newtonsoft.Json;
 using Noggog;
-using System.IO;
 using Mutagen.Bethesda.Plugins.Analysis;
 
 namespace Mutagen.Bethesda.Tests.Benchmarks;
@@ -17,11 +16,11 @@ public class Locators
     public void Setup()
     {
         // Load Settings
-        System.Console.WriteLine("Running in directory: " + Directory.GetCurrentDirectory());
+        Console.WriteLine("Running in directory: " + Directory.GetCurrentDirectory());
         FilePath settingsPath = "../../../../TestingSettings.xml";
-        System.Console.WriteLine("Settings path: " + settingsPath);
+        Console.WriteLine("Settings path: " + settingsPath);
         var settings = JsonConvert.DeserializeObject<TestingSettings>(File.ReadAllText(settingsPath.Path));
-        System.Console.WriteLine("Target settings: " + settings.ToString());
+        Console.WriteLine("Target settings: " + settings.ToString());
         var dataPath = Path.Combine(settings.DataFolderLocations.Oblivion, "Oblivion.esm");
         data = File.ReadAllBytes(dataPath);
         stream = new MutagenMemoryReadStream(data, new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));

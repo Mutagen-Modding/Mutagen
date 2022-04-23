@@ -1,8 +1,4 @@
-using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
@@ -22,9 +18,9 @@ public class SkyrimProcessor : Processor
     
     protected override Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>>? KnownDeadStringKeys()
     {
-        return new()
+        return new Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>>
         {
-            { (Skyrim.Constants.Update, StringsSource.Normal), new() { 34 } }
+            { (Constants.Update, StringsSource.Normal), new() { 34 } }
         };
     }
 
@@ -96,8 +92,8 @@ public class SkyrimProcessor : Processor
                 new RecordType[]
                 {
                     RecordTypes.ENAM,
-                    new RecordType("NAM0"),
-                    new RecordType("FNMK"),
+                    new("NAM0"),
+                    new("FNMK"),
                 });
             var enam = positions[0];
             if (enam == null) break;
@@ -117,7 +113,7 @@ public class SkyrimProcessor : Processor
             transferPos += bytes.Length;
         }
 
-        this._instructions.SetSubstitution(fileOffset + rec.Location, reordered);
+        _instructions.SetSubstitution(fileOffset + rec.Location, reordered);
     }
 
     private void ProcessNpcs(
@@ -135,7 +131,7 @@ public class SkyrimProcessor : Processor
             writer.Write(r / 255f);
             writer.Write(g / 255f);
             writer.Write(b / 255f);
-            this._instructions.SetSubstitution(fileOffset + qnamFrame.Location + qnamFrame.HeaderLength, bytes);
+            _instructions.SetSubstitution(fileOffset + qnamFrame.Location + qnamFrame.HeaderLength, bytes);
         }
 
         if (majorFrame.TryLocateSubrecordFrame(RecordTypes.NAM9, out var nam9Frame))
@@ -181,7 +177,7 @@ public class SkyrimProcessor : Processor
         if (raw.SequenceEqual(rdats.Keys)) return;
         foreach (var item in rdats.Reverse())
         {
-            this._instructions.SetMove(
+            _instructions.SetMove(
                 loc: fileOffset + majorFrame.TotalLength,
                 section: item.Value);
         }

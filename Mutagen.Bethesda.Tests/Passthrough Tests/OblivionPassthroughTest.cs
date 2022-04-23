@@ -3,8 +3,6 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 
 namespace Mutagen.Bethesda.Tests;
@@ -29,13 +27,13 @@ public class OblivionPassthroughTest : PassthroughTest
     {
         return OblivionMod.CreateFromBinary(
             new ModPath(ModKey, path.Path),
-            parallel: this.Settings.ParallelProccessingSteps);
+            parallel: Settings.ParallelProccessingSteps);
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)
     {
         var wrapper = OblivionMod.CreateFromBinaryOverlay(file.Path);
-        var ret = new OblivionMod(this.ModKey);
+        var ret = new OblivionMod(ModKey);
         ret.DeepCopyIn(wrapper);
         return ret;
     }
@@ -74,7 +72,7 @@ public class OblivionPassthroughTest : PassthroughTest
             new RecordType("XXXX"));
         ret.StopMarkers[RecordTypes.WRLD] = new List<RecordType>()
         {
-            new RecordType("OFST"),
+            new("OFST"),
         };
         ret.AddAlignments(
             RecordTypes.REFR,
@@ -159,7 +157,7 @@ public class OblivionPassthroughTest : PassthroughTest
             new RecordType("NAM1"));
         ret.StopMarkers[RecordTypes.CREA] = new List<RecordType>()
         {
-            new RecordType("DATA"),
+            new("DATA"),
         };
         ret.SetGroupAlignment(
             (int)GroupTypeEnum.CellTemporaryChildren,

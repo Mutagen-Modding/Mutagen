@@ -1,8 +1,5 @@
 using Loqui;
 using Noggog;
-using System;
-using System.IO;
-using System.Linq;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -15,8 +12,8 @@ public class DidNotMatchException : Exception, IPrintable
 
     public DidNotMatchException(string path, RangeInt64[] errs, Stream stream)
     {
-        this.Errors = errs;
-        this.Path = path;
+        Errors = errs;
+        Path = path;
         //this.ErrorBytes = new byte[Errors.Length][];
         //for (int i = 0; i < Errors.Length; i++)
         //{
@@ -53,9 +50,9 @@ public class DidNotMatchException : Exception, IPrintable
         fg.AppendLine($"{Path} Bytes did not match at positions:");
         using (new DepthWrapper(fg))
         {
-            for (int i = 0; i < this.Errors.Length; i++)
+            for (int i = 0; i < Errors.Length; i++)
             {
-                var err = this.Errors[i];
+                var err = Errors[i];
                 fg.AppendLine($"{err.ToString("X")}");
                 //using (new DepthWrapper(fg))
                 //{

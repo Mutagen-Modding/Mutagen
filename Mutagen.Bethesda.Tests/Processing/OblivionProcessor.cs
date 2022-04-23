@@ -5,10 +5,6 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using Noggog;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
@@ -58,22 +54,22 @@ public class OblivionProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        this.DynamicMove(
+        DynamicMove(
             majorFrame,
             fileOffset,
             offendingIndices: new RecordType[]
             {
-                new RecordType("CNTO"),
-                new RecordType("SCRI"),
-                new RecordType("AIDT")
+                new("CNTO"),
+                new("SCRI"),
+                new("AIDT")
             },
             offendingLimits: new RecordType[]
             {
-                new RecordType("ACBS")
+                new("ACBS")
             },
             locationsToMove: new RecordType[]
             {
-                new RecordType("CNAM")
+                new("CNAM")
             });
     }
 
@@ -89,7 +85,7 @@ public class OblivionProcessor : Processor
         {
             var lvld = majorFrame.LocateSubrecord(RecordTypes.LVLD);
             var index = lvld.EndLocation + 1;
-            this._instructions.SetAddition(
+            _instructions.SetAddition(
                 loc: index + fileOffset,
                 addition: new byte[]
                 {
@@ -107,18 +103,18 @@ public class OblivionProcessor : Processor
         {
             var existingLen = dataFrame.ContentLength;
             byte[] lenData = new byte[2];
-            using (var writer = new MutagenWriter(new MemoryStream(lenData), this.GameRelease))
+            using (var writer = new MutagenWriter(new MemoryStream(lenData), GameRelease))
             {
                 writer.Write((ushort)(existingLen - 7));
             }
-            this._instructions.SetSubstitution(
+            _instructions.SetSubstitution(
                 loc: fileOffset + Plugins.Internals.Constants.HeaderLength,
                 sub: lenData);
         }
 
         // Remove DATA
         var dataRange = new RangeInt64(dataFrame.Location + fileOffset, dataFrame.Location + fileOffset + 7 - 1);
-        this._instructions.SetRemove(dataRange);
+        _instructions.SetRemove(dataRange);
         amount -= (int)dataRange.Width;
 
         ProcessLengths(
@@ -152,7 +148,7 @@ public class OblivionProcessor : Processor
         foreach (var item in rdats.Reverse())
         {
             if (item.Key == (int)RegionData.RegionDataType.Icon) continue;
-            this._instructions.SetMove(
+            _instructions.SetMove(
                 loc: fileOffset + majorFrame.TotalLength,
                 section: item.Value);
         }
@@ -172,7 +168,7 @@ public class OblivionProcessor : Processor
 
             // Get icon bytes
             MemoryStream memStream = new MemoryStream();
-            using (var writer = new MutagenWriter(memStream, this.GameRelease))
+            using (var writer = new MutagenWriter(memStream, GameRelease))
             {
                 using (HeaderExport.Header(
                            writer,
@@ -184,10 +180,10 @@ public class OblivionProcessor : Processor
             }
 
             var arr = memStream.ToArray();
-            this._instructions.SetAddition(
+            _instructions.SetAddition(
                 loc: locToPlace,
                 addition: arr);
-            this._instructions.SetRemove(
+            _instructions.SetRemove(
                 section: iconLoc);
             amount += arr.Length;
             amount -= (int)iconLoc.Width;
@@ -209,10 +205,10 @@ public class OblivionProcessor : Processor
         {
             ModifyLengthTracking(fileOffset, -4);
             var removeStart = fileOffset + xlocFrame.Location + xlocFrame.HeaderLength + 12;
-            this._instructions.SetSubstitution(
+            _instructions.SetSubstitution(
                 loc: fileOffset + xlocFrame.Location + 4,
                 sub: new byte[] { 12, 0 });
-            this._instructions.SetRemove(
+            _instructions.SetRemove(
                 section: new RangeInt64(
                     removeStart,
                     removeStart + 3));
@@ -225,10 +221,10 @@ public class OblivionProcessor : Processor
             {
                 ModifyLengthTracking(fileOffset, -3);
                 var removeStart = fileOffset + xsedFrame.Location + xsedFrame.HeaderLength + 1;
-                this._instructions.SetSubstitution(
+                _instructions.SetSubstitution(
                     loc: fileOffset + xsedFrame.Location + 4,
                     sub: new byte[] { 1, 0 });
-                this._instructions.SetRemove(
+                _instructions.SetRemove(
                     section: new RangeInt64(
                         removeStart,
                         removeStart + 2));
@@ -316,10 +312,10 @@ public class OblivionProcessor : Processor
         int amount = 0;
         foreach (var ctdt in majorFrame.FindEnumerateSubrecords(RecordTypes.CTDT))
         {
-            this._instructions.SetSubstitution(
+            _instructions.SetSubstitution(
                 loc: ctdt.Location + fileOffset + 3,
                 sub: new byte[] { (byte)'A', 0x18 });
-            this._instructions.SetAddition(
+            _instructions.SetAddition(
                 addition: new byte[4],
                 loc: ctdt.Location + fileOffset + 0x1A);
             amount += 4;
@@ -329,12 +325,12 @@ public class OblivionProcessor : Processor
         {
             var existingLen = schd.ContentLength;
             var diff = existingLen - 0x14;
-            this._instructions.SetSubstitution(
+            _instructions.SetSubstitution(
                 loc: schd.Location + fileOffset + 3,
                 sub: new byte[] { (byte)'R', 0x14 });
             if (diff == 0) continue;
             var locToRemove = fileOffset + schd.Location + schd.HeaderLength + 0x14;
-            this._instructions.SetRemove(
+            _instructions.SetRemove(
                 section: new RangeInt64(
                     locToRemove,
                     locToRemove + diff - 1));
@@ -354,10 +350,10 @@ public class OblivionProcessor : Processor
         int amount = 0;
         foreach (var ctdt in majorFrame.FindEnumerateSubrecords(RecordTypes.CTDT))
         {
-            this._instructions.SetSubstitution(
+            _instructions.SetSubstitution(
                 loc: ctdt.Location + fileOffset + 3,
                 sub: new byte[] { (byte)'A', 0x18 });
-            this._instructions.SetAddition(
+            _instructions.SetAddition(
                 addition: new byte[4],
                 loc: ctdt.Location + fileOffset + 0x1A);
             amount += 4;
@@ -376,10 +372,10 @@ public class OblivionProcessor : Processor
         int amount = 0;
         foreach (var ctdt in majorFrame.FindEnumerateSubrecords(RecordTypes.CTDT))
         {
-            this._instructions.SetSubstitution(
+            _instructions.SetSubstitution(
                 loc: ctdt.Location + fileOffset + 3,
                 sub: new byte[] { (byte)'A', 0x18 });
-            this._instructions.SetAddition(
+            _instructions.SetAddition(
                 addition: new byte[4],
                 loc: ctdt.Location + fileOffset + 0x1A);
             amount += 4;
@@ -388,17 +384,17 @@ public class OblivionProcessor : Processor
         foreach (var ctdt in majorFrame.FindEnumerateSubrecords(RecordTypes.PKDT))
         {
             if (ctdt.ContentLength != 4) continue;
-            this._instructions.SetSubstitution(
+            _instructions.SetSubstitution(
                 loc: fileOffset + ctdt.Location + 4,
                 sub: new byte[] { 0x8 });
             var first1 = ctdt.Content[0];
             var first2 = ctdt.Content[1];
             var second1 = ctdt.Content[2];
             var second2 = ctdt.Content[3];
-            this._instructions.SetSubstitution(
+            _instructions.SetSubstitution(
                 loc: fileOffset + ctdt.Location + 6,
                 sub: new byte[] { first1, first2, 0, 0 });
-            this._instructions.SetAddition(
+            _instructions.SetAddition(
                 loc: fileOffset + ctdt.Location + 10,
                 addition: new byte[] { second1, 0, 0, 0 });
             amount += 4;
@@ -418,32 +414,32 @@ public class OblivionProcessor : Processor
         {
             var len = ctsd.ContentLength;
             var move = 2;
-            this._instructions.SetSubstitution(
+            _instructions.SetSubstitution(
                 sub: new byte[] { 0, 0 },
                 loc: fileOffset + ctsd.EndLocation + move);
             move = 38;
             if (len < 2 + move) return;
-            this._instructions.SetSubstitution(
+            _instructions.SetSubstitution(
                 sub: new byte[] { 0, 0 },
                 loc: fileOffset + ctsd.EndLocation + move);
             move = 53;
             if (len < 3 + move) return;
-            this._instructions.SetSubstitution(
+            _instructions.SetSubstitution(
                 sub: new byte[] { 0, 0, 0 },
                 loc: fileOffset + ctsd.EndLocation + 53);
             move = 69;
             if (len < 3 + move) return;
-            this._instructions.SetSubstitution(
+            _instructions.SetSubstitution(
                 sub: new byte[] { 0, 0, 0 },
                 loc: fileOffset + ctsd.EndLocation + 69);
             move = 82;
             if (len < 2 + move) return;
-            this._instructions.SetSubstitution(
+            _instructions.SetSubstitution(
                 sub: new byte[] { 0, 0 },
                 loc: fileOffset + ctsd.EndLocation + 82);
             move = 113;
             if (len < 3 + move) return;
-            this._instructions.SetSubstitution(
+            _instructions.SetSubstitution(
                 sub: new byte[] { 0, 0, 0 },
                 loc: fileOffset + ctsd.EndLocation + 113);
         }
@@ -459,10 +455,10 @@ public class OblivionProcessor : Processor
             var len = dataRec.ContentLength; 
             if (len == 0x02) 
             { 
-                this._instructions.SetSubstitution( 
+                _instructions.SetSubstitution( 
                     loc: fileOffset + dataRec.Location + Plugins.Internals.Constants.HeaderLength, 
                     sub: new byte[] { 0, 0 }); 
-                this._instructions.SetRemove( 
+                _instructions.SetRemove( 
                     section: RangeInt64.FromLength( 
                         loc: fileOffset + dataRec.EndLocation, 
                         length: 2)); 
@@ -471,10 +467,10 @@ public class OblivionProcessor : Processor
  
             if (len == 0x56) 
             { 
-                this._instructions.SetSubstitution( 
+                _instructions.SetSubstitution( 
                     loc: fileOffset + dataRec.Location + Plugins.Internals.Constants.HeaderLength, 
                     sub: new byte[] { 0x54, 0 }); 
-                this._instructions.SetRemove( 
+                _instructions.SetRemove( 
                     section: RangeInt64.FromLength( 
                         loc: fileOffset + dataRec.EndLocation + 0x54, 
                         length: 2)); 
@@ -483,10 +479,10 @@ public class OblivionProcessor : Processor
  
             if (len == 0x2A) 
             { 
-                this._instructions.SetSubstitution( 
+                _instructions.SetSubstitution( 
                     loc: fileOffset + dataRec.Location + Plugins.Internals.Constants.HeaderLength, 
                     sub: new byte[] { 0x28, 0 }); 
-                this._instructions.SetRemove( 
+                _instructions.SetRemove( 
                     section: RangeInt64.FromLength( 
                         loc: fileOffset + dataRec.EndLocation + 0x28, 
                         length: 2)); 
@@ -495,10 +491,10 @@ public class OblivionProcessor : Processor
  
             if (len == 0x3E) 
             { 
-                this._instructions.SetSubstitution( 
+                _instructions.SetSubstitution( 
                     loc: fileOffset + dataRec.Location + Plugins.Internals.Constants.HeaderLength, 
                     sub: new byte[] { 0x3C, 0 }); 
-                this._instructions.SetRemove( 
+                _instructions.SetRemove( 
                     section: RangeInt64.FromLength( 
                         loc: fileOffset + dataRec.EndLocation + 0x3C, 
                         length: 2)); 
@@ -508,7 +504,7 @@ public class OblivionProcessor : Processor
             var move = 0x39; 
             if (len >= 3 + move) 
             { 
-                this._instructions.SetSubstitution( 
+                _instructions.SetSubstitution( 
                     sub: new byte[] { 0, 0, 0 }, 
                     loc: fileOffset + dataRec.EndLocation + move); 
             } 

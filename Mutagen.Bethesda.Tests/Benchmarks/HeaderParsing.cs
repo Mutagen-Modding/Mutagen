@@ -3,7 +3,6 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
-using System;
 
 namespace Mutagen.Bethesda.Tests.Benchmarks;
 
@@ -28,8 +27,8 @@ public class HeaderParsing
         0x64, 0x00
     };
     static GameConstants constants = GameConstants.Oblivion;
-    static MutagenFrame frame = new MutagenFrame(new MutagenMemoryReadStream(bytes, new ParsingBundle(constants, masterReferences: null!)));
-    static RecordType type = new RecordType("WEAP");
+    static MutagenFrame frame = new(new MutagenMemoryReadStream(bytes, new ParsingBundle(constants, masterReferences: null!)));
+    static RecordType type = new("WEAP");
 
     [Benchmark]
     public (bool, long) MajorRecordHeaderSpan()
