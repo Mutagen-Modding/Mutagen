@@ -32,7 +32,6 @@ public class RecordGeneratorProvider : IGenerationConstructor
     {
         LoquiGenerator gen = new LoquiGenerator(typical: false)
         {
-            NotifyingDefault = NotifyingType.None,
             NullableDefault = true,
             ToStringDefault = false,
         };

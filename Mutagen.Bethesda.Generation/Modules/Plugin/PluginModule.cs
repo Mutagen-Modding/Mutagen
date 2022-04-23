@@ -91,7 +91,6 @@ public class PluginModule : GenerationModule
         if (loqui.TargetObjectGeneration?.GetObjectType() != ObjectType.Group) return;
         loqui.Singleton = true;
         loqui.NullableProperty.OnNext((false, true));
-        loqui.NotifyingProperty.OnNext((NotifyingType.None, true));
     }
 
     public override async Task PostLoad(ObjectGeneration obj)

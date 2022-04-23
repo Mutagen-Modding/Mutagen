@@ -65,8 +65,6 @@ public class FormLinkType : ClassType
         LoquiType.GetterInterfaceType = LoquiInterfaceType.IGetter;
         _rawFormID.Name = this.Name;
         _rawFormID.SetObjectGeneration(this.ObjectGen, false);
-        this.NotifyingProperty.Subscribe(i => LoquiType.NotifyingProperty.OnNext(i));
-        this.NotifyingProperty.Subscribe(i => _rawFormID.NotifyingProperty.OnNext(i));
         this.NullableProperty.Subscribe(i => LoquiType.NullableProperty.OnNext(i));
         this.NullableProperty.Subscribe(i => _rawFormID.NullableProperty.OnNext(i));
         this.FormIDType = node.GetAttribute<FormIDTypeEnum>("type", defaultVal: FormIDTypeEnum.Normal);

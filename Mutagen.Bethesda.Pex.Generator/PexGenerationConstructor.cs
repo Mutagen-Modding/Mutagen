@@ -10,7 +10,6 @@ public class PexGenerationConstructor : IGenerationConstructor
     {
         LoquiGenerator gen = new LoquiGenerator(typical: false)
         {
-            NotifyingDefault = NotifyingType.None,
             NullableDefault = false,
             ToStringDefault = false,
         };
