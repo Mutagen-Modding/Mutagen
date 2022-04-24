@@ -35,7 +35,7 @@ partial class FootstepSetBinaryCreateTranslation
 
     public static int[] GetListCounts(IMutagenReadStream frame)
     {
-        var subFrame = frame.ReadSubrecord(RecordTypes.XCNT);
+        var subFrame = frame.ReadSubrecordHeader(RecordTypes.XCNT);
         if (subFrame.ContentLength != 20)
         {
             throw new ArgumentException($"XCNT record had unexpected length {subFrame.ContentLength} != 20");
@@ -49,7 +49,7 @@ partial class FootstepSetBinaryCreateTranslation
 
         var formIDCount = ret.Sum();
 
-        var dataHeader = frame.ReadSubrecord(RecordTypes.DATA);
+        var dataHeader = frame.ReadSubrecordHeader(RecordTypes.DATA);
         var expectedLen = formIDCount * 4;
         if (dataHeader.ContentLength != expectedLen)
         {

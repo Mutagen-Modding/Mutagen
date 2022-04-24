@@ -1733,10 +1733,10 @@ namespace Mutagen.Bethesda.Skyrim
                     switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
                     {
                         case 0:
-                            frame.ReadSubrecordFrame();
+                            frame.ReadSubrecord();
                             return new ParseResult(default(int?), nextRecordType);
                         case 1:
-                            frame.ReadSubrecordFrame();
+                            frame.ReadSubrecord();
                             return ParseResult.Stop;
                         default:
                             throw new NotImplementedException();
@@ -1962,10 +1962,10 @@ namespace Mutagen.Bethesda.Skyrim
                     switch (recordParseCount?.GetOrAdd(type) ?? 0)
                     {
                         case 0:
-                            stream.ReadSubrecordFrame();
+                            stream.ReadSubrecord();
                             return new ParseResult(default(int?), type);
                         case 1:
-                            stream.ReadSubrecordFrame();
+                            stream.ReadSubrecord();
                             return ParseResult.Stop;
                         default:
                             throw new NotImplementedException();

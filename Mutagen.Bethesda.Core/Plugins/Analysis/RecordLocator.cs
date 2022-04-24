@@ -110,7 +110,7 @@ public static class RecordLocator
         bool checkOverallGrupType)
     {
         var grupLoc = reader.Position;
-        GroupHeader groupMeta = reader.GetGroup();
+        GroupHeader groupMeta = reader.GetGroupHeader();
         fileLocs.GrupLocations.Add(new GroupLocationMarker(RangeInt64.FromLength(reader.Position, groupMeta.TotalLength), groupMeta.ContainedRecordType));
         var grupRec = grupRecOverride ?? groupMeta.ContainedRecordType;
 
@@ -127,11 +127,11 @@ public static class RecordLocator
         {
             while (!frame.Complete)
             {
-                MajorRecordHeader majorRecordMeta = frame.GetMajorRecord();
+                MajorRecordHeader majorRecordMeta = frame.GetMajorRecordHeader();
                 var targetRec = majorRecordMeta.RecordType;
                 if (targetRec != grupRec)
                 {
-                    var grup = frame.GetGroup(checkIsGroup: false);
+                    var grup = frame.GetGroupHeader(checkIsGroup: false);
                     if (IsSubLevelGRUP(grup))
                     {
                         parentGroupLocations.Push(grupLoc);
@@ -195,7 +195,7 @@ public static class RecordLocator
         Stack<long> parentGroupLocations)
     {
         var grupLoc = frame.Position;
-        GroupHeader groupMeta = frame.GetGroup();
+        GroupHeader groupMeta = frame.GetGroupHeader();
         if (!groupMeta.IsGroup)
         {
             throw new DataMisalignedException("Group was not read in where expected: 0x" + (frame.Position - 4).ToString("X"));
@@ -250,7 +250,7 @@ public static class RecordLocator
         while (!frame.Complete)
         {
             var grupLoc = frame.Position;
-            var groupMeta = frame.GetGroup();
+            var groupMeta = frame.GetGroupHeader();
             if (!groupMeta.IsGroup)
             {
                 throw new ArgumentException();
@@ -283,7 +283,7 @@ public static class RecordLocator
         while (!frame.Complete)
         {
             var grupLoc = frame.Position;
-            var groupMeta = frame.GetGroup();
+            var groupMeta = frame.GetGroupHeader();
             fileLocs.GrupLocations.Add(new GroupLocationMarker(RangeInt64.FromLength(grupLoc, groupMeta.TotalLength), groupMeta.ContainedRecordType));
             if (frame.MetaData.Constants.GroupConstants.Cell.SubTypes.Contains(groupMeta.GroupType))
             {
@@ -310,7 +310,7 @@ public static class RecordLocator
         SkipHeader(reader);
         while (!reader.Complete)
         {
-            GroupHeader groupMeta = reader.GetGroup();
+            GroupHeader groupMeta = reader.GetGroupHeader();
             if (!groupMeta.IsGroup)
             {
                 throw new DataMisalignedException("Group was not read in where expected: 0x" + reader.Position.ToString("X"));
@@ -325,7 +325,7 @@ public static class RecordLocator
         IMutagenReadStream reader,
         bool checkOverallGrupType = true)
     {
-        var groupMeta = reader.GetGroup();
+        var groupMeta = reader.GetGroupHeader();
         var grupLoc = reader.Position;
         var targetRec = groupMeta.ContainedRecordType;
         if (!groupMeta.IsGroup)
@@ -340,10 +340,10 @@ public static class RecordLocator
             while (!frame.Complete)
             {
                 var recordLocation = reader.Position;
-                MajorRecordHeader majorMeta = reader.GetMajorRecord();
+                MajorRecordHeader majorMeta = reader.GetMajorRecordHeader();
                 if (majorMeta.RecordType != targetRec)
                 {
-                    var subGroupMeta = reader.GetGroup();
+                    var subGroupMeta = reader.GetGroupHeader();
                     if (IsSubLevelGRUP(subGroupMeta))
                     {
                         reader.Position += subGroupMeta.TotalLength;

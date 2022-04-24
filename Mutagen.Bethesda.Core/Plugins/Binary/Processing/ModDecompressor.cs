@@ -34,7 +34,7 @@ public static class ModDecompressor
             interest: interest,
             additionalCriteria: (stream, recType, len) =>
             {
-                return stream.GetMajorRecord().IsCompressed;
+                return stream.GetMajorRecordHeader().IsCompressed;
             });
 
         // Construct group length container for later use
@@ -60,7 +60,7 @@ public static class ModDecompressor
 
             // If complete overall, return
             if (inputStream.Complete) break;
-            var majorMeta = inputStream.ReadMajorRecord(readSafe: true);
+            var majorMeta = inputStream.ReadMajorRecordHeader(readSafe: true);
             var len = majorMeta.ContentLength;
             using var frame = MutagenFrame.ByLength(
                 reader: inputStream,

@@ -2285,7 +2285,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.TTEC:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.TemplateColors = BinaryOverlayList.FactoryByStartIndex<TintTemplateColorBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),

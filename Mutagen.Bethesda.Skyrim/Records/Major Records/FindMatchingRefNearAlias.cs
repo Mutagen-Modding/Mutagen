@@ -19,7 +19,7 @@ partial class FindMatchingRefNearAliasBinaryCreateTranslation
 {
     public static partial void FillBinaryAliasIndexCustom(MutagenFrame frame, IFindMatchingRefNearAlias item)
     {
-        var subrecord = frame.ReadSubrecordFrame();
+        var subrecord = frame.ReadSubrecord();
         item.AliasIndex = checked((short)BinaryPrimitives.ReadInt32LittleEndian(subrecord.Content));
     }
 }

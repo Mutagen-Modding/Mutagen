@@ -1355,7 +1355,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.RPLD:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RegionArea_FieldIndex.RegionPoints) return ParseResult.Stop;
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.RegionPoints = BinaryOverlayList.FactoryByStartIndex<P2Float>(
                         mem: stream.RemainingMemory.Slice(0, subLen),

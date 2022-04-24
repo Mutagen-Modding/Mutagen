@@ -60,7 +60,7 @@ public class AlignmentRepeatedRule : AlignmentRule
         MutagenWriter stream; 
         while (!inputStream.Complete) 
         { 
-            var frame = inputStream.GetSubrecordFrame(readSafe: true);
+            var frame = inputStream.GetSubrecord(readSafe: true);
             var subType = frame.RecordType;
             if (!SubTypes.TryGetValue(subType, out var rule)) 
             { 

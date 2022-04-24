@@ -52,7 +52,7 @@ public static class Decompression
 
     internal static OverlayStream DecompressStream(OverlayStream stream)
     {
-        var majorMeta = stream.GetMajorRecord();
+        var majorMeta = stream.GetMajorRecordHeader();
         if (majorMeta.IsCompressed)
         {
             uint uncompressedLength =

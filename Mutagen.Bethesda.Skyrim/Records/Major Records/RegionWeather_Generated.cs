@@ -1358,7 +1358,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.RDWT:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Weathers = BinaryOverlayList.FactoryByStartIndex<WeatherTypeBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),

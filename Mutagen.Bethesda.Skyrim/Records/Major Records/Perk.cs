@@ -38,13 +38,13 @@ partial class PerkBinaryCreateTranslation
 
     public static IEnumerable<APerkEffect> ParseEffects(IMutagenReadStream stream)
     {
-        while (stream.TryReadSubrecordFrame(RecordTypes.PRKE, out var prkeFrame))
+        while (stream.TryReadSubrecord(RecordTypes.PRKE, out var prkeFrame))
         {
             var type = (Perk.EffectType)prkeFrame.Content[0];
             var rank = prkeFrame.Content[1];
             var priority = prkeFrame.Content[2];
             APerkEffect effect;
-            if (stream.TryReadSubrecordFrame(RecordTypes.DATA, out var dataFrame))
+            if (stream.TryReadSubrecord(RecordTypes.DATA, out var dataFrame))
             {
                 switch (type)
                 {
@@ -97,7 +97,7 @@ partial class PerkBinaryCreateTranslation
                         ReadOnlyMemorySlice<byte>? epf3 = null;
                         ReadOnlyMemorySlice<byte>? epfd = null;
                         ReadOnlyMemorySlice<byte>? epft = null;
-                        while (stream.TryReadSubrecordFrame(out var subFrame))
+                        while (stream.TryReadSubrecord(out var subFrame))
                         {
                             switch (subFrame.RecordTypeInt)
                             {
@@ -302,13 +302,13 @@ partial class PerkBinaryCreateTranslation
             }
             effect.Rank = rank;
             effect.Priority = priority;
-            if (stream.TryReadSubrecordFrame(RecordTypes.EPFT, out var epftFrame)
+            if (stream.TryReadSubrecord(RecordTypes.EPFT, out var epftFrame)
                 && epftFrame.ContentLength != 1
                 && epftFrame.Content[0] != (byte)APerkEntryPointEffect.ParameterType.None)
             {
                 throw new ArgumentException($"Encountered an unexpected epft frame.");
             }
-            stream.TryReadSubrecordFrame(RecordTypes.PRKF, out var _);
+            stream.TryReadSubrecord(RecordTypes.PRKF, out var _);
             yield return effect;
         }
     }

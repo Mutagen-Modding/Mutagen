@@ -24,11 +24,11 @@ partial class PathGridBinaryCreateTranslation
 
     public static void FillBinaryPointToPointConnections(MutagenFrame frame, IPathGridInternal item)
     {
-        if (!frame.TryReadSubrecord(RecordTypes.DATA, out var subMeta)) return;
+        if (!frame.TryReadSubrecordHeader(RecordTypes.DATA, out var subMeta)) return;
 
         uint ptCount = frame.Reader.ReadUInt16();
 
-        if (!frame.Reader.TryReadSubrecord(PGRP, out subMeta)) return;
+        if (!frame.Reader.TryReadSubrecordHeader(PGRP, out subMeta)) return;
         var pointDataSpan = frame.Reader.ReadSpan(subMeta.ContentLength);
         var bytePointsNum = pointDataSpan.Length / POINT_LEN;
         if (bytePointsNum != ptCount)
@@ -40,7 +40,7 @@ partial class PathGridBinaryCreateTranslation
         for (int recAttempt = 0; recAttempt < 2; recAttempt++)
         {
             if (frame.Reader.Complete) break;
-            subMeta = frame.GetSubrecord();
+            subMeta = frame.GetSubrecordHeader();
             switch (subMeta.RecordType.TypeInt)
             {
                 case 0x47414750: //"PGAG":
@@ -163,10 +163,10 @@ internal partial class PathGridBinaryOverlay
 
     partial void PointToPointConnectionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
-        var dataFrame = stream.ReadSubrecordFrame();
+        var dataFrame = stream.ReadSubrecord();
         uint ptCount = BinaryPrimitives.ReadUInt16LittleEndian(dataFrame.Content);
 
-        var pgrpMeta = stream.GetSubrecord();
+        var pgrpMeta = stream.GetSubrecordHeader();
         if (pgrpMeta.RecordType != PathGridBinaryCreateTranslation.PGRP) return;
         stream.Position += pgrpMeta.HeaderLength;
         var pointData = stream.ReadMemory(pgrpMeta.ContentLength);
@@ -180,7 +180,7 @@ internal partial class PathGridBinaryOverlay
         for (int recAttempt = 0; recAttempt < 2; recAttempt++)
         {
             if (stream.Complete) break;
-            var subMeta = stream.GetSubrecord();
+            var subMeta = stream.GetSubrecordHeader();
             switch (subMeta.RecordType.TypeInt)
             {
                 case 0x47414750: //"PGAG":

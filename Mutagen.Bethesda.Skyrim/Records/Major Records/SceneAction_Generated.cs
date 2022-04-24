@@ -2216,7 +2216,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 length: contentLength);
                             return new ParseResult((int)SceneAction_FieldIndex.Type, nextRecordType);
                         case 1:
-                            frame.ReadSubrecordFrame();
+                            frame.ReadSubrecord();
                             return ParseResult.Stop;
                         default:
                             throw new NotImplementedException();
@@ -2537,7 +2537,7 @@ namespace Mutagen.Bethesda.Skyrim
                             _TypeLocation = (stream.Position - offset);
                             return new ParseResult((int)SceneAction_FieldIndex.Type, type);
                         case 1:
-                            stream.ReadSubrecordFrame();
+                            stream.ReadSubrecord();
                             return ParseResult.Stop;
                         default:
                             throw new NotImplementedException();

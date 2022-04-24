@@ -54,7 +54,7 @@ partial class QuestBinaryCreateTranslation
 
     public static partial ParseResult FillBinaryUnusedConditionsLogicCustom(MutagenFrame frame, IQuestInternal item)
     {
-        var nextHeader = frame.ReadSubrecordFrame();
+        var nextHeader = frame.ReadSubrecord();
         if (nextHeader.RecordType != RecordTypes.NEXT
             || nextHeader.Content.Length != 0)
         {
@@ -67,7 +67,7 @@ partial class QuestBinaryCreateTranslation
     public static partial ParseResult FillBinaryNextAliasIDCustom(MutagenFrame frame, IQuestInternal item)
     {
         // Skip
-        frame.ReadSubrecordFrame();
+        frame.ReadSubrecord();
         return null;
     }
 }
@@ -114,7 +114,7 @@ partial class QuestBinaryOverlay
 
     public partial ParseResult UnusedConditionsLogicCustomParse(OverlayStream stream, int offset)
     {
-        var nextHeader = stream.ReadSubrecordFrame();
+        var nextHeader = stream.ReadSubrecord();
         if (nextHeader.RecordType != RecordTypes.NEXT
             || nextHeader.Content.Length != 0)
         {
@@ -127,7 +127,7 @@ partial class QuestBinaryOverlay
 
     public partial ParseResult NextAliasIDCustomParse(OverlayStream stream, int offset)
     {
-        stream.ReadSubrecordFrame();
+        stream.ReadSubrecord();
         return null;
     }
 }

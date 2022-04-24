@@ -112,7 +112,7 @@ partial class PackageBinaryCreateTranslation
 
     public static partial void FillBinaryPackageTemplateCustom(MutagenFrame frame, IPackageInternal item)
     {
-        var pkcuRecord = frame.ReadSubrecordFrame();
+        var pkcuRecord = frame.ReadSubrecord();
         if (pkcuRecord.Content.Length != 12)
         {
             throw new ArgumentException();
@@ -129,7 +129,7 @@ partial class PackageBinaryCreateTranslation
         // Retrieve the expected types, then skip rest of data
         var valuesPosition = stream.Position;
         var types = new List<string>(expectedCount);
-        while (stream.TryReadSubrecordFrame(out var subRecord))
+        while (stream.TryReadSubrecord(out var subRecord))
         {
             switch (subRecord.RecordTypeInt)
             {
@@ -155,7 +155,7 @@ partial class PackageBinaryCreateTranslation
         APackageData? lastPackage = null;
         int itemIndex = 0;
         var packages = new List<APackageData>(expectedCount);
-        while (stream.TryGetSubrecordFrame(out var subRecord))
+        while (stream.TryGetSubrecord(out var subRecord))
         {
             switch (subRecord.RecordTypeInt)
             {
@@ -221,7 +221,7 @@ partial class PackageBinaryCreateTranslation
         lastPackage = null;
         while (itemIndex < expectedCount)
         {
-            if (!stream.TryGetSubrecordFrame(out var subRecord)) break;
+            if (!stream.TryGetSubrecord(out var subRecord)) break;
             switch (subRecord.RecordTypeInt)
             {
                 case RecordTypeInts.ANAM:
@@ -320,7 +320,7 @@ partial class PackageBinaryCreateTranslation
     public static partial void FillBinaryXnamMarkerCustom(MutagenFrame frame, IPackageInternal item)
     {
         // Skip marker
-        item.XnamMarker = frame.ReadSubrecordFrame().Content.ToArray();
+        item.XnamMarker = frame.ReadSubrecord().Content.ToArray();
         item.ProcedureTree.SetTo(
             ListBinaryTranslation<PackageBranch>.Instance.Parse(
                 reader: frame.SpawnAll(),
@@ -336,7 +336,7 @@ partial class PackageBinaryCreateTranslation
     public static void AbsorbPackageData(IMutagenReadStream stream, IDictionary<sbyte, APackageData> dict)
     {
         APackageData? lastPackage = null;
-        while (stream.TryGetSubrecordFrame(out var subRecord))
+        while (stream.TryGetSubrecord(out var subRecord))
         {
             switch (subRecord.RecordTypeInt)
             {
@@ -531,7 +531,7 @@ partial class PackageBinaryOverlay
         int finalPos,
         int offset)
     {
-        var pkcu = stream.ReadSubrecordFrame();
+        var pkcu = stream.ReadSubrecord();
         var count = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(pkcu.Content));
         _packageTemplate = FormKeyBinaryTranslation.Instance.Parse(pkcu.Content.Slice(4), _package.MetaData.MasterReferences!);
         DataInputVersion = BinaryPrimitives.ReadInt32LittleEndian(pkcu.Content.Slice(8));
@@ -542,7 +542,7 @@ partial class PackageBinaryOverlay
 
     partial void XnamMarkerCustomParse(OverlayStream stream, long finalPos, int offset)
     {
-        var xnam = stream.ReadSubrecordFrame();
+        var xnam = stream.ReadSubrecord();
         _xnam = xnam.Content;
         this.ProcedureTree = this.ParseRepeatedTypelessSubrecord<PackageBranchBinaryOverlay>(
             stream: stream,

@@ -716,7 +716,7 @@ public partial class Condition
         MutagenFrame frame,
         TypedParseParams? translationParams)
     {
-        if (!frame.Reader.TryGetSubrecord(Mutagen.Bethesda.Skyrim.Internals.RecordTypes.CTDA, out var subRecMeta))
+        if (!frame.Reader.TryGetSubrecordHeader(Mutagen.Bethesda.Skyrim.Internals.RecordTypes.CTDA, out var subRecMeta))
         {
             throw new ArgumentException();
         }
@@ -852,7 +852,7 @@ partial class ConditionBinaryCreateTranslation
     public static void FillConditionsList(IList<Condition> conditions, MutagenFrame frame)
     {
         conditions.Clear();
-        while (frame.Reader.TryGetSubrecord(RecordTypes.CTDA, out var subMeta))
+        while (frame.Reader.TryGetSubrecordHeader(RecordTypes.CTDA, out var subMeta))
         {
             conditions.Add(Condition.CreateFromBinary(frame, default(TypedParseParams)));
         }
@@ -874,7 +874,7 @@ partial class ConditionBinaryCreateTranslation
 
     private static void ParseString(MutagenFrame frame, IFunctionConditionData funcData)
     {
-        if (!frame.Reader.TryGetSubrecordFrame(out var subMeta)) return;
+        if (!frame.Reader.TryGetSubrecord(out var subMeta)) return;
         switch (subMeta.RecordType.TypeInt)
         {
             case 0x31534943: // CIS1
@@ -948,7 +948,7 @@ abstract partial class ConditionBinaryOverlay
 
     public static ConditionBinaryOverlay ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package)
     {
-        var subRecMeta = stream.GetSubrecordFrame();
+        var subRecMeta = stream.GetSubrecord();
         if (subRecMeta.RecordType != RecordTypes.CTDA)
         {
             throw new ArgumentException();
@@ -966,7 +966,7 @@ abstract partial class ConditionBinaryOverlay
 
     public static ConditionBinaryOverlay ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package, TypedParseParams? _)
     {
-        var subRecMeta = stream.GetSubrecordFrame();
+        var subRecMeta = stream.GetSubrecord();
         if (subRecMeta.RecordType != RecordTypes.CTDA)
         {
             throw new ArgumentException();
@@ -984,7 +984,7 @@ abstract partial class ConditionBinaryOverlay
 
     public static IReadOnlyList<ConditionBinaryOverlay> ConstructBinayOverlayCountedList(OverlayStream stream, BinaryOverlayFactoryPackage package)
     {
-        var counterMeta = stream.ReadSubrecordFrame();
+        var counterMeta = stream.ReadSubrecord();
         if (counterMeta.RecordType != RecordTypes.CITC
             || counterMeta.Content.Length != 4)
         {
@@ -1254,7 +1254,7 @@ partial class FunctionConditionDataBinaryOverlay
 
     private void ParseStringParameter(OverlayStream stream)
     {
-        if (stream.Complete || !stream.TryGetSubrecord(out var subFrame)) return;
+        if (stream.Complete || !stream.TryGetSubrecordHeader(out var subFrame)) return;
         switch (subFrame.RecordTypeInt)
         {
             case 0x31534943: // CIS1

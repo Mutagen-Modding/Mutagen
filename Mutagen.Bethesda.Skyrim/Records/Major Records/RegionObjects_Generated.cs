@@ -1358,7 +1358,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.RDOT:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Objects = BinaryOverlayList.FactoryByStartIndex<RegionObjectBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),

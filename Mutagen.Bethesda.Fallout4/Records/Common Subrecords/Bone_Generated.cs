@@ -1472,7 +1472,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.BSMS:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Bone_FieldIndex.Values) return ParseResult.Stop;
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Values = BinaryOverlayList.FactoryByStartIndex<Single>(
                         mem: stream.RemainingMemory.Slice(0, subLen),

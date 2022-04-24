@@ -17,10 +17,10 @@ partial class RoadBinaryCreateTranslation
 
     public static partial void FillBinaryPointsCustom(MutagenFrame frame, IRoadInternal item)
     {
-        if (!frame.Reader.TryReadSubrecord(PGRP, out var subMeta)) return;
+        if (!frame.Reader.TryReadSubrecordHeader(PGRP, out var subMeta)) return;
         var pointBytes = frame.Reader.ReadSpan(subMeta.ContentLength);
 
-        subMeta = frame.ReadSubrecord();
+        subMeta = frame.ReadSubrecordHeader();
         switch (subMeta.RecordType.TypeInt)
         {
             case 0x52524750: // "PGRR":
@@ -120,11 +120,11 @@ partial class RoadBinaryOverlay
     partial void PointsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
         if (stream.Complete) return;
-        var subMeta = stream.GetSubrecord();
+        var subMeta = stream.GetSubrecordHeader();
         if (subMeta.RecordType != RecordTypes.PGRP) return;
         stream.Position += subMeta.HeaderLength;
         var pointBytes = stream.ReadMemory(subMeta.ContentLength);
-        subMeta = stream.GetSubrecord();
+        subMeta = stream.GetSubrecordHeader();
         switch (subMeta.RecordTypeInt)
         {
             case 0x52524750: // "PGRR":

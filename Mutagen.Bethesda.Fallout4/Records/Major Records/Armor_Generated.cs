@@ -4635,7 +4635,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new ArmorBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
@@ -4808,7 +4808,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DAMA:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Resistances = BinaryOverlayList.FactoryByStartIndex<ArmorResistanceBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -4825,7 +4825,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.APPR:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.AttachParentSlots = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),

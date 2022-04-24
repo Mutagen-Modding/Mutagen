@@ -2229,7 +2229,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new NavigationMapInfoBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.MergedToEndingPos = 0x18 + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(0x18)) * 4 + 4;
             ret.PreferredMergesEndingPos = ret.MergedToEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.MergedToEndingPos)) * 4 + 4;

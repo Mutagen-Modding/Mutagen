@@ -45,7 +45,7 @@ partial class QuestAliasBinaryCreateTranslation
 {
     public static partial ParseResult FillBinaryIDParseCustom(MutagenFrame frame, IQuestAlias item, PreviousParse lastParsed)
     {
-        var subMeta = frame.ReadSubrecord();
+        var subMeta = frame.ReadSubrecordHeader();
         item.Type = subMeta.RecordTypeInt switch
         {
             // ALST
@@ -61,7 +61,7 @@ partial class QuestAliasBinaryCreateTranslation
     public static partial ParseResult FillBinaryEndCustom(MutagenFrame frame, IQuestAlias item, PreviousParse lastParsed)
     {
         // Skip
-        frame.ReadSubrecordFrame();
+        frame.ReadSubrecord();
         return lastParsed;
     }
 }
@@ -101,7 +101,7 @@ partial class QuestAliasBinaryOverlay
 
     public partial ParseResult IDParseCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
-        var subMeta = stream.ReadSubrecord();
+        var subMeta = stream.ReadSubrecordHeader();
         this.Type = subMeta.RecordTypeInt switch
         {
             // ALST
@@ -116,7 +116,7 @@ partial class QuestAliasBinaryOverlay
 
     public partial ParseResult EndCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
-        stream.ReadSubrecordFrame();
+        stream.ReadSubrecord();
         return lastParsed;
     }
 }

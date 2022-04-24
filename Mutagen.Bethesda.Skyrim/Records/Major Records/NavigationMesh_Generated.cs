@@ -1673,7 +1673,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XXXX:
                 {
-                    var overflowHeader = frame.ReadSubrecordFrame();
+                    var overflowHeader = frame.ReadSubrecord();
                     return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
@@ -1777,7 +1777,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new NavigationMeshBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
@@ -1845,7 +1845,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XXXX:
                 {
-                    var overflowHeader = stream.ReadSubrecordFrame();
+                    var overflowHeader = stream.ReadSubrecord();
                     return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:

@@ -13,7 +13,7 @@ partial class PatrolBinaryCreateTranslation
 {
     public static partial ParseResult FillBinaryPatrolScriptMarkerCustom(MutagenFrame frame, IPatrol item, PreviousParse lastParsed)
     {
-        if (frame.ReadSubrecordFrame().Content.Length != 0)
+        if (frame.ReadSubrecord().Content.Length != 0)
         {
             throw new ArgumentException($"Marker had unexpected length.");
         }
@@ -46,7 +46,7 @@ partial class PatrolBinaryOverlay
 
     public partial ParseResult PatrolScriptMarkerCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
-        if (stream.ReadSubrecordFrame().Content.Length != 0)
+        if (stream.ReadSubrecord().Content.Length != 0)
         {
             throw new ArgumentException($"Marker had unexpected length.");
         }

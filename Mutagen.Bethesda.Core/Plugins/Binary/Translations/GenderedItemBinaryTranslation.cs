@@ -86,7 +86,7 @@ internal class GenderedItemBinaryTranslation
         for (int i = 0; i < 2; i++)
         {
             if (frame.Reader.Complete) break;
-            var subHeader = frame.GetSubrecord();
+            var subHeader = frame.GetSubrecordHeader();
             RecordType type = subHeader.RecordType;
             if (type != maleMarker && type != femaleMarker)
             {
@@ -137,7 +137,7 @@ internal class GenderedItemBinaryTranslation
         for (int i = 0; i < 2; i++)
         {
             if (frame.Reader.Complete) break;
-            var subHeader = frame.GetSubrecord();
+            var subHeader = frame.GetSubrecordHeader();
             RecordType type = subHeader.RecordType;
             if (type != maleMarker && type != femaleMarker)
             {
@@ -190,7 +190,7 @@ internal class GenderedItemBinaryTranslation
         for (int i = 0; i < 2; i++)
         {
             if (frame.Reader.Complete) break;
-            var subHeader = frame.GetSubrecord();
+            var subHeader = frame.GetSubrecordHeader();
             RecordType type = subHeader.RecordType;
             if (type == maleMarker)
             {
@@ -229,14 +229,14 @@ internal class GenderedItemBinaryTranslation
         for (int i = 0; i < 2; i++)
         {
             if (frame.Reader.Complete) break;
-            var genderedHeader = frame.GetSubrecord();
+            var genderedHeader = frame.GetSubrecordHeader();
             RecordType type = genderedHeader.RecordType;
             if (type != maleMarker && type != femaleMarker)
             {
                 break;
             }
             frame.Position += genderedHeader.TotalLength;
-            var subHeader = frame.GetSubrecord();
+            var subHeader = frame.GetSubrecordHeader();
             if (contentMarker != subHeader.RecordType)
             {
                 break;
@@ -287,11 +287,11 @@ internal class GenderedItemBinaryTranslation
         for (int i = 0; i < 2; i++)
         {
             if (frame.Reader.Complete) break;
-            var markerHeader = frame.GetSubrecord();
+            var markerHeader = frame.GetSubrecordHeader();
             if (markerHeader.RecordType != marker) break;
             frame.Position += markerHeader.TotalLength;
 
-            var genderedHeader = frame.GetSubrecord();
+            var genderedHeader = frame.GetSubrecordHeader();
             RecordType type = genderedHeader.RecordType;
             if (type != maleMarker && type != femaleMarker)
             {

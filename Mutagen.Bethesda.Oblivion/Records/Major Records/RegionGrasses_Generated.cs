@@ -1338,7 +1338,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.RDGS:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Grasses = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IGrassGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),

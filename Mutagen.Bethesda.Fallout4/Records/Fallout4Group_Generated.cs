@@ -1509,7 +1509,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new Fallout4GroupBinaryOverlay<T>(
                 bytes: HeaderTranslation.ExtractGroupMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetGroup().TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetGroupHeader().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.GroupConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.MetaData.Constants.GroupConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(

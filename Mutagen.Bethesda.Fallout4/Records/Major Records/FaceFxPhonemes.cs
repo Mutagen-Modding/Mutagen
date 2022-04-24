@@ -265,7 +265,7 @@ partial class FaceFxPhonemesBinaryCreateTranslation
 
     public static ParseResult ParseFaceFxPhonemes(MutagenFrame frame, IFaceFxPhonemes item)
     {
-        var meta = frame.Reader.GetSubrecord();
+        var meta = frame.Reader.GetSubrecordHeader();
         IReadOnlyList<(Target Target, string Name)>? targets;
 
         if (meta.RecordType == RecordTypes.PHTN)
@@ -283,14 +283,14 @@ partial class FaceFxPhonemesBinaryCreateTranslation
                 targets.Add((target, name));
             }
 
-            var subFrame = frame.Reader.GetSubrecordFrame();
+            var subFrame = frame.Reader.GetSubrecord();
             int i = 0;
             while (subFrame.RecordType == RecordTypes.PHTN)
             {
                 var str = BinaryStringUtility.ProcessWholeToZString(subFrame.Content, frame.MetaData.Encodings.NonTranslated);
                 Add(targetAccumulation, (Target)i++, str);
                 frame.Position += subFrame.TotalLength;
-                if (!frame.Reader.TryGetSubrecordFrame(out subFrame)) break;
+                if (!frame.Reader.TryGetSubrecord(out subFrame)) break;
             }
 
             item.ForceNames = true;
@@ -309,7 +309,7 @@ partial class FaceFxPhonemesBinaryCreateTranslation
         ReadOnlyMemorySlice<byte>[] slots = new ReadOnlyMemorySlice<byte>[SlotSize];
         for (int i = 0; i < SlotSize; i++)
         {
-            var subMetaFrame = frame.Reader.ReadSubrecordFrame(RecordTypes.PHWT);
+            var subMetaFrame = frame.Reader.ReadSubrecord(RecordTypes.PHWT);
             var content = subMetaFrame.Content;
             if (expectedSize == null)
             {

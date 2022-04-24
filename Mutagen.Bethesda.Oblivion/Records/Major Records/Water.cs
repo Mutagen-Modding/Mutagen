@@ -58,7 +58,7 @@ partial class WaterBinaryCreateTranslation
 {
     public static WaterData CreateCustom(MutagenFrame frame)
     {
-        var subHeader = frame.GetSubrecord();
+        var subHeader = frame.GetSubrecordHeader();
 
         if (subHeader.ContentLength == 2)
         {

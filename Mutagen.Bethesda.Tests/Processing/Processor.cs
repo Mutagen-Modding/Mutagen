@@ -191,7 +191,7 @@ public abstract class Processor
             using (var stream = streamGetter())
             {
                 stream.Position = loc.Key;
-                frame = stream.ReadMajorRecordFrame(readSafe: true);
+                frame = stream.ReadMajorRecord(readSafe: true);
             }
             if (procs != null)
             {
@@ -363,7 +363,7 @@ public abstract class Processor
         }
 
         stream.Position = recordLoc;
-        var majorMeta = stream.ReadMajorRecord();
+        var majorMeta = stream.ReadMajorRecordHeader();
         byte[] lenData = new byte[2];
         BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(majorMeta.ContentLength + amount));
         _instructions.SetSubstitution(
@@ -373,7 +373,7 @@ public abstract class Processor
         if (subRecordLoc != null)
         {
             stream.Position = subRecordLoc.Value;
-            var subMeta = stream.ReadSubrecord();
+            var subMeta = stream.ReadSubrecordHeader();
             lenData = new byte[2];
             BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(subMeta.ContentLength + amount));
             _instructions.SetSubstitution(
@@ -520,7 +520,7 @@ public abstract class Processor
         foreach (var loc in _alignedFileLocs.GrupLocations.Keys)
         {
             stream.Position = loc;
-            var groupMeta = stream.ReadGroup();
+            var groupMeta = stream.ReadGroupHeader();
             if (groupMeta.ContentLength != 0 || groupMeta.GroupType != 0) continue;
             _instructions.SetRemove(RangeInt64.FromLength(loc, groupMeta.HeaderLength));
         }
@@ -593,7 +593,7 @@ public abstract class Processor
             IStringsLookup overlay)
         {
             var loc = stream.Position;
-            var sub = stream.ReadSubrecord();
+            var sub = stream.ReadSubrecordHeader();
             if (sub.ContentLength != 4)
             {
                 throw new ArgumentException();
@@ -642,7 +642,7 @@ public abstract class Processor
             var majorCompletePos = stream.Position + major.ContentLength;
             while (stream.Position < majorCompletePos)
             {
-                var sub = stream.GetSubrecord();
+                var sub = stream.GetSubrecordHeader();
                 if (StringTypes.Contains(sub.RecordType))
                 {
                     ProcessStringLink(stream, processedStrings, overlay);
@@ -767,7 +767,7 @@ public abstract class Processor
         foreach (var rec in locs.ListedRecords)
         {
             stream.Position = rec.Key;
-            var major = stream.ReadMajorRecord();
+            var major = stream.ReadMajorRecordHeader();
             if (!dict.TryGetValue(major.RecordType, out var instructions))
             {
                 continue;
@@ -791,10 +791,10 @@ public abstract class Processor
         List<RangeInt64> removes = new List<RangeInt64>();
         stream.Position = fileOffset;
         // Skip Major Record
-        var majorHeader = stream.ReadMajorRecord();
+        var majorHeader = stream.ReadMajorRecordHeader();
         stream.Position += majorHeader.ContentLength;
         var blockGroupPos = stream.Position;
-        if (!stream.TryReadGroup(out var blockGroup)) return;
+        if (!stream.TryReadGroupHeader(out var blockGroup)) return;
         var blockGrupType = blockGroup.GroupType;
         if (blockGrupType != stream.MetaData.Constants.GroupConstants.Cell.TopGroupType) return;
         if (blockGroup.ContentLength == 0)
@@ -807,7 +807,7 @@ public abstract class Processor
             for (int i = 0; i < numSubGroups; i++)
             {
                 var subBlockGroupPos = stream.Position;
-                if (!stream.TryReadGroup(out var subBlockGroup)) break;
+                if (!stream.TryReadGroupHeader(out var subBlockGroup)) break;
                 if (!stream.MetaData.Constants.GroupConstants.Cell.SubTypes.Contains(subBlockGroup.GroupType))
                 {
                     goto Break;
@@ -850,10 +850,10 @@ public abstract class Processor
         List<RangeInt64> removes = new List<RangeInt64>();
         stream.Position = fileOffset;
         // Skip Major Record
-        var majorHeader = stream.ReadMajorRecord();
+        var majorHeader = stream.ReadMajorRecordHeader();
         stream.Position += majorHeader.ContentLength;
         var blockGroupPos = stream.Position;
-        if (!stream.TryReadGroup(out var blockGroup)) return;
+        if (!stream.TryReadGroupHeader(out var blockGroup)) return;
         var blockGrupType = blockGroup.GroupType;
         if (blockGrupType != stream.MetaData.Constants.GroupConstants.Topic.TopGroupType) return;
         if (blockGroup.ContentLength == 0)

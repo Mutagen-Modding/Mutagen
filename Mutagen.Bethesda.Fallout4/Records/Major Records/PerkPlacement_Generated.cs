@@ -1167,7 +1167,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new PerkPlacementBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x5 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(

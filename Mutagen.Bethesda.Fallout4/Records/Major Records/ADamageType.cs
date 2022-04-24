@@ -10,7 +10,7 @@ public partial class ADamageType
         MutagenFrame frame,
         TypedParseParams? translationParams)
     {
-        var majorMeta = frame.GetMajorRecordFrame();
+        var majorMeta = frame.GetMajorRecord();
         if (majorMeta.FormVersion >= 78)
         {
             return DamageType.CreateFromBinary(frame, translationParams); 

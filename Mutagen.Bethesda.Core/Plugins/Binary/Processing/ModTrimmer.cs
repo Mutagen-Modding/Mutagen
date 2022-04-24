@@ -45,7 +45,7 @@ public class ModTrimmer
         
         while (!inputStream.Complete)
         {
-            var groupMeta = inputStream.GetGroup(readSafe: true);
+            var groupMeta = inputStream.GetGroupHeader(readSafe: true);
             if (interest.IsInterested(groupMeta.ContainedRecordType))
             {
                 inputStream.WriteTo(outputStream, checked((int)groupMeta.TotalLength));

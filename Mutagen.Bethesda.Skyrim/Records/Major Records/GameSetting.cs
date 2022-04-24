@@ -20,7 +20,7 @@ public partial class GameSetting : IGameSettingCommon
         MutagenFrame frame,
         TypedParseParams? translationParams = null)
     {
-        var majorMeta = frame.GetMajorRecord();
+        var majorMeta = frame.GetMajorRecordHeader();
         var settingType = GameSettingUtility.GetGameSettingType(frame.GetMemory(checked((int)majorMeta.TotalLength)), frame.MetaData.Constants);
         if (settingType.Failed)
         {

@@ -1479,7 +1479,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.TNAM:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MapMarker_FieldIndex.Types) return ParseResult.Stop;
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Types = BinaryOverlayList.FactoryByStartIndex<MapMarker.Type>(
                         mem: stream.RemainingMemory.Slice(0, subLen),

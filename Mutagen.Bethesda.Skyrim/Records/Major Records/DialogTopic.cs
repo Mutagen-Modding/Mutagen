@@ -147,7 +147,7 @@ partial class DialogTopicBinaryCreateTranslation
         try
         {
             if (frame.Reader.Complete) return;
-            if (!frame.TryGetGroup(out var groupMeta)) return;
+            if (!frame.TryGetGroupHeader(out var groupMeta)) return;
             if (groupMeta.GroupType == (int)GroupTypeEnum.TopicChildren)
             {
                 obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
@@ -180,7 +180,7 @@ partial class DialogTopicBinaryCreateTranslation
     public static partial ParseResult FillBinaryResponseCountCustom(MutagenFrame frame, IDialogTopicInternal item)
     {
         // Skip counter
-        frame.ReadSubrecordFrame();
+        frame.ReadSubrecord();
         return null;
     }
 }
@@ -255,7 +255,7 @@ partial class DialogTopicBinaryOverlay
         {
             if (stream.Complete) return;
             var startPos = stream.Position;
-            if (!stream.TryGetGroup(out var groupMeta)) return;
+            if (!stream.TryGetGroupHeader(out var groupMeta)) return;
             if (groupMeta.GroupType != (int)GroupTypeEnum.TopicChildren) return;
             this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
             var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));

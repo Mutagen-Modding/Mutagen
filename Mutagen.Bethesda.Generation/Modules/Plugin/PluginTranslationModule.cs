@@ -911,7 +911,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         fg.AppendLine($"case RecordTypeInts.{data.EndMarkerType}: // End Marker");
                         using (new BraceWrapper(fg))
                         {
-                            fg.AppendLine($"{ReaderMemberName}.ReadSubrecordFrame();");
+                            fg.AppendLine($"{ReaderMemberName}.ReadSubrecord();");
                             fg.AppendLine($"return {nameof(ParseResult)}.Stop;");
                         }
                     }
@@ -1072,7 +1072,7 @@ public class PluginTranslationModule : BinaryTranslationModule
 
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"var overflowHeader = {streamAccessor}.ReadSubrecordFrame();");
+                fg.AppendLine($"var overflowHeader = {streamAccessor}.ReadSubrecord();");
                 fg.AppendLine(
                     $"return {nameof(ParseResult)}.{nameof(ParseResult.OverrideLength)}(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));");
             }
@@ -1541,7 +1541,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         fg.AppendLine($"case RecordTypeInts.{endMarkerType}: // End Marker");
                         using (new BraceWrapper(fg))
                         {
-                            fg.AppendLine($"stream.ReadSubrecordFrame();");
+                            fg.AppendLine($"stream.ReadSubrecord();");
                             fg.AppendLine($"return {nameof(ParseResult)}.Stop;");
                         }
                     }
@@ -2219,7 +2219,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                     if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
                     {
-                        fg.AppendLine($"var nextRecord = parseParams.ConvertToCustom(stream.Get{(obj.GetObjectType() == ObjectType.Subrecord ? "Subrecord" : "MajorRecord")}().RecordType);");
+                        fg.AppendLine($"var nextRecord = parseParams.ConvertToCustom(stream.Get{(obj.GetObjectType() == ObjectType.Subrecord ? "SubrecordHeader" : "MajorRecordHeader")}().RecordType);");
                         fg.AppendLine($"switch (nextRecord.TypeInt)");
                         using (new BraceWrapper(fg))
                         {
@@ -2308,15 +2308,15 @@ public class PluginTranslationModule : BinaryTranslationModule
                         switch (obj.GetObjectType())
                         {
                             case ObjectType.Subrecord:
-                                fg.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));");
+                                fg.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));");
                                 fg.AppendLine($"int offset = stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength;");
                                 break;
                             case ObjectType.Record:
-                                fg.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));");
+                                fg.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));");
                                 fg.AppendLine($"int offset = stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.MajorConstants.TypeAndLengthLength;");
                                 break;
                             case ObjectType.Group:
-                                fg.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetGroup().TotalLength));");
+                                fg.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetGroupHeader().TotalLength));");
                                 fg.AppendLine($"int offset = stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.GroupConstants.TypeAndLengthLength;");
                                 break;
                             case ObjectType.Mod:

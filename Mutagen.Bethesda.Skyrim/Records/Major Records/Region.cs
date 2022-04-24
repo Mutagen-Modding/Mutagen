@@ -68,18 +68,18 @@ partial class RegionBinaryCreateTranslation
 
     static void ParseRegionData(MutagenFrame frame, IRegionInternal item)
     {
-        var rdatFrame = frame.Reader.GetSubrecordFrame();
+        var rdatFrame = frame.Reader.GetSubrecord();
         int len = rdatFrame.TotalLength;
         RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
 
-        if (frame.Reader.TryGetSubrecord(out var subMeta, offset: len))
+        if (frame.Reader.TryGetSubrecordHeader(out var subMeta, offset: len))
         {
             var recType = subMeta.RecordType;
             if (recType == RecordTypes.ICON)
             {
                 len += subMeta.TotalLength;
                 // Skip icon subrecord for now
-                subMeta = frame.Reader.GetSubrecord(offset: rdatFrame.TotalLength + subMeta.TotalLength);
+                subMeta = frame.Reader.GetSubrecordHeader(offset: rdatFrame.TotalLength + subMeta.TotalLength);
             }
             if (IsExpected(dataType, recType))
             {
@@ -99,7 +99,7 @@ partial class RegionBinaryCreateTranslation
                 item.Grasses = RegionGrasses.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
                 break;
             case RegionData.RegionDataType.Sound:
-                if (frame.Reader.TryGetSubrecord(out var nextRec, offset: len)
+                if (frame.Reader.TryGetSubrecordHeader(out var nextRec, offset: len)
                     && (nextRec.RecordType.Equals(RDSA) || nextRec.RecordType.Equals(RDMO)))
                 {
                     len += nextRec.TotalLength;
@@ -155,12 +155,12 @@ partial class RegionBinaryOverlay : IRegionGetter
         OverlayStream stream,
         int offset)
     {
-        var rdat = stream.GetSubrecord();
+        var rdat = stream.GetSubrecordHeader();
         while (rdat.RecordType.Equals(RecordTypes.RDAT))
         {
             ParseRegionData(stream, offset);
             if (stream.Complete) break;
-            rdat = stream.GetSubrecord();
+            rdat = stream.GetSubrecordHeader();
         }
 
         return null;
@@ -169,19 +169,19 @@ partial class RegionBinaryOverlay : IRegionGetter
     private void ParseRegionData(OverlayStream stream, int offset)
     {
         int loc = stream.Position - offset;
-        var rdatFrame = stream.ReadSubrecordFrame();
+        var rdatFrame = stream.ReadSubrecord();
         RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
         var len = rdatFrame.TotalLength;
         if (!stream.Complete)
         {
-            var contentMeta = stream.GetSubrecord();
+            var contentMeta = stream.GetSubrecordHeader();
             var recType = contentMeta.RecordType;
             if (recType == RecordTypes.ICON)
             {
                 var totalLen = contentMeta.TotalLength;
                 len += totalLen;
                 // Skip icon subrecord for now
-                contentMeta = stream.GetSubrecord(offset: rdatFrame.TotalLength + totalLen);
+                contentMeta = stream.GetSubrecordHeader(offset: rdatFrame.TotalLength + totalLen);
             }
             if (RegionBinaryCreateTranslation.IsExpected(dataType, contentMeta.RecordType))
             {
@@ -204,7 +204,7 @@ partial class RegionBinaryOverlay : IRegionGetter
                 _LandSpan = this._data.Slice(loc, len);
                 break;
             case RegionData.RegionDataType.Sound:
-                if (stream.TryGetSubrecord(out var nextRec)
+                if (stream.TryGetSubrecordHeader(out var nextRec)
                     && (nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDSA)
                         || nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDMO)))
                 {

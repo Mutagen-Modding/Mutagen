@@ -78,7 +78,7 @@ partial class StaticBinaryCreateTranslation
     public static int ReadHeader<T>(T frame)
         where T : IMutagenReadStream
     {
-        var subRec = frame.ReadSubrecord(RecordTypes.MNAM);
+        var subRec = frame.ReadSubrecordHeader(RecordTypes.MNAM);
         var len = subRec.ContentLength;
         var amount = len / 260;
         var over = len % 260;

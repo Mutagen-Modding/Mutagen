@@ -19,7 +19,7 @@ partial class ObjectTemplateBinaryCreateTranslation<T>
     public static partial ParseResult FillBinaryOBTSLogicCustom(MutagenFrame frame, IObjectTemplate<T> item,
         PreviousParse lastParsed)
     {
-        frame.ReadSubrecord(RecordTypes.OBTS);
+        frame.ReadSubrecordHeader(RecordTypes.OBTS);
         var includeCount = frame.ReadUInt32();
         var propertyCount = frame.ReadUInt32();
         item.LevelMin = frame.ReadUInt8();
@@ -238,7 +238,7 @@ partial class ObjectTemplateBinaryOverlay<T>
     {
         _obtsLoc = (stream.Position - offset) + stream.MetaData.Constants.SubConstants.HeaderLength;
         _keywordCount = _data[_obtsLoc.Value + 15];
-        stream.ReadSubrecordFrame(RecordTypes.OBTS);
+        stream.ReadSubrecord(RecordTypes.OBTS);
         Keywords = BinaryOverlayList.FactoryByStartIndex(
             _data.Slice(_obtsLoc.Value + 16, _keywordCount!.Value * 4),
             _package,

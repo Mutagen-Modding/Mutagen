@@ -11,7 +11,7 @@ partial class WorldspaceObjectBoundsBinaryCreateTranslation
 {
     public static partial void FillBinaryMaxCustom(MutagenFrame frame, IWorldspaceObjectBounds item)
     {
-        var subHeader = frame.ReadSubrecord();
+        var subHeader = frame.ReadSubrecordHeader();
         if (subHeader.ContentLength != 8)
         {
             throw new ArgumentException("Unexpected length");
@@ -23,7 +23,7 @@ partial class WorldspaceObjectBoundsBinaryCreateTranslation
 
     public static partial void FillBinaryMinCustom(MutagenFrame frame, IWorldspaceObjectBounds item)
     {
-        var subHeader = frame.ReadSubrecord();
+        var subHeader = frame.ReadSubrecordHeader();
         if (subHeader.ContentLength != 8)
         {
             throw new ArgumentException("Unexpected length");

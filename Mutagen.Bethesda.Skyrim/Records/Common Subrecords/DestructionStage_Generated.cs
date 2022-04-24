@@ -1247,7 +1247,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DSTF: // End Marker
                 {
-                    frame.ReadSubrecordFrame();
+                    frame.ReadSubrecord();
                     return ParseResult.Stop;
                 }
                 default:
@@ -1398,7 +1398,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DSTF: // End Marker
                 {
-                    stream.ReadSubrecordFrame();
+                    stream.ReadSubrecord();
                     return ParseResult.Stop;
                 }
                 default:

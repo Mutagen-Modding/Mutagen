@@ -67,7 +67,7 @@ partial class LeveledItemBinaryOverlay
 
     public partial ParseResult VestigialCustomParse(OverlayStream stream, int offset)
     {
-        var subMeta = stream.ReadSubrecord();
+        var subMeta = stream.ReadSubrecordHeader();
         if (subMeta.ContentLength != 1)
         {
             throw new ArgumentException($"Unexpected length: {subMeta.ContentLength}");

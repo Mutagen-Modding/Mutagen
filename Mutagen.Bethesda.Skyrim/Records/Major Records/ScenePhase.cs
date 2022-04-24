@@ -17,7 +17,7 @@ partial class ScenePhaseBinaryCreateTranslation
 
     public static partial void FillBinaryCompletionConditionsCustom(MutagenFrame frame, IScenePhase item)
     {
-        frame.ReadSubrecordFrame();
+        frame.ReadSubrecord();
         ConditionBinaryCreateTranslation.FillConditionsList(item.CompletionConditions, frame);
     }
 }
@@ -49,7 +49,7 @@ partial class ScenePhaseBinaryOverlay
 
     partial void CompletionConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
-        stream.ReadSubrecordFrame();
+        stream.ReadSubrecord();
         CompletionConditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
     }
 }

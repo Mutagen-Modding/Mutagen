@@ -46,7 +46,7 @@ partial class CellBinaryCreateTranslation
     private static void CustomBinaryEnd(MutagenFrame frame, ICellInternal obj)
     {
         if (frame.Reader.Complete) return;
-        if (!frame.TryGetGroup(out var groupMeta)) return;
+        if (!frame.TryGetGroupHeader(out var groupMeta)) return;
         var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
         if (groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
         {
@@ -64,7 +64,7 @@ partial class CellBinaryCreateTranslation
         var subFrame = frame.SpawnWithLength(groupMeta.ContentLength);
         while (!subFrame.Complete)
         {
-            var persistGroupMeta = frame.GetGroup();
+            var persistGroupMeta = frame.GetGroupHeader();
             if (!persistGroupMeta.IsGroup)
             {
                 throw new ArgumentException();
@@ -104,7 +104,7 @@ partial class CellBinaryCreateTranslation
         IList<IPlaced> coll,
         bool persistentParse)
     {
-        var groupMeta = frame.ReadGroup();
+        var groupMeta = frame.ReadGroupHeader();
         var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
         if (formKey != obj.FormKey)
         {
@@ -142,7 +142,7 @@ partial class CellBinaryCreateTranslation
 
     static bool ParseTemporaryOutliers(MutagenFrame frame, ICellInternal obj)
     {
-        var majorMeta = frame.GetMajorRecord();
+        var majorMeta = frame.GetMajorRecordHeader();
         var nextHeader = majorMeta.RecordType;
         if (nextHeader.Equals(RecordTypes.PGRD))
         {
@@ -163,7 +163,7 @@ partial class CellBinaryCreateTranslation
 
     static void ParseTemporary(MutagenFrame frame, ICellInternal obj)
     {
-        var groupMeta = frame.ReadGroup();
+        var groupMeta = frame.ReadGroupHeader();
         var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
         if (formKey != obj.FormKey)
         {
@@ -326,12 +326,12 @@ partial class CellBinaryOverlay
         var startingPos = stream.Position;
         while (!stream.Complete)
         {
-            var cellMeta = stream.GetMajorRecord();
+            var cellMeta = stream.GetMajorRecordHeader();
             if (cellMeta.RecordType != RecordTypes.CELL) break;
             ret.Add(stream.Position - startingPos);
             stream.Position += (int)cellMeta.TotalLength;
             if (stream.Complete) break;
-            if (!stream.TryGetGroup(out var groupFrame)) continue;
+            if (!stream.TryGetGroupHeader(out var groupFrame)) continue;
             if (groupFrame.GroupType == (int)GroupTypeEnum.CellChildren)
             {
                 stream.Position += (int)groupFrame.TotalLength;
@@ -346,7 +346,7 @@ partial class CellBinaryOverlay
         {
             if (stream.Complete) return;
             var startPos = stream.Position;
-            if (!stream.TryGetGroup(out var groupMeta)) return;
+            if (!stream.TryGetGroupHeader(out var groupMeta)) return;
             var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
             if (groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
             {
@@ -365,7 +365,7 @@ partial class CellBinaryOverlay
             while (!stream.Complete)
             {
                 var subGroupLocation = stream.Position;
-                var subGroupMeta = stream.ReadGroup();
+                var subGroupMeta = stream.ReadGroupHeader();
                 if (!subGroupMeta.IsGroup)
                 {
                     throw new ArgumentException();
@@ -416,7 +416,7 @@ partial class CellBinaryOverlay
                         var contentSpan = stream.GetMemory(checked((int)subGroupMeta.ContentLength));
                         while (stream.Position < endPos)
                         {
-                            var majorMeta = stream.GetMajorRecord();
+                            var majorMeta = stream.GetMajorRecordHeader();
                             var recType = majorMeta.RecordType;
                             if (TypicalPlacedTypes.TriggeringRecordTypes.Contains(recType))
                             {

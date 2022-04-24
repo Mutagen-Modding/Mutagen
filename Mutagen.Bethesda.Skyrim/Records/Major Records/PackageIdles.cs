@@ -33,7 +33,7 @@ partial class PackageIdlesBinaryCreateTranslation
         byte? count = null;
         for (int i = 0; i < 3; i++)
         {
-            var subRecord = frame.GetSubrecordFrame();
+            var subRecord = frame.GetSubrecord();
             if (subRecord.RecordType == RecordTypes.IDLC)
             {
                 // Counter start
@@ -133,7 +133,7 @@ partial class PackageIdlesBinaryOverlay
         byte? count = null;
         for (int i = 0; i < 3; i++)
         {
-            var subRecord = stream.GetSubrecordFrame();
+            var subRecord = stream.GetSubrecord();
             if (subRecord.RecordType == RecordTypes.IDLC)
             {
                 // Counter start
@@ -160,7 +160,7 @@ partial class PackageIdlesBinaryOverlay
                 }
                 else
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = subMeta.ContentLength;
                     this.Animations = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IIdleAnimationGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),

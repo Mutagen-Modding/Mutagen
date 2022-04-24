@@ -67,7 +67,7 @@ partial class WorldspaceBinaryCreateTranslation
     {
         try
         {
-            if (!frame.Reader.TryReadGroup(out var groupHeader)) return;
+            if (!frame.Reader.TryReadGroupHeader(out var groupHeader)) return;
             if (groupHeader.GroupType == (int)GroupTypeEnum.WorldChildren)
             {
                 obj.SubCellsTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupHeader.LastModifiedData);
@@ -133,7 +133,7 @@ partial class WorldspaceBinaryOverlay
         try
         {
             if (stream.Complete) return;
-            var groupMeta = stream.GetGroup();
+            var groupMeta = stream.GetGroupHeader();
             if (!groupMeta.IsGroup || groupMeta.GroupType != (int)GroupTypeEnum.WorldChildren) return;
 
             if (this.FormKey != Mutagen.Bethesda.Plugins.FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)))
@@ -160,7 +160,7 @@ partial class WorldspaceBinaryOverlay
                         stream.Position += checked((int)varMeta.TotalLength);
                         if (!stream.Complete)
                         {
-                            var subCellGroup = stream.GetGroup();
+                            var subCellGroup = stream.GetGroupHeader();
                             if (subCellGroup.IsGroup && subCellGroup.GroupType == (int)GroupTypeEnum.CellChildren)
                             {
                                 stream.Position += checked((int)subCellGroup.TotalLength);

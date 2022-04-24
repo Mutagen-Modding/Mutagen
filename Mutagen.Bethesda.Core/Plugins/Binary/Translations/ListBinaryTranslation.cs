@@ -33,7 +33,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
             MutagenFrame subFrame;
             if (!IsLoqui)
             {
-                var subHeader = reader.ReadSubrecord();
+                var subHeader = reader.ReadSubrecordHeader();
                 subFrame = reader.ReadAndReframe(subHeader.ContentLength);
             }
             else
@@ -69,7 +69,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
             MutagenFrame subFrame;
             if (!IsLoqui)
             {
-                var subHeader = reader.ReadSubrecord();
+                var subHeader = reader.ReadSubrecordHeader();
                 subFrame = reader.ReadAndReframe(subHeader.ContentLength);
             }
             else
@@ -165,7 +165,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         triggeringRecord = translationParams.ConvertToCustom(triggeringRecord);
         while (!reader.Complete && !reader.Reader.Complete)
         {
-            if (!reader.Reader.TryGetSubrecord(triggeringRecord, out var header)) break;
+            if (!reader.Reader.TryGetSubrecordHeader(triggeringRecord, out var header)) break;
             if (!IsLoqui || skipHeader)
             {
                 reader.Position += header.HeaderLength;
@@ -356,7 +356,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         TypedParseParams? translationParams = null)
     {
         if (amount == 0) return new ExtendedList<T>();
-        var subHeader = reader.GetSubrecord();
+        var subHeader = reader.GetSubrecordHeader();
         if (subHeader.RecordType != triggeringRecord)
         {
             throw SubrecordException.Enrich(
@@ -393,7 +393,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         BinaryMasterParseDelegate<T> transl,
         TypedParseParams? translationParams = null)
     {
-        var subHeader = reader.GetSubrecordFrame();
+        var subHeader = reader.GetSubrecord();
         var recType = subHeader.RecordType;
         if (recType == countRecord)
         {
@@ -433,7 +433,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
 
         // Don't return early if count is zero, as we're expecting one content record still that is empty
         // But still okay if it doesn't exist
-        var subHeader = reader.GetSubrecord();
+        var subHeader = reader.GetSubrecordHeader();
         if (subHeader.RecordType != triggeringRecord)
         {
             if (amount == 0) return Enumerable.Empty<T>();
@@ -471,7 +471,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         BinarySubParseDelegate<MutagenFrame, T> transl,
         bool nullIfZero = false)
     {
-        var subHeader = reader.GetSubrecordFrame();
+        var subHeader = reader.GetSubrecord();
         var recType = subHeader.RecordType;
         if (recType == countRecord)
         {
@@ -511,7 +511,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         var startingPos = reader.Position;
         for (int i = 0; i < amount; i++)
         {
-            var subHeader = reader.GetSubrecord();
+            var subHeader = reader.GetSubrecordHeader();
             if (subHeader.RecordType != triggeringRecord)
             {
                 // Unexpected, but shouldn't throw if we can help it
@@ -544,7 +544,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         BinaryMasterParseDelegate<T> transl,
         TypedParseParams? translationParams = null)
     {
-        var subHeader = reader.GetSubrecordFrame();
+        var subHeader = reader.GetSubrecord();
         var recType = subHeader.RecordType;
         if (recType == countRecord)
         {
@@ -584,7 +584,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         var startingPos = reader.Position;
         for (int i = 0; i < amount; i++)
         {
-            var subHeader = reader.GetSubrecord();
+            var subHeader = reader.GetSubrecordHeader();
             if (subHeader.RecordType != triggeringRecord)
             {
                 throw SubrecordException.Enrich(
@@ -616,7 +616,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         int countLengthLength,
         BinarySubParseDelegate<MutagenFrame, T> transl)
     {
-        var subHeader = reader.GetSubrecordFrame();
+        var subHeader = reader.GetSubrecord();
         var recType = subHeader.RecordType;
         if (recType == countRecord)
         {
@@ -652,7 +652,7 @@ internal class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, M
         TypedParseParams? translationParams = null,
         bool nullIfZero = true)
     {
-        var subHeader = reader.GetSubrecordFrame();
+        var subHeader = reader.GetSubrecord();
         var recType = subHeader.RecordType;
         if (recType == countRecord)
         {

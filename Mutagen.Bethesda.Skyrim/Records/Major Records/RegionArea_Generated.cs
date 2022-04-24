@@ -1355,7 +1355,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.RPLD:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RegionArea_FieldIndex.RegionPointListData) return ParseResult.Stop;
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.RegionPointListData = BinaryOverlayList.FactoryByStartIndex<P2Float>(
                         mem: stream.RemainingMemory.Slice(0, subLen),

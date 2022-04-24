@@ -2377,7 +2377,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new LandscapeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
@@ -2425,7 +2425,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.VNML:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     this.VertexNormals = BinaryOverlayArray2d.Factory<P3UInt8>(
                         mem: stream.RemainingMemory.Slice(0, subMeta.ContentLength),
                         package: _package,
@@ -2441,7 +2441,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.VCLR:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     this.VertexColors = BinaryOverlayArray2d.Factory<P3UInt8>(
                         mem: stream.RemainingMemory.Slice(0, subMeta.ContentLength),
                         package: _package,
@@ -2473,7 +2473,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.VTEX:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Textures = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILandscapeTextureGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),

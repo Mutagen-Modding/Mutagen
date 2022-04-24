@@ -60,7 +60,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         stream.Position = (int)headerMeta.TotalLength;
         while (!stream.Complete)
         {
-            GroupHeader groupMeta = stream.GetGroup(package);
+            GroupHeader groupMeta = stream.GetGroupHeader(package);
             if (!groupMeta.IsGroup)
             {
                 throw new ArgumentException("Did not see GRUP header as expected.");
@@ -94,7 +94,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         Dictionary<RecordType, int>? recordParseCount = null;
         while (!stream.Complete && stream.Position < finalPos)
         {
-            MajorRecordHeader majorMeta = stream.GetMajorRecord();
+            MajorRecordHeader majorMeta = stream.GetMajorRecordHeader();
             try
             {
                 var minimumFinalPos = stream.Position + majorMeta.TotalLength;
@@ -148,7 +148,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         Dictionary<RecordType, int>? recordParseCount = null;
         while (!stream.Complete && stream.Position < finalPos)
         {
-            if (!stream.TryGetGroup(out var groupMeta))
+            if (!stream.TryGetGroupHeader(out var groupMeta))
             {
                 throw new DataMisalignedException();
             }
@@ -189,7 +189,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         {
             try
             {
-                SubrecordHeader subMeta = stream.GetSubrecord();
+                SubrecordHeader subMeta = stream.GetSubrecordHeader();
                 lastParsedType = subMeta.RecordType;
                 var minimumFinalPos = stream.Position;
                 if (lastParsed.LengthOverride.HasValue)
@@ -266,7 +266,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         Dictionary<RecordType, int>? recordParseCount = null;
         while (!stream.Complete && stream.Position < finalPos)
         {
-            SubrecordHeader subMeta = stream.GetSubrecord();
+            SubrecordHeader subMeta = stream.GetSubrecordHeader();
             var minimumFinalPos = stream.Position + subMeta.TotalLength;
             var parsed = fill(
                 stream: stream,
@@ -610,7 +610,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         var ret = new List<T>();
         while (!stream.Complete)
         {
-            var subMeta = stream.GetSubrecord();
+            var subMeta = stream.GetSubrecordHeader();
             var recType = subMeta.RecordType;
             if (!trigger.TriggeringRecordTypes.Contains(recType)) break;
             var minimumFinalPos = stream.Position + subMeta.TotalLength;
@@ -645,7 +645,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         var ret = new List<T>();
         while (!stream.Complete)
         {
-            var subMeta = stream.GetSubrecord();
+            var subMeta = stream.GetSubrecordHeader();
             var recType = subMeta.RecordType;
             if (trigger != recType) break;
             var minimumFinalPos = stream.Position + subMeta.TotalLength;
@@ -668,7 +668,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         var ret = new List<T>();
         while (!stream.Complete)
         {
-            var subMeta = stream.GetSubrecord();
+            var subMeta = stream.GetSubrecordHeader();
             var recType = subMeta.RecordType;
             if (trigger != recType) break;
             var minimumFinalPos = stream.Position + subMeta.TotalLength;

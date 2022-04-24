@@ -103,7 +103,7 @@ internal static class PluginUtilityTranslation
             var lastParsed = new PreviousParse();
             while (!targetFrame.Complete)
             {
-                var subMeta = targetFrame.GetSubrecord();
+                var subMeta = targetFrame.GetSubrecordHeader();
                 var finalPos = targetFrame.Position + subMeta.TotalLength;
                 ParseResult parsed;
                 try
@@ -184,7 +184,7 @@ internal static class PluginUtilityTranslation
         var previousParse = new PreviousParse();
         while (!frame.Complete)
         {
-            var subMeta = frame.GetSubrecord();
+            var subMeta = frame.GetSubrecordHeader();
             var finalPos = frame.Position + subMeta.TotalLength;
             var parsed = fillTyped(
                 record: record,
@@ -243,7 +243,7 @@ internal static class PluginUtilityTranslation
         Dictionary<RecordType, int>? recordParseCount = null;
         while (!frame.Complete)
         {
-            var subMeta = frame.GetSubrecord();
+            var subMeta = frame.GetSubrecordHeader();
             var finalPos = frame.Position + subMeta.TotalLength;
             var parsed = fillTyped(
                 record: record,
@@ -283,7 +283,7 @@ internal static class PluginUtilityTranslation
         RecordStructFill<G> fillStructs,
         RecordTypeFill<G> fillTyped)
     {
-        var groupMeta = frame.GetGroup();
+        var groupMeta = frame.GetGroupHeader();
         if (!groupMeta.IsGroup)
         {
             throw new ArgumentException($"Expected GRUP header was not read in: {frame.Position}");
@@ -339,7 +339,7 @@ internal static class PluginUtilityTranslation
         frame.Reader.MetaData.MasterReferences.SetTo(record.MasterReferences);
         while (!frame.Complete)
         {
-            var groupHeader = frame.GetGroup();
+            var groupHeader = frame.GetGroupHeader();
             if (!groupHeader.IsGroup)
             {
                 throw new ArgumentException("Did not see GRUP header as expected.");
@@ -431,7 +431,7 @@ internal static class PluginUtilityTranslation
 
     internal static void SkipPastAll(IBinaryReadStream stream, GameConstants meta, RecordType recordType)
     {
-        while (stream.TryReadSubrecordFrame(meta, recordType, out var _))
+        while (stream.TryReadSubrecord(meta, recordType, out var _))
         {
         }
     }

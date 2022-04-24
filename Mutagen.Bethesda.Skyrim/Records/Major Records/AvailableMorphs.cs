@@ -25,12 +25,12 @@ partial class AvailableMorphsBinaryCreateTranslation
     {
         for (int i = 0; i < 4; i++)
         {
-            if (!frame.Reader.TryReadSubrecordFrame(RecordTypes.MPAI, out var indexFrame)) break;
+            if (!frame.Reader.TryReadSubrecord(RecordTypes.MPAI, out var indexFrame)) break;
             if (indexFrame.Content.Length != 4)
             {
                 throw new ArgumentException($"Unexpected Morphs index length: {indexFrame.Content.Length} != 4");
             }
-            if (!frame.Reader.TryReadSubrecordFrame(MPAV, out var dataFrame))
+            if (!frame.Reader.TryReadSubrecord(MPAV, out var dataFrame))
             {
                 throw new ArgumentException($"Did not read in expected morph data record MPAI");
             }

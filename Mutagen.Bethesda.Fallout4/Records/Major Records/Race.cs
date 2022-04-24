@@ -96,7 +96,7 @@ partial class RaceBinaryCreateTranslation
     public static partial void FillBinaryExtraNAM2Custom(MutagenFrame frame, IRaceInternal item)
     {
         if (frame.Complete) return;
-        if (frame.TryGetSubrecord(Race.NAM2, out var subHeader))
+        if (frame.TryGetSubrecordHeader(Race.NAM2, out var subHeader))
         {
             item.ExportingExtraNam2 = true;
             frame.Position += subHeader.TotalLength;
@@ -116,7 +116,7 @@ partial class RaceBinaryCreateTranslation
         {
             var data = new BipedObjectData();
             dict[(BipedObject)i] = data;
-            var subFrame = frame.ReadSubrecordFrame();
+            var subFrame = frame.ReadSubrecord();
             if (subFrame.RecordType != RecordTypes.NAME)
             {
                 throw new ArgumentException($"Unexpected record type: {subFrame.RecordType} != {RecordTypes.NAME}");
@@ -125,7 +125,7 @@ partial class RaceBinaryCreateTranslation
             data.Name = subFrame.AsString(frame.MetaData.Encodings.NonTranslated);
         }
 
-        var content = frame.ReadSubrecordFrame(RecordTypes.RBPC).Content;
+        var content = frame.ReadSubrecord(RecordTypes.RBPC).Content;
         for (int i = 0; i < NumBipedObjectNames; i++)
         {
             FormLink<IActorValueInformationGetter> link;
@@ -156,12 +156,12 @@ partial class RaceBinaryCreateTranslation
                 transl: MorphValue.TryCreateFromBinary));
 
         // Read off last index subrecord
-        frame.ReadSubrecordFrame(RecordTypes.MLSI);
+        frame.ReadSubrecord(RecordTypes.MLSI);
     }
 
     public static partial ParseResult FillBinaryBoneDataParseCustom(MutagenFrame frame, IRaceInternal item)
     {
-        var genderFrame = frame.ReadSubrecordFrame(RecordTypes.BSMP);
+        var genderFrame = frame.ReadSubrecord(RecordTypes.BSMP);
                 
         ExtendedList<Bone> list = Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Bone>.Instance.Parse(
             reader: frame.SpawnAll(),
@@ -221,7 +221,7 @@ partial class RaceBinaryOverlay
 
     public partial ParseResult BoneDataParseCustomParse(OverlayStream stream, int offset)
     {
-        var genderFrame = stream.ReadSubrecordFrame(RecordTypes.BSMP);
+        var genderFrame = stream.ReadSubrecord(RecordTypes.BSMP);
         _boneData ??= new GenderedItem<IReadOnlyList<IBoneGetter>?>(null, null);
         IReadOnlyList<IBoneGetter> list = this.ParseRepeatedTypelessSubrecord(
             stream: stream,
@@ -296,7 +296,7 @@ partial class RaceBinaryOverlay
             factory: MorphValueBinaryOverlay.MorphValueFactory);
 
         // Read off last index subrecord
-        stream.ReadSubrecordFrame(RecordTypes.MLSI);
+        stream.ReadSubrecord(RecordTypes.MLSI);
     }
 }
 

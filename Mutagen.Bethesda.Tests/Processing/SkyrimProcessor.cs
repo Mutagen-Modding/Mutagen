@@ -240,7 +240,7 @@ public class SkyrimProcessor : Processor
 
             uint actualCount = 0;
             stream.Position = fileOffset + majorFrame.TotalLength;
-            if (stream.TryReadGroupFrame(out var groupFrame))
+            if (stream.TryReadGroup(out var groupFrame))
             {
                 int groupPos = 0;
                 while (groupPos < groupFrame.Content.Length)
@@ -833,7 +833,7 @@ public class SkyrimProcessor : Processor
         long? lastepft = null;
         while (stream.Position < majorCompletePos)
         {
-            var sub = stream.GetSubrecord();
+            var sub = stream.GetSubrecordHeader();
             switch (sub.RecordTypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -846,7 +846,7 @@ public class SkyrimProcessor : Processor
                 case RecordTypeInts.EPFD:
                     var pos = stream.Position;
                     stream.Position = lastepft.Value;
-                    var epftFrame = stream.ReadSubrecordFrame();
+                    var epftFrame = stream.ReadSubrecord();
                     if (epftFrame.Content[0] == (byte)APerkEntryPointEffect.ParameterType.LString)
                     {
                         stream.Position = pos;
@@ -870,7 +870,7 @@ public class SkyrimProcessor : Processor
         IStringsLookup overlay)
     {
         stream.Position -= major.HeaderLength;
-        var majorRec = stream.GetMajorRecordFrame();
+        var majorRec = stream.GetMajorRecord();
         if (!majorRec.TryLocateSubrecord("EDID", out var edidRec)) throw new ArgumentException();
         if (edidRec.Content[0] != (byte)'s') return;
         if (!majorRec.TryLocateSubrecord("DATA", out var dataRec)) throw new ArgumentException();

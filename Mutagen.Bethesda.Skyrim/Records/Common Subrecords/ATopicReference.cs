@@ -20,7 +20,7 @@ partial class ATopicReferenceBinaryCreateTranslation
 {
     public static IEnumerable<ATopicReference> Factory(MutagenFrame frame)
     {
-        while (frame.TryReadSubrecord(RecordTypes.PDTO, out var _))
+        while (frame.TryReadSubrecordHeader(RecordTypes.PDTO, out var _))
         {
             var type = (ATopicReference.TopicType)frame.ReadInt32();
             switch (type)

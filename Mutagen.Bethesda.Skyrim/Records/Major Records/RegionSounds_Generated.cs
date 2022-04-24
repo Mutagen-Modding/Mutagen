@@ -1439,7 +1439,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.RDSA:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Sounds = BinaryOverlayList.FactoryByStartIndex<RegionSoundBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),

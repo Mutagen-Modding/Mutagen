@@ -392,7 +392,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
         string dataAccess;
         if (arr2d.GetFieldData().HasTrigger)
         {
-            fg.AppendLine($"var subMeta = stream.ReadSubrecord();");
+            fg.AppendLine($"var subMeta = stream.ReadSubrecordHeader();");
             dataAccess = "stream.RemainingMemory.Slice(0, subMeta.ContentLength)";
         }
         else

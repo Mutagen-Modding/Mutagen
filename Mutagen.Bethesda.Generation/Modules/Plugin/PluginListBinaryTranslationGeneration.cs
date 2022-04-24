@@ -838,7 +838,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                 }
                 break;
             case ListBinaryType.Trigger:
-                fg.AppendLine($"var subMeta = stream.ReadSubrecord();");
+                fg.AppendLine($"var subMeta = stream.ReadSubrecordHeader();");
                 fg.AppendLine("var subLen = finalPos - stream.Position;");
                 if (expectedLen.HasValue)
                 {

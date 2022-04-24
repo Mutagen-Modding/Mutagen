@@ -22,7 +22,7 @@ partial class BodyTemplateBinaryCreateTranslation
 {
     public static BodyTemplate Parse(MutagenFrame frame)
     {
-        var subFrame = frame.ReadSubrecord();
+        var subFrame = frame.ReadSubrecordHeader();
         var version = frame.MetaData.FormVersion!.Value;
         switch (subFrame.RecordTypeInt)
         {
@@ -128,7 +128,7 @@ partial class BodyTemplateBinaryOverlay
 
     public static IBodyTemplateGetter? CustomFactory(OverlayStream stream, BinaryOverlayFactoryPackage package)
     {
-        var subFrame = stream.ReadSubrecord();
+        var subFrame = stream.ReadSubrecordHeader();
         var version = package.FormVersion!.FormVersion!.Value;
         switch (subFrame.RecordTypeInt)
         {

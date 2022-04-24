@@ -176,13 +176,13 @@ partial class PlacedObjectBinaryCreateTranslation
 
     public static partial ParseResult FillBinaryBoundDataCustom(MutagenFrame frame, IPlacedObjectInternal item)
     {
-        var header = frame.ReadSubrecordFrame();
+        var header = frame.ReadSubrecord();
         if (header.Content.Length != 4)
         {
             throw new ArgumentException($"Unexpected data header length: {header.Content.Length} != 4");
         }
         item.Unknown = BinaryPrimitives.ReadInt16LittleEndian(header.Content.Slice(2));
-        while (frame.Reader.TryReadSubrecord(out var subHeader))
+        while (frame.Reader.TryReadSubrecordHeader(out var subHeader))
         {
             switch (subHeader.RecordTypeInt)
             {
@@ -267,14 +267,14 @@ partial class PlacedObjectBinaryOverlay
     public partial ParseResult BoundDataCustomParse(OverlayStream stream, int offset)
     {
         _boundDataLoc = stream.Position - offset;
-        var header = stream.ReadSubrecordFrame();
+        var header = stream.ReadSubrecord();
         if (header.Content.Length != 4)
         {
             throw new ArgumentException($"Unexpected data header length: {header.Content.Length} != 4");
         }
         var roomCount = header.Content[0];
         var flags = header.Content[1];
-        while (stream.TryGetSubrecord(out var subHeader))
+        while (stream.TryGetSubrecordHeader(out var subHeader))
         {
             switch (subHeader.RecordTypeInt)
             {

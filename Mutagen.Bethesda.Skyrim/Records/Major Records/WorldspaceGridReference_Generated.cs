@@ -1305,7 +1305,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new WorldspaceGridReferenceBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.ReferencesEndingPos = 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(0x4)) * 8 + 4;
             ret.CustomFactoryEnd(

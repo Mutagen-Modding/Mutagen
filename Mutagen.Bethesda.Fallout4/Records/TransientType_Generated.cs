@@ -1291,7 +1291,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new TransientTypeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.LinksEndingPos = ret._data.Length;
             ret.CustomFactoryEnd(

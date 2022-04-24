@@ -64,7 +64,7 @@ partial class WeatherBinaryCreateTranslation
         {
             throw new ArgumentException();
         }
-        var subRec = stream.ReadSubrecordFrame();
+        var subRec = stream.ReadSubrecord();
         textures[layer] = BinaryStringUtility.ProcessWholeToZString(subRec.Content, stream.MetaData.Encodings.NonTranslated);
     }
 
@@ -76,7 +76,7 @@ partial class WeatherBinaryCreateTranslation
 
     public static void FillBinaryCloudAlphas(MutagenFrame frame, CloudLayer[] clouds)
     {
-        frame.ReadSubrecord();
+        frame.ReadSubrecordHeader();
         for (int i = 0; i < NumLayers; i++)
         {
             clouds[i].Alphas = new WeatherAlpha()
@@ -97,7 +97,7 @@ partial class WeatherBinaryCreateTranslation
 
     public static void FillBinaryCloudColors(MutagenFrame frame, CloudLayer[] clouds)
     {
-        var rec = frame.ReadSubrecord();
+        var rec = frame.ReadSubrecordHeader();
         frame = frame.SpawnWithLength(rec.ContentLength);
         for (int i = 0; i < NumLayers; i++)
         {
@@ -119,7 +119,7 @@ partial class WeatherBinaryCreateTranslation
 
     public static void FillBinaryCloudYSpeeds(MutagenFrame frame, CloudLayer[] clouds)
     {
-        frame.ReadSubrecord();
+        frame.ReadSubrecordHeader();
         for (int i = 0; i < NumLayers; i++)
         {
             clouds[i].YSpeed = ConvertToSpeed(frame.ReadUInt8());
@@ -134,7 +134,7 @@ partial class WeatherBinaryCreateTranslation
 
     public static void FillBinaryCloudXSpeeds(MutagenFrame frame, CloudLayer[] clouds)
     {
-        frame.ReadSubrecord();
+        frame.ReadSubrecordHeader();
         for (int i = 0; i < NumLayers; i++)
         {
             clouds[i].XSpeed = ConvertToSpeed(frame.ReadUInt8());
@@ -149,7 +149,7 @@ partial class WeatherBinaryCreateTranslation
 
     public static void FillBinaryDisabledCloudLayers(MutagenFrame frame, CloudLayer[] clouds)
     {
-        var subRec = frame.ReadSubrecordFrame();
+        var subRec = frame.ReadSubrecord();
         var raw = BinaryPrimitives.ReadUInt32LittleEndian(subRec.Content);
         uint index = 1;
         for (int i = 0; i < NumLayers; i++)
@@ -173,7 +173,7 @@ partial class WeatherBinaryCreateTranslation
     {
         AmbientColors Parse()
         {
-            var subMeta = frame.ReadSubrecord();
+            var subMeta = frame.ReadSubrecordHeader();
             if (subMeta.RecordType != RecordTypes.DALC)
             {
                 throw new ArgumentException();

@@ -20,14 +20,14 @@ partial class EffectBinaryCreateTranslation
 {
     public static partial ParseResult FillBinaryEffectInitialCustom(MutagenFrame frame, IEffect item, PreviousParse lastParsed)
     {
-        var subMeta = frame.ReadSubrecord();
+        var subMeta = frame.ReadSubrecordHeader();
         if (subMeta.ContentLength != Mutagen.Bethesda.Plugins.Internals.Constants.HeaderLength)
         {
             throw new ArgumentException($"Magic effect name must be length 4.  Was: {subMeta.ContentLength}");
         }
         var magicEffName = frame.ReadMemory(4);
 
-        if (!frame.Reader.TryGetSubrecord(RecordTypes.EFIT, out var efitMeta))
+        if (!frame.Reader.TryGetSubrecordHeader(RecordTypes.EFIT, out var efitMeta))
         {
             throw new ArgumentException("Expected EFIT header.");
         }

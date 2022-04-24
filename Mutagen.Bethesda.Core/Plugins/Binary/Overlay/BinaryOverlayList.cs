@@ -96,7 +96,7 @@ internal abstract class BinaryOverlayList
                 _ => throw new NotImplementedException(),
             };
             stream.Position += initialHeader.TotalLength;
-            if (!stream.TryReadSubrecordFrame(trigger, out var contentFrame))
+            if (!stream.TryReadSubrecord(trigger, out var contentFrame))
             {
                 if (count == 0) return Array.Empty<T>();
                 throw new ArgumentException($"List with a non zero {initialHeader.RecordType} counter did not follow up with expected type: {trigger}");
@@ -140,7 +140,7 @@ internal abstract class BinaryOverlayList
             };
             stream.Position += initialHeader.TotalLength;
             if (count == 0) return null;
-            var contentFrame = stream.ReadSubrecordFrame(trigger);
+            var contentFrame = stream.ReadSubrecord(trigger);
             return new BinaryOverlayListByStartIndex<T>(
                 contentFrame.Content,
                 package,

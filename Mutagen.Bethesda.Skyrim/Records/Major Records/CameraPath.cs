@@ -24,7 +24,7 @@ partial class CameraPathBinaryCreateTranslation
 {
     public static partial void FillBinaryZoomCustom(MutagenFrame frame, ICameraPathInternal item)
     {
-        var subFrame = frame.ReadSubrecordFrame();
+        var subFrame = frame.ReadSubrecord();
         if (subFrame.Content.Length != 1)
         {
             throw new ArgumentException();

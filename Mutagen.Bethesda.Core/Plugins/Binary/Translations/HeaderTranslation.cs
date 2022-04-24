@@ -281,7 +281,7 @@ public class HeaderTranslation
         bool hopGroup = true)
         where TReader : IMutagenReadStream
     {
-        GroupHeader groupMeta = reader.GetGroup();
+        GroupHeader groupMeta = reader.GetGroupHeader();
         RecordType ret = groupMeta.RecordType;
         contentLength = checked((int)groupMeta.TotalLength);
         if (groupMeta.IsGroup)

@@ -30,7 +30,7 @@ public static class ModRecordSorter
                 // If complete overall, return
                 if (inputStream.Complete) return;
 
-                var groupMeta = inputStream.GetGroup();
+                var groupMeta = inputStream.GetGroupHeader();
 
                 var storage = new Dictionary<FormKey, List<ReadOnlyMemorySlice<byte>>>();
                 using (var grupFrame = new MutagenFrame(inputStream).SpawnWithLength(groupMeta.TotalLength))
@@ -39,10 +39,10 @@ public static class ModRecordSorter
                     locatorStream.Position = grupLoc.Value;
                     foreach (var rec in RecordLocator.ParseTopLevelGRUP(locatorStream))
                     {
-                        MajorRecordHeader majorMeta = inputStream.GetMajorRecord();
+                        MajorRecordHeader majorMeta = inputStream.GetMajorRecordHeader();
                         storage.GetOrAdd(rec.FormKey).Add(inputStream.ReadMemory(checked((int)majorMeta.TotalLength), readSafe: true));
                         if (grupFrame.Complete) continue;
-                        if (inputStream.TryGetGroup(out var subGroupMeta))
+                        if (inputStream.TryGetGroupHeader(out var subGroupMeta))
                         {
                             storage.GetOrAdd(rec.FormKey).Add(inputStream.ReadMemory(checked((int)subGroupMeta.TotalLength), readSafe: true));
                         }

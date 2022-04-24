@@ -71,7 +71,7 @@ partial class FurnitureBinaryCreateTranslation
 
     public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IFurnitureInternal item)
     {
-        var subFrame = frame.ReadSubrecordFrame();
+        var subFrame = frame.ReadSubrecord();
         // Read flags like normal
         item.Flags = (Furniture.Flag)BinaryPrimitives.ReadUInt16LittleEndian(subFrame.Content);
     }
@@ -88,7 +88,7 @@ partial class FurnitureBinaryCreateTranslation
 
     public static Furniture.Flag FillBinaryFlags2(IMutagenReadStream stream, Func<int, FurnitureMarker> getter, Furniture.Flag? existingFlag)
     {
-        var subFrame = stream.ReadSubrecordFrame();
+        var subFrame = stream.ReadSubrecord();
         uint raw = BinaryPrimitives.ReadUInt32LittleEndian(subFrame.Content);
 
         // Clear out upper bytes of existing flags
@@ -361,7 +361,7 @@ partial class FurnitureBinaryOverlay
 
     partial void FlagsCustomParse(OverlayStream stream, long finalPos, int offset)
     {
-        var subFrame = stream.ReadSubrecordFrame();
+        var subFrame = stream.ReadSubrecord();
         // Read flags like normal
         _flags = (Furniture.Flag)BinaryPrimitives.ReadUInt16LittleEndian(subFrame.Content);
     }

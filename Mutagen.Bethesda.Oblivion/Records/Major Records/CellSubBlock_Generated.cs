@@ -1990,7 +1990,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new CellSubBlockBinaryOverlay(
                 bytes: HeaderTranslation.ExtractGroupMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetGroup().TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetGroupHeader().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.GroupConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.GroupConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(

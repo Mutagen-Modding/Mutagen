@@ -35,7 +35,7 @@ public class AlignmentRepeatedRuleTests
         var reader = new MutagenMemoryReadStream(bytes, new ParsingBundle(GameConstants.SkyrimSE, null!));
         foreach (var t in types)
         {
-            reader.ReadSubrecordFrame(t);
+            reader.ReadSubrecord(t);
         }
 
         if (!reader.Complete)

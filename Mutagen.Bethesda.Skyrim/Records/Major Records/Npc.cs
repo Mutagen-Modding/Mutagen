@@ -20,7 +20,7 @@ partial class NpcBinaryCreateTranslation
     public static partial ParseResult FillBinaryDataMarkerCustom(MutagenFrame frame, INpcInternal item)
     {
         // Skip marker
-        frame.ReadSubrecordFrame();
+        frame.ReadSubrecord();
         return null;
     }
 }
@@ -38,7 +38,7 @@ partial class NpcBinaryOverlay
     public partial ParseResult DataMarkerCustomParse(OverlayStream stream, int offset)
     {
         // Skip marker
-        stream.ReadSubrecordFrame();
+        stream.ReadSubrecord();
         return null;
     }
 }

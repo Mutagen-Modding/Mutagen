@@ -2172,7 +2172,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XXXX:
                 {
-                    var overflowHeader = frame.ReadSubrecordFrame();
+                    var overflowHeader = frame.ReadSubrecord();
                     return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
@@ -2309,7 +2309,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new SkyrimModHeaderBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
@@ -2384,7 +2384,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.OverriddenForms = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ISkyrimMajorRecordGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -2406,7 +2406,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XXXX:
                 {
-                    var overflowHeader = stream.ReadSubrecordFrame();
+                    var overflowHeader = stream.ReadSubrecord();
                     return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:

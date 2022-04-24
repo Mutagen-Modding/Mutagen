@@ -177,7 +177,7 @@ public class Fallout4Processor : Processor
         IStringsLookup overlay)
     {
         stream.Position -= major.HeaderLength;
-        var majorRec = stream.GetMajorRecordFrame();
+        var majorRec = stream.GetMajorRecord();
         if (!majorRec.TryLocateSubrecord("EDID", out var edidRec)) throw new ArgumentException();
         if (edidRec.Content[0] != (byte)'s') return;
         if (!majorRec.TryLocateSubrecord("DATA", out var dataRec)) throw new ArgumentException();

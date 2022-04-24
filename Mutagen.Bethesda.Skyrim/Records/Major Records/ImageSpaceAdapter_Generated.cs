@@ -13114,7 +13114,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new ImageSpaceAdapterBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecordHeader().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
@@ -13162,7 +13162,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.BlurRadius = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13174,7 +13174,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.VNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.DoubleVisionStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13186,7 +13186,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.TintColor = BinaryOverlayList.FactoryByStartIndex<ColorFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13198,7 +13198,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.NAM3:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.FadeColor = BinaryOverlayList.FactoryByStartIndex<ColorFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13210,7 +13210,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.RadialBlurStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13222,7 +13222,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.RadialBlurRampUp = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13234,7 +13234,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.RadialBlurStart = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13246,7 +13246,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.RadialBlurRampDown = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13258,7 +13258,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.RadialBlurDownStart = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13270,7 +13270,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.DepthOfFieldStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13282,7 +13282,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.DepthOfFieldDistance = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13294,7 +13294,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.DepthOfFieldRange = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13306,7 +13306,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.NAM4:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.MotionBlurStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13318,7 +13318,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._0_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.HdrEyeAdaptSpeedMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13330,7 +13330,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.@IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.HdrEyeAdaptSpeedAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13342,7 +13342,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._1_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.HdrBloomBlurRadiusMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13354,7 +13354,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.AIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.HdrBloomBlurRadiusAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13366,7 +13366,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._2_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.HdrBloomThresholdMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13378,7 +13378,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.BIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.HdrBloomThresholdAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13390,7 +13390,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._3_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.HdrBloomScaleMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13402,7 +13402,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.HdrBloomScaleAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13414,7 +13414,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._4_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.HdrTargetLumMinMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13426,7 +13426,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.HdrTargetLumMinAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13438,7 +13438,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._5_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.HdrTargetLumMaxMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13450,7 +13450,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.EIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.HdrTargetLumMaxAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13462,7 +13462,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._6_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.HdrSunlightScaleMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13474,7 +13474,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.FIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.HdrSunlightScaleAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13486,7 +13486,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._7_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.HdrSkyScaleMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13498,7 +13498,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.GIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.HdrSkyScaleAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13510,7 +13510,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._8_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown08 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13522,7 +13522,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.HIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown48 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13534,7 +13534,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._9_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown09 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13546,7 +13546,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.IIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown49 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13558,7 +13558,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._A_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown0A = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13570,7 +13570,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.JIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown4A = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13582,7 +13582,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._B_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown0B = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13594,7 +13594,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.KIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown4B = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13606,7 +13606,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._C_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown0C = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13618,7 +13618,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.LIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown4C = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13630,7 +13630,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._D_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown0D = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13642,7 +13642,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.MIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown4D = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13654,7 +13654,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._E_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown0E = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13666,7 +13666,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.NIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown4E = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13678,7 +13678,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._F_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown0F = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13690,7 +13690,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.OIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown4F = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13702,7 +13702,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._10_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown10 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13714,7 +13714,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.PIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown50 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13726,7 +13726,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._11_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.CinematicSaturationMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13738,7 +13738,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.QIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.CinematicSaturationAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13750,7 +13750,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._12_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.CinematicBrightnessMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13762,7 +13762,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.RIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.CinematicBrightnessAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13774,7 +13774,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._13_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.CinematicContrastMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13786,7 +13786,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.SIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.CinematicContrastAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13798,7 +13798,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts._14_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown14 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -13810,7 +13810,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.TIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Unknown54 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),

@@ -27,7 +27,7 @@ public class ModGroupMerger
             interest: interest,
             additionalCriteria: (stream, recType, len) =>
             {
-                return stream.GetMajorRecord().IsCompressed;
+                return stream.GetMajorRecordHeader().IsCompressed;
             });
         
         inputStream.Position = 0;
@@ -36,7 +36,7 @@ public class ModGroupMerger
         foreach (var loc in fileLocs.GrupLocations)
         {
             inputStream.Position = loc.Key;
-            var group = inputStream.ReadGroup();
+            var group = inputStream.ReadGroupHeader();
             if (!group.IsTopLevel) continue;
             dict.GetOrAdd(loc.Value.ContainedRecordType).Add(loc.Value);
         }
@@ -79,7 +79,7 @@ public class ModGroupMerger
 
             if (inputStream.Complete) break;
             
-            var groupMeta = inputStream.GetGroup();
+            var groupMeta = inputStream.GetGroupHeader();
 
             if (!dict.TryGetValue(groupMeta.ContainedRecordType, out var groupLocations))
             {
@@ -105,7 +105,7 @@ public class ModGroupMerger
             foreach (var groupLoc in groupLocations)
             {
                 inputStream.Position = groupLoc.Location.Min;
-                var targetGroupMeta = inputStream.GetGroupFrame(readSafe: false);
+                var targetGroupMeta = inputStream.GetGroup(readSafe: false);
                 totalLen += targetGroupMeta.Content.Length;
                 writer.BaseStream.Write(targetGroupMeta.Content);
             }

@@ -68,7 +68,7 @@ internal class GroupListOverlay<T> : IReadOnlyList<T>
         List<int> locations = new List<int>();
 
         stream.Position -= package.MetaData.Constants.GroupConstants.HeaderLength;
-        var groupMeta = stream.GetGroup(package);
+        var groupMeta = stream.GetGroupHeader(package);
         var finalPos = stream.Position + groupMeta.TotalLength;
         stream.Position += package.MetaData.Constants.GroupConstants.HeaderLength;
         // Parse locations

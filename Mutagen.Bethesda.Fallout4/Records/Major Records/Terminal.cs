@@ -54,7 +54,7 @@ partial class TerminalBinaryCreateTranslation
 
     public static Terminal.Flag FillBinaryFlags(IMutagenReadStream stream, Func<int, FurnitureMarkerParameters> getter)
     {
-        var subFrame = stream.ReadSubrecordFrame();
+        var subFrame = stream.ReadSubrecord();
         uint raw = BinaryPrimitives.ReadUInt32LittleEndian(subFrame.Content);
         var ret = (Terminal.Flag)(raw & UpperFlagsMask);
 
@@ -104,7 +104,7 @@ partial class TerminalBinaryCreateTranslation
 
     public static void FillBinaryMarkers(MutagenFrame stream, Func<int, FurnitureMarkerParameters> getter)
     {
-        var snam = stream.ReadSubrecord(RecordTypes.SNAM);
+        var snam = stream.ReadSubrecordHeader(RecordTypes.SNAM);
         stream = stream.SpawnWithLength(snam.ContentLength);
         int i = 0;
         while (stream.Remaining > 0)

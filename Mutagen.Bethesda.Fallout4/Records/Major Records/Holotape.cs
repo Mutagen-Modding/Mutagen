@@ -23,7 +23,7 @@ partial class HolotapeBinaryCreateTranslation
 {
     public static partial ParseResult FillBinaryTypeParseCustom(MutagenFrame frame, IHolotapeInternal item)
     {
-        var sub = frame.ReadSubrecord(RecordTypes.DNAM);
+        var sub = frame.ReadSubrecordHeader(RecordTypes.DNAM);
         var type = EnumBinaryTranslation<Holotape.Types, MutagenFrame, MutagenWriter>.Instance.Parse(frame, 1);
         switch (type)
         {
@@ -49,7 +49,7 @@ partial class HolotapeBinaryCreateTranslation
 
     public static partial ParseResult FillBinaryDataParseCustom(MutagenFrame frame, IHolotapeInternal item)
     {
-        var sub = frame.ReadSubrecord();
+        var sub = frame.ReadSubrecordHeader();
         switch (sub.RecordTypeInt)
         {
             case RecordTypeInts.SNAM:

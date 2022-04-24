@@ -158,7 +158,7 @@ partial class NpcBinaryCreateTranslation
         MutagenFrame frame,
         INpcInternal item)
     {
-        var subrec = frame.ReadSubrecord();
+        var subrec = frame.ReadSubrecordHeader();
         switch (subrec.RecordTypeInt)
         {
             case RecordTypeInts.MSDK:
@@ -291,7 +291,7 @@ partial class NpcBinaryOverlay
 
     public partial ParseResult MorphParsingCustomParse(OverlayStream stream, int offset)
     {
-        var subRec = stream.GetSubrecord();
+        var subRec = stream.GetSubrecordHeader();
         switch (subRec.RecordTypeInt)
         {
             case RecordTypeInts.MSDK:

@@ -98,7 +98,7 @@ partial class FurnitureBinaryCreateTranslation
 
     public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IFurnitureInternal item)
     {
-        var subFrame = frame.ReadSubrecordFrame();
+        var subFrame = frame.ReadSubrecord();
         // Read flags like normal
         item.Flags = (Furniture.Flag)BinaryPrimitives.ReadUInt16LittleEndian(subFrame.Content);
     }
@@ -114,7 +114,7 @@ partial class FurnitureBinaryCreateTranslation
 
     public static Furniture.Flag FillBinaryFlags2(IMutagenReadStream stream, Func<int, FurnitureMarkerParameters> getter, Furniture.Flag? existingFlag)
     {
-        var subFrame = stream.ReadSubrecordFrame();
+        var subFrame = stream.ReadSubrecord();
         uint raw = BinaryPrimitives.ReadUInt32LittleEndian(subFrame.Content);
 
         // Clear out upper bytes of existing flags
@@ -164,13 +164,13 @@ partial class FurnitureBinaryCreateTranslation
     public static Furniture.EntryPointType ParseBinaryEnabledEntryPointsCustom<TReader>(TReader frame)
         where TReader : IMutagenReadStream
     {
-        var enam = frame.ReadSubrecordFrame(RecordTypes.ENAM);
+        var enam = frame.ReadSubrecord(RecordTypes.ENAM);
         var index = enam.AsInt32();
         if (index != -1)
         {
             throw new ArgumentException($"Unexpected ENAM index: {index}");
         }
-        var name0 = frame.ReadSubrecordFrame(RecordTypes.NAM0);
+        var name0 = frame.ReadSubrecord(RecordTypes.NAM0);
         var zeros = BinaryPrimitives.ReadInt16LittleEndian(name0.Content);
         if (zeros != 0)
         {
@@ -186,7 +186,7 @@ partial class FurnitureBinaryCreateTranslation
 
     public static void FillBinaryMarkers(MutagenFrame stream, Func<int, FurnitureMarkerParameters> getter)
     {
-        var snam = stream.ReadSubrecord(RecordTypes.SNAM);
+        var snam = stream.ReadSubrecordHeader(RecordTypes.SNAM);
         stream = stream.SpawnWithLength(snam.ContentLength);
         int i = 0;
         while (stream.Remaining > 0)
@@ -301,7 +301,7 @@ partial class FurnitureBinaryOverlay
 
     partial void FlagsCustomParse(OverlayStream stream, long finalPos, int offset)
     {
-        var subFrame = stream.ReadSubrecordFrame();
+        var subFrame = stream.ReadSubrecord();
         // Read flags like normal
         _flags = (Furniture.Flag)BinaryPrimitives.ReadUInt16LittleEndian(subFrame.Content);
     }

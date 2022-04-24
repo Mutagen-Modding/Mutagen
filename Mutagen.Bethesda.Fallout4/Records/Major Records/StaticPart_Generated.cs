@@ -1386,7 +1386,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DATA:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)StaticPart_FieldIndex.Placements) return ParseResult.Stop;
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Placements = BinaryOverlayList.FactoryByStartIndex<PlacementBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),

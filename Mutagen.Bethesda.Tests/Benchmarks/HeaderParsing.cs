@@ -41,7 +41,7 @@ public class HeaderParsing
     [Benchmark]
     public (bool, long) MajorRecordHeaderGetStream()
     {
-        var meta = frame.GetMajorRecord();
+        var meta = frame.GetMajorRecordHeader();
         if (meta.RecordType != type) return (false, -1);
         return (true, meta.ContentLength);
     }

@@ -284,7 +284,7 @@ internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
         Dictionary<FormKey, int> locationDict = new Dictionary<FormKey, int>();
 
         stream.Position -= package.MetaData.Constants.GroupConstants.HeaderLength;
-        var groupMeta = stream.GetGroup(package.MetaData);
+        var groupMeta = stream.GetGroupHeader(package.MetaData);
         var finalPos = stream.Position + groupMeta.TotalLength;
         stream.Position += package.MetaData.Constants.GroupConstants.HeaderLength;
         // Parse MajorRecord locations

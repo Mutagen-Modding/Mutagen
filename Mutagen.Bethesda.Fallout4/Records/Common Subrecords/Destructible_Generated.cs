@@ -1647,7 +1647,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DAMC:
                 {
                     if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Destructible_FieldIndex.Resistances) return ParseResult.Stop;
-                    var subMeta = stream.ReadSubrecord();
+                    var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
                     this.Resistances = BinaryOverlayList.FactoryByStartIndex<ResistanceDestructibleBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),

@@ -50,7 +50,7 @@ internal static class GlobalCustomParsing
         where T : IMajorRecord, IGlobalCommon
     {
         var initialPos = frame.Position;
-        var majorMeta = frame.GetMajorRecordFrame();
+        var majorMeta = frame.GetMajorRecord();
         if (majorMeta.RecordType != GLOB)
         {
             throw new ArgumentException();

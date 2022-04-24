@@ -31,7 +31,7 @@ partial class APlacedTrapBinaryCreateTranslation
 {
     public static partial ParseResult FillBinaryTrapFormCustom(MutagenFrame frame, IAPlacedTrapInternal item)
     {
-        var subRec = frame.ReadSubrecordFrame();
+        var subRec = frame.ReadSubrecord();
         if (subRec.Content.Length != 4)
         {
             throw new ArgumentException("Unexpected length");
@@ -112,7 +112,7 @@ partial class APlacedTrapBinaryOverlay
 {
     public partial ParseResult TrapFormCustomParse(OverlayStream stream, int offset)
     {
-        var subRec = stream.ReadSubrecordFrame();
+        var subRec = stream.ReadSubrecord();
         if (subRec.Content.Length != 4)
         {
             throw new ArgumentException("Unexpected length");

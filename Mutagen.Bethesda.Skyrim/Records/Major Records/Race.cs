@@ -81,7 +81,7 @@ partial class RaceBinaryCreateTranslation
     public static partial void FillBinaryExtraNAM2Custom(MutagenFrame frame, IRaceInternal item)
     {
         if (frame.Complete) return;
-        if (frame.TryGetSubrecord(Race.NAM2, out var subHeader))
+        if (frame.TryGetSubrecordHeader(Race.NAM2, out var subHeader))
         {
             item.ExportingExtraNam2 = true;
             frame.Position += subHeader.TotalLength;
@@ -92,7 +92,7 @@ partial class RaceBinaryCreateTranslation
     {
         for (int i = 0; i < NumBipedObjectNames; i++)
         {
-            if (!frame.Reader.TryReadSubrecordFrame(RecordTypes.NAME, out var subHeader)) break;
+            if (!frame.Reader.TryReadSubrecord(RecordTypes.NAME, out var subHeader)) break;
             BipedObject type = (BipedObject)i;
             var val = BinaryStringUtility.ProcessWholeToZString(subHeader.Content, frame.MetaData.Encodings.NonTranslated);
             if (!string.IsNullOrEmpty(val))

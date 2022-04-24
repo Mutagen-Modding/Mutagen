@@ -167,7 +167,7 @@ public static class ModRecordAligner
             ReadOnlyMemorySlice<byte>? rest = null; 
             while (inputStream.Position < endPos) 
             { 
-                var subType = inputStream.GetSubrecordFrame(); 
+                var subType = inputStream.GetSubrecord(); 
                 if (stopMarkers?.Contains(subType.RecordType) ?? false) 
                 { 
                     rest = inputStream.ReadMemory((int)(endPos - inputStream.Position), readSafe: true); 
@@ -241,7 +241,7 @@ public static class ModRecordAligner
  
             // If complete overall, return 
             if (inputStream.Complete) break; 
-            var groupMeta = inputStream.GetGroup(); 
+            var groupMeta = inputStream.GetGroupHeader(); 
             if (!groupMeta.IsGroup) 
             { 
                 throw new ArgumentException(); 
@@ -256,7 +256,7 @@ public static class ModRecordAligner
             { 
                 while (!frame.Complete) 
                 { 
-                    var majorMeta = inputStream.GetMajorRecord(); 
+                    var majorMeta = inputStream.GetMajorRecordHeader(); 
                     var bytes = inputStream.ReadMemory(checked((int)majorMeta.TotalLength)); 
                     var type = majorMeta.RecordType; 
                     if (groupRules.Contains(type)) 
@@ -329,18 +329,18 @@ public static class ModRecordAligner
             switch (type.Type) 
             { 
                 case "ROAD": 
-                    roadStorage = reader.ReadMemory(checked((int)reader.GetMajorRecord().TotalLength)); 
+                    roadStorage = reader.ReadMemory(checked((int)reader.GetMajorRecordHeader().TotalLength)); 
                     break; 
                 case "CELL": 
                     if (cellStorage != null) 
                     { 
                         throw new ArgumentException(); 
                     } 
-                    var cellMajorMeta = reader.GetMajorRecord(); 
+                    var cellMajorMeta = reader.GetMajorRecordHeader(); 
                     var startPos = reader.Position; 
                     reader.Position += cellMajorMeta.HeaderLength; 
                     long cellGroupLen = 0; 
-                    if (reader.TryGetGroup(out var cellSubGroupMeta) 
+                    if (reader.TryGetGroupHeader(out var cellSubGroupMeta) 
                         && cellSubGroupMeta.GroupType == writer.MetaData.Constants.GroupConstants.Cell.TopGroupType) 
                     { 
                         cellGroupLen = cellSubGroupMeta.TotalLength; 
@@ -355,7 +355,7 @@ public static class ModRecordAligner
                         i = 3; // end loop 
                         continue; 
                     } 
-                    grupBytes.Add(reader.ReadMemory(checked((int)reader.GetGroup().TotalLength))); 
+                    grupBytes.Add(reader.ReadMemory(checked((int)reader.GetGroupHeader().TotalLength))); 
                     break; 
                 case "WRLD": 
                     i = 3; // end loop 
