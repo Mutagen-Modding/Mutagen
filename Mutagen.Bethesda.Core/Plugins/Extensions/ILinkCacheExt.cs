@@ -137,6 +137,19 @@ public static class ILinkCacheExt
     }
 
     /// <summary>
+    /// Creates a Link Cache using a single mod as its link target.  Mod is allowed to be modified afterwards, but
+    /// this comes at a performance cost of not allowing much caching to be done.  If the mod is not expected to
+    /// be modified afterwards, use ImmutableModLinkCache instead.<br/>
+    /// </summary>
+    /// <param name="mod">Mod to construct the package relative to</param>
+    /// <returns>LinkPackage attached to given mod</returns>
+    public static MutableModLinkCache ToUntypedMutableLinkCache(
+        this IModGetter mod)
+    {
+        return new MutableModLinkCache(mod);
+    }
+
+    /// <summary>
     /// Creates a new linking package relative to a load order.<br/>
     /// Will resolve links to the highest overriding mod containing the record being sought. <br/>
     /// Modification of the target LoadOrder, or Mods on the LoadOrder is not safe.  Internal caches can become
