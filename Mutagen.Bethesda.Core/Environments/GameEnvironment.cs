@@ -82,7 +82,7 @@ public interface IGameEnvironmentState<TMod> : IGameEnvironmentState
     /// <summary>
     /// Load Order object containing all the mods present in the environment.
     /// </summary>
-    ILoadOrder<IModListing<TMod>> LoadOrder { get; }
+    new ILoadOrder<IModListing<TMod>> LoadOrder { get; }
 }
 
 public interface IGameEnvironmentState<TModSetter, TModGetter> : IGameEnvironmentState<TModGetter> 
