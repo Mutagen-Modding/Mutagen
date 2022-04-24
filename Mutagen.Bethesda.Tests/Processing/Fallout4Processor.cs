@@ -2,12 +2,10 @@ using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Strings;
 using Noggog;
-using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -30,16 +28,17 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.WEAP, ProcessWeapons);
         AddDynamicProcessing(RecordTypes.NPC_, ProcessNpcs);
         AddDynamicProcessing(RecordTypes.BNDS, ProcessBendableSplines);
+        AddDynamicProcessing(RecordTypes.REGN, ProcessRegions);
     }
 
     private void ProcessGameSettings(
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (!majorFrame.TryLocateSubrecordFrame("EDID", out var edidFrame)) return;
+        if (!majorFrame.TryLocateSubrecord("EDID", out var edidFrame)) return;
         if ((char)edidFrame.Content[0] != 'f') return;
 
-        if (!majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec)) return;
+        if (!majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec)) return;
         ProcessZeroFloat(dataRec, fileOffset);
     }
 
@@ -47,7 +46,7 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (!majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec)) return;
+        if (!majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec)) return;
         int offset = 0;
         ProcessZeroFloats(dataRec, fileOffset, ref offset, 9);
     }
@@ -56,9 +55,9 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (!majorFrame.TryLocateSubrecordPinFrame(RecordTypes.MLSI, out var mlsi)) return;
+        if (!majorFrame.TryLocateSubrecord(RecordTypes.MLSI, out var mlsi)) return;
 
-        if (majorFrame.TryLocateSubrecord(RecordTypes.MSID, out _))
+        if (majorFrame.TryLocateSubrecordHeader(RecordTypes.MSID, out _))
         {
             var max = majorFrame.FindEnumerateSubrecords(RecordTypes.MSID)
                 .Select(x => x.AsInt32())
@@ -98,7 +97,7 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.SNAM, out var frame))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.SNAM, out var frame))
         {
             int offset = 0;
             int i = 0;
@@ -115,7 +114,7 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DNAM, out var frame))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.DNAM, out var frame))
         {
             int offset = 4;
             ProcessZeroFloats(frame, fileOffset, ref offset, 8);
@@ -129,28 +128,28 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.QNAM, out var frame))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.QNAM, out var frame))
         {
             int offset = 0;
             ProcessColorFloat(frame, fileOffset, ref offset, alpha: true);
         }
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.AIDT, out frame))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.AIDT, out frame))
         {
             int offset = 6;
             ProcessBool(frame, fileOffset, ref offset, 2);
             offset = 20;
             ProcessBool(frame, fileOffset, ref offset, 4);
         }
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.TPLT, out frame))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.TPLT, out frame))
         {
             ProcessFormIDOverflow(frame, fileOffset);
         }
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.TPTA, out frame))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.TPTA, out frame))
         {
             ProcessFormIDOverflows(frame, fileOffset);
         }
         if (majorFrame.FormID.ID == 0x3D62A
-            && majorFrame.TryLocateSubrecordPinFrame(RecordTypes.COCT, out frame))
+            && majorFrame.TryLocateSubrecord(RecordTypes.COCT, out frame))
         {
             var bytes = new byte[4];
             BinaryPrimitives.WriteInt32LittleEndian(bytes, 1);
@@ -164,7 +163,7 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DNAM, out var frame))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.DNAM, out var frame))
         {
             int offset = 8;
             ProcessColorFloat(frame, fileOffset, ref offset, alpha: true);
@@ -179,11 +178,48 @@ public class Fallout4Processor : Processor
     {
         stream.Position -= major.HeaderLength;
         var majorRec = stream.GetMajorRecordFrame();
-        if (!majorRec.TryLocateSubrecordFrame("EDID", out var edidRec)) throw new ArgumentException();
+        if (!majorRec.TryLocateSubrecord("EDID", out var edidRec)) throw new ArgumentException();
         if (edidRec.Content[0] != (byte)'s') return;
-        if (!majorRec.TryLocateSubrecordPinFrame("DATA", out var dataRec)) throw new ArgumentException();
+        if (!majorRec.TryLocateSubrecord("DATA", out var dataRec)) throw new ArgumentException();
         stream.Position += dataRec.Location;
         AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay);
+    }
+
+    private void ProcessRegions(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        var rdatHeader = RecordSpanExtensions.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.RDAT);
+        if (rdatHeader == null) return;
+
+        // Order RDATs by index
+        SortedList<uint, RangeInt64> rdats = new SortedList<uint, RangeInt64>();
+        List<uint> raw = new List<uint>();
+        while (rdatHeader != null)
+        {
+            var index = BinaryPrimitives.ReadUInt32LittleEndian(rdatHeader.Value.Content);
+            var nextRdat = RecordSpanExtensions.FindFirstSubrecord(
+                majorFrame.Content,
+                majorFrame.Meta,
+                RecordTypes.RDAT,
+                offset: rdatHeader.Value.Location + rdatHeader.Value.TotalLength);
+            rdats[index] =
+                new RangeInt64(
+                    fileOffset + majorFrame.HeaderLength + rdatHeader.Value.Location,
+                    nextRdat == null
+                        ? fileOffset + majorFrame.TotalLength - 1
+                        : nextRdat.Value.Location - 1 + fileOffset + majorFrame.HeaderLength);
+            raw.Add(index);
+            rdatHeader = nextRdat;
+        }
+
+        if (raw.SequenceEqual(rdats.Keys)) return;
+        foreach (var item in rdats.Reverse())
+        {
+            _instructions.SetMove(
+                loc: fileOffset + majorFrame.TotalLength,
+                section: item.Value);
+        }
     }
 
     protected override AStringsAlignment[] GetStringsFileAlignments(StringsSource source)
@@ -227,6 +263,7 @@ public class Fallout4Processor : Processor
                     new RecordType[] { "HAZD", "FULL" },
                     new RecordType[] { "TERM", "FULL" },
                     new RecordType[] { "LVLI", "ONAM" },
+                    new RecordType[] { "REGN", "RDMP" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]

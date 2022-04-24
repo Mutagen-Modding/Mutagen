@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -126,20 +125,20 @@ public class Fallout4PassthroughTest : PassthroughTest
     protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path)
     {
         return Fallout4ModBinaryOverlay.Fallout4ModFactory(
-            new ModPath(this.ModKey, this.FilePath.Path));
+            new ModPath(ModKey, FilePath.Path));
     }
 
     protected override async Task<IMod> ImportBinary(FilePath path)
     {
         return Fallout4Mod.CreateFromBinary(
-            new ModPath(this.ModKey, path.Path),
-            parallel: this.Settings.ParallelProccessingSteps);
+            new ModPath(ModKey, path.Path),
+            parallel: Settings.ParallelProccessingSteps);
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)
     {
         var wrapper = Fallout4Mod.CreateFromBinaryOverlay(file.Path);
-        var ret = new Fallout4Mod(this.ModKey);
+        var ret = new Fallout4Mod(ModKey);
         ret.DeepCopyIn(wrapper);
         return ret;
     }

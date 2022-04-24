@@ -7,13 +7,8 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Strings;
 using Noggog;
-using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reactive.Subjects;
-using System.Threading.Tasks;
 using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Masters;
@@ -37,7 +32,7 @@ public abstract class Processor
     protected DirectoryPath TempFolder;
     public bool DoMultithreading = true;
     public ModKey ModKey => SourcePath.ModKey;
-    protected DirectoryPath DataFolder => new DirectoryInfo(Path.GetDirectoryName(this.SourcePath));
+    protected DirectoryPath DataFolder => new DirectoryInfo(Path.GetDirectoryName(SourcePath));
     public delegate void DynamicProcessor(MajorRecordFrame majorFrame, long fileOffset);
     public delegate void DynamicStreamProcessor(IMutagenReadStream stream, MajorRecordFrame majorFrame, long fileOffset);
     protected Dictionary<RecordType, List<DynamicProcessor>> DynamicProcessors = new();
@@ -220,11 +215,11 @@ public abstract class Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (!majorFrame.TryLocateSubrecordFrame("EDID", out var edidFrame, out var edidLoc)) return;
+        if (!majorFrame.TryLocateSubrecord("EDID", out var edidFrame)) return;
         var formKey = FormKey.Factory(Masters, majorFrame.FormID.Raw);
         ProcessStringTermination(
             edidFrame,
-            fileOffset + majorFrame.HeaderLength + edidLoc,
+            fileOffset + majorFrame.HeaderLength + edidFrame.Location,
             formKey);
     }
 
@@ -555,7 +550,7 @@ public abstract class Processor
                 pos += subRec.TotalLength;
                 continue;
             }
-            var passedLen = PluginUtilityTranslation.SkipPastAll(frame.Content.Slice(pos), frame.Meta, containedType, out var numPassed);
+            var passedLen = RecordSpanExtensions.SkipPastAll(frame.Content.Slice(pos), frame.Meta, containedType, out var numPassed);
             // Found contained record
             if (!prevWasCounter)
             {
@@ -629,14 +624,14 @@ public abstract class Processor
 
     public class StringsAlignmentTypical : AStringsAlignment
     {
-        public HashSet<RecordType> StringTypes = new HashSet<RecordType>();
+        public HashSet<RecordType> StringTypes = new();
 
         public StringsAlignmentTypical(RecordType[] types)
         {
             StringTypes.Add(types);
         }
 
-        public override AStringsAlignment.Handle Handler => Align;
+        public override Handle Handler => Align;
 
         private void Align(
             IMutagenReadStream stream,
@@ -886,20 +881,20 @@ public abstract class Processor
         ICollection<RecordType> locationsToMove,
         bool enforcePast = false)
     {
-        var offender = PluginUtilityTranslation.FindFirstSubrecord(
+        var offender = RecordSpanExtensions.FindFirstSubrecord(
             majorFrame.Content,
             majorFrame.Meta,
-            recordTypes: offendingIndices.ToGetter());
+            recordTypes: offendingIndices.ToGetter())?.Location;
         if (offender == null) return false;
-        var limit = PluginUtilityTranslation.FindFirstSubrecord(
+        var limit = RecordSpanExtensions.FindFirstSubrecord(
             majorFrame.Content,
             majorFrame.Meta,
-            recordTypes: offendingLimits.ToGetter());
+            recordTypes: offendingLimits.ToGetter())?.Location;
         if (limit == null) return false;
-        long? locToMove = PluginUtilityTranslation.FindFirstSubrecord(
+        long? locToMove = RecordSpanExtensions.FindFirstSubrecord(
             majorFrame.Content.Slice(enforcePast ? offender.Value : 0),
             majorFrame.Meta,
-            recordTypes: locationsToMove.ToGetter());
+            recordTypes: locationsToMove.ToGetter())?.Location;
         if (locToMove == null)
         {
             locToMove = majorFrame.TotalLength;

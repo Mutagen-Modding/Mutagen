@@ -261,30 +261,15 @@ public static class HeaderExt
     /// <param name="type">Type to search for</param>
     /// <param name="header">SubrecordHeader if found</param>
     /// <returns>True if matching subrecord is found</returns>
-    public static bool TryLocateSubrecord(this MajorRecordFrame majorFrame, RecordType type, out SubrecordHeader header)
+    public static bool TryLocateSubrecordHeader(this MajorRecordFrame majorFrame, RecordType type, out SubrecordPinHeader header)
     {
-        return majorFrame.TryLocateSubrecord(type, header: out header, loc: out var _);
-    }
-
-    /// <summary>
-    /// Iterates a MajorRecordFrame's contents and locates the first occurance of the desired type
-    /// </summary>
-    /// <param name="majorFrame">Frame to read from</param>
-    /// <param name="type">Type to search for</param>
-    /// <param name="header">SubrecordHeader if found</param>
-    /// <param name="loc">Location of the subrecord, relative to the parent record's RecordType data</param>
-    /// <returns>True if matching subrecord is found</returns>
-    public static bool TryLocateSubrecord(this MajorRecordFrame majorFrame, RecordType type, out SubrecordHeader header, out int loc)
-    {
-        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
+        var find = RecordSpanExtensions.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type);
         if (find == null)
         {
             header = default;
-            loc = default;
             return false;
         }
-        header = new SubrecordHeader(majorFrame.Meta, majorFrame.Content.Slice(find.Value));
-        loc = find.Value + majorFrame.HeaderLength;
+        header = new SubrecordPinHeader(majorFrame.Meta, majorFrame.Content.Slice(find.Value.Location), find.Value.Location + majorFrame.HeaderLength);
         return true;
     }
 
@@ -296,81 +281,15 @@ public static class HeaderExt
     /// <param name="header">SubrecordHeader if found</param>
     /// <param name="loc">Location of the subrecord, relative to the parent record's RecordType data</param>
     /// <returns>True if matching subrecord is found</returns>
-    public static bool TryLocateSubrecord(this MajorRecordFrame majorFrame, RecordType type, int offset, out SubrecordHeader header, out int loc)
+    public static bool TryLocateSubrecordHeader(this MajorRecordFrame majorFrame, RecordType type, int offset, out SubrecordPinHeader header)
     {
-        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type, navigateToContent: false);
+        var find = RecordSpanExtensions.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type);
         if (find == null)
         {
             header = default;
-            loc = default;
             return false;
         }
-        header = new SubrecordHeader(majorFrame.Meta, majorFrame.Content.Slice(find.Value + offset - majorFrame.HeaderLength));
-        loc = find.Value + offset;
-        return true;
-    }
-
-    /// <summary>
-    /// Iterates a MajorRecordFrame's subrecords and locates the first occurance of the desired type
-    /// </summary>
-    /// <param name="majorFrame">Frame to read from</param>
-    /// <param name="type">Type to search for</param>
-    /// <param name="frame">SubrecordFrame if found</param>
-    /// <returns>True if matching subrecord is found</returns>
-    public static bool TryLocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, out SubrecordFrame frame)
-    {
-        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
-        if (find == null)
-        {
-            frame = default;
-            return false;
-        }
-        frame = new SubrecordFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value));
-        return true;
-    }
-
-    /// <summary>
-    /// Iterates a MajorRecordFrame's subrecords and locates the first occurance of the desired type
-    /// </summary>
-    /// <param name="majorFrame">Frame to read from</param>
-    /// <param name="type">Type to search for</param>
-    /// <param name="frame">SubrecordFrame if found</param>
-    /// <param name="loc">Location of the subrecord, relative to the parent record's RecordType data</param>
-    /// <returns>True if matching subrecord is found</returns>
-    public static bool TryLocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, out SubrecordFrame frame, out int loc)
-    {
-        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
-        if (find == null)
-        {
-            frame = default;
-            loc = default;
-            return false;
-        }
-        frame = new SubrecordFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value));
-        loc = find.Value + majorFrame.HeaderLength;
-        return true;
-    }
-
-    /// <summary>
-    /// Iterates a MajorRecordFrame's subrecords and locates the first occurance of the desired type
-    /// </summary>
-    /// <param name="majorFrame">Frame to read from</param>
-    /// <param name="type">Type to search for</param>
-    /// <param name="offset">Offset within the Major Record's contents to start searching</param>
-    /// <param name="frame">SubrecordFrame if found</param>
-    /// <param name="loc">Location of the subrecord, relative to the parent record's RecordType data</param>
-    /// <returns>True if matching subrecord is found</returns>
-    public static bool TryLocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, int offset, out SubrecordFrame frame, out int loc)
-    {
-        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type, navigateToContent: false);
-        if (find == null)
-        {
-            frame = default;
-            loc = default;
-            return false;
-        }
-        frame = new SubrecordFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value + offset - majorFrame.HeaderLength));
-        loc = find.Value + offset;
+        header = new SubrecordPinHeader(majorFrame.Meta, majorFrame.Content.Slice(find.Value.Location + offset - majorFrame.HeaderLength), find.Value.Location + offset);
         return true;
     }
 
@@ -381,15 +300,15 @@ public static class HeaderExt
     /// <param name="type">Type to search for</param>
     /// <param name="pin">SubrecordPinFrame if found</param>
     /// <returns>True if matching subrecord is found</returns>
-    public static bool TryLocateSubrecordPinFrame(this MajorRecordFrame majorFrame, RecordType type, out SubrecordPinFrame pin)
+    public static bool TryLocateSubrecord(this MajorRecordFrame majorFrame, RecordType type, out SubrecordPinFrame pin)
     {
-        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
+        var find = RecordSpanExtensions.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type);
         if (find == null)
         {
             pin = default;
             return false;
         }
-        pin = new SubrecordPinFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value), find.Value + majorFrame.HeaderLength);
+        pin = new SubrecordPinFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value.Location), find.Value.Location + majorFrame.HeaderLength);
         return true;
     }
 
@@ -401,15 +320,15 @@ public static class HeaderExt
     /// <param name="offset">Offset within the Major Record's contents to start searching</param>
     /// <param name="pin">SubrecordPinFrame if found</param>
     /// <returns>True if matching subrecord is found</returns>
-    public static bool TryLocateSubrecordPinFrame(this MajorRecordFrame majorFrame, RecordType type, int offset, out SubrecordPinFrame pin)
+    public static bool TryLocateSubrecord(this MajorRecordFrame majorFrame, RecordType type, int offset, out SubrecordPinFrame pin)
     {
-        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type, navigateToContent: false);
+        var find = RecordSpanExtensions.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type);
         if (find == null)
         {
             pin = default;
             return false;
         }
-        pin = new SubrecordPinFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value + offset - majorFrame.HeaderLength), find.Value + offset);
+        pin = new SubrecordPinFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value.Location + offset - majorFrame.HeaderLength), find.Value.Location + offset);
         return true;
     }
 
@@ -420,22 +339,9 @@ public static class HeaderExt
     /// <param name="type">Type to search for</param>
     /// <exception cref="System.ArgumentException">Thrown if target type cannot be found.</exception>
     /// <returns>First encountered SubrecordHeader with the given type</returns>
-    public static SubrecordHeader LocateSubrecord(this MajorRecordFrame majorFrame, RecordType type)
+    public static SubrecordPinHeader LocateSubrecordHeader(this MajorRecordFrame majorFrame, RecordType type)
     {
-        return majorFrame.LocateSubrecord(type, loc: out var _);
-    }
-
-    /// <summary>
-    /// Iterates a MajorRecordFrame's subrecords and locates the first occurance of the desired type
-    /// </summary>
-    /// <param name="majorFrame">Frame to read from</param>
-    /// <param name="type">Type to search for</param>
-    /// <param name="loc">Location of the subrecord, relative to the parent record's RecordType data</param>
-    /// <exception cref="System.ArgumentException">Thrown if target type cannot be found.</exception>
-    /// <returns>First encountered SubrecordHeader with the given type</returns>
-    public static SubrecordHeader LocateSubrecord(this MajorRecordFrame majorFrame, RecordType type, out int loc)
-    {
-        if (!TryLocateSubrecord(majorFrame, type, out var header, out loc))
+        if (!TryLocateSubrecordHeader(majorFrame, type, out var header))
         {
             throw new ArgumentException($"Could not locate subrecord of type: {type}");
         }
@@ -451,64 +357,13 @@ public static class HeaderExt
     /// <param name="loc">Location of the subrecord, relative to the parent record's RecordType data</param>
     /// <exception cref="System.ArgumentException">Thrown if target type cannot be found.</exception>
     /// <returns>First encountered SubrecordHeader with the given type</returns>
-    public static SubrecordHeader LocateSubrecord(this MajorRecordFrame majorFrame, RecordType type, int offset, out int loc)
+    public static SubrecordPinHeader LocateSubrecordHeader(this MajorRecordFrame majorFrame, RecordType type, int offset)
     {
-        if (!TryLocateSubrecord(majorFrame, type, offset, out var header, out loc))
+        if (!TryLocateSubrecordHeader(majorFrame, type, offset, out var header))
         {
             throw new ArgumentException($"Could not locate subrecord of type: {type}");
         }
         return header;
-    }
-
-    /// <summary>
-    /// Iterates a MajorRecordFrame's subrecords and locates the first occurance of the desired type
-    /// </summary>
-    /// <param name="majorFrame">Frame to read from</param>
-    /// <param name="type">Type to search for</param>
-    /// <exception cref="System.ArgumentException">Thrown if target type cannot be found.</exception>
-    /// <returns>First encountered SubrecordFrame with the given type</returns>
-    public static SubrecordFrame LocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type)
-    {
-        if (!TryLocateSubrecordFrame(majorFrame, type, out var frame))
-        {
-            throw new ArgumentException($"Could not locate subrecord of type: {type}");
-        }
-        return frame;
-    }
-
-    /// <summary>
-    /// Iterates a MajorRecordFrame's subrecords and locates the first occurance of the desired type
-    /// </summary>
-    /// <param name="majorFrame">Frame to read from</param>
-    /// <param name="type">Type to search for</param>
-    /// <param name="loc">Location of the subrecord, relative to the parent record's RecordType data</param>
-    /// <exception cref="System.ArgumentException">Thrown if target type cannot be found.</exception>
-    /// <returns>First encountered SubrecordFrame with the given type</returns>
-    public static SubrecordFrame LocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, out int loc)
-    {
-        if (!TryLocateSubrecordFrame(majorFrame, type, out var frame, out loc))
-        {
-            throw new ArgumentException($"Could not locate subrecord of type: {type}");
-        }
-        return frame;
-    }
-
-    /// <summary>
-    /// Iterates a MajorRecordFrame's subrecords and locates the first occurance of the desired type
-    /// </summary>
-    /// <param name="majorFrame">Frame to read from</param>
-    /// <param name="type">Type to search for</param>
-    /// <param name="offset">Offset within the Major Record's contents to start searching</param>
-    /// <param name="loc">Location of the subrecord, relative to the parent record's RecordType data</param>
-    /// <exception cref="System.ArgumentException">Thrown if target type cannot be found.</exception>
-    /// <returns>First encountered SubrecordFrame with the given type</returns>
-    public static SubrecordFrame LocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, int offset, out int loc)
-    {
-        if (!TryLocateSubrecordFrame(majorFrame, type, offset, out var frame, out loc))
-        {
-            throw new ArgumentException($"Could not locate subrecord of type: {type}");
-        }
-        return frame;
     }
 
     /// <summary>
@@ -518,9 +373,9 @@ public static class HeaderExt
     /// <param name="type">Type to search for</param>
     /// <exception cref="System.ArgumentException">Thrown if target type cannot be found.</exception>
     /// <returns>First encountered SubrecordPin with the given type</returns>
-    public static SubrecordPinFrame LocateSubrecordPinFrame(this MajorRecordFrame majorFrame, RecordType type)
+    public static SubrecordPinFrame LocateSubrecord(this MajorRecordFrame majorFrame, RecordType type)
     {
-        if (!TryLocateSubrecordPinFrame(majorFrame, type, out var pin))
+        if (!TryLocateSubrecord(majorFrame, type, out var pin))
         {
             throw new ArgumentException($"Could not locate subrecord of type: {type}");
         }
@@ -535,9 +390,9 @@ public static class HeaderExt
     /// <param name="offset">Offset within the Major Record's contents to start searching</param>
     /// <exception cref="System.ArgumentException">Thrown if target type cannot be found.</exception>
     /// <returns>First encountered SubrecordPin with the given type</returns>
-    public static SubrecordPinFrame LocateSubrecordPinFrame(this MajorRecordFrame majorFrame, RecordType type, int offset)
+    public static SubrecordPinFrame LocateSubrecord(this MajorRecordFrame majorFrame, RecordType type, int offset)
     {
-        if (!TryLocateSubrecordPinFrame(majorFrame, type, offset, out var pin))
+        if (!TryLocateSubrecord(majorFrame, type, offset, out var pin))
         {
             throw new ArgumentException($"Could not locate subrecord of type: {type}");
         }

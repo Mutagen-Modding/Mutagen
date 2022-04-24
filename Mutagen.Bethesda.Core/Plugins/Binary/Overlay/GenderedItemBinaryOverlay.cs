@@ -228,14 +228,14 @@ internal static class GenderedItemBinaryOverlay
         where T : class
     {
         int? maleLoc = null, femaleLoc = null;
-        var find = PluginUtilityTranslation.FindNextSubrecords(stream.RemainingMemory, package.MetaData.Constants, out var lenParsed, male, female);
-        if (find[0] != null)
+        var find = RecordSpanExtensions.FindNextSubrecords(stream.RemainingMemory, package.MetaData.Constants, out var lenParsed, male, female);
+        if (find[0] is { } firstFind)
         {
-            maleLoc = find[0];
+            maleLoc = firstFind.Location;
         }
-        if (find[1] != null)
+        if (find[1] is { } secondFind)
         {
-            femaleLoc = find[1];
+            femaleLoc = secondFind.Location;
         }
         var ret = new GenderedItemBinaryOverlay<T?>(
             stream.RemainingMemory.Slice(0, lenParsed),
@@ -258,14 +258,14 @@ internal static class GenderedItemBinaryOverlay
         where T : notnull
     {
         int? maleLoc = null, femaleLoc = null;
-        var find = PluginUtilityTranslation.FindNextSubrecords(stream.RemainingMemory, package.MetaData.Constants, out var lenParsed, male, female);
-        if (find[0] != null)
+        var find = RecordSpanExtensions.FindNextSubrecords(stream.RemainingMemory, package.MetaData.Constants, out var lenParsed, male, female);
+        if (find[0] is { } firstFind)
         {
-            maleLoc = find[0];
+            maleLoc = firstFind.Location;
         }
-        if (find[1] != null)
+        if (find[1] is { } secondFind)
         {
-            femaleLoc = find[1];
+            femaleLoc = secondFind.Location;
         }
         var ret = new GenderedItemBinaryOverlay<T>(
             stream.RemainingMemory.Slice(0, lenParsed),

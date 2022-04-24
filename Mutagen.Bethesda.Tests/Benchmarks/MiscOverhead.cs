@@ -1,14 +1,13 @@
 using BenchmarkDotNet.Attributes;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Translations.Binary;
-using System;
 
 namespace Mutagen.Bethesda.Tests.Benchmarks;
 
 public class MiscOverhead
 {
     static byte[] bytes = new byte[] { 1, 2, 3 };
-    static MutagenFrame frame = new MutagenFrame(new MutagenMemoryReadStream(bytes, new ParsingBundle(GameRelease.Oblivion, masterReferences: null!)));
+    static MutagenFrame frame = new(new MutagenMemoryReadStream(bytes, new ParsingBundle(GameRelease.Oblivion, masterReferences: null!)));
     static ByteBinaryTranslation<MutagenFrame, MutagenWriter> transl = ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance;
 
     [Benchmark]

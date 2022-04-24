@@ -1,9 +1,6 @@
 using Loqui;
-using System;
-using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -17,7 +14,7 @@ public static class TestBattery
         {
             using var sub = test.AllOutput.Subscribe(msg =>
             {
-                System.Console.WriteLine(msg);
+                Console.WriteLine(msg);
             });
             try
             {
@@ -32,12 +29,12 @@ public static class TestBattery
                     FileGeneration fg = new FileGeneration();
                     printable.ToString(fg);
                     var str = fg.ToString();
-                    System.Console.Write(fg);
-                    System.Console.WriteLine();
+                    Console.Write(fg);
+                    Console.WriteLine();
                 }
                 else
                 {
-                    System.Console.WriteLine(ex);
+                    Console.WriteLine(ex);
                 }
             }
             await test.Output.LastOrDefaultAsync();
@@ -45,11 +42,11 @@ public static class TestBattery
         }
         if (failed == 0)
         {
-            System.Console.WriteLine("All passed");
+            Console.WriteLine("All passed");
         }
         else
         {
-            System.Console.WriteLine($"{failed} / {(passed + failed)} failed");
+            Console.WriteLine($"{failed} / {(passed + failed)} failed");
         }
     }
 
@@ -115,7 +112,7 @@ public static class TestBattery
         }
         if (settings.TestBenchmarks)
         {
-            Mutagen.Bethesda.Tests.Benchmarks.Benchmarks.Run();
+            Benchmarks.Benchmarks.Run();
         }
         if (settings.TestRecordEnumerables)
         {

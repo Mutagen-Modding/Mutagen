@@ -22,16 +22,16 @@ public class HeaderExtTests
     public void MajorFrameTryLocateSubrecord()
     {
         var majorFrame = new MajorRecordFrame(GameConstants.Oblivion, GetMajorBytes());
-        Assert.True(majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var _, out var loc));
-        Assert.Equal(DataPos, loc);
+        Assert.True(majorFrame.TryLocateSubrecordHeader(RecordTypes.DATA, out var rec));
+        Assert.Equal(DataPos, rec.Location);
     }
 
     [Fact]
     public void MajorFrameTryLocateSubrecordFrame()
     {
         var majorFrame = new MajorRecordFrame(GameConstants.Oblivion, GetMajorBytes());
-        Assert.True(majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var subFrame, out var loc));
-        Assert.Equal(DataPos, loc);
+        Assert.True(majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var subFrame));
+        Assert.Equal(DataPos, subFrame.Location);
         Assert.Equal(DataValue, subFrame.AsInt32());
     }
 
@@ -39,16 +39,16 @@ public class HeaderExtTests
     public void MajorFrameLocateSubrecord()
     {
         var majorFrame = new MajorRecordFrame(GameConstants.Oblivion, GetMajorBytes());
-        majorFrame.LocateSubrecord(RecordTypes.DATA, out var loc);
-        Assert.Equal(DataPos, loc);
+        var rec = majorFrame.LocateSubrecordHeader(RecordTypes.DATA);
+        Assert.Equal(DataPos, rec.Location);
     }
 
     [Fact]
     public void MajorFrameLocateSubrecordFrame()
     {
         var majorFrame = new MajorRecordFrame(GameConstants.Oblivion, GetMajorBytes());
-        var subFrame = majorFrame.LocateSubrecordFrame(RecordTypes.DATA, out var loc);
-        Assert.Equal(DataPos, loc);
+        var subFrame = majorFrame.LocateSubrecord(RecordTypes.DATA);
+        Assert.Equal(DataPos, subFrame.Location);
         Assert.Equal(DataValue, subFrame.AsInt32());
     }
 
@@ -56,16 +56,16 @@ public class HeaderExtTests
     public void MajorMemoryFrameTryLocateSubrecord()
     {
         var majorFrame = new MajorRecordFrame(GameConstants.Oblivion, GetMajorBytes());
-        Assert.True(majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var _, out var loc));
-        Assert.Equal(DataPos, loc);
+        Assert.True(majorFrame.TryLocateSubrecordHeader(RecordTypes.DATA, out var rec));
+        Assert.Equal(DataPos, rec.Location);
     }
 
     [Fact]
     public void MajorMemoryFrameTryLocateSubrecordFrame()
     {
         var majorFrame = new MajorRecordFrame(GameConstants.Oblivion, GetMajorBytes());
-        Assert.True(majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var subFrame, out var loc));
-        Assert.Equal(DataPos, loc);
+        Assert.True(majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var subFrame));
+        Assert.Equal(DataPos, subFrame.Location);
         Assert.Equal(DataValue, subFrame.AsInt32());
     }
 
@@ -73,16 +73,16 @@ public class HeaderExtTests
     public void MajorMemoryFrameLocateSubrecord()
     {
         var majorFrame = new MajorRecordFrame(GameConstants.Oblivion, GetMajorBytes());
-        majorFrame.LocateSubrecord(RecordTypes.DATA, out var loc);
-        Assert.Equal(DataPos, loc);
+        var rec = majorFrame.LocateSubrecordHeader(RecordTypes.DATA);
+        Assert.Equal(DataPos, rec.Location);
     }
 
     [Fact]
     public void MajorMemoryFrameLocateSubrecordFrame()
     {
         var majorFrame = new MajorRecordFrame(GameConstants.Oblivion, GetMajorBytes());
-        var subFrame = majorFrame.LocateSubrecordFrame(RecordTypes.DATA, out var loc);
-        Assert.Equal(DataPos, loc);
+        var subFrame = majorFrame.LocateSubrecord(RecordTypes.DATA);
+        Assert.Equal(DataPos, subFrame.Location);
         Assert.Equal(DataValue, subFrame.AsInt32());
     }
 

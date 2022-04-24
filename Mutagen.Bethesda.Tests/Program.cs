@@ -1,9 +1,6 @@
 using Newtonsoft.Json;
 using Noggog;
-using System;
 using System.Diagnostics;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -27,7 +24,7 @@ class Program
                 throw new ArgumentException($"Could not find settings file at: {settingsFile}");
             }
 
-            System.Console.WriteLine($"Using settings: {settingsFile.Path}");
+            Console.WriteLine($"Using settings: {settingsFile.Path}");
             var settings = JsonConvert.DeserializeObject<TestingSettings>(File.ReadAllText(settingsFile.Path));
 
             Stopwatch sw = new Stopwatch();
@@ -37,9 +34,9 @@ class Program
         }
         catch (Exception ex)
         {
-            System.Console.WriteLine("Exception occurred:");
-            System.Console.WriteLine(ex);
+            Console.WriteLine("Exception occurred:");
+            Console.WriteLine(ex);
         }
-        System.Console.ReadLine();
+        Console.ReadLine();
     }
 }

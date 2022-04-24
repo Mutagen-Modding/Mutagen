@@ -1,5 +1,4 @@
 using Loqui;
-using System;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -10,8 +9,8 @@ public class MoreDataException : Exception, IPrintable
 
     public MoreDataException(string path, long pos)
     {
-        this.Position = pos;
-        this.Path = path;
+        Position = pos;
+        Path = path;
     }
 
     public override string ToString()

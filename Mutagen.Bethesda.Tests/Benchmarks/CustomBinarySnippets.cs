@@ -5,8 +5,6 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Newtonsoft.Json;
 using Noggog;
 using Noggog.Utility;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Tests.Benchmarks;
 
@@ -21,11 +19,11 @@ public class CustomBinarySnippets
     public async Task Setup()
     {
         // Load Settings
-        System.Console.WriteLine("Running in directory: " + Directory.GetCurrentDirectory());
+        Console.WriteLine("Running in directory: " + Directory.GetCurrentDirectory());
         FilePath settingsPath = "../../../../TestingSettings.xml";
-        System.Console.WriteLine("Settings path: " + settingsPath);
+        Console.WriteLine("Settings path: " + settingsPath);
         Settings = JsonConvert.DeserializeObject<TestingSettings>(File.ReadAllText(settingsPath.Path));
-        System.Console.WriteLine("Target settings: " + Settings.ToString());
+        Console.WriteLine("Target settings: " + Settings.ToString());
 
         var passthroughSettings = new PassthroughTestParams()
         {

@@ -1,12 +1,8 @@
 using Noggog;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -20,11 +16,11 @@ public enum TestState
 
 public class Test
 {
-    private readonly Subject<string> _output = new Subject<string>();
+    private readonly Subject<string> _output = new();
     private readonly Func<Subject<string>, Task> _toDo;
-    private readonly CompositeDisposable _disposables = new CompositeDisposable();
-    private readonly BehaviorSubject<TestState> _stateSignal = new BehaviorSubject<TestState>(TestState.NotStarted);
-    private readonly List<Test> _children = new List<Test>();
+    private readonly CompositeDisposable _disposables = new();
+    private readonly BehaviorSubject<TestState> _stateSignal = new(TestState.NotStarted);
+    private readonly List<Test> _children = new();
     private readonly bool _parallel;
 
     public string Name { get; }

@@ -6,11 +6,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using Noggog.Utility;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Testing;
 
@@ -22,9 +17,9 @@ public class OtherTests
     {
         var mod = OblivionMod.CreateFromBinary(
             new ModPath(
-                Mutagen.Bethesda.Oblivion.Constants.Oblivion,
+                Constants.Oblivion,
                 Path.Combine(settings.DataFolderLocations.Oblivion, target.Path)),
-            importMask: new Mutagen.Bethesda.Oblivion.GroupMask()
+            importMask: new GroupMask()
             {
                 Npcs = true
             });
@@ -49,7 +44,7 @@ public class OtherTests
     {
         var mod = OblivionMod.CreateFromBinary(
             new ModPath(
-                Mutagen.Bethesda.Oblivion.Constants.Oblivion,
+                Constants.Oblivion,
                 Path.Combine(settings.DataFolderLocations.Oblivion, target.Path)));
 
         using var tmp = TempFolder.FactoryByAddedPath("Mutagen_Oblivion_Binary_GroupMask_Export");
