@@ -263,7 +263,7 @@ public static class HeaderExt
     /// <returns>True if matching subrecord is found</returns>
     public static bool TryLocateSubrecord(this MajorRecordFrame majorFrame, RecordType type, out SubrecordPinHeader header)
     {
-        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type);
+        var find = RecordSpanExtensions.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type);
         if (find == null)
         {
             header = default;
@@ -283,7 +283,7 @@ public static class HeaderExt
     /// <returns>True if matching subrecord is found</returns>
     public static bool TryLocateSubrecord(this MajorRecordFrame majorFrame, RecordType type, int offset, out SubrecordPinHeader header)
     {
-        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type);
+        var find = RecordSpanExtensions.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type);
         if (find == null)
         {
             header = default;
@@ -302,7 +302,7 @@ public static class HeaderExt
     /// <returns>True if matching subrecord is found</returns>
     public static bool TryLocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, out SubrecordPinFrame pin)
     {
-        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type);
+        var find = RecordSpanExtensions.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type);
         if (find == null)
         {
             pin = default;
@@ -322,7 +322,7 @@ public static class HeaderExt
     /// <returns>True if matching subrecord is found</returns>
     public static bool TryLocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, int offset, out SubrecordPinFrame pin)
     {
-        var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type);
+        var find = RecordSpanExtensions.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type);
         if (find == null)
         {
             pin = default;

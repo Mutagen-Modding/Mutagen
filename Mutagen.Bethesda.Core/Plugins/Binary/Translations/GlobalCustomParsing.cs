@@ -1,8 +1,6 @@
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Records;
-using Noggog;
-using System;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
@@ -32,7 +30,7 @@ internal static class GlobalCustomParsing
     public static char? GetGlobalChar(MajorRecordFrame frame)
     {
         var subrecordSpan = frame.Content;
-        var fnamMeta = PluginUtilityTranslation.FindFirstSubrecord(subrecordSpan, frame.Meta, FNAM);
+        var fnamMeta = RecordSpanExtensions.FindFirstSubrecord(subrecordSpan, frame.Meta, FNAM);
         if (fnamMeta == null)
         {
             return null;
@@ -68,7 +66,7 @@ internal static class GlobalCustomParsing
         frame.Reader.Position = initialPos + frame.MetaData.Constants.MajorConstants.TypeAndLengthLength;
 
         // Read data
-        var fltvLoc = PluginUtilityTranslation.FindFirstSubrecord(majorMeta.Content, frame.MetaData.Constants, FLTV);
+        var fltvLoc = RecordSpanExtensions.FindFirstSubrecord(majorMeta.Content, frame.MetaData.Constants, FLTV);
         if (fltvLoc == null)
         {
             throw new ArgumentException($"Could not find FLTV.");

@@ -189,7 +189,7 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        var rdatHeader = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.RDAT);
+        var rdatHeader = RecordSpanExtensions.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.RDAT);
         if (rdatHeader == null) return;
 
         // Order RDATs by index
@@ -198,7 +198,7 @@ public class Fallout4Processor : Processor
         while (rdatHeader != null)
         {
             var index = BinaryPrimitives.ReadUInt32LittleEndian(rdatHeader.Value.Content);
-            var nextRdat = PluginUtilityTranslation.FindFirstSubrecord(
+            var nextRdat = RecordSpanExtensions.FindFirstSubrecord(
                 majorFrame.Content,
                 majorFrame.Meta,
                 RecordTypes.RDAT,

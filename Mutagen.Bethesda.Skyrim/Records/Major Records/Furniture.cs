@@ -141,7 +141,7 @@ partial class FurnitureBinaryCreateTranslation
         while (!stream.Complete)
         {
             // Find next set of records that make up a marker record
-            var next = PluginUtilityTranslation.FindNextSubrecords(
+            var next = RecordSpanExtensions.FindNextSubrecords(
                 stream.RemainingMemory,
                 stream.MetaData.Constants,
                 out var lenParsed,
@@ -203,7 +203,7 @@ partial class FurnitureBinaryCreateTranslation
 
     public static void FillBinaryMarkers(IMutagenReadStream stream, Func<int, FurnitureMarker> getter)
     {
-        var recs = PluginUtilityTranslation.ParseRepeatingSubrecord(
+        var recs = RecordSpanExtensions.ParseRepeatingSubrecord(
             stream.RemainingMemory,
             stream.MetaData.Constants,
             RecordTypes.FNPR,

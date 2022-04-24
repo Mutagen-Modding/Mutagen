@@ -550,7 +550,7 @@ public abstract class Processor
                 pos += subRec.TotalLength;
                 continue;
             }
-            var passedLen = PluginUtilityTranslation.SkipPastAll(frame.Content.Slice(pos), frame.Meta, containedType, out var numPassed);
+            var passedLen = RecordSpanExtensions.SkipPastAll(frame.Content.Slice(pos), frame.Meta, containedType, out var numPassed);
             // Found contained record
             if (!prevWasCounter)
             {
@@ -881,17 +881,17 @@ public abstract class Processor
         ICollection<RecordType> locationsToMove,
         bool enforcePast = false)
     {
-        var offender = PluginUtilityTranslation.FindFirstSubrecord(
+        var offender = RecordSpanExtensions.FindFirstSubrecord(
             majorFrame.Content,
             majorFrame.Meta,
             recordTypes: offendingIndices.ToGetter())?.Location;
         if (offender == null) return false;
-        var limit = PluginUtilityTranslation.FindFirstSubrecord(
+        var limit = RecordSpanExtensions.FindFirstSubrecord(
             majorFrame.Content,
             majorFrame.Meta,
             recordTypes: offendingLimits.ToGetter())?.Location;
         if (limit == null) return false;
-        long? locToMove = PluginUtilityTranslation.FindFirstSubrecord(
+        long? locToMove = RecordSpanExtensions.FindFirstSubrecord(
             majorFrame.Content.Slice(enforcePast ? offender.Value : 0),
             majorFrame.Meta,
             recordTypes: locationsToMove.ToGetter())?.Location;

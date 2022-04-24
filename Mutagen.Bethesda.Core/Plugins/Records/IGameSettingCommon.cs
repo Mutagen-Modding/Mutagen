@@ -154,7 +154,7 @@ public static class GameSettingUtility
     public static GetResponse<GameSettingType> GetGameSettingType(ReadOnlyMemorySlice<byte> span, GameConstants meta)
     {
         var majorMeta = meta.MajorRecordFrame(span);
-        var edidMeta = PluginUtilityTranslation.FindFirstSubrecord(majorMeta.Content, meta, Constants.EditorID);
+        var edidMeta = RecordSpanExtensions.FindFirstSubrecord(majorMeta.Content, meta, Constants.EditorID);
         if (edidMeta == null)
         {
             return GetResponse<GameSettingType>.Fail($"EDID was not located");
