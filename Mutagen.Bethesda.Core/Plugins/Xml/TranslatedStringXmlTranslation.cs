@@ -1,6 +1,5 @@
 using Loqui.Internal;
 using Mutagen.Bethesda.Strings;
-using System;
 using System.Xml.Linq;
 
 namespace Mutagen.Bethesda.Plugins.Xml;

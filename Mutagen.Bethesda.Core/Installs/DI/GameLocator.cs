@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
 using GameFinder;
 using GameFinder.StoreHandlers.GOG;
 using GameFinder.StoreHandlers.Steam;

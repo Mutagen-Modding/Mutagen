@@ -1,7 +1,5 @@
 using Mutagen.Bethesda.Plugins;
 using Noggog;
-using System;
-using System.Collections.Generic;
 using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Environments.DI;
 using Stream = System.IO.Stream;

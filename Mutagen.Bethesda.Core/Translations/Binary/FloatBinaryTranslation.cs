@@ -1,5 +1,4 @@
 using Noggog;
-using System;
 using System.Buffers.Binary;
 
 namespace Mutagen.Bethesda.Translations.Binary;

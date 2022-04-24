@@ -2,12 +2,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.IO.Abstractions;
-using System.Linq;
-using System.Threading;
 using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Strings;

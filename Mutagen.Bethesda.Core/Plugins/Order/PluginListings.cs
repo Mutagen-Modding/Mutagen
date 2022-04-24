@@ -1,10 +1,6 @@
 using DynamicData;
 using Noggog;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.IO.Abstractions;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using Mutagen.Bethesda.Environments.DI;

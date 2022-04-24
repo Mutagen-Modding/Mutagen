@@ -1,6 +1,4 @@
 using Mutagen.Bethesda.Plugins.Records;
-using System;
-using System.IO;
 
 namespace Mutagen.Bethesda.Plugins.Allocators;
 

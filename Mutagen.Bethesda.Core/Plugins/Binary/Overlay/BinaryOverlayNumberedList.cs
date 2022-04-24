@@ -1,9 +1,7 @@
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
-using System;
 using System.Buffers.Binary;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay;
 

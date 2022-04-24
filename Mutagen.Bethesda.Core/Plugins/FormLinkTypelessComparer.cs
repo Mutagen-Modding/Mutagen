@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Plugins;

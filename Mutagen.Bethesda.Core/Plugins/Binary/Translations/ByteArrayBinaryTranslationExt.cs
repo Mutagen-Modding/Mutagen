@@ -2,7 +2,6 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 

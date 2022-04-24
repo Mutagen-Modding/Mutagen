@@ -1,10 +1,7 @@
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Records;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using Mutagen.Bethesda.Plugins.Analysis;
 
 namespace Mutagen.Bethesda.Plugins.Utility;

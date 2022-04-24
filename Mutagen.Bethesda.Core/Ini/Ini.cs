@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using Noggog;
 
 namespace Mutagen.Bethesda.Inis;

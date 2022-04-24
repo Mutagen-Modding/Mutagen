@@ -2,9 +2,6 @@ using Loqui;
 using Loqui.Internal;
 using Loqui.Xml;
 using Noggog.Utility;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace Mutagen.Bethesda.Plugins.Xml;

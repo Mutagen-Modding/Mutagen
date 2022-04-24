@@ -1,5 +1,4 @@
-﻿using System;
-using System.Buffers.Binary;
+﻿using System.Buffers.Binary;
 using Ionic.Zlib;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Meta;

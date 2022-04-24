@@ -1,13 +1,9 @@
 using DynamicData;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.IO.Abstractions;
-using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Environments.DI;

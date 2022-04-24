@@ -1,11 +1,8 @@
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
-using System;
 using System.Buffers.Binary;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 
 namespace Mutagen.Bethesda.Strings;
 

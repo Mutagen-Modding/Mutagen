@@ -4,9 +4,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay;
 

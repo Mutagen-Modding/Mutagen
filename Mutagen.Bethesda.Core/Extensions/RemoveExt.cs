@@ -1,7 +1,6 @@
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
-using System.Collections.Generic;
 
 namespace Mutagen.Bethesda;
 

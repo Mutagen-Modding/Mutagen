@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Noggog;
+﻿using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 

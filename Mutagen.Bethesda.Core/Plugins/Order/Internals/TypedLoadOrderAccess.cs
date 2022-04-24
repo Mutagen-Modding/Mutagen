@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
 

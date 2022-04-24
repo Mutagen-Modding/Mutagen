@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Mutagen.Bethesda.Archives;
 
 public interface IArchiveFolder

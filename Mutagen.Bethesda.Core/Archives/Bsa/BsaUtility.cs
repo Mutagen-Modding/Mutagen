@@ -1,8 +1,6 @@
 using Noggog;
-using System;
-using System.IO;
 using System.Text;
-using System.Threading.Tasks;
+
 #pragma warning disable SYSLIB0001 // Type or member is obsolete
 
 namespace Mutagen.Bethesda.Archives.Bsa;

@@ -1,6 +1,4 @@
 using Mutagen.Bethesda.Plugins.Records;
-using System;
-using System.Collections.Generic;
 using System.IO.Abstractions;
 using Noggog;
 using Path = System.IO.Path;

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Loqui;
+﻿using Loqui;
 
 namespace Mutagen.Bethesda.Plugins.Records.Mapping;
 

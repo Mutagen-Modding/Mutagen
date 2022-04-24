@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Loqui;
+﻿using Loqui;
 using Mutagen.Bethesda.Plugins.Cache.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Noggog;

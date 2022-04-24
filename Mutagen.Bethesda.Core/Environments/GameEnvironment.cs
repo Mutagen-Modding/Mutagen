@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Installs;
 using Mutagen.Bethesda.Plugins.Cache;

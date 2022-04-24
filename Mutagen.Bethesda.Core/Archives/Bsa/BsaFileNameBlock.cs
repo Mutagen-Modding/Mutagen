@@ -1,6 +1,4 @@
 using Noggog;
-using System;
-using System.IO;
 using Mutagen.Bethesda.Archives.Exceptions;
 
 namespace Mutagen.Bethesda.Archives.Bsa;

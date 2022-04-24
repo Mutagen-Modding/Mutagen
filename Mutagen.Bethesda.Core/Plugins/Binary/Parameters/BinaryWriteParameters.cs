@@ -1,6 +1,4 @@
 using Mutagen.Bethesda.Strings;
-using System;
-using System.IO;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 

@@ -1,7 +1,5 @@
 using Mutagen.Bethesda.Plugins.Implicit;
 using Noggog;
-using System;
-using System.Collections.Generic;
 
 // Intentionally not in Implicit
 namespace Mutagen.Bethesda.Plugins;

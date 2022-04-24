@@ -1,7 +1,5 @@
 using Noggog;
-using System;
 using System.Buffers.Binary;
-using System.IO;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using K4os.Compression.LZ4.Streams;
 using Noggog.Streams;

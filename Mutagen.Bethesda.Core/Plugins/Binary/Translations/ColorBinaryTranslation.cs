@@ -2,7 +2,6 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 

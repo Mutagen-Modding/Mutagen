@@ -1,7 +1,5 @@
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Translations.Binary;
-using System;
-using System.Collections.Generic;
 using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;

@@ -2,11 +2,7 @@ using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Archives.Exceptions;
 using Mutagen.Bethesda.Plugins;
 using Noggog;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Threading;
 using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Strings;

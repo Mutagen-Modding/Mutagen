@@ -1,8 +1,5 @@
 using Noggog;
-using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.IO;
 
 namespace Mutagen.Bethesda.Archives.Bsa;
 

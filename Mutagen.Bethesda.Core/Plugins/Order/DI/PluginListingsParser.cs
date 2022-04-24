@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-
-namespace Mutagen.Bethesda.Plugins.Order.DI;
+﻿namespace Mutagen.Bethesda.Plugins.Order.DI;
 
 /// <summary>
 /// Converts a stream into raw enumerable of ModListings

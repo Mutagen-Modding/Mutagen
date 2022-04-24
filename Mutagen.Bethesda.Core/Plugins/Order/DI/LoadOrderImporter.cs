@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO.Abstractions;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IO.Abstractions;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;

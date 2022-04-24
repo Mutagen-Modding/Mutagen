@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-
 namespace Mutagen.Bethesda.Pex;
 
 public partial class PexObject

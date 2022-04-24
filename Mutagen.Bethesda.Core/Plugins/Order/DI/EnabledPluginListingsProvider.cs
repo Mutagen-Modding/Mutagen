@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Mutagen.Bethesda.Plugins.Order.DI;
+﻿namespace Mutagen.Bethesda.Plugins.Order.DI;
 
 public interface IEnabledPluginListingsProvider
 {

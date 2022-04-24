@@ -1,4 +1,3 @@
-using System;
 using System.Runtime.CompilerServices;
 
 namespace Mutagen.Bethesda.WPF.Reflection.Attributes;

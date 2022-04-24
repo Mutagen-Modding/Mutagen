@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Mutagen.Bethesda.Plugins.Aspects;
+﻿namespace Mutagen.Bethesda.Plugins.Aspects;
 
 /// <summary>
 /// An attribute that marks an interface as one that should be considered by Source Generator systems

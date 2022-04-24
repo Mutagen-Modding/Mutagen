@@ -1,4 +1,3 @@
-using System;
 using System.Data;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Exceptions;

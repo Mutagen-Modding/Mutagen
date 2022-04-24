@@ -1,7 +1,5 @@
 using DynamicData;
 using Noggog;
-using System;
-using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Reactive;
 using System.Reactive.Concurrency;

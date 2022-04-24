@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Mutagen.Bethesda.Plugins.Binary.Streams;
+﻿using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;

@@ -1,10 +1,6 @@
 using Mutagen.Bethesda.Plugins.Records;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.IO.Abstractions;
-using System.Linq;
 using Noggog;
 using Path = System.IO.Path;
 using DirectoryNotFoundException = System.IO.DirectoryNotFoundException;

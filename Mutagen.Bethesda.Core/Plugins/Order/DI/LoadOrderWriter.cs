@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO.Abstractions;
-using System.Linq;
+﻿using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Noggog;
 

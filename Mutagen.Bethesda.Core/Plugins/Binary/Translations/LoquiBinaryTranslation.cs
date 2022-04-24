@@ -2,11 +2,8 @@ using Loqui;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
 using Noggog.Utility;
-using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 

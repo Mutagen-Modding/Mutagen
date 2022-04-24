@@ -1,5 +1,4 @@
-﻿using System;
-using Mutagen.Bethesda.Plugins;
+﻿using Mutagen.Bethesda.Plugins;
 using Noggog;
 
 namespace Mutagen.Bethesda.Archives.DI;

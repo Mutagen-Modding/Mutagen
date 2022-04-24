@@ -1,5 +1,3 @@
-using System;
-
 namespace Mutagen.Bethesda.Pex;
 
 internal static class NumericExtensions

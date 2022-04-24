@@ -1,7 +1,5 @@
 using Loqui;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using static Loqui.EqualsMaskHelper;
 

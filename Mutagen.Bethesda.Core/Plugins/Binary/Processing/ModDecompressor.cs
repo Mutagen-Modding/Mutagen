@@ -1,8 +1,5 @@
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Utility;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using Mutagen.Bethesda.Plugins.Analysis;
 

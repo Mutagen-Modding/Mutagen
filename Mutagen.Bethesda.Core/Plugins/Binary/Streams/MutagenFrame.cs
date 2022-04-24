@@ -1,8 +1,6 @@
 using Noggog;
-using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Streams;
 

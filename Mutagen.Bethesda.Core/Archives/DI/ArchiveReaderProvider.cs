@@ -1,4 +1,3 @@
-using System;
 using System.IO.Abstractions;
 using Mutagen.Bethesda.Archives.Ba2;
 using Mutagen.Bethesda.Archives.Bsa;

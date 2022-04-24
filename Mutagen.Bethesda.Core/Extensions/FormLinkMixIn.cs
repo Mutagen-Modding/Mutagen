@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Loqui.Interfaces;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;

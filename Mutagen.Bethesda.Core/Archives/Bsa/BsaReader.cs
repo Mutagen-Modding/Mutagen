@@ -1,12 +1,8 @@
 using Noggog;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
-using System.Linq;
 using System.Text;
 using Mutagen.Bethesda.Archives.Exceptions;
-using System.IO;
 
 namespace Mutagen.Bethesda.Archives.Bsa;
 

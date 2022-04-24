@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace Mutagen.Bethesda.Plugins.RecordTypeMapping;
+﻿namespace Mutagen.Bethesda.Plugins.RecordTypeMapping;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Interface,
     Inherited = true)]

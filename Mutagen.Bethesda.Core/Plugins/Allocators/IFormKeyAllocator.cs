@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using Mutagen.Bethesda.Plugins.Records;

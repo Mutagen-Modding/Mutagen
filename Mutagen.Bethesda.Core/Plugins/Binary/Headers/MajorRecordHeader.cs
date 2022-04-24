@@ -1,10 +1,8 @@
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
-using System;
 using System.Buffers.Binary;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 

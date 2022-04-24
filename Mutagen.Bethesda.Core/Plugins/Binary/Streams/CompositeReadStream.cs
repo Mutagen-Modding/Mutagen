@@ -1,8 +1,4 @@
 using Noggog;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Streams;
 

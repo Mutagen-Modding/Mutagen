@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Mutagen.Bethesda.Archives.Ba2;
 
 class Ba2FolderWrapper : IArchiveFolder

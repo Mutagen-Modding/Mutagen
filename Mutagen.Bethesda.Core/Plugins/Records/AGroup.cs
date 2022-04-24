@@ -6,13 +6,10 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Noggog;
-using System;
 using System.Buffers.Binary;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Mutagen.Bethesda.Plugins.Meta;
 
 namespace Mutagen.Bethesda.Plugins.Records;

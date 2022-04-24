@@ -1,6 +1,5 @@
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Mutagen.Bethesda.Plugins.Cache

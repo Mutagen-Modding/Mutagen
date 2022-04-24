@@ -1,5 +1,4 @@
 using Noggog;
-using System;
 
 namespace Mutagen.Bethesda.Translations.Binary;
 

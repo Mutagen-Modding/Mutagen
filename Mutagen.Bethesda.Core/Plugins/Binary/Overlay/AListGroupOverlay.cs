@@ -3,10 +3,8 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Internals;
 using Noggog;
-using System;
 using System.Buffers.Binary;
 using System.Collections;
-using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins.Meta;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay;

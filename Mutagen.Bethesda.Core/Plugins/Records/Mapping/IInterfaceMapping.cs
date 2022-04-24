@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Mutagen.Bethesda.Plugins.Records.Mapping;
+﻿namespace Mutagen.Bethesda.Plugins.Records.Mapping;
 
 internal interface IInterfaceMapping
 {

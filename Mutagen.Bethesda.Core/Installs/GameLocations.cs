@@ -1,5 +1,4 @@
 using Noggog;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Installs.DI;
 

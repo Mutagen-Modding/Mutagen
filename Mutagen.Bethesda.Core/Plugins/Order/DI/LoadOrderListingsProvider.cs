@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Mutagen.Bethesda.Plugins.Order.DI;
+﻿namespace Mutagen.Bethesda.Plugins.Order.DI;
 
 public interface ILoadOrderListingsProvider : IListingsProvider
 {

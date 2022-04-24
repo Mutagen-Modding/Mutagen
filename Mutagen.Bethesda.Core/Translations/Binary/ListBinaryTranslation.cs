@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Noggog;
 using Loqui;
 using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;

@@ -1,5 +1,3 @@
-using System.IO;
-
 namespace Mutagen.Bethesda.Pex;
 
 public interface IBinaryObject

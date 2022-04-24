@@ -1,4 +1,3 @@
-using System;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Records.Mapping;

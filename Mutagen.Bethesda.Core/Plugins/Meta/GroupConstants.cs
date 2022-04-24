@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Mutagen.Bethesda.Plugins.Meta;
 
 public record GroupCellConstants(int TopGroupType, int[] SubTypes);

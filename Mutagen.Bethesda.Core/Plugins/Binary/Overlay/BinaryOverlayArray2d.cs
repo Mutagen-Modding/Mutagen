@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay;

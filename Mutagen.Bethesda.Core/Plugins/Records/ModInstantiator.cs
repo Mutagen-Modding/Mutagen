@@ -1,10 +1,7 @@
 // using Loqui;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
-using System;
-using System.Collections.Generic;
 using System.IO.Abstractions;
-using System.Linq;
 using System.Linq.Expressions;
 using DynamicData;
 using Loqui;

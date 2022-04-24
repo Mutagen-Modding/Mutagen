@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Mutagen.Bethesda.Plugins.Binary.Parameters;
+﻿namespace Mutagen.Bethesda.Plugins.Binary.Parameters;
 
 public class ParallelWriteParameters
 {

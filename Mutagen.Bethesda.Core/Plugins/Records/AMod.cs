@@ -1,7 +1,5 @@
 using Mutagen.Bethesda.Plugins.Allocators;
-using System;
 using Noggog;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Abstractions;
 using Loqui;

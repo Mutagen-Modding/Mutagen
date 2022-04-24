@@ -1,4 +1,3 @@
-using System;
 using System.IO.Abstractions;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Strings;

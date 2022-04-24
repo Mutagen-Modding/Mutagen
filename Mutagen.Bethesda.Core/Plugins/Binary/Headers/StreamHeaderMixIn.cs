@@ -4,7 +4,6 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
-using System;
 
 namespace Mutagen.Bethesda;
 

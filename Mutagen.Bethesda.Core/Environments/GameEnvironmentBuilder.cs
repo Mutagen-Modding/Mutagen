@@ -1,10 +1,7 @@
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;

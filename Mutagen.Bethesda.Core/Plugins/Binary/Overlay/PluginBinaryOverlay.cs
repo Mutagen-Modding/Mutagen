@@ -4,8 +4,6 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
-using System;
-using System.Collections.Generic;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Internals;
 

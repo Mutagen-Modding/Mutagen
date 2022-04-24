@@ -1,5 +1,4 @@
-﻿using System;
-using Mutagen.Bethesda.Plugins.Binary.Streams;
+﻿using Mutagen.Bethesda.Plugins.Binary.Streams;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 

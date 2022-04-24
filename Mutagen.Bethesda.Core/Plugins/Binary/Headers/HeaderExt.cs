@@ -3,9 +3,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
-using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings;
 

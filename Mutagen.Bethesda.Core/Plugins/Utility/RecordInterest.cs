@@ -1,5 +1,4 @@
 using Noggog;
-using System.Collections.Generic;
 
 namespace Mutagen.Bethesda.Plugins.Utility;
 

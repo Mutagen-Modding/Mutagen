@@ -2,8 +2,6 @@ using Loqui;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog.Utility;
-using System;
-using System.Linq;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 

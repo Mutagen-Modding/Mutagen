@@ -1,6 +1,5 @@
 using Loqui.Internal;
 using Loqui.Xml;
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
 
