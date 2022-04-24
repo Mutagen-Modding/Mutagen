@@ -155,7 +155,7 @@ public static class GameSettingUtility
     public static GetResponse<GameSettingType> GetGameSettingType(ReadOnlyMemorySlice<byte> span, GameConstants meta)
     {
         var majorMeta = meta.MajorRecordFrame(span);
-        var edidFrame = majorMeta.LocateSubrecordFrame(RecordTypes.EDID);
+        var edidFrame = majorMeta.LocateSubrecord(RecordTypes.EDID);
         var edid = edidFrame.AsString(MutagenEncodingProvider._1252);
         if (edid.Length == 0)
         {

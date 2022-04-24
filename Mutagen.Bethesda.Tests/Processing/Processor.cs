@@ -215,7 +215,7 @@ public abstract class Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (!majorFrame.TryLocateSubrecordFrame("EDID", out var edidFrame)) return;
+        if (!majorFrame.TryLocateSubrecord("EDID", out var edidFrame)) return;
         var formKey = FormKey.Factory(Masters, majorFrame.FormID.Raw);
         ProcessStringTermination(
             edidFrame,

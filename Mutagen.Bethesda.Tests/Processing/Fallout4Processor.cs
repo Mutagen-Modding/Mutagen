@@ -35,10 +35,10 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (!majorFrame.TryLocateSubrecordFrame("EDID", out var edidFrame)) return;
+        if (!majorFrame.TryLocateSubrecord("EDID", out var edidFrame)) return;
         if ((char)edidFrame.Content[0] != 'f') return;
 
-        if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec)) return;
+        if (!majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec)) return;
         ProcessZeroFloat(dataRec, fileOffset);
     }
 
@@ -46,7 +46,7 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec)) return;
+        if (!majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec)) return;
         int offset = 0;
         ProcessZeroFloats(dataRec, fileOffset, ref offset, 9);
     }
@@ -55,9 +55,9 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.MLSI, out var mlsi)) return;
+        if (!majorFrame.TryLocateSubrecord(RecordTypes.MLSI, out var mlsi)) return;
 
-        if (majorFrame.TryLocateSubrecord(RecordTypes.MSID, out _))
+        if (majorFrame.TryLocateSubrecordHeader(RecordTypes.MSID, out _))
         {
             var max = majorFrame.FindEnumerateSubrecords(RecordTypes.MSID)
                 .Select(x => x.AsInt32())
@@ -97,7 +97,7 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.SNAM, out var frame))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.SNAM, out var frame))
         {
             int offset = 0;
             int i = 0;
@@ -114,7 +114,7 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DNAM, out var frame))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.DNAM, out var frame))
         {
             int offset = 4;
             ProcessZeroFloats(frame, fileOffset, ref offset, 8);
@@ -128,28 +128,28 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.QNAM, out var frame))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.QNAM, out var frame))
         {
             int offset = 0;
             ProcessColorFloat(frame, fileOffset, ref offset, alpha: true);
         }
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.AIDT, out frame))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.AIDT, out frame))
         {
             int offset = 6;
             ProcessBool(frame, fileOffset, ref offset, 2);
             offset = 20;
             ProcessBool(frame, fileOffset, ref offset, 4);
         }
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.TPLT, out frame))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.TPLT, out frame))
         {
             ProcessFormIDOverflow(frame, fileOffset);
         }
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.TPTA, out frame))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.TPTA, out frame))
         {
             ProcessFormIDOverflows(frame, fileOffset);
         }
         if (majorFrame.FormID.ID == 0x3D62A
-            && majorFrame.TryLocateSubrecordFrame(RecordTypes.COCT, out frame))
+            && majorFrame.TryLocateSubrecord(RecordTypes.COCT, out frame))
         {
             var bytes = new byte[4];
             BinaryPrimitives.WriteInt32LittleEndian(bytes, 1);
@@ -163,7 +163,7 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DNAM, out var frame))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.DNAM, out var frame))
         {
             int offset = 8;
             ProcessColorFloat(frame, fileOffset, ref offset, alpha: true);
@@ -178,9 +178,9 @@ public class Fallout4Processor : Processor
     {
         stream.Position -= major.HeaderLength;
         var majorRec = stream.GetMajorRecordFrame();
-        if (!majorRec.TryLocateSubrecordFrame("EDID", out var edidRec)) throw new ArgumentException();
+        if (!majorRec.TryLocateSubrecord("EDID", out var edidRec)) throw new ArgumentException();
         if (edidRec.Content[0] != (byte)'s') return;
-        if (!majorRec.TryLocateSubrecordFrame("DATA", out var dataRec)) throw new ArgumentException();
+        if (!majorRec.TryLocateSubrecord("DATA", out var dataRec)) throw new ArgumentException();
         stream.Position += dataRec.Location;
         AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay);
     }

@@ -77,13 +77,13 @@ public class OblivionProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataFrame)) return;
+        if (!majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataFrame)) return;
 
         int amount = 0;
         var dataFlag = dataFrame.AsUInt8();
         if (dataFlag == 1)
         {
-            var lvld = majorFrame.LocateSubrecord(RecordTypes.LVLD);
+            var lvld = majorFrame.LocateSubrecordHeader(RecordTypes.LVLD);
             var index = lvld.EndLocation + 1;
             _instructions.SetAddition(
                 loc: index + fileOffset,
@@ -128,14 +128,14 @@ public class OblivionProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.RDAT, out var rdatFrame)) return;
+        if (!majorFrame.TryLocateSubrecord(RecordTypes.RDAT, out var rdatFrame)) return;
         var rdatIndex = rdatFrame.Location;
         int amount = 0;
         SortedList<uint, RangeInt64> rdats = new SortedList<uint, RangeInt64>();
         bool foundNext = true;
         while (foundNext)
         {
-            foundNext = majorFrame.TryLocateSubrecordFrame(RecordTypes.RDAT, offset: rdatIndex + rdatFrame.TotalLength, out var nextRdatFrame);
+            foundNext = majorFrame.TryLocateSubrecord(RecordTypes.RDAT, offset: rdatIndex + rdatFrame.TotalLength, out var nextRdatFrame);
             var index = rdatFrame.Content.UInt32();
             rdats[index] =
                 new RangeInt64(
@@ -155,7 +155,7 @@ public class OblivionProcessor : Processor
 
         if (rdats.ContainsKey((int)RegionData.RegionDataType.Icon))
         { // Need to create icon record
-            if (!majorFrame.TryLocateSubrecordFrame("EDID", out var edidFrame))
+            if (!majorFrame.TryLocateSubrecord("EDID", out var edidFrame))
             {
                 throw new ArgumentException();
             }
@@ -200,7 +200,7 @@ public class OblivionProcessor : Processor
         long fileOffset)
     {
         int amount = 0;
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XLOC, out var xlocFrame)
+        if (majorFrame.TryLocateSubrecord(RecordTypes.XLOC, out var xlocFrame)
             && xlocFrame.ContentLength == 16)
         {
             ModifyLengthTracking(fileOffset, -4);
@@ -214,7 +214,7 @@ public class OblivionProcessor : Processor
                     removeStart + 3));
             amount -= 4;
         }
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XSED, out var xsedFrame))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.XSED, out var xsedFrame))
         {
             var len = xsedFrame.ContentLength;
             if (len == 4)
@@ -232,12 +232,12 @@ public class OblivionProcessor : Processor
             }
         }
 
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec))
         {
             ProcessZeroFloats(dataRec, fileOffset, 6);
         }
 
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XTEL, out var xtelFrame))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.XTEL, out var xtelFrame))
         {
             ProcessZeroFloats(xtelFrame, fileOffset, 6);
         }
@@ -253,7 +253,7 @@ public class OblivionProcessor : Processor
         long fileOffset)
     {
         int amount = 0;
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec))
         {
             ProcessZeroFloats(dataRec, fileOffset, 6);
         }
@@ -269,7 +269,7 @@ public class OblivionProcessor : Processor
         long fileOffset)
     {
         int amount = 0;
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec))
         {
             ProcessZeroFloats(dataRec, fileOffset, 6);
         }
@@ -410,7 +410,7 @@ public class OblivionProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecord(RecordTypes.CSTD, out var ctsd))
+        if (majorFrame.TryLocateSubrecordHeader(RecordTypes.CSTD, out var ctsd))
         {
             var len = ctsd.ContentLength;
             var move = 2;
@@ -450,7 +450,7 @@ public class OblivionProcessor : Processor
         long fileOffset) 
     { 
         var amount = 0; 
-        if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec)) 
+        if (majorFrame.TryLocateSubrecordHeader(RecordTypes.DATA, out var dataRec)) 
         { 
             var len = dataRec.ContentLength; 
             if (len == 0x02) 
@@ -520,10 +520,10 @@ public class OblivionProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        var edidRec = majorFrame.LocateSubrecordFrame("EDID");
+        var edidRec = majorFrame.LocateSubrecord("EDID");
         if ((char)edidRec.Content[0] != 'f') return;
 
-        if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryLocateSubrecordHeader(RecordTypes.DATA, out var dataRec))
         {
             var dataIndex = dataRec.EndLocation;
             ProcessZeroFloat(majorFrame, fileOffset, ref dataIndex);
@@ -534,7 +534,7 @@ public class OblivionProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec))
         {
             var offset = 2;
             ProcessZeroFloats(dataRec, fileOffset, ref offset, 2);
@@ -545,7 +545,7 @@ public class OblivionProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec))
+        if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec))
         {
             var offset = 16;
             ProcessZeroFloats(dataRec, fileOffset, ref offset, 2);
