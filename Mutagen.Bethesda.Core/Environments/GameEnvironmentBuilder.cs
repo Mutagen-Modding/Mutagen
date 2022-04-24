@@ -56,7 +56,7 @@ public record GameEnvironmentBuilder<TMod, TModGetter>
     /// <summary>
     /// Exposes the load order for transformation by the user
     /// </summary>
-    /// <param name="transformer">Transformation lambda to process the incoming enuerable and return a new desired one</param>
+    /// <param name="transformer">Transformation lambda to process the incoming enumerable and return a new desired one</param>
     /// <returns>New builder with the new rules</returns>
     public GameEnvironmentBuilder<TMod, TModGetter> TransformLoadOrder(Func<IEnumerable<IModListingGetter>, IEnumerable<IModListingGetter>> transformer)
     {
@@ -86,6 +86,11 @@ public record GameEnvironmentBuilder<TMod, TModGetter>
                 throw new NotImplementedException();
         }
         return ret with { MutableMods = MutableMods.Add(mod) };
+    }
+
+    public GameEnvironmentBuilder<TMod, TModGetter> WithTargetDataFolder(DirectoryPath path)
+    {
+        return this with { DataDirectoryProvider = new DataDirectoryInjection(path) };
     }
 
     /// <summary>
