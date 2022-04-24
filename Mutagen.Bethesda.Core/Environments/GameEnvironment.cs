@@ -127,7 +127,7 @@ public class GameEnvironmentState :
         DirectoryPath dataFolderPath,
         FilePath loadOrderFilePath,
         FilePath? creationClubListingsFilePath,
-        ILoadOrder<IModListingGetter<IModGetter>> loadOrder,
+        ILoadOrderGetter<IModListingGetter<IModGetter>> loadOrder,
         ILinkCache linkCache,
         bool dispose = true)
     {
