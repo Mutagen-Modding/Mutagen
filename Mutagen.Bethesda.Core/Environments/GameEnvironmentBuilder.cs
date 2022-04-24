@@ -323,3 +323,18 @@ public record GameEnvironmentBuilder
             linkCache: linkCache);
     }
 }
+
+public static class GameEnvironmentBuilderMixIns
+{
+    public static GameEnvironmentBuilder Builder(this GameEnvironment env, GameRelease release)
+    {
+        return GameEnvironmentBuilder.Create(release);
+    }
+    
+    public static GameEnvironmentBuilder<TMod, TModGetter> Builder<TMod, TModGetter>(this GameEnvironment env, GameRelease release)
+        where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
+        where TModGetter : class, IContextGetterMod<TMod, TModGetter>
+    {
+        return GameEnvironmentBuilder<TMod, TModGetter>.Create(release);
+    }
+}
