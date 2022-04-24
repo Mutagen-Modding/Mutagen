@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using System;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Plugins.Records;
@@ -154,12 +155,8 @@ public static class GameSettingUtility
     public static GetResponse<GameSettingType> GetGameSettingType(ReadOnlyMemorySlice<byte> span, GameConstants meta)
     {
         var majorMeta = meta.MajorRecordFrame(span);
-        var edidMeta = RecordSpanExtensions.FindFirstSubrecord(majorMeta.Content, meta, Constants.EditorID);
-        if (edidMeta == null)
-        {
-            return GetResponse<GameSettingType>.Fail($"EDID was not located");
-        }
-        var edid = edidMeta.Value.AsString(MutagenEncodingProvider._1252);
+        var edidFrame = majorMeta.LocateSubrecordFrame(RecordTypes.EDID);
+        var edid = edidFrame.AsString(MutagenEncodingProvider._1252);
         if (edid.Length == 0)
         {
             return GetResponse<GameSettingType>.Fail("No EDID parsed.");
