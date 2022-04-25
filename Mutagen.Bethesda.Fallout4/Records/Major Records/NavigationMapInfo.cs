@@ -1,12 +1,12 @@
+﻿using System.Buffers.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System.Buffers.Binary;
 
-namespace Mutagen.Bethesda.Skyrim;
+namespace Mutagen.Bethesda.Fallout4;
 
 partial class NavigationMapInfoBinaryCreateTranslation
 {

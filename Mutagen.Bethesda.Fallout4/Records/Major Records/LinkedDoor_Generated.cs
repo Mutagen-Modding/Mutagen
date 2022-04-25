@@ -39,13 +39,13 @@ using System.Text;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class EdgeLink :
-        IEdgeLink,
-        IEquatable<IEdgeLinkGetter>,
-        ILoquiObjectSetter<EdgeLink>
+    public partial class LinkedDoor :
+        IEquatable<ILinkedDoorGetter>,
+        ILinkedDoor,
+        ILoquiObjectSetter<LinkedDoor>
     {
         #region Ctor
-        public EdgeLink()
+        public LinkedDoor()
         {
             CustomCtor();
         }
@@ -55,21 +55,15 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown
         public Int32 Unknown { get; set; } = default;
         #endregion
-        #region Mesh
-        private readonly IFormLink<INavigationMeshGetter> _Mesh = new FormLink<INavigationMeshGetter>();
-        public IFormLink<INavigationMeshGetter> Mesh
+        #region Door
+        private readonly IFormLink<IPlacedObjectGetter> _Door = new FormLink<IPlacedObjectGetter>();
+        public IFormLink<IPlacedObjectGetter> Door
         {
-            get => _Mesh;
-            set => _Mesh.SetTo(value);
+            get => _Door;
+            set => _Door.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<INavigationMeshGetter> IEdgeLinkGetter.Mesh => this.Mesh;
-        #endregion
-        #region TriangleIndex
-        public Int16 TriangleIndex { get; set; } = default;
-        #endregion
-        #region Unknown2
-        public SByte Unknown2 { get; set; } = default;
+        IFormLinkGetter<IPlacedObjectGetter> ILinkedDoorGetter.Door => this.Door;
         #endregion
 
         #region To String
@@ -78,7 +72,7 @@ namespace Mutagen.Bethesda.Fallout4
             FileGeneration fg,
             string? name = null)
         {
-            EdgeLinkMixIn.ToString(
+            LinkedDoorMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -88,16 +82,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IEdgeLinkGetter rhs) return false;
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not ILinkedDoorGetter rhs) return false;
+            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IEdgeLinkGetter? obj)
+        public bool Equals(ILinkedDoorGetter? obj)
         {
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -110,21 +104,15 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.Unknown = initialValue;
-                this.Mesh = initialValue;
-                this.TriangleIndex = initialValue;
-                this.Unknown2 = initialValue;
+                this.Door = initialValue;
             }
 
             public Mask(
                 TItem Unknown,
-                TItem Mesh,
-                TItem TriangleIndex,
-                TItem Unknown2)
+                TItem Door)
             {
                 this.Unknown = Unknown;
-                this.Mesh = Mesh;
-                this.TriangleIndex = TriangleIndex;
-                this.Unknown2 = Unknown2;
+                this.Door = Door;
             }
 
             #pragma warning disable CS8618
@@ -137,9 +125,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             #region Members
             public TItem Unknown;
-            public TItem Mesh;
-            public TItem TriangleIndex;
-            public TItem Unknown2;
+            public TItem Door;
             #endregion
 
             #region Equals
@@ -153,18 +139,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.Mesh, rhs.Mesh)) return false;
-                if (!object.Equals(this.TriangleIndex, rhs.TriangleIndex)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.Door, rhs.Door)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Unknown);
-                hash.Add(this.Mesh);
-                hash.Add(this.TriangleIndex);
-                hash.Add(this.Unknown2);
+                hash.Add(this.Door);
                 return hash.ToHashCode();
             }
 
@@ -174,9 +156,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Unknown)) return false;
-                if (!eval(this.Mesh)) return false;
-                if (!eval(this.TriangleIndex)) return false;
-                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.Door)) return false;
                 return true;
             }
             #endregion
@@ -185,9 +165,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Unknown)) return true;
-                if (eval(this.Mesh)) return true;
-                if (eval(this.TriangleIndex)) return true;
-                if (eval(this.Unknown2)) return true;
+                if (eval(this.Door)) return true;
                 return false;
             }
             #endregion
@@ -195,7 +173,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new EdgeLink.Mask<R>();
+                var ret = new LinkedDoor.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -203,9 +181,7 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Unknown = eval(this.Unknown);
-                obj.Mesh = eval(this.Mesh);
-                obj.TriangleIndex = eval(this.TriangleIndex);
-                obj.Unknown2 = eval(this.Unknown2);
+                obj.Door = eval(this.Door);
             }
             #endregion
 
@@ -215,16 +191,16 @@ namespace Mutagen.Bethesda.Fallout4
                 return ToString(printMask: null);
             }
 
-            public string ToString(EdgeLink.Mask<bool>? printMask = null)
+            public string ToString(LinkedDoor.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, EdgeLink.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, LinkedDoor.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(EdgeLink.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(LinkedDoor.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -232,17 +208,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         fg.AppendItem(Unknown, "Unknown");
                     }
-                    if (printMask?.Mesh ?? true)
+                    if (printMask?.Door ?? true)
                     {
-                        fg.AppendItem(Mesh, "Mesh");
-                    }
-                    if (printMask?.TriangleIndex ?? true)
-                    {
-                        fg.AppendItem(TriangleIndex, "TriangleIndex");
-                    }
-                    if (printMask?.Unknown2 ?? true)
-                    {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        fg.AppendItem(Door, "Door");
                     }
                 }
                 fg.AppendLine("]");
@@ -270,25 +238,19 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
             public Exception? Unknown;
-            public Exception? Mesh;
-            public Exception? TriangleIndex;
-            public Exception? Unknown2;
+            public Exception? Door;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                EdgeLink_FieldIndex enu = (EdgeLink_FieldIndex)index;
+                LinkedDoor_FieldIndex enu = (LinkedDoor_FieldIndex)index;
                 switch (enu)
                 {
-                    case EdgeLink_FieldIndex.Unknown:
+                    case LinkedDoor_FieldIndex.Unknown:
                         return Unknown;
-                    case EdgeLink_FieldIndex.Mesh:
-                        return Mesh;
-                    case EdgeLink_FieldIndex.TriangleIndex:
-                        return TriangleIndex;
-                    case EdgeLink_FieldIndex.Unknown2:
-                        return Unknown2;
+                    case LinkedDoor_FieldIndex.Door:
+                        return Door;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -296,20 +258,14 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthException(int index, Exception ex)
             {
-                EdgeLink_FieldIndex enu = (EdgeLink_FieldIndex)index;
+                LinkedDoor_FieldIndex enu = (LinkedDoor_FieldIndex)index;
                 switch (enu)
                 {
-                    case EdgeLink_FieldIndex.Unknown:
+                    case LinkedDoor_FieldIndex.Unknown:
                         this.Unknown = ex;
                         break;
-                    case EdgeLink_FieldIndex.Mesh:
-                        this.Mesh = ex;
-                        break;
-                    case EdgeLink_FieldIndex.TriangleIndex:
-                        this.TriangleIndex = ex;
-                        break;
-                    case EdgeLink_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case LinkedDoor_FieldIndex.Door:
+                        this.Door = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -318,20 +274,14 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthMask(int index, object obj)
             {
-                EdgeLink_FieldIndex enu = (EdgeLink_FieldIndex)index;
+                LinkedDoor_FieldIndex enu = (LinkedDoor_FieldIndex)index;
                 switch (enu)
                 {
-                    case EdgeLink_FieldIndex.Unknown:
+                    case LinkedDoor_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
-                    case EdgeLink_FieldIndex.Mesh:
-                        this.Mesh = (Exception?)obj;
-                        break;
-                    case EdgeLink_FieldIndex.TriangleIndex:
-                        this.TriangleIndex = (Exception?)obj;
-                        break;
-                    case EdgeLink_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case LinkedDoor_FieldIndex.Door:
+                        this.Door = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -342,9 +292,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (Overall != null) return true;
                 if (Unknown != null) return true;
-                if (Mesh != null) return true;
-                if (TriangleIndex != null) return true;
-                if (Unknown2 != null) return true;
+                if (Door != null) return true;
                 return false;
             }
             #endregion
@@ -380,9 +328,7 @@ namespace Mutagen.Bethesda.Fallout4
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(Mesh, "Mesh");
-                fg.AppendItem(TriangleIndex, "TriangleIndex");
-                fg.AppendItem(Unknown2, "Unknown2");
+                fg.AppendItem(Door, "Door");
             }
             #endregion
 
@@ -392,9 +338,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Mesh = this.Mesh.Combine(rhs.Mesh);
-                ret.TriangleIndex = this.TriangleIndex.Combine(rhs.TriangleIndex);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.Door = this.Door.Combine(rhs.Door);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -419,9 +363,7 @@ namespace Mutagen.Bethesda.Fallout4
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Unknown;
-            public bool Mesh;
-            public bool TriangleIndex;
-            public bool Unknown2;
+            public bool Door;
             #endregion
 
             #region Ctors
@@ -432,9 +374,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Unknown = defaultOn;
-                this.Mesh = defaultOn;
-                this.TriangleIndex = defaultOn;
-                this.Unknown2 = defaultOn;
+                this.Door = defaultOn;
             }
 
             #endregion
@@ -451,9 +391,7 @@ namespace Mutagen.Bethesda.Fallout4
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Unknown, null));
-                ret.Add((Mesh, null));
-                ret.Add((TriangleIndex, null));
-                ret.Add((Unknown2, null));
+                ret.Add((Door, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -465,31 +403,31 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => EdgeLinkCommon.Instance.GetContainedFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EdgeLinkSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LinkedDoorCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LinkedDoorSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => EdgeLinkBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => LinkedDoorBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((EdgeLinkBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((LinkedDoorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static EdgeLink CreateFromBinary(
+        public static LinkedDoor CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new EdgeLink();
-            ((EdgeLinkSetterCommon)((IEdgeLinkGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new LinkedDoor();
+            ((LinkedDoorSetterCommon)((ILinkedDoorGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -500,7 +438,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out EdgeLink item,
+            out LinkedDoor item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -515,34 +453,32 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((EdgeLinkSetterCommon)((IEdgeLinkGetter)this).CommonSetterInstance()!).Clear(this);
+            ((LinkedDoorSetterCommon)((ILinkedDoorGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static EdgeLink GetNew()
+        internal static LinkedDoor GetNew()
         {
-            return new EdgeLink();
+            return new LinkedDoor();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IEdgeLink :
-        IEdgeLinkGetter,
+    public partial interface ILinkedDoor :
         IFormLinkContainer,
-        ILoquiObjectSetter<IEdgeLink>
+        ILinkedDoorGetter,
+        ILoquiObjectSetter<ILinkedDoor>
     {
         new Int32 Unknown { get; set; }
-        new IFormLink<INavigationMeshGetter> Mesh { get; set; }
-        new Int16 TriangleIndex { get; set; }
-        new SByte Unknown2 { get; set; }
+        new IFormLink<IPlacedObjectGetter> Door { get; set; }
     }
 
-    public partial interface IEdgeLinkGetter :
+    public partial interface ILinkedDoorGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IEdgeLinkGetter>
+        ILoquiObject<ILinkedDoorGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -550,53 +486,51 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => EdgeLink_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => LinkedDoor_Registration.Instance;
         Int32 Unknown { get; }
-        IFormLinkGetter<INavigationMeshGetter> Mesh { get; }
-        Int16 TriangleIndex { get; }
-        SByte Unknown2 { get; }
+        IFormLinkGetter<IPlacedObjectGetter> Door { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class EdgeLinkMixIn
+    public static partial class LinkedDoorMixIn
     {
-        public static void Clear(this IEdgeLink item)
+        public static void Clear(this ILinkedDoor item)
         {
-            ((EdgeLinkSetterCommon)((IEdgeLinkGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((LinkedDoorSetterCommon)((ILinkedDoorGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static EdgeLink.Mask<bool> GetEqualsMask(
-            this IEdgeLinkGetter item,
-            IEdgeLinkGetter rhs,
+        public static LinkedDoor.Mask<bool> GetEqualsMask(
+            this ILinkedDoorGetter item,
+            ILinkedDoorGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((LinkedDoorCommon)((ILinkedDoorGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IEdgeLinkGetter item,
+            this ILinkedDoorGetter item,
             string? name = null,
-            EdgeLink.Mask<bool>? printMask = null)
+            LinkedDoor.Mask<bool>? printMask = null)
         {
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).ToString(
+            return ((LinkedDoorCommon)((ILinkedDoorGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IEdgeLinkGetter item,
+            this ILinkedDoorGetter item,
             FileGeneration fg,
             string? name = null,
-            EdgeLink.Mask<bool>? printMask = null)
+            LinkedDoor.Mask<bool>? printMask = null)
         {
-            ((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).ToString(
+            ((LinkedDoorCommon)((ILinkedDoorGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -604,21 +538,21 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IEdgeLinkGetter item,
-            IEdgeLinkGetter rhs,
-            EdgeLink.TranslationMask? equalsMask = null)
+            this ILinkedDoorGetter item,
+            ILinkedDoorGetter rhs,
+            LinkedDoor.TranslationMask? equalsMask = null)
         {
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).Equals(
+            return ((LinkedDoorCommon)((ILinkedDoorGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IEdgeLink lhs,
-            IEdgeLinkGetter rhs)
+            this ILinkedDoor lhs,
+            ILinkedDoorGetter rhs)
         {
-            ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LinkedDoorSetterTranslationCommon)((ILinkedDoorGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -627,11 +561,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IEdgeLink lhs,
-            IEdgeLinkGetter rhs,
-            EdgeLink.TranslationMask? copyMask = null)
+            this ILinkedDoor lhs,
+            ILinkedDoorGetter rhs,
+            LinkedDoor.TranslationMask? copyMask = null)
         {
-            ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LinkedDoorSetterTranslationCommon)((ILinkedDoorGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -640,28 +574,28 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IEdgeLink lhs,
-            IEdgeLinkGetter rhs,
-            out EdgeLink.ErrorMask errorMask,
-            EdgeLink.TranslationMask? copyMask = null)
+            this ILinkedDoor lhs,
+            ILinkedDoorGetter rhs,
+            out LinkedDoor.ErrorMask errorMask,
+            LinkedDoor.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LinkedDoorSetterTranslationCommon)((ILinkedDoorGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = EdgeLink.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LinkedDoor.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IEdgeLink lhs,
-            IEdgeLinkGetter rhs,
+            this ILinkedDoor lhs,
+            ILinkedDoorGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LinkedDoorSetterTranslationCommon)((ILinkedDoorGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -669,32 +603,32 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static EdgeLink DeepCopy(
-            this IEdgeLinkGetter item,
-            EdgeLink.TranslationMask? copyMask = null)
+        public static LinkedDoor DeepCopy(
+            this ILinkedDoorGetter item,
+            LinkedDoor.TranslationMask? copyMask = null)
         {
-            return ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LinkedDoorSetterTranslationCommon)((ILinkedDoorGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static EdgeLink DeepCopy(
-            this IEdgeLinkGetter item,
-            out EdgeLink.ErrorMask errorMask,
-            EdgeLink.TranslationMask? copyMask = null)
+        public static LinkedDoor DeepCopy(
+            this ILinkedDoorGetter item,
+            out LinkedDoor.ErrorMask errorMask,
+            LinkedDoor.TranslationMask? copyMask = null)
         {
-            return ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LinkedDoorSetterTranslationCommon)((ILinkedDoorGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static EdgeLink DeepCopy(
-            this IEdgeLinkGetter item,
+        public static LinkedDoor DeepCopy(
+            this ILinkedDoorGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LinkedDoorSetterTranslationCommon)((ILinkedDoorGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -702,11 +636,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IEdgeLink item,
+            this ILinkedDoor item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((EdgeLinkSetterCommon)((IEdgeLinkGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((LinkedDoorSetterCommon)((ILinkedDoorGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -722,50 +656,48 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    internal enum EdgeLink_FieldIndex
+    internal enum LinkedDoor_FieldIndex
     {
         Unknown = 0,
-        Mesh = 1,
-        TriangleIndex = 2,
-        Unknown2 = 3,
+        Door = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class EdgeLink_Registration : ILoquiRegistration
+    internal partial class LinkedDoor_Registration : ILoquiRegistration
     {
-        public static readonly EdgeLink_Registration Instance = new EdgeLink_Registration();
+        public static readonly LinkedDoor_Registration Instance = new LinkedDoor_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 321,
+            msgID: 447,
             version: 0);
 
-        public const string GUID = "d5312308-0813-41dc-87c0-d45119a5615e";
+        public const string GUID = "887e6b28-462d-4f2c-a981-65e591efced9";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(EdgeLink.Mask<>);
+        public static readonly Type MaskType = typeof(LinkedDoor.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(EdgeLink.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(LinkedDoor.ErrorMask);
 
-        public static readonly Type ClassType = typeof(EdgeLink);
+        public static readonly Type ClassType = typeof(LinkedDoor);
 
-        public static readonly Type GetterType = typeof(IEdgeLinkGetter);
+        public static readonly Type GetterType = typeof(ILinkedDoorGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IEdgeLink);
+        public static readonly Type SetterType = typeof(ILinkedDoor);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.EdgeLink";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.LinkedDoor";
 
-        public const string Name = "EdgeLink";
+        public const string Name = "LinkedDoor";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -773,7 +705,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(EdgeLinkBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(LinkedDoorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -806,32 +738,30 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class EdgeLinkSetterCommon
+    internal partial class LinkedDoorSetterCommon
     {
-        public static readonly EdgeLinkSetterCommon Instance = new EdgeLinkSetterCommon();
+        public static readonly LinkedDoorSetterCommon Instance = new LinkedDoorSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IEdgeLink item)
+        public void Clear(ILinkedDoor item)
         {
             ClearPartial();
             item.Unknown = default;
-            item.Mesh.Clear();
-            item.TriangleIndex = default;
-            item.Unknown2 = default;
+            item.Door.Clear();
         }
         
         #region Mutagen
-        public void RemapLinks(IEdgeLink obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ILinkedDoor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Mesh.Relink(mapping);
+            obj.Door.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IEdgeLink item,
+            ILinkedDoor item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -839,23 +769,23 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: EdgeLinkBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: LinkedDoorBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class EdgeLinkCommon
+    internal partial class LinkedDoorCommon
     {
-        public static readonly EdgeLinkCommon Instance = new EdgeLinkCommon();
+        public static readonly LinkedDoorCommon Instance = new LinkedDoorCommon();
 
-        public EdgeLink.Mask<bool> GetEqualsMask(
-            IEdgeLinkGetter item,
-            IEdgeLinkGetter rhs,
+        public LinkedDoor.Mask<bool> GetEqualsMask(
+            ILinkedDoorGetter item,
+            ILinkedDoorGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new EdgeLink.Mask<bool>(false);
-            ((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new LinkedDoor.Mask<bool>(false);
+            ((LinkedDoorCommon)((ILinkedDoorGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -864,22 +794,20 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            IEdgeLinkGetter item,
-            IEdgeLinkGetter rhs,
-            EdgeLink.Mask<bool> ret,
+            ILinkedDoorGetter item,
+            ILinkedDoorGetter rhs,
+            LinkedDoor.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.Mesh = item.Mesh.Equals(rhs.Mesh);
-            ret.TriangleIndex = item.TriangleIndex == rhs.TriangleIndex;
-            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.Door = item.Door.Equals(rhs.Door);
         }
         
         public string ToString(
-            IEdgeLinkGetter item,
+            ILinkedDoorGetter item,
             string? name = null,
-            EdgeLink.Mask<bool>? printMask = null)
+            LinkedDoor.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -891,18 +819,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void ToString(
-            IEdgeLinkGetter item,
+            ILinkedDoorGetter item,
             FileGeneration fg,
             string? name = null,
-            EdgeLink.Mask<bool>? printMask = null)
+            LinkedDoor.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"EdgeLink =>");
+                fg.AppendLine($"LinkedDoor =>");
             }
             else
             {
-                fg.AppendLine($"{name} (EdgeLink) =>");
+                fg.AppendLine($"{name} (LinkedDoor) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -916,61 +844,43 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            IEdgeLinkGetter item,
+            ILinkedDoorGetter item,
             FileGeneration fg,
-            EdgeLink.Mask<bool>? printMask = null)
+            LinkedDoor.Mask<bool>? printMask = null)
         {
             if (printMask?.Unknown ?? true)
             {
                 fg.AppendItem(item.Unknown, "Unknown");
             }
-            if (printMask?.Mesh ?? true)
+            if (printMask?.Door ?? true)
             {
-                fg.AppendItem(item.Mesh.FormKey, "Mesh");
-            }
-            if (printMask?.TriangleIndex ?? true)
-            {
-                fg.AppendItem(item.TriangleIndex, "TriangleIndex");
-            }
-            if (printMask?.Unknown2 ?? true)
-            {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                fg.AppendItem(item.Door.FormKey, "Door");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IEdgeLinkGetter? lhs,
-            IEdgeLinkGetter? rhs,
+            ILinkedDoorGetter? lhs,
+            ILinkedDoorGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)EdgeLink_FieldIndex.Unknown) ?? true))
+            if ((crystal?.GetShouldTranslate((int)LinkedDoor_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EdgeLink_FieldIndex.Mesh) ?? true))
+            if ((crystal?.GetShouldTranslate((int)LinkedDoor_FieldIndex.Door) ?? true))
             {
-                if (!lhs.Mesh.Equals(rhs.Mesh)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)EdgeLink_FieldIndex.TriangleIndex) ?? true))
-            {
-                if (lhs.TriangleIndex != rhs.TriangleIndex) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)EdgeLink_FieldIndex.Unknown2) ?? true))
-            {
-                if (lhs.Unknown2 != rhs.Unknown2) return false;
+                if (!lhs.Door.Equals(rhs.Door)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IEdgeLinkGetter item)
+        public virtual int GetHashCode(ILinkedDoorGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Unknown);
-            hash.Add(item.Mesh);
-            hash.Add(item.TriangleIndex);
-            hash.Add(item.Unknown2);
+            hash.Add(item.Door);
             return hash.ToHashCode();
         }
         
@@ -979,57 +889,49 @@ namespace Mutagen.Bethesda.Fallout4
         
         public object GetNew()
         {
-            return EdgeLink.GetNew();
+            return LinkedDoor.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IEdgeLinkGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILinkedDoorGetter obj)
         {
-            yield return FormLinkInformation.Factory(obj.Mesh);
+            yield return FormLinkInformation.Factory(obj.Door);
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class EdgeLinkSetterTranslationCommon
+    internal partial class LinkedDoorSetterTranslationCommon
     {
-        public static readonly EdgeLinkSetterTranslationCommon Instance = new EdgeLinkSetterTranslationCommon();
+        public static readonly LinkedDoorSetterTranslationCommon Instance = new LinkedDoorSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IEdgeLink item,
-            IEdgeLinkGetter rhs,
+            ILinkedDoor item,
+            ILinkedDoorGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)EdgeLink_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LinkedDoor_FieldIndex.Unknown) ?? true))
             {
                 item.Unknown = rhs.Unknown;
             }
-            if ((copyMask?.GetShouldTranslate((int)EdgeLink_FieldIndex.Mesh) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LinkedDoor_FieldIndex.Door) ?? true))
             {
-                item.Mesh.SetTo(rhs.Mesh.FormKey);
-            }
-            if ((copyMask?.GetShouldTranslate((int)EdgeLink_FieldIndex.TriangleIndex) ?? true))
-            {
-                item.TriangleIndex = rhs.TriangleIndex;
-            }
-            if ((copyMask?.GetShouldTranslate((int)EdgeLink_FieldIndex.Unknown2) ?? true))
-            {
-                item.Unknown2 = rhs.Unknown2;
+                item.Door.SetTo(rhs.Door.FormKey);
             }
         }
         
         #endregion
         
-        public EdgeLink DeepCopy(
-            IEdgeLinkGetter item,
-            EdgeLink.TranslationMask? copyMask = null)
+        public LinkedDoor DeepCopy(
+            ILinkedDoorGetter item,
+            LinkedDoor.TranslationMask? copyMask = null)
         {
-            EdgeLink ret = (EdgeLink)((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).GetNew();
-            ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LinkedDoor ret = (LinkedDoor)((LinkedDoorCommon)((ILinkedDoorGetter)item).CommonInstance()!).GetNew();
+            ((LinkedDoorSetterTranslationCommon)((ILinkedDoorGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1038,30 +940,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public EdgeLink DeepCopy(
-            IEdgeLinkGetter item,
-            out EdgeLink.ErrorMask errorMask,
-            EdgeLink.TranslationMask? copyMask = null)
+        public LinkedDoor DeepCopy(
+            ILinkedDoorGetter item,
+            out LinkedDoor.ErrorMask errorMask,
+            LinkedDoor.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            EdgeLink ret = (EdgeLink)((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).GetNew();
-            ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LinkedDoor ret = (LinkedDoor)((LinkedDoorCommon)((ILinkedDoorGetter)item).CommonInstance()!).GetNew();
+            ((LinkedDoorSetterTranslationCommon)((ILinkedDoorGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = EdgeLink.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LinkedDoor.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public EdgeLink DeepCopy(
-            IEdgeLinkGetter item,
+        public LinkedDoor DeepCopy(
+            ILinkedDoorGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            EdgeLink ret = (EdgeLink)((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).GetNew();
-            ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LinkedDoor ret = (LinkedDoor)((LinkedDoorCommon)((ILinkedDoorGetter)item).CommonInstance()!).GetNew();
+            ((LinkedDoorSetterTranslationCommon)((ILinkedDoorGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1077,27 +979,27 @@ namespace Mutagen.Bethesda.Fallout4
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class EdgeLink
+    public partial class LinkedDoor
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => EdgeLink_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => EdgeLink_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => LinkedDoor_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LinkedDoor_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => EdgeLinkCommon.Instance;
+        protected object CommonInstance() => LinkedDoorCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return EdgeLinkSetterCommon.Instance;
+            return LinkedDoorSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => EdgeLinkSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => LinkedDoorSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IEdgeLinkGetter.CommonInstance() => this.CommonInstance();
+        object ILinkedDoorGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IEdgeLinkGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ILinkedDoorGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IEdgeLinkGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ILinkedDoorGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1108,25 +1010,23 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class EdgeLinkBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class LinkedDoorBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static EdgeLinkBinaryWriteTranslation Instance = new EdgeLinkBinaryWriteTranslation();
+        public readonly static LinkedDoorBinaryWriteTranslation Instance = new LinkedDoorBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IEdgeLinkGetter item,
+            ILinkedDoorGetter item,
             MutagenWriter writer)
         {
             writer.Write(item.Unknown);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Mesh);
-            writer.Write(item.TriangleIndex);
-            writer.Write(item.Unknown2);
+                item: item.Door);
         }
 
         public void Write(
             MutagenWriter writer,
-            IEdgeLinkGetter item,
+            ILinkedDoorGetter item,
             TypedWriteParams? translationParams = null)
         {
             WriteEmbedded(
@@ -1140,25 +1040,23 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IEdgeLinkGetter)item,
+                item: (ILinkedDoorGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class EdgeLinkBinaryCreateTranslation
+    internal partial class LinkedDoorBinaryCreateTranslation
     {
-        public readonly static EdgeLinkBinaryCreateTranslation Instance = new EdgeLinkBinaryCreateTranslation();
+        public readonly static LinkedDoorBinaryCreateTranslation Instance = new LinkedDoorBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IEdgeLink item,
+            ILinkedDoor item,
             MutagenFrame frame)
         {
             item.Unknown = frame.ReadInt32();
-            item.Mesh.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.TriangleIndex = frame.ReadInt16();
-            item.Unknown2 = frame.ReadInt8();
+            item.Door.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }
@@ -1167,14 +1065,14 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class EdgeLinkBinaryTranslationMixIn
+    public static class LinkedDoorBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IEdgeLinkGetter item,
+            this ILinkedDoorGetter item,
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((EdgeLinkBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((LinkedDoorBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1187,55 +1085,53 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal partial class EdgeLinkBinaryOverlay :
+    internal partial class LinkedDoorBinaryOverlay :
         PluginBinaryOverlay,
-        IEdgeLinkGetter
+        ILinkedDoorGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => EdgeLink_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => EdgeLink_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => LinkedDoor_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LinkedDoor_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => EdgeLinkCommon.Instance;
+        protected object CommonInstance() => LinkedDoorCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => EdgeLinkSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => LinkedDoorSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IEdgeLinkGetter.CommonInstance() => this.CommonInstance();
+        object ILinkedDoorGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IEdgeLinkGetter.CommonSetterInstance() => null;
+        object? ILinkedDoorGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IEdgeLinkGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ILinkedDoorGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => EdgeLinkCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LinkedDoorCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => EdgeLinkBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => LinkedDoorBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((EdgeLinkBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((LinkedDoorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public IFormLinkGetter<INavigationMeshGetter> Mesh => new FormLink<INavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public Int16 TriangleIndex => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2));
-        public SByte Unknown2 => (sbyte)_data.Slice(0xA, 0x1)[0];
+        public IFormLinkGetter<IPlacedObjectGetter> Door => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected EdgeLinkBinaryOverlay(
+        protected LinkedDoorBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1245,16 +1141,16 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static EdgeLinkBinaryOverlay EdgeLinkFactory(
+        public static LinkedDoorBinaryOverlay LinkedDoorFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new EdgeLinkBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0xB),
+            var ret = new LinkedDoorBinaryOverlay(
+                bytes: stream.RemainingMemory.Slice(0, 0x8),
                 package: package);
             int offset = stream.Position;
-            stream.Position += 0xB;
+            stream.Position += 0x8;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1262,12 +1158,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static EdgeLinkBinaryOverlay EdgeLinkFactory(
+        public static LinkedDoorBinaryOverlay LinkedDoorFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return EdgeLinkFactory(
+            return LinkedDoorFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1279,7 +1175,7 @@ namespace Mutagen.Bethesda.Fallout4
             FileGeneration fg,
             string? name = null)
         {
-            EdgeLinkMixIn.ToString(
+            LinkedDoorMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1289,16 +1185,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IEdgeLinkGetter rhs) return false;
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not ILinkedDoorGetter rhs) return false;
+            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IEdgeLinkGetter? obj)
+        public bool Equals(ILinkedDoorGetter? obj)
         {
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

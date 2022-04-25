@@ -56,6 +56,7 @@
       <Group name="ShaderParticleGeometries" refName="ShaderParticleGeometry" />
       <Group name="VisualEffects" refName="VisualEffect" />
       <Group name="Regions" refName="Region" />
+      <Group name="NavigationMeshInfoMaps" refName="NavigationMeshInfoMap" />
       <!--			<Group name="VoiceTypes" refName="VoiceType" />-->
       <!--			<Group name="Quests" refName="Quest" />-->
       <!--			<Group name="MaterialTypes" refName="MaterialType" />-->

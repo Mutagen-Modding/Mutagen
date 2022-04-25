@@ -143,7 +143,7 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             Container_Registration.Instance,
             Npc_Registration.Instance,
             SoundOutputModel_Registration.Instance,
-            ANavigationMesh_Registration.Instance,
+            NavigationMesh_Registration.Instance,
             MiscItem_Registration.Instance,
             MiscItemComponent_Registration.Instance,
             WeatherType_Registration.Instance,
@@ -323,7 +323,14 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             WeatherSound_Registration.Instance,
             WeatherMagic_Registration.Instance,
             WeatherGodRays_Registration.Instance,
-            Climate_Registration.Instance
+            Climate_Registration.Instance,
+            NavigationMeshInfoMap_Registration.Instance,
+            NavigationMapInfo_Registration.Instance,
+            LinkedDoor_Registration.Instance,
+            IslandData_Registration.Instance,
+            PreferredPathing_Registration.Instance,
+            NavmeshSet_Registration.Instance,
+            NavmeshNode_Registration.Instance
         );
     }
 }

@@ -39,37 +39,32 @@ using System.Text;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class EdgeLink :
-        IEdgeLink,
-        IEquatable<IEdgeLinkGetter>,
-        ILoquiObjectSetter<EdgeLink>
+    public partial class NavmeshSet :
+        IEquatable<INavmeshSetGetter>,
+        ILoquiObjectSetter<NavmeshSet>,
+        INavmeshSet
     {
         #region Ctor
-        public EdgeLink()
+        public NavmeshSet()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Unknown
-        public Int32 Unknown { get; set; } = default;
-        #endregion
-        #region Mesh
-        private readonly IFormLink<INavigationMeshGetter> _Mesh = new FormLink<INavigationMeshGetter>();
-        public IFormLink<INavigationMeshGetter> Mesh
-        {
-            get => _Mesh;
-            set => _Mesh.SetTo(value);
-        }
+        #region Navmeshes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<INavigationMeshGetter> IEdgeLinkGetter.Mesh => this.Mesh;
+        private ExtendedList<IFormLinkGetter<INavigationMeshGetter>> _Navmeshes = new ExtendedList<IFormLinkGetter<INavigationMeshGetter>>();
+        public ExtendedList<IFormLinkGetter<INavigationMeshGetter>> Navmeshes
+        {
+            get => this._Navmeshes;
+            init => this._Navmeshes = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> INavmeshSetGetter.Navmeshes => _Navmeshes;
         #endregion
-        #region TriangleIndex
-        public Int16 TriangleIndex { get; set; } = default;
-        #endregion
-        #region Unknown2
-        public SByte Unknown2 { get; set; } = default;
+
         #endregion
 
         #region To String
@@ -78,7 +73,7 @@ namespace Mutagen.Bethesda.Fallout4
             FileGeneration fg,
             string? name = null)
         {
-            EdgeLinkMixIn.ToString(
+            NavmeshSetMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -88,16 +83,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IEdgeLinkGetter rhs) return false;
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not INavmeshSetGetter rhs) return false;
+            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IEdgeLinkGetter? obj)
+        public bool Equals(INavmeshSetGetter? obj)
         {
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -107,24 +102,9 @@ namespace Mutagen.Bethesda.Fallout4
             IMask<TItem>
         {
             #region Ctors
-            public Mask(TItem initialValue)
+            public Mask(TItem Navmeshes)
             {
-                this.Unknown = initialValue;
-                this.Mesh = initialValue;
-                this.TriangleIndex = initialValue;
-                this.Unknown2 = initialValue;
-            }
-
-            public Mask(
-                TItem Unknown,
-                TItem Mesh,
-                TItem TriangleIndex,
-                TItem Unknown2)
-            {
-                this.Unknown = Unknown;
-                this.Mesh = Mesh;
-                this.TriangleIndex = TriangleIndex;
-                this.Unknown2 = Unknown2;
+                this.Navmeshes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Navmeshes, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -136,10 +116,7 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public TItem Unknown;
-            public TItem Mesh;
-            public TItem TriangleIndex;
-            public TItem Unknown2;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Navmeshes;
             #endregion
 
             #region Equals
@@ -152,19 +129,13 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.Mesh, rhs.Mesh)) return false;
-                if (!object.Equals(this.TriangleIndex, rhs.TriangleIndex)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.Navmeshes, rhs.Navmeshes)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Unknown);
-                hash.Add(this.Mesh);
-                hash.Add(this.TriangleIndex);
-                hash.Add(this.Unknown2);
+                hash.Add(this.Navmeshes);
                 return hash.ToHashCode();
             }
 
@@ -173,10 +144,17 @@ namespace Mutagen.Bethesda.Fallout4
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Unknown)) return false;
-                if (!eval(this.Mesh)) return false;
-                if (!eval(this.TriangleIndex)) return false;
-                if (!eval(this.Unknown2)) return false;
+                if (this.Navmeshes != null)
+                {
+                    if (!eval(this.Navmeshes.Overall)) return false;
+                    if (this.Navmeshes.Specific != null)
+                    {
+                        foreach (var item in this.Navmeshes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -184,10 +162,17 @@ namespace Mutagen.Bethesda.Fallout4
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Unknown)) return true;
-                if (eval(this.Mesh)) return true;
-                if (eval(this.TriangleIndex)) return true;
-                if (eval(this.Unknown2)) return true;
+                if (this.Navmeshes != null)
+                {
+                    if (eval(this.Navmeshes.Overall)) return true;
+                    if (this.Navmeshes.Specific != null)
+                    {
+                        foreach (var item in this.Navmeshes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -195,17 +180,27 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new EdgeLink.Mask<R>();
+                var ret = new NavmeshSet.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Unknown = eval(this.Unknown);
-                obj.Mesh = eval(this.Mesh);
-                obj.TriangleIndex = eval(this.TriangleIndex);
-                obj.Unknown2 = eval(this.Unknown2);
+                if (Navmeshes != null)
+                {
+                    obj.Navmeshes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Navmeshes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Navmeshes.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Navmeshes.Specific = l;
+                        foreach (var item in Navmeshes.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -215,34 +210,41 @@ namespace Mutagen.Bethesda.Fallout4
                 return ToString(printMask: null);
             }
 
-            public string ToString(EdgeLink.Mask<bool>? printMask = null)
+            public string ToString(NavmeshSet.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, EdgeLink.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, NavmeshSet.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(EdgeLink.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(NavmeshSet.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Unknown ?? true)
+                    if ((printMask?.Navmeshes?.Overall ?? true)
+                        && Navmeshes is {} NavmeshesItem)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
-                    }
-                    if (printMask?.Mesh ?? true)
-                    {
-                        fg.AppendItem(Mesh, "Mesh");
-                    }
-                    if (printMask?.TriangleIndex ?? true)
-                    {
-                        fg.AppendItem(TriangleIndex, "TriangleIndex");
-                    }
-                    if (printMask?.Unknown2 ?? true)
-                    {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        fg.AppendLine("Navmeshes =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(NavmeshesItem.Overall);
+                            if (NavmeshesItem.Specific != null)
+                            {
+                                foreach (var subItem in NavmeshesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
                     }
                 }
                 fg.AppendLine("]");
@@ -269,26 +271,17 @@ namespace Mutagen.Bethesda.Fallout4
                     return _warnings;
                 }
             }
-            public Exception? Unknown;
-            public Exception? Mesh;
-            public Exception? TriangleIndex;
-            public Exception? Unknown2;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Navmeshes;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                EdgeLink_FieldIndex enu = (EdgeLink_FieldIndex)index;
+                NavmeshSet_FieldIndex enu = (NavmeshSet_FieldIndex)index;
                 switch (enu)
                 {
-                    case EdgeLink_FieldIndex.Unknown:
-                        return Unknown;
-                    case EdgeLink_FieldIndex.Mesh:
-                        return Mesh;
-                    case EdgeLink_FieldIndex.TriangleIndex:
-                        return TriangleIndex;
-                    case EdgeLink_FieldIndex.Unknown2:
-                        return Unknown2;
+                    case NavmeshSet_FieldIndex.Navmeshes:
+                        return Navmeshes;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -296,20 +289,11 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthException(int index, Exception ex)
             {
-                EdgeLink_FieldIndex enu = (EdgeLink_FieldIndex)index;
+                NavmeshSet_FieldIndex enu = (NavmeshSet_FieldIndex)index;
                 switch (enu)
                 {
-                    case EdgeLink_FieldIndex.Unknown:
-                        this.Unknown = ex;
-                        break;
-                    case EdgeLink_FieldIndex.Mesh:
-                        this.Mesh = ex;
-                        break;
-                    case EdgeLink_FieldIndex.TriangleIndex:
-                        this.TriangleIndex = ex;
-                        break;
-                    case EdgeLink_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case NavmeshSet_FieldIndex.Navmeshes:
+                        this.Navmeshes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -318,20 +302,11 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthMask(int index, object obj)
             {
-                EdgeLink_FieldIndex enu = (EdgeLink_FieldIndex)index;
+                NavmeshSet_FieldIndex enu = (NavmeshSet_FieldIndex)index;
                 switch (enu)
                 {
-                    case EdgeLink_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
-                        break;
-                    case EdgeLink_FieldIndex.Mesh:
-                        this.Mesh = (Exception?)obj;
-                        break;
-                    case EdgeLink_FieldIndex.TriangleIndex:
-                        this.TriangleIndex = (Exception?)obj;
-                        break;
-                    case EdgeLink_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case NavmeshSet_FieldIndex.Navmeshes:
+                        this.Navmeshes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -341,10 +316,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Unknown != null) return true;
-                if (Mesh != null) return true;
-                if (TriangleIndex != null) return true;
-                if (Unknown2 != null) return true;
+                if (Navmeshes != null) return true;
                 return false;
             }
             #endregion
@@ -379,10 +351,28 @@ namespace Mutagen.Bethesda.Fallout4
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(Mesh, "Mesh");
-                fg.AppendItem(TriangleIndex, "TriangleIndex");
-                fg.AppendItem(Unknown2, "Unknown2");
+                if (Navmeshes is {} NavmeshesItem)
+                {
+                    fg.AppendLine("Navmeshes =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(NavmeshesItem.Overall);
+                        if (NavmeshesItem.Specific != null)
+                        {
+                            foreach (var subItem in NavmeshesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             #endregion
 
@@ -391,10 +381,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Mesh = this.Mesh.Combine(rhs.Mesh);
-                ret.TriangleIndex = this.TriangleIndex.Combine(rhs.TriangleIndex);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.Navmeshes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Navmeshes?.Overall, rhs.Navmeshes?.Overall), ExceptionExt.Combine(this.Navmeshes?.Specific, rhs.Navmeshes?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -418,10 +405,7 @@ namespace Mutagen.Bethesda.Fallout4
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Unknown;
-            public bool Mesh;
-            public bool TriangleIndex;
-            public bool Unknown2;
+            public bool Navmeshes;
             #endregion
 
             #region Ctors
@@ -431,10 +415,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Unknown = defaultOn;
-                this.Mesh = defaultOn;
-                this.TriangleIndex = defaultOn;
-                this.Unknown2 = defaultOn;
+                this.Navmeshes = defaultOn;
             }
 
             #endregion
@@ -450,10 +431,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Unknown, null));
-                ret.Add((Mesh, null));
-                ret.Add((TriangleIndex, null));
-                ret.Add((Unknown2, null));
+                ret.Add((Navmeshes, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -465,31 +443,31 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => EdgeLinkCommon.Instance.GetContainedFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EdgeLinkSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => NavmeshSetCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavmeshSetSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => EdgeLinkBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => NavmeshSetBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((EdgeLinkBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((NavmeshSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static EdgeLink CreateFromBinary(
+        public static NavmeshSet CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            var ret = new EdgeLink();
-            ((EdgeLinkSetterCommon)((IEdgeLinkGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new NavmeshSet();
+            ((NavmeshSetSetterCommon)((INavmeshSetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -500,7 +478,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out EdgeLink item,
+            out NavmeshSet item,
             TypedParseParams? translationParams = null)
         {
             var startPos = frame.Position;
@@ -515,34 +493,31 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((EdgeLinkSetterCommon)((IEdgeLinkGetter)this).CommonSetterInstance()!).Clear(this);
+            ((NavmeshSetSetterCommon)((INavmeshSetGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static EdgeLink GetNew()
+        internal static NavmeshSet GetNew()
         {
-            return new EdgeLink();
+            return new NavmeshSet();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IEdgeLink :
-        IEdgeLinkGetter,
+    public partial interface INavmeshSet :
         IFormLinkContainer,
-        ILoquiObjectSetter<IEdgeLink>
+        ILoquiObjectSetter<INavmeshSet>,
+        INavmeshSetGetter
     {
-        new Int32 Unknown { get; set; }
-        new IFormLink<INavigationMeshGetter> Mesh { get; set; }
-        new Int16 TriangleIndex { get; set; }
-        new SByte Unknown2 { get; set; }
+        new ExtendedList<IFormLinkGetter<INavigationMeshGetter>> Navmeshes { get; }
     }
 
-    public partial interface IEdgeLinkGetter :
+    public partial interface INavmeshSetGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IEdgeLinkGetter>
+        ILoquiObject<INavmeshSetGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -550,53 +525,50 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => EdgeLink_Registration.Instance;
-        Int32 Unknown { get; }
-        IFormLinkGetter<INavigationMeshGetter> Mesh { get; }
-        Int16 TriangleIndex { get; }
-        SByte Unknown2 { get; }
+        static ILoquiRegistration StaticRegistration => NavmeshSet_Registration.Instance;
+        IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> Navmeshes { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class EdgeLinkMixIn
+    public static partial class NavmeshSetMixIn
     {
-        public static void Clear(this IEdgeLink item)
+        public static void Clear(this INavmeshSet item)
         {
-            ((EdgeLinkSetterCommon)((IEdgeLinkGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((NavmeshSetSetterCommon)((INavmeshSetGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static EdgeLink.Mask<bool> GetEqualsMask(
-            this IEdgeLinkGetter item,
-            IEdgeLinkGetter rhs,
+        public static NavmeshSet.Mask<bool> GetEqualsMask(
+            this INavmeshSetGetter item,
+            INavmeshSetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((NavmeshSetCommon)((INavmeshSetGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IEdgeLinkGetter item,
+            this INavmeshSetGetter item,
             string? name = null,
-            EdgeLink.Mask<bool>? printMask = null)
+            NavmeshSet.Mask<bool>? printMask = null)
         {
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).ToString(
+            return ((NavmeshSetCommon)((INavmeshSetGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IEdgeLinkGetter item,
+            this INavmeshSetGetter item,
             FileGeneration fg,
             string? name = null,
-            EdgeLink.Mask<bool>? printMask = null)
+            NavmeshSet.Mask<bool>? printMask = null)
         {
-            ((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).ToString(
+            ((NavmeshSetCommon)((INavmeshSetGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -604,21 +576,21 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IEdgeLinkGetter item,
-            IEdgeLinkGetter rhs,
-            EdgeLink.TranslationMask? equalsMask = null)
+            this INavmeshSetGetter item,
+            INavmeshSetGetter rhs,
+            NavmeshSet.TranslationMask? equalsMask = null)
         {
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).Equals(
+            return ((NavmeshSetCommon)((INavmeshSetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IEdgeLink lhs,
-            IEdgeLinkGetter rhs)
+            this INavmeshSet lhs,
+            INavmeshSetGetter rhs)
         {
-            ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NavmeshSetSetterTranslationCommon)((INavmeshSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -627,11 +599,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IEdgeLink lhs,
-            IEdgeLinkGetter rhs,
-            EdgeLink.TranslationMask? copyMask = null)
+            this INavmeshSet lhs,
+            INavmeshSetGetter rhs,
+            NavmeshSet.TranslationMask? copyMask = null)
         {
-            ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NavmeshSetSetterTranslationCommon)((INavmeshSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -640,28 +612,28 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IEdgeLink lhs,
-            IEdgeLinkGetter rhs,
-            out EdgeLink.ErrorMask errorMask,
-            EdgeLink.TranslationMask? copyMask = null)
+            this INavmeshSet lhs,
+            INavmeshSetGetter rhs,
+            out NavmeshSet.ErrorMask errorMask,
+            NavmeshSet.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NavmeshSetSetterTranslationCommon)((INavmeshSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = EdgeLink.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NavmeshSet.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IEdgeLink lhs,
-            IEdgeLinkGetter rhs,
+            this INavmeshSet lhs,
+            INavmeshSetGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NavmeshSetSetterTranslationCommon)((INavmeshSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -669,32 +641,32 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static EdgeLink DeepCopy(
-            this IEdgeLinkGetter item,
-            EdgeLink.TranslationMask? copyMask = null)
+        public static NavmeshSet DeepCopy(
+            this INavmeshSetGetter item,
+            NavmeshSet.TranslationMask? copyMask = null)
         {
-            return ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NavmeshSetSetterTranslationCommon)((INavmeshSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static EdgeLink DeepCopy(
-            this IEdgeLinkGetter item,
-            out EdgeLink.ErrorMask errorMask,
-            EdgeLink.TranslationMask? copyMask = null)
+        public static NavmeshSet DeepCopy(
+            this INavmeshSetGetter item,
+            out NavmeshSet.ErrorMask errorMask,
+            NavmeshSet.TranslationMask? copyMask = null)
         {
-            return ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NavmeshSetSetterTranslationCommon)((INavmeshSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static EdgeLink DeepCopy(
-            this IEdgeLinkGetter item,
+        public static NavmeshSet DeepCopy(
+            this INavmeshSetGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NavmeshSetSetterTranslationCommon)((INavmeshSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -702,11 +674,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IEdgeLink item,
+            this INavmeshSet item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((EdgeLinkSetterCommon)((IEdgeLinkGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((NavmeshSetSetterCommon)((INavmeshSetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -722,50 +694,47 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    internal enum EdgeLink_FieldIndex
+    internal enum NavmeshSet_FieldIndex
     {
-        Unknown = 0,
-        Mesh = 1,
-        TriangleIndex = 2,
-        Unknown2 = 3,
+        Navmeshes = 0,
     }
     #endregion
 
     #region Registration
-    internal partial class EdgeLink_Registration : ILoquiRegistration
+    internal partial class NavmeshSet_Registration : ILoquiRegistration
     {
-        public static readonly EdgeLink_Registration Instance = new EdgeLink_Registration();
+        public static readonly NavmeshSet_Registration Instance = new NavmeshSet_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 321,
+            msgID: 450,
             version: 0);
 
-        public const string GUID = "d5312308-0813-41dc-87c0-d45119a5615e";
+        public const string GUID = "945414e9-610f-4f53-881e-0fe4c68f2dfa";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 1;
 
-        public static readonly Type MaskType = typeof(EdgeLink.Mask<>);
+        public static readonly Type MaskType = typeof(NavmeshSet.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(EdgeLink.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(NavmeshSet.ErrorMask);
 
-        public static readonly Type ClassType = typeof(EdgeLink);
+        public static readonly Type ClassType = typeof(NavmeshSet);
 
-        public static readonly Type GetterType = typeof(IEdgeLinkGetter);
+        public static readonly Type GetterType = typeof(INavmeshSetGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IEdgeLink);
+        public static readonly Type SetterType = typeof(INavmeshSet);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.EdgeLink";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.NavmeshSet";
 
-        public const string Name = "EdgeLink";
+        public const string Name = "NavmeshSet";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -773,7 +742,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(EdgeLinkBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(NavmeshSetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -806,32 +775,29 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class EdgeLinkSetterCommon
+    internal partial class NavmeshSetSetterCommon
     {
-        public static readonly EdgeLinkSetterCommon Instance = new EdgeLinkSetterCommon();
+        public static readonly NavmeshSetSetterCommon Instance = new NavmeshSetSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IEdgeLink item)
+        public void Clear(INavmeshSet item)
         {
             ClearPartial();
-            item.Unknown = default;
-            item.Mesh.Clear();
-            item.TriangleIndex = default;
-            item.Unknown2 = default;
+            item.Navmeshes.Clear();
         }
         
         #region Mutagen
-        public void RemapLinks(IEdgeLink obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(INavmeshSet obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Mesh.Relink(mapping);
+            obj.Navmeshes.RemapLinks(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IEdgeLink item,
+            INavmeshSet item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -839,23 +805,23 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: EdgeLinkBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: NavmeshSetBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class EdgeLinkCommon
+    internal partial class NavmeshSetCommon
     {
-        public static readonly EdgeLinkCommon Instance = new EdgeLinkCommon();
+        public static readonly NavmeshSetCommon Instance = new NavmeshSetCommon();
 
-        public EdgeLink.Mask<bool> GetEqualsMask(
-            IEdgeLinkGetter item,
-            IEdgeLinkGetter rhs,
+        public NavmeshSet.Mask<bool> GetEqualsMask(
+            INavmeshSetGetter item,
+            INavmeshSetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new EdgeLink.Mask<bool>(false);
-            ((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new NavmeshSet.Mask<bool>(false);
+            ((NavmeshSetCommon)((INavmeshSetGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -864,22 +830,22 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            IEdgeLinkGetter item,
-            IEdgeLinkGetter rhs,
-            EdgeLink.Mask<bool> ret,
+            INavmeshSetGetter item,
+            INavmeshSetGetter rhs,
+            NavmeshSet.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.Mesh = item.Mesh.Equals(rhs.Mesh);
-            ret.TriangleIndex = item.TriangleIndex == rhs.TriangleIndex;
-            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.Navmeshes = item.Navmeshes.CollectionEqualsHelper(
+                rhs.Navmeshes,
+                (l, r) => object.Equals(l, r),
+                include);
         }
         
         public string ToString(
-            IEdgeLinkGetter item,
+            INavmeshSetGetter item,
             string? name = null,
-            EdgeLink.Mask<bool>? printMask = null)
+            NavmeshSet.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -891,18 +857,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void ToString(
-            IEdgeLinkGetter item,
+            INavmeshSetGetter item,
             FileGeneration fg,
             string? name = null,
-            EdgeLink.Mask<bool>? printMask = null)
+            NavmeshSet.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"EdgeLink =>");
+                fg.AppendLine($"NavmeshSet =>");
             }
             else
             {
-                fg.AppendLine($"{name} (EdgeLink) =>");
+                fg.AppendLine($"{name} (NavmeshSet) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -916,61 +882,48 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            IEdgeLinkGetter item,
+            INavmeshSetGetter item,
             FileGeneration fg,
-            EdgeLink.Mask<bool>? printMask = null)
+            NavmeshSet.Mask<bool>? printMask = null)
         {
-            if (printMask?.Unknown ?? true)
+            if (printMask?.Navmeshes?.Overall ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
-            }
-            if (printMask?.Mesh ?? true)
-            {
-                fg.AppendItem(item.Mesh.FormKey, "Mesh");
-            }
-            if (printMask?.TriangleIndex ?? true)
-            {
-                fg.AppendItem(item.TriangleIndex, "TriangleIndex");
-            }
-            if (printMask?.Unknown2 ?? true)
-            {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                fg.AppendLine("Navmeshes =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Navmeshes)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem.FormKey);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IEdgeLinkGetter? lhs,
-            IEdgeLinkGetter? rhs,
+            INavmeshSetGetter? lhs,
+            INavmeshSetGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)EdgeLink_FieldIndex.Unknown) ?? true))
+            if ((crystal?.GetShouldTranslate((int)NavmeshSet_FieldIndex.Navmeshes) ?? true))
             {
-                if (lhs.Unknown != rhs.Unknown) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)EdgeLink_FieldIndex.Mesh) ?? true))
-            {
-                if (!lhs.Mesh.Equals(rhs.Mesh)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)EdgeLink_FieldIndex.TriangleIndex) ?? true))
-            {
-                if (lhs.TriangleIndex != rhs.TriangleIndex) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)EdgeLink_FieldIndex.Unknown2) ?? true))
-            {
-                if (lhs.Unknown2 != rhs.Unknown2) return false;
+                if (!lhs.Navmeshes.SequenceEqualNullable(rhs.Navmeshes)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IEdgeLinkGetter item)
+        public virtual int GetHashCode(INavmeshSetGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Unknown);
-            hash.Add(item.Mesh);
-            hash.Add(item.TriangleIndex);
-            hash.Add(item.Unknown2);
+            hash.Add(item.Navmeshes);
             return hash.ToHashCode();
         }
         
@@ -979,57 +932,63 @@ namespace Mutagen.Bethesda.Fallout4
         
         public object GetNew()
         {
-            return EdgeLink.GetNew();
+            return NavmeshSet.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IEdgeLinkGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INavmeshSetGetter obj)
         {
-            yield return FormLinkInformation.Factory(obj.Mesh);
+            foreach (var item in obj.Navmeshes)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class EdgeLinkSetterTranslationCommon
+    internal partial class NavmeshSetSetterTranslationCommon
     {
-        public static readonly EdgeLinkSetterTranslationCommon Instance = new EdgeLinkSetterTranslationCommon();
+        public static readonly NavmeshSetSetterTranslationCommon Instance = new NavmeshSetSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IEdgeLink item,
-            IEdgeLinkGetter rhs,
+            INavmeshSet item,
+            INavmeshSetGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)EdgeLink_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NavmeshSet_FieldIndex.Navmeshes) ?? true))
             {
-                item.Unknown = rhs.Unknown;
-            }
-            if ((copyMask?.GetShouldTranslate((int)EdgeLink_FieldIndex.Mesh) ?? true))
-            {
-                item.Mesh.SetTo(rhs.Mesh.FormKey);
-            }
-            if ((copyMask?.GetShouldTranslate((int)EdgeLink_FieldIndex.TriangleIndex) ?? true))
-            {
-                item.TriangleIndex = rhs.TriangleIndex;
-            }
-            if ((copyMask?.GetShouldTranslate((int)EdgeLink_FieldIndex.Unknown2) ?? true))
-            {
-                item.Unknown2 = rhs.Unknown2;
+                errorMask?.PushIndex((int)NavmeshSet_FieldIndex.Navmeshes);
+                try
+                {
+                    item.Navmeshes.SetTo(
+                        rhs.Navmeshes
+                        .Select(r => (IFormLinkGetter<INavigationMeshGetter>)new FormLink<INavigationMeshGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
         #endregion
         
-        public EdgeLink DeepCopy(
-            IEdgeLinkGetter item,
-            EdgeLink.TranslationMask? copyMask = null)
+        public NavmeshSet DeepCopy(
+            INavmeshSetGetter item,
+            NavmeshSet.TranslationMask? copyMask = null)
         {
-            EdgeLink ret = (EdgeLink)((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).GetNew();
-            ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            NavmeshSet ret = (NavmeshSet)((NavmeshSetCommon)((INavmeshSetGetter)item).CommonInstance()!).GetNew();
+            ((NavmeshSetSetterTranslationCommon)((INavmeshSetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1038,30 +997,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public EdgeLink DeepCopy(
-            IEdgeLinkGetter item,
-            out EdgeLink.ErrorMask errorMask,
-            EdgeLink.TranslationMask? copyMask = null)
+        public NavmeshSet DeepCopy(
+            INavmeshSetGetter item,
+            out NavmeshSet.ErrorMask errorMask,
+            NavmeshSet.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            EdgeLink ret = (EdgeLink)((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).GetNew();
-            ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            NavmeshSet ret = (NavmeshSet)((NavmeshSetCommon)((INavmeshSetGetter)item).CommonInstance()!).GetNew();
+            ((NavmeshSetSetterTranslationCommon)((INavmeshSetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = EdgeLink.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NavmeshSet.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public EdgeLink DeepCopy(
-            IEdgeLinkGetter item,
+        public NavmeshSet DeepCopy(
+            INavmeshSetGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            EdgeLink ret = (EdgeLink)((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).GetNew();
-            ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            NavmeshSet ret = (NavmeshSet)((NavmeshSetCommon)((INavmeshSetGetter)item).CommonInstance()!).GetNew();
+            ((NavmeshSetSetterTranslationCommon)((INavmeshSetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1077,27 +1036,27 @@ namespace Mutagen.Bethesda.Fallout4
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class EdgeLink
+    public partial class NavmeshSet
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => EdgeLink_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => EdgeLink_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => NavmeshSet_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavmeshSet_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => EdgeLinkCommon.Instance;
+        protected object CommonInstance() => NavmeshSetCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return EdgeLinkSetterCommon.Instance;
+            return NavmeshSetSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => EdgeLinkSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => NavmeshSetSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IEdgeLinkGetter.CommonInstance() => this.CommonInstance();
+        object INavmeshSetGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IEdgeLinkGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object INavmeshSetGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IEdgeLinkGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object INavmeshSetGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1108,25 +1067,29 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class EdgeLinkBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class NavmeshSetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static EdgeLinkBinaryWriteTranslation Instance = new EdgeLinkBinaryWriteTranslation();
+        public readonly static NavmeshSetBinaryWriteTranslation Instance = new NavmeshSetBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IEdgeLinkGetter item,
+            INavmeshSetGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.Unknown);
-            FormLinkBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Write(
                 writer: writer,
-                item: item.Mesh);
-            writer.Write(item.TriangleIndex);
-            writer.Write(item.Unknown2);
+                items: item.Navmeshes,
+                countLengthLength: 4,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<INavigationMeshGetter> subItem, TypedWriteParams? conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
         }
 
         public void Write(
             MutagenWriter writer,
-            IEdgeLinkGetter item,
+            INavmeshSetGetter item,
             TypedWriteParams? translationParams = null)
         {
             WriteEmbedded(
@@ -1140,25 +1103,26 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IEdgeLinkGetter)item,
+                item: (INavmeshSetGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class EdgeLinkBinaryCreateTranslation
+    internal partial class NavmeshSetBinaryCreateTranslation
     {
-        public readonly static EdgeLinkBinaryCreateTranslation Instance = new EdgeLinkBinaryCreateTranslation();
+        public readonly static NavmeshSetBinaryCreateTranslation Instance = new NavmeshSetBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IEdgeLink item,
+            INavmeshSet item,
             MutagenFrame frame)
         {
-            item.Unknown = frame.ReadInt32();
-            item.Mesh.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.TriangleIndex = frame.ReadInt16();
-            item.Unknown2 = frame.ReadInt8();
+            item.Navmeshes.SetTo(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Parse(
+                    amount: frame.ReadInt32(),
+                    reader: frame,
+                    transl: FormLinkBinaryTranslation.Instance.Parse));
         }
 
     }
@@ -1167,14 +1131,14 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class EdgeLinkBinaryTranslationMixIn
+    public static class NavmeshSetBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IEdgeLinkGetter item,
+            this INavmeshSetGetter item,
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((EdgeLinkBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((NavmeshSetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1187,55 +1151,55 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal partial class EdgeLinkBinaryOverlay :
+    internal partial class NavmeshSetBinaryOverlay :
         PluginBinaryOverlay,
-        IEdgeLinkGetter
+        INavmeshSetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => EdgeLink_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => EdgeLink_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => NavmeshSet_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavmeshSet_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => EdgeLinkCommon.Instance;
+        protected object CommonInstance() => NavmeshSetCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => EdgeLinkSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => NavmeshSetSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IEdgeLinkGetter.CommonInstance() => this.CommonInstance();
+        object INavmeshSetGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IEdgeLinkGetter.CommonSetterInstance() => null;
+        object? INavmeshSetGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IEdgeLinkGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object INavmeshSetGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => EdgeLinkCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => NavmeshSetCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => EdgeLinkBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => NavmeshSetBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((EdgeLinkBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((NavmeshSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public IFormLinkGetter<INavigationMeshGetter> Mesh => new FormLink<INavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public Int16 TriangleIndex => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2));
-        public SByte Unknown2 => (sbyte)_data.Slice(0xA, 0x1)[0];
+        #region Navmeshes
+        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> Navmeshes => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_data, _package, 4, countLength: 4, (s, p) => new FormLink<INavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        protected int NavmeshesEndingPos;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected EdgeLinkBinaryOverlay(
+        protected NavmeshSetBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1245,16 +1209,17 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static EdgeLinkBinaryOverlay EdgeLinkFactory(
+        public static NavmeshSetBinaryOverlay NavmeshSetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            var ret = new EdgeLinkBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0xB),
+            var ret = new NavmeshSetBinaryOverlay(
+                bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
-            stream.Position += 0xB;
+            ret.NavmeshesEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._data) * 4 + 4;
+            stream.Position += ret.NavmeshesEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1262,12 +1227,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static EdgeLinkBinaryOverlay EdgeLinkFactory(
+        public static NavmeshSetBinaryOverlay NavmeshSetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams? parseParams = null)
         {
-            return EdgeLinkFactory(
+            return NavmeshSetFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 parseParams: parseParams);
@@ -1279,7 +1244,7 @@ namespace Mutagen.Bethesda.Fallout4
             FileGeneration fg,
             string? name = null)
         {
-            EdgeLinkMixIn.ToString(
+            NavmeshSetMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1289,16 +1254,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IEdgeLinkGetter rhs) return false;
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not INavmeshSetGetter rhs) return false;
+            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IEdgeLinkGetter? obj)
+        public bool Equals(INavmeshSetGetter? obj)
         {
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

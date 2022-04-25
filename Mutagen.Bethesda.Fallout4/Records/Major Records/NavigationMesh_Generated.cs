@@ -41,14 +41,14 @@ using System.Text;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public abstract partial class ANavigationMesh :
+    public abstract partial class NavigationMesh :
         Fallout4MajorRecord,
-        IANavigationMeshInternal,
-        IEquatable<IANavigationMeshGetter>,
-        ILoquiObjectSetter<ANavigationMesh>
+        IEquatable<INavigationMeshGetter>,
+        ILoquiObjectSetter<NavigationMesh>,
+        INavigationMeshInternal
     {
         #region Ctor
-        protected ANavigationMesh()
+        protected NavigationMesh()
         {
             CustomCtor();
         }
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Fallout4
             FileGeneration fg,
             string? name = null)
         {
-            ANavigationMeshMixIn.ToString(
+            NavigationMeshMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ANavigationMesh.Mask<R>();
+                var ret = new NavigationMesh.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -164,16 +164,16 @@ namespace Mutagen.Bethesda.Fallout4
                 return ToString(printMask: null);
             }
 
-            public string ToString(ANavigationMesh.Mask<bool>? printMask = null)
+            public string ToString(NavigationMesh.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, ANavigationMesh.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, NavigationMesh.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ANavigationMesh.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(NavigationMesh.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                ANavigationMesh_FieldIndex enu = (ANavigationMesh_FieldIndex)index;
+                NavigationMesh_FieldIndex enu = (NavigationMesh_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthException(int index, Exception ex)
             {
-                ANavigationMesh_FieldIndex enu = (ANavigationMesh_FieldIndex)index;
+                NavigationMesh_FieldIndex enu = (NavigationMesh_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -212,7 +212,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthMask(int index, object obj)
             {
-                ANavigationMesh_FieldIndex enu = (ANavigationMesh_FieldIndex)index;
+                NavigationMesh_FieldIndex enu = (NavigationMesh_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -307,14 +307,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = ANavigationMesh_Registration.TriggeringRecordType;
-        public ANavigationMesh(FormKey formKey)
+        public static readonly RecordType GrupRecordType = NavigationMesh_Registration.TriggeringRecordType;
+        public NavigationMesh(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        private ANavigationMesh(
+        private NavigationMesh(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -323,7 +323,7 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        internal ANavigationMesh(
+        internal NavigationMesh(
             FormKey formKey,
             ushort formVersion)
         {
@@ -332,12 +332,12 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        public ANavigationMesh(IFallout4Mod mod)
+        public NavigationMesh(IFallout4Mod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public ANavigationMesh(IFallout4Mod mod, string editorID)
+        public NavigationMesh(IFallout4Mod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<ANavigationMesh>.ToString(this);
+            return MajorRecordPrinter<NavigationMesh>.ToString(this);
         }
 
         #region Equals and Hash
@@ -355,16 +355,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IANavigationMeshGetter rhs) return false;
-            return ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not INavigationMeshGetter rhs) return false;
+            return ((NavigationMeshCommon)((INavigationMeshGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IANavigationMeshGetter? obj)
+        public bool Equals(INavigationMeshGetter? obj)
         {
-            return ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavigationMeshCommon)((INavigationMeshGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((NavigationMeshCommon)((INavigationMeshGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -372,12 +372,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ANavigationMeshBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => NavigationMeshBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((ANavigationMeshBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((NavigationMeshBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -388,10 +388,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((ANavigationMeshSetterCommon)((IANavigationMeshGetter)this).CommonSetterInstance()!).Clear(this);
+            ((NavigationMeshSetterCommon)((INavigationMeshGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new ANavigationMesh GetNew()
+        internal static new NavigationMesh GetNew()
         {
             throw new ArgumentException("New called on an abstract class.");
         }
@@ -400,68 +400,68 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Interface
-    public partial interface IANavigationMesh :
-        IANavigationMeshGetter,
+    public partial interface INavigationMesh :
         IFallout4MajorRecordInternal,
-        ILoquiObjectSetter<IANavigationMeshInternal>
+        ILoquiObjectSetter<INavigationMeshInternal>,
+        INavigationMeshGetter
     {
     }
 
-    public partial interface IANavigationMeshInternal :
+    public partial interface INavigationMeshInternal :
         IFallout4MajorRecordInternal,
-        IANavigationMesh,
-        IANavigationMeshGetter
+        INavigationMesh,
+        INavigationMeshGetter
     {
     }
 
-    public partial interface IANavigationMeshGetter :
+    public partial interface INavigationMeshGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IANavigationMeshGetter>
+        ILoquiObject<INavigationMeshGetter>
     {
-        static new ILoquiRegistration StaticRegistration => ANavigationMesh_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => NavigationMesh_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ANavigationMeshMixIn
+    public static partial class NavigationMeshMixIn
     {
-        public static void Clear(this IANavigationMeshInternal item)
+        public static void Clear(this INavigationMeshInternal item)
         {
-            ((ANavigationMeshSetterCommon)((IANavigationMeshGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((NavigationMeshSetterCommon)((INavigationMeshGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ANavigationMesh.Mask<bool> GetEqualsMask(
-            this IANavigationMeshGetter item,
-            IANavigationMeshGetter rhs,
+        public static NavigationMesh.Mask<bool> GetEqualsMask(
+            this INavigationMeshGetter item,
+            INavigationMeshGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ANavigationMeshCommon)((IANavigationMeshGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IANavigationMeshGetter item,
+            this INavigationMeshGetter item,
             string? name = null,
-            ANavigationMesh.Mask<bool>? printMask = null)
+            NavigationMesh.Mask<bool>? printMask = null)
         {
-            return ((ANavigationMeshCommon)((IANavigationMeshGetter)item).CommonInstance()!).ToString(
+            return ((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IANavigationMeshGetter item,
+            this INavigationMeshGetter item,
             FileGeneration fg,
             string? name = null,
-            ANavigationMesh.Mask<bool>? printMask = null)
+            NavigationMesh.Mask<bool>? printMask = null)
         {
-            ((ANavigationMeshCommon)((IANavigationMeshGetter)item).CommonInstance()!).ToString(
+            ((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -469,39 +469,39 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IANavigationMeshGetter item,
-            IANavigationMeshGetter rhs,
-            ANavigationMesh.TranslationMask? equalsMask = null)
+            this INavigationMeshGetter item,
+            INavigationMeshGetter rhs,
+            NavigationMesh.TranslationMask? equalsMask = null)
         {
-            return ((ANavigationMeshCommon)((IANavigationMeshGetter)item).CommonInstance()!).Equals(
+            return ((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IANavigationMeshInternal lhs,
-            IANavigationMeshGetter rhs,
-            out ANavigationMesh.ErrorMask errorMask,
-            ANavigationMesh.TranslationMask? copyMask = null)
+            this INavigationMeshInternal lhs,
+            INavigationMeshGetter rhs,
+            out NavigationMesh.ErrorMask errorMask,
+            NavigationMesh.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ANavigationMeshSetterTranslationCommon)((IANavigationMeshGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NavigationMeshSetterTranslationCommon)((INavigationMeshGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = ANavigationMesh.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NavigationMesh.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IANavigationMeshInternal lhs,
-            IANavigationMeshGetter rhs,
+            this INavigationMeshInternal lhs,
+            INavigationMeshGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ANavigationMeshSetterTranslationCommon)((IANavigationMeshGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NavigationMeshSetterTranslationCommon)((INavigationMeshGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -509,44 +509,44 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static ANavigationMesh DeepCopy(
-            this IANavigationMeshGetter item,
-            ANavigationMesh.TranslationMask? copyMask = null)
+        public static NavigationMesh DeepCopy(
+            this INavigationMeshGetter item,
+            NavigationMesh.TranslationMask? copyMask = null)
         {
-            return ((ANavigationMeshSetterTranslationCommon)((IANavigationMeshGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NavigationMeshSetterTranslationCommon)((INavigationMeshGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ANavigationMesh DeepCopy(
-            this IANavigationMeshGetter item,
-            out ANavigationMesh.ErrorMask errorMask,
-            ANavigationMesh.TranslationMask? copyMask = null)
+        public static NavigationMesh DeepCopy(
+            this INavigationMeshGetter item,
+            out NavigationMesh.ErrorMask errorMask,
+            NavigationMesh.TranslationMask? copyMask = null)
         {
-            return ((ANavigationMeshSetterTranslationCommon)((IANavigationMeshGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NavigationMeshSetterTranslationCommon)((INavigationMeshGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ANavigationMesh DeepCopy(
-            this IANavigationMeshGetter item,
+        public static NavigationMesh DeepCopy(
+            this INavigationMeshGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ANavigationMeshSetterTranslationCommon)((IANavigationMeshGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NavigationMeshSetterTranslationCommon)((INavigationMeshGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static ANavigationMesh Duplicate(
-            this IANavigationMeshGetter item,
+        public static NavigationMesh Duplicate(
+            this INavigationMeshGetter item,
             FormKey formKey,
-            ANavigationMesh.TranslationMask? copyMask = null)
+            NavigationMesh.TranslationMask? copyMask = null)
         {
-            return ((ANavigationMeshCommon)((IANavigationMeshGetter)item).CommonInstance()!).Duplicate(
+            return ((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
@@ -556,11 +556,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IANavigationMeshInternal item,
+            this INavigationMeshInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            ((ANavigationMeshSetterCommon)((IANavigationMeshGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((NavigationMeshSetterCommon)((INavigationMeshGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    internal enum ANavigationMesh_FieldIndex
+    internal enum NavigationMesh_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -588,9 +588,9 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Registration
-    internal partial class ANavigationMesh_Registration : ILoquiRegistration
+    internal partial class NavigationMesh_Registration : ILoquiRegistration
     {
-        public static readonly ANavigationMesh_Registration Instance = new ANavigationMesh_Registration();
+        public static readonly NavigationMesh_Registration Instance = new NavigationMesh_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
@@ -605,23 +605,23 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(ANavigationMesh.Mask<>);
+        public static readonly Type MaskType = typeof(NavigationMesh.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ANavigationMesh.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(NavigationMesh.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ANavigationMesh);
+        public static readonly Type ClassType = typeof(NavigationMesh);
 
-        public static readonly Type GetterType = typeof(IANavigationMeshGetter);
+        public static readonly Type GetterType = typeof(INavigationMeshGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IANavigationMesh);
+        public static readonly Type SetterType = typeof(INavigationMesh);
 
-        public static readonly Type? InternalSetterType = typeof(IANavigationMeshInternal);
+        public static readonly Type? InternalSetterType = typeof(INavigationMeshInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.ANavigationMesh";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.NavigationMesh";
 
-        public const string Name = "ANavigationMesh";
+        public const string Name = "NavigationMesh";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Fallout4
             var all = RecordCollection.Factory(RecordTypes.NAVM);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(ANavigationMeshBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(NavigationMeshBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -669,13 +669,13 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class ANavigationMeshSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class NavigationMeshSetterCommon : Fallout4MajorRecordSetterCommon
     {
-        public new static readonly ANavigationMeshSetterCommon Instance = new ANavigationMeshSetterCommon();
+        public new static readonly NavigationMeshSetterCommon Instance = new NavigationMeshSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IANavigationMeshInternal item)
+        public void Clear(INavigationMeshInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -683,16 +683,16 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override void Clear(IFallout4MajorRecordInternal item)
         {
-            Clear(item: (IANavigationMeshInternal)item);
+            Clear(item: (INavigationMeshInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IANavigationMeshInternal)item);
+            Clear(item: (INavigationMeshInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IANavigationMesh obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(INavigationMesh obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -701,7 +701,7 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IANavigationMeshInternal item,
+            INavigationMeshInternal item,
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (ANavigationMesh)item,
+                item: (NavigationMesh)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -724,7 +724,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? translationParams = null)
         {
             CopyInFromBinary(
-                item: (ANavigationMesh)item,
+                item: (NavigationMesh)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -732,17 +732,17 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class ANavigationMeshCommon : Fallout4MajorRecordCommon
+    internal partial class NavigationMeshCommon : Fallout4MajorRecordCommon
     {
-        public new static readonly ANavigationMeshCommon Instance = new ANavigationMeshCommon();
+        public new static readonly NavigationMeshCommon Instance = new NavigationMeshCommon();
 
-        public ANavigationMesh.Mask<bool> GetEqualsMask(
-            IANavigationMeshGetter item,
-            IANavigationMeshGetter rhs,
+        public NavigationMesh.Mask<bool> GetEqualsMask(
+            INavigationMeshGetter item,
+            INavigationMeshGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ANavigationMesh.Mask<bool>(false);
-            ((ANavigationMeshCommon)((IANavigationMeshGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new NavigationMesh.Mask<bool>(false);
+            ((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -751,9 +751,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            IANavigationMeshGetter item,
-            IANavigationMeshGetter rhs,
-            ANavigationMesh.Mask<bool> ret,
+            INavigationMeshGetter item,
+            INavigationMeshGetter rhs,
+            NavigationMesh.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -761,9 +761,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public string ToString(
-            IANavigationMeshGetter item,
+            INavigationMeshGetter item,
             string? name = null,
-            ANavigationMesh.Mask<bool>? printMask = null)
+            NavigationMesh.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -775,18 +775,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void ToString(
-            IANavigationMeshGetter item,
+            INavigationMeshGetter item,
             FileGeneration fg,
             string? name = null,
-            ANavigationMesh.Mask<bool>? printMask = null)
+            NavigationMesh.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ANavigationMesh =>");
+                fg.AppendLine($"NavigationMesh =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ANavigationMesh) =>");
+                fg.AppendLine($"{name} (NavigationMesh) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -800,9 +800,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            IANavigationMeshGetter item,
+            INavigationMeshGetter item,
             FileGeneration fg,
-            ANavigationMesh.Mask<bool>? printMask = null)
+            NavigationMesh.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
@@ -810,39 +810,39 @@ namespace Mutagen.Bethesda.Fallout4
                 printMask: printMask);
         }
         
-        public static ANavigationMesh_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
+        public static NavigationMesh_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout4MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ANavigationMesh_FieldIndex)((int)index);
+                    return (NavigationMesh_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormKey:
-                    return (ANavigationMesh_FieldIndex)((int)index);
+                    return (NavigationMesh_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.VersionControl:
-                    return (ANavigationMesh_FieldIndex)((int)index);
+                    return (NavigationMesh_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.EditorID:
-                    return (ANavigationMesh_FieldIndex)((int)index);
+                    return (NavigationMesh_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
-                    return (ANavigationMesh_FieldIndex)((int)index);
+                    return (NavigationMesh_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
-                    return (ANavigationMesh_FieldIndex)((int)index);
+                    return (NavigationMesh_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new ANavigationMesh_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new NavigationMesh_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ANavigationMesh_FieldIndex)((int)index);
+                    return (NavigationMesh_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (ANavigationMesh_FieldIndex)((int)index);
+                    return (NavigationMesh_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (ANavigationMesh_FieldIndex)((int)index);
+                    return (NavigationMesh_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (ANavigationMesh_FieldIndex)((int)index);
+                    return (NavigationMesh_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -850,8 +850,8 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Equals and Hash
         public virtual bool Equals(
-            IANavigationMeshGetter? lhs,
-            IANavigationMeshGetter? rhs,
+            INavigationMeshGetter? lhs,
+            INavigationMeshGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -865,8 +865,8 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IANavigationMeshGetter?)lhs,
-                rhs: rhs as IANavigationMeshGetter,
+                lhs: (INavigationMeshGetter?)lhs,
+                rhs: rhs as INavigationMeshGetter,
                 crystal: crystal);
         }
         
@@ -876,12 +876,12 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? crystal)
         {
             return Equals(
-                lhs: (IANavigationMeshGetter?)lhs,
-                rhs: rhs as IANavigationMeshGetter,
+                lhs: (INavigationMeshGetter?)lhs,
+                rhs: rhs as INavigationMeshGetter,
                 crystal: crystal);
         }
         
-        public virtual int GetHashCode(IANavigationMeshGetter item)
+        public virtual int GetHashCode(INavigationMeshGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -890,12 +890,12 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override int GetHashCode(IFallout4MajorRecordGetter item)
         {
-            return GetHashCode(item: (IANavigationMeshGetter)item);
+            return GetHashCode(item: (INavigationMeshGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IANavigationMeshGetter)item);
+            return GetHashCode(item: (INavigationMeshGetter)item);
         }
         
         #endregion
@@ -903,11 +903,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override object GetNew()
         {
-            return ANavigationMesh.GetNew();
+            return NavigationMesh.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IANavigationMeshGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INavigationMeshGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -917,8 +917,8 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Duplicate
-        public ANavigationMesh Duplicate(
-            IANavigationMeshGetter item,
+        public NavigationMesh Duplicate(
+            INavigationMeshGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
@@ -931,7 +931,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IANavigationMeshGetter)item,
+                item: (INavigationMeshGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -942,7 +942,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IANavigationMeshGetter)item,
+                item: (INavigationMeshGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -952,14 +952,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class ANavigationMeshSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class NavigationMeshSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
-        public new static readonly ANavigationMeshSetterTranslationCommon Instance = new ANavigationMeshSetterTranslationCommon();
+        public new static readonly NavigationMeshSetterTranslationCommon Instance = new NavigationMeshSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IANavigationMeshInternal item,
-            IANavigationMeshGetter rhs,
+            INavigationMeshInternal item,
+            INavigationMeshGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -973,8 +973,8 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void DeepCopyIn(
-            IANavigationMesh item,
-            IANavigationMeshGetter rhs,
+            INavigationMesh item,
+            INavigationMeshGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -995,8 +995,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IANavigationMeshInternal)item,
-                rhs: (IANavigationMeshGetter)rhs,
+                item: (INavigationMeshInternal)item,
+                rhs: (INavigationMeshGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1010,8 +1010,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IANavigationMesh)item,
-                rhs: (IANavigationMeshGetter)rhs,
+                item: (INavigationMesh)item,
+                rhs: (INavigationMeshGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1025,8 +1025,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IANavigationMeshInternal)item,
-                rhs: (IANavigationMeshGetter)rhs,
+                item: (INavigationMeshInternal)item,
+                rhs: (INavigationMeshGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1040,8 +1040,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IANavigationMesh)item,
-                rhs: (IANavigationMeshGetter)rhs,
+                item: (INavigationMesh)item,
+                rhs: (INavigationMeshGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1049,12 +1049,12 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
-        public ANavigationMesh DeepCopy(
-            IANavigationMeshGetter item,
-            ANavigationMesh.TranslationMask? copyMask = null)
+        public NavigationMesh DeepCopy(
+            INavigationMeshGetter item,
+            NavigationMesh.TranslationMask? copyMask = null)
         {
-            ANavigationMesh ret = (ANavigationMesh)((ANavigationMeshCommon)((IANavigationMeshGetter)item).CommonInstance()!).GetNew();
-            ((ANavigationMeshSetterTranslationCommon)((IANavigationMeshGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            NavigationMesh ret = (NavigationMesh)((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).GetNew();
+            ((NavigationMeshSetterTranslationCommon)((INavigationMeshGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1063,30 +1063,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public ANavigationMesh DeepCopy(
-            IANavigationMeshGetter item,
-            out ANavigationMesh.ErrorMask errorMask,
-            ANavigationMesh.TranslationMask? copyMask = null)
+        public NavigationMesh DeepCopy(
+            INavigationMeshGetter item,
+            out NavigationMesh.ErrorMask errorMask,
+            NavigationMesh.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ANavigationMesh ret = (ANavigationMesh)((ANavigationMeshCommon)((IANavigationMeshGetter)item).CommonInstance()!).GetNew();
-            ((ANavigationMeshSetterTranslationCommon)((IANavigationMeshGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            NavigationMesh ret = (NavigationMesh)((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).GetNew();
+            ((NavigationMeshSetterTranslationCommon)((INavigationMeshGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = ANavigationMesh.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NavigationMesh.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public ANavigationMesh DeepCopy(
-            IANavigationMeshGetter item,
+        public NavigationMesh DeepCopy(
+            INavigationMeshGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ANavigationMesh ret = (ANavigationMesh)((ANavigationMeshCommon)((IANavigationMeshGetter)item).CommonInstance()!).GetNew();
-            ((ANavigationMeshSetterTranslationCommon)((IANavigationMeshGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            NavigationMesh ret = (NavigationMesh)((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).GetNew();
+            ((NavigationMeshSetterTranslationCommon)((INavigationMeshGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1102,21 +1102,21 @@ namespace Mutagen.Bethesda.Fallout4
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ANavigationMesh
+    public partial class NavigationMesh
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ANavigationMesh_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => ANavigationMesh_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => NavigationMesh_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => NavigationMesh_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ANavigationMeshCommon.Instance;
+        protected override object CommonInstance() => NavigationMeshCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return ANavigationMeshSetterCommon.Instance;
+            return NavigationMeshSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ANavigationMeshSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => NavigationMeshSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1127,15 +1127,15 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ANavigationMeshBinaryWriteTranslation :
+    public partial class NavigationMeshBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ANavigationMeshBinaryWriteTranslation Instance = new ANavigationMeshBinaryWriteTranslation();
+        public new readonly static NavigationMeshBinaryWriteTranslation Instance = new NavigationMeshBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
-            IANavigationMeshGetter item,
+            INavigationMeshGetter item,
             TypedWriteParams? translationParams = null)
         {
             using (HeaderExport.Record(
@@ -1165,7 +1165,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IANavigationMeshGetter)item,
+                item: (INavigationMeshGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1176,7 +1176,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IANavigationMeshGetter)item,
+                item: (INavigationMeshGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1187,16 +1187,16 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams? translationParams = null)
         {
             Write(
-                item: (IANavigationMeshGetter)item,
+                item: (INavigationMeshGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class ANavigationMeshBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class NavigationMeshBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static ANavigationMeshBinaryCreateTranslation Instance = new ANavigationMeshBinaryCreateTranslation();
+        public new readonly static NavigationMeshBinaryCreateTranslation Instance = new NavigationMeshBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
     }
@@ -1205,7 +1205,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class ANavigationMeshBinaryTranslationMixIn
+    public static class NavigationMeshBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1214,30 +1214,30 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal abstract partial class ANavigationMeshBinaryOverlay :
+    internal abstract partial class NavigationMeshBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
-        IANavigationMeshGetter
+        INavigationMeshGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ANavigationMesh_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => ANavigationMesh_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => NavigationMesh_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => NavigationMesh_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ANavigationMeshCommon.Instance;
+        protected override object CommonInstance() => NavigationMeshCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ANavigationMeshSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => NavigationMeshSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ANavigationMeshBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => NavigationMeshBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams? translationParams = null)
         {
-            ((ANavigationMeshBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((NavigationMeshBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -1249,7 +1249,7 @@ namespace Mutagen.Bethesda.Fallout4
             int offset);
 
         partial void CustomCtor();
-        protected ANavigationMeshBinaryOverlay(
+        protected NavigationMeshBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1266,7 +1266,7 @@ namespace Mutagen.Bethesda.Fallout4
             FileGeneration fg,
             string? name = null)
         {
-            ANavigationMeshMixIn.ToString(
+            NavigationMeshMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1275,7 +1275,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override string ToString()
         {
-            return MajorRecordPrinter<ANavigationMesh>.ToString(this);
+            return MajorRecordPrinter<NavigationMesh>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1285,16 +1285,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IANavigationMeshGetter rhs) return false;
-            return ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not INavigationMeshGetter rhs) return false;
+            return ((NavigationMeshCommon)((INavigationMeshGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IANavigationMeshGetter? obj)
+        public bool Equals(INavigationMeshGetter? obj)
         {
-            return ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavigationMeshCommon)((INavigationMeshGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((NavigationMeshCommon)((INavigationMeshGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

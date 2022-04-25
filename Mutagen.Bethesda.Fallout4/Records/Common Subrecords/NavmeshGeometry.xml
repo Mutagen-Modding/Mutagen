@@ -49,7 +49,7 @@
   <Object name="EdgeLink" objType="Subrecord" GUID="d5312308-0813-41dc-87c0-d45119a5615e" ID="321">
     <Fields>
       <Int32 name="Unknown" />
-      <FormLink name="Mesh" refName="ANavigationMesh" />
+      <FormLink name="Mesh" refName="NavigationMesh" />
       <Int16 name="TriangleIndex" />
       <Int8 name="Unknown2" />
     </Fields>

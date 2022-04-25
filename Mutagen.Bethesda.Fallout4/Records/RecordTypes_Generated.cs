@@ -291,6 +291,7 @@ public partial class RecordTypes
     public static readonly RecordType NAM7 = new(0x374D414E);
     public static readonly RecordType NAM8 = new(0x384D414E);
     public static readonly RecordType NAME = new(0x454D414E);
+    public static readonly RecordType NAVI = new(0x4956414E);
     public static readonly RecordType NAVM = new(0x4D56414E);
     public static readonly RecordType NIAD = new(0x4441494E);
     public static readonly RecordType NNAM = new(0x4D414E4E);
@@ -298,7 +299,11 @@ public partial class RecordTypes
     public static readonly RecordType NPC_ = new(0x5F43504E);
     public static readonly RecordType NTOP = new(0x504F544E);
     public static readonly RecordType NTRM = new(0x4D52544E);
+    public static readonly RecordType NVER = new(0x5245564E);
+    public static readonly RecordType NVMI = new(0x494D564E);
     public static readonly RecordType NVNM = new(0x4D4E564E);
+    public static readonly RecordType NVPP = new(0x5050564E);
+    public static readonly RecordType NVSI = new(0x4953564E);
     public static readonly RecordType OBND = new(0x444E424F);
     public static readonly RecordType OBTE = new(0x4554424F);
     public static readonly RecordType OBTF = new(0x4654424F);

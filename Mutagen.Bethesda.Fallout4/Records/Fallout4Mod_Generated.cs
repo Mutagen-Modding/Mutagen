@@ -113,6 +113,7 @@ namespace Mutagen.Bethesda.Fallout4
             _ShaderParticleGeometries_Object = new Fallout4Group<ShaderParticleGeometry>(this);
             _VisualEffects_Object = new Fallout4Group<VisualEffect>(this);
             _Regions_Object = new Fallout4Group<Region>(this);
+            _NavigationMeshInfoMaps_Object = new Fallout4Group<NavigationMeshInfoMap>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -496,6 +497,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout4GroupGetter<IRegionGetter> IFallout4ModGetter.Regions => _Regions_Object;
         #endregion
+        #region NavigationMeshInfoMaps
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout4Group<NavigationMeshInfoMap> _NavigationMeshInfoMaps_Object;
+        public Fallout4Group<NavigationMeshInfoMap> NavigationMeshInfoMaps => _NavigationMeshInfoMaps_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout4GroupGetter<INavigationMeshInfoMapGetter> IFallout4ModGetter.NavigationMeshInfoMaps => _NavigationMeshInfoMaps_Object;
+        #endregion
 
         #region To String
 
@@ -588,6 +596,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ShaderParticleGeometries = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.VisualEffects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
                 this.Regions = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
+                this.NavigationMeshInfoMaps = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(initialValue, new Fallout4Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -644,7 +653,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Climates,
                 TItem ShaderParticleGeometries,
                 TItem VisualEffects,
-                TItem Regions)
+                TItem Regions,
+                TItem NavigationMeshInfoMaps)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(GameSettings, new Fallout4Group.Mask<TItem>(GameSettings));
@@ -700,6 +710,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ShaderParticleGeometries = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(ShaderParticleGeometries, new Fallout4Group.Mask<TItem>(ShaderParticleGeometries));
                 this.VisualEffects = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(VisualEffects, new Fallout4Group.Mask<TItem>(VisualEffects));
                 this.Regions = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(Regions, new Fallout4Group.Mask<TItem>(Regions));
+                this.NavigationMeshInfoMaps = new MaskItem<TItem, Fallout4Group.Mask<TItem>?>(NavigationMeshInfoMaps, new Fallout4Group.Mask<TItem>(NavigationMeshInfoMaps));
             }
 
             #pragma warning disable CS8618
@@ -765,6 +776,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? ShaderParticleGeometries { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? VisualEffects { get; set; }
             public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? Regions { get; set; }
+            public MaskItem<TItem, Fallout4Group.Mask<TItem>?>? NavigationMeshInfoMaps { get; set; }
             #endregion
 
             #region Equals
@@ -831,6 +843,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.ShaderParticleGeometries, rhs.ShaderParticleGeometries)) return false;
                 if (!object.Equals(this.VisualEffects, rhs.VisualEffects)) return false;
                 if (!object.Equals(this.Regions, rhs.Regions)) return false;
+                if (!object.Equals(this.NavigationMeshInfoMaps, rhs.NavigationMeshInfoMaps)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -890,6 +903,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.ShaderParticleGeometries);
                 hash.Add(this.VisualEffects);
                 hash.Add(this.Regions);
+                hash.Add(this.NavigationMeshInfoMaps);
                 return hash.ToHashCode();
             }
 
@@ -1168,6 +1182,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Regions.Overall)) return false;
                     if (this.Regions.Specific != null && !this.Regions.Specific.All(eval)) return false;
                 }
+                if (NavigationMeshInfoMaps != null)
+                {
+                    if (!eval(this.NavigationMeshInfoMaps.Overall)) return false;
+                    if (this.NavigationMeshInfoMaps.Specific != null && !this.NavigationMeshInfoMaps.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1445,6 +1464,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Regions.Overall)) return true;
                     if (this.Regions.Specific != null && this.Regions.Specific.Any(eval)) return true;
                 }
+                if (NavigationMeshInfoMaps != null)
+                {
+                    if (eval(this.NavigationMeshInfoMaps.Overall)) return true;
+                    if (this.NavigationMeshInfoMaps.Specific != null && this.NavigationMeshInfoMaps.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1513,6 +1537,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.ShaderParticleGeometries = this.ShaderParticleGeometries == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.ShaderParticleGeometries.Overall), this.ShaderParticleGeometries.Specific?.Translate(eval));
                 obj.VisualEffects = this.VisualEffects == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.VisualEffects.Overall), this.VisualEffects.Specific?.Translate(eval));
                 obj.Regions = this.Regions == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.Regions.Overall), this.Regions.Specific?.Translate(eval));
+                obj.NavigationMeshInfoMaps = this.NavigationMeshInfoMaps == null ? null : new MaskItem<R, Fallout4Group.Mask<R>?>(eval(this.NavigationMeshInfoMaps.Overall), this.NavigationMeshInfoMaps.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1751,6 +1776,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Regions?.ToString(fg);
                     }
+                    if (printMask?.NavigationMeshInfoMaps?.Overall ?? true)
+                    {
+                        NavigationMeshInfoMaps?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1830,6 +1859,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4Group.ErrorMask<ShaderParticleGeometry.ErrorMask>?>? ShaderParticleGeometries;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<VisualEffect.ErrorMask>?>? VisualEffects;
             public MaskItem<Exception?, Fallout4Group.ErrorMask<Region.ErrorMask>?>? Regions;
+            public MaskItem<Exception?, Fallout4Group.ErrorMask<NavigationMeshInfoMap.ErrorMask>?>? NavigationMeshInfoMaps;
             #endregion
 
             #region IErrorMask
@@ -1946,6 +1976,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return VisualEffects;
                     case Fallout4Mod_FieldIndex.Regions:
                         return Regions;
+                    case Fallout4Mod_FieldIndex.NavigationMeshInfoMaps:
+                        return NavigationMeshInfoMaps;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2117,6 +2149,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.Regions:
                         this.Regions = new MaskItem<Exception?, Fallout4Group.ErrorMask<Region.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.NavigationMeshInfoMaps:
+                        this.NavigationMeshInfoMaps = new MaskItem<Exception?, Fallout4Group.ErrorMask<NavigationMeshInfoMap.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2290,6 +2325,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.Regions:
                         this.Regions = (MaskItem<Exception?, Fallout4Group.ErrorMask<Region.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.NavigationMeshInfoMaps:
+                        this.NavigationMeshInfoMaps = (MaskItem<Exception?, Fallout4Group.ErrorMask<NavigationMeshInfoMap.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2352,6 +2390,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (ShaderParticleGeometries != null) return true;
                 if (VisualEffects != null) return true;
                 if (Regions != null) return true;
+                if (NavigationMeshInfoMaps != null) return true;
                 return false;
             }
             #endregion
@@ -2440,6 +2479,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ShaderParticleGeometries?.ToString(fg);
                 VisualEffects?.ToString(fg);
                 Regions?.ToString(fg);
+                NavigationMeshInfoMaps?.ToString(fg);
             }
             #endregion
 
@@ -2502,6 +2542,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ShaderParticleGeometries = this.ShaderParticleGeometries.Combine(rhs.ShaderParticleGeometries, (l, r) => l.Combine(r));
                 ret.VisualEffects = this.VisualEffects.Combine(rhs.VisualEffects, (l, r) => l.Combine(r));
                 ret.Regions = this.Regions.Combine(rhs.Regions, (l, r) => l.Combine(r));
+                ret.NavigationMeshInfoMaps = this.NavigationMeshInfoMaps.Combine(rhs.NavigationMeshInfoMaps, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2579,6 +2620,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4Group.TranslationMask<ShaderParticleGeometry.TranslationMask>? ShaderParticleGeometries;
             public Fallout4Group.TranslationMask<VisualEffect.TranslationMask>? VisualEffects;
             public Fallout4Group.TranslationMask<Region.TranslationMask>? Regions;
+            public Fallout4Group.TranslationMask<NavigationMeshInfoMap.TranslationMask>? NavigationMeshInfoMaps;
             #endregion
 
             #region Ctors
@@ -2657,6 +2699,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((ShaderParticleGeometries != null ? ShaderParticleGeometries.OnOverall : DefaultOn, ShaderParticleGeometries?.GetCrystal()));
                 ret.Add((VisualEffects != null ? VisualEffects.OnOverall : DefaultOn, VisualEffects?.GetCrystal()));
                 ret.Add((Regions != null ? Regions.OnOverall : DefaultOn, Regions?.GetCrystal()));
+                ret.Add((NavigationMeshInfoMaps != null ? NavigationMeshInfoMaps.OnOverall : DefaultOn, NavigationMeshInfoMaps?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2751,6 +2794,7 @@ namespace Mutagen.Bethesda.Fallout4
             _ShaderParticleGeometries_Object = new Fallout4Group<ShaderParticleGeometry>(this);
             _VisualEffects_Object = new Fallout4Group<VisualEffect>(this);
             _Regions_Object = new Fallout4Group<Region>(this);
+            _NavigationMeshInfoMaps_Object = new Fallout4Group<NavigationMeshInfoMap>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -2969,6 +3013,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Regions.RecordCache.Set(rhsMod.Regions.RecordCache.Items);
             }
+            if (mask?.NavigationMeshInfoMaps ?? true)
+            {
+                this.NavigationMeshInfoMaps.RecordCache.Set(rhsMod.NavigationMeshInfoMaps.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -3032,6 +3080,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += ShaderParticleGeometries.RecordCache.Count > 0 ? 1 : default(uint);
             count += VisualEffects.RecordCache.Count > 0 ? 1 : default(uint);
             count += Regions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += NavigationMeshInfoMaps.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -3334,6 +3383,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4Group<ShaderParticleGeometry> ShaderParticleGeometries { get; }
         new Fallout4Group<VisualEffect> VisualEffects { get; }
         new Fallout4Group<Region> Regions { get; }
+        new Fallout4Group<NavigationMeshInfoMap> NavigationMeshInfoMaps { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -3406,6 +3456,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4GroupGetter<IShaderParticleGeometryGetter> ShaderParticleGeometries { get; }
         IFallout4GroupGetter<IVisualEffectGetter> VisualEffects { get; }
         IFallout4GroupGetter<IRegionGetter> Regions { get; }
+        IFallout4GroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps { get; }
 
     }
 
@@ -4022,6 +4073,7 @@ namespace Mutagen.Bethesda.Fallout4
         ShaderParticleGeometries = 51,
         VisualEffects = 52,
         Regions = 53,
+        NavigationMeshInfoMaps = 54,
     }
     #endregion
 
@@ -4039,9 +4091,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 54;
+        public const ushort AdditionalFieldCount = 55;
 
-        public const ushort FieldCount = 54;
+        public const ushort FieldCount = 55;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -4163,6 +4215,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.ShaderParticleGeometries.Clear();
             item.VisualEffects.Clear();
             item.Regions.Clear();
+            item.NavigationMeshInfoMaps.Clear();
         }
         
         #region Mutagen
@@ -4216,6 +4269,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Climates.RemapLinks(mapping);
             obj.VisualEffects.RemapLinks(mapping);
             obj.Regions.RemapLinks(mapping);
+            obj.NavigationMeshInfoMaps.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4Mod obj)
@@ -4303,6 +4357,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.ShaderParticleGeometries.Remove(keys);
             obj.VisualEffects.Remove(keys);
             obj.Regions.Remove(keys);
+            obj.NavigationMeshInfoMaps.Remove(keys);
         }
         
         public void Remove(
@@ -4790,6 +4845,14 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+                case "NavigationMeshInfoMap":
+                case "INavigationMeshInfoMapGetter":
+                case "INavigationMeshInfoMap":
+                case "INavigationMeshInfoMapInternal":
+                    obj.NavigationMeshInfoMaps.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
@@ -5049,6 +5112,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.ShaderParticleGeometries = MaskItemExt.Factory(item.ShaderParticleGeometries.GetEqualsMask(rhs.ShaderParticleGeometries, include), include);
             ret.VisualEffects = MaskItemExt.Factory(item.VisualEffects.GetEqualsMask(rhs.VisualEffects, include), include);
             ret.Regions = MaskItemExt.Factory(item.Regions.GetEqualsMask(rhs.Regions, include), include);
+            ret.NavigationMeshInfoMaps = MaskItemExt.Factory(item.NavigationMeshInfoMaps.GetEqualsMask(rhs.NavigationMeshInfoMaps, include), include);
         }
         
         public string ToString(
@@ -5310,6 +5374,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.Regions?.Overall ?? true)
             {
                 item.Regions?.ToString(fg, "Regions");
+            }
+            if (printMask?.NavigationMeshInfoMaps?.Overall ?? true)
+            {
+                item.NavigationMeshInfoMaps?.ToString(fg, "NavigationMeshInfoMaps");
             }
         }
         
@@ -5752,6 +5820,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isRegionsEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.NavigationMeshInfoMaps) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.NavigationMeshInfoMaps, rhs.NavigationMeshInfoMaps, out var lhsNavigationMeshInfoMaps, out var rhsNavigationMeshInfoMaps, out var isNavigationMeshInfoMapsEqual))
+                {
+                    if (!object.Equals(lhsNavigationMeshInfoMaps, rhsNavigationMeshInfoMaps)) return false;
+                }
+                else if (!isNavigationMeshInfoMapsEqual) return false;
+            }
             return true;
         }
         
@@ -5812,6 +5888,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.ShaderParticleGeometries);
             hash.Add(item.VisualEffects);
             hash.Add(item.Regions);
+            hash.Add(item.NavigationMeshInfoMaps);
             return hash.ToHashCode();
         }
         
@@ -6095,6 +6172,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IRegion":
                 case "IRegionInternal":
                     return obj.Regions;
+                case "NavigationMeshInfoMap":
+                case "INavigationMeshInfoMapGetter":
+                case "INavigationMeshInfoMap":
+                case "INavigationMeshInfoMapInternal":
+                    return obj.NavigationMeshInfoMaps;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }
@@ -6119,7 +6201,7 @@ namespace Mutagen.Bethesda.Fallout4
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[53];
+            Stream[] outputStreams = new Stream[54];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -6174,6 +6256,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.ShaderParticleGeometries, 50, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.VisualEffects, 51, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Regions, 52, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.NavigationMeshInfoMaps, 53, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -6413,6 +6496,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
+            foreach (var item in obj.NavigationMeshInfoMaps.ContainedFormLinks)
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -6627,6 +6714,10 @@ namespace Mutagen.Bethesda.Fallout4
                 yield return item;
             }
             foreach (var item in obj.Regions.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.NavigationMeshInfoMaps.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -7142,6 +7233,15 @@ namespace Mutagen.Bethesda.Fallout4
                         yield return item;
                     }
                     yield break;
+                case "NavigationMeshInfoMap":
+                case "INavigationMeshInfoMapGetter":
+                case "INavigationMeshInfoMap":
+                case "INavigationMeshInfoMapInternal":
+                    foreach (var item in obj.NavigationMeshInfoMaps.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout4, obj, type, out var linkInterfaces))
                     {
@@ -7640,6 +7740,15 @@ namespace Mutagen.Bethesda.Fallout4
                 modKey: obj.ModKey,
                 group: (m) => m.Regions,
                 groupGetter: (m) => m.Regions))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, NavigationMeshInfoMap, INavigationMeshInfoMapGetter>(
+                srcGroup: obj.NavigationMeshInfoMaps,
+                type: typeof(INavigationMeshInfoMapGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.NavigationMeshInfoMaps,
+                groupGetter: (m) => m.NavigationMeshInfoMaps))
             {
                 yield return item;
             }
@@ -8412,6 +8521,20 @@ namespace Mutagen.Bethesda.Fallout4
                         modKey: obj.ModKey,
                         group: (m) => m.Regions,
                         groupGetter: (m) => m.Regions))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "NavigationMeshInfoMap":
+                case "INavigationMeshInfoMapGetter":
+                case "INavigationMeshInfoMap":
+                case "INavigationMeshInfoMapInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout4Mod, IFallout4ModGetter, NavigationMeshInfoMap, INavigationMeshInfoMapGetter>(
+                        srcGroup: obj.NavigationMeshInfoMaps,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.NavigationMeshInfoMaps,
+                        groupGetter: (m) => m.NavigationMeshInfoMaps))
                     {
                         yield return item;
                     }
@@ -9536,6 +9659,26 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.NavigationMeshInfoMaps) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.NavigationMeshInfoMaps);
+                try
+                {
+                    item.NavigationMeshInfoMaps.DeepCopyIn(
+                        rhs: rhs.NavigationMeshInfoMaps,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.NavigationMeshInfoMaps));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -9679,6 +9822,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool ShaderParticleGeometries;
         public bool VisualEffects;
         public bool Regions;
+        public bool NavigationMeshInfoMaps;
         public GroupMask()
         {
         }
@@ -9737,6 +9881,7 @@ namespace Mutagen.Bethesda.Fallout4
             ShaderParticleGeometries = defaultValue;
             VisualEffects = defaultValue;
             Regions = defaultValue;
+            NavigationMeshInfoMaps = defaultValue;
         }
     }
 
@@ -10347,6 +10492,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)RegionsItem).BinaryWriteTranslator).Write<IRegionGetter>(
                         item: RegionsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.NavigationMeshInfoMaps ?? true)
+            {
+                var NavigationMeshInfoMapsItem = item.NavigationMeshInfoMaps;
+                if (NavigationMeshInfoMapsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout4GroupBinaryWriteTranslation)((IBinaryItem)NavigationMeshInfoMapsItem).BinaryWriteTranslator).Write<INavigationMeshInfoMapGetter>(
+                        item: NavigationMeshInfoMapsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -11159,6 +11315,20 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     return (int)Fallout4Mod_FieldIndex.Regions;
                 }
+                case RecordTypeInts.NAVI:
+                {
+                    if (importMask?.NavigationMeshInfoMaps ?? true)
+                    {
+                        item.NavigationMeshInfoMaps.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.NavigationMeshInfoMaps;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -11585,6 +11755,11 @@ namespace Mutagen.Bethesda.Fallout4
         private IFallout4GroupGetter<IRegionGetter>? _Regions => _RegionsLocations != null ? Fallout4GroupBinaryOverlay<IRegionGetter>.Fallout4GroupFactory(_data, _RegionsLocations, _package) : default;
         public IFallout4GroupGetter<IRegionGetter> Regions => _Regions ?? new Fallout4Group<Region>(this);
         #endregion
+        #region NavigationMeshInfoMaps
+        private List<RangeInt64>? _NavigationMeshInfoMapsLocations;
+        private IFallout4GroupGetter<INavigationMeshInfoMapGetter>? _NavigationMeshInfoMaps => _NavigationMeshInfoMapsLocations != null ? Fallout4GroupBinaryOverlay<INavigationMeshInfoMapGetter>.Fallout4GroupFactory(_data, _NavigationMeshInfoMapsLocations, _package) : default;
+        public IFallout4GroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps => _NavigationMeshInfoMaps ?? new Fallout4Group<NavigationMeshInfoMap>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -11990,6 +12165,12 @@ namespace Mutagen.Bethesda.Fallout4
                     _RegionsLocations ??= new();
                     _RegionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout4Mod_FieldIndex.Regions;
+                }
+                case RecordTypeInts.NAVI:
+                {
+                    _NavigationMeshInfoMapsLocations ??= new();
+                    _NavigationMeshInfoMapsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout4Mod_FieldIndex.NavigationMeshInfoMaps;
                 }
                 default:
                     return default(int?);

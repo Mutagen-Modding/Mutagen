@@ -156,9 +156,6 @@
     <Compile Include="Records\Major Records\Ammunition.cs">
       <DependentUpon>Ammunition.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ANavigationMesh_Generated.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Armor.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
@@ -342,6 +339,9 @@
     <Compile Include="Records\Major Records\MusicType.cs">
       <DependentUpon>MusicType.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\NavigationMapInfo.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Npc.cs">
       <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
@@ -362,6 +362,9 @@
     </Compile>
     <Compile Include="Records\Major Records\PlacedNpc_Generated.cs">
       <DependentUpon>PlacedNpc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PreferredPathing.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Projectile.cs">
       <DependentUpon>Projectile.xml</DependentUpon>
@@ -1428,6 +1431,30 @@
     </Compile>
     <Compile Include="Records\Major Records\Climate_Generated.cs">
       <DependentUpon>Climate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavigationMesh_Generated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavigationMeshInfoMap_Generated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavigationMapInfo_Generated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LinkedDoor_Generated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\IslandData_Generated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PreferredPathing_Generated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavmeshSet_Generated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavmeshNode_Generated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -289,6 +289,7 @@ public partial class RecordTypeInts
     public const int NAM7 = 0x374D414E;
     public const int NAM8 = 0x384D414E;
     public const int NAME = 0x454D414E;
+    public const int NAVI = 0x4956414E;
     public const int NAVM = 0x4D56414E;
     public const int NIAD = 0x4441494E;
     public const int NNAM = 0x4D414E4E;
@@ -296,7 +297,11 @@ public partial class RecordTypeInts
     public const int NPC_ = 0x5F43504E;
     public const int NTOP = 0x504F544E;
     public const int NTRM = 0x4D52544E;
+    public const int NVER = 0x5245564E;
+    public const int NVMI = 0x494D564E;
     public const int NVNM = 0x4D4E564E;
+    public const int NVPP = 0x5050564E;
+    public const int NVSI = 0x4953564E;
     public const int OBND = 0x444E424F;
     public const int OBTE = 0x4554424F;
     public const int OBTF = 0x4654424F;
