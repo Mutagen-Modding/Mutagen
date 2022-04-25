@@ -1676,55 +1676,5 @@ public static class StreamHeaderMixIn
     {
         return ReadVariableHeader(stream, stream.MetaData.Constants, readSafe: readSafe);
     }
-
-    /// <summary>
-    /// Locates the first encountered instances of all given subrecord types, and returns an array of their locations
-    /// -1 represents a recordtype that was not found.
-    /// 
-    /// Not suggested to use with high numbers of record types, as it is an N^2 algorithm
-    /// </summary>
-    /// <param name="stream">Stream to read from</param>
-    /// <param name="recordTypes">Record types to locate</param>
-    /// <returns>Array of found record locations</returns>
-    //public static int?[] ReadFirstSubrecords<TStream>(this TStream stream, params RecordType[] recordTypes)
-    //    where TStream : IMutagenReadStream
-    //{
-    //    int?[] ret = new int?[recordTypes.Length];
-    //    while (stream.Complete)
-    //    {
-    //        var subMeta = stream.GetSubrecord();
-    //        var recType = subMeta.RecordType;
-    //        for (int i = 0; i < recordTypes.Length; i++)
-    //        {
-    //            if (recordTypes[i] == recType && ret[i] == null)
-    //            {
-    //                ret[i] = lenParsed;
-    //                bool breakOut = false;
-
-    //                // Check to see if there's still more to find
-    //                for (int j = 0; j < ret.Length; j++)
-    //                {
-    //                    if (ret[j] == null)
-    //                    {
-    //                        breakOut = true;
-    //                        break;
-    //                    }
-    //                }
-
-    //                if (breakOut)
-    //                {
-    //                    break;
-    //                }
-
-    //                // Found everything
-    //                return ret;
-    //            }
-    //        }
-
-    //        lenParsed += subMeta.TotalLength;
-    //    }
-
-    //    return ret;
-    //}
     #endregion
 }

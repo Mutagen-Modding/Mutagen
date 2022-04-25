@@ -58,9 +58,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region MapColor
-        public Color? MapColor { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Color? IRegionGetter.MapColor => this.MapColor;
+        public Color MapColor { get; set; } = default;
         #endregion
         #region Worldspace
         private readonly IFormLinkNullable<IWorldspaceGetter> _Worldspace = new FormLinkNullable<IWorldspaceGetter>();
@@ -152,16 +150,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IRegionSoundsGetter? IRegionGetter.Sounds => this.Sounds;
         #endregion
-        #region LodDisplayDistanceMultiplier
-        public Single? LodDisplayDistanceMultiplier { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IRegionGetter.LodDisplayDistanceMultiplier => this.LodDisplayDistanceMultiplier;
-        #endregion
-        #region OcclusionAccuracyDist
-        public Single? OcclusionAccuracyDist { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IRegionGetter.OcclusionAccuracyDist => this.OcclusionAccuracyDist;
-        #endregion
 
         #region To String
 
@@ -195,8 +183,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Land = new MaskItem<TItem, RegionLand.Mask<TItem>?>(initialValue, new RegionLand.Mask<TItem>(initialValue));
                 this.Grasses = new MaskItem<TItem, RegionGrasses.Mask<TItem>?>(initialValue, new RegionGrasses.Mask<TItem>(initialValue));
                 this.Sounds = new MaskItem<TItem, RegionSounds.Mask<TItem>?>(initialValue, new RegionSounds.Mask<TItem>(initialValue));
-                this.LodDisplayDistanceMultiplier = initialValue;
-                this.OcclusionAccuracyDist = initialValue;
             }
 
             public Mask(
@@ -214,9 +200,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Map,
                 TItem Land,
                 TItem Grasses,
-                TItem Sounds,
-                TItem LodDisplayDistanceMultiplier,
-                TItem OcclusionAccuracyDist)
+                TItem Sounds)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -234,8 +218,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Land = new MaskItem<TItem, RegionLand.Mask<TItem>?>(Land, new RegionLand.Mask<TItem>(Land));
                 this.Grasses = new MaskItem<TItem, RegionGrasses.Mask<TItem>?>(Grasses, new RegionGrasses.Mask<TItem>(Grasses));
                 this.Sounds = new MaskItem<TItem, RegionSounds.Mask<TItem>?>(Sounds, new RegionSounds.Mask<TItem>(Sounds));
-                this.LodDisplayDistanceMultiplier = LodDisplayDistanceMultiplier;
-                this.OcclusionAccuracyDist = OcclusionAccuracyDist;
             }
 
             #pragma warning disable CS8618
@@ -256,8 +238,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, RegionLand.Mask<TItem>?>? Land { get; set; }
             public MaskItem<TItem, RegionGrasses.Mask<TItem>?>? Grasses { get; set; }
             public MaskItem<TItem, RegionSounds.Mask<TItem>?>? Sounds { get; set; }
-            public TItem LodDisplayDistanceMultiplier;
-            public TItem OcclusionAccuracyDist;
             #endregion
 
             #region Equals
@@ -280,8 +260,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Land, rhs.Land)) return false;
                 if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
                 if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
-                if (!object.Equals(this.LodDisplayDistanceMultiplier, rhs.LodDisplayDistanceMultiplier)) return false;
-                if (!object.Equals(this.OcclusionAccuracyDist, rhs.OcclusionAccuracyDist)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -296,8 +274,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Land);
                 hash.Add(this.Grasses);
                 hash.Add(this.Sounds);
-                hash.Add(this.LodDisplayDistanceMultiplier);
-                hash.Add(this.OcclusionAccuracyDist);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -352,8 +328,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Sounds.Overall)) return false;
                     if (this.Sounds.Specific != null && !this.Sounds.Specific.All(eval)) return false;
                 }
-                if (!eval(this.LodDisplayDistanceMultiplier)) return false;
-                if (!eval(this.OcclusionAccuracyDist)) return false;
                 return true;
             }
             #endregion
@@ -406,8 +380,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Sounds.Overall)) return true;
                     if (this.Sounds.Specific != null && this.Sounds.Specific.Any(eval)) return true;
                 }
-                if (eval(this.LodDisplayDistanceMultiplier)) return true;
-                if (eval(this.OcclusionAccuracyDist)) return true;
                 return false;
             }
             #endregion
@@ -446,8 +418,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Land = this.Land == null ? null : new MaskItem<R, RegionLand.Mask<R>?>(eval(this.Land.Overall), this.Land.Specific?.Translate(eval));
                 obj.Grasses = this.Grasses == null ? null : new MaskItem<R, RegionGrasses.Mask<R>?>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
                 obj.Sounds = this.Sounds == null ? null : new MaskItem<R, RegionSounds.Mask<R>?>(eval(this.Sounds.Overall), this.Sounds.Specific?.Translate(eval));
-                obj.LodDisplayDistanceMultiplier = eval(this.LodDisplayDistanceMultiplier);
-                obj.OcclusionAccuracyDist = eval(this.OcclusionAccuracyDist);
             }
             #endregion
 
@@ -525,14 +495,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Sounds?.ToString(fg);
                     }
-                    if (printMask?.LodDisplayDistanceMultiplier ?? true)
-                    {
-                        fg.AppendItem(LodDisplayDistanceMultiplier, "LodDisplayDistanceMultiplier");
-                    }
-                    if (printMask?.OcclusionAccuracyDist ?? true)
-                    {
-                        fg.AppendItem(OcclusionAccuracyDist, "OcclusionAccuracyDist");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -554,8 +516,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, RegionLand.ErrorMask?>? Land;
             public MaskItem<Exception?, RegionGrasses.ErrorMask?>? Grasses;
             public MaskItem<Exception?, RegionSounds.ErrorMask?>? Sounds;
-            public Exception? LodDisplayDistanceMultiplier;
-            public Exception? OcclusionAccuracyDist;
             #endregion
 
             #region IErrorMask
@@ -582,10 +542,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Grasses;
                     case Region_FieldIndex.Sounds:
                         return Sounds;
-                    case Region_FieldIndex.LodDisplayDistanceMultiplier:
-                        return LodDisplayDistanceMultiplier;
-                    case Region_FieldIndex.OcclusionAccuracyDist:
-                        return OcclusionAccuracyDist;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -622,12 +578,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Region_FieldIndex.Sounds:
                         this.Sounds = new MaskItem<Exception?, RegionSounds.ErrorMask?>(ex, null);
-                        break;
-                    case Region_FieldIndex.LodDisplayDistanceMultiplier:
-                        this.LodDisplayDistanceMultiplier = ex;
-                        break;
-                    case Region_FieldIndex.OcclusionAccuracyDist:
-                        this.OcclusionAccuracyDist = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -667,12 +617,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Region_FieldIndex.Sounds:
                         this.Sounds = (MaskItem<Exception?, RegionSounds.ErrorMask?>?)obj;
                         break;
-                    case Region_FieldIndex.LodDisplayDistanceMultiplier:
-                        this.LodDisplayDistanceMultiplier = (Exception?)obj;
-                        break;
-                    case Region_FieldIndex.OcclusionAccuracyDist:
-                        this.OcclusionAccuracyDist = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -691,8 +635,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Land != null) return true;
                 if (Grasses != null) return true;
                 if (Sounds != null) return true;
-                if (LodDisplayDistanceMultiplier != null) return true;
-                if (OcclusionAccuracyDist != null) return true;
                 return false;
             }
             #endregion
@@ -758,8 +700,6 @@ namespace Mutagen.Bethesda.Fallout4
                 Land?.ToString(fg);
                 Grasses?.ToString(fg);
                 Sounds?.ToString(fg);
-                fg.AppendItem(LodDisplayDistanceMultiplier, "LodDisplayDistanceMultiplier");
-                fg.AppendItem(OcclusionAccuracyDist, "OcclusionAccuracyDist");
             }
             #endregion
 
@@ -777,8 +717,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Land = this.Land.Combine(rhs.Land, (l, r) => l.Combine(r));
                 ret.Grasses = this.Grasses.Combine(rhs.Grasses, (l, r) => l.Combine(r));
                 ret.Sounds = this.Sounds.Combine(rhs.Sounds, (l, r) => l.Combine(r));
-                ret.LodDisplayDistanceMultiplier = this.LodDisplayDistanceMultiplier.Combine(rhs.LodDisplayDistanceMultiplier);
-                ret.OcclusionAccuracyDist = this.OcclusionAccuracyDist.Combine(rhs.OcclusionAccuracyDist);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -810,8 +748,6 @@ namespace Mutagen.Bethesda.Fallout4
             public RegionLand.TranslationMask? Land;
             public RegionGrasses.TranslationMask? Grasses;
             public RegionSounds.TranslationMask? Sounds;
-            public bool LodDisplayDistanceMultiplier;
-            public bool OcclusionAccuracyDist;
             #endregion
 
             #region Ctors
@@ -822,8 +758,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.MapColor = defaultOn;
                 this.Worldspace = defaultOn;
-                this.LodDisplayDistanceMultiplier = defaultOn;
-                this.OcclusionAccuracyDist = defaultOn;
             }
 
             #endregion
@@ -840,8 +774,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Land != null ? Land.OnOverall : DefaultOn, Land?.GetCrystal()));
                 ret.Add((Grasses != null ? Grasses.OnOverall : DefaultOn, Grasses?.GetCrystal()));
                 ret.Add((Sounds != null ? Sounds.OnOverall : DefaultOn, Sounds?.GetCrystal()));
-                ret.Add((LodDisplayDistanceMultiplier, null));
-                ret.Add((OcclusionAccuracyDist, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -988,7 +920,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IRegionInternal>,
         IRegionGetter
     {
-        new Color? MapColor { get; set; }
+        new Color MapColor { get; set; }
         new IFormLinkNullable<IWorldspaceGetter> Worldspace { get; set; }
         new ExtendedList<RegionArea> RegionAreas { get; }
         new RegionObjects? Objects { get; set; }
@@ -997,8 +929,6 @@ namespace Mutagen.Bethesda.Fallout4
         new RegionLand? Land { get; set; }
         new RegionGrasses? Grasses { get; set; }
         new RegionSounds? Sounds { get; set; }
-        new Single? LodDisplayDistanceMultiplier { get; set; }
-        new Single? OcclusionAccuracyDist { get; set; }
         #region Mutagen
         new Region.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1022,7 +952,7 @@ namespace Mutagen.Bethesda.Fallout4
         IMapsToGetter<IRegionGetter>
     {
         static new ILoquiRegistration StaticRegistration => Region_Registration.Instance;
-        Color? MapColor { get; }
+        Color MapColor { get; }
         IFormLinkNullableGetter<IWorldspaceGetter> Worldspace { get; }
         IReadOnlyList<IRegionAreaGetter> RegionAreas { get; }
         IRegionObjectsGetter? Objects { get; }
@@ -1031,8 +961,6 @@ namespace Mutagen.Bethesda.Fallout4
         IRegionLandGetter? Land { get; }
         IRegionGrassesGetter? Grasses { get; }
         IRegionSoundsGetter? Sounds { get; }
-        Single? LodDisplayDistanceMultiplier { get; }
-        Single? OcclusionAccuracyDist { get; }
 
         #region Mutagen
         Region.MajorFlag MajorFlags { get; }
@@ -1210,8 +1138,6 @@ namespace Mutagen.Bethesda.Fallout4
         Land = 12,
         Grasses = 13,
         Sounds = 14,
-        LodDisplayDistanceMultiplier = 15,
-        OcclusionAccuracyDist = 16,
     }
     #endregion
 
@@ -1229,9 +1155,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "56939c76-580a-4107-8929-e12f38528c39";
 
-        public const ushort AdditionalFieldCount = 11;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(Region.Mask<>);
 
@@ -1271,8 +1197,7 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.ANAM,
                 RecordTypes.RDAT,
                 RecordTypes.ICON,
-                RecordTypes.MICO,
-                RecordTypes.RLDM);
+                RecordTypes.MICO);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);
@@ -1326,8 +1251,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.Land = null;
             item.Grasses = null;
             item.Sounds = null;
-            item.LodDisplayDistanceMultiplier = default;
-            item.OcclusionAccuracyDist = default;
             base.Clear(item);
         }
         
@@ -1454,8 +1377,6 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Sounds,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.LodDisplayDistanceMultiplier = item.LodDisplayDistanceMultiplier.EqualsWithin(rhs.LodDisplayDistanceMultiplier);
-            ret.OcclusionAccuracyDist = item.OcclusionAccuracyDist.EqualsWithin(rhs.OcclusionAccuracyDist);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1507,10 +1428,9 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if ((printMask?.MapColor ?? true)
-                && item.MapColor is {} MapColorItem)
+            if (printMask?.MapColor ?? true)
             {
-                fg.AppendItem(MapColorItem, "MapColor");
+                fg.AppendItem(item.MapColor, "MapColor");
             }
             if (printMask?.Worldspace ?? true)
             {
@@ -1563,16 +1483,6 @@ namespace Mutagen.Bethesda.Fallout4
                 && item.Sounds is {} SoundsItem)
             {
                 SoundsItem?.ToString(fg, "Sounds");
-            }
-            if ((printMask?.LodDisplayDistanceMultiplier ?? true)
-                && item.LodDisplayDistanceMultiplier is {} LodDisplayDistanceMultiplierItem)
-            {
-                fg.AppendItem(LodDisplayDistanceMultiplierItem, "LodDisplayDistanceMultiplier");
-            }
-            if ((printMask?.OcclusionAccuracyDist ?? true)
-                && item.OcclusionAccuracyDist is {} OcclusionAccuracyDistItem)
-            {
-                fg.AppendItem(OcclusionAccuracyDistItem, "OcclusionAccuracyDist");
             }
         }
         
@@ -1682,14 +1592,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isSoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.LodDisplayDistanceMultiplier) ?? true))
-            {
-                if (!lhs.LodDisplayDistanceMultiplier.EqualsWithin(rhs.LodDisplayDistanceMultiplier)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.OcclusionAccuracyDist) ?? true))
-            {
-                if (!lhs.OcclusionAccuracyDist.EqualsWithin(rhs.OcclusionAccuracyDist)) return false;
-            }
             return true;
         }
         
@@ -1718,10 +1620,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IRegionGetter item)
         {
             var hash = new HashCode();
-            if (item.MapColor is {} MapColoritem)
-            {
-                hash.Add(MapColoritem);
-            }
+            hash.Add(item.MapColor);
             hash.Add(item.Worldspace);
             hash.Add(item.RegionAreas);
             if (item.Objects is {} Objectsitem)
@@ -1747,14 +1646,6 @@ namespace Mutagen.Bethesda.Fallout4
             if (item.Sounds is {} Soundsitem)
             {
                 hash.Add(Soundsitem);
-            }
-            if (item.LodDisplayDistanceMultiplier is {} LodDisplayDistanceMultiplieritem)
-            {
-                hash.Add(LodDisplayDistanceMultiplieritem);
-            }
-            if (item.OcclusionAccuracyDist is {} OcclusionAccuracyDistitem)
-            {
-                hash.Add(OcclusionAccuracyDistitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -2079,14 +1970,6 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.LodDisplayDistanceMultiplier) ?? true))
-            {
-                item.LodDisplayDistanceMultiplier = rhs.LodDisplayDistanceMultiplier;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.OcclusionAccuracyDist) ?? true))
-            {
-                item.OcclusionAccuracyDist = rhs.OcclusionAccuracyDist;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2244,7 +2127,7 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            ColorBinaryTranslation.Instance.WriteNullable(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MapColor,
                 header: translationParams.ConvertToCustom(RecordTypes.RCLR));
@@ -2266,14 +2149,6 @@ namespace Mutagen.Bethesda.Fallout4
             RegionBinaryWriteTranslation.WriteBinaryRegionAreaLogic(
                 writer: writer,
                 item: item);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.LodDisplayDistanceMultiplier,
-                header: translationParams.ConvertToCustom(RecordTypes.RLDM));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.OcclusionAccuracyDist,
-                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
         }
 
         public static partial void WriteBinaryRegionAreaLogicCustom(
@@ -2406,18 +2281,6 @@ namespace Mutagen.Bethesda.Fallout4
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                 }
-                case RecordTypeInts.RLDM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LodDisplayDistanceMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Region_FieldIndex.LodDisplayDistanceMultiplier;
-                }
-                case RecordTypeInts.ANAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OcclusionAccuracyDist = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Region_FieldIndex.OcclusionAccuracyDist;
-                }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -2483,7 +2346,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region MapColor
         private int? _MapColorLocation;
-        public Color? MapColor => _MapColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MapColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
+        public Color MapColor => _MapColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MapColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region Worldspace
         private int? _WorldspaceLocation;
@@ -2494,14 +2357,6 @@ namespace Mutagen.Bethesda.Fallout4
         public partial ParseResult RegionAreaLogicCustomParse(
             OverlayStream stream,
             int offset);
-        #endregion
-        #region LodDisplayDistanceMultiplier
-        private int? _LodDisplayDistanceMultiplierLocation;
-        public Single? LodDisplayDistanceMultiplier => _LodDisplayDistanceMultiplierLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _LodDisplayDistanceMultiplierLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
-        #endregion
-        #region OcclusionAccuracyDist
-        private int? _OcclusionAccuracyDistLocation;
-        public Single? OcclusionAccuracyDist => _OcclusionAccuracyDistLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _OcclusionAccuracyDistLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2581,16 +2436,11 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.RPLI:
                 {
-                    this.RegionAreas = BinaryOverlayList.FactoryByArray<RegionAreaBinaryOverlay>(
-                        mem: stream.RemainingMemory,
-                        package: _package,
+                    this.RegionAreas = this.ParseRepeatedTypelessSubrecord<RegionAreaBinaryOverlay>(
+                        stream: stream,
                         parseParams: parseParams,
-                        getter: (s, p, recConv) => RegionAreaBinaryOverlay.RegionAreaFactory(new OverlayStream(s, p), p, recConv),
-                        locs: ParseRecordLocations(
-                            stream: stream,
-                            trigger: type,
-                            constants: _package.MetaData.Constants.SubConstants,
-                            skipHeader: false));
+                        trigger: RegionArea_Registration.TriggerSpecs,
+                        factory: RegionAreaBinaryOverlay.RegionAreaFactory);
                     return (int)Region_FieldIndex.RegionAreas;
                 }
                 case RecordTypeInts.RDAT:
@@ -2598,16 +2448,6 @@ namespace Mutagen.Bethesda.Fallout4
                     return RegionAreaLogicCustomParse(
                         stream,
                         offset);
-                }
-                case RecordTypeInts.RLDM:
-                {
-                    _LodDisplayDistanceMultiplierLocation = (stream.Position - offset);
-                    return (int)Region_FieldIndex.LodDisplayDistanceMultiplier;
-                }
-                case RecordTypeInts.ANAM:
-                {
-                    _OcclusionAccuracyDistLocation = (stream.Position - offset);
-                    return (int)Region_FieldIndex.OcclusionAccuracyDist;
                 }
                 default:
                     return base.FillRecordType(

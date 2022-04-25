@@ -79,6 +79,16 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
+        #region LodDisplayDistanceMultiplier
+        public override Single? LodDisplayDistanceMultiplier { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IRegionSoundsGetter.LodDisplayDistanceMultiplier => this.LodDisplayDistanceMultiplier;
+        #endregion
+        #region OcclusionAccuracyDist
+        public override Single? OcclusionAccuracyDist { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IRegionSoundsGetter.OcclusionAccuracyDist => this.OcclusionAccuracyDist;
+        #endregion
 
         #region To String
 
@@ -121,19 +131,25 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Music = initialValue;
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionSound.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RegionSound.Mask<TItem>?>>());
+                this.LodDisplayDistanceMultiplier = initialValue;
+                this.OcclusionAccuracyDist = initialValue;
             }
 
             public Mask(
                 TItem Header,
                 TItem Icons,
                 TItem Music,
-                TItem Sounds)
+                TItem Sounds,
+                TItem LodDisplayDistanceMultiplier,
+                TItem OcclusionAccuracyDist)
             : base(
                 Header: Header,
                 Icons: Icons)
             {
                 this.Music = Music;
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, RegionSound.Mask<TItem>?>>());
+                this.LodDisplayDistanceMultiplier = LodDisplayDistanceMultiplier;
+                this.OcclusionAccuracyDist = OcclusionAccuracyDist;
             }
 
             #pragma warning disable CS8618
@@ -147,6 +163,8 @@ namespace Mutagen.Bethesda.Fallout4
             #region Members
             public TItem Music;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionSound.Mask<TItem>?>>?>? Sounds;
+            public TItem LodDisplayDistanceMultiplier;
+            public TItem OcclusionAccuracyDist;
             #endregion
 
             #region Equals
@@ -162,6 +180,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Music, rhs.Music)) return false;
                 if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
+                if (!object.Equals(this.LodDisplayDistanceMultiplier, rhs.LodDisplayDistanceMultiplier)) return false;
+                if (!object.Equals(this.OcclusionAccuracyDist, rhs.OcclusionAccuracyDist)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -169,6 +189,8 @@ namespace Mutagen.Bethesda.Fallout4
                 var hash = new HashCode();
                 hash.Add(this.Music);
                 hash.Add(this.Sounds);
+                hash.Add(this.LodDisplayDistanceMultiplier);
+                hash.Add(this.OcclusionAccuracyDist);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -192,6 +214,8 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
+                if (!eval(this.LodDisplayDistanceMultiplier)) return false;
+                if (!eval(this.OcclusionAccuracyDist)) return false;
                 return true;
             }
             #endregion
@@ -213,6 +237,8 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
+                if (eval(this.LodDisplayDistanceMultiplier)) return true;
+                if (eval(this.OcclusionAccuracyDist)) return true;
                 return false;
             }
             #endregion
@@ -244,6 +270,8 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
+                obj.LodDisplayDistanceMultiplier = eval(this.LodDisplayDistanceMultiplier);
+                obj.OcclusionAccuracyDist = eval(this.OcclusionAccuracyDist);
             }
             #endregion
 
@@ -293,6 +321,14 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                         fg.AppendLine("]");
                     }
+                    if (printMask?.LodDisplayDistanceMultiplier ?? true)
+                    {
+                        fg.AppendItem(LodDisplayDistanceMultiplier, "LodDisplayDistanceMultiplier");
+                    }
+                    if (printMask?.OcclusionAccuracyDist ?? true)
+                    {
+                        fg.AppendItem(OcclusionAccuracyDist, "OcclusionAccuracyDist");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -307,6 +343,8 @@ namespace Mutagen.Bethesda.Fallout4
             #region Members
             public Exception? Music;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionSound.ErrorMask?>>?>? Sounds;
+            public Exception? LodDisplayDistanceMultiplier;
+            public Exception? OcclusionAccuracyDist;
             #endregion
 
             #region IErrorMask
@@ -319,6 +357,10 @@ namespace Mutagen.Bethesda.Fallout4
                         return Music;
                     case RegionSounds_FieldIndex.Sounds:
                         return Sounds;
+                    case RegionSounds_FieldIndex.LodDisplayDistanceMultiplier:
+                        return LodDisplayDistanceMultiplier;
+                    case RegionSounds_FieldIndex.OcclusionAccuracyDist:
+                        return OcclusionAccuracyDist;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -334,6 +376,12 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case RegionSounds_FieldIndex.Sounds:
                         this.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionSound.ErrorMask?>>?>(ex, null);
+                        break;
+                    case RegionSounds_FieldIndex.LodDisplayDistanceMultiplier:
+                        this.LodDisplayDistanceMultiplier = ex;
+                        break;
+                    case RegionSounds_FieldIndex.OcclusionAccuracyDist:
+                        this.OcclusionAccuracyDist = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -352,6 +400,12 @@ namespace Mutagen.Bethesda.Fallout4
                     case RegionSounds_FieldIndex.Sounds:
                         this.Sounds = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionSound.ErrorMask?>>?>)obj;
                         break;
+                    case RegionSounds_FieldIndex.LodDisplayDistanceMultiplier:
+                        this.LodDisplayDistanceMultiplier = (Exception?)obj;
+                        break;
+                    case RegionSounds_FieldIndex.OcclusionAccuracyDist:
+                        this.OcclusionAccuracyDist = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +417,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Overall != null) return true;
                 if (Music != null) return true;
                 if (Sounds != null) return true;
+                if (LodDisplayDistanceMultiplier != null) return true;
+                if (OcclusionAccuracyDist != null) return true;
                 return false;
             }
             #endregion
@@ -421,6 +477,8 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     fg.AppendLine("]");
                 }
+                fg.AppendItem(LodDisplayDistanceMultiplier, "LodDisplayDistanceMultiplier");
+                fg.AppendItem(OcclusionAccuracyDist, "OcclusionAccuracyDist");
             }
             #endregion
 
@@ -431,6 +489,8 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.Music = this.Music.Combine(rhs.Music);
                 ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
+                ret.LodDisplayDistanceMultiplier = this.LodDisplayDistanceMultiplier.Combine(rhs.LodDisplayDistanceMultiplier);
+                ret.OcclusionAccuracyDist = this.OcclusionAccuracyDist.Combine(rhs.OcclusionAccuracyDist);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -455,6 +515,8 @@ namespace Mutagen.Bethesda.Fallout4
             #region Members
             public bool Music;
             public RegionSound.TranslationMask? Sounds;
+            public bool LodDisplayDistanceMultiplier;
+            public bool OcclusionAccuracyDist;
             #endregion
 
             #region Ctors
@@ -464,6 +526,8 @@ namespace Mutagen.Bethesda.Fallout4
                 : base(defaultOn, onOverall)
             {
                 this.Music = defaultOn;
+                this.LodDisplayDistanceMultiplier = defaultOn;
+                this.OcclusionAccuracyDist = defaultOn;
             }
 
             #endregion
@@ -473,6 +537,8 @@ namespace Mutagen.Bethesda.Fallout4
                 base.GetCrystal(ret);
                 ret.Add((Music, null));
                 ret.Add((Sounds == null ? DefaultOn : !Sounds.GetCrystal().CopyNothing, Sounds?.GetCrystal()));
+                ret.Add((LodDisplayDistanceMultiplier, null));
+                ret.Add((OcclusionAccuracyDist, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -553,6 +619,8 @@ namespace Mutagen.Bethesda.Fallout4
     {
         new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
         new ExtendedList<RegionSound>? Sounds { get; set; }
+        new Single? LodDisplayDistanceMultiplier { get; set; }
+        new Single? OcclusionAccuracyDist { get; set; }
     }
 
     public partial interface IRegionSoundsGetter :
@@ -565,6 +633,8 @@ namespace Mutagen.Bethesda.Fallout4
         static new ILoquiRegistration StaticRegistration => RegionSounds_Registration.Instance;
         IFormLinkNullableGetter<IMusicTypeGetter> Music { get; }
         IReadOnlyList<IRegionSoundGetter>? Sounds { get; }
+        Single? LodDisplayDistanceMultiplier { get; }
+        Single? OcclusionAccuracyDist { get; }
 
     }
 
@@ -713,6 +783,8 @@ namespace Mutagen.Bethesda.Fallout4
         Icons = 1,
         Music = 2,
         Sounds = 3,
+        LodDisplayDistanceMultiplier = 4,
+        OcclusionAccuracyDist = 5,
     }
     #endregion
 
@@ -730,9 +802,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "d721a855-8c28-4887-be02-c29153dc8b8e";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(RegionSounds.Mask<>);
 
@@ -770,7 +842,9 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.ICON,
                 RecordTypes.MICO,
                 RecordTypes.RDMO,
-                RecordTypes.RDSA);
+                RecordTypes.RDSA,
+                RecordTypes.RLDM,
+                RecordTypes.ANAM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RegionSoundsBinaryWriteTranslation);
@@ -817,6 +891,8 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Music.Clear();
             item.Sounds = null;
+            item.LodDisplayDistanceMultiplier = default;
+            item.OcclusionAccuracyDist = default;
             base.Clear(item);
         }
         
@@ -893,6 +969,8 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Sounds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.LodDisplayDistanceMultiplier = item.LodDisplayDistanceMultiplier.EqualsWithin(rhs.LodDisplayDistanceMultiplier);
+            ret.OcclusionAccuracyDist = item.OcclusionAccuracyDist.EqualsWithin(rhs.OcclusionAccuracyDist);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -967,6 +1045,16 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 fg.AppendLine("]");
             }
+            if ((printMask?.LodDisplayDistanceMultiplier ?? true)
+                && item.LodDisplayDistanceMultiplier is {} LodDisplayDistanceMultiplierItem)
+            {
+                fg.AppendItem(LodDisplayDistanceMultiplierItem, "LodDisplayDistanceMultiplier");
+            }
+            if ((printMask?.OcclusionAccuracyDist ?? true)
+                && item.OcclusionAccuracyDist is {} OcclusionAccuracyDistItem)
+            {
+                fg.AppendItem(OcclusionAccuracyDistItem, "OcclusionAccuracyDist");
+            }
         }
         
         public static RegionSounds_FieldIndex ConvertFieldIndex(RegionData_FieldIndex index)
@@ -998,6 +1086,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds, (l, r) => ((RegionSoundCommon)((IRegionSoundGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)RegionSounds_FieldIndex.Sounds)))) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)RegionSounds_FieldIndex.LodDisplayDistanceMultiplier) ?? true))
+            {
+                if (!lhs.LodDisplayDistanceMultiplier.EqualsWithin(rhs.LodDisplayDistanceMultiplier)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionSounds_FieldIndex.OcclusionAccuracyDist) ?? true))
+            {
+                if (!lhs.OcclusionAccuracyDist.EqualsWithin(rhs.OcclusionAccuracyDist)) return false;
+            }
             return true;
         }
         
@@ -1017,6 +1113,14 @@ namespace Mutagen.Bethesda.Fallout4
             var hash = new HashCode();
             hash.Add(item.Music);
             hash.Add(item.Sounds);
+            if (item.LodDisplayDistanceMultiplier is {} LodDisplayDistanceMultiplieritem)
+            {
+                hash.Add(LodDisplayDistanceMultiplieritem);
+            }
+            if (item.OcclusionAccuracyDist is {} OcclusionAccuracyDistitem)
+            {
+                hash.Add(OcclusionAccuracyDistitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1111,6 +1215,14 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)RegionSounds_FieldIndex.LodDisplayDistanceMultiplier) ?? true))
+            {
+                item.LodDisplayDistanceMultiplier = rhs.LodDisplayDistanceMultiplier;
+            }
+            if ((copyMask?.GetShouldTranslate((int)RegionSounds_FieldIndex.OcclusionAccuracyDist) ?? true))
+            {
+                item.OcclusionAccuracyDist = rhs.OcclusionAccuracyDist;
             }
         }
         
@@ -1241,6 +1353,14 @@ namespace Mutagen.Bethesda.Fallout4
                         writer: subWriter,
                         translationParams: conv);
                 });
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.LodDisplayDistanceMultiplier,
+                header: translationParams.ConvertToCustom(RecordTypes.RLDM));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.OcclusionAccuracyDist,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
         }
 
         public void Write(
@@ -1316,6 +1436,18 @@ namespace Mutagen.Bethesda.Fallout4
                         .CastExtendedList<RegionSound>();
                     return (int)RegionSounds_FieldIndex.Sounds;
                 }
+                case RecordTypeInts.RLDM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LodDisplayDistanceMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)RegionSounds_FieldIndex.LodDisplayDistanceMultiplier;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.OcclusionAccuracyDist = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)RegionSounds_FieldIndex.OcclusionAccuracyDist;
+                }
                 default:
                     return RegionDataBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -1377,6 +1509,14 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullableGetter<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
         #endregion
         public IReadOnlyList<IRegionSoundGetter>? Sounds { get; private set; }
+        #region LodDisplayDistanceMultiplier
+        private int? _LodDisplayDistanceMultiplierLocation;
+        public override Single? LodDisplayDistanceMultiplier => _LodDisplayDistanceMultiplierLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _LodDisplayDistanceMultiplierLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region OcclusionAccuracyDist
+        private int? _OcclusionAccuracyDistLocation;
+        public override Single? OcclusionAccuracyDist => _OcclusionAccuracyDistLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _OcclusionAccuracyDistLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1450,6 +1590,16 @@ namespace Mutagen.Bethesda.Fallout4
                         getter: (s, p) => RegionSoundBinaryOverlay.RegionSoundFactory(s, p));
                     stream.Position += subLen;
                     return (int)RegionSounds_FieldIndex.Sounds;
+                }
+                case RecordTypeInts.RLDM:
+                {
+                    _LodDisplayDistanceMultiplierLocation = (stream.Position - offset);
+                    return (int)RegionSounds_FieldIndex.LodDisplayDistanceMultiplier;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _OcclusionAccuracyDistLocation = (stream.Position - offset);
+                    return (int)RegionSounds_FieldIndex.OcclusionAccuracyDist;
                 }
                 default:
                     return base.FillRecordType(

@@ -18,11 +18,11 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
     public bool Nullable => nullable ?? false || typeof(T).GetName().EndsWith("?");
     public bool PreferDirectTranslation = true;
     public delegate bool CustomReadAction(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor reader, Accessor item);
-    public CustomReadAction CustomRead;
+    public CustomReadAction? CustomRead;
     public delegate bool CustomWriteAction(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor writer, Accessor item);
-    public CustomWriteAction CustomWrite;
+    public CustomWriteAction? CustomWrite;
     public delegate bool CustomWrapperAction(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor data, Accessor passedLen);
-    public CustomWrapperAction CustomWrapper;
+    public CustomWrapperAction? CustomWrapper;
     public override bool NeedsNamespacePrefix => false;
     public override string Namespace => "Mutagen.Bethesda.Translations.Binary.";
     public virtual bool NeedsGenerics => true;
@@ -32,7 +32,7 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
         return $"{Typename(typeGen)}BinaryTranslation{(NeedsGenerics ? $"<{Module.ReaderClass}, {Module.WriterClass}>" : null)}.Instance";
     }
 
-    public PrimitiveBinaryTranslationGeneration(int? expectedLen, string typeName = null, bool? nullable = null)
+    public PrimitiveBinaryTranslationGeneration(int? expectedLen, string? typeName = null, bool? nullable = null)
     {
         this._ExpectedLength = expectedLen;
         this.nullable = nullable;
@@ -223,7 +223,7 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
         Accessor dataAccessor,
         int? currentPosition,
         string passedLengthAccessor,
-        DataType dataType = null)
+        DataType? dataType = null)
     {
         passedLengthAccessor ??= "0x0";
         var data = typeGen.GetFieldData();
@@ -254,7 +254,7 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
         {
             if (dataType != null) throw new ArgumentException();
             dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})";
-            fg.AppendLine($"public {typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, dataAccessor, "_package")} : {typeGen.GetDefault(getter: true)};");
+            fg.AppendLine($"public {typeGen.OverrideStr}{typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, dataAccessor, "_package")} : {typeGen.GetDefault(getter: true)};");
         }
         else
         {

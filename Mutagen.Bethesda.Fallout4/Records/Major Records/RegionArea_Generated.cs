@@ -52,9 +52,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region EdgeFallOff
-        public UInt32? EdgeFallOff { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? IRegionAreaGetter.EdgeFallOff => this.EdgeFallOff;
+        public UInt32 EdgeFallOff { get; set; } = default;
         #endregion
         #region RegionPointListData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -71,15 +69,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region Unknown
+        public UInt32? Unknown { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unknown = new byte[4];
-        public MemorySlice<Byte> Unknown
-        {
-            get => _Unknown;
-            set => this._Unknown = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IRegionAreaGetter.Unknown => this.Unknown;
+        UInt32? IRegionAreaGetter.Unknown => this.Unknown;
         #endregion
 
         #region To String
@@ -581,9 +573,9 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IRegionArea>,
         IRegionAreaGetter
     {
-        new UInt32? EdgeFallOff { get; set; }
+        new UInt32 EdgeFallOff { get; set; }
         new ExtendedList<P2Float>? RegionPointListData { get; set; }
-        new MemorySlice<Byte> Unknown { get; set; }
+        new UInt32? Unknown { get; set; }
     }
 
     public partial interface IRegionAreaGetter :
@@ -598,9 +590,9 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => RegionArea_Registration.Instance;
-        UInt32? EdgeFallOff { get; }
+        UInt32 EdgeFallOff { get; }
         IReadOnlyList<P2Float>? RegionPointListData { get; }
-        ReadOnlyMemorySlice<Byte> Unknown { get; }
+        UInt32? Unknown { get; }
 
     }
 
@@ -873,7 +865,7 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.EdgeFallOff = default;
             item.RegionPointListData = null;
-            item.Unknown = new byte[4];
+            item.Unknown = default;
         }
         
         #region Mutagen
@@ -889,7 +881,6 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame,
             TypedParseParams? translationParams = null)
         {
-            frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -931,7 +922,7 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.RegionPointListData,
                 (l, r) => l.Equals(r),
                 include);
-            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
+            ret.Unknown = item.Unknown == rhs.Unknown;
         }
         
         public string ToString(
@@ -978,10 +969,9 @@ namespace Mutagen.Bethesda.Fallout4
             FileGeneration fg,
             RegionArea.Mask<bool>? printMask = null)
         {
-            if ((printMask?.EdgeFallOff ?? true)
-                && item.EdgeFallOff is {} EdgeFallOffItem)
+            if (printMask?.EdgeFallOff ?? true)
             {
-                fg.AppendItem(EdgeFallOffItem, "EdgeFallOff");
+                fg.AppendItem(item.EdgeFallOff, "EdgeFallOff");
             }
             if ((printMask?.RegionPointListData?.Overall ?? true)
                 && item.RegionPointListData is {} RegionPointListDataItem)
@@ -1002,9 +992,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Unknown ?? true)
+            if ((printMask?.Unknown ?? true)
+                && item.Unknown is {} UnknownItem)
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                fg.AppendItem(UnknownItem, "Unknown");
             }
         }
         
@@ -1025,7 +1016,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)RegionArea_FieldIndex.Unknown) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+                if (lhs.Unknown != rhs.Unknown) return false;
             }
             return true;
         }
@@ -1033,12 +1024,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IRegionAreaGetter item)
         {
             var hash = new HashCode();
-            if (item.EdgeFallOff is {} EdgeFallOffitem)
-            {
-                hash.Add(EdgeFallOffitem);
-            }
+            hash.Add(item.EdgeFallOff);
             hash.Add(item.RegionPointListData);
-            hash.Add(item.Unknown);
+            if (item.Unknown is {} Unknownitem)
+            {
+                hash.Add(Unknownitem);
+            }
             return hash.ToHashCode();
         }
         
@@ -1103,7 +1094,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((copyMask?.GetShouldTranslate((int)RegionArea_FieldIndex.Unknown) ?? true))
             {
-                item.Unknown = rhs.Unknown.ToArray();
+                item.Unknown = rhs.Unknown;
             }
         }
         
@@ -1202,7 +1193,7 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenWriter writer,
             TypedWriteParams? translationParams)
         {
-            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.EdgeFallOff,
                 header: translationParams.ConvertToCustom(RecordTypes.RPLI));
@@ -1211,7 +1202,7 @@ namespace Mutagen.Bethesda.Fallout4
                 items: item.RegionPointListData,
                 recordType: translationParams.ConvertToCustom(RecordTypes.RPLD),
                 transl: P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.Unknown,
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM));
@@ -1222,17 +1213,10 @@ namespace Mutagen.Bethesda.Fallout4
             IRegionAreaGetter item,
             TypedWriteParams? translationParams = null)
         {
-            using (HeaderExport.Subrecord(
+            WriteRecordTypes(
+                item: item,
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.RPLI),
-                overflowRecord: translationParams?.OverflowRecordType,
-                out var writerToUse))
-            {
-                WriteRecordTypes(
-                    item: item,
-                    writer: writerToUse,
-                    translationParams: translationParams);
-            }
+                translationParams: translationParams);
         }
 
         public void Write(
@@ -1272,6 +1256,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.RPLI:
                 {
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EdgeFallOff = frame.ReadUInt32();
                     return (int)RegionArea_FieldIndex.EdgeFallOff;
@@ -1289,7 +1274,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Unknown = frame.ReadUInt32();
                     return (int)RegionArea_FieldIndex.Unknown;
                 }
                 default:
@@ -1362,12 +1347,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region EdgeFallOff
         private int? _EdgeFallOffLocation;
-        public UInt32? EdgeFallOff => _EdgeFallOffLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EdgeFallOffLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32 EdgeFallOff => _EdgeFallOffLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EdgeFallOffLocation.Value, _package.MetaData.Constants)) : default;
         #endregion
         public IReadOnlyList<P2Float>? RegionPointListData { get; private set; }
         #region Unknown
         private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte> Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants) : Array.Empty<byte>();
+        public UInt32? Unknown => _UnknownLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1391,17 +1376,12 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams? parseParams = null)
         {
             var ret = new RegionAreaBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                bytes: stream.RemainingMemory,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecordHeader().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            ret.CustomFactoryEnd(
+            int offset = stream.Position;
+            ret.FillTypelessSubrecordTypes(
                 stream: stream,
-                finalPos: finalPos,
-                offset: offset);
-            ret.FillSubrecordTypes(
-                stream: stream,
-                finalPos: finalPos,
+                finalPos: stream.Length,
                 offset: offset,
                 parseParams: parseParams,
                 fill: ret.FillRecordType);
@@ -1433,6 +1413,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.RPLI:
                 {
+                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return ParseResult.Stop;
                     _EdgeFallOffLocation = (stream.Position - offset);
                     return (int)RegionArea_FieldIndex.EdgeFallOff;
                 }
