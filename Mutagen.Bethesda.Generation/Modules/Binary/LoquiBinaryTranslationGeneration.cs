@@ -468,13 +468,14 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
             }
             else
             {
-                if (!loqui.Singleton)
+                if (loqui.Singleton)
                 {
-                    fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}({dataAccessor}.Slice({passedLengthAccessor ?? "0x0"}), _package), _package, {recConverter});");
+                    fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)} _{typeGen.Name} {{ get; private set; }}");
                 }
                 else
                 {
-                    fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)} _{typeGen.Name} {{ get; private set; }}");
+                    var finalPosParam = loqui.TargetObjectGeneration.IsVariableLengthStruct() ? $", {dataAccessor}.Length - {passedLengthAccessor}" : null;
+                    fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}({dataAccessor}.Slice({passedLengthAccessor ?? "0x0"}), _package), _package{finalPosParam}, {recConverter});");
                 }
             }
         }

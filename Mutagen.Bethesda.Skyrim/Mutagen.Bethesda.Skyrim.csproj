@@ -61,11 +61,6 @@
     <Compile Include="Extensions\GlobalGroupMixIn.cs" />
     <Compile Include="Extensions\IPlacedExt.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
-    <Compile Include="Interfaces\Aspect\IAmbientColorsCommon.cs">
-      <CodeLanguage>cs</CodeLanguage>
-      <DefaultPackFolder>content</DefaultPackFolder>
-      <BuildAction>Compile</BuildAction>
-    </Compile>
     <Compile Include="Interfaces\Aspect\IHarvestable.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -404,9 +399,6 @@
     </Compile>
     <Compile Include="Records\Major Records\Light.cs">
       <DependentUpon>Light.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LightingTemplate.cs">
-      <DependentUpon>LightingTemplate.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\LoadScreen.cs">
       <DependentUpon>LoadScreen.xml</DependentUpon>

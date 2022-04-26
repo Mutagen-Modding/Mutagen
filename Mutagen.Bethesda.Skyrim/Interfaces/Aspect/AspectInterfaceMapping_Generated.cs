@@ -20,13 +20,6 @@ namespace Mutagen.Bethesda.Skyrim
         public SkyrimAspectInterfaceMapping()
         {
             var dict = new Dictionary<Type, InterfaceMappingResult>();
-            dict[typeof(IAmbientColorsCommon)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-            {
-                AmbientColors_Registration.Instance,
-                CellLighting_Registration.Instance,
-                LightingTemplate_Registration.Instance,
-            });
-            dict[typeof(IAmbientColorsCommonGetter)] = dict[typeof(IAmbientColorsCommon)] with { Setter = false };
             dict[typeof(IHarvestable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Tree_Registration.Instance,

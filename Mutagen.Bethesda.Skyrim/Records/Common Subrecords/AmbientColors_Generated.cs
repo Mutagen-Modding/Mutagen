@@ -679,7 +679,6 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IAmbientColors :
-        IAmbientColorsCommon,
         IAmbientColorsGetter,
         ILoquiObjectSetter<IAmbientColors>
     {
@@ -696,7 +695,6 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAmbientColorsGetter :
         ILoquiObject,
-        IAmbientColorsCommonGetter,
         IBinaryItem,
         ILoquiObject<IAmbientColorsGetter>
     {

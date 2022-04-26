@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LightingTemplate" objType="Record" recordType="LGTM" baseClass="SkyrimMajorRecord" GUID="e6740b74-8860-4887-854c-5e668986332a" ID="285">
-    <Interface>IAmbientColorsCommon</Interface>
     <Fields>
       <Data>
         <Fields>
@@ -15,15 +14,7 @@
           <Float name="DirectionalFade" />
           <Float name="FogClipDistance" />
           <Float name="FogPower" />
-          <Color name="AmbientDirectionalXPlus" binaryType="Alpha" />
-          <Color name="AmbientDirectionalXMinus" binaryType="Alpha" />
-          <Color name="AmbientDirectionalYPlus" binaryType="Alpha" />
-          <Color name="AmbientDirectionalYMinus" binaryType="Alpha" />
-          <Color name="AmbientDirectionalZPlus" binaryType="Alpha" />
-          <Color name="AmbientDirectionalZMinus" binaryType="Alpha" />
-          <Break />
-          <Color name="AmbientSpecular" binaryType="Alpha" />
-          <Float name="AmbientScale" />
+          <RefDirect name="AmbientColors" refName="AmbientColors" />
           <Break />
           <Color name="FogFarColor" binaryType="Alpha" />
           <Float name="FogMax" />

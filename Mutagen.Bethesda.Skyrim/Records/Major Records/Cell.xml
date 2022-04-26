@@ -72,7 +72,6 @@
     </Fields>
   </Object>
   <Object name="CellLighting" objType="Subrecord" recordType="XCLL" GUID="ee8cc403-808a-41cb-81c4-e94fd1fca22d" ID="284">
-    <Interface>IAmbientColorsCommon</Interface>
     <Fields>
       <Color name="AmbientColor" binaryType="Alpha" />
       <Color name="DirectionalColor" binaryType="Alpha" />
@@ -84,15 +83,8 @@
       <Float name="DirectionalFade" />
       <Float name="FogClipDistance" />
       <Float name="FogPower" />
-      <Color name="AmbientDirectionalXPlus" binaryType="Alpha" />
-      <Color name="AmbientDirectionalXMinus" binaryType="Alpha" />
-      <Color name="AmbientDirectionalYPlus" binaryType="Alpha" />
-      <Color name="AmbientDirectionalYMinus" binaryType="Alpha" />
-      <Color name="AmbientDirectionalZPlus" binaryType="Alpha" />
-      <Color name="AmbientDirectionalZMinus" binaryType="Alpha" />
+      <RefDirect name="AmbientColors" refName="AmbientColors" />
       <Break />
-      <Color name="AmbientSpecular" binaryType="Alpha" />
-      <Float name="AmbientScale" />
       <Color name="FogFarColor" binaryType="Alpha" />
       <Float name="FogMax" />
       <Float name="LightFadeBegin" />

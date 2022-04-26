@@ -86,49 +86,10 @@ namespace Mutagen.Bethesda.Skyrim
         #region FogPower
         public Single FogPower { get; set; } = default;
         #endregion
-        #region AmbientDirectionalXPlus
-        public Color AmbientDirectionalXPlus { get; set; } = default;
-        #endregion
-        #region AmbientDirectionalXMinus
-        public Color AmbientDirectionalXMinus { get; set; } = default;
-        #endregion
-        #region AmbientDirectionalYPlus
-        public Color AmbientDirectionalYPlus { get; set; } = default;
-        #endregion
-        #region AmbientDirectionalYMinus
-        public Color AmbientDirectionalYMinus { get; set; } = default;
-        #endregion
-        #region AmbientDirectionalZPlus
-        public Color AmbientDirectionalZPlus { get; set; } = default;
-        #endregion
-        #region AmbientDirectionalZMinus
-        public Color AmbientDirectionalZMinus { get; set; } = default;
-        #endregion
-        #region AmbientSpecular
+        #region AmbientColors
+        public AmbientColors AmbientColors { get; set; } = new AmbientColors();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Color _AmbientSpecular;
-        public Color AmbientSpecular
-        {
-            get => this._AmbientSpecular;
-            set
-            {
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._AmbientSpecular = value;
-            }
-        }
-        #endregion
-        #region AmbientScale
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _AmbientScale;
-        public Single AmbientScale
-        {
-            get => this._AmbientScale;
-            set
-            {
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._AmbientScale = value;
-            }
-        }
+        IAmbientColorsGetter ILightingTemplateGetter.AmbientColors => AmbientColors;
         #endregion
         #region FogFarColor
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -139,7 +100,6 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
                 this._FogFarColor = value;
             }
         }
@@ -153,7 +113,6 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
                 this._FogMax = value;
             }
         }
@@ -167,7 +126,6 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
                 this._LightFadeStartDistance = value;
             }
         }
@@ -181,7 +139,6 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
                 this._LightFadeEndDistance = value;
             }
         }
@@ -195,7 +152,6 @@ namespace Mutagen.Bethesda.Skyrim
             set
             {
                 this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
                 this._Unknown = value;
             }
         }
@@ -248,14 +204,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DirectionalFade = initialValue;
                 this.FogClipDistance = initialValue;
                 this.FogPower = initialValue;
-                this.AmbientDirectionalXPlus = initialValue;
-                this.AmbientDirectionalXMinus = initialValue;
-                this.AmbientDirectionalYPlus = initialValue;
-                this.AmbientDirectionalYMinus = initialValue;
-                this.AmbientDirectionalZPlus = initialValue;
-                this.AmbientDirectionalZMinus = initialValue;
-                this.AmbientSpecular = initialValue;
-                this.AmbientScale = initialValue;
+                this.AmbientColors = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(initialValue, new AmbientColors.Mask<TItem>(initialValue));
                 this.FogFarColor = initialValue;
                 this.FogMax = initialValue;
                 this.LightFadeStartDistance = initialValue;
@@ -282,14 +231,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem DirectionalFade,
                 TItem FogClipDistance,
                 TItem FogPower,
-                TItem AmbientDirectionalXPlus,
-                TItem AmbientDirectionalXMinus,
-                TItem AmbientDirectionalYPlus,
-                TItem AmbientDirectionalYMinus,
-                TItem AmbientDirectionalZPlus,
-                TItem AmbientDirectionalZMinus,
-                TItem AmbientSpecular,
-                TItem AmbientScale,
+                TItem AmbientColors,
                 TItem FogFarColor,
                 TItem FogMax,
                 TItem LightFadeStartDistance,
@@ -315,14 +257,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DirectionalFade = DirectionalFade;
                 this.FogClipDistance = FogClipDistance;
                 this.FogPower = FogPower;
-                this.AmbientDirectionalXPlus = AmbientDirectionalXPlus;
-                this.AmbientDirectionalXMinus = AmbientDirectionalXMinus;
-                this.AmbientDirectionalYPlus = AmbientDirectionalYPlus;
-                this.AmbientDirectionalYMinus = AmbientDirectionalYMinus;
-                this.AmbientDirectionalZPlus = AmbientDirectionalZPlus;
-                this.AmbientDirectionalZMinus = AmbientDirectionalZMinus;
-                this.AmbientSpecular = AmbientSpecular;
-                this.AmbientScale = AmbientScale;
+                this.AmbientColors = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(AmbientColors, new AmbientColors.Mask<TItem>(AmbientColors));
                 this.FogFarColor = FogFarColor;
                 this.FogMax = FogMax;
                 this.LightFadeStartDistance = LightFadeStartDistance;
@@ -351,14 +286,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem DirectionalFade;
             public TItem FogClipDistance;
             public TItem FogPower;
-            public TItem AmbientDirectionalXPlus;
-            public TItem AmbientDirectionalXMinus;
-            public TItem AmbientDirectionalYPlus;
-            public TItem AmbientDirectionalYMinus;
-            public TItem AmbientDirectionalZPlus;
-            public TItem AmbientDirectionalZMinus;
-            public TItem AmbientSpecular;
-            public TItem AmbientScale;
+            public MaskItem<TItem, AmbientColors.Mask<TItem>?>? AmbientColors { get; set; }
             public TItem FogFarColor;
             public TItem FogMax;
             public TItem LightFadeStartDistance;
@@ -389,14 +317,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.DirectionalFade, rhs.DirectionalFade)) return false;
                 if (!object.Equals(this.FogClipDistance, rhs.FogClipDistance)) return false;
                 if (!object.Equals(this.FogPower, rhs.FogPower)) return false;
-                if (!object.Equals(this.AmbientDirectionalXPlus, rhs.AmbientDirectionalXPlus)) return false;
-                if (!object.Equals(this.AmbientDirectionalXMinus, rhs.AmbientDirectionalXMinus)) return false;
-                if (!object.Equals(this.AmbientDirectionalYPlus, rhs.AmbientDirectionalYPlus)) return false;
-                if (!object.Equals(this.AmbientDirectionalYMinus, rhs.AmbientDirectionalYMinus)) return false;
-                if (!object.Equals(this.AmbientDirectionalZPlus, rhs.AmbientDirectionalZPlus)) return false;
-                if (!object.Equals(this.AmbientDirectionalZMinus, rhs.AmbientDirectionalZMinus)) return false;
-                if (!object.Equals(this.AmbientSpecular, rhs.AmbientSpecular)) return false;
-                if (!object.Equals(this.AmbientScale, rhs.AmbientScale)) return false;
+                if (!object.Equals(this.AmbientColors, rhs.AmbientColors)) return false;
                 if (!object.Equals(this.FogFarColor, rhs.FogFarColor)) return false;
                 if (!object.Equals(this.FogMax, rhs.FogMax)) return false;
                 if (!object.Equals(this.LightFadeStartDistance, rhs.LightFadeStartDistance)) return false;
@@ -419,14 +340,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.DirectionalFade);
                 hash.Add(this.FogClipDistance);
                 hash.Add(this.FogPower);
-                hash.Add(this.AmbientDirectionalXPlus);
-                hash.Add(this.AmbientDirectionalXMinus);
-                hash.Add(this.AmbientDirectionalYPlus);
-                hash.Add(this.AmbientDirectionalYMinus);
-                hash.Add(this.AmbientDirectionalZPlus);
-                hash.Add(this.AmbientDirectionalZMinus);
-                hash.Add(this.AmbientSpecular);
-                hash.Add(this.AmbientScale);
+                hash.Add(this.AmbientColors);
                 hash.Add(this.FogFarColor);
                 hash.Add(this.FogMax);
                 hash.Add(this.LightFadeStartDistance);
@@ -454,14 +368,11 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.DirectionalFade)) return false;
                 if (!eval(this.FogClipDistance)) return false;
                 if (!eval(this.FogPower)) return false;
-                if (!eval(this.AmbientDirectionalXPlus)) return false;
-                if (!eval(this.AmbientDirectionalXMinus)) return false;
-                if (!eval(this.AmbientDirectionalYPlus)) return false;
-                if (!eval(this.AmbientDirectionalYMinus)) return false;
-                if (!eval(this.AmbientDirectionalZPlus)) return false;
-                if (!eval(this.AmbientDirectionalZMinus)) return false;
-                if (!eval(this.AmbientSpecular)) return false;
-                if (!eval(this.AmbientScale)) return false;
+                if (AmbientColors != null)
+                {
+                    if (!eval(this.AmbientColors.Overall)) return false;
+                    if (this.AmbientColors.Specific != null && !this.AmbientColors.Specific.All(eval)) return false;
+                }
                 if (!eval(this.FogFarColor)) return false;
                 if (!eval(this.FogMax)) return false;
                 if (!eval(this.LightFadeStartDistance)) return false;
@@ -491,14 +402,11 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.DirectionalFade)) return true;
                 if (eval(this.FogClipDistance)) return true;
                 if (eval(this.FogPower)) return true;
-                if (eval(this.AmbientDirectionalXPlus)) return true;
-                if (eval(this.AmbientDirectionalXMinus)) return true;
-                if (eval(this.AmbientDirectionalYPlus)) return true;
-                if (eval(this.AmbientDirectionalYMinus)) return true;
-                if (eval(this.AmbientDirectionalZPlus)) return true;
-                if (eval(this.AmbientDirectionalZMinus)) return true;
-                if (eval(this.AmbientSpecular)) return true;
-                if (eval(this.AmbientScale)) return true;
+                if (AmbientColors != null)
+                {
+                    if (eval(this.AmbientColors.Overall)) return true;
+                    if (this.AmbientColors.Specific != null && this.AmbientColors.Specific.Any(eval)) return true;
+                }
                 if (eval(this.FogFarColor)) return true;
                 if (eval(this.FogMax)) return true;
                 if (eval(this.LightFadeStartDistance)) return true;
@@ -535,14 +443,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.DirectionalFade = eval(this.DirectionalFade);
                 obj.FogClipDistance = eval(this.FogClipDistance);
                 obj.FogPower = eval(this.FogPower);
-                obj.AmbientDirectionalXPlus = eval(this.AmbientDirectionalXPlus);
-                obj.AmbientDirectionalXMinus = eval(this.AmbientDirectionalXMinus);
-                obj.AmbientDirectionalYPlus = eval(this.AmbientDirectionalYPlus);
-                obj.AmbientDirectionalYMinus = eval(this.AmbientDirectionalYMinus);
-                obj.AmbientDirectionalZPlus = eval(this.AmbientDirectionalZPlus);
-                obj.AmbientDirectionalZMinus = eval(this.AmbientDirectionalZMinus);
-                obj.AmbientSpecular = eval(this.AmbientSpecular);
-                obj.AmbientScale = eval(this.AmbientScale);
+                obj.AmbientColors = this.AmbientColors == null ? null : new MaskItem<R, AmbientColors.Mask<R>?>(eval(this.AmbientColors.Overall), this.AmbientColors.Specific?.Translate(eval));
                 obj.FogFarColor = eval(this.FogFarColor);
                 obj.FogMax = eval(this.FogMax);
                 obj.LightFadeStartDistance = eval(this.LightFadeStartDistance);
@@ -612,37 +513,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(FogPower, "FogPower");
                     }
-                    if (printMask?.AmbientDirectionalXPlus ?? true)
+                    if (printMask?.AmbientColors?.Overall ?? true)
                     {
-                        fg.AppendItem(AmbientDirectionalXPlus, "AmbientDirectionalXPlus");
-                    }
-                    if (printMask?.AmbientDirectionalXMinus ?? true)
-                    {
-                        fg.AppendItem(AmbientDirectionalXMinus, "AmbientDirectionalXMinus");
-                    }
-                    if (printMask?.AmbientDirectionalYPlus ?? true)
-                    {
-                        fg.AppendItem(AmbientDirectionalYPlus, "AmbientDirectionalYPlus");
-                    }
-                    if (printMask?.AmbientDirectionalYMinus ?? true)
-                    {
-                        fg.AppendItem(AmbientDirectionalYMinus, "AmbientDirectionalYMinus");
-                    }
-                    if (printMask?.AmbientDirectionalZPlus ?? true)
-                    {
-                        fg.AppendItem(AmbientDirectionalZPlus, "AmbientDirectionalZPlus");
-                    }
-                    if (printMask?.AmbientDirectionalZMinus ?? true)
-                    {
-                        fg.AppendItem(AmbientDirectionalZMinus, "AmbientDirectionalZMinus");
-                    }
-                    if (printMask?.AmbientSpecular ?? true)
-                    {
-                        fg.AppendItem(AmbientSpecular, "AmbientSpecular");
-                    }
-                    if (printMask?.AmbientScale ?? true)
-                    {
-                        fg.AppendItem(AmbientScale, "AmbientScale");
+                        AmbientColors?.ToString(fg);
                     }
                     if (printMask?.FogFarColor ?? true)
                     {
@@ -694,14 +567,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? DirectionalFade;
             public Exception? FogClipDistance;
             public Exception? FogPower;
-            public Exception? AmbientDirectionalXPlus;
-            public Exception? AmbientDirectionalXMinus;
-            public Exception? AmbientDirectionalYPlus;
-            public Exception? AmbientDirectionalYMinus;
-            public Exception? AmbientDirectionalZPlus;
-            public Exception? AmbientDirectionalZMinus;
-            public Exception? AmbientSpecular;
-            public Exception? AmbientScale;
+            public MaskItem<Exception?, AmbientColors.ErrorMask?>? AmbientColors;
             public Exception? FogFarColor;
             public Exception? FogMax;
             public Exception? LightFadeStartDistance;
@@ -737,22 +603,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return FogClipDistance;
                     case LightingTemplate_FieldIndex.FogPower:
                         return FogPower;
-                    case LightingTemplate_FieldIndex.AmbientDirectionalXPlus:
-                        return AmbientDirectionalXPlus;
-                    case LightingTemplate_FieldIndex.AmbientDirectionalXMinus:
-                        return AmbientDirectionalXMinus;
-                    case LightingTemplate_FieldIndex.AmbientDirectionalYPlus:
-                        return AmbientDirectionalYPlus;
-                    case LightingTemplate_FieldIndex.AmbientDirectionalYMinus:
-                        return AmbientDirectionalYMinus;
-                    case LightingTemplate_FieldIndex.AmbientDirectionalZPlus:
-                        return AmbientDirectionalZPlus;
-                    case LightingTemplate_FieldIndex.AmbientDirectionalZMinus:
-                        return AmbientDirectionalZMinus;
-                    case LightingTemplate_FieldIndex.AmbientSpecular:
-                        return AmbientSpecular;
-                    case LightingTemplate_FieldIndex.AmbientScale:
-                        return AmbientScale;
+                    case LightingTemplate_FieldIndex.AmbientColors:
+                        return AmbientColors;
                     case LightingTemplate_FieldIndex.FogFarColor:
                         return FogFarColor;
                     case LightingTemplate_FieldIndex.FogMax:
@@ -807,29 +659,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case LightingTemplate_FieldIndex.FogPower:
                         this.FogPower = ex;
                         break;
-                    case LightingTemplate_FieldIndex.AmbientDirectionalXPlus:
-                        this.AmbientDirectionalXPlus = ex;
-                        break;
-                    case LightingTemplate_FieldIndex.AmbientDirectionalXMinus:
-                        this.AmbientDirectionalXMinus = ex;
-                        break;
-                    case LightingTemplate_FieldIndex.AmbientDirectionalYPlus:
-                        this.AmbientDirectionalYPlus = ex;
-                        break;
-                    case LightingTemplate_FieldIndex.AmbientDirectionalYMinus:
-                        this.AmbientDirectionalYMinus = ex;
-                        break;
-                    case LightingTemplate_FieldIndex.AmbientDirectionalZPlus:
-                        this.AmbientDirectionalZPlus = ex;
-                        break;
-                    case LightingTemplate_FieldIndex.AmbientDirectionalZMinus:
-                        this.AmbientDirectionalZMinus = ex;
-                        break;
-                    case LightingTemplate_FieldIndex.AmbientSpecular:
-                        this.AmbientSpecular = ex;
-                        break;
-                    case LightingTemplate_FieldIndex.AmbientScale:
-                        this.AmbientScale = ex;
+                    case LightingTemplate_FieldIndex.AmbientColors:
+                        this.AmbientColors = new MaskItem<Exception?, AmbientColors.ErrorMask?>(ex, null);
                         break;
                     case LightingTemplate_FieldIndex.FogFarColor:
                         this.FogFarColor = ex;
@@ -893,29 +724,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case LightingTemplate_FieldIndex.FogPower:
                         this.FogPower = (Exception?)obj;
                         break;
-                    case LightingTemplate_FieldIndex.AmbientDirectionalXPlus:
-                        this.AmbientDirectionalXPlus = (Exception?)obj;
-                        break;
-                    case LightingTemplate_FieldIndex.AmbientDirectionalXMinus:
-                        this.AmbientDirectionalXMinus = (Exception?)obj;
-                        break;
-                    case LightingTemplate_FieldIndex.AmbientDirectionalYPlus:
-                        this.AmbientDirectionalYPlus = (Exception?)obj;
-                        break;
-                    case LightingTemplate_FieldIndex.AmbientDirectionalYMinus:
-                        this.AmbientDirectionalYMinus = (Exception?)obj;
-                        break;
-                    case LightingTemplate_FieldIndex.AmbientDirectionalZPlus:
-                        this.AmbientDirectionalZPlus = (Exception?)obj;
-                        break;
-                    case LightingTemplate_FieldIndex.AmbientDirectionalZMinus:
-                        this.AmbientDirectionalZMinus = (Exception?)obj;
-                        break;
-                    case LightingTemplate_FieldIndex.AmbientSpecular:
-                        this.AmbientSpecular = (Exception?)obj;
-                        break;
-                    case LightingTemplate_FieldIndex.AmbientScale:
-                        this.AmbientScale = (Exception?)obj;
+                    case LightingTemplate_FieldIndex.AmbientColors:
+                        this.AmbientColors = (MaskItem<Exception?, AmbientColors.ErrorMask?>?)obj;
                         break;
                     case LightingTemplate_FieldIndex.FogFarColor:
                         this.FogFarColor = (Exception?)obj;
@@ -957,14 +767,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (DirectionalFade != null) return true;
                 if (FogClipDistance != null) return true;
                 if (FogPower != null) return true;
-                if (AmbientDirectionalXPlus != null) return true;
-                if (AmbientDirectionalXMinus != null) return true;
-                if (AmbientDirectionalYPlus != null) return true;
-                if (AmbientDirectionalYMinus != null) return true;
-                if (AmbientDirectionalZPlus != null) return true;
-                if (AmbientDirectionalZMinus != null) return true;
-                if (AmbientSpecular != null) return true;
-                if (AmbientScale != null) return true;
+                if (AmbientColors != null) return true;
                 if (FogFarColor != null) return true;
                 if (FogMax != null) return true;
                 if (LightFadeStartDistance != null) return true;
@@ -1017,14 +820,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(DirectionalFade, "DirectionalFade");
                 fg.AppendItem(FogClipDistance, "FogClipDistance");
                 fg.AppendItem(FogPower, "FogPower");
-                fg.AppendItem(AmbientDirectionalXPlus, "AmbientDirectionalXPlus");
-                fg.AppendItem(AmbientDirectionalXMinus, "AmbientDirectionalXMinus");
-                fg.AppendItem(AmbientDirectionalYPlus, "AmbientDirectionalYPlus");
-                fg.AppendItem(AmbientDirectionalYMinus, "AmbientDirectionalYMinus");
-                fg.AppendItem(AmbientDirectionalZPlus, "AmbientDirectionalZPlus");
-                fg.AppendItem(AmbientDirectionalZMinus, "AmbientDirectionalZMinus");
-                fg.AppendItem(AmbientSpecular, "AmbientSpecular");
-                fg.AppendItem(AmbientScale, "AmbientScale");
+                AmbientColors?.ToString(fg);
                 fg.AppendItem(FogFarColor, "FogFarColor");
                 fg.AppendItem(FogMax, "FogMax");
                 fg.AppendItem(LightFadeStartDistance, "LightFadeStartDistance");
@@ -1050,14 +846,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.DirectionalFade = this.DirectionalFade.Combine(rhs.DirectionalFade);
                 ret.FogClipDistance = this.FogClipDistance.Combine(rhs.FogClipDistance);
                 ret.FogPower = this.FogPower.Combine(rhs.FogPower);
-                ret.AmbientDirectionalXPlus = this.AmbientDirectionalXPlus.Combine(rhs.AmbientDirectionalXPlus);
-                ret.AmbientDirectionalXMinus = this.AmbientDirectionalXMinus.Combine(rhs.AmbientDirectionalXMinus);
-                ret.AmbientDirectionalYPlus = this.AmbientDirectionalYPlus.Combine(rhs.AmbientDirectionalYPlus);
-                ret.AmbientDirectionalYMinus = this.AmbientDirectionalYMinus.Combine(rhs.AmbientDirectionalYMinus);
-                ret.AmbientDirectionalZPlus = this.AmbientDirectionalZPlus.Combine(rhs.AmbientDirectionalZPlus);
-                ret.AmbientDirectionalZMinus = this.AmbientDirectionalZMinus.Combine(rhs.AmbientDirectionalZMinus);
-                ret.AmbientSpecular = this.AmbientSpecular.Combine(rhs.AmbientSpecular);
-                ret.AmbientScale = this.AmbientScale.Combine(rhs.AmbientScale);
+                ret.AmbientColors = this.AmbientColors.Combine(rhs.AmbientColors, (l, r) => l.Combine(r));
                 ret.FogFarColor = this.FogFarColor.Combine(rhs.FogFarColor);
                 ret.FogMax = this.FogMax.Combine(rhs.FogMax);
                 ret.LightFadeStartDistance = this.LightFadeStartDistance.Combine(rhs.LightFadeStartDistance);
@@ -1097,14 +886,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool DirectionalFade;
             public bool FogClipDistance;
             public bool FogPower;
-            public bool AmbientDirectionalXPlus;
-            public bool AmbientDirectionalXMinus;
-            public bool AmbientDirectionalYPlus;
-            public bool AmbientDirectionalYMinus;
-            public bool AmbientDirectionalZPlus;
-            public bool AmbientDirectionalZMinus;
-            public bool AmbientSpecular;
-            public bool AmbientScale;
+            public AmbientColors.TranslationMask? AmbientColors;
             public bool FogFarColor;
             public bool FogMax;
             public bool LightFadeStartDistance;
@@ -1130,14 +912,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DirectionalFade = defaultOn;
                 this.FogClipDistance = defaultOn;
                 this.FogPower = defaultOn;
-                this.AmbientDirectionalXPlus = defaultOn;
-                this.AmbientDirectionalXMinus = defaultOn;
-                this.AmbientDirectionalYPlus = defaultOn;
-                this.AmbientDirectionalYMinus = defaultOn;
-                this.AmbientDirectionalZPlus = defaultOn;
-                this.AmbientDirectionalZMinus = defaultOn;
-                this.AmbientSpecular = defaultOn;
-                this.AmbientScale = defaultOn;
                 this.FogFarColor = defaultOn;
                 this.FogMax = defaultOn;
                 this.LightFadeStartDistance = defaultOn;
@@ -1161,14 +935,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((DirectionalFade, null));
                 ret.Add((FogClipDistance, null));
                 ret.Add((FogPower, null));
-                ret.Add((AmbientDirectionalXPlus, null));
-                ret.Add((AmbientDirectionalXMinus, null));
-                ret.Add((AmbientDirectionalYPlus, null));
-                ret.Add((AmbientDirectionalYMinus, null));
-                ret.Add((AmbientDirectionalZPlus, null));
-                ret.Add((AmbientDirectionalZMinus, null));
-                ret.Add((AmbientSpecular, null));
-                ret.Add((AmbientScale, null));
+                ret.Add((AmbientColors != null ? AmbientColors.OnOverall : DefaultOn, AmbientColors?.GetCrystal()));
                 ret.Add((FogFarColor, null));
                 ret.Add((FogMax, null));
                 ret.Add((LightFadeStartDistance, null));
@@ -1240,8 +1007,7 @@ namespace Mutagen.Bethesda.Skyrim
         [Flags]
         public enum DATADataType
         {
-            Break0 = 1,
-            Break1 = 2
+            Break0 = 1
         }
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -1322,7 +1088,6 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILightingTemplate :
-        IAmbientColorsCommon,
         ILightingTemplateGetter,
         ILoquiObjectSetter<ILightingTemplateInternal>,
         ISkyrimMajorRecordInternal
@@ -1337,14 +1102,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single DirectionalFade { get; set; }
         new Single FogClipDistance { get; set; }
         new Single FogPower { get; set; }
-        new Color AmbientDirectionalXPlus { get; set; }
-        new Color AmbientDirectionalXMinus { get; set; }
-        new Color AmbientDirectionalYPlus { get; set; }
-        new Color AmbientDirectionalYMinus { get; set; }
-        new Color AmbientDirectionalZPlus { get; set; }
-        new Color AmbientDirectionalZMinus { get; set; }
-        new Color AmbientSpecular { get; set; }
-        new Single AmbientScale { get; set; }
+        new AmbientColors AmbientColors { get; set; }
         new Color FogFarColor { get; set; }
         new Single FogMax { get; set; }
         new Single LightFadeStartDistance { get; set; }
@@ -1364,7 +1122,6 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.LGTM)]
     public partial interface ILightingTemplateGetter :
         ISkyrimMajorRecordGetter,
-        IAmbientColorsCommonGetter,
         IBinaryItem,
         ILoquiObject<ILightingTemplateGetter>,
         IMapsToGetter<ILightingTemplateGetter>
@@ -1380,14 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single DirectionalFade { get; }
         Single FogClipDistance { get; }
         Single FogPower { get; }
-        Color AmbientDirectionalXPlus { get; }
-        Color AmbientDirectionalXMinus { get; }
-        Color AmbientDirectionalYPlus { get; }
-        Color AmbientDirectionalYMinus { get; }
-        Color AmbientDirectionalZPlus { get; }
-        Color AmbientDirectionalZMinus { get; }
-        Color AmbientSpecular { get; }
-        Single AmbientScale { get; }
+        IAmbientColorsGetter AmbientColors { get; }
         Color FogFarColor { get; }
         Single FogMax { get; }
         Single LightFadeStartDistance { get; }
@@ -1569,21 +1319,14 @@ namespace Mutagen.Bethesda.Skyrim
         DirectionalFade = 13,
         FogClipDistance = 14,
         FogPower = 15,
-        AmbientDirectionalXPlus = 16,
-        AmbientDirectionalXMinus = 17,
-        AmbientDirectionalYPlus = 18,
-        AmbientDirectionalYMinus = 19,
-        AmbientDirectionalZPlus = 20,
-        AmbientDirectionalZMinus = 21,
-        AmbientSpecular = 22,
-        AmbientScale = 23,
-        FogFarColor = 24,
-        FogMax = 25,
-        LightFadeStartDistance = 26,
-        LightFadeEndDistance = 27,
-        Unknown = 28,
-        DirectionalAmbientColors = 29,
-        DATADataTypeState = 30,
+        AmbientColors = 16,
+        FogFarColor = 17,
+        FogMax = 18,
+        LightFadeStartDistance = 19,
+        LightFadeEndDistance = 20,
+        Unknown = 21,
+        DirectionalAmbientColors = 22,
+        DATADataTypeState = 23,
     }
     #endregion
 
@@ -1601,9 +1344,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "e6740b74-8860-4887-854c-5e668986332a";
 
-        public const ushort AdditionalFieldCount = 25;
+        public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 31;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(LightingTemplate.Mask<>);
 
@@ -1692,14 +1435,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.DirectionalFade = default;
             item.FogClipDistance = default;
             item.FogPower = default;
-            item.AmbientDirectionalXPlus = default;
-            item.AmbientDirectionalXMinus = default;
-            item.AmbientDirectionalYPlus = default;
-            item.AmbientDirectionalYMinus = default;
-            item.AmbientDirectionalZPlus = default;
-            item.AmbientDirectionalZMinus = default;
-            item.AmbientSpecular = default;
-            item.AmbientScale = default;
+            item.AmbientColors.Clear();
             item.FogFarColor = default;
             item.FogMax = default;
             item.LightFadeStartDistance = default;
@@ -1802,14 +1538,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.DirectionalFade = item.DirectionalFade.EqualsWithin(rhs.DirectionalFade);
             ret.FogClipDistance = item.FogClipDistance.EqualsWithin(rhs.FogClipDistance);
             ret.FogPower = item.FogPower.EqualsWithin(rhs.FogPower);
-            ret.AmbientDirectionalXPlus = item.AmbientDirectionalXPlus.ColorOnlyEquals(rhs.AmbientDirectionalXPlus);
-            ret.AmbientDirectionalXMinus = item.AmbientDirectionalXMinus.ColorOnlyEquals(rhs.AmbientDirectionalXMinus);
-            ret.AmbientDirectionalYPlus = item.AmbientDirectionalYPlus.ColorOnlyEquals(rhs.AmbientDirectionalYPlus);
-            ret.AmbientDirectionalYMinus = item.AmbientDirectionalYMinus.ColorOnlyEquals(rhs.AmbientDirectionalYMinus);
-            ret.AmbientDirectionalZPlus = item.AmbientDirectionalZPlus.ColorOnlyEquals(rhs.AmbientDirectionalZPlus);
-            ret.AmbientDirectionalZMinus = item.AmbientDirectionalZMinus.ColorOnlyEquals(rhs.AmbientDirectionalZMinus);
-            ret.AmbientSpecular = item.AmbientSpecular.ColorOnlyEquals(rhs.AmbientSpecular);
-            ret.AmbientScale = item.AmbientScale.EqualsWithin(rhs.AmbientScale);
+            ret.AmbientColors = MaskItemExt.Factory(item.AmbientColors.GetEqualsMask(rhs.AmbientColors, include), include);
             ret.FogFarColor = item.FogFarColor.ColorOnlyEquals(rhs.FogFarColor);
             ret.FogMax = item.FogMax.EqualsWithin(rhs.FogMax);
             ret.LightFadeStartDistance = item.LightFadeStartDistance.EqualsWithin(rhs.LightFadeStartDistance);
@@ -1912,37 +1641,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 fg.AppendItem(item.FogPower, "FogPower");
             }
-            if (printMask?.AmbientDirectionalXPlus ?? true)
+            if (printMask?.AmbientColors?.Overall ?? true)
             {
-                fg.AppendItem(item.AmbientDirectionalXPlus, "AmbientDirectionalXPlus");
-            }
-            if (printMask?.AmbientDirectionalXMinus ?? true)
-            {
-                fg.AppendItem(item.AmbientDirectionalXMinus, "AmbientDirectionalXMinus");
-            }
-            if (printMask?.AmbientDirectionalYPlus ?? true)
-            {
-                fg.AppendItem(item.AmbientDirectionalYPlus, "AmbientDirectionalYPlus");
-            }
-            if (printMask?.AmbientDirectionalYMinus ?? true)
-            {
-                fg.AppendItem(item.AmbientDirectionalYMinus, "AmbientDirectionalYMinus");
-            }
-            if (printMask?.AmbientDirectionalZPlus ?? true)
-            {
-                fg.AppendItem(item.AmbientDirectionalZPlus, "AmbientDirectionalZPlus");
-            }
-            if (printMask?.AmbientDirectionalZMinus ?? true)
-            {
-                fg.AppendItem(item.AmbientDirectionalZMinus, "AmbientDirectionalZMinus");
-            }
-            if (printMask?.AmbientSpecular ?? true)
-            {
-                fg.AppendItem(item.AmbientSpecular, "AmbientSpecular");
-            }
-            if (printMask?.AmbientScale ?? true)
-            {
-                fg.AppendItem(item.AmbientScale, "AmbientScale");
+                item.AmbientColors?.ToString(fg, "AmbientColors");
             }
             if (printMask?.FogFarColor ?? true)
             {
@@ -2061,37 +1762,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.FogPower.EqualsWithin(rhs.FogPower)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalXPlus) ?? true))
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientColors) ?? true))
             {
-                if (!lhs.AmbientDirectionalXPlus.ColorOnlyEquals(rhs.AmbientDirectionalXPlus)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalXMinus) ?? true))
-            {
-                if (!lhs.AmbientDirectionalXMinus.ColorOnlyEquals(rhs.AmbientDirectionalXMinus)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalYPlus) ?? true))
-            {
-                if (!lhs.AmbientDirectionalYPlus.ColorOnlyEquals(rhs.AmbientDirectionalYPlus)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalYMinus) ?? true))
-            {
-                if (!lhs.AmbientDirectionalYMinus.ColorOnlyEquals(rhs.AmbientDirectionalYMinus)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalZPlus) ?? true))
-            {
-                if (!lhs.AmbientDirectionalZPlus.ColorOnlyEquals(rhs.AmbientDirectionalZPlus)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalZMinus) ?? true))
-            {
-                if (!lhs.AmbientDirectionalZMinus.ColorOnlyEquals(rhs.AmbientDirectionalZMinus)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientSpecular) ?? true))
-            {
-                if (!lhs.AmbientSpecular.ColorOnlyEquals(rhs.AmbientSpecular)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientScale) ?? true))
-            {
-                if (!lhs.AmbientScale.EqualsWithin(rhs.AmbientScale)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.AmbientColors, rhs.AmbientColors, out var lhsAmbientColors, out var rhsAmbientColors, out var isAmbientColorsEqual))
+                {
+                    if (!((AmbientColorsCommon)((IAmbientColorsGetter)lhsAmbientColors).CommonInstance()!).Equals(lhsAmbientColors, rhsAmbientColors, crystal?.GetSubCrystal((int)LightingTemplate_FieldIndex.AmbientColors))) return false;
+                }
+                else if (!isAmbientColorsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogFarColor) ?? true))
             {
@@ -2163,14 +1840,7 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.DirectionalFade);
             hash.Add(item.FogClipDistance);
             hash.Add(item.FogPower);
-            hash.Add(item.AmbientDirectionalXPlus);
-            hash.Add(item.AmbientDirectionalXMinus);
-            hash.Add(item.AmbientDirectionalYPlus);
-            hash.Add(item.AmbientDirectionalYMinus);
-            hash.Add(item.AmbientDirectionalZPlus);
-            hash.Add(item.AmbientDirectionalZMinus);
-            hash.Add(item.AmbientSpecular);
-            hash.Add(item.AmbientScale);
+            hash.Add(item.AmbientColors);
             hash.Add(item.FogFarColor);
             hash.Add(item.FogMax);
             hash.Add(item.LightFadeStartDistance);
@@ -2324,37 +1994,27 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.FogPower = rhs.FogPower;
             }
-            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalXPlus) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientColors) ?? true))
             {
-                item.AmbientDirectionalXPlus = rhs.AmbientDirectionalXPlus;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalXMinus) ?? true))
-            {
-                item.AmbientDirectionalXMinus = rhs.AmbientDirectionalXMinus;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalYPlus) ?? true))
-            {
-                item.AmbientDirectionalYPlus = rhs.AmbientDirectionalYPlus;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalYMinus) ?? true))
-            {
-                item.AmbientDirectionalYMinus = rhs.AmbientDirectionalYMinus;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalZPlus) ?? true))
-            {
-                item.AmbientDirectionalZPlus = rhs.AmbientDirectionalZPlus;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalZMinus) ?? true))
-            {
-                item.AmbientDirectionalZMinus = rhs.AmbientDirectionalZMinus;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientSpecular) ?? true))
-            {
-                item.AmbientSpecular = rhs.AmbientSpecular;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientScale) ?? true))
-            {
-                item.AmbientScale = rhs.AmbientScale;
+                errorMask?.PushIndex((int)LightingTemplate_FieldIndex.AmbientColors);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientColors) ?? true))
+                    {
+                        item.AmbientColors = rhs.AmbientColors.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)LightingTemplate_FieldIndex.AmbientColors),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogFarColor) ?? true))
             {
@@ -2600,48 +2260,26 @@ namespace Mutagen.Bethesda.Skyrim
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FogPower);
-                ColorBinaryTranslation.Instance.Write(
+                var AmbientColorsItem = item.AmbientColors;
+                ((AmbientColorsBinaryWriteTranslation)((IBinaryItem)AmbientColorsItem).BinaryWriteTranslator).Write(
+                    item: AmbientColorsItem,
                     writer: writer,
-                    item: item.AmbientDirectionalXPlus);
-                ColorBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.AmbientDirectionalXMinus);
-                ColorBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.AmbientDirectionalYPlus);
-                ColorBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.AmbientDirectionalYMinus);
-                ColorBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.AmbientDirectionalZPlus);
-                ColorBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.AmbientDirectionalZMinus);
+                    translationParams: translationParams);
                 if (!item.DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0))
                 {
                     ColorBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.AmbientSpecular);
+                        item: item.FogFarColor);
                     FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                         writer: writer,
-                        item: item.AmbientScale);
-                    if (!item.DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1))
-                    {
-                        ColorBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.FogFarColor);
-                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                            writer: writer,
-                            item: item.FogMax);
-                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                            writer: writer,
-                            item: item.LightFadeStartDistance);
-                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                            writer: writer,
-                            item: item.LightFadeEndDistance);
-                        writer.Write(item.Unknown);
-                    }
+                        item: item.FogMax);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.LightFadeStartDistance);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.LightFadeEndDistance);
+                    writer.Write(item.Unknown);
                 }
             }
             if (item.DirectionalAmbientColors is {} DirectionalAmbientColorsItem)
@@ -2759,23 +2397,11 @@ namespace Mutagen.Bethesda.Skyrim
                     item.DirectionalFade = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.FogClipDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.FogPower = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    item.AmbientDirectionalXPlus = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    item.AmbientDirectionalXMinus = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    item.AmbientDirectionalYPlus = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    item.AmbientDirectionalYMinus = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    item.AmbientDirectionalZPlus = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    item.AmbientDirectionalZMinus = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.AmbientColors = Mutagen.Bethesda.Skyrim.AmbientColors.CreateFromBinary(frame: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= LightingTemplate.DATADataType.Break0;
-                        return (int)LightingTemplate_FieldIndex.AmbientDirectionalZMinus;
-                    }
-                    item.AmbientSpecular = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    item.AmbientScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Complete)
-                    {
-                        item.DATADataTypeState |= LightingTemplate.DATADataType.Break1;
-                        return (int)LightingTemplate_FieldIndex.AmbientScale;
+                        return (int)LightingTemplate_FieldIndex.AmbientColors;
                     }
                     item.FogFarColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
                     item.FogMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
@@ -2899,69 +2525,35 @@ namespace Mutagen.Bethesda.Skyrim
         private bool _FogPower_IsSet => _DATALocation.HasValue;
         public Single FogPower => _FogPower_IsSet ? _data.Slice(_FogPowerLocation, 4).Float() : default;
         #endregion
-        #region AmbientDirectionalXPlus
-        private int _AmbientDirectionalXPlusLocation => _DATALocation!.Value.Min + 0x28;
-        private bool _AmbientDirectionalXPlus_IsSet => _DATALocation.HasValue;
-        public Color AmbientDirectionalXPlus => _AmbientDirectionalXPlus_IsSet ? _data.Slice(_AmbientDirectionalXPlusLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
-        #endregion
-        #region AmbientDirectionalXMinus
-        private int _AmbientDirectionalXMinusLocation => _DATALocation!.Value.Min + 0x2C;
-        private bool _AmbientDirectionalXMinus_IsSet => _DATALocation.HasValue;
-        public Color AmbientDirectionalXMinus => _AmbientDirectionalXMinus_IsSet ? _data.Slice(_AmbientDirectionalXMinusLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
-        #endregion
-        #region AmbientDirectionalYPlus
-        private int _AmbientDirectionalYPlusLocation => _DATALocation!.Value.Min + 0x30;
-        private bool _AmbientDirectionalYPlus_IsSet => _DATALocation.HasValue;
-        public Color AmbientDirectionalYPlus => _AmbientDirectionalYPlus_IsSet ? _data.Slice(_AmbientDirectionalYPlusLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
-        #endregion
-        #region AmbientDirectionalYMinus
-        private int _AmbientDirectionalYMinusLocation => _DATALocation!.Value.Min + 0x34;
-        private bool _AmbientDirectionalYMinus_IsSet => _DATALocation.HasValue;
-        public Color AmbientDirectionalYMinus => _AmbientDirectionalYMinus_IsSet ? _data.Slice(_AmbientDirectionalYMinusLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
-        #endregion
-        #region AmbientDirectionalZPlus
-        private int _AmbientDirectionalZPlusLocation => _DATALocation!.Value.Min + 0x38;
-        private bool _AmbientDirectionalZPlus_IsSet => _DATALocation.HasValue;
-        public Color AmbientDirectionalZPlus => _AmbientDirectionalZPlus_IsSet ? _data.Slice(_AmbientDirectionalZPlusLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
-        #endregion
-        #region AmbientDirectionalZMinus
-        private int _AmbientDirectionalZMinusLocation => _DATALocation!.Value.Min + 0x3C;
-        private bool _AmbientDirectionalZMinus_IsSet => _DATALocation.HasValue;
-        public Color AmbientDirectionalZMinus => _AmbientDirectionalZMinus_IsSet ? _data.Slice(_AmbientDirectionalZMinusLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
-        #endregion
-        #region AmbientSpecular
-        private int _AmbientSpecularLocation => _DATALocation!.Value.Min + 0x40;
-        private bool _AmbientSpecular_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
-        public Color AmbientSpecular => _AmbientSpecular_IsSet ? _data.Slice(_AmbientSpecularLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
-        #endregion
-        #region AmbientScale
-        private int _AmbientScaleLocation => _DATALocation!.Value.Min + 0x44;
-        private bool _AmbientScale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
-        public Single AmbientScale => _AmbientScale_IsSet ? _data.Slice(_AmbientScaleLocation, 4).Float() : default;
+        #region AmbientColors
+        private int _AmbientColorsLocation => _DATALocation!.Value.Min + 0x28;
+        private bool _AmbientColors_IsSet => _DATALocation.HasValue;
+        private IAmbientColorsGetter? _AmbientColors => _AmbientColors_IsSet ? AmbientColorsBinaryOverlay.AmbientColorsFactory(new OverlayStream(_data.Slice(_AmbientColorsLocation), _package), _package, _DATALocation!.Value.Width - 40) : default;
+        public IAmbientColorsGetter AmbientColors => _AmbientColors ?? new AmbientColors();
         #endregion
         #region FogFarColor
         private int _FogFarColorLocation => _DATALocation!.Value.Min + 0x48;
-        private bool _FogFarColor_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
+        private bool _FogFarColor_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
         public Color FogFarColor => _FogFarColor_IsSet ? _data.Slice(_FogFarColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region FogMax
         private int _FogMaxLocation => _DATALocation!.Value.Min + 0x4C;
-        private bool _FogMax_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
+        private bool _FogMax_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
         public Single FogMax => _FogMax_IsSet ? _data.Slice(_FogMaxLocation, 4).Float() : default;
         #endregion
         #region LightFadeStartDistance
         private int _LightFadeStartDistanceLocation => _DATALocation!.Value.Min + 0x50;
-        private bool _LightFadeStartDistance_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
+        private bool _LightFadeStartDistance_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
         public Single LightFadeStartDistance => _LightFadeStartDistance_IsSet ? _data.Slice(_LightFadeStartDistanceLocation, 4).Float() : default;
         #endregion
         #region LightFadeEndDistance
         private int _LightFadeEndDistanceLocation => _DATALocation!.Value.Min + 0x54;
-        private bool _LightFadeEndDistance_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
+        private bool _LightFadeEndDistance_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
         public Single LightFadeEndDistance => _LightFadeEndDistance_IsSet ? _data.Slice(_LightFadeEndDistanceLocation, 4).Float() : default;
         #endregion
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min + 0x58;
-        private bool _Unknown_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
+        private bool _Unknown_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
         public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_UnknownLocation, 4)) : default;
         #endregion
         public IAmbientColorsGetter? DirectionalAmbientColors { get; private set; }
@@ -3035,13 +2627,9 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
-                    if (subLen <= 0x40)
-                    {
-                        this.DATADataTypeState |= LightingTemplate.DATADataType.Break0;
-                    }
                     if (subLen <= 0x48)
                     {
-                        this.DATADataTypeState |= LightingTemplate.DATADataType.Break1;
+                        this.DATADataTypeState |= LightingTemplate.DATADataType.Break0;
                     }
                     return (int)LightingTemplate_FieldIndex.Unknown;
                 }
