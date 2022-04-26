@@ -2,20 +2,17 @@ using Loqui;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Mutagen.Bethesda.Skyrim;
 
-public static class ModContextExt
+internal static class ModContextExt
 {
-    public static readonly DialogTopic.TranslationMask DialogTopicCopyMask = new DialogTopic.TranslationMask(true)
+    public static readonly DialogTopic.TranslationMask DialogTopicCopyMask = new(true)
     {
         Responses = false
     };
 
-    public static readonly Cell.TranslationMask CellCopyMask = new Cell.TranslationMask(true)
+    public static readonly Cell.TranslationMask CellCopyMask = new(true)
     {
         Persistent = false,
         Temporary = false,
@@ -29,7 +26,7 @@ public static class ModContextExt
         TemporaryUnknownGroupData = false,
     };
 
-    public static readonly Worldspace.TranslationMask WorldspaceCopyMask = new Worldspace.TranslationMask(true)
+    public static readonly Worldspace.TranslationMask WorldspaceCopyMask = new(true)
     {
         SubCells = false,
         TopCell = false,
@@ -41,7 +38,7 @@ public static class ModContextExt
 
     public static readonly Landscape.TranslationMask? LandscapeCopyMask = null;
 
-    internal static IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
+    public static IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
         this ISkyrimListGroupGetter<ICellBlockGetter> cellBlocks,
         ILinkCache linkCache,
         ModKey modKey,
@@ -56,7 +53,7 @@ public static class ModContextExt
             throwIfUnknown: true);
     }
 
-    internal static IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
+    public static IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
         this ISkyrimListGroupGetter<ICellBlockGetter> cellBlocks,
         ILinkCache linkCache,
         Type type,
@@ -149,7 +146,7 @@ public static class ModContextExt
         }
     }
 
-    internal static IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
+    public static IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
         this IReadOnlyList<IWorldspaceBlockGetter> worldspaceBlocks,
         IWorldspaceGetter worldspace,
         ILinkCache linkCache,

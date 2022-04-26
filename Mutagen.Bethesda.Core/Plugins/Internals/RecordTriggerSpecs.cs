@@ -1,6 +1,6 @@
 namespace Mutagen.Bethesda.Plugins.Internals;
 
-public class RecordTriggerSpecs
+internal class RecordTriggerSpecs
 {
     public IRecordCollection AllRecordTypes { get; }
     public IRecordCollection TriggeringRecordTypes { get; }

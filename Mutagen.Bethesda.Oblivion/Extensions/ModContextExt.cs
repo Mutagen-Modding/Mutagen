@@ -2,20 +2,17 @@ using Loqui;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Mutagen.Bethesda.Oblivion;
 
-public static class ModContextExt
+internal static class ModContextExt
 {
-    public static readonly DialogTopic.TranslationMask DialogResponsesCopyMask = new DialogTopic.TranslationMask(true)
+    public static readonly DialogTopic.TranslationMask DialogResponsesCopyMask = new(true)
     {
         Items = false
     };
 
-    public static readonly Cell.TranslationMask CellCopyMask = new Cell.TranslationMask(true)
+    public static readonly Cell.TranslationMask CellCopyMask = new(true)
     {
         Persistent = false,
         Temporary = false,
@@ -24,7 +21,7 @@ public static class ModContextExt
         PathGrid = false
     };
 
-    public static readonly Worldspace.TranslationMask WorldspaceCopyMask = new Worldspace.TranslationMask(true)
+    public static readonly Worldspace.TranslationMask WorldspaceCopyMask = new(true)
     {
         SubCells = false,
         TopCell = false,
@@ -35,7 +32,7 @@ public static class ModContextExt
     public static readonly Road.TranslationMask? RoadCopyMask = null;
     public static readonly PathGrid.TranslationMask? PathGridCopyMask = null;
 
-    internal static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
+    public static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
         this IOblivionListGroupGetter<ICellBlockGetter> cellBlocks,
         ILinkCache linkCache,
         ModKey modKey,
@@ -50,7 +47,7 @@ public static class ModContextExt
             throwIfUnknown: true);
     }
 
-    internal static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
+    public static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
         this IOblivionListGroupGetter<ICellBlockGetter> cellBlocks,
         ILinkCache linkCache,
         Type type,
@@ -147,7 +144,7 @@ public static class ModContextExt
         }
     }
 
-    internal static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
+    public static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
         this IReadOnlyList<IWorldspaceBlockGetter> worldspaceBlocks,
         IWorldspaceGetter worldspace,
         ILinkCache linkCache,
